@@ -344,13 +344,14 @@
             <li><a href="#master-table">2. Diagnostic Master Table</a></li>
             <li><a href="#audit-framework">3. Fast Audit Framework</a></li>
             <li><a href="#modern-pathologies">4. Modern 2026 Pathologies</a></li>
-            <li><a href="#best-practices">5. Best Practices Checklist</a></li>
-            <li><a href="#pipeline-strategy">6. Multi-Model Strategy</a></li>
-            <li><a href="#mapping">7. Pipeline Mapping</a></li>
-            <li><a href="#nuclear-audit">8. Nuclear Audit</a></li>
-            <li><a href="#task-list">9. Optimization Task List</a></li>
-            <li><a href="#transformation">10. Before vs. After</a></li>
-            <li><a href="#conclusion">11. Conclusion</a></li>
+            <li><a href="#high-fidelity">5. High-Fidelity Strategy</a></li>
+            <li><a href="#best-practices">6. Best Practices Checklist</a></li>
+            <li><a href="#pipeline-strategy">7. Multi-Model Strategy</a></li>
+            <li><a href="#mapping">8. Pipeline Mapping</a></li>
+            <li><a href="#nuclear-audit">9. Nuclear Audit</a></li>
+            <li><a href="#task-list">10. Optimization Task List</a></li>
+            <li><a href="#transformation">11. Before vs. After</a></li>
+            <li><a href="#conclusion">12. Conclusion</a></li>
         </ul>
     </nav>
 
@@ -359,21 +360,21 @@
             <div class="meta-tags">
                 <span class="tag">Whitepaper</span>
                 <span class="tag">Diagnostics</span>
-                <span class="tag">SOTA Autonomous</span>
+                <span class="tag">High-Fidelity Hardened</span>
             </div>
             <h1>Nuclear Stability: AI Training Pathology Master Guide</h1>
             <p class="subtitle">A technical roadmap for recognizing and remediating convergence failures in production-grade restoration models.</p>
             
             <div class="author-info">
                 <span>Author: <b>Lem Treursić</b></span>
-                <span>Version: <b>1.0.0 (Nuclear-Hardened)</b></span>
+                <span>Version: <b>1.1.0 (High-Fidelity)</b></span>
                 <span>Date: <b>May 2026</b></span>
             </div>
         </header>
 
         <section id="abstract">
             <div class="abstract-box">
-                <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 19 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.</p>
+                <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 20 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.</p>
             </div>
         </section>
 
@@ -386,7 +387,7 @@
                     <thead>
                         <tr>
                             <th>Issue</th>
-                            <th>Context & Rationale</th>
+                            <th>When & Why it Happens</th>
                             <th>Recognition Metrics</th>
                             <th>Remediation Strategy</th>
                         </tr>
@@ -494,9 +495,21 @@
             <p><strong>Remedy:</strong> Reset optimizer state; use <strong>Lookahead Optimizer</strong>; or increase Momentum parameters.</p>
         </section>
 
+        <section id="high-fidelity">
+            <h2>5. High-Fidelity Strategy (v16.2.8)</h2>
+            <h3>The "Low-Resolution Blur" Pathology</h3>
+            <p><strong>The Issue:</strong> Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.</p>
+            <p><strong>Remedy:</strong> <strong>Mandatory High-Fidelity Floor</strong>. As of v16.2.8, all models must start at a minimum of <strong>224px</strong> or <strong>512px</strong> (Metric Scorers).</p>
+
+            <h3>Memory-Sentinel Drift</h3>
+            <p><strong>The Issue:</strong> Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.</p>
+            <p><strong>Remedy:</strong> <strong>Active Memory-Sentinel Probing</strong>. Decouple batch size from registry and probe hardware headroom before every resolution jump.</p>
+        </section>
+
         <section id="best-practices">
-            <h2>5. Best Practices Checklist</h2>
+            <h2>6. Best Practices Checklist</h2>
             <ul class="checklist">
+                <li><strong>High-Fidelity Floor:</strong> Never start below 224px. Low-res warm-up is a legacy artifact.</li>
                 <li><strong>Baseline First:</strong> Build a simple model first. If a complex one fails, the issue is data.</li>
                 <li><strong>Warm-up Strategy:</strong> Use a linear warm-up for the first 5% of training.</li>
                 <li><strong>AdamW over Adam:</strong> Decouple weight decay from gradient updates.</li>
@@ -505,7 +518,7 @@
         </section>
 
         <section id="pipeline-strategy">
-            <h2>6. Multi-Model Pipeline Strategy</h2>
+            <h2>7. Multi-Model Pipeline Strategy</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -521,7 +534,7 @@
                             <td><strong>A: Metric Scorers</strong></td>
                             <td><code>nima_aesthetic</code>, <code>nima_authenticity</code></td>
                             <td>SRCC > 0.90</td>
-                            <td>LR "Jolt" (1.5x) and switch to SWA at 65%.</td>
+                            <td>LR "Jolt" (1.5x) and SWA at 65% mark.</td>
                         </tr>
                         <tr>
                             <td><strong>B: Restoration</strong></td>
@@ -547,7 +560,7 @@
         </section>
 
         <section id="mapping">
-            <h2>7. Mapping Pathologies to Pipeline Stages</h2>
+            <h2>8. Mapping Pathologies to Pipeline Stages</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -560,25 +573,25 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Early (112px-224px)</strong></td>
+                            <td><strong>Foundation (224px-512px)</strong></td>
                             <td><strong>Exploding Gradients</strong></td>
                             <td>Loss spikes in first 50 steps.</td>
                             <td>Linear Warm-up & Grad Clipping.</td>
                         </tr>
                         <tr>
-                            <td><strong>Mid (384px-512px)</strong></td>
+                            <td><strong>Expansion (512px-768px)</strong></td>
                             <td><strong>Training Plateau</strong></td>
                             <td>Loss Delta < 0.001 per epoch.</td>
-                            <td><strong>LR Jolt</strong> (1.5x).</td>
+                            <td><strong>LR Jolt</strong> (1.5x) or Stride Threshold (0.75).</td>
                         </tr>
                         <tr>
-                            <td><strong>High-Res (640px+)</strong></td>
+                            <td><strong>Deepening (768px+)</strong></td>
                             <td><strong>Vanishing Gradients</strong></td>
                             <td>Norm falls to 10<sup>-7</sup>.</td>
                             <td>Switch to <strong>BFloat16</strong>.</td>
                         </tr>
                         <tr>
-                            <td><strong>Full Data (100%)</strong></td>
+                            <td><strong>Refinement (100% Data)</strong></td>
                             <td><strong>Overfitting</strong></td>
                             <td>Val metric diverges from Train.</td>
                             <td>Increase <strong>Dropout</strong> (0.3) & L2.</td>
@@ -589,10 +602,10 @@
         </section>
 
         <section id="nuclear-audit">
-            <h2>8. Nuclear Audit: Optimization Checklist</h2>
+            <h2>9. Nuclear Audit: Optimization Checklist</h2>
             <h3>🚀 High-Velocity "DO's"</h3>
             <ul class="checklist">
-                <li><strong>Memory-Sentinel Probing:</strong> Always use <code>batch_size: auto</code>.</li>
+                <li><strong>Memory-Sentinel Probing:</strong> Decouple <code>batch_size</code> from registry.</li>
                 <li><strong>NPP Loop Detection:</strong> Trust the Governor's "Recoil" logic.</li>
                 <li><strong>Atomic Save Protocol:</strong> Use the <code>.tmp</code> swap method.</li>
             </ul>
@@ -606,7 +619,7 @@
         </section>
 
         <section id="transformation">
-            <h2>10. SOTA Transformation: Before vs. After</h2>
+            <h2>11. SOTA Transformation: Before vs. After</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -618,29 +631,29 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Plateau Management</strong></td>
-                            <td>Manual waiting; high stagnation risk.</td>
-                            <td><strong>Propulsion Jolt:</strong> Auto-triggers 1.5x LR surge.</td>
+                            <td><strong>Fidelity Floor</strong></td>
+                            <td>64px-112px warm-up; blurred learning.</td>
+                            <td><strong>224px-512px Mandatory Floor</strong>.</td>
                         </tr>
                         <tr>
-                            <td><strong>Restoration Balance</strong></td>
-                            <td>PSNR effectively ignored.</td>
-                            <td><strong>Balanced Fidelity:</strong> PSNR (10) vs SSIM (40).</td>
+                            <td><strong>Batch Management</strong></td>
+                            <td>Static registry values; OOM risk.</td>
+                            <td><strong>Memory-Sentinel</strong>: Dynamic probing.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plateau Management</strong></td>
+                            <td>Manual waiting; high stagnation risk.</td>
+                            <td><strong>Propulsion Jolt:</strong> Auto-triggers 1.5x surge.</td>
                         </tr>
                         <tr>
                             <td><strong>Stability Guard</strong></td>
                             <td>Reactive (Post-epoch).</td>
-                            <td><strong>Proactive Sentinels:</strong> Real-time batch-level monitoring.</td>
+                            <td><strong>Proactive Sentinels:</strong> Real-time monitoring.</td>
                         </tr>
                         <tr>
-                            <td><strong>Visual Fidelity</strong></td>
-                            <td>Bilinear/Nearest.</td>
-                            <td><strong>LANCZOS Scaling:</strong> High-fidelity resizing.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hardware Mapping</strong></td>
-                            <td>Generic presets.</td>
-                            <td><strong>Profile Mapping:</strong> VRAM-aware configs (4GB vs 16GB).</td>
+                            <td><strong>Stride Protocol</strong></td>
+                            <td>Fixed 0.90 barrier; slow early progress.</td>
+                            <td><strong>Dynamic Thresholds</strong> (0.75 / 0.90).</td>
                         </tr>
                     </tbody>
                 </table>
@@ -649,12 +662,12 @@
 
         <section id="conclusion">
             <div class="conclusion">
-                <h2>11. Conclusion: The Indestructible Paradigm</h2>
+                <h2>12. Conclusion: The Indestructible Paradigm</h2>
                 <p>The transition from manual hyperparameter tuning to autonomous, <strong>"Nuclear-Hardened"</strong> training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the <strong>LemGendary</strong> ecosystem has achieved a state of indestructible convergence.</p>
                 <p>The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware.</p>
             </div>
             <p style="text-align: center; margin-top: 40px; color: var(--accent-primary); font-family: 'Outfit', sans-serif; font-weight: 700;">
-                Status: SOTA-Autonomous & Nuclear-Hardened.
+                Status: SOTA-Autonomous & High-Fidelity Hardened.
             </p>
         </section>
     </main>

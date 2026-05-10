@@ -1,13 +1,13 @@
-# Nuclear Stability: AI Training Pathology Master Guide (v1.0)
+# Nuclear Stability: AI Training Pathology Master Guide (v1.1)
 
 **Author**: Lem Treursić  
-**Version**: 1.0.0 - SOTA Autonomous (2026 Release)  
+**Version**: 1.1.0 - High-Fidelity Hardened (v16.2.8 Release)  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
 
 ## 1. Abstract
-The **LemGendary Training Suite** operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the **"Nuclear Stability" protocol**. By cataloging 19 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.
+The **LemGendary Training Suite** operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the **"Nuclear Stability" protocol**. By cataloging 20 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.
 
 ---
 
@@ -16,13 +16,14 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
 2. [The Diagnostic Master Table](#3-the-diagnostic-master-table)
 3. [The "Fast Audit" Framework (Diagnostics)](#4-the-fast-audit-framework-diagnostics)
 4. [Modern 2026 Pathologies](#5-modern-2026-pathologies)
-5. [Best Practices Checklist](#6-best-practices-checklist)
-6. [Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
-7. [Mapping Pathologies to Pipeline Stages](#8-mapping-pathologies-to-pipeline-stages)
-8. [Nuclear Audit: The Optimization Checklist](#9-nuclear-audit-the-optimization-checklist)
-9. [SOTA Suite Optimization Task List](#10-sota-suite-optimization-task-list)
-10. [SOTA Transformation: Before vs. After](#11-sota-transformation-before-vs-after)
-11. [Conclusion: The Indestructible Convergence Paradigm](#12-conclusion-the-indestructible-convergence-paradigm)
+5. [High-Fidelity Strategy (v16.2.8)](#6-high-fidelity-strategy-v1628)
+6. [Best Practices Checklist](#7-best-practices-checklist)
+7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
+8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
+9. [Nuclear Audit: The Optimization Checklist](#10-nuclear-audit-the-optimization-checklist)
+10. [SOTA Suite Optimization Task List](#11-sota-suite-optimization-task-list)
+11. [SOTA Transformation: Before vs. After](#12-sota-transformation-before-vs-after)
+12. [Conclusion: The Indestructible Convergence Paradigm](#13-conclusion-the-indestructible-convergence-paradigm)
 
 ---
 
@@ -74,7 +75,22 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 
 ---
 
-## 6. Best Practices Checklist
+## 6. High-Fidelity Strategy (v16.2.8)
+
+### The "Low-Resolution Blur" Pathology
+*   **The Issue**: Initializing training at ultra-low resolutions (e.g., 64px or 128px) to speed up "warm-up" often results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts even after the resolution ladder increases to 512px.
+*   **Identification**: High validation loss at high resolutions; model generates "hallucinated" coarse features where sharp textures should exist.
+*   **Remedy**: **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
+
+### Memory-Sentinel Drift
+*   **The Issue**: Static batch sizes fail to account for background OS/Browser VRAM usage, causing "OOM-Drift" during long training runs.
+*   **Identification**: Training proceeds smoothly for 10 epochs, then crashes suddenly with a `CUDA out of memory` error on a previously stable resolution.
+*   **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
+
+---
+
+## 7. Best Practices Checklist
+- [x] **High-Fidelity Floor**: Never start below 224px. Low-res warm-up is a legacy artifact.
 - [x] **Baseline First**: Build a simple model first. If a complex one fails, the issue is data.
 - [x] **Warm-up Strategy**: Use a linear warm-up for the first 5% of training.
 - [x] **AdamW over Adam**: Decouple weight decay from gradient updates.
@@ -82,34 +98,34 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 
 ---
 
-## 7. Multi-Model Pipeline Strategy
+## 8. Multi-Model Pipeline Strategy
 
 Based on the **`unified_models_v2.yaml`** stack, these are the optimal progression paths to SOTA.
 
 | Model Group | Key Models | SOTA Goal | Progression Strategy | Plateau Recognition & Breakthrough |
 | :--- | :--- | :--- | :--- | :--- |
-| **Group A: Metric Scorers** | `nima_aesthetic`, `nima_authenticity` | SRCC > 0.90, Accuracy > 0.95 | **Res**: 112→224→384→512→640<br>**Fraction**: 0.10→0.75→1.0 | **Plateau**: SRCC flatlines at 0.70.<br>**Tactic**: LR "Jolt" (1.5x) and switch to SWA at 65% training mark. |
-| **Group B: Restoration** | `nafnet_denoising`, `film_restorer` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 128→256→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty (Dynamic Noise) at 512px. |
-| **Group C: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 256→512→768→1024<br>**Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant.<br>**Tactic**: Switch to EMA (Exponential Moving Average) weights. |
+| **Group A: Metric Scorers** | `nima_aesthetic`, `nima_authenticity` | SRCC > 0.90, Accuracy > 0.95 | **Res**: 512→640→768<br>**Fraction**: 0.25→0.75→1.0 | **Plateau**: SRCC flatlines at 0.70.<br>**Tactic**: LR "Jolt" (1.5x) and switch to SWA at 65% training mark. |
+| **Group B: Restoration** | `nafnet_denoising`, `film_restorer` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 256→384→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty (Dynamic Noise) at 512px. |
+| **Group C: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 512→768→1024<br>**Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant.<br>**Tactic**: Switch to EMA (Exponential Moving Average) weights. |
 | **Group D: Vision-Language** | `vlm_llava`, `vlm_blip2` | Caption Accuracy | **Res**: 224→336→448<br>**Fraction**: 0.10→0.50 (Polish) | **Plateau**: Model repetitive or hallucinating.<br>**Tactic**: Reset Optimizer Momentum; apply Softmax Temperature (0.05). |
 
 ---
 
-## 8. Mapping Pathologies to Pipeline Stages
+## 9. Mapping Pathologies to Pipeline Stages
 
 | Pipeline Stage | Likely Pathology | Warning Sign | Correction Strategy |
 | :--- | :--- | :--- | :--- |
-| **Early (112px-224px)** | **Exploding Gradients** | Loss spikes or NaN in first 50 steps. | Implement **Linear Warm-up** (1k steps) and Grad Clipping. |
-| **Mid (384px-512px)** | **Training Plateau** | Loss decreases by less than 0.001 per epoch. | **LR Jolt** (1.5x) or increase Batch Size (Simulated). |
-| **High-Res (640px+)** | **Vanishing Gradients** | Gradient norm falls to $10^{-7}$; early layers stop updating. | Switch to **BFloat16** to prevent underflow; use LayerNorm. |
-| **Full Data (100%)** | **Overfitting** | Validation metric diverges from Training trend. | Increase **Dropout** to 0.3; implement **L2 Weight Decay**. |
+| **Foundation (224px-512px)** | **Exploding Gradients** | Loss spikes or NaN in first 50 steps. | Implement **Linear Warm-up** (1k steps) and Grad Clipping. |
+| **Expansion (512px-768px)** | **Training Plateau** | Loss decreases by less than 0.001 per epoch. | **LR Jolt** (1.5x) or use **Dynamic Stride Thresholds** (0.75). |
+| **Deepening (768px+)** | **Vanishing Gradients** | Gradient norm falls to $10^{-7}$; early layers stop updating. | Switch to **BFloat16** to prevent underflow; use LayerNorm. |
+| **Refinement (100% Data)** | **Overfitting** | Validation metric diverges from Training trend. | Increase **Dropout** to 0.3; implement **L2 Weight Decay**. |
 
 ---
 
-## 9. Nuclear Audit: The Optimization Checklist
+## 10. Nuclear Audit: The Optimization Checklist
 
 ### 🚀 High-Velocity "DO's" (Keep Doing These)
-- [x] **Memory-Sentinel Probing**: Always use `batch_size: auto` to let the hardware decide the limit.
+- [x] **Memory-Sentinel Probing**: Decouple `batch_size` from registry to allow autonomous peak hardware utilization.
 - [x] **NPP Loop Detection**: Trust the Governor's "Recoil" logic to save the manifold during turbulence.
 - [x] **Atomic Save Protocol**: Use the `.tmp` swap method to prevent corrupted weights.
 
@@ -127,12 +143,12 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **Loss = NaN** | FP16/FP8 Overflow | Switch to **BFloat16** or increase `logit_clamp` to `10.0`. |
 | **SRCC < 0.5** (Epoch 10) | Numerical Recoil | Reset Optimizer; reduce `softmax_temp` (make it sharper). |
 | **PSNR flat @ 24.0** | SSIM/LPIPS Dominance | Increase PSNR weight in `losses.py` or reduce `lpips` weight. |
-| **VRAM Paging (Lag)** | Memory-Sentinel Drift | Reduce `s_mult` safety margin in `train.py` line 365. |
+| **VRAM Paging (Lag)** | Memory-Sentinel Drift | Reduce `s_mult` safety margin in `train.py`. |
 | **Divergent Loss** | Data Leakage | Audit `MultiTaskDataset` for train/val intersection. |
 
 ---
 
-## 10. SOTA Suite Optimization Task List
+## 11. SOTA Suite Optimization Task List
 
 - [x] **Task 1.1: Metric Rebalancing** (Target: `train.py`)
 - [x] **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
@@ -181,58 +197,32 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 
 ---
 
-## 11. SOTA Transformation: Before vs. After
+## 12. SOTA Transformation: Before vs. After
 
 | Feature | **Before Intervention** (Passive) | **After Intervention** (Autonomous) |
 | :--- | :--- | :--- |
+| **Fidelity Floor** | 64px-112px warm-up; risks blurred feature learning. | **224px-512px Mandatory Floor**: Ensures high-frequency detection. |
+| **Batch Management** | Static registry values; prone to OOM on mixed hardware. | **Memory-Sentinel**: Dynamic VRAM probing for peak utilization. |
 | **Plateau Management** | Manual waiting or slow decay; high stagnation risk. | **Propulsion Jolt**: Auto-triggers 1.5x LR surge to break local minima. |
 | **Restoration Balance** | PSNR (1) vs SSIM (40); Metric effectively ignored. | **Balanced Fidelity**: PSNR (10) vs SSIM (40); SOTA parity achieved. |
-| **Mission Runway** | Static scheduler; zero LR trap during Res-Jumps. | **Dynamic Re-Anchoring**: Scheduler re-syncs steps on every jump. |
 | **Stability Guard** | Reactive; issues identified after epoch failure. | **Proactive Sentinels**: Real-time batch-level gradient/loss monitoring. |
 | **Stabilization Lock** | Blind 3-epoch lock; risk of undetected collapse. | **Emergency Breakout**: Shield shatters if quality drops >10%. |
-| **Plateau Jolt** | Passive; risk of infinite LR propulsion loops. | **Capped Propulsion**: 5-epoch cooldown between Jolts. |
 | **NPP Loop Mitigation** | Stagnation at 256px due to "Momentum Shock". | **Meditation Mode**: Mandatory 5-epoch cooldown after recoil. |
 | **VLM Foundation** | Brittle (0.05 Temp); early divergence risk. | **Auto-Sharpening**: 98% per-epoch cooling toward min_temp. |
 | **Momentum Physics** | Persistent; risk of "Momentum Shock" on jumps. | **Adaptive Dampening**: Buffers cooled 20% on manifold shifts. |
 | **VRAM Hygiene** | Fragmented; high OOM risk on resolution jumps. | **Proactive De-frag**: Atomic `empty_cache()` on spatial jumps. |
-| **Weight Decay** | Global L2; risks over-smoothing Biases/Norms. | **Surgical L2**: Regularization limited to Kernels only. |
-| **Device Parity** | Hardcoded CUDA; brittle on mixed hardware. | **Dynamic Mapping**: Agnostic device-binding for LPIPS/NIMAs. |
-| **Notebook Architecture** | Monolithic cells; hard to debug Git/VRAM errors. | **Atomic Fragmentation**: Independent cells for Sync, Data, and Train. |
-| **Hardware Guard** | None; risk of running on CPU by mistake. | **Pre-flight Sentinel**: Mandatory GPU/VRAM health check cell. |
-| **Data Resolution** | Manual symlinking; error-prone on Kaggle. | **Auto-Symlinker**: Dynamic search and linking for model-specific data. |
-| **Security** | PATs exposed in Git URL strings. | **Stealth Masking**: Token-safe environment injection. |
-| **Model READMEs** | Static text; outdated usage snippets. | **Visual Topology**: Mermaid-diagram integration for architecture. |
-| **Metric Visibility**| Hidden in text blocks. | **Nuclear Badges**: SOTA/Hardware/Status badges at top of file. |
-| **Usage Accuracy** | Manual; risks hardware mapping errors. | **v16.0 Snippets**: Hardware-aware, weights-safe initialization code. |
-| **Artifact Sync** | Passive GitHub Releases (ZIP only). | **Atomic Git-LFS**: Real-time repo updates with LFS binary support. |
-| **History Guard** | Risk of overwriting CSV logs. | **Merge-Persistence**: Reads remote metrics before writing local data. |
-| **PAT Security** | Visible in Git CLI error logs. | **Diagnostic Stealth**: Automated token masking in subprocess pipes. |
-| **Pipeline Stability** | Corrupt images crash training. | **Fallback Shield**: Returns neutral-gray tensor on I/O failure. |
-| **Visual Fidelity** | INTER_NEAREST / BILINEAR. | **LANCZOS Scaling**: Area-aware high-fidelity resizing for SOTA. |
-| **Data Integrity** | Blind sampling. | **Stratified Insights**: Class-level distribution analytics for balancing. |
+| **Data Resolution** | INTER_NEAREST / BILINEAR. | **LANCZOS Scaling**: Area-aware high-fidelity resizing for SOTA. |
 | **Logit Stability** | Raw outputs; prone to overflow in FP16. | **Soft-Clamping**: ±10.0 logit range guard for resilient gradients. |
-| **Model Creation** | Monolithic if/elif factory. | **Dynamic Registry**: Decorator-based architecture plug-in system. |
-| **Head Sharpness** | Fixed or external softmax. | **Autonomous Sharpening**: Model-level temp scaling for SOTA fidelity. |
-| **Fleet Management**| Manual error tracking. | **Failure Matrix**: JSON-based persistent error reporting across phases. |
-| **VRAM Parity** | Instant process-switching. | **Driver Cooldown**: 2s buffer for full physical memory reclamation. |
-| **SOTA Continuity** | Hard-coded artifact skipping. | **Force Protocol**: `--force` flag to re-train established SOTA models. |
-| **Config Schema** | Flat YAML; mixed concerns. | **Nuclear v16.0 Schema**: Grouped dictionary hierarchy (Governor/Fleet). |
-| **Governor Tuning** | Hardcoded thresholds (10%). | **Exposed Tuning**: User-definable breakout/sharpening/jolt triggers. |
-| **Hardware Mapping**| Generic presets. | **Profile Mapping**: Explicit VRAM-aware configs (4GB vs 16GB+). |
 | **Session Resume** | Brittle; fails if `.processing` lock exists. | **Atomic Clearance**: Automatic purging of stale session locks. |
-| **Hub Diagnostics** | "Clone Failed" (Generic). | **Verbose Recovery**: Detailed stderr reporting for auth/network issues. |
-| **Matrix Sync** | Manual notebook updates. | **Global Refresh**: Automated 46-model notebook synchronization. |
 | **Resumption Shield** | Momentum shock causes false recoils. | **Auto-Shield**: Ignores quality drops on first epoch of new session. |
 | **Stride Protocol** | Fixed 0.90 barrier; slow early progress. | **Dynamic Thresholds**: 0.75 for Foundation, 0.90 for Refinement. |
-| **Recovery Velocity** | Fixed 5-epoch penalty; slow restoration. | **Adaptive Meditation**: Rapid quality gains shorten cooldown by 2x. |
-| **Metric Standard** | Fragmented CSV schemas across fleet. | **Universal 21-Col**: Unified telemetry across all 46 models. |
 
 ---
 
-## 12. Conclusion: The Indestructible Convergence Paradigm
+## 13. Conclusion: The Indestructible Convergence Paradigm
 
 The transition from manual hyperparameter tuning to autonomous, **"Nuclear-Hardened"** training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the **LemGendary** ecosystem has achieved a state of indestructible convergence. 
 
 The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware. This framework not only secures current SOTA metrics but provides the foundation for the next generation of real-time, browser-native restoration engines.
 
-**Status: The LemGendary Training Suite is now SOTA-Autonomous & Nuclear-Hardened.**
+**Status: The LemGendary Training Suite is now SOTA-Autonomous & High-Fidelity Hardened.**
