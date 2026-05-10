@@ -20,6 +20,8 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
    * [The "Low-Resolution Blur" Pathology](#the-low-resolution-blur-pathology)
    * [Memory-Sentinel Drift](#memory-sentinel-drift)
    * [Atomic Hardware Re-Auditing](#atomic-hardware-re-auditing)
+   * [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
+   * [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -92,6 +94,16 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 *   **Identification**: Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
 *   **Remedy**: **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
 
+### The Serial Recovery Shield (v17.2)
+*   **The Issue**: On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.
+*   **Identification**: Training bar stops moving; CPU usage drops to 0%; script does not respond to `Ctrl+C`.
+*   **Remedy**: **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
+
+### The Sub-Nuclear 4GB Lockdown (v22.0)
+*   **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.
+*   **Identification**: "Shared GPU Memory" in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
+*   **Remedy**: **Iron-Clamp Protocol**. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.
+
 ---
 
 ## 7. Best Practices Checklist
@@ -157,7 +169,9 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 
 - [x] **Task 1.1: Metric Rebalancing** (Target: `train.py`)
 - [x] **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
-- [x] **Task 1.3: VLM Temperature Warm-up** (Target: `unified_models_v2.yaml`)
+- [x] **VLM Temperature Warm-up**: Update `unified_models_v2.yaml` to sharpen from 0.1 to 0.05.
+- [x] **Terminal Progress Guard (v17.2)**: Implement epoch-advancing logic for checkpoints at ≥99.9% progress.
+- [x] **Shared Memory Guard (v18.0)**: Detect and clamp batch size if Dedicated VRAM is exhausted.
 - [x] **Task 2.1: The Propulsion Jolt** (Target: `optimization_engine.py`)
 - [x] **Task 2.2: Hot-Reload DataLoader** (Target: `train.py`)
 - [x] **Task 3.1: Gradient Sentinel Injection** (Target: `train.py`)
