@@ -344,7 +344,13 @@
             <li><a href="#master-table">2. Diagnostic Master Table</a></li>
             <li><a href="#audit-framework">3. Fast Audit Framework</a></li>
             <li><a href="#modern-pathologies">4. Modern 2026 Pathologies</a></li>
-            <li><a href="#high-fidelity">5. High-Fidelity Strategy</a></li>
+            <li><a href="#high-fidelity">5. High-Fidelity Strategy</a>
+                <ul class="sub-item" style="list-style: none;">
+                    <li><a href="#blur-pathology">· Blur Pathology</a></li>
+                    <li><a href="#sentinel-drift">· Sentinel Drift</a></li>
+                    <li><a href="#atomic-audit">· Atomic Re-Audit</a></li>
+                </ul>
+            </li>
             <li><a href="#best-practices">6. Best Practices Checklist</a></li>
             <li><a href="#pipeline-strategy">7. Multi-Model Strategy</a></li>
             <li><a href="#mapping">8. Pipeline Mapping</a></li>
@@ -504,6 +510,11 @@
             <h3>Memory-Sentinel Drift</h3>
             <p><strong>The Issue:</strong> Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.</p>
             <p><strong>Remedy:</strong> <strong>Active Memory-Sentinel Probing</strong>. Decouple batch size from registry and probe hardware headroom before every resolution jump.</p>
+
+            <h3 id="atomic-audit">Atomic Hardware Re-Auditing</h3>
+            <p><strong>The Issue:</strong> Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.</p>
+            <p><strong>Identification:</strong> Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.</p>
+            <p><strong>Remedy:</strong> <strong>Atomic Re-Audit Protocol</strong>. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.</p>
         </section>
 
         <section id="best-practices">
@@ -654,6 +665,11 @@
                             <td><strong>Stride Protocol</strong></td>
                             <td>Fixed 0.90 barrier; slow early progress.</td>
                             <td><strong>Dynamic Thresholds</strong> (0.75 / 0.90).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hardware Auditing</strong></td>
+                            <td>Single probe at startup; sub-optimal scaling.</td>
+                            <td><strong>Atomic Re-Audit</strong>: Real-world probe on every spatial jump.</td>
                         </tr>
                     </tbody>
                 </table>

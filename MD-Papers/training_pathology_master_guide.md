@@ -17,6 +17,9 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
 3. [The "Fast Audit" Framework (Diagnostics)](#4-the-fast-audit-framework-diagnostics)
 4. [Modern 2026 Pathologies](#5-modern-2026-pathologies)
 5. [High-Fidelity Strategy (v16.2.8)](#6-high-fidelity-strategy-v1628)
+   * [The "Low-Resolution Blur" Pathology](#the-low-resolution-blur-pathology)
+   * [Memory-Sentinel Drift](#memory-sentinel-drift)
+   * [Atomic Hardware Re-Auditing](#atomic-hardware-re-auditing)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -82,10 +85,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 *   **Identification**: High validation loss at high resolutions; model generates "hallucinated" coarse features where sharp textures should exist.
 *   **Remedy**: **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
 
-### Memory-Sentinel Drift
-*   **The Issue**: Static batch sizes fail to account for background OS/Browser VRAM usage, causing "OOM-Drift" during long training runs.
-*   **Identification**: Training proceeds smoothly for 10 epochs, then crashes suddenly with a `CUDA out of memory` error on a previously stable resolution.
 *   **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
+
+### Atomic Hardware Re-Auditing
+*   **The Issue**: Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
+*   **Identification**: Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
+*   **Remedy**: **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
 
 ---
 
@@ -210,6 +215,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **NPP Loop Mitigation** | Stagnation at 256px due to "Momentum Shock". | **Meditation Mode**: Mandatory 5-epoch cooldown after recoil. |
 | **VLM Foundation** | Brittle (0.05 Temp); early divergence risk. | **Auto-Sharpening**: 98% per-epoch cooling toward min_temp. |
 | **Momentum Physics** | Persistent; risk of "Momentum Shock" on jumps. | **Adaptive Dampening**: Buffers cooled 20% on manifold shifts. |
+| **Hardware Auditing** | Single probe at startup; sub-optimal scaling. | **Atomic Re-Audit**: Real-world probe on every spatial jump. |
 | **VRAM Hygiene** | Fragmented; high OOM risk on resolution jumps. | **Proactive De-frag**: Atomic `empty_cache()` on spatial jumps. |
 | **Data Resolution** | INTER_NEAREST / BILINEAR. | **LANCZOS Scaling**: Area-aware high-fidelity resizing for SOTA. |
 | **Logit Stability** | Raw outputs; prone to overflow in FP16. | **Soft-Clamping**: ±10.0 logit range guard for resilient gradients. |
