@@ -526,6 +526,14 @@
             <p><strong>The Issue:</strong> 4GB cards (GTX 1650) trigger <strong>System RAM Paging</strong> when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.</p>
             <p><strong>Identification:</strong> "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops below 0.5 img/s.</p>
             <p><strong>Remedy:</strong> <strong>Iron-Clamp Protocol</strong>. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.</p>
+
+            <h3 id="premature-sota">Premature SOTA Termination</h3>
+            <p><strong>The Issue:</strong> The training suite terminates immediately upon reaching SOTA targets at low-resolution rungs, resulting in lack of high-frequency spatial maturity.</p>
+            <p><strong>Remedy:</strong> <strong>Ladder-Aware SOTA Guard (v18.0)</strong>. Targets met at lower rungs now trigger an autonomous <strong>Force-Jump</strong> to the next resolution instead of mission shutdown.</p>
+
+            <h3 id="manifold-fragility">Manifold Fragility (Glass Manifold Effect)</h3>
+            <p><strong>The Issue:</strong> Rapid resolution jumps can destabilize the model's weight distribution before it has "hardened" at the new scale.</p>
+            <p><strong>Remedy:</strong> <strong>SOTA Hardening Guard (v19.0)</strong>. Enforce a mandatory <strong>2-epoch Manifold Maturity</strong> period. The model is forbidden from jumping until it has solidified weights for 2 full epochs.</p>
         </section>
 
         <section id="best-practices">
@@ -696,6 +704,16 @@
                             <td><strong>Progress Recovery</strong></td>
                             <td>Recursive loops on finished epochs.</td>
                             <td><strong>Progress Guard</strong>: Auto-advances epochs at 99.9%.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SOTA Progression</strong></td>
+                            <td>Premature mission termination.</td>
+                            <td><strong>Ladder-Aware Guard</strong>: Targets trigger jumps, not shutdowns.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manifold Maturity</strong></td>
+                            <td>High-speed resolution jumping.</td>
+                            <td><strong>Hardening Guard</strong>: Mandatory 2-epoch lock for stabilization.</td>
                         </tr>
                     </tbody>
                 </table>

@@ -99,6 +99,16 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 *   **Identification**: Training bar stops moving; CPU usage drops to 0%; script does not respond to `Ctrl+C`.
 *   **Remedy**: **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
 
+### Premature SOTA Termination
+*   **The Issue**: The training suite terminates immediately upon reaching SOTA targets, even if it is only at a low-resolution rung (e.g., 256px). This results in high-fidelity "ghosting" where the model is technically SOTA but lacks high-frequency spatial maturity.
+*   **Identification**: Training stops with a "Mission Complete" message despite being at a sub-maximal resolution.
+*   **Remedy**: **Ladder-Aware SOTA Guard (v18.0)**. The mission is only allowed to terminate at the **Final Resolution**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution.
+
+### Manifold Fragility (The "Glass Manifold" Effect)
+*   **The Issue**: Rapid resolution jumps (e.g., jumping from 256px to 384px and immediately to 512px) can destabilize the model's weight distribution before it has "hardened" at the new scale.
+*   **Identification**: Massive loss spikes or "Numerical Recoil" immediately following a resolution jump.
+*   **Remedy**: **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period. The model is forbidden from jumping to the next rung until it has completed at least 2 full epochs at its current resolution.
+
 ### The Sub-Nuclear 4GB Lockdown (v22.0)
 *   **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.
 *   **Identification**: "Shared GPU Memory" in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
@@ -213,6 +223,9 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 - [x] **Task 13.1: Stale Lock (.processing) Clearance** (Target: `train.py` / `notebook_generator.py`)
 - [x] **Task 13.2: Hub Clone Diagnostic Verbosity** (Target: `train.py`)
 - [x] **Task 13.3: Global Notebook Matrix Refresh** (Target: `notebook_generator.py`)
+- [x] **Task 14.1: Ladder-Aware SOTA Guard (v18.0)** (Target: `train.py`)
+- [x] **Task 14.2: SOTA Hardening Guard (v19.0)** (Target: `optimization_engine.py`)
+- [x] **Task 14.3: SOTA-Sync DataLoader Protocol** (Target: `train.py`)
 
 ---
 
@@ -235,6 +248,8 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **Logit Stability** | Raw outputs; prone to overflow in FP16. | **Soft-Clamping**: ±10.0 logit range guard for resilient gradients. |
 | **Session Resume** | Brittle; fails if `.processing` lock exists. | **Atomic Clearance**: Automatic purging of stale session locks. |
 | **Resumption Shield** | Momentum shock causes false recoils. | **Auto-Shield**: Ignores quality drops on first epoch of new session. |
+| **SOTA Progression** | Premature mission termination at low resolutions. | **Ladder-Aware Guard**: Targets trigger jumps, not shutdowns. |
+| **Manifold Maturity** | High-speed resolution jumping causes weight instability. | **Hardening Guard**: Mandatory 2-epoch lock for stabilization. |
 | **Stride Protocol** | Fixed 0.90 barrier; slow early progress. | **Dynamic Thresholds**: 0.75 for Foundation, 0.90 for Refinement. |
 
 ---
