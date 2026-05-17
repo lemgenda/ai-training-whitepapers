@@ -483,6 +483,7 @@
                     <ul class="sub-item">
                         <li><a href="#attention">3.1 Downsampled Global Attention</a></li>
                         <li><a href="#task-ingestion">3.2 Dynamic Filename Task Ingestion</a></li>
+                        <li><a href="#validation-expansion">3.3 Dynamic Validation Sharding & Auto-Expansion</a></li>
                     </ul>
                 </li>
                 <li><a href="#deployment">4. Deployment Strategy</a></li>
@@ -587,6 +588,15 @@
                     <li>Instantiates a regex-driven analysis of compiled physical image filenames.</li>
                     <li>Maps physical compilation tags (e.g. <code>"nafnetdebluring"</code> &rarr; <code>"deblur"</code>, <code>"mirnetlowlight"</code> &rarr; <code>"lowlight"</code>) natively back to task indices.</li>
                     <li>Passes explicit <code>task_idx</code> targets to the <code>CombinedLoss</code> CrossEntropy classifier during training, forcing proper multi-head optimization.</li>
+                </ul>
+            </div>
+
+            <div class="card" id="validation-expansion">
+                <h3>3.3 Dynamic Validation Sharding & Auto-Expansion</h3>
+                <p>To balance computational efficiency during optimization with rigorous quality assurance, the training suite implements a dual-mode validation regime:</p>
+                <ul>
+                    <li><strong>Active Training Phases (Foundation, Expansion):</strong> Validation is constrained to a deterministic <strong>30% subset</strong> using a fixed random seed. Because evaluating high-fidelity perceptual metrics (LPIPS/FID) is highly compute-intensive, this sharding provides a <strong>3x validation speedup</strong>. The fixed seed ensures that the metrics baseline remains mathematically stable across epochs for the Governor's plateau-detection calculations.</li>
+                    <li><strong>Refinement Phase:</strong> Once the model achieves maximum resolution and 100% training dataset fraction, the validation loader automatically auto-expands to <strong>100% (the full validation dataset)</strong>. This guarantees that final model checkpoints undergo a complete generalizability audit before production WebGPU deployment, protecting against local subset overfitting.</li>
                 </ul>
             </div>
         </section>

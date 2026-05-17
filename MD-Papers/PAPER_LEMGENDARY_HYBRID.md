@@ -16,6 +16,7 @@
 3. [Critical Architectural Optimizations](#3-critical-architectural-optimizations)
    - [3.1 Downsampled Global Attention (OOM Remediation)](#31-downsampled-global-attention-oom-remediation)
    - [3.2 Dynamic Filename Task Ingestion](#32-dynamic-filename-task-ingestion)
+   - [3.3 Dynamic Validation Sharding & Auto-Expansion](#33-dynamic-validation-sharding--auto-expansion)
 4. [Deployment Strategy & WebGPU Compatibility](#4-deployment-strategy--webgpu-compatibility)
 5. [Conclusion](#5-conclusion)
 
@@ -86,9 +87,17 @@ This maintains 100% checkpoint compatibility with existing weights while renderi
 During dataset consolidation, multi-task models ingest millions of composite images. A critical failure mode discovered was **Task-Index Blindness**, where the loss engine received a static task label (e.g. `"restoration"` globally), locking the routing classifier into a single head and halting the optimization of secondary heads.
 
 We implemented the **Dynamic Task-Index Extractor**:
+
 - Instantiates a regex-driven analysis of compiled physical image filenames.
 - Maps physical compilation tags (`nafnetdebluring` $\rightarrow$ `deblur`, `mirnetlowlight` $\rightarrow$ `lowlight`, `ffanetindoor` $\rightarrow$ `dehaze`) natively back to task indices.
 - Passes explicit `task_idx` targets to the `CombinedLoss` CrossEntropy classifier during training, forcing proper multi-head optimization.
+
+### 3.3 Dynamic Validation Sharding & Auto-Expansion
+
+To balance computational efficiency during optimization with rigorous quality assurance, the training suite implements a dual-mode validation regime:
+
+- **Active Training Phases (Foundation, Expansion)**: Validation is constrained to a deterministic **30% subset** using a fixed random seed. Because evaluating high-fidelity perceptual metrics (LPIPS/FID) is highly compute-intensive, this sharding provides a **3x validation speedup**. The fixed seed ensures that the metrics baseline remains mathematically stable across epochs for the Governor's plateau-detection calculations.
+- **Refinement Phase**: Once the model achieves maximum resolution and 100% training dataset fraction, the validation loader automatically auto-expands to **100% (the full validation dataset)**. This guarantees that final model checkpoints undergo a complete generalizability audit before production WebGPU deployment, protecting against local subset overfitting.
 
 ---
 
