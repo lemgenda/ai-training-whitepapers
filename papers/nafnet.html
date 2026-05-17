@@ -304,12 +304,16 @@
                 padding-left: 20px;
             }
             .toc-sidebar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
                 display: none;
             }
         }
 
         /* --- Sticky TOC Sidebar --- */
         .toc-sidebar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
             position: fixed;
             left: 20px;
             top: 40px;
@@ -443,7 +447,12 @@
             background: var(--accent-color);
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
         }
-    </style>
+    
+        /* Hide scrollbar for Chrome, Safari, and Opera */
+        .toc-sidebar::-webkit-scrollbar {
+            display: none;
+        }
+        </style>
 </head>
 <body>
     <div class="container">
@@ -467,7 +476,7 @@
         </header>
 
         <nav class="toc-sidebar">
-            <a href="https://lemgenda.hr" target="_blank" class="toc-brand">
+            <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
             <h4>Navigation Matrix</h4>
