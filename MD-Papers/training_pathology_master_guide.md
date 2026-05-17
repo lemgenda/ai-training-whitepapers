@@ -7,11 +7,13 @@
 ---
 
 ## 1. Abstract
+
 The **LemGendary Training Suite** operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the **"Nuclear Stability" protocol**. By cataloging 20 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.
 
 ---
 
 ## 2. Table of Contents
+
 1. [Abstract](#1-abstract)
 2. [The Diagnostic Master Table](#3-the-diagnostic-master-table)
 3. [The "Fast Audit" Framework (Diagnostics)](#4-the-fast-audit-framework-diagnostics)
@@ -22,6 +24,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
    * [Atomic Hardware Re-Auditing](#atomic-hardware-re-auditing)
    * [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
    * [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
+   * [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -55,73 +58,88 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 
 To recognize these issues in under 5 minutes of monitoring, observe these three critical "Nuclear" metrics:
 
-1.  **The Gradient Global Norm**:
-    *   **Healthy**: Stable, non-zero trend (usually 0.1 to 5.0).
-    *   **Exploding**: Vertical climb to 100+ followed by NaN.
-    *   **Vanishing**: Flat line at $10^{-6}$ or lower.
-2.  **Activation Sparsity**:
-    *   Monitor the percentage of zeros in your layer outputs. If a layer is >80% sparse (dead neurons), your initialization is too aggressive or your LR is too high.
-3.  **Weight-to-Update Ratio**:
-    *   Calculate $|\Delta w| / |w|$. For stable training, this ratio should be approximately **$10^{-3}$**. If it is $10^{-1}$, your updates are too violent (Exploding). If it is $10^{-5}$, you are "Stagnating."
+1. **The Gradient Global Norm**:
+    * **Healthy**: Stable, non-zero trend (usually 0.1 to 5.0).
+    * **Exploding**: Vertical climb to 100+ followed by NaN.
+    * **Vanishing**: Flat line at $10^{-6}$ or lower.
+2. **Activation Sparsity**:
+    * Monitor the percentage of zeros in your layer outputs. If a layer is >80% sparse (dead neurons), your initialization is too aggressive or your LR is too high.
+3. **Weight-to-Update Ratio**:
+    * Calculate $|\Delta w| / |w|$. For stable training, this ratio should be approximately **$10^{-3}$**. If it is $10^{-1}$, your updates are too violent (Exploding). If it is $10^{-5}$, you are "Stagnating."
 
 ---
 
 ## 5. Modern 2026 Pathologies
 
 ### Mixed Precision Underflow (FP16/FP8)
-*   **The Issue**: Gradients are so small they become zero in 16-bit or 8-bit precision.
-*   **Identification**: Global gradient norm is exactly `0.0` but weights are not zero.
-*   **Remedy**: Increase **Loss Scale** (e.g., `scaler.scale(loss)`) or switch to `BFloat16` which has a larger dynamic range.
+
+* **The Issue**: Gradients are so small they become zero in 16-bit or 8-bit precision.
+* **Identification**: Global gradient norm is exactly `0.0` but weights are not zero.
+* **Remedy**: Increase **Loss Scale** (e.g., `scaler.scale(loss)`) or switch to `BFloat16` which has a larger dynamic range.
 
 ### Optimizer Momentum Decay
-*   **The Issue**: Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.
-*   **Identification**: Learning rate is still high, but weight updates are tiny.
-*   **Remedy**: Reset optimizer state; use **Lookahead Optimizer**; or increase Momentum parameters.
+
+* **The Issue**: Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.
+* **Identification**: Learning rate is still high, but weight updates are tiny.
+* **Remedy**: Reset optimizer state; use **Lookahead Optimizer**; or increase Momentum parameters.
 
 ---
 
 ## 6. High-Fidelity Strategy (v16.2.8)
 
 ### The "Low-Resolution Blur" Pathology
-*   **The Issue**: Initializing training at ultra-low resolutions (e.g., 64px or 128px) to speed up "warm-up" often results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts even after the resolution ladder increases to 512px.
-*   **Identification**: High validation loss at high resolutions; model generates "hallucinated" coarse features where sharp textures should exist.
-*   **Remedy**: **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
 
-*   **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
+* **The Issue**: Initializing training at ultra-low resolutions (e.g., 64px or 128px) to speed up "warm-up" often results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts even after the resolution ladder increases to 512px.
+* **Identification**: High validation loss at high resolutions; model generates "hallucinated" coarse features where sharp textures should exist.
+* **Remedy**: **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
+
+* **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
 
 ### Atomic Hardware Re-Auditing
-*   **The Issue**: Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
-*   **Identification**: Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
-*   **Remedy**: **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
+
+* **The Issue**: Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
+* **Identification**: Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
+* **Remedy**: **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
 
 ### The Serial Recovery Shield (v17.2)
-*   **The Issue**: On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.
-*   **Identification**: Training bar stops moving; CPU usage drops to 0%; script does not respond to `Ctrl+C`.
-*   **Remedy**: **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
+
+* **The Issue**: On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.
+* **Identification**: Training bar stops moving; CPU usage drops to 0%; script does not respond to `Ctrl+C`.
+* **Remedy**: **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
 
 ### Premature SOTA Termination
-*   **The Issue**: The training suite terminates immediately upon reaching SOTA targets, even if it is only at a low-resolution rung (e.g., 256px). This results in high-fidelity "ghosting" where the model is technically SOTA but lacks high-frequency spatial maturity.
-*   **Identification**: Training stops with a "Mission Complete" message despite being at a sub-maximal resolution.
-*   **Remedy**: **Ladder-Aware SOTA Guard (v18.0)**. The mission is only allowed to terminate at the **Final Resolution**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution.
+
+* **The Issue**: The training suite terminates immediately upon reaching SOTA targets, even if it is only at a low-resolution rung (e.g., 256px). This results in high-fidelity "ghosting" where the model is technically SOTA but lacks high-frequency spatial maturity.
+* **Identification**: Training stops with a "Mission Complete" message despite being at a sub-maximal resolution.
+* **Remedy**: **Ladder-Aware SOTA Guard (v18.0)**. The mission is only allowed to terminate at the **Final Resolution**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution.
 
 ### Manifold Fragility (The "Glass Manifold" Effect)
-*   **The Issue**: Rapid resolution jumps (e.g., jumping from 256px to 384px and immediately to 512px) can destabilize the model's weight distribution before it has "hardened" at the new scale.
-*   **Identification**: Massive loss spikes or "Numerical Recoil" immediately following a resolution jump.
-*   **Remedy**: **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period. The model is forbidden from jumping to the next rung until it has completed at least 2 full epochs at its current resolution.
+
+* **The Issue**: Rapid resolution jumps (e.g., jumping from 256px to 384px and immediately to 512px) can destabilize the model's weight distribution before it has "hardened" at the new scale.
+* **Identification**: Massive loss spikes or "Numerical Recoil" immediately following a resolution jump.
+* **Remedy**: **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period. The model is forbidden from jumping to the next rung until it has completed at least 2 full epochs at its current resolution.
 
 ### The Sub-Nuclear 4GB Lockdown (v22.0)
-*   **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.
-*   **Identification**: "Shared GPU Memory" in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
-*   **Remedy**: **Iron-Clamp Protocol**. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.
+
+* **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.
+* **Identification**: "Shared GPU Memory" in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
+* **Remedy**: **Iron-Clamp Protocol**. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.
+
+### The False-Positive Spike (Absolute Energy Floor)
+
+* **The Issue**: The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x the running average). In high-fidelity restoration, the running average can drop to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike the loss to 0.03. This triggers a 30x relative spike detection, causing the Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03 being physically harmless (3% error).
+* **Identification**: Console logs show `Sudden Loss Spike detected (0.0308 vs 0.0010)` resulting in `Manifold unstable. NPP Recoil active` on otherwise stable metrics.
+* **Remedy**: **Absolute Energy Floor**. Implement an absolute mathematical threshold (e.g., `> 0.05` unscaled) to the spike detection logic. A spike is now only considered dangerous if it represents a massive relative deviation *and* breaches the absolute baseline energy floor.
 
 ---
 
 ## 7. Best Practices Checklist
-- [x] **High-Fidelity Floor**: Never start below 224px. Low-res warm-up is a legacy artifact.
-- [x] **Baseline First**: Build a simple model first. If a complex one fails, the issue is data.
-- [x] **Warm-up Strategy**: Use a linear warm-up for the first 5% of training.
-- [x] **AdamW over Adam**: Decouple weight decay from gradient updates.
-- [x] **One Change at a Time**: Only alter one hyperparameter per run.
+
+* [x] **High-Fidelity Floor**: Never start below 224px. Low-res warm-up is a legacy artifact.
+* [x] **Baseline First**: Build a simple model first. If a complex one fails, the issue is data.
+* [x] **Warm-up Strategy**: Use a linear warm-up for the first 5% of training.
+* [x] **AdamW over Adam**: Decouple weight decay from gradient updates.
+* [x] **One Change at a Time**: Only alter one hyperparameter per run.
 
 ---
 
@@ -152,16 +170,18 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 ## 10. Nuclear Audit: The Optimization Checklist
 
 ### 🚀 High-Velocity "DO's" (Keep Doing These)
-- [x] **Memory-Sentinel Probing**: Decouple `batch_size` from registry to allow autonomous peak hardware utilization.
-- [x] **NPP Loop Detection**: Trust the Governor's "Recoil" logic to save the manifold during turbulence.
-- [x] **Atomic Save Protocol**: Use the `.tmp` swap method to prevent corrupted weights.
+
+* [x] **Memory-Sentinel Probing**: Decouple `batch_size` from registry to allow autonomous peak hardware utilization.
+* [x] **NPP Loop Detection**: Trust the Governor's "Recoil" logic to save the manifold during turbulence.
+* [x] **Atomic Save Protocol**: Use the `.tmp` swap method to prevent corrupted weights.
 
 ### 🛠️ Critical "FIX's" (SOTA Blockers)
-- [x] **Metric Rebalancing**: Change `METRIC_WEIGHTS['psnr']` from `1` to `10` in `train.py`. Currently, PSNR is effectively ignored in the Quality Score.
-- [x] **LPIPS Device Agnosticism**: Patch `losses.py` to use `device` mapping instead of hardcoded `'cuda'`.
-- [x] **Implement the "Propulsion Jolt"**: Update `optimization_engine.py` to apply the `jolt_multiplier` (1.5x) when the model hits a **Flat Plateau** (Delta < 0.0005).
-- [x] **DataLoader Hot-Reload**: Re-initialize the `DataLoader` whenever the Governor triggers a **Spatial Jump** (Resolution change) to avoid VRAM paging.
-- [x] **VLM Temperature Relaxation**: Increase `vlm_llava` `softmax_temp` to `0.1` during the Foundation phase, then sharpen to `0.05` only in Refinement.
+
+* [x] **Metric Rebalancing**: Change `METRIC_WEIGHTS['psnr']` from `1` to `10` in `train.py`. Currently, PSNR is effectively ignored in the Quality Score.
+* [x] **LPIPS Device Agnosticism**: Patch `losses.py` to use `device` mapping instead of hardcoded `'cuda'`.
+* [x] **Implement the "Propulsion Jolt"**: Update `optimization_engine.py` to apply the `jolt_multiplier` (1.5x) when the model hits a **Flat Plateau** (Delta < 0.0005).
+* [x] **DataLoader Hot-Reload**: Re-initialize the `DataLoader` whenever the Governor triggers a **Spatial Jump** (Resolution change) to avoid VRAM paging.
+* [x] **VLM Temperature Relaxation**: Increase `vlm_llava` `softmax_temp` to `0.1` during the Foundation phase, then sharpen to `0.05` only in Refinement.
 
 ### 🔬 Deep Diagnostic Triggers
 
@@ -177,55 +197,55 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 
 ## 11. SOTA Suite Optimization Task List
 
-- [x] **Task 1.1: Metric Rebalancing** (Target: `train.py`)
-- [x] **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
-- [x] **VLM Temperature Warm-up**: Update `unified_models_v2.yaml` to sharpen from 0.1 to 0.05.
-- [x] **Terminal Progress Guard (v17.2)**: Implement epoch-advancing logic for checkpoints at ≥99.9% progress.
-- [x] **Shared Memory Guard (v18.0)**: Detect and clamp batch size if Dedicated VRAM is exhausted.
-- [x] **Task 2.1: The Propulsion Jolt** (Target: `optimization_engine.py`)
-- [x] **Task 2.2: Hot-Reload DataLoader** (Target: `train.py`)
-- [x] **Task 3.1: Gradient Sentinel Injection** (Target: `train.py`)
-- [x] **Task 4.1: Momentum Dampening** (Target: `train.py`)
-- [x] **Task 4.2: VRAM De-fragmentation** (Target: `train.py`)
-- [x] **Task 4.3: Surgical Weight Decay** (Target: `train.py`)
-- [x] **Task 5.1: Emergency Shield Breakout** (Target: `optimization_engine.py`)
-- [x] **Task 5.2: Jolt Cooldown Protocol** (Target: `optimization_engine.py`)
-- [x] **Task 5.3: Autonomous Temp Sharpening** (Target: `optimization_engine.py`)
-- [x] **Task 6.1: Atomic Cell Fragmentation** (Target: `notebook_generator.py`)
-- [x] **Task 6.2: Pre-flight Hardware Sentinel** (Target: `notebook_generator.py`)
-- [x] **Task 6.3: Multi-Path Dataset Symlinker** (Target: `notebook_generator.py`)
-- [x] **Task 6.4: Stealth PAT Masking** (Target: `notebook_generator.py`)
-- [x] **Task 7.1: SOTA Metric Badging** (Target: `doc_generator.py`)
-- [x] **Task 7.2: Mermaid Topology Integration** (Target: `doc_generator.py`)
-- [x] **Task 7.3: v16.0 Stealth Usage Snippets** (Target: `doc_generator.py`)
-- [x] **Task 7.4: Automated Quality Vector Badges** (Target: `doc_generator.py`)
-- [x] **Task 8.1: Atomic Git-LFS Synchronizer** (Target: `cloud_sync.py`)
-- [x] **Task 8.2: Metrics Merge-Persistence** (Target: `cloud_sync.py`)
-- [x] **Task 8.3: Diagnostic Stealth (Token Masking)** (Target: `cloud_sync.py`)
-- [x] **Task 8.4: Multi-Threaded Sync Manager** (Target: `cloud_sync.py`)
-- [x] **Task 8.5: NPP Loop Mitigation** (Target: `optimization_engine.py`)
-- [x] **Task 9.1: Neutral Grey Fallback Shield** (Target: `dataset.py`)
-- [x] **Task 9.2: High-Fidelity LANCZOS Scaling** (Target: `dataset.py`)
-- [x] **Task 9.3: Stratified Label Distribution** (Target: `dataset.py`)
-- [x] **Task 9.4: Atomic Parquet Recovery** (Target: `data_utils.py`)
-- [x] **Task 10.1: Temperature-Aware Softmax Head** (Target: `nima.py`)
-- [x] **Task 10.2: Dynamic Architecture Registry** (Target: `factory.py`)
-- [x] **Task 10.3: WebGPU-Safe Tensor Permutations** (Target: `core_restoration.py`)
-- [x] **Task 10.4: Logit Clamping Guard (±10.0)** (Target: `nima.py`)
-- [x] **Task 11.1: SOTA Overwrite Force-Flag** (Target: `train_all.py`)
-- [x] **Task 11.2: Persistent Failure-Report Matrix** (Target: `train_all.py`)
-- [x] **Task 11.3: Inter-Model Driver Cooldown** (Target: `train_all.py`)
-- [x] **Task 11.4: Global SOTA Dashboard (README Gen)** (Target: `train_all.py`)
-- [x] **Task 12.1: Nuclear v16.0 Schema Update** (Target: `config.yaml`)
-- [x] **Task 12.2: Governor Threshold Tuning** (Target: `config.yaml`)
-- [x] **Task 12.3: Fleet Synchronization Flags** (Target: `config.yaml`)
-- [x] **Task 12.4: Hardware-Specific Profiles** (Target: `config.yaml`)
-- [x] **Task 13.1: Stale Lock (.processing) Clearance** (Target: `train.py` / `notebook_generator.py`)
-- [x] **Task 13.2: Hub Clone Diagnostic Verbosity** (Target: `train.py`)
-- [x] **Task 13.3: Global Notebook Matrix Refresh** (Target: `notebook_generator.py`)
-- [x] **Task 14.1: Ladder-Aware SOTA Guard (v18.0)** (Target: `train.py`)
-- [x] **Task 14.2: SOTA Hardening Guard (v19.0)** (Target: `optimization_engine.py`)
-- [x] **Task 14.3: SOTA-Sync DataLoader Protocol** (Target: `train.py`)
+* [x] **Task 1.1: Metric Rebalancing** (Target: `train.py`)
+* [x] **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
+* [x] **VLM Temperature Warm-up**: Update `unified_models_v2.yaml` to sharpen from 0.1 to 0.05.
+* [x] **Terminal Progress Guard (v17.2)**: Implement epoch-advancing logic for checkpoints at ≥99.9% progress.
+* [x] **Shared Memory Guard (v18.0)**: Detect and clamp batch size if Dedicated VRAM is exhausted.
+* [x] **Task 2.1: The Propulsion Jolt** (Target: `optimization_engine.py`)
+* [x] **Task 2.2: Hot-Reload DataLoader** (Target: `train.py`)
+* [x] **Task 3.1: Gradient Sentinel Injection** (Target: `train.py`)
+* [x] **Task 4.1: Momentum Dampening** (Target: `train.py`)
+* [x] **Task 4.2: VRAM De-fragmentation** (Target: `train.py`)
+* [x] **Task 4.3: Surgical Weight Decay** (Target: `train.py`)
+* [x] **Task 5.1: Emergency Shield Breakout** (Target: `optimization_engine.py`)
+* [x] **Task 5.2: Jolt Cooldown Protocol** (Target: `optimization_engine.py`)
+* [x] **Task 5.3: Autonomous Temp Sharpening** (Target: `optimization_engine.py`)
+* [x] **Task 6.1: Atomic Cell Fragmentation** (Target: `notebook_generator.py`)
+* [x] **Task 6.2: Pre-flight Hardware Sentinel** (Target: `notebook_generator.py`)
+* [x] **Task 6.3: Multi-Path Dataset Symlinker** (Target: `notebook_generator.py`)
+* [x] **Task 6.4: Stealth PAT Masking** (Target: `notebook_generator.py`)
+* [x] **Task 7.1: SOTA Metric Badging** (Target: `doc_generator.py`)
+* [x] **Task 7.2: Mermaid Topology Integration** (Target: `doc_generator.py`)
+* [x] **Task 7.3: v16.0 Stealth Usage Snippets** (Target: `doc_generator.py`)
+* [x] **Task 7.4: Automated Quality Vector Badges** (Target: `doc_generator.py`)
+* [x] **Task 8.1: Atomic Git-LFS Synchronizer** (Target: `cloud_sync.py`)
+* [x] **Task 8.2: Metrics Merge-Persistence** (Target: `cloud_sync.py`)
+* [x] **Task 8.3: Diagnostic Stealth (Token Masking)** (Target: `cloud_sync.py`)
+* [x] **Task 8.4: Multi-Threaded Sync Manager** (Target: `cloud_sync.py`)
+* [x] **Task 8.5: NPP Loop Mitigation** (Target: `optimization_engine.py`)
+* [x] **Task 9.1: Neutral Grey Fallback Shield** (Target: `dataset.py`)
+* [x] **Task 9.2: High-Fidelity LANCZOS Scaling** (Target: `dataset.py`)
+* [x] **Task 9.3: Stratified Label Distribution** (Target: `dataset.py`)
+* [x] **Task 9.4: Atomic Parquet Recovery** (Target: `data_utils.py`)
+* [x] **Task 10.1: Temperature-Aware Softmax Head** (Target: `nima.py`)
+* [x] **Task 10.2: Dynamic Architecture Registry** (Target: `factory.py`)
+* [x] **Task 10.3: WebGPU-Safe Tensor Permutations** (Target: `core_restoration.py`)
+* [x] **Task 10.4: Logit Clamping Guard (±10.0)** (Target: `nima.py`)
+* [x] **Task 11.1: SOTA Overwrite Force-Flag** (Target: `train_all.py`)
+* [x] **Task 11.2: Persistent Failure-Report Matrix** (Target: `train_all.py`)
+* [x] **Task 11.3: Inter-Model Driver Cooldown** (Target: `train_all.py`)
+* [x] **Task 11.4: Global SOTA Dashboard (README Gen)** (Target: `train_all.py`)
+* [x] **Task 12.1: Nuclear v16.0 Schema Update** (Target: `config.yaml`)
+* [x] **Task 12.2: Governor Threshold Tuning** (Target: `config.yaml`)
+* [x] **Task 12.3: Fleet Synchronization Flags** (Target: `config.yaml`)
+* [x] **Task 12.4: Hardware-Specific Profiles** (Target: `config.yaml`)
+* [x] **Task 13.1: Stale Lock (.processing) Clearance** (Target: `train.py` / `notebook_generator.py`)
+* [x] **Task 13.2: Hub Clone Diagnostic Verbosity** (Target: `train.py`)
+* [x] **Task 13.3: Global Notebook Matrix Refresh** (Target: `notebook_generator.py`)
+* [x] **Task 14.1: Ladder-Aware SOTA Guard (v18.0)** (Target: `train.py`)
+* [x] **Task 14.2: SOTA Hardening Guard (v19.0)** (Target: `optimization_engine.py`)
+* [x] **Task 14.3: SOTA-Sync DataLoader Protocol** (Target: `train.py`)
 
 ---
 
@@ -256,7 +276,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 
 ## 13. Conclusion: The Indestructible Convergence Paradigm
 
-The transition from manual hyperparameter tuning to autonomous, **"Nuclear-Hardened"** training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the **LemGendary** ecosystem has achieved a state of indestructible convergence. 
+The transition from manual hyperparameter tuning to autonomous, **"Nuclear-Hardened"** training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the **LemGendary** ecosystem has achieved a state of indestructible convergence.
 
 The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware. This framework not only secures current SOTA metrics but provides the foundation for the next generation of real-time, browser-native restoration engines.
 

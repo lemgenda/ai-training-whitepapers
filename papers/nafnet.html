@@ -473,6 +473,10 @@
                         <li><a href="#scorecarding">6.18 Invariant Native Scorecarding (v6.2.0)</a></li>
                         <li><a href="#universal-backend">6.19 Universal Backend Selection</a></li>
                         <li><a href="#checkpoint-governance">6.20 Time-Aware Checkpoint Governance</a></li>
+                        <li><a href="#dynamic-min-delta">6.21 Dynamic min_delta Scaling</a></li>
+                        <li><a href="#resolution-sota-guard">6.22 Resolution-Aware Patience Reset</a></li>
+                        <li><a href="#validation-sharding">6.23 Validation Sharding (30% Audit)</a></li>
+                        <li><a href="#vram-defibrillation">6.24 VRAM Defibrillation for InceptionV3</a></li>
                     </ul>
                 </li>
                 <li><a href="#deployment">7. Deployment Strategy</a>
@@ -503,12 +507,11 @@
 
         <section id="taxonomy">
             <h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
-            <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.</p>
+            <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation. By unifying diverse restoration subsets into the <code>LemGendizedNoiseDataset</code>, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.</p>
             <ul>
-                <li><strong>Denoising Track:</strong> Targeting low-light sensor artifacts and ISO gain noise without destroying high-frequency textures.</li>
-                <li><strong>Deblurring Track:</strong> Mitigating motion blur and focal misalignment through deep spatial feature extraction.</li>
+                <li><strong>The Denoising Track (nafnet_denoising):</strong> Requires the model to cleanly isolate pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric). NAFNet excels here due to its <code>SimpleGate</code> structure which preserves high-bandwidth frequencies much better than traditional ReLU architectures.</li>
+                <li><strong>The Deblurring Track (nafnet_debluring):</strong> Demands spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels.</li>
             </ul>
-            <p>By unifying diverse restoration subsets into the <code>LemGendizedNoiseDataset</code>, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in mobile photography.</p>
             
             <div class="visual-taxonomy">
                 <div class="quadrant" onclick="openModal('assets/technical_noise.png', 'Denoising Target', 'Extreme ISO sensor noise requiring deep feature extraction without blurring edges.')">
@@ -561,6 +564,16 @@
             <h2>5. The SOTA Architectural Migration (Mock to NAFNet)</h2>
             <p>The evaluation of LemGendary AI models is conducted against rigorous industry benchmarks and legacy state-of-the-art architectures. By utilizing the 2026 Resiliency Engine and our specialized Universal Quality Subset, we have established a new baseline for high-fidelity assessment and restoration. The following metrics isolate the specific generational leaps in absolute correlation and structural fidelity achieved on consumer-grade hardware.</p>
             <p>The primary triumph of this whitepaper is the stabilization of <strong>NAFNet</strong> in production. Legacy code featured 500-parameter "Mock" setups. The true NAFNet possesses millions of parameters driven by <code>SimpleGates</code> and <code>SimplifiedChannelAttention</code>.</p>
+            
+            <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                <img src="assets/nafnet_denoising_training.png" alt="NAFNet Denoising Trajectory" style="width: 100%; border-radius: 4px;">
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 3: NAFNet Denoising Training Trajectory - Exhibiting rapid convergence and extreme high-fidelity PSNR/SSIM retention over extended epochs.</em></p>
+            </div>
+
+            <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid #03dac6;">
+                <img src="assets/nafnet_debluring_training.png" alt="NAFNet Deblurring Trajectory" style="width: 100%; border-radius: 4px;">
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 4: NAFNet Deblurring Training Trajectory - Showcasing the complex spatial reconstruction required to align kinetic motion blur, mapped against structural MSE validation loss.</em></p>
+            </div>
             <h3 id="simplegate">5.1 SimpleGate over ReLU</h3>
             <p>NAFNet actively abandons activating nonlinearities (like ReLU). Instead, it splits channels in half and multiplies them together (<code>SimpleGate</code>). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising.</p>
         </section>
@@ -708,6 +721,30 @@
             <div class="card">
                 <h3 id="checkpoint-governance">6.20 Time-Aware Checkpoint Governance (15-min Window)</h3>
                 <p>To protect training progress on high-complexity manifolds, the suite implements a <strong>Time-Aware Checkpoint Governor</strong>. It monitors iteration velocity and dynamically recalibrates the save frequency to target a 15-minute resiliency window, ensuring that no more than 15 minutes of work is ever at risk.</p>
+            </div>
+
+            <div class="card">
+                <h3 id="dynamic-min-delta">6.21 Dynamic min_delta Scaling for High-Range Quality</h3>
+                <p><strong>Issue:</strong> Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g., <code>475.25</code>). The legacy Governor used a static <code>min_delta</code> of <code>0.0005</code> to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, completely freezing the dataset expansion engine.</p>
+                <p><strong>Fix:</strong> The Governor dynamically queries <code>task_type</code>. For <code>restoration</code> tasks, it multiplies the tolerance by 100x (<code>0.05</code>), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).</p>
+            </div>
+
+            <div class="card">
+                <h3 id="resolution-sota-guard">6.22 Resolution-Aware Patience Reset (SOTA Guard)</h3>
+                <p><strong>Issue:</strong> When the Governor triggered a spatial jump (e.g., expanding validation from 512px to 640px), the baseline metric mathematically plummeted (e.g., <code>450</code> down to <code>300</code>) because processing 6.25x more pixels is inherently more difficult. However, the Governor stubbornly held onto the old <code>450</code> score in its <code>best_quality</code> memory, declaring the model "stagnant" forever because it could never beat the low-res score.</p>
+                <p><strong>Fix:</strong> Engineered the <strong>Resolution-Aware SOTA Memory Purge</strong>. When a resolution shift occurs, the Governor explicitly purges its <code>best_quality</code> memory and resets the patience clock to zero. It natively anchors a new SOTA baseline at the new 640px complexity.</p>
+            </div>
+
+            <div class="card">
+                <h3 id="validation-sharding">6.23 Validation Sharding (30% Fixed Audit)</h3>
+                <p><strong>Issue:</strong> High-Fidelity Perceptual Metrics (CPU-based SSIM, InceptionV3 FID, VGG LPIPS) require immense computational overhead. Evaluating 100% of the 640px validation dataset took nearly as long as the training epoch itself, destroying mission velocity.</p>
+                <p><strong>Fix:</strong> Implemented <strong>Validation Sharding</strong>. The pipeline now evaluates a fixed <strong>30% random-seeded subset</strong> of the validation loader. Because <code>shuffle=False</code> is enforced, the exact same spatial features are evaluated every epoch, maintaining perfectly smooth LPIPS/FID metric geometry while accelerating the validation cycle by 300%.</p>
+            </div>
+
+            <div class="card">
+                <h3 id="vram-defibrillation">6.24 VRAM Defibrillation for InceptionV3</h3>
+                <p><strong>Issue:</strong> After a dense NAFNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in <code>CUDA Out of Memory</code> crashes purely during validation.</p>
+                <p><strong>Fix:</strong> Engineered the <strong>Surgical VRAM Defibrillator</strong>. A mandatory <code>torch.cuda.empty_cache()</code> cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.</p>
             </div>
         </section>
 

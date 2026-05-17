@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Abstract](#1-abstract)
 2. [Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
 3. [Hardware-Aware Infrastructure: Universal Acceleration](#3-hardware-aware-infrastructure-universal-acceleration)
@@ -31,7 +32,7 @@
    - [6.10 Persistent I/O Synchronization (v5.8)](#610-persistent-io-synchronization-v58)
    - [6.11 Architectural Survival Profiles (v5.9)](#611-architectural-survival-profiles-v59)
    - [6.12 Mission Continuity Guard (v6.1)](#612-mission-continuity-guard-v61)
-   - [6.13 Manifold Rescue & High-Energy Jolt (v6.1.17)](#613-manifold-rescue-high-energy-jolt-v6117)
+   - [6.13 Manifold Rescue & High-Energy Jolt (v6.1.17)](#613-manifold-rescue--high-energy-jolt-v6117)
    - [6.14 Velocity Life-Support (v6.1.18)](#614-velocity-life-support-v6118)
    - [6.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#615-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
    - [6.16 Telemetry Parity & Plateau Resilience (v6.1.31)](#616-telemetry-parity--plateau-resilience-v6131)
@@ -39,6 +40,10 @@
    - [6.18 Invariant Native Scorecarding (v6.2.0)](#618-invariant-native-scorecarding-v620)
    - [6.19 Universal Backend Selection (MPS/XPU/DirectML)](#619-universal-backend-selection-mpsxpudirectml)
    - [6.20 Time-Aware Checkpoint Governance (15-min Window)](#620-time-aware-checkpoint-governance-15-min-window)
+   - [6.21 Dynamic min_delta Scaling for High-Range Quality](#621-dynamic-min_delta-scaling-for-high-range-quality)
+   - [6.22 Resolution-Aware Patience Reset (SOTA Guard)](#622-resolution-aware-patience-reset-sota-guard)
+   - [6.23 Validation Sharding (30% Fixed Audit)](#623-validation-sharding-30-fixed-audit)
+   - [6.24 VRAM Defibrillation for InceptionV3](#624-vram-defibrillation-for-inceptionv3)
 7. [Deployment Strategy: The C++ ONNX Ghost-Severing Protocol](#7-deployment-strategy-the-c-onnx-ghost-severing-protocol)
    - [7.1 Standalone Exporters](#71-standalone-exporters)
    - [7.2 The Ghost-Severing Protocol](#72-the-ghost-severing-protocol)
@@ -53,30 +58,41 @@
 ---
 
 ## 1. Abstract
+
 The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **NAFNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
 
 ---
 
 ## 2. Visual Taxonomy: The LemGendary Restoration Subset
+
 The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.
+
+### The Denoising Track (nafnet_denoising)
 
 ![Denoising Target](../assets/technical_noise.png)
 *Figure 1: Denoising Target - Extreme ISO sensor noise requiring deep feature extraction without blurring edges.*
+Denoising requires the model to cleanly isolate pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric). NAFNet excels here due to its `SimpleGate` structure which preserves high-bandwidth frequencies much better than traditional ReLU architectures.
+
+### The Deblurring Track (nafnet_debluring)
 
 ![Deblurring Target](../assets/technical_compression.png)
 *Figure 2: Deblurring Target - Complex spatial macroblocking and focal blur requiring multi-scale restoration.*
+Deblurring demands spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels.
 
-By unifying diverse restoration subsets into the `LemGendizedNoiseDataset`, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in mobile photography.
+By unifying these diverse restoration subsets into the `LemGendizedNoiseDataset`, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.
 
 ---
 
 ## 3. Hardware-Aware Infrastructure: Universal Acceleration
+
 Training massive architectures like NAFNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.
 
 ### 3.1 The Headroom-Aware Memory-Sentinel
+
 The Sentinel has evolved to actively probe the hardware environment using `torch.cuda.mem_get_info()`. This ensures that even on 4GB hardware, the NAFNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.
 
 ### 3.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)
+
 The pipeline harnesses local NumPy/OpenCV workers to decode image tensors natively in CPU cache before flushing them to the GPU. This prevents data-starvation of the GPU cores completely, hiding I/O latency behind raw throughput.
 
 ---
@@ -84,14 +100,18 @@ The pipeline harnesses local NumPy/OpenCV workers to decode image tensors native
 ## 4. Mathematical Optimization: High-Fidelity Perceptual Engines
 
 ### 4.1 Structural VS Perceptual Verification
+
 While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:
+
 - **LPIPS (Learned Perceptual Image Patch Similarity)**: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.
 - **FID (Frechet Inception Distance)**: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.
 
 ### 4.2 PCIe VRAM Thrashing & The Chunking Fix
+
 When attempting to validate a 425-image subset against LPIPS simultaneously, the 15GB VRAM ceiling immediately shattered. The Linux kernel initiated "PCIe Thrashing"—swapping VRAM back to System RAM, physically hanging the Kaggle instance for hours. We engineered a **Structural Chunking Loop** (Cap: 8), permanently restricting VRAM utilization to ~500MB without losing mathematical fidelity.
 
 ### 4.3 The CPU-Bottleneck Bypass
+
 Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking `lpips(net="vgg")` against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks `.to(device)` directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.
 
 ---
@@ -102,7 +122,14 @@ The evaluation of LemGendary AI models is conducted against rigorous industry be
 
 The primary triumph of this whitepaper is the stabilization of **NAFNet** in production. Legacy code featured 500-parameter "Mock" setups. The true NAFNet possesses millions of parameters driven by `SimpleGates` and `SimplifiedChannelAttention`.
 
+![NAFNet Denoising Trajectory](../assets/nafnet_denoising_training.png)
+*Figure 3: NAFNet Denoising Training Trajectory - Exhibiting rapid convergence and extreme high-fidelity PSNR/SSIM retention over extended epochs.*
+
+![NAFNet Deblurring Trajectory](../assets/nafnet_debluring_training.png)
+*Figure 4: NAFNet Deblurring Training Trajectory - Showcasing the complex spatial reconstruction required to align kinetic motion blur, mapped against structural MSE validation loss.*
+
 ### 5.1 SimpleGate over ReLU
+
 NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, it splits channels in half and multiplies them together (`SimpleGate`). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising.
 
 ---
@@ -110,87 +137,133 @@ NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, 
 ## 6. Challenges & Resilience Architecture
 
 ### 6.1 The SimpleGate NaN Overflows (Structural FP16 Disable)
+
 **Issue**: NAFNet training initially exploded with infinite `NaN` losses. Because `SimpleGate` acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of `65,504` in FP16.
 **Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop dynamically disables AMP specifically for `NAFNet`, forcing strict double-precision gradients via FP32.
 
 ### 6.2 The Contiguous View Kernel Crash
+
 **Issue**: When interacting with partial dataset views, PyTorch passed fragmented tensors into convolutions causing `misaligned address` crashes.
 **Fix**: Patched `models/core_restoration.py` with rigorous `.contiguous()` clamps. Every input passed to `Conv2d`, `Pool2d`, or a `SimpleGate` multiplier is physically forced into linear memory realignment.
 
 ### 6.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock
+
 **Issue**: Standard Early Stopping mechanisms (patience=15) mathematically trigger "Sudden Death" at Epoch 39 due to MSE Val Loss wobbling on the floor, permanently locking the model out of the crucial OneCycleLR precision-cooling sequence (Epochs 40-50).
 **Fix**: Engineered an emergency `early_stopping_patience: 50` override to permanently disable MSE-based sudden death for high-complexity manifolds.
 
 ### 6.4 The VGG Perceptual Convergence Collapse
+
 **Issue**: The convergence ceiling unexpectedly hard-locked at exactly ~22.70dB.
-**Fix**: 
+**Fix**:
+
 - **Strict ImageNet Normalization Anchor**: We natively bound standard deviations that dynamically scale input tensors to pure VGG spatial geometry.
 - **Magnitude Equalization**: We radically depressed the scalar magnitude down to `0.005`, allowing VGG to provide sharp detail contours without overpowering PSNR.
 
 ### 6.5 The "Double-Step" OneCycleLR Matrix Paradox
+
 **Issue**: Resuming from a checkpoint via PyTorch's `Fast-Forward` loop caused manual invocations of `scheduler.step()` to blindly advance the clock while the dataloader was merely skipping batches.
 **Fix**: Engineered the **No-Manual-Stepping Resumption Logic**.
 
 ### 6.6 The SOTA Sentry "Defibrillation Override"
+
 **Issue**: Upon extending epochs, the model loaded schedulers where the learning rate had decayed down to terminal levels.
 **Fix**: SOTA Sentry dynamically bypasses `scheduler_state` injection during extended epoch bounds, slamming the architecture with a fresh "Phase-1" burst of velocity.
 
 ### 6.7 The Universal SOTA Optimization Vector
-**Fix**: 
+
+**Fix**:
+
 - **The L1-LPIPS Harmonic Matrix**: We structurally swapped to `L1Loss`, anchoring the true learned `lpips.LPIPS(net='vgg')` layer at exactly `0.025`.
 - **Universal Visual SOTA Sentry**: The orchestrator now mathematically compounds `current_quality_score = psnr + (ssim * 20) - (lpips * 20)`.
 
 ### 6.8 The Stagnation Paradox: Plateau-Buster v5.2
+
 **Fix**: Implemented the **v5.2 Plateau-Buster**. The Governor now requires a minimum **0.1% relative improvement** and triggers a **Kinetic Jolt** if the model remains stagnant for more than 2 epochs.
 
 ### 6.9 The Quality-Regression Mutex (SOTA Guardrail)
+
 **Fix**: The SOTA export logic is now strictly bounded by the `current_quality_score`. The system will **NOT** coronation the model as "Best" unless its physical quality metrics have hit a record high.
 
 ### 6.10 Persistent I/O Synchronization (v5.8)
+
 **Fix**: Engineered the **Persistent Mission Manifest**. Subsequent restarts load a JSON manifest in milliseconds, shattering the Windows disk-latency bottleneck.
 
 ### 6.11 Architectural Survival Profiles (v5.9)
+
 **Fix**: Implementation of the **Survival Profile**. The environment dynamically detects VRAM constraints and enforces a **Physical Batch Size 1** strategy coupled with **4x Gradient Accumulation**.
 
 ### 6.12 Mission Continuity Guard (v6.1)
+
 **Fix**: Engineered the **Continuity Guard**. A final **Manifold Leak Guard** audit-locks the epoch until 100% of the dataset is processed.
 
 ### 6.13 Manifold Rescue & High-Energy Jolt (v6.1.17)
+
 **Fix**: Implementation of the **High-Energy Jolt**. When a 12-epoch stagnation is detected, the Governor forces a **Hard-Reset** to the `base_lr` (0.0002).
 
 ### 6.14 Velocity Life-Support (v6.1.18)
+
 **Fix**: Implementation of **Velocity Life-Support**. If the current LR drops below 1% of the base training speed, an emergency **Rescue Trigger** forces an immediate Jolt.
 
 ### 6.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)
+
 **Fix**: Engineered the **Mitochondrial Pulse**. The persistence trigger now utilizes a **Mathematical Epsilon** (`1e-5`), ensuring that save-states are biologically-synchronized.
 
 ### 6.16 Telemetry Parity & Plateau Resilience (v6.1.31)
-**Fix**: 
+
+**Fix**:
+
 - **Velocity Shield (Survivor Floor)**: The Regression Guard is now bound by a physical `5e-7` absolute LR floor.
 - **Zero-Lag Telemetry Sync**: Real-time LR readings are slaved directly to the physical `optimizer.param_groups`.
 
 ### 6.17 True Stabilization Shield & Synchronous Spatial Augmentation (v6.1.26)
-**Fix**: 
+
+**Fix**:
+
 - **True Stabilization Shield**: A hard-coded 3-epoch lockout period follows any structural shift or high-energy Jolt.
 - **Synchronous Spatial Augmentation**: Applied 50% randomized geometric flips to both noisy inputs and clean targets to shatter the feature memorization ceiling.
 
 ### 6.18 Invariant Native Scorecarding (v6.2.0)
+
 **Fix**: Validation resolution is now fully decoupled from dynamic scaling, anchored to a native 640px evaluation resolution from Epoch 1 to 1000.
 
 ### 6.19 Universal Backend Selection (MPS/XPU/DirectML)
+
 The 2026 update introduces a **Unified Hardware Handshake**. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same NAFNet codebase executes at maximum performance across all major silicon providers without manual intervention.
 
 ### 6.20 Time-Aware Checkpoint Governance (15-min Window)
+
 To protect training progress on high-complexity manifolds, the suite implements a **Time-Aware Checkpoint Governor**. It monitors iteration velocity and dynamically recalibrates the save frequency to target a 15-minute resiliency window, ensuring that no more than 15 minutes of work is ever at risk.
+
+### 6.21 Dynamic min_delta Scaling for High-Range Quality
+
+**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, thus completely freezing the dataset expansion engine.
+**Fix:** The Governor dynamically queries `task_type`. For `restoration` tasks, it multiplies the tolerance by 100x (`0.05`), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).
+
+### 6.22 Resolution-Aware Patience Reset (SOTA Guard)
+
+**Issue:** When the Governor triggered a spatial jump (e.g. expanding validation from 512px to 640px), the baseline metric mathematically plummeted (e.g. `450` down to `300`) because processing 6.25x more pixels is inherently more difficult. However, the Governor stubbornly held onto the old `450` score in its `best_quality` memory, declaring the model "stagnant" forever because it could never beat the low-res score.
+**Fix:** Engineered the **Resolution-Aware SOTA Memory Purge**. When a resolution shift occurs, the Governor explicitly purges its `best_quality` memory and resets the patience clock to zero. It natively anchors a new SOTA baseline at the new 640px complexity.
+
+### 6.23 Validation Sharding (30% Fixed Audit)
+
+**Issue:** High-Fidelity Perceptual Metrics (CPU-based SSIM, InceptionV3 FID, VGG LPIPS) require immense computational overhead. Evaluating 100% of the 640px validation dataset took nearly as long as the training epoch itself, destroying mission velocity.
+**Fix:** Implemented **Validation Sharding**. The pipeline now evaluates a fixed **30% random-seeded subset** of the validation loader. Because `shuffle=False` is enforced, the exact same spatial features are evaluated every epoch, maintaining perfectly smooth LPIPS/FID metric geometry while accelerating the validation cycle by 300%.
+
+### 6.24 VRAM Defibrillation for InceptionV3
+
+**Issue:** After a dense NAFNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in `CUDA Out of Memory` crashes purely during validation.
+**Fix:** Engineered the **Surgical VRAM Defibrillator**. A mandatory `torch.cuda.empty_cache()` cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.
 
 ---
 
 ## 7. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol
 
 ### 7.1 Standalone Exporters
+
 Checkpoints saved under `DataParallel` are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.
 
 ### 7.2 The Ghost-Severing Protocol
+
 **Fix**: Implemented the **Ghost Severing Protocol**. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.
 
 ---
@@ -198,15 +271,19 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 ## 8. Kaggle Cloud Execution Protocols
 
 ### 8.1 Single-GPU Specialization (15GB T4 Node Strategy)
+
 We actively deprecate the second GPU in Kaggle instances to double VRAM stability linearly on `cuda:0`.
 
 ### 8.2 Sub-Epoch Continuity (Progress Snapshots)
+
 We natively execute intra-epoch `progress.pth` serialization precisely tracking global `_batch_steps`.
 
 ### 8.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)
+
 **Fix**: Implemented the **Serial Extraction Mutex**. Download and extractions are strictly serialized via a Global Named Mutex, ensuring training threads are never starved.
 
 ### 8.4 Registry-First Dynamic Unification (v4.5)
+
 **Fix**: All asset handles and Kaggle URLs are resolved from the `unified_models.yaml` registry, ensuring the pipeline is robust against local/cloud path shifts.
 
 ---
@@ -224,6 +301,7 @@ We natively execute intra-epoch `progress.pth` serialization precisely tracking 
 ---
 
 ## 10. Conclusion: The Browser Restoration Paradigm
-The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible. 
+
+The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.
 
 The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
