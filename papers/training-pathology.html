@@ -51,14 +51,23 @@
             z-index: 100;
         }
 
-        .logo-small {
+        .toc-brand {
             display: block;
-            margin-bottom: 40px;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
         }
 
-        .logo-small img {
-            height: 48px;
-            filter: drop-shadow(0 0 10px rgba(0, 122, 255, 0.3));
+        .toc-brand img {
+            width: 40px;
+            height: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .toc-brand img:hover {
+            opacity: 1;
         }
 
         .toc-sidebar h4 {
@@ -110,12 +119,26 @@
 
         header {
             margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .brand-logo {
+            display: block;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .brand-logo img {
+            height: 60px;
+            display: block;
+            margin: 0 auto;
         }
 
         .meta-tags {
             display: flex;
             gap: 12px;
             margin-bottom: 24px;
+            justify-content: center;
         }
 
         .tag {
@@ -145,6 +168,7 @@
             font-size: 1.25rem;
             color: var(--text-secondary);
             max-width: 800px;
+            margin: 0 auto 20px;
         }
 
         .author-info {
@@ -153,6 +177,7 @@
             color: var(--text-secondary);
             display: flex;
             gap: 24px;
+            justify-content: center;
         }
 
         .author-info b { color: var(--text-primary); }
@@ -334,8 +359,8 @@
 
 <body>
     <nav class="toc-sidebar">
-        <a href="../index.html" class="logo-small">
-            <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+        <a href="../index.html" class="toc-brand">
+            <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
         </a>
         <h4>Navigation Matrix</h4>
         <ul>
@@ -366,6 +391,9 @@
 
     <main class="main-content">
         <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo">
+            </a>
             <div class="meta-tags">
                 <span class="tag">Whitepaper</span>
                 <span class="tag">Diagnostics</span>
