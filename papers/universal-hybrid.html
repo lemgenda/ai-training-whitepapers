@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture of LemGendary AI: Universal Hybrid Restoration Pipelines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent-color: #007aff;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --code-bg: #1a1a1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 40px 20px;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(0, 122, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .meta {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            margin: 35px 0 15px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: #fff;
+        }
+
+        ul, ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .visual-taxonomy {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .quadrant {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quadrant:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 122, 255, 0.15);
+        }
+
+        .quadrant img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quadrant-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .quadrant-info strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .quadrant-info span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Modal Lightbox Styles --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-caption {
+            margin-top: 25px;
+            color: #fff;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .modal-caption h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        td {
+            font-size: 0.85rem;
+        }
+
+        .math-block {
+            padding: 24px;
+            background: var(--code-bg);
+            border-radius: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            color: #4cd964;
+            text-align: center;
+            margin: 25px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 80px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            padding-bottom: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 900px;
+                padding-left: 20px;
+            }
+            .toc-sidebar {
+                display: none;
+            }
+        }
+
+        /* --- Sticky TOC Sidebar --- */
+        .toc-sidebar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            position: fixed;
+            left: 20px;
+            top: 40px;
+            width: 220px;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .toc-sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .toc-brand {
+            display: block;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toc-brand img {
+            width: 40px;
+            height: auto;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .toc-sidebar h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .toc-sidebar ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .toc-sidebar li {
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        .toc-sidebar a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+            border-left: 2px solid transparent;
+            padding: 5px 0 5px 10px;
+        }
+
+        .toc-sidebar a:hover, .toc-sidebar a.active {
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+            padding-left: 15px;
+        }
+
+        .toc-sidebar .sub-item {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 15px;
+            font-size: 0.75rem;
+        }
+
+        .toc-sidebar li:hover > .sub-item,
+        .toc-sidebar li.is-active > .sub-item {
+            max-height: 800px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px auto 40px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            width: fit-content;
+            z-index: 10;
+            position: relative;
+        }
+
+        .tab-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-link.active {
+            color: #fff;
+            background: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="universal-hybrid.html" class="tab-link active">Universal Hybrid</a>
+                <a href="nafnet.html" class="tab-link">NAFNet</a>
+                <a href="mirnet.html" class="tab-link">MIRNet</a>
+                <a href="ffanet.html" class="tab-link">FFANet</a>
+                <a href="mprnet.html" class="tab-link">MPRNet</a>
+            </div>
+            <h1>Architecture of LemGendary AI</h1>
+            <p class="subtitle">Universal Hybrid Restoration Pipelines</p>
+            <div class="meta">
+                <span>By Lem Treursić</span>
+                <span>Version: 1.0.0 - Unified Multi-Modal Release</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h4>Navigation Matrix</h4>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#architectures">2. Unified Hybrid Architectures</a>
+                    <ul class="sub-item">
+                        <li><a href="#upnv2">2.1 UPN v2 Large</a></li>
+                        <li><a href="#filmrestorer">2.2 Universal Film Restorer</a></li>
+                        <li><a href="#multitask">2.3 Multi-Task Restorer</a></li>
+                    </ul>
+                </li>
+                <li><a href="#optimizations">3. Critical Optimizations</a>
+                    <ul class="sub-item">
+                        <li><a href="#attention">3.1 Downsampled Global Attention</a></li>
+                        <li><a href="#task-ingestion">3.2 Dynamic Filename Task Ingestion</a></li>
+                    </ul>
+                </li>
+                <li><a href="#deployment">4. Deployment Strategy</a></li>
+                <li><a href="#conclusion">5. Conclusion</a></li>
+            </ul>
+        </nav>
+
+        <section id="abstract">
+            <h2>1. Abstract</h2>
+            <p>The <strong>LemGendary Training Suite</strong> achieves absolute multi-modal restoration parity through its <strong>Universal Hybrid Architecture</strong> release. By integrating parameterized steering networks, dynamic physical degradation modeling, and soft Mixture-of-Experts (MoE) multi-task routing, the suite expands beyond single-problem architectures. This paper presents the mathematical models, spatial complexity optimizations, and deployment pathways for three flagship models: <strong>UPN v2 Large</strong>, the <strong>Universal Film Restorer</strong>, and the <strong>Multi-Task Restorer</strong>. We demonstrate how memory-sentinel optimizations enable high-resolution restoration execution within highly constrained consumer hardware environments.</p>
+        </section>
+
+        <section id="architectures">
+            <h2>2. Unified Hybrid Architectures</h2>
+            <p>Moving beyond dedicated single-task networks, modern restoration demands high generalizability. By combining modular structures with dynamically parameterized steering, these three engines comprise the primary SOTA hybrid restoration suite.</p>
+
+            <div class="visual-taxonomy">
+                <div class="quadrant" onclick="openModal('../assets/aesthetic_masterpiece.png', 'UPN v2 Large', 'High-resolution restoration and parameterized space-recovery modeling.')">
+                    <img src="../assets/aesthetic_masterpiece.png" alt="UPN v2 Large" onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=cover'">
+                    <div class="quadrant-info">
+                        <strong>UPN v2 Large</strong>
+                        <span>Space-Recovery & Super-Res</span>
+                    </div>
+                </div>
+                <div class="quadrant" onclick="openModal('../assets/technical_compression.png', 'Universal Film Restorer', 'Vintage film degradation synthesizer and recovery pipeline.')">
+                    <img src="../assets/technical_compression.png" alt="Universal Film Restorer" onerror="this.src='https://images.unsplash.com/photo-1542204172-e70528091850?q=80&w=800&auto=format&fit=cover'">
+                    <div class="quadrant-info">
+                        <strong>Universal Film Restorer</strong>
+                        <span>Analog Degradation Recovery</span>
+                    </div>
+                </div>
+                <div class="quadrant" onclick="openModal('../assets/technical_noise.png', 'Multi-Task Restorer', 'Multiheaded task-routing routing restoration block.')">
+                    <img src="../assets/technical_noise.png" alt="Multi-Task Restorer" onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=cover'">
+                    <div class="quadrant-info">
+                        <strong>Multi-Task Restorer</strong>
+                        <span>Mixture-of-Experts MoE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="upnv2">
+                <h3>2.1 UPN v2 Large: Parameterized Space-Recovery</h3>
+                <p>The <strong>UPN v2 Large</strong> model represents our premier space-recovery and super-resolution engine. Built on top of residual channel-attention blocks, UPN v2 incorporates <strong>Parameterized Steering Vectors</strong> that allow real-time strength tuning during runtime execution.</p>
+                <ul>
+                    <li><strong>Dynamic Kernel Steerability:</strong> Rather than baking static restoration parameters into the weights, the steering vector dynamically scales internal residual feature maps.</li>
+                    <li><strong>Fixed-Shape ONNX Compliance:</strong> Engineered specifically to prevent WebGPU slice and dynamic-shape boundary crashes in browser runtimes by enforcing strict static-tensor compilation formats during export.</li>
+                </ul>
+            </div>
+
+            <div class="card" id="filmrestorer">
+                <h3>2.2 Universal Film Restorer: Synthesized Degradation</h3>
+                <p>The <strong>Universal Film Restorer</strong> targets the remediation of legacy analog film assets. Its primary innovation is its <strong>Dynamic Film Degradation Synthesizer</strong>, which eliminates the need for paired degraded/clean reference manifolds.</p>
+                <ul>
+                    <li><strong>On-the-Fly Synthetic Injection:</strong> Clean, high-fidelity source images (such as DIV2K) are dynamically degraded during batch ingestion.</li>
+                    <li><strong>Parametric Degradation Layers:</strong> Randomly samples and blends spatial noise, continuous analog film grain, high-contrast dust specs, physical emulsion scratches, and localized chromatic aberration vectors.</li>
+                    <li><strong>Global Identity Recovery:</strong> Forces the model to map severely corrupted visual arrays back to their mathematically clean high-resolution target anchors.</li>
+                </ul>
+            </div>
+
+            <div class="card" id="multitask">
+                <h3>2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing</h3>
+                <p>The <strong>LemGendized Professional Multi-Task Restoration Model</strong> addresses heterogenous degradations through a unified architecture. It bypasses the need for running multiple isolated models sequentially.</p>
+                <ul>
+                    <li><strong>Shared Encoder Backbone:</strong> Features a deep spatial encoder that captures core texture representation.</li>
+                    <li><strong>Soft Routing Task Classifier:</strong> A specialized classifier analyzes the latent features and generates a probability weight vector: <code class="highlight">w &isin; R^6</code></li>
+                    <li><strong>Mixture-of-Experts Heads:</strong> Feeds the latent representations into 6 specialized restoration heads simultaneously: Denoise, Deblur, Derain, Dehaze, LowLight, and SuperRes.</li>
+                    <li><strong>Linear Blending Output:</strong> The final output is a dynamically weighted linear combination of the heads' outputs based on the routing probabilities:</li>
+                </ul>
+                <div class="math-block">
+                    Y_hat = &Sigma; (w_i * H_i(Z))
+                </div>
+            </div>
+        </section>
+
+        <section id="optimizations">
+            <h2>3. Critical Architectural Optimizations</h2>
+            
+            <div class="card" id="attention">
+                <h3>3.1 Downsampled Global Attention (OOM Remediation)</h3>
+                <p>Standard spatial self-attention possesses quadratic spatial complexity:</p>
+                <div class="math-block">
+                    O(N^2) = O((H * W)^2)
+                </div>
+                <p>For high-fidelity inputs scaled up to 256x256 pixels, the sequence length is 65,536, forcing PyTorch to attempt a massive <strong>128 GB memory allocation</strong> for the attention matrix on GPU/CPU forward passes.</p>
+                <p>To achieve robust consumer-grade hardware compatibility (targeting NVIDIA GTX 1650 / 4GB VRAM), we engineered the <strong>Downsampled Global Attention (DGA)</strong> block:</p>
+                <ol style="margin-left:20px; margin-bottom:20px;">
+                    <li><strong>Adaptive Average Pooling:</strong> Downsamples spatial feature tensors dynamically to a stable sequence map of 32x32 pixels.</li>
+                    <li><strong>Global Attention Computation:</strong> Executes multihead spatial self-attention on the pooled 1,024-token sequence, reducing memory consumption by over <strong>4,000x</strong> (limiting attention matrices to &lt;4 MB of VRAM).</li>
+                    <li><strong>Bilinear Interpolation:</strong> Interpolates the processed attention map back to the original input resolution (H x W) and injects it residually:</li>
+                </ol>
+                <div class="math-block">
+                    X_out = X + Interpolate(Attention(Pool(X)))
+                </div>
+                <p>This maintains 100% checkpoint compatibility with existing weights while rendering OOM crashes structurally impossible.</p>
+            </div>
+
+            <div class="card" id="task-ingestion">
+                <h3>3.2 Dynamic Filename Task Ingestion</h3>
+                <p>During dataset consolidation, multi-task models ingest millions of composite images. A critical failure mode discovered was <strong>Task-Index Blindness</strong>, where the loss engine received a static task label (e.g. <code>"restoration"</code> globally), locking the routing classifier into a single head and halting the optimization of secondary heads.</p>
+                <p>We implemented the <strong>Dynamic Task-Index Extractor</strong> protocol:</p>
+                <ul>
+                    <li>Instantiates a regex-driven analysis of compiled physical image filenames.</li>
+                    <li>Maps physical compilation tags (e.g. <code>"nafnetdebluring"</code> &rarr; <code>"deblur"</code>, <code>"mirnetlowlight"</code> &rarr; <code>"lowlight"</code>) natively back to task indices.</li>
+                    <li>Passes explicit <code>task_idx</code> targets to the <code>CombinedLoss</code> CrossEntropy classifier during training, forcing proper multi-head optimization.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="deployment">
+            <h2>4. Deployment Strategy & WebGPU Compatibility</h2>
+            <p>All Universal Hybrid models are exported utilizing <strong>Opset 15/17</strong> validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and zero-latency shader execution inside modern WebGPU browser kernels.</p>
+        </section>
+
+        <section id="conclusion">
+            <h2>5. Conclusion</h2>
+            <p>The <strong>Universal Hybrid Restoration</strong> paradigms set a new standard for efficient, high-fidelity AI processing. By combining dynamic physical degradation synthesis, parameterized steering, and memory-hardened global attention blocks, LemGendary AI models guarantee superior restoration performance across heterogeneous consumer hardware fleets.</p>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 LemGenda AI Hub. All hybrid models designed and optimized for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div class="modal-caption" id="modalCaption">
+            <h4 id="modalTitle">Caption Title</h4>
+            <p id="modalDesc">Description text</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal(imgSrc, title, desc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDesc = document.getElementById('modalDesc');
+            
+            modalImg.src = imgSrc;
+            modalTitle.innerText = title;
+            modalDesc.innerText = desc;
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal on Esc press
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

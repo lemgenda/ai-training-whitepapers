@@ -56,6 +56,7 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 | **Label Noise Sensitivity** | Model overfits to mislabeled samples, causing high variance. | **Loss Spikes**: Random, huge spikes in training loss that don't affect validation trends. | **Robust Loss Functions** (MAE instead of MSE); **Label Smoothing**; **SALI** vetting. |
 | **Regression Boundary Collapse** | Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes. | **Param Clamping**: Regression MAE flatlines; outputs clamp to domain boundaries. | Switch to **SmoothL1 (Huber) Loss** and implement **$\pi$-boundary normalization** to scale gradients symmetrically. |
 | **Multi-Task Gradient Conflict** | Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure. | **Dual-Failures**: PSNR improves but restored color is washed out or noise removal is imperfect. | Combine **L1 + Perceptual Loss (LPIPS)** and implement **Global Residual Connections (`out + x`)** to learn delta differences. |
+| **MoE Routing Collapse** | Multi-task models (e.g., Multi-Task Restorer) trained on composite datasets where specific task labels are missing or unified under a generic category. | **Routing Lock**: Routing weight vectors permanently lock to a single head index; secondary heads fail to learn. | Implement **Dynamic Filename Task Ingestion** to extract task targets directly from file metadata/filenames. |
 
 ---
 

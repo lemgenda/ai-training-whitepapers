@@ -513,6 +513,12 @@
                             <td>PSNR improves but restored color is washed out or noise removal is imperfect.</td>
                             <td>Combine <strong>L1 + Perceptual Loss (LPIPS)</strong> and implement <strong>Global Residual Connections (`out + x`)</strong> to learn delta differences.</td>
                         </tr>
+                        <tr>
+                            <td><strong>MoE Routing Collapse</strong></td>
+                            <td>Multi-task models (e.g., Multi-Task Restorer) trained on composite datasets where specific task labels are missing or unified under a generic category.</td>
+                            <td>Routing weight vectors permanently lock to a single head index; secondary heads fail to learn.</td>
+                            <td>Implement <strong>Dynamic Filename Task Ingestion</strong> to extract task targets directly from file metadata/filenames.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
