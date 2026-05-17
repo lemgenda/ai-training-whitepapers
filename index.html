@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemGendary AI Documentation Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-color: #0a0a0c;
@@ -33,7 +35,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 50%, rgba(0, 122, 255, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.06) 0%, transparent 50%);
             background-attachment: fixed;
@@ -106,7 +108,10 @@
         .card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: radial-gradient(circle at center, rgba(0, 122, 255, 0.1) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
@@ -216,8 +221,13 @@
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .grid { grid-template-columns: 1fr; }
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -225,7 +235,8 @@
 <body>
     <header>
         <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
-            <img src="assets/lemgenda-logo.svg" alt="LemGenda" class="logo" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            <img src="assets/lemgenda-logo.svg" alt="LemGenda" class="logo"
+                onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
         </a>
         <h1>LemGendary Training Suite</h1>
         <p class="subtitle">Official documentation hub for our hardware-aware AI models and performance whitepapers.</p>
@@ -233,7 +244,7 @@
 
     <div class="container">
         <div class="grid">
-            
+
             <!-- Category 1 -->
             <a href="papers/training-pathology.html" class="card">
                 <div class="card-content">
@@ -242,7 +253,8 @@
                         <span class="status-badge status-active">Published</span>
                     </div>
                     <h2>Training Pathology</h2>
-                    <p class="models-list">Master guide for diagnosing and remediating AI training failures like Vanishing Gradients and NaN Divergence.</p>
+                    <p class="models-list">Master guide for diagnosing and remediating AI training failures like
+                        Vanishing Gradients and NaN Divergence.</p>
                     <div class="arrow">→</div>
                 </div>
             </a>
@@ -255,7 +267,8 @@
                         <span class="status-badge status-active">Published</span>
                     </div>
                     <h2>Quality Assessment</h2>
-                    <p class="models-list">NIMA architecture for both Aesthetic visualization and Technical artifact detection.</p>
+                    <p class="models-list">NIMA architecture for both Aesthetic visualization and Technical artifact
+                        detection.</p>
                     <div class="arrow">→</div>
                 </div>
             </a>
@@ -268,7 +281,8 @@
                         <span class="status-badge status-pending">In Training</span>
                     </div>
                     <h2>Face & Detection</h2>
-                    <p class="models-list">RetinaFace, YOLOv8 object mapping, and CodeFormer facial synthesis.</p>
+                    <p class="models-list">RetinaFace, ParseNet, YOLOv8 object mapping, and CodeFormer facial synthesis.
+                    </p>
                 </div>
             </a>
 
@@ -280,7 +294,8 @@
                         <span class="status-badge status-pending">In Training</span>
                     </div>
                     <h2>Super-Resolution</h2>
-                    <p class="models-list">UltraZoom (x2, x3, x4, x8) upscaling pipelines built for WebGPU edge execution.</p>
+                    <p class="models-list">UltraZoom (x2, x3, x4, x8) upscaling pipelines built for WebGPU edge
+                        execution.</p>
                 </div>
             </a>
 
@@ -292,7 +307,8 @@
                         <span class="status-badge status-active">Published</span>
                     </div>
                     <h2>Image Restoration</h2>
-                    <p class="models-list">NAFNet, MIRNet, FFANet, and MPRNet architectures for artifact and environmental correction.</p>
+                    <p class="models-list">NAFNet, MIRNet, FFANet, and MPRNet architectures for artifact and
+                        environmental correction.</p>
                     <div class="arrow">→</div>
                 </div>
             </a>
@@ -305,7 +321,8 @@
                         <span class="status-badge status-pending">In Training</span>
                     </div>
                     <h2>Universal Hybrid</h2>
-                    <p class="models-list">UPN v2, Multi-Restorer, and Film pipeline combinations for multi-modal restoration targets.</p>
+                    <p class="models-list">UPN v2, Multi-Restorer, and Film pipeline combinations for multi-modal
+                        restoration targets.</p>
                 </div>
             </a>
 
@@ -316,4 +333,5 @@
         <p>&copy; 2026 LemGenda AI Hub. All models designed and optimized for Universal Hardware resilience.</p>
     </footer>
 </body>
+
 </html>

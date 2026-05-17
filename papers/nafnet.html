@@ -530,6 +530,8 @@
                         <li><a href="#resolution-sota-guard">6.22 Resolution-Aware Patience Reset</a></li>
                         <li><a href="#validation-sharding">6.23 Validation Sharding (30% Audit)</a></li>
                         <li><a href="#vram-defibrillation">6.24 VRAM Defibrillation for InceptionV3</a></li>
+                        <li><a href="#restoration-quality-score">6.25 Restoration Quality Score integration</a></li>
+                        <li><a href="#governor-history-serialization">6.26 Governor History Serialization</a></li>
                     </ul>
                 </li>
                 <li><a href="#deployment">7. Deployment Strategy</a>
@@ -798,6 +800,18 @@
                 <h3 id="vram-defibrillation">6.24 VRAM Defibrillation for InceptionV3</h3>
                 <p><strong>Issue:</strong> After a dense NAFNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in <code>CUDA Out of Memory</code> crashes purely during validation.</p>
                 <p><strong>Fix:</strong> Engineered the <strong>Surgical VRAM Defibrillator</strong>. A mandatory <code>torch.cuda.empty_cache()</code> cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.</p>
+            </div>
+
+            <div class="card">
+                <h3 id="restoration-quality-score">6.25 Restoration Quality Score Integration</h3>
+                <p><strong>Issue:</strong> For restoration models (like NAFNet), the <code>current_quality_score</code> was bypassed during validation metrics gathering due to a nested <code>task_type == "quality"</code> check in <code>train.py</code>. This left the validation scorecarding blind, reporting <code>0.0000</code> Quality Scores in <code>metrics.csv</code> and freezing curriculum scaling.</p>
+                <p><strong>Fix:</strong> Un-nested the SOTA targets evaluation loop in <code>train.py</code>. The orchestrator now dynamically compounds high-fidelity metrics (PSNR, SSIM, LPIPS, FID) for all restoration tasks that define SOTA targets, restoring correct quality scorecarding and curriculum growth.</p>
+            </div>
+
+            <div class="card">
+                <h3 id="governor-history-serialization">6.26 Governor History Serialization</h3>
+                <p><strong>Issue:</strong> The Smart Training Governor's historical epoch memory buffer (<code>self.history</code>) was completely omitted from <code>get_state()</code> and <code>load_state()</code>. As a result, resuming training from a checkpoint completely reset the flatness detector patience, which (when combined with frequent cloud restarts) permanently locked the model at its initial curriculum resolution/variety.</p>
+                <p><strong>Fix:</strong> Hardened the governor state manager in <code>optimization_engine.py</code> to serialize and deserialize the <code>self.history</code> list. Plateau memory now persists seamlessly across arbitrary stops, resumes, and preemptions.</p>
             </div>
         </section>
 
