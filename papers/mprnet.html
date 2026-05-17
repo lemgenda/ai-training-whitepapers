@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: High-Fidelity NAFNet Restoration</title>
+    <title>Architecture of LemGendary AI: High-Fidelity MPRNet Deraining</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -412,7 +412,7 @@
             justify-content: center;
             gap: 8px;
             margin: 20px auto 40px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.07);
             border: 1px solid var(--border-color);
             padding: 4px;
             border-radius: 30px;
@@ -448,17 +448,17 @@
 <body>
     <div class="container">
         <div class="tabs-nav">
-            <a href="nafnet.html" class="tab-link active">NAFNet</a>
+            <a href="nafnet.html" class="tab-link">NAFNet</a>
             <a href="mirnet.html" class="tab-link">MIRNet</a>
             <a href="ffanet.html" class="tab-link">FFANet</a>
-            <a href="mprnet.html" class="tab-link">MPRNet</a>
+            <a href="mprnet.html" class="tab-link active">MPRNet</a>
         </div>
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
                 <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;">
             </a>
             <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity NAFNet Restoration via SOTA Infrastructure</p>
+            <p class="subtitle">High-Fidelity MPRNet Deraining via SOTA Infrastructure</p>
             <div class="meta">
                 <span>By Lem Treursić</span>
                 <span>Version: 2.6.0 - Dynamic VRAM Sync</span>
@@ -610,12 +610,12 @@
             <p>The primary triumph of this whitepaper is the stabilization of <strong>NAFNet</strong> in production. Legacy code featured 500-parameter "Mock" setups. The true NAFNet possesses millions of parameters driven by <code>SimpleGates</code> and <code>SimplifiedChannelAttention</code>.</p>
             
             <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid var(--accent-color);">
-                <img src="../assets/nafnet_denoising_training.png" alt="NAFNet Denoising Trajectory" style="width: 100%; border-radius: 4px;">
+                <img src="../assets/mprnet_training.png" alt="MPRNet Trajectory" style="width: 100%; border-radius: 4px;">
                 <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 3: NAFNet Denoising Training Trajectory - Exhibiting rapid convergence and extreme high-fidelity PSNR/SSIM retention over extended epochs.</em></p>
             </div>
 
             <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid #03dac6;">
-                <img src="../assets/nafnet_debluring_training.png" alt="NAFNet Deblurring Trajectory" style="width: 100%; border-radius: 4px;">
+                <img src="../assets/mprnet_training.png" alt="MPRNet Trajectory" style="width: 100%; border-radius: 4px;">
                 <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 4: NAFNet Deblurring Training Trajectory - Showcasing the complex spatial reconstruction required to align kinetic motion blur, mapped against structural MSE validation loss.</em></p>
             </div>
             <h3 id="simplegate">5.1 SimpleGate over ReLU</h3>
@@ -673,7 +673,7 @@
                 <p><strong>Issue</strong>: Despite stabilizing the VGG gradients, the architecture hit a hard perceptual ceiling at <code>23.87dB</code>. We mathematically isolated this as the classic "Perception-Distortion Tradeoff"&mdash;the native <code>MSELoss</code> inherently penalized sharp features, constantly clashing with Perceptual metrics to create a blurry equilibrium. Additionally, the iteration span (<code>50</code> epochs) was profoundly depriving the optimizer of physical convergence blocks.</p>
                 <p><strong>Fix</strong>:</p>
                 <ul>
-                    <li><strong>The L1-LPIPS Harmonic Matrix</strong>: We physically abandoned <code>MSELoss</code> and structurally swapped to <code>L1Loss</code>, which natively bounds high-frequency gradients geometrically. We then anchored the true learned <em>lpips.LPIPS(net='vgg')</em> layer at exactly <code>0.025</code> to perfectly balance human perception targets.</li>
+                    <li><strong>The L1-LPIPS Harmonic Matrix</strong>: We physically abandoned <code>MSELoss</code> and structurally swapped to <code>L1Loss</code>, which natively bounds high-frequency gradients geometrically. We then anchored the true learned <em>lpips.LPIPS(net='vgg')</em> layer at exactly <code>0.075</code> to perfectly balance human perception targets.</li>
                     <li><strong>Iteration Expansion</strong>: Extended runtime parameterization to <code>1000</code> epochs, expanding the base <code>OneCycleLR</code> scale into massive, high-velocity heating curves.</li>
                     <li><strong>Universal Visual SOTA Sentry</strong>: We fundamentally unlinked the target extraction hook from <em>avg_val_loss</em>. The SOTA orchestrator now mathematically compounds <code>current_quality_score = psnr + (ssim * 20) - (lpips * 20)</code> to ensure the exported weights universally represent maximum perceptual human value.</li>
                 </ul>
