@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 # Nuclear Stability: AI Training Pathology Master Guide (v1.1)
 
 **Author**: Lem Treursić  
@@ -23,6 +24,8 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
    * [Memory-Sentinel Drift](#memory-sentinel-drift)
    * [Atomic Hardware Re-Auditing](#atomic-hardware-re-auditing)
    * [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
+   * [Premature SOTA Termination](#premature-sota-termination)
+   * [Manifold Fragility (The "Glass Manifold" Effect)](#manifold-fragility-the-glass-manifold-effect)
    * [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
    * [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
 6. [Best Practices Checklist](#7-best-practices-checklist)
@@ -51,6 +54,8 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 | **Internal Covariate Shift** | Distribution of layer inputs changes during training, slowing convergence. | **Jitter**: Training loss fluctuates wildly between batches. | **Batch Normalization** or **Layer Normalization**; implement **Skip Connections**. |
 | **Catastrophic Forgetting** | Fine-tuning on new data overwrites weights for original tasks. | **Regression**: Accuracy on original validation set drops sharply after fine-tuning. | **Elastic Weight Consolidation (EWC)**; **Replay Buffer** (mix old data with new); lower LR. |
 | **Label Noise Sensitivity** | Model overfits to mislabeled samples, causing high variance. | **Loss Spikes**: Random, huge spikes in training loss that don't affect validation trends. | **Robust Loss Functions** (MAE instead of MSE); **Label Smoothing**; **SALI** vetting. |
+| **Regression Boundary Collapse** | Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes. | **Param Clamping**: Regression MAE flatlines; outputs clamp to domain boundaries. | Switch to **SmoothL1 (Huber) Loss** and implement **$\pi$-boundary normalization** to scale gradients symmetrically. |
+| **Multi-Task Gradient Conflict** | Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure. | **Dual-Failures**: PSNR improves but restored color is washed out or noise removal is imperfect. | Combine **L1 + Perceptual Loss (LPIPS)** and implement **Global Residual Connections (`out + x`)** to learn delta differences. |
 
 ---
 
@@ -93,7 +98,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 * **Identification**: High validation loss at high resolutions; model generates "hallucinated" coarse features where sharp textures should exist.
 * **Remedy**: **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
 
+### Memory-Sentinel Drift
+
+* **The Issue**: Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.
+* **Identification**: Sudden OOM crashes during epoch transitions or spatial scaling.
 * **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
+
 
 ### Atomic Hardware Re-Auditing
 
@@ -150,9 +160,10 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | Model Group | Key Models | SOTA Goal | Progression Strategy | Plateau Recognition & Breakthrough |
 | :--- | :--- | :--- | :--- | :--- |
 | **Group A: Metric Scorers** | `nima_aesthetic`, `nima_authenticity` | SRCC > 0.90, Accuracy > 0.95 | **Res**: 512→640→768<br>**Fraction**: 0.25→0.75→1.0 | **Plateau**: SRCC flatlines at 0.70.<br>**Tactic**: LR "Jolt" (1.5x) and switch to SWA at 65% training mark. |
-| **Group B: Restoration** | `nafnet_denoising`, `film_restorer` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 256→384→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty (Dynamic Noise) at 512px. |
+| **Group B: Restoration** | `nafnet_denoising`, `film_restorer` | PSNR > 33.0, LPIPS < 0.06 (Restoration)<br>PSNR > 24.0, SSIM > 0.80, LPIPS < 0.25 (Film Restorer SOTA) | **Res**: 256→384→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty (Dynamic Scratches/Sepia) at 512px; switch to L1 + LPIPS loss. |
 | **Group C: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 512→768→1024<br>**Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant.<br>**Tactic**: Switch to EMA (Exponential Moving Average) weights. |
 | **Group D: Vision-Language** | `vlm_llava`, `vlm_blip2` | Caption Accuracy | **Res**: 224→336→448<br>**Fraction**: 0.10→0.50 (Polish) | **Plateau**: Model repetitive or hallucinating.<br>**Tactic**: Reset Optimizer Momentum; apply Softmax Temperature (0.05). |
+| **Group E: Parameter Regression** | `upn_v2` | MAE < 0.03 | **Res**: Locked at 256px (VRAM conservation)<br>**Fraction**: 0.15 increments | **Plateau**: Parameters saturate or clamp at extreme limits.<br>**Tactic**: Implement SmoothL1 loss and $\pi$-boundary normalization. |
 
 ---
 

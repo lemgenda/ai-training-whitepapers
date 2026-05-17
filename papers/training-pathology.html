@@ -386,6 +386,8 @@
                     <li><a href="#serial-shield">· Serial Shield (v17.2)</a></li>
                     <li><a href="#iron-clamp">· Iron-Clamp (v22.0)</a></li>
                     <li><a href="#false-positive-spike">· False-Positive Spike</a></li>
+                    <li><a href="#premature-sota">· Premature SOTA</a></li>
+                    <li><a href="#manifold-fragility">· Manifold Fragility</a></li>
                 </ul>
             </li>
             <li><a href="#best-practices">6. Best Practices Checklist</a></li>
@@ -499,6 +501,18 @@
                             <td>Random, huge spikes in training loss that don't affect validation trends.</td>
                             <td><strong>Robust Loss Functions</strong> (MAE over MSE); <strong>Label Smoothing</strong>; <strong>SALI</strong> vetting.</td>
                         </tr>
+                        <tr>
+                            <td><strong>Regression Boundary Collapse</strong></td>
+                            <td>Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes.</td>
+                            <td>Continuous regression MAE flatlines; predictions clamp to extreme boundary outputs.</td>
+                            <td>Switch to <strong>SmoothL1 (Huber) Loss</strong> and implement <strong>$\pi$-boundary normalization</strong> to scale gradients symmetrically.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multi-Task Gradient Conflict</strong></td>
+                            <td>Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure.</td>
+                            <td>PSNR improves but restored color is washed out or noise removal is imperfect.</td>
+                            <td>Combine <strong>L1 + Perceptual Loss (LPIPS)</strong> and implement <strong>Global Residual Connections (`out + x`)</strong> to learn delta differences.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -543,11 +557,11 @@
 
         <section id="high-fidelity">
             <h2>5. High-Fidelity Strategy (v16.2.8)</h2>
-            <h3>The "Low-Resolution Blur" Pathology</h3>
+            <h3 id="blur-pathology">The "Low-Resolution Blur" Pathology</h3>
             <p><strong>The Issue:</strong> Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.</p>
             <p><strong>Remedy:</strong> <strong>Mandatory High-Fidelity Floor</strong>. As of v16.2.8, all models must start at a minimum of <strong>224px</strong> or <strong>512px</strong> (Metric Scorers).</p>
 
-            <h3>Memory-Sentinel Drift</h3>
+            <h3 id="sentinel-drift">Memory-Sentinel Drift</h3>
             <p><strong>The Issue:</strong> Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.</p>
             <p><strong>Remedy:</strong> <strong>Active Memory-Sentinel Probing</strong>. Decouple batch size from registry and probe hardware headroom before every resolution jump.</p>
 
@@ -612,8 +626,8 @@
                         <tr>
                             <td><strong>B: Restoration</strong></td>
                             <td><code>nafnet_denoising</code>, <code>film_restorer</code></td>
-                            <td>PSNR > 33.0</td>
-                            <td>Increase degradation difficulty at 512px.</td>
+                            <td>PSNR > 33.0 (Restoration)<br>PSNR > 24.0, SSIM > 0.80, LPIPS < 0.25 (Film Restorer SOTA)</td>
+                            <td>Increase degradation difficulty at 512px; switch to L1 + LPIPS loss.</td>
                         </tr>
                         <tr>
                             <td><strong>C: Generative</strong></td>
@@ -626,6 +640,12 @@
                             <td><code>vlm_llava</code>, <code>vlm_blip2</code></td>
                             <td>Caption Accuracy</td>
                             <td>Reset Momentum; apply Softmax Temperature (0.05).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>E: Parameter Regression</strong></td>
+                            <td><code>upn_v2</code></td>
+                            <td>MAE < 0.03</td>
+                            <td>Switch to SmoothL1 loss and apply $\pi$-boundary normalization.</td>
                         </tr>
                     </tbody>
                 </table>
