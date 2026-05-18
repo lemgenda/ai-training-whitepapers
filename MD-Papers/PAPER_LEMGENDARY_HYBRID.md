@@ -51,16 +51,21 @@ The **LemGendized Professional Multi-Task Restoration Model** addresses heteroge
 
 - **Shared Encoder Backbone**: Features a deep spatial encoder that captures core texture representation.
 - **Soft Routing Task Classifier**: A specialized classifier analyzes the latent features and generates a probability weight vector:
-  $$\mathbf{w} \in \mathbb{R}^{6}$$
-- **Mixture-of-Experts Heads**: Feeds the latent representations into 6 specialized restoration heads simultaneously:
-  1. `DenoiseHead`
-  2. `DeblurHead`
-  3. `DerainHead`
-  4. `DehazeHead`
-  5. `LowLightHead`
-  6. `SuperResHead`
+  $$\mathbf{w} \in \mathbb{R}^{11}$$
+- **Mixture-of-Experts Heads**: Feeds the latent representations into 11 specialized restoration heads simultaneously:
+  1. `DenoiseHead` (denoise)
+  2. `DeblurHead` (deblur)
+  3. `DerainHead` (derain)
+  4. `DehazeHead` (dehaze_indoor)
+  5. `DehazeHead` (dehaze_outdoor)
+  6. `LowLightHead` (lowlight)
+  7. `LowLightHead` (exposure)
+  8. `SuperResHead` (superres)
+  9. `GenericConvHead` (vintage)
+  10. `GenericConvHead` (face_restorer)
+  11. `GenericConvHead` (face_parser)
 - **Linear Blending Output**: The final output is a dynamically weighted linear combination of the heads' outputs based on the routing probabilities:
-  $$\hat{\mathbf{Y}} = \sum_{i=1}^{6} w_i \cdot \mathbf{H}_i(\mathbf{Z})$$
+  $$\hat{\mathbf{Y}} = \sum_{i=1}^{11} w_i \cdot \mathbf{H}_i(\mathbf{Z})$$
 
 ---
 
@@ -88,8 +93,8 @@ During dataset consolidation, multi-task models ingest millions of composite ima
 
 We implemented the **Dynamic Task-Index Extractor**:
 
-- Instantiates a regex-driven analysis of compiled physical image filenames.
-- Maps physical compilation tags (`nafnetdebluring` $\rightarrow$ `deblur`, `mirnetlowlight` $\rightarrow$ `lowlight`, `ffanetindoor` $\rightarrow$ `dehaze`) natively back to task indices.
+- Instantiates a regex-driven analysis of compiled physical image filenames via `professionalmultitaskrestoration_[task]_compiled_[manifold]_[idx].jpg`.
+- Maps physical compilation tags (`deblur`, `denoise`, `derain`, `dehaze_indoor`, `dehaze_outdoor`, `lowlight`, `exposure`, `superres`, `vintage`, `face_restorer`, and `face_parser`) natively back to task indices with backward-compatible substring fallbacks.
 - Passes explicit `task_idx` targets to the `CombinedLoss` CrossEntropy classifier during training, forcing proper multi-head optimization.
 
 ### 3.3 Dynamic Validation Sharding & Auto-Expansion
