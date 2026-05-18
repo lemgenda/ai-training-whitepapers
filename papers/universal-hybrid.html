@@ -548,12 +548,12 @@
                 <p>The <strong>LemGendized Professional Multi-Task Restoration Model</strong> addresses heterogenous degradations through a unified architecture. It bypasses the need for running multiple isolated models sequentially.</p>
                 <ul>
                     <li><strong>Shared Encoder Backbone:</strong> Features a deep spatial encoder that captures core texture representation.</li>
-                    <li><strong>Soft Routing Task Classifier:</strong> A specialized classifier analyzes the latent features and generates a probability weight vector: <code class="highlight">w &isin; R^6</code></li>
-                    <li><strong>Mixture-of-Experts Heads:</strong> Feeds the latent representations into 6 specialized restoration heads simultaneously: Denoise, Deblur, Derain, Dehaze, LowLight, and SuperRes.</li>
+                    <li><strong>Soft Routing Task Classifier:</strong> A specialized classifier analyzes the latent features and generates a probability weight vector: <code class="highlight">w &isin; R^11</code></li>
+                    <li><strong>Mixture-of-Experts Heads:</strong> Feeds the latent representations into 11 specialized restoration heads simultaneously: Denoise, Deblur, Derain, Dehaze (Indoor), Dehaze (Outdoor), LowLight, Exposure, SuperRes, Vintage, Face Restorer, and Face Parser.</li>
                     <li><strong>Linear Blending Output:</strong> The final output is a dynamically weighted linear combination of the heads' outputs based on the routing probabilities:</li>
                 </ul>
                 <div class="math-block">
-                    Y_hat = &Sigma; (w_i * H_i(Z))
+                    Y_hat = &Sigma; (w_i * H_i(Z))  [for i = 1 to 11]
                 </div>
             </div>
         </section>
@@ -585,8 +585,8 @@
                 <p>During dataset consolidation, multi-task models ingest millions of composite images. A critical failure mode discovered was <strong>Task-Index Blindness</strong>, where the loss engine received a static task label (e.g. <code>"restoration"</code> globally), locking the routing classifier into a single head and halting the optimization of secondary heads.</p>
                 <p>We implemented the <strong>Dynamic Task-Index Extractor</strong> protocol:</p>
                 <ul>
-                    <li>Instantiates a regex-driven analysis of compiled physical image filenames.</li>
-                    <li>Maps physical compilation tags (e.g. <code>"nafnetdebluring"</code> &rarr; <code>"deblur"</code>, <code>"mirnetlowlight"</code> &rarr; <code>"lowlight"</code>) natively back to task indices.</li>
+                    <li>Instantiates a regex-driven analysis of compiled physical image filenames via <code>professionalmultitaskrestoration_[task]_compiled_[manifold]_[idx].jpg</code>.</li>
+                    <li>Maps physical compilation tags (e.g. <code>"deblur"</code>, <code>"denoise"</code>, <code>"derain"</code>, <code>"dehaze_indoor"</code>, <code>"dehaze_outdoor"</code>, <code>"lowlight"</code>, <code>"exposure"</code>, <code>"superres"</code>, <code>"vintage"</code>, <code>"face_restorer"</code>, and <code>"face_parser"</code>) natively back to task indices with backward-compatible substring fallbacks.</li>
                     <li>Passes explicit <code>task_idx</code> targets to the <code>CombinedLoss</code> CrossEntropy classifier during training, forcing proper multi-head optimization.</li>
                 </ul>
             </div>
