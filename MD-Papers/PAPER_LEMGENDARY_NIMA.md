@@ -10,6 +10,7 @@
 1. [Abstract](#1-abstract)
 2. [Visual Taxonomy: The LemGendary Universal Quality Subset](#2-visual-taxonomy-the-lemgendary-universal-quality-subset)
    - [2.1 The Four-Quadrant Dataset Philosophy](#21-the-four-quadrant-dataset-philosophy)
+   - [2.2 NIMA Authenticity: Generative vs. Real Manifolds](#22-nima-authenticity-generative-vs-real-manifolds)
 3. [Hardware-Aware Infrastructure: Universal Acceleration](#3-hardware-aware-infrastructure-universal-acceleration)
    - [3.1 The Headroom-Aware Memory-Sentinel](#31-the-headroom-aware-memory-sentinel)
    - [3.2 Intra-Epoch Paging Protection](#32-intra-epoch-paging-protection)
@@ -19,6 +20,7 @@
    - [4.2 True Rank Correlation via EMD Temperature Anchoring](#42-true-rank-correlation-via-emd-temperature-anchoring)
    - [4.3 Resonance Coefficient Selection](#43-the-resonance-coefficient-selection-015-weighting)
    - [4.4 Soft-Label PMF Strategy](#44-the-soft-label-pmf-strategy)
+   - [4.5 Binned Midpoint Thresholding for Authenticity Scoring](#45-binned-midpoint-thresholding-for-authenticity-scoring)
 5. [Performance Metrics: LemGendary vs. Google SOTA](#5-performance-metrics-lemgendary-vs-google-sota)
    - [5.1 Consolidated SOTA Benchmarks](#51-consolidated-sota-benchmarks-avalivetid-bases)
 6. [Dataset Health & Recovery: The Infinite Pipeline](#6-dataset-health--recovery-the-infinite-pipeline)
@@ -56,6 +58,10 @@
    - [7.27 The Rank Margin Objective (v6.1.30)](#727-the-rank-margin-objective-v6130)
    - [7.28 Telemetry Parity & Plateau Resilience (v6.1.31)](#728-telemetry-parity--plateau-resilience-v6131)
    - [7.29 Invariant Native Scorecarding (v6.2.0)](#729-invariant-native-scorecarding-v620)
+   - [7.30 Low-Variance Safety Gate for Authenticity Convergence (v6.2.8)](#730-low-variance-safety-gate-for-authenticity-convergence-v628)
+   - [7.31 SOTA Memorization & Data Verification (v6.2.8)](#731-sota-memorization--data-verification-v628)
+   - [7.32 SOTA Quality Selection Guard (v6.2.8)](#732-sota-quality-selection-guard-v628)
+   - [7.33 Same-Resolution Recoil Protection (v6.2.8)](#733-same-resolution-recoil-protection-v628)
 8. [Deployment Strategy: Why ONNX?](#8-deployment-strategy-why-onnx)
    - [8.1 Format Comparison Matrix](#81-format-comparison-matrix)
    - [8.2 Why ONNX Wins for LemGendary](#82-why-onnx-wins-for-lemgendary)
@@ -94,6 +100,9 @@ Traditional datasets often conflate beauty with clarity. Our LemGendized subset 
 ![Quadrant 4: Low Aesthetic, High Technical](../assets/technical_sharp_boring.png)
 *Figure 4: High Technical (10/10) / Low Aesthetic (1/10) - A sharp, flawless image of a boring subject. This teaches the model that "sharpness" alone is not "art."*
 
+### 2.2 NIMA Authenticity: Generative vs. Real Manifolds
+To combat the proliferation of synthetic media and deepfakes, the suite integrates the **NIMA Authenticity (AI vs. Real)** classification lifecycle. Unlike standard aesthetic classifiers that evaluate artistic appeal, the authenticity classifier uses the `LemGendizedNimaAuthenticity` dataset manifold—a balanced corpus of real-world photography and diverse AI-generated/synthetic samples (covering GAN, Diffusion, and NeRF architectures). The model learns to detect subtle generative artifacts, frequency anomalies, and structural inconsistencies in the synthetic manifold.
+
 ---
 
 ## 3. Hardware-Aware Infrastructure: Universal Acceleration
@@ -126,6 +135,9 @@ The **0.15 coefficient** was empirically selected to balance the "EMD Convergenc
 ### 4.4 The Soft-Label PMF Strategy
 To achieve high-fidelity convergence, scores are not treated as flat scalars (e.g., 7.5). Instead, they are transformed into a **Probability Mass Function (PMF)** over the 1-10 range. This allows the EMD loss to "feel" the shape of human consensus, teaching the model to distinguish between a "solid 7.0" and a "highly controversial 7.0."
 
+### 4.5 Binned Midpoint Thresholding for Authenticity Scoring
+To evaluate the NIMA Authenticity scorer within our unified EMD loss framework, we apply a binned midpoint threshold at **5.5** (the exact center of the 1-10 NIMA scale). Predictions with probability mass distributions peaking at or above 5.5 represent synthetic/AI-generated origins (Fake), while distributions peaking below 5.5 represent real camera captures (Real). This allows authenticity to be trained with the same EMD distribution shape loss while producing a binary classification accuracy metric.
+
 ---
 
 ## 5. Performance Metrics: LemGendary vs. Google SOTA
@@ -141,6 +153,7 @@ Our results demonstrate significant generational leaps over the original 2018 NI
 | **Aesthetic** | **SRCC** | ~0.612 | **0.9068** | **+48.1% (Ranking)** |
 | **Technical** | **PLCC** | ~0.908 | **0.9848** | **+8.4% (Record)** |
 | **Technical** | **SRCC** | ~0.900 | **0.9037** | **Record Stability** |
+| **Authenticity** | **Accuracy** | N/A | **0.9336** | **SOTA Detector** |
 
 #### 5.1.1 Aesthetic Training Curve
 ![NIMA Aesthetic Training](../assets/nima_aesthetic_training.png)
@@ -313,6 +326,22 @@ The training of 440,000 samples on a 48-hour continuous cycle required "Resilien
 - Validation resolution is now decoupled from the Governor's dynamic training size.
 - Using a `val_resolution` registry key in `unified_models.yaml`, high-end models (like NAFNet) are strictly anchored to their target native resolution (e.g., 640px) from Epoch 1 to 1000.
 - This creates an unbroken, invariant metric baseline, ensuring that every decimal of PSNR or SRCC improvement directly correlates to true geometric learning, rather than resolution manipulation.
+
+### 7.30 Low-Variance Safety Gate for Authenticity Convergence (v6.2.8)
+**Issue**: Standard NIMA training uses an Emergency Head Reset if the PLCC/SRCC drops into negative ranges (e.g., during manifold shifts). However, because `nima_authenticity` operates on narrow/bimodal target distributions with low variance, standard head resets and thermal shocks were triggering falsely, destabilizing the training process.
+**Fix**: Implemented the **Low-Variance Safety Gate**. The training loop now bypasses emergency head resets and thermal shock temp resets if the model is `nima_authenticity` or if the validation target standard deviation is extremely low ($< 0.15$). This stabilized training across early and late epochs, successfully resolving the negative correlation drop and achieving steady convergence.
+
+### 7.31 SOTA Memorization & Data Verification (v6.2.8)
+**Issue**: Reaching SOTA targets at the final resolution step on a sub-sampled dataset (fraction $< 1.0$) previously shut down training. However, this risked saving a model that had memorized the subset and could not generalize to the full dataset.
+**Fix**: Deployed the SOTA Memorization Gating. Hitting SOTA targets at the final resolution ladder rung with a dataset fraction $< 1.0$ now automatically overrides the fraction to `1.0` (100% data) and reconstructs the training loader. The mission only terminates when SOTA is achieved at the max resolution ladder step with 100% of the training dataset.
+
+### 7.32 SOTA Quality Selection Guard (v6.2.8)
+**Issue**: Standard checkpoint selection evaluated SOTA strictly on validation loss. For quality-focused models, loss improvements could occur via output variance shrinking even when correlation metrics (PLCC/SRCC/Accuracy) worsened.
+**Fix**: Surgically gated SOTA checkpoint/ONNX exports on `quality` tasks to ignore loss-only improvements if PLCC, SRCC, or Accuracy do not improve. Loss-only improvements still update the validation loss threshold, but they are prevented from overwriting SOTA weights.
+
+### 7.33 Same-Resolution Recoil Protection (v6.2.8)
+**Issue**: In previous iterations, the Governor's stabilization engine ran in circles by lowering dataset fractions and immediately retraining instead of stabilizing on the current fraction.
+**Fix**: Hardened the Governor recoil logic to retain the current data fraction during same-resolution plateaus and regressions. This allows the model to stabilize on the current data variety instead of running in loops lowering and rising fractions.
 
 ---
 

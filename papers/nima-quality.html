@@ -442,6 +442,7 @@
                 <li><a href="#taxonomy">2. Visual Taxonomy</a>
                     <ul class="sub-item">
                         <li><a href="#quadrant-philosophy">2.1 Quadrant Philosophy</a></li>
+                        <li><a href="#authenticity-manifold">2.2 NIMA Authenticity</a></li>
                     </ul>
                 </li>
                 <li><a href="#hardware">3. Infrastructure</a>
@@ -457,6 +458,7 @@
                         <li><a href="#emd-temp-anchor">4.2 EMD Temp Anchor</a></li>
                         <li><a href="#resonance-curve">4.3 Resonance Curve</a></li>
                         <li><a href="#pmf-strategy">4.4 PMF Strategy</a></li>
+                        <li><a href="#authenticity-binned-threshold">4.5 Binned Midpoint</a></li>
                     </ul>
                 </li>
                 <li><a href="#benchmarks">5. Benchmarks</a>
@@ -502,6 +504,10 @@
                         <li><a href="#rank-margin">7.27 The Rank Margin Objective (v6.1.30)</a></li>
                         <li><a href="#telemetry-parity">7.28 Telemetry Parity (v6.1.31)</a></li>
                         <li><a href="#scorecarding">7.29 Invariant Native Scorecarding (v6.2.0)</a></li>
+                        <li><a href="#low-variance-gate">7.30 Low-Variance Safety Gate (v6.2.8)</a></li>
+                        <li><a href="#sota-memorization-gate">7.31 SOTA Memorization (v6.2.8)</a></li>
+                        <li><a href="#sota-quality-selection-guard">7.32 SOTA Quality Selection Guard (v6.2.8)</a></li>
+                        <li><a href="#same-res-recoil-protection">7.33 Same-Res Recoil Protection (v6.2.8)</a></li>
                     </ul>
                 </li>
                 <li><a href="#onnx">8. ONNX Strategy</a>
@@ -570,6 +576,9 @@
                     </div>
                 </div>
             </div>
+            
+            <h3 id="authenticity-manifold">2.2 NIMA Authenticity: Generative vs. Real Manifolds</h3>
+            <p>To combat the proliferation of synthetic media and deepfakes, the suite integrates the <strong>NIMA Authenticity (AI vs. Real)</strong> classification lifecycle. Unlike standard aesthetic classifiers that evaluate artistic appeal, the authenticity classifier uses the <code>LemGendizedNimaAuthenticity</code> dataset manifold—a balanced corpus of real-world photography and diverse AI-generated/synthetic samples (covering GAN, Diffusion, and NeRF architectures). The model learns to detect subtle generative artifacts, frequency anomalies, and structural inconsistencies in the synthetic manifold.</p>
         </section>
 
         <section id="hardware">
@@ -605,6 +614,8 @@
 
                 <h3 id="pmf-strategy">4.4 The Soft-Label PMF Strategy</h3>
                 <p>To achieve high-fidelity convergence, scores are not treated as flat scalars (e.g., 7.5). Instead, they are transformed into a <strong>Probability Mass Function (PMF)</strong> over the 1-10 range. This allows the EMD loss to "feel" the shape of human consensus, teaching the model to distinguish between a "solid 7.0" and a "highly controversial 7.0."</p>
+                <h3 id="authenticity-binned-threshold">4.5 Binned Midpoint Thresholding for Authenticity Scoring</h3>
+                <p>To evaluate the NIMA Authenticity scorer within our unified EMD loss framework, we apply a binned midpoint threshold at <strong>5.5</strong> (the exact center of the 1-10 NIMA scale). Predictions with probability mass distributions peaking at or above 5.5 represent synthetic/AI-generated origins (Fake), while distributions peaking below 5.5 represent real camera captures (Real). This allows authenticity to be trained with the same EMD distribution shape loss while producing a binary classification accuracy metric.</p>
             </div>
         </section>
 
@@ -650,6 +661,13 @@
                         <td>~0.900</td>
                         <td><strong>0.9037</strong></td>
                         <td>Record Stability</td>
+                    </tr>
+                    <tr>
+                        <td>Authenticity</td>
+                        <td>Accuracy</td>
+                        <td>N/A</td>
+                        <td><strong>0.9336</strong></td>
+                        <td>SOTA Detector</td>
                     </tr>
                 </tbody>
             </table>
@@ -878,6 +896,27 @@
                 - Validation resolution is now decoupled from the Governor's dynamic training size.<br/>
                 - Using a <code>val_resolution</code> registry key in <code>unified_models.yaml</code>, high-end models (like NAFNet) are strictly anchored to their target native resolution (e.g., 640px) from Epoch 1 to 1000.<br/>
                 - This creates an unbroken, invariant metric baseline, ensuring that every decimal of PSNR or SRCC improvement directly correlates to true geometric learning, rather than resolution manipulation.</p>
+            </div>
+
+            <div class="card">
+                <h4 id="low-variance-gate">7.30 Low-Variance Safety Gate for Authenticity Convergence (v6.2.8)</h4>
+                <p><strong>Issue</strong>: Standard NIMA training uses an Emergency Head Reset if the PLCC/SRCC drops into negative ranges (e.g., during manifold shifts). However, because <code>nima_authenticity</code> operates on narrow/bimodal target distributions with low variance, standard head resets and thermal shocks were triggering falsely, destabilizing the training process.</p>
+                <p><strong>Fix</strong>: Implemented the <strong>Low-Variance Safety Gate</strong>. The training loop now bypasses emergency head resets and thermal shock temp resets if the model is <code>nima_authenticity</code> or if the validation target standard deviation is extremely low ($< 0.15$). This stabilized training across early and late epochs, successfully resolving the negative correlation drop and achieving steady convergence.</p>
+            </div>
+            <div class="card">
+                <h4 id="sota-memorization-gate">7.31 SOTA Memorization & Data Verification (v6.2.8)</h4>
+                <p><strong>Issue</strong>: Reaching SOTA targets at the final resolution step on a sub-sampled dataset (fraction $< 1.0$) previously shut down training. However, this risked saving a model that had memorized the subset and could not generalize to the full dataset.</p>
+                <p><strong>Fix</strong>: Deployed the SOTA Memorization Gating. Hitting SOTA targets at the final resolution ladder rung with a dataset fraction $< 1.0$ now automatically overrides the fraction to <code>1.0</code> (100% data) and reconstructs the training loader. The mission only terminates when SOTA is achieved at the max resolution ladder step with 100% of the training dataset.</p>
+            </div>
+            <div class="card">
+                <h4 id="sota-quality-selection-guard">7.32 SOTA Quality Selection Guard (v6.2.8)</h4>
+                <p><strong>Issue</strong>: Standard checkpoint selection evaluated SOTA strictly on validation loss. For quality-focused models, loss improvements could occur via output variance shrinking even when correlation metrics (PLCC/SRCC/Accuracy) worsened.</p>
+                <p><strong>Fix</strong>: Surgically gated SOTA checkpoint/ONNX exports on <code>quality</code> tasks to ignore loss-only improvements if PLCC, SRCC, or Accuracy do not improve. Loss-only improvements still update the validation loss threshold, but they are prevented from overwriting SOTA weights.</p>
+            </div>
+            <div class="card">
+                <h4 id="same-res-recoil-protection">7.33 Same-Resolution Recoil Protection (v6.2.8)</h4>
+                <p><strong>Issue</strong>: In previous iterations, the Governor's stabilization engine ran in circles by lowering dataset fractions and immediately retraining instead of stabilizing on the current fraction.</p>
+                <p><strong>Fix</strong>: Hardened the Governor recoil logic to retain the data fraction during same-resolution plateaus and regressions. This allows the model to stabilize on the current data variety instead of running in loops lowering and rising fractions.</p>
             </div>
         </section>
 
