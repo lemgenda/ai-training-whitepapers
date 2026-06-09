@@ -491,6 +491,7 @@
                         <li><a href="#logit-refactor">7.13 Logit Refactor</a></li>
                         <li><a href="#plateau-breaker">7.14 The Plateau Breaker: Dynamic Kinetic LR Injection (v5.2)</a></li>
                         <li><a href="#swa-smoothing">7.15 SWA Smoothing</a></li>
+                        <li><a href="#cosine-recalibration">7.16 Intra-Epoch Cosine Recalibration (v3.0)</a></li>
                         <li><a href="#v31-resiliency">7.17 Metric-Driven Deployment (v3.1)</a></li>
                         <li><a href="#v32-velocity">7.18 Mission Velocity (v3.2)</a></li>
                         <li><a href="#registry-first">7.19 Registry-First Unification (v4.5)</a></li>
@@ -508,6 +509,7 @@
                         <li><a href="#sota-memorization-gate">7.31 SOTA Memorization (v6.2.8)</a></li>
                         <li><a href="#sota-quality-selection-guard">7.32 SOTA Quality Selection Guard (v6.2.8)</a></li>
                         <li><a href="#same-res-recoil-protection">7.33 Same-Res Recoil Protection (v6.2.8)</a></li>
+                        <li><a href="#overfitting-rescue">7.34 Overfitting Rescue Protocol (v6.3.0)</a></li>
                     </ul>
                 </li>
                 <li><a href="#onnx">8. ONNX Strategy</a>
@@ -805,6 +807,16 @@
                 <p><strong>Fix</strong>: Integrated <strong>Stochastic Weight Averaging (SWA)</strong>. The Resilience Engine tracks a shadow mean of weights across the final 50% of the mission, producing a smoothed manifold that exhibits superior stability and correlation benchmarks compared to raw epoch snapshots.</p>
             </div>
             <div class="card">
+                <h4 id="cosine-recalibration">7.16 Intra-Epoch Cosine Recalibration (v3.0 Resiliency)</h4>
+                <p><strong>Issue</strong>: Upon resumption from high-frequency intra-epoch checkpoints (Mitochondrial Shield), the system initially suffered from a "Manifold Shock" where the scheduler rewound to the start of the epoch, ignoring processed batches. Furthermore, a critical bug on low-VRAM 1650 hardware caused the <code>accumulation_steps</code> to reset to 1, triggering gradient explosions.</p>
+                <p><strong>Fix</strong>: Implemented the <strong>v3.0 Resiliency Patch</strong>.</p>
+                <ul>
+                    <li><strong>Runway Sync</strong>: The "Bloated Runway" logic now factorially includes <code>resume_iteration</code>, ensuring the Cosine Clock is perfectly aligned with the data manifold upon resumption.</li>
+                    <li><strong>Sentinel Persistence</strong>: Hardened the Memory-Sentinel to prevent accidental accumulation resets, maintaining the 4x stride stability throughout the entire mission.</li>
+                    <li><strong>Result</strong>: Successfully recovered a <strong>7.1% quality regression</strong>, restoring the model to a stable <strong>0.95+ PLCC</strong> state.</li>
+                </ul>
+            </div>
+            <div class="card">
                 <h4 id="v31-resiliency">7.17 Metric-Driven Deployment & Polarity Alignment (v3.1 Resiliency)</h4>
                 <p><strong>Issue</strong>: During the 1000-epoch mission, two critical regressions were identified: (1) a "Sign Flipping" bug in the dataset logic that caused a perfectly negative correlation (-0.93 PLCC), and (2) a "Runway Crash" where the scheduler's 1000-epoch curve was overwritten by the checkpoint's old 50-epoch state.</p>
                 <p><strong>Fix</strong>: Executed the <strong>v3.1 Zero-Bug Restoration</strong>.</p>
@@ -917,6 +929,11 @@
                 <h4 id="same-res-recoil-protection">7.33 Same-Resolution Recoil Protection (v6.2.8)</h4>
                 <p><strong>Issue</strong>: In previous iterations, the Governor's stabilization engine ran in circles by lowering dataset fractions and immediately retraining instead of stabilizing on the current fraction.</p>
                 <p><strong>Fix</strong>: Hardened the Governor recoil logic to retain the data fraction during same-resolution plateaus and regressions. This allows the model to stabilize on the current data variety instead of running in loops lowering and rising fractions.</p>
+            </div>
+            <div class="card">
+                <h4 id="overfitting-rescue">7.34 Overfitting Rescue Protocol (v6.3.0)</h4>
+                <p><strong>Issue</strong>: During continuous training cycles, early overfitting can cause validation metrics to regress. In legacy configurations, this regression triggered tactical recoils and locks, keeping the model starved of data variety and perpetuating the overfitting cycle.</p>
+                <p><strong>Fix</strong>: Implemented a trend-based <strong>Overfitting Rescue Protocol</strong>. The Governor now monitors training versus validation loss trends over a 3-epoch sliding window. If training loss trend decreases (&lt; -1e-4) while validation loss trend increases (&gt; 1e-4), the Governor overrides cooldown locks and force-expands the training dataset fraction (+15% data) to introduce immediate variety and break the overfitting state.</p>
             </div>
         </section>
 

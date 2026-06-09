@@ -62,6 +62,7 @@
    - [7.31 SOTA Memorization & Data Verification (v6.2.8)](#731-sota-memorization--data-verification-v628)
    - [7.32 SOTA Quality Selection Guard (v6.2.8)](#732-sota-quality-selection-guard-v628)
    - [7.33 Same-Resolution Recoil Protection (v6.2.8)](#733-same-resolution-recoil-protection-v628)
+   - [7.34 Overfitting Rescue Protocol (v6.3.0)](#734-overfitting-rescue-protocol-v630)
 8. [Deployment Strategy: Why ONNX?](#8-deployment-strategy-why-onnx)
    - [8.1 Format Comparison Matrix](#81-format-comparison-matrix)
    - [8.2 Why ONNX Wins for LemGendary](#82-why-onnx-wins-for-lemgendary)
@@ -342,6 +343,10 @@ The training of 440,000 samples on a 48-hour continuous cycle required "Resilien
 ### 7.33 Same-Resolution Recoil Protection (v6.2.8)
 **Issue**: In previous iterations, the Governor's stabilization engine ran in circles by lowering dataset fractions and immediately retraining instead of stabilizing on the current fraction.
 **Fix**: Hardened the Governor recoil logic to retain the current data fraction during same-resolution plateaus and regressions. This allows the model to stabilize on the current data variety instead of running in loops lowering and rising fractions.
+
+### 7.34 Overfitting Rescue Protocol (v6.3.0)
+**Issue**: During continuous training cycles, early overfitting can cause validation metrics to regress. In legacy configurations, this regression triggered tactical recoils and locks, keeping the model starved of data variety and perpetuating the overfitting cycle.
+**Fix**: Implemented a trend-based **Overfitting Rescue Protocol**. The Governor now monitors training versus validation loss trends over a 3-epoch sliding window. If training loss trend decreases ($< -1\times 10^{-4}$) while validation loss trend increases ($> 1\times 10^{-4}$), the Governor overrides cooldown locks and force-expands the training dataset fraction (+15% data) to introduce immediate variety and break the overfitting state.
 
 ---
 

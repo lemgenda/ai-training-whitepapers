@@ -47,7 +47,7 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 | **Vanishing Gradients** | Deep networks with sigmoid/tanh; saturation in early layers prevents updates. | **Gradient Histograms**: Check early layers for values near zero. **Learning Rate**: Model fails to learn even with high LR. | Switch to **ReLU/GELU**; implement **Batch/Layer Normalization**; add **Residual Connections**. |
 | **Exploding Gradients** | Unstable weight updates in deep/recurrent networks; poor initialization. | **Loss Curve**: Massive vertical spikes or immediate `NaN`. **Gradient Norms**: Global norm exceeds threshold (e.g., >10.0). | **Gradient Clipping** (Norm-based); lower Learning Rate; use **He Initialization**. |
 | **Dying ReLUs** | High LR causes neurons to output zero permanently; weights become stuck. | **Activation Histograms**: Significant portion of the layer outputting exactly zero. | Use **Leaky ReLU** or **ELU**; reduce Learning Rate; use **Batch Normalization**. |
-| **Overfitting** | Model memorizes noise; capacity is too high for the dataset size. | **Divergence**: Training loss drops while Validation loss rises. | **Data Augmentation**; **Dropout** (0.2–0.5); **Weight Decay (L2)**; **Early Stopping**. |
+| **Overfitting** | Model memorizes noise; capacity is too high for the dataset size. | **Divergence**: Training loss drops while Validation loss rises. | **Data Augmentation**; **Dropout** (0.2–0.5); **Weight Decay (L2)**; **Overfitting Rescue Protocol** (Governor dynamic dataset expansion). |
 | **NaN Divergence** | Numerical instability in Mixed Precision (FP16/FP8); log(0) or division by zero. | **Instant Failure**: Loss becomes `NaN` or `Inf` within 10–50 steps. | **Loss Scaling** (Static or Dynamic); check for `eps` in epsilon-sensitive layers; use **FP32** for loss. |
 | **Mode Collapse** | (GANs) Generator finds a single output that "fools" the discriminator. | **Output Visuals**: Model generates identical/similar images regardless of noise input. | **Mini-batch Discrimination**; **Unrolled GANs**; use **Wasserstein Loss (WGAN-GP)**. |
 | **Training Plateau** | Optimizer stuck in flat regions or local minima; LR is too high/low. | **Stagnation**: Loss curve is flat for many epochs despite no convergence. | **Learning Rate Scheduler** (Cosine Annealing/ReduceOnPlateau); try **SWA** (Stochastic Weight Averaging). |
@@ -283,6 +283,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **SOTA Progression** | Premature mission termination at low resolutions. | **Ladder-Aware Guard**: Targets trigger jumps, not shutdowns. |
 | **Manifold Maturity** | High-speed resolution jumping causes weight instability. | **Hardening Guard**: Mandatory 2-epoch lock for stabilization. |
 | **Stride Protocol** | Fixed 0.90 barrier; slow early progress. | **Dynamic Thresholds**: 0.75 for Foundation, 0.90 for Refinement. |
+| **Overfitting Rescue** | Overfitting triggers panic recoil & data variety starvation. | **Rescue Protocol**: Automatically overrides cooldowns and force-expands dataset fraction (+15%) on overfitting trends. |
 
 ---
 
