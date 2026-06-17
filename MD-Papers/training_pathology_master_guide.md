@@ -105,7 +105,6 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 * **Identification**: Sudden OOM crashes during epoch transitions or spatial scaling.
 * **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and allow the suite to probe hardware headroom before every resolution jump.
 
-
 ### Atomic Hardware Re-Auditing
 
 * **The Issue**: Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
@@ -134,7 +133,7 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 
 * **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.
 * **Identification**: "Shared GPU Memory" in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
-* **Remedy**: **Iron-Clamp Protocol**. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.
+* **Remedy**: **Absolute Sentinel Authority**. The Memory Sentinel now acts as the absolute physical authority, overriding any hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to fit entirely within physical VRAM, preventing Windows System RAM paging.
 
 ### The False-Positive Spike (Absolute Energy Floor)
 
@@ -258,6 +257,9 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 * [x] **Task 14.1: Ladder-Aware SOTA Guard (v18.0)** (Target: `train.py`)
 * [x] **Task 14.2: SOTA Hardening Guard (v19.0)** (Target: `optimization_engine.py`)
 * [x] **Task 14.3: SOTA-Sync DataLoader Protocol** (Target: `train.py`)
+* [x] **Task 15.1: SOTA Benchmark Injection** (Target: `unified_models_v2.yaml`)
+* [x] **Task 15.2: Hardware-Aware Authority Overrides** (Target: `train.py`)
+* [x] **Task 15.3: Global Fraction Calibration (15%)** (Target: `optimization_engine.py`)
 
 ---
 
@@ -266,7 +268,8 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | Feature | **Before Intervention** (Passive) | **After Intervention** (Autonomous) |
 | :--- | :--- | :--- |
 | **Fidelity Floor** | 64px-112px warm-up; risks blurred feature learning. | **224px-512px Mandatory Floor**: Ensures high-frequency detection. |
-| **Batch Management** | Static registry values; prone to OOM on mixed hardware. | **Memory-Sentinel**: Dynamic VRAM probing for peak utilization. |
+| **Batch Management** | Static registry values; prone to OOM on mixed hardware. | **Absolute Sentinel Authority**: Dynamic VRAM probing overrides YAML. |
+| **Fraction Baseline** | 50% start; slow foundational convergence. | **15% Global Baseline**: Hyper-light foundational scaling. |
 | **Plateau Management** | Manual waiting or slow decay; high stagnation risk. | **Propulsion Jolt**: Auto-triggers 1.5x LR surge to break local minima. |
 | **Restoration Balance** | PSNR (1) vs SSIM (40); Metric effectively ignored. | **Balanced Fidelity**: PSNR (10) vs SSIM (40); SOTA parity achieved. |
 | **Stability Guard** | Reactive; issues identified after epoch failure. | **Proactive Sentinels**: Real-time batch-level gradient/loss monitoring. |

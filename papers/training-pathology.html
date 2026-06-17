@@ -384,7 +384,7 @@
                     <li><a href="#sentinel-drift">· Sentinel Drift</a></li>
                     <li><a href="#atomic-audit">· Atomic Re-Audit</a></li>
                     <li><a href="#serial-shield">· Serial Shield (v17.2)</a></li>
-                    <li><a href="#iron-clamp">· Iron-Clamp (v22.0)</a></li>
+                    <li><a href="#iron-clamp">· 4GB Lockdown (v22.0)</a></li>
                     <li><a href="#false-positive-spike">· False-Positive Spike</a></li>
                     <li><a href="#premature-sota">· Premature SOTA</a></li>
                     <li><a href="#manifold-fragility">· Manifold Fragility</a></li>
@@ -583,7 +583,7 @@
             <h3 id="iron-clamp">The Sub-Nuclear 4GB Lockdown (v22.0)</h3>
             <p><strong>The Issue:</strong> 4GB cards (GTX 1650) trigger <strong>System RAM Paging</strong> when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.</p>
             <p><strong>Identification:</strong> "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops below 0.5 img/s.</p>
-            <p><strong>Remedy:</strong> <strong>Iron-Clamp Protocol</strong>. Implement hard pixel ceilings (0.4M - 0.8M pixels) to force conservative batch sizes (e.g., Batch 6-8 at 256px) that fit entirely within physical VRAM.</p>
+            <p><strong>Remedy:</strong> <strong>Absolute Sentinel Authority</strong>. The Memory Sentinel now acts as the absolute physical authority, overriding any hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to fit entirely within physical VRAM, preventing Windows System RAM paging.</p>
 
             <h3 id="false-positive-spike">The False-Positive Spike (Absolute Energy Floor)</h3>
             <p><strong>The Issue:</strong> The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x the running average). In high-fidelity restoration, the running average can drop to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike the loss to 0.03. This triggers a 30x relative spike detection, causing the Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03 being physically harmless (3% error).</p>
@@ -770,6 +770,9 @@
                     <li><strong>Task 14.1: Ladder-Aware SOTA Guard (v18.0)</strong> (Target: <code>train.py</code>)</li>
                     <li><strong>Task 14.2: SOTA Hardening Guard (v19.0)</strong> (Target: <code>optimization_engine.py</code>)</li>
                     <li><strong>Task 14.3: SOTA-Sync DataLoader Protocol</strong> (Target: <code>train.py</code>)</li>
+                    <li><strong>Task 15.1: SOTA Benchmark Injection</strong> (Target: <code>unified_models_v2.yaml</code>)</li>
+                    <li><strong>Task 15.2: Hardware-Aware Authority Overrides</strong> (Target: <code>train.py</code>)</li>
+                    <li><strong>Task 15.3: Global Fraction Calibration (15%)</strong> (Target: <code>optimization_engine.py</code>)</li>
                 </ul>
             </div>
         </section>
@@ -794,7 +797,12 @@
                         <tr>
                             <td><strong>Batch Management</strong></td>
                             <td>Static registry values; OOM risk.</td>
-                            <td><strong>Memory-Sentinel</strong>: Dynamic probing.</td>
+                            <td><strong>Absolute Sentinel Authority</strong>: Dynamic VRAM probing overrides YAML.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fraction Baseline</strong></td>
+                            <td>50% start; slow foundational convergence.</td>
+                            <td><strong>15% Global Baseline</strong>: Hyper-light foundational scaling.</td>
                         </tr>
                         <tr>
                             <td><strong>Plateau Management</strong></td>
@@ -824,7 +832,7 @@
                         <tr>
                             <td><strong>VRAM Paging</strong></td>
                             <td>Unrestricted batch; triggers System RAM paging.</td>
-                            <td><strong>Iron-Clamp</strong>: Hard pixel ceilings to stay inside Dedicated VRAM.</td>
+                            <td><strong>Absolute Sentinel Authority</strong>: Dynamic clamping inside Dedicated VRAM.</td>
                         </tr>
                         <tr>
                             <td><strong>Progress Recovery</strong></td>
