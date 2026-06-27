@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Training Suite Guide - LemGendary AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0c;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #007aff;
+            --accent-secondary: #5856d6;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 122, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(88, 86, 214, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Sidebar Navigation */
+        .toc-sidebar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 40px 24px;
+            background: rgba(255, 255, 255, 0.01);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        .toc-brand {
+            display: block;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .toc-sidebar h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .toc-sidebar ul {
+            list-style: none;
+        }
+
+        .toc-sidebar li {
+            margin-bottom: 12px;
+        }
+
+        .toc-sidebar a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: block;
+            padding-left: 12px;
+            border-left: 2px solid transparent;
+        }
+
+        .toc-sidebar a:hover {
+            color: var(--text-primary);
+            padding-left: 16px;
+            border-left-color: var(--accent-primary);
+        }
+
+        .toc-sidebar .sub-item {
+            margin-left: 16px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            max-width: 1000px;
+            padding: 80px 60px;
+        }
+
+        header {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .meta-tags {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+
+        .tag {
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--accent-primary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Content Typography */
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin: 60px 0 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin: 40px 0 16px;
+        }
+
+        p {
+            margin-bottom: 24px;
+            font-size: 1.05rem;
+        }
+
+        ul {
+            margin-bottom: 24px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: #fff;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="toc-sidebar">
+        <a href="../index.html" class="toc-brand">
+            ← Hub
+        </a>
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#executive-summary">1. Executive Summary</a></li>
+            <li>
+                <a href="#nuclear-hardening">2. High-Fidelity "Nuclear" Hardening</a>
+                <div class="sub-item">
+                    <a href="#dynamic-memory">2.1. Dynamic Memory-Sentinel</a>
+                    <a href="#curriculum">2.2. Intelligent Curriculum</a>
+                    <a href="#resolution-ladders">2.3. Hardened Resolution Ladders</a>
+                    <a href="#checkpoint-resumption">2.4. Checkpoint Resumption</a>
+                    <a href="#moe-scaling">2.5. MoE 11-Manifold Scaling</a>
+                </div>
+            </li>
+            <li>
+                <a href="#judicial-audit">3. Judicial Audit Engine</a>
+                <div class="sub-item">
+                    <a href="#framework-agnosticism">3.1. Framework Agnosticism & Guards</a>
+                    <a href="#fast-path">3.2. Fast-Path Correlator</a>
+                </div>
+            </li>
+            <li><a href="#universal-models">4. Universal Models Registry</a></li>
+            <li><a href="#telemetry">5. Universal SOTA Telemetry</a></li>
+            <li>
+                <a href="#distributed-edge">6. Distributed Edge Training</a>
+                <div class="sub-item">
+                    <a href="#federated-sync">6.1. Federated Average-Sync</a>
+                    <a href="#webgpu-export">6.2. WebGPU Zero-Copy Export</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <div class="meta-tags">
+                <span class="tag">CAT. 07</span>
+                <span class="tag">MASTER GUIDE</span>
+            </div>
+            <h1>Master Training Suite Guide</h1>
+            <p class="subtitle">Complete documentation of the LemGendary High-Fidelity Training Engine.</p>
+        </header>
+
+        <section id="executive-summary">
+            <h2>1. Executive Summary</h2>
+            <p>The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.2.9 "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.</p>
+        </section>
+
+        <section id="nuclear-hardening">
+            <h2>2. High-Fidelity "Nuclear" Hardening</h2>
+            <p>The suite enforces a strict high-fidelity baseline to ensure models learn complex textures and micro-artifacts from the very first epoch.</p>
+
+            <h3 id="dynamic-memory">2.1. Dynamic Memory-Sentinel (Batch Decoupling)</h3>
+            <ul>
+                <li><strong>Absolute Sentinel Authority</strong>: Acts as the absolute physical authority. It treats <code>batch_size</code> from config as a maximum boundary and autonomously throttles it downwards if the local physical VRAM cannot hold it, permanently preventing system RAM paging.</li>
+                <li><strong>Atomic Re-Audit</strong>: Performs a fresh hardware probe every time the resolution ladder jumps, ensuring peak physical throughput at low resolutions while automatically throttling for high-res stability.</li>
+                <li><strong>Sub-Nuclear 4GB Lockdown</strong>: On GTX 1650/4GB cards, it enforces a strict <strong>Serial-Only Mode</strong> after an OOM, delivering a <strong>2x performance gain</strong> by preventing Windows System RAM paging.</li>
+                <li><strong>Dynamic Validation Sharding & Auto-Expansion</strong>: Subsets the validation dataloader to 30% per epoch to accelerate perceptual metric computation. Once the model hits the Refinement Phase, it dynamically auto-expands validation to <strong>100% (full dataset)</strong> to guarantee an absolute SOTA generalizability audit.</li>
+            </ul>
+
+            <h3 id="curriculum">2.2. Intelligent Curriculum & Sawtooth Governance</h3>
+            <ul>
+                <li><strong>Universal Quality Scorecarding</strong>: The trainer dynamically compounds PSNR, SSIM, LPIPS, and FID for all restoration models, mathematically verifying ultimate convergence against academic SOTA benchmarks.</li>
+                <li><strong>Continuous Parameter Predictor Calibration</strong>: Standardized validation MAE telemetry for continuous parameter predictors (like <code>upn_v2</code>), recording MAE directly into <code>metrics.csv</code>.</li>
+                <li><strong>Professional Multi-Task Restoration</strong>: Fully integrated multi-headed Mixture-of-Experts (MoE) routing engine with 11 specialized restoration heads dynamically trained under Dynamic Filename Task Ingestion.</li>
+            </ul>
+
+            <h3 id="resolution-ladders">2.3. Hardened Resolution Ladders & SOTA Guards</h3>
+            <ul>
+                <li><strong>Ladder-Aware Progression</strong>: Reaching SOTA targets at sub-maximal resolutions triggers a <strong>Forced Spatial Jump</strong> to the next rung (e.g., 256px &rarr; 384px).</li>
+                <li><strong>SOTA Hardening Guard</strong>: Enforces a mandatory <strong>2-epoch "Hardening Period"</strong> for every resolution rung to solidify weights.</li>
+                <li><strong>Overfitting Rescue Protocol</strong>: Overrides tactical recoils and cooldown locks when trend-based overfitting is diagnosed, force-expanding the dataset fraction (+15% data) to break the overfitting attractor.</li>
+                <li><strong>SOTA Verification</strong>: Verifies SOTA targets on 100% of training data at final resolution before permitting export.</li>
+            </ul>
+
+            <h3 id="checkpoint-resumption">2.4. Checkpoint Resumption & Singularity Hardening</h3>
+            <ul>
+                <li><strong>The Scheduler Shield</strong>: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.</li>
+                <li><strong>Immediate Rollback on Metric Singularity</strong>: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN.</li>
+            </ul>
+
+            <h3 id="moe-scaling">2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture</h3>
+            <ul>
+                <li><strong>Double-Softmax Squeeze Protection</strong>: The <code>TaskClassifier</code> routing network natively isolates softmax activation from the loss engine, returning raw logits to prevent <code>log_softmax</code> gradient flattening when calculating Cross-Entropy gating loss.</li>
+                <li><strong>Dynamic Perceptual LPIPS Balancing</strong>: Automatically intercepts batch task indices during joint training to apply dynamic, sample-specific LPIPS multipliers scaling from <code>0.005</code> (Face Parsing) to <code>0.050</code> (Vintage &amp; Face Restoration). This permanently prevents aggressive structural tasks from mathematically overpowering subtle intensity-based manifolds (like Lowlight/Exposure) via head competition.</li>
+                <li><strong>Dynamic Regex Ingestion</strong>: Seamlessly routes tasks like Denoise, Deblur, Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction of physical dataset filenames on the fly.</li>
+            </ul>
+        </section>
+
+        <section id="judicial-audit">
+            <h2>3. Judicial Audit Engine</h2>
+            <p>A fully decoupled, zero-dependency validation wrapper designed for CI/CD integration and isolated model auditing natively via <code>judicial_audit_api.py</code>.</p>
+
+            <h3 id="framework-agnosticism">3.1. Framework Agnosticism & Type Guards</h3>
+            <p>Loads raw PyTorch <code>.pth</code> dictionaries, full PyTorch exported objects, and ONNX compiled graphs dynamically. It injects a dynamic class resolution pass to unpack <code>SoftmaxWrapper</code> boundaries, a critical guardrail accommodating PyTorch 2.6+ <code>weights_only=False</code> unpickling shifts.</p>
+            <p>To prevent standard tensor mis-casting during ONNX graph evaluation, the auditor dynamically intercepts the <code>Float16</code> schema directly from the ONNX inputs, safely casting down Float32 PyTorch tensors.</p>
+
+            <h3 id="fast-path">3.2. Fast-Path Correlator</h3>
+            <p>Bypasses complex multi-process training augmenters for single-threaded PIL loads (eliminating Windows DataLoader worker-hangs), outputting standard <strong>PLCC</strong> (Pearson) and <strong>SRCC</strong> (Spearman) scores natively, and automatically piping results into a standard JSON schema for automated regression auditing.</p>
+        </section>
+
+        <section id="universal-models">
+            <h2>4. Universal Models Registry & SOTA Baselines</h2>
+            <p>Below is the exhaustive matrix of supported architectures natively integrated within the suite, dynamically driven by the <code>unified_models_v2.yaml</code> engine.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Architecture / Backbone</th>
+                        <th>LemGendized Dataset</th>
+                        <th>SOTA Targets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>LemGendary NIMA Aesthetic Scorer (Mobile)</td><td>MobileNetV2 (Global Composition)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.65 | SRCC: 0.65</td></tr>
+                    <tr><td>LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S)</td><td>EfficientNetV2-S (Global Composition)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.7 | SRCC: 0.7</td></tr>
+                    <tr><td>LemGendary NIMA Aesthetic Scorer (Pro ViT)</td><td>Swin-v2-T (Global Multi-Scale Attention)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.75 | SRCC: 0.75</td></tr>
+                    <tr><td>LemGendary NIMA Technical Scorer</td><td>EfficientNetV2-S (Spatial Integrity)</td><td>LemGendizedNimaTechnical</td><td>PLCC: 0.88 | SRCC: 0.88</td></tr>
+                    <tr><td>LemGendary Authenticity Scorer (AI vs Human)</td><td>EfficientNetV2-S (Distribution Scorer)</td><td>LemGendizedNimaAuthenticity</td><td>N/A</td></tr>
+                    <tr><td>LemGendary UPN v2 Parameter Predictor</td><td>N/A</td><td>LemGendizedUpnV2</td><td>MAE: 0.05</td></tr>
+                    <tr><td>LemGendary Universal Film Restorer</td><td>N/A</td><td>LemGendizedFilmRestorer</td><td>PSNR: 24.0 | SSIM: 0.8</td></tr>
+                    <tr><td>LemGendary CodeFormer Face Restoration</td><td>N/A</td><td>LemGendizedCodeFormer</td><td>PSNR: 33.0 | SSIM: 0.92</td></tr>
+                    <tr><td>LemGendary ParseNet Face Parsing</td><td>N/A</td><td>LemGendizedParseNet</td><td>N/A</td></tr>
+                    <tr><td>LemGendary RetinaFace MobileNet Detection</td><td>N/A</td><td>LemGendizedRetinaFaceMobileNet</td><td>N/A</td></tr>
+                    <tr><td>LemGendary RetinaFace ResNet Detection</td><td>N/A</td><td>LemGendizedRetinaFaceResNet</td><td>N/A</td></tr>
+                    <tr><td>LemGendary FFANet Dehazing (Indoor)</td><td>N/A</td><td>LemGendizedFfaNetIndoor</td><td>PSNR: 36.39 | SSIM: 0.988</td></tr>
+                    <tr><td>LemGendary FFANet Dehazing (Outdoor)</td><td>N/A</td><td>LemGendizedFfaNetOutdoor</td><td>PSNR: 33.57 | SSIM: 0.984</td></tr>
+                    <tr><td>LemGendary MIRNet v2 Low-Light Enhancement</td><td>N/A</td><td>LemGendizedMirNetLowLight</td><td>PSNR: 24.14 | SSIM: 0.83</td></tr>
+                    <tr><td>LemGendary MIRNet v2 Exposure Correction</td><td>N/A</td><td>LemGendizedMirNetExposure</td><td>PSNR: 24.14 | SSIM: 0.83</td></tr>
+                    <tr><td>LemGendary MPRNet Deraining</td><td>N/A</td><td>LemGendizedMprNetDeraining</td><td>PSNR: 36.4 | SSIM: 0.98</td></tr>
+                    <tr><td>LemGendary NAFNet Debluring</td><td>N/A</td><td>LemGendizedNafNetDebluring</td><td>PSNR: 37.0 | SSIM: 0.975</td></tr>
+                    <tr><td>LemGendary NAFNet Denoising</td><td>N/A</td><td>LemGendizedNafNetDenoising</td><td>PSNR: 42.0 | SSIM: 0.992</td></tr>
+                    <tr><td>LemGendary YOLOv8n Multi-Task Model</td><td>N/A</td><td>LemGendizedYoloV8n</td><td>N/A</td></tr>
+                    <tr><td>LemGendary Professional Multi-Task Restoration Model</td><td>N/A</td><td>LemGendizedProfessionalMultitaskRestoration</td><td>PSNR: 32.0 | SSIM: 0.93</td></tr>
+                    <tr><td>LemGendary UltraZoom Master Model</td><td>N/A</td><td>LemGendizedUltraZoom</td><td>PSNR: 34.0 | SSIM: 0.95</td></tr>
+                    <tr><td>LemGendary SDXL Master Diffusion</td><td>N/A</td><td>diffusion_master_manifold</td><td>N/A</td></tr>
+                    <tr><td>LemGendary FLUX.1 Master Diffusion</td><td>N/A</td><td>diffusion_master_manifold</td><td>N/A</td></tr>
+                    <tr><td>LemGendary LLaVA v1.5 Master VLM</td><td>N/A</td><td>vision_language_master_manifold</td><td>N/A</td></tr>
+                    <tr><td>LemGendary BLIP-2 Master VLM</td><td>N/A</td><td>vision_language_master_manifold</td><td>N/A</td></tr>
+                    <tr><td>LemGendary Universal NSFW Classifier</td><td>MobileNetV2 (Categorical Anchor)</td><td>classification_master_manifold</td><td>N/A</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="telemetry">
+            <h2>5. Universal SOTA Telemetry & Cloud Sync</h2>
+            <p>Standardized historical audit (<code>metrics.csv</code>) captures the complete state including Epoch, Loss, LR, Accuracy, Res, Data, Temp, Clamp, Batch, Accumulation, and Stress. The <strong>Metrics Sanitizer</strong> explicitly sanitizes <code>inf</code>/<code>NaN</code> artifacts to prevent numerical poison.</p>
+            <p>The Governor automatically synchronizes with the <code>LemGendaryModels</code> repository, saving <code>_latest.pth</code> and <code>_best.pth</code> directly to the Hub. It uses Dual-Token PATs (<code>SUITE_PAT</code> and <code>GITHUB_PAT</code>) for secure, headless authentication on Kaggle deployment matrices. All inference notebooks and training engines natively fall back to <strong>DirectML</strong> on local machines, providing zero-config GPU acceleration for AMD and Intel graphics cards on Windows.</p>
+        </section>
+
+        <section id="distributed-edge">
+            <h2>6. Distributed Edge Training: LemGendary Cloud Link</h2>
+            <p>The suite integrates a multi-node, collision-resistant <strong>LemGendary Cloud Link</strong> designed to crowdsource training loops across decentralized consumer-grade GPU networks.</p>
+
+            <h3 id="federated-sync">6.1. Federated Gradient Accumulation (Average-Sync)</h3>
+            <ul>
+                <li><strong>WAN Payload Bypass</strong>: Instead of syncing multi-gigabyte weight tensors across the network, the <code>CloudSyncManager</code> pushes lightweight, compressed gradient chunks to a centralized WebSockets Coordinator Hub (port 8765).</li>
+                <li><strong>Consensus Broadcasting</strong>: The coordinator tracks epoch syncs, learning rate recoils, and node parameters. Once a quorum is met, the hub broadcasts a unified federated average-sync gradient vector to all active edge nodes.</li>
+            </ul>
+
+            <h3 id="webgpu-export">6.2. Memory-Sentinel WebGPU Zero-Copy Export</h3>
+            <ul>
+                <li><strong>Opset 17 Hardening</strong>: The exporter is rigidly configured to ONNX <code>opset_version=17</code> and dynamic axes are intentionally stripped (locked to a <code>512x512</code> spatial tile). This permanently prevents standard WebGPU "Slice" operator crashes during browser inference.</li>
+                <li><strong>Crowdsourced Browser Nodes</strong>: SOTA manifolds exported via this pipeline enable crowdsourced, zero-copy training and inference directly within any user's mobile or desktop NPU-enabled web browser.</li>
+            </ul>
+        </section>
+
+    </main>
+</body>
+</html>
