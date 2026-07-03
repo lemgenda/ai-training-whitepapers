@@ -559,6 +559,16 @@
             <h3>Optimizer Momentum Decay</h3>
             <p><strong>The Issue:</strong> Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.</p>
             <p><strong>Remedy:</strong> Reset optimizer state; use <strong>Lookahead Optimizer</strong>; or increase Momentum parameters.</p>
+
+            <h3>The "Governor Loop" (Artificial Plateau Exploit)</h3>
+            <p><strong>The Issue:</strong> The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.</p>
+            <p><strong>Identification:</strong> Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.</p>
+            <p><strong>Remedy:</strong> Implement an <strong>Absolute Patience Limit</strong> (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.</p>
+
+            <h3>Live Polarity Inversion (Negative Manifold)</h3>
+            <p><strong>The Issue:</strong> The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.</p>
+            <p><strong>Identification:</strong> The <code>SRCC</code> or <code>PLCC</code> correlation metrics suddenly turn negative (<code>&lt; 0.0</code>) despite high theoretical quality scores.</p>
+            <p><strong>Remedy:</strong> Integrate a <strong>Live Polarity Shield</strong> into the telemetry engine to actively monitor <code>SRCC</code> and <code>PLCC</code> during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.</p>
         </section>
 
         <section id="high-fidelity">
@@ -597,6 +607,10 @@
             <h3 id="manifold-fragility">Manifold Fragility (Glass Manifold Effect)</h3>
             <p><strong>The Issue:</strong> Rapid resolution jumps can destabilize the model's weight distribution before it has "hardened" at the new scale.</p>
             <p><strong>Remedy:</strong> <strong>SOTA Hardening Guard (v19.0)</strong>. Enforce a mandatory <strong>2-epoch Manifold Maturity</strong> period. The model is forbidden from jumping until it has solidified weights for 2 full epochs.</p>
+
+            <h3 id="thermal-glass-manifold-collapse">Thermal Glass Manifold Collapse (The Stress Loop)</h3>
+            <p><strong>The Issue:</strong> When a model plateaus far away from its final SOTA target, the Governor assumes it is trapped and deploys the <strong>Stress Protocol</strong> by sharpening the Softmax Temperature. If the model's manifold is highly fragile (which is common immediately after setting a new SOTA), this extreme sharpening shatters the weights, causing a &gt;10% regression. The Regression Guard then rolls back to SOTA, causing an endless loop.</p>
+            <p><strong>Remedy:</strong> <strong>Strict Thermal Floors</strong>. Constrain the Governor with a strict <code>min_temp</code> in the <code>unified_models_v2.yaml</code> configuration (e.g., <code>min_temp: 0.96</code>). This physically blocks the Stress Protocol from dropping the temperature into the shattering zone.</p>
         </section>
 
         <section id="best-practices">

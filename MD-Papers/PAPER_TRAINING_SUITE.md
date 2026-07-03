@@ -37,7 +37,8 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
 - **The Scheduler Shield**: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.
-- **Immediate Rollback on Metric Singularity**: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN.
+- **Metric Singularity & Live Polarity Shield**: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN. **New in v1.2.2**: The Live Polarity Shield monitors the manifold directly during training; if `SRCC < 0.0` or `PLCC < 0.0` is detected mid-epoch, it immediately flags a "Polarity Collapse", rejecting the epoch and triggering an instant SOTA rollback to purge inverted weights.
+- **Absolute Anti-Loop Guard (Dead Man's Switch)**: To prevent models from manipulating localized 5% drift gates via marginal "lucky" spikes, the Governor tracks an `absolute_patience` limit (default 15 epochs). If a model fails to beat the Absolute SOTA for 15 epochs, the Governor forcefully severs the training loop and executes a hard SOTA rollback.
 
 ### 2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture
 

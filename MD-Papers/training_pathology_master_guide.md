@@ -26,6 +26,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
    * [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
    * [Premature SOTA Termination](#premature-sota-termination)
    * [Manifold Fragility (The "Glass Manifold" Effect)](#manifold-fragility-the-glass-manifold-effect)
+* [Thermal Glass Manifold Collapse (The Stress Loop)](#thermal-glass-manifold-collapse-the-stress-loop)
    * [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
    * [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
 6. [Best Practices Checklist](#7-best-practices-checklist)
@@ -89,6 +90,18 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 * **Identification**: Learning rate is still high, but weight updates are tiny.
 * **Remedy**: Reset optimizer state; use **Lookahead Optimizer**; or increase Momentum parameters.
 
+### The "Governor Loop" (Artificial Plateau Exploit)
+
+* **The Issue**: The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.
+* **Identification**: Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.
+* **Remedy**: Implement an **Absolute Patience Limit** (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.
+
+### Live Polarity Inversion (Negative Manifold)
+
+* **The Issue**: The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.
+* **Identification**: The `SRCC` or `PLCC` correlation metrics suddenly turn negative (`< 0.0`) despite high theoretical quality scores.
+* **Remedy**: Integrate a **Live Polarity Shield** into the telemetry engine to actively monitor `SRCC` and `PLCC` during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.
+
 ---
 
 ## 6. High-Fidelity Strategy (v16.2.8)
@@ -128,6 +141,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 * **The Issue**: Rapid resolution jumps (e.g., jumping from 256px to 384px and immediately to 512px) can destabilize the model's weight distribution before it has "hardened" at the new scale.
 * **Identification**: Massive loss spikes or "Numerical Recoil" immediately following a resolution jump.
 * **Remedy**: **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period. The model is forbidden from jumping to the next rung until it has completed at least 2 full epochs at its current resolution.
+
+### Thermal Glass Manifold Collapse (The Stress Loop)
+
+* **The Issue**: When a model plateaus far away from its final absolute SOTA target, the Governor assumes it is trapped in a local minimum and deploys the **Stress Protocol**. It does this by aggressively sharpening the Softmax Temperature (e.g., down to `0.92`). However, if the model's manifold is highly fragile (which is common immediately after setting a new SOTA), this extreme sharpening physically shatters the weights, causing a massive >10% regression. The Regression Guard then detects the collapse, rolls back to SOTA, and the Governor repeats the Stress Protocol on the next plateau, causing an endless loop.
+* **Identification**: The logs show `Deploying Stress Protocol` followed immediately by `Performance drift detected (>10%)` and `SOTA Rollback triggered!`. The model eternally cycles between hitting SOTA and collapsing.
+* **Remedy**: **Strict Thermal Floors**. The Governor must be constrained with a strict `min_temp` in the `unified_models_v2.yaml` configuration (e.g., `min_temp: 0.96`). This physically blocks the Stress Protocol from dropping the temperature into the shattering zone.
 
 ### The Sub-Nuclear 4GB Lockdown (v22.0)
 
