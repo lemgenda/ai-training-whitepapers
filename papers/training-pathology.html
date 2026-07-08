@@ -377,7 +377,15 @@
             <li><a href="#abstract">1. Abstract</a></li>
             <li><a href="#master-table">2. Diagnostic Master Table</a></li>
             <li><a href="#audit-framework">3. Fast Audit Framework</a></li>
-            <li><a href="#modern-pathologies">4. Modern 2026 Pathologies</a></li>
+            <li><a href="#modern-pathologies">4. Modern 2026 Pathologies</a>
+                <ul class="sub-item" style="list-style: none;">
+                    <li><a href="#mixed-precision">· Mixed Precision Underflow</a></li>
+                    <li><a href="#momentum-decay">· Optimizer Momentum Decay</a></li>
+                    <li><a href="#governor-loop">· The Governor Loop</a></li>
+                    <li><a href="#polarity-inversion">· Live Polarity Inversion</a></li>
+                    <li><a href="#dataparallel-misalignment">· DataParallel Misalignment</a></li>
+                </ul>
+            </li>
             <li><a href="#high-fidelity">5. High-Fidelity Strategy</a>
                 <ul class="sub-item" style="list-style: none;">
                     <li><a href="#blur-pathology">· Blur Pathology</a></li>
@@ -552,23 +560,28 @@
         <section id="modern-pathologies">
             <h2>4. Modern 2026 Pathologies</h2>
             
-            <h3>Mixed Precision Underflow (FP16/FP8)</h3>
+            <h3 id="mixed-precision">Mixed Precision Underflow (FP16/FP8)</h3>
             <p><strong>The Issue:</strong> Gradients are so small they become zero in 16-bit or 8-bit precision.</p>
             <p><strong>Remedy:</strong> Increase <code>Loss Scale</code> or switch to <strong>BFloat16</strong> which has a larger dynamic range.</p>
 
-            <h3>Optimizer Momentum Decay</h3>
+            <h3 id="momentum-decay">Optimizer Momentum Decay</h3>
             <p><strong>The Issue:</strong> Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.</p>
             <p><strong>Remedy:</strong> Reset optimizer state; use <strong>Lookahead Optimizer</strong>; or increase Momentum parameters.</p>
 
-            <h3>The "Governor Loop" (Artificial Plateau Exploit)</h3>
+            <h3 id="governor-loop">The "Governor Loop" (Artificial Plateau Exploit)</h3>
             <p><strong>The Issue:</strong> The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.</p>
             <p><strong>Identification:</strong> Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.</p>
             <p><strong>Remedy:</strong> Implement an <strong>Absolute Patience Limit</strong> (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.</p>
 
-            <h3>Live Polarity Inversion (Negative Manifold)</h3>
+            <h3 id="polarity-inversion">Live Polarity Inversion (Negative Manifold)</h3>
             <p><strong>The Issue:</strong> The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.</p>
             <p><strong>Identification:</strong> The <code>SRCC</code> or <code>PLCC</code> correlation metrics suddenly turn negative (<code>&lt; 0.0</code>) despite high theoretical quality scores.</p>
             <p><strong>Remedy:</strong> Integrate a <strong>Live Polarity Shield</strong> into the telemetry engine to actively monitor <code>SRCC</code> and <code>PLCC</code> during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.</p>
+
+            <h3 id="dataparallel-misalignment">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)</h3>
+            <p><strong>The Issue:</strong> When running PyTorch <code>DataParallel</code> on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (<code>_broadcast_coalesced</code>). If any parameter high up in the model architecture has an odd size (e.g. an <code>out_channels=3</code> output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for <em>every single parameter</em> that follows it. While most operations tolerate unaligned memory, heavily vectorized cuDNN algorithms (like <code>conv2d</code> and <code>conv_transpose2d</code>) will immediately crash with a fatal <code>CUDA error: misaligned address</code> or <code>unable to find an engine to execute this computation</code>.</p>
+            <p><strong>Identification:</strong> Model successfully trains on a single GPU but crashes with <code>misaligned address</code> during the forward pass specifically on <code>replica 1</code> or higher. Tracebacks point directly to standard cuDNN operations.</p>
+            <p><strong>Remedy:</strong> <strong>Global Alignment Monkey-Patch</strong>. Do not alter the model's <code>__init__</code> order (as this permanently corrupts the Optimizer state). Instead, inject a global monkey-patch over <code>nn.Conv2d.forward</code> and <code>nn.ConvTranspose2d.forward</code> that dynamically checks the raw memory pointer (<code>weight.data_ptr() % 16</code>). If the pointer is unaligned (indicating a DataParallel replica buffer), intercept the execution and force a <code>.clone()</code> to instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator before passing it to <code>F.conv2d</code>.</p>
         </section>
 
         <section id="high-fidelity">

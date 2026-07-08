@@ -19,6 +19,11 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
 2. [The Diagnostic Master Table](#3-the-diagnostic-master-table)
 3. [The "Fast Audit" Framework (Diagnostics)](#4-the-fast-audit-framework-diagnostics)
 4. [Modern 2026 Pathologies](#5-modern-2026-pathologies)
+   * [Mixed Precision Underflow (FP16/FP8)](#mixed-precision-underflow-fp16fp8)
+   * [Optimizer Momentum Decay](#optimizer-momentum-decay)
+   * [The "Governor Loop" (Artificial Plateau Exploit)](#the-governor-loop-artificial-plateau-exploit)
+   * [Live Polarity Inversion (Negative Manifold)](#live-polarity-inversion-negative-manifold)
+   * [Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault)
 5. [High-Fidelity Strategy (v16.2.8)](#6-high-fidelity-strategy-v1628)
    * [The "Low-Resolution Blur" Pathology](#the-low-resolution-blur-pathology)
    * [Memory-Sentinel Drift](#memory-sentinel-drift)
@@ -26,7 +31,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
    * [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
    * [Premature SOTA Termination](#premature-sota-termination)
    * [Manifold Fragility (The "Glass Manifold" Effect)](#manifold-fragility-the-glass-manifold-effect)
-* [Thermal Glass Manifold Collapse (The Stress Loop)](#thermal-glass-manifold-collapse-the-stress-loop)
+   * [Thermal Glass Manifold Collapse (The Stress Loop)](#thermal-glass-manifold-collapse-the-stress-loop)
    * [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
    * [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
 6. [Best Practices Checklist](#7-best-practices-checklist)
@@ -101,6 +106,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 * **The Issue**: The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.
 * **Identification**: The `SRCC` or `PLCC` correlation metrics suddenly turn negative (`< 0.0`) despite high theoretical quality scores.
 * **Remedy**: Integrate a **Live Polarity Shield** into the telemetry engine to actively monitor `SRCC` and `PLCC` during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.
+
+### Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)
+
+* **The Issue**: When running PyTorch `DataParallel` on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (`_broadcast_coalesced`). If any parameter high up in the model architecture has an odd size (e.g. an `out_channels=3` output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for *every single parameter* that follows it. While most operations tolerate unaligned memory, heavily vectorized cuDNN algorithms (like `conv2d` and `conv_transpose2d`) will immediately crash with a fatal `CUDA error: misaligned address` or `unable to find an engine to execute this computation`.
+* **Identification**: Model successfully trains on a single GPU but crashes with `misaligned address` during the forward pass specifically on `replica 1` or higher. Tracebacks point directly to standard cuDNN operations.
+* **Remedy**: **Global Alignment Monkey-Patch**. Do not alter the model's `__init__` order (as this permanently corrupts the Optimizer state). Instead, inject a global monkey-patch over `nn.Conv2d.forward` and `nn.ConvTranspose2d.forward` that dynamically checks the raw memory pointer (`weight.data_ptr() % 16`). If the pointer is unaligned (indicating a DataParallel replica buffer), intercept the execution and force a `.clone()` to instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator before passing it to `F.conv2d`.
 
 ---
 
