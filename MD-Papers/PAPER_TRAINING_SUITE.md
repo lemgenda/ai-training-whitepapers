@@ -19,7 +19,8 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Absolute Sentinel Authority**: Acts as the absolute physical authority. It treats `batch_size` from config as a maximum boundary and autonomously throttles it downwards if the local physical VRAM cannot hold it, permanently preventing system RAM paging.
 - **Atomic Re-Audit**: Performs a fresh hardware probe every time the resolution ladder jumps, ensuring peak physical throughput at low resolutions while automatically throttling for high-res stability.
 - **Sub-Nuclear 4GB Lockdown**: On GTX 1650/4GB cards, it enforces a strict **Serial-Only Mode** after an OOM, delivering a **2x performance gain** by preventing Windows System RAM paging.
-- **Dynamic Validation Sharding & Auto-Expansion**: Subsets the validation dataloader to 30% per epoch to accelerate perceptual metric computation. Once the model hits the Refinement Phase, it dynamically auto-expands validation to **100% (full dataset)** to guarantee an absolute SOTA generalizability audit.
+- **Multi-GPU DataParallel Engine**: Automatically detects multiple CUDA devices and wraps the active manifold in PyTorch's `DataParallel` engine. It dynamically scales the batch size perfectly across the available physical hardware (e.g. Kaggle T4x2) while keeping learning rates synchronized.
+- **Dynamic Validation Sharding & Auto-Expansion**: Subsets the validation dataloader to 30% per epoch to accelerate perceptual metric computation. Once the model hits the Refinement Phase, or the dynamically configurable `high_fidelity_fraction` (default 70%) at maximum resolution, it dynamically auto-expands validation to **100% (full dataset)** to guarantee an absolute SOTA generalizability audit.
 
 ### 2.2. Intelligent Curriculum & Sawtooth Governance
 
@@ -39,6 +40,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **The Scheduler Shield**: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.
 - **Metric Singularity & Live Polarity Shield**: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN. **New in v1.2.2**: The Live Polarity Shield monitors the manifold directly during training; if `SRCC < 0.0` or `PLCC < 0.0` is detected mid-epoch, it immediately flags a "Polarity Collapse", rejecting the epoch and triggering an instant SOTA rollback to purge inverted weights.
 - **Absolute Anti-Loop Guard (Dead Man's Switch)**: To prevent models from manipulating localized 5% drift gates via marginal "lucky" spikes, the Governor tracks an `absolute_patience` limit (default 15 epochs). If a model fails to beat the Absolute SOTA for 15 epochs, the Governor forcefully severs the training loop and executes a hard SOTA rollback.
+- **ONNX Trace Resilience (FakeTensor Guards)**: Dynamically wraps unmapped `FakeTensor` memory pointer access (`data_ptr()`) during FX/ONNX graph tracing within the DataParallel multi-GPU engine to prevent false-positive segmentation faults during structural graph export.
 
 ### 2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture
 
