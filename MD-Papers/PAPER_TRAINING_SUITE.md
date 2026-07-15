@@ -73,7 +73,7 @@ Below is the exhaustive matrix of supported architectures natively integrated wi
 
 | Model Name | Architecture / Backbone | LemGendized Dataset | SOTA Targets |
 | --- | --- | --- | --- |
-| LemGendary NIMA Aesthetic Scorer (Mobile) | MobileNetV2 (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.65 \| SRCC: 0.65 |
+| LemGendary NIMA Aesthetic Scorer (Mobile) | MobileNetV2 (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.60 \| SRCC: 0.60 |
 | LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S) | EfficientNetV2-S (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.7 \| SRCC: 0.7 |
 | LemGendary NIMA Aesthetic Scorer (Pro ViT) | Swin-v2-T (Global Multi-Scale Attention) | LemGendizedNimaAesthetic | PLCC: 0.75 \| SRCC: 0.75 |
 | LemGendary NIMA Technical Scorer | EfficientNetV2-S (Spatial Integrity) | LemGendizedNimaTechnical | PLCC: 0.88 \| SRCC: 0.88 |
