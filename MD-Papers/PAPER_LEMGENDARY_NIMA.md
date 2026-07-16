@@ -67,6 +67,7 @@
     - [7.35 Telemetry Engine Synchronization (v6.3.1)](#735-telemetry-engine-synchronization-v631)
     - [7.36 Plateau Timer Hardening (v6.3.2)](#736-plateau-timer-hardening-v632)
     - [7.37 Permanent Stress Deactivation Protocol (v6.3.3)](#737-permanent-stress-deactivation-protocol-v633)
+    - [7.38 Jolt Cooldown State Persistence (v6.3.4)](#738-jolt-cooldown-state-persistence-v634)
 8. [Deployment Strategy: Why ONNX?](#8-deployment-strategy-why-onnx)
     - [8.1 Format Comparison Matrix](#81-format-comparison-matrix)
     - [8.2 Why ONNX Wins for LemGendary](#82-why-onnx-wins-for-lemgendary)

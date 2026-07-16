@@ -399,6 +399,7 @@
                     <li><a href="#csv-lie">· The CSV Lie</a></li>
                     <li><a href="#infinite-cooling">· Infinite Cooling Loop</a></li>
                     <li><a href="#permanent-stress">· Permanent Stress</a></li>
+                    <li><a href="#amnesiac-jolt">· The Amnesiac Double-Jolt</a></li>
                 </ul>
             </li>
             <li><a href="#best-practices">6. Best Practices Checklist</a></li>
@@ -642,6 +643,11 @@
             <p><strong>The Issue:</strong> A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (<code>Stress: 5.0</code>) for all subsequent epochs.</p>
             <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.</p>
             <p><strong>Remedy:</strong> <strong>SOTA Deactivation Gate</strong>. Patch the Governor's <code>Update Memory</code> phase in <code>optimization_engine.py</code>. When <code>current_quality &gt; self.best_quality</code>, instantly neutralize <code>self.current_stress</code> back to <code>0.0</code> so the new manifold can anchor cleanly.</p>
+
+            <h3 id="amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</h3>
+            <p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.</p>
+            <p><strong>Identification:</strong> The terminal outputs <code>JOLT: Breaking Plateau with 1.50x LR Propulsion</code> immediately upon resuming from a checkpoint, and metrics regress heavily.</p>
+            <p><strong>Remedy:</strong> <strong>State Persistence</strong>. Ensure <code>last_jolt_epoch</code> is correctly serialized in <code>get_state()</code> and loaded in <code>load_state()</code> inside <code>optimization_engine.py</code>.</p>
         </section>
 
         <section id="best-practices">

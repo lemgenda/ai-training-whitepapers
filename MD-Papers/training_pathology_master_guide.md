@@ -195,6 +195,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **Identification**: `metrics.csv` shows `Stress: 5.0` continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.
 - **Remedy**: **SOTA Deactivation Gate**. Patch the Governor's `Update Memory` phase in `optimization_engine.py`. When `current_quality > self.best_quality`, instantly neutralize `self.current_stress` back to `0.0` so the new manifold can anchor cleanly.
 
+### The Amnesiac Double-Jolt (Cooldown Persistence)
+
+- **The Issue**: The Governor fails to persist the `last_jolt_epoch` timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.
+- **Identification**: The terminal outputs `JOLT: Breaking Plateau with 1.50x LR Propulsion` immediately upon resuming from a checkpoint, and metrics regress heavily.
+- **Remedy**: **State Persistence**. Ensure `last_jolt_epoch` is correctly serialized in `get_state()` and loaded in `load_state()` inside `optimization_engine.py`.
+
 ### The Sub-Nuclear 4GB Lockdown (v22.0)
 
 - **The Issue**: 4GB cards (GTX 1650) often trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB. This slows training by 10x-20x.

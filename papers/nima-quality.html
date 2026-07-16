@@ -513,6 +513,7 @@
                         <li><a href="#telemetry-sync">7.35 Telemetry Engine Synchronization (v6.3.1)</a></li>
                         <li><a href="#plateau-timer">7.36 Plateau Timer Hardening (v6.3.2)</a></li>
                         <li><a href="#permanent-stress">7.37 Permanent Stress Deactivation Protocol (v6.3.3)</a></li>
+                        <li><a href="#jolt-cooldown">7.38 Jolt Cooldown State Persistence (v6.3.4)</a></li>
                     </ul>
                 </li>
                 <li><a href="#onnx">8. ONNX Strategy</a>
@@ -952,6 +953,11 @@
                 <h4 id="permanent-stress">7.37 Permanent Stress Deactivation Protocol (v6.3.3)</h4>
                 <p><strong>Issue</strong>: When a model successfully broke a plateau and established a new SOTA Best Quality Score using the Stress Protocol, the Governor never turned the noise generators off. This permanently trapped the model in a state of maximum noise injection (<code>Stress: 5.0</code>), destroying fine-tuning convergence.</p>
                 <p><strong>Fix</strong>: Engineered the <strong>Stress Deactivation Protocol</strong> in the <code>optimization_engine.py</code> memory update phase. The Governor now actively monitors SOTA breakthroughs (<code>current_quality &gt; self.best_quality</code>); upon establishing a new peak, it instantly resets <code>current_stress</code> back to <code>0.0</code> to allow the new manifold to smoothly anchor.</p>
+            </div>
+            <div class="card">
+                <h4 id="jolt-cooldown">7.38 Jolt Cooldown State Persistence (v6.3.4)</h4>
+                <p><strong>Issue</strong>: The Governor applied a High-Energy Jolt (1.5x LR propulsion) to shatter plateaus but failed to persist the <code>last_jolt_epoch</code> variable across script resumes. This caused "Amnesiac Double-Jolting," where the Governor instantly re-jolted the model upon any restart while in a plateau, destroying manifold convergence and preventing the Stress protocol from operating.</p>
+                <p><strong>Fix</strong>: Patched <code>optimization_engine.py</code> to correctly serialize and load <code>last_jolt_epoch</code> in <code>get_state()</code> and <code>load_state()</code>. The Governor now accurately respects the 5-epoch <code>jolt_cooldown</code> regardless of runtime interruptions.</p>
             </div>
         </section>
 
