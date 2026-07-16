@@ -396,6 +396,9 @@
                     <li><a href="#false-positive-spike">· False-Positive Spike</a></li>
                     <li><a href="#premature-sota">· Premature SOTA</a></li>
                     <li><a href="#manifold-fragility">· Manifold Fragility</a></li>
+                    <li><a href="#csv-lie">· The CSV Lie</a></li>
+                    <li><a href="#infinite-cooling">· Infinite Cooling Loop</a></li>
+                    <li><a href="#permanent-stress">· Permanent Stress</a></li>
                 </ul>
             </li>
             <li><a href="#best-practices">6. Best Practices Checklist</a></li>
@@ -624,6 +627,21 @@
             <h3 id="thermal-glass-manifold-collapse">Thermal Glass Manifold Collapse (The Stress Loop)</h3>
             <p><strong>The Issue:</strong> When a model plateaus far away from its final SOTA target, the Governor assumes it is trapped and deploys the <strong>Stress Protocol</strong> by sharpening the Softmax Temperature. If the model's manifold is highly fragile (which is common immediately after setting a new SOTA), this extreme sharpening shatters the weights, causing a &gt;10% regression. The Regression Guard then rolls back to SOTA, causing an endless loop.</p>
             <p><strong>Remedy:</strong> <strong>Strict Thermal Floors</strong>. Constrain the Governor with a strict <code>min_temp</code> in the <code>unified_models_v2.yaml</code> configuration (e.g., <code>min_temp: 0.96</code>). This physically blocks the Stress Protocol from dropping the temperature into the shattering zone.</p>
+            
+            <h3 id="csv-lie">The "CSV Lie" Pathology</h3>
+            <p><strong>The Issue:</strong> Telemetry logging natively pulls background hardware metrics instead of the Governor's internal state machine, causing visualizations to show <code>0.0</code> Dataset Stress even when the model is actively being subjected to the Stress Protocol.</p>
+            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 0.0</code> despite the training terminal outputting <code>REFINEMENT: Trapped in Plateau. Deploying Stress Protocol</code>.</p>
+            <p><strong>Remedy:</strong> <strong>Engine Synchronization</strong>. The telemetry engine (<code>telemetry.py</code>) must be hardwired to extract <code>current_epoch_governor_state['stress']</code> instead of hardware memory stress.</p>
+
+            <h3 id="infinite-cooling">The Infinite Cooling Loop</h3>
+            <p><strong>The Issue:</strong> A mathematical logic flaw in the training loop resets the <code>epochs_no_improve</code> counter to <code>0</code> whenever any action is taken by the Governor. Because the Governor frequently cools the learning rate (an action), the plateau timer never reaches its threshold (e.g., 5 epochs) to deploy the Stress Protocol.</p>
+            <p><strong>Identification:</strong> The model is completely flatlined for dozens of epochs. The learning rate is repeatedly cooled, but the dataset fraction never drops and the Stress Protocol is never deployed.</p>
+            <p><strong>Remedy:</strong> <strong>Action Hardening</strong>. The plateau timer must explicitly ignore standard learning rate adjustments (<code>lr_changed = True</code>), resetting only upon spatial jumps, dataset fraction expansions, or positive 'Jolt' multipliers.</p>
+
+            <h3 id="permanent-stress">The Permanent Stress Pathology</h3>
+            <p><strong>The Issue:</strong> A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (<code>Stress: 5.0</code>) for all subsequent epochs.</p>
+            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.</p>
+            <p><strong>Remedy:</strong> <strong>SOTA Deactivation Gate</strong>. Patch the Governor's <code>Update Memory</code> phase in <code>optimization_engine.py</code>. When <code>current_quality &gt; self.best_quality</code>, instantly neutralize <code>self.current_stress</code> back to <code>0.0</code> so the new manifold can anchor cleanly.</p>
         </section>
 
         <section id="best-practices">

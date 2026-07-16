@@ -510,6 +510,9 @@
                         <li><a href="#sota-quality-selection-guard">7.32 SOTA Quality Selection Guard (v6.2.8)</a></li>
                         <li><a href="#same-res-recoil-protection">7.33 Same-Res Recoil Protection (v6.2.8)</a></li>
                         <li><a href="#overfitting-rescue">7.34 Overfitting Rescue Protocol (v6.3.0)</a></li>
+                        <li><a href="#telemetry-sync">7.35 Telemetry Engine Synchronization (v6.3.1)</a></li>
+                        <li><a href="#plateau-timer">7.36 Plateau Timer Hardening (v6.3.2)</a></li>
+                        <li><a href="#permanent-stress">7.37 Permanent Stress Deactivation Protocol (v6.3.3)</a></li>
                     </ul>
                 </li>
                 <li><a href="#onnx">8. ONNX Strategy</a>
@@ -934,6 +937,21 @@
                 <h4 id="overfitting-rescue">7.34 Overfitting Rescue Protocol (v6.3.0)</h4>
                 <p><strong>Issue</strong>: During continuous training cycles, early overfitting can cause validation metrics to regress. In legacy configurations, this regression triggered tactical recoils and locks, keeping the model starved of data variety and perpetuating the overfitting cycle.</p>
                 <p><strong>Fix</strong>: Implemented a trend-based <strong>Overfitting Rescue Protocol</strong>. The Governor now monitors training versus validation loss trends over a 3-epoch sliding window. If training loss trend decreases (&lt; -1e-4) while validation loss trend increases (&gt; 1e-4), the Governor overrides cooldown locks and force-expands the training dataset fraction (+15% data) to introduce immediate variety and break the overfitting state.</p>
+            </div>
+            <div class="card">
+                <h4 id="telemetry-sync">7.35 Telemetry Engine Synchronization (v6.3.1)</h4>
+                <p><strong>Issue</strong>: <code>metrics.csv</code> falsely reported <code>0.0</code> Dataset Stress even when the Governor's Stress Protocol was actively deployed, leading to "CSV Lies." This occurred because telemetry logged the hardware memory stress instead of the mathematical dataset stress.</p>
+                <p><strong>Fix</strong>: Synchronized the <code>telemetry.py</code> engine to extract and log <code>current_epoch_governor_state['stress']</code>, ensuring 1:1 parity between visual logs and the Governor's internal state.</p>
+            </div>
+            <div class="card">
+                <h4 id="plateau-timer">7.36 Plateau Timer Hardening (v6.3.2)</h4>
+                <p><strong>Issue</strong>: The Governor became trapped in infinite cooling loops because the <code>epochs_no_improve</code> counter reset to <code>0</code> whenever any action (even a cooling learning rate adjustment) was taken, preventing the Plateau Patience timer from ever reaching its 5-epoch trigger for the Stress Protocol.</p>
+                <p><strong>Fix</strong>: Hardened the <code>train.py</code> loop. The plateau timer now explicitly ignores standard learning rate adjustments and only resets on structural changes (spatial resolution jumps or dataset fraction expansions) or when a positive 'Jolt' multiplier is applied.</p>
+            </div>
+            <div class="card">
+                <h4 id="permanent-stress">7.37 Permanent Stress Deactivation Protocol (v6.3.3)</h4>
+                <p><strong>Issue</strong>: When a model successfully broke a plateau and established a new SOTA Best Quality Score using the Stress Protocol, the Governor never turned the noise generators off. This permanently trapped the model in a state of maximum noise injection (<code>Stress: 5.0</code>), destroying fine-tuning convergence.</p>
+                <p><strong>Fix</strong>: Engineered the <strong>Stress Deactivation Protocol</strong> in the <code>optimization_engine.py</code> memory update phase. The Governor now actively monitors SOTA breakthroughs (<code>current_quality &gt; self.best_quality</code>); upon establishing a new peak, it instantly resets <code>current_stress</code> back to <code>0.0</code> to allow the new manifold to smoothly anchor.</p>
             </div>
         </section>
 
