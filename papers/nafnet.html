@@ -556,12 +556,12 @@
             </ul>
         </nav>
 
-        <section id="abstract">
+        
+<section id="abstract">
             <h2>1. Abstract</h2>
             <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
         </section>
-
-        <section id="taxonomy">
+<section id="taxonomy">
             <h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
             <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation. By unifying diverse restoration subsets into the <code>LemGendizedNoiseDataset</code>, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.</p>
             <ul>
@@ -587,8 +587,9 @@
             </div>
         </section>
 
-        <section id="hardware">
-            <h2>3. Hardware-Aware Infrastructure: Universal Acceleration</h2>
+        <section id="shared-foundations">
+            <h2>3. Shared Foundations</h2>
+            <h2>3.1 Hardware-Aware Infrastructure: Universal Acceleration</h2>
             <p>Training massive architectures like NAFNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.</p>
             <div class="card">
                 <h3 id="memory-sentinel">3.1 The Headroom-Aware Memory-Sentinel</h3>
@@ -598,10 +599,8 @@
                 <h3 id="ovc-bridge">3.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)</h3>
                 <p>The pipeline harnesses local NumPy/OpenCV workers to decode image tensors natively in CPU cache before flushing them to the GPU. This prevents data-starvation of the GPU cores completely, hiding I/O latency behind raw throughput.</p>
             </div>
-        </section>
-
-        <section id="optimization">
-            <h2>4. Mathematical Optimization: High-Fidelity Perceptual Engines</h2>
+        
+            <h2>3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h2>
             <h3 id="structural-perceptual">4.1 Structural VS Perceptual Verification</h3>
             <p>While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:</p>
             <ul>
@@ -614,28 +613,132 @@
 
             <h3 id="cpu-bypass">4.3 The CPU-Bottleneck Bypass</h3>
             <p>Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking <code>lpips(net="vgg")</code> against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks <code>.to(device)</code> directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.</p>
-        </section>
         
-        <section id="migration">
-            <h2>5. The SOTA Architectural Migration (Mock to NAFNet)</h2>
-            <p>The evaluation of LemGendary AI models is conducted against rigorous industry benchmarks and legacy state-of-the-art architectures. By utilizing the 2026 Resiliency Engine and our specialized Universal Quality Subset, we have established a new baseline for high-fidelity assessment and restoration. The following metrics isolate the specific generational leaps in absolute correlation and structural fidelity achieved on consumer-grade hardware.</p>
-            <p>The primary triumph of this whitepaper is the stabilization of <strong>NAFNet</strong> in production. Legacy code featured 500-parameter "Mock" setups. The true NAFNet possesses millions of parameters driven by <code>SimpleGates</code> and <code>SimplifiedChannelAttention</code>.</p>
+            <h2>3.3 Kaggle Cloud Execution Protocols</h2>
+            <p>Kaggle instances uniquely operate under hyper-ephemeral boundaries (12-hour session maximums, multi-GPU validation desyncs, random RAM evictions). We implemented the following deployment strategies to ensure robust convergence parity.</p>
             
-            <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid var(--accent-color);">
-                <img src="../assets/nafnet_denoising_training.png" alt="NAFNet Denoising Trajectory" style="width: 100%; border-radius: 4px;">
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 3: NAFNet Denoising Training Trajectory - Exhibiting rapid convergence and extreme high-fidelity PSNR/SSIM retention over extended epochs.</em></p>
-            </div>
+            <h3 id="single-gpu">8.1 Single-GPU Specialization</h3>
+            <p>Kaggle frequently offers 2x T4 standard instances. Activating PyTorch <code>nn.DataParallel</code> physically splits NAFNet's SimpleGate multiplicative volumes directly across PCIe buses natively crippled by Kaggle's internal VM throttling. We actively deprecate the second GPU to double VRAM stability linearly on <code>cuda:0</code>.</p>
 
-            <div style="margin: 30px 0; padding: 20px; background: #252538; border-radius: 8px; border-left: 4px solid #03dac6;">
-                <img src="../assets/nafnet_debluring_training.png" alt="NAFNet Deblurring Trajectory" style="width: 100%; border-radius: 4px;">
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #a1a1aa;"><em>Figure 4: NAFNet Deblurring Training Trajectory - Showcasing the complex spatial reconstruction required to align kinetic motion blur, mapped against structural MSE validation loss.</em></p>
+            <h3 id="sub-epoch-continuity">8.2 Sub-Epoch Continuity</h3>
+            <p>Because an epoch can take 2-3 hours on massive HD topologies, standard <code>epoch-only</code> checkpoints are insufficient. We natively execute intra-epoch <code>progress.pth</code> serialization precisely tracking global <code>_batch_steps</code>. The SOTA Resumption Array guarantees hardware disruptions merely clip seconds off the training sequence.</p>
+
+            <h3 id="serial-extraction">8.3 Serial Extraction Mutex: Stable Global Alignment</h3>
+            <p><strong>Issue</strong>: Concurrent unzipping of massive datasets (FFHQ, DIV2K) previously triggered fatal OS freezes and I/O contention on localized storage arrays.</p>
+            <p><strong>Fix</strong>: Implemented the <strong>Serial Extraction Mutex</strong>. The dataset pipeline now acquires a **Global Named Mutex** (<em>Global\LemGendaryExtractionLock</em>) during the unzipping phase. While downloads operate in parallel to maximize bandwidth, extractions are strictly serialized. This ensures that NAFNet training threads maintain a rock-solid training stride without CPU starvation.</p>
+            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border-color); margin-top:20px;">
+                <h3 id="registry-first">8.4 Registry-First Dynamic Unification (v4.5)</h3>
+                <p><strong>Issue</strong>: Legacy NAFNet deployments required manual configuration of dataset paths and Kaggle slugs across multiple files, leading to frequent "Path Not Found" errors during multi-model orchestration.</p>
+                <p><strong>Fix</strong>: Synchronized NAFNet with the <strong>Registry-First Dynamic Orchestration</strong> protocol. All asset handles and Kaggle URLs are now natively resolved from the <em>unified_models.yaml</em> registry, ensuring that the NAFNet convergence pipeline is entirely self-managed and robust against local/cloud path shifts.</p>
             </div>
-            <h3 id="simplegate">5.1 SimpleGate over ReLU</h3>
-            <p>NAFNet actively abandons activating nonlinearities (like ReLU). Instead, it splits channels in half and multiplies them together (<code>SimpleGate</code>). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising.</p>
+        
         </section>
 
-        <section id="challenges">
-            <h2>6. Challenges & Resilience Architecture</h2>
+
+        <section id="model-deep-dives">
+            <h2>4. Model Deep-Dives</h2>
+
+            <div class="card" id="nafnet-denoising">
+                <h3>4.1 NAFNet Denoising Scorer</h3>
+                
+                <h4>4.1.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NAFNet Denoising</strong> is a professional-grade AI model optimized for the <code>restoration</code> lifecycle. It isolates pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric).</p>
+
+                <h4>4.1.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NAFNet (Standard Backbone)</li>
+                    <li><strong>Input Resolution</strong>: 512x512</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.1.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNafNetDenoising</code></li>
+                    <li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment.</li>
+                </ul>
+
+                <h4>4.1.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 24</li>
+                    <li><strong>Best PSNR</strong>: 51.5954 dB</li>
+                    <li><strong>Best SSIM</strong>: 0.9997</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00006000</li>
+                </ul>
+
+                <h4>4.1.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nafnet_denoising_training.png" alt="NAFNet Denoising Training Curve">
+                    <figcaption>Figure: Training Convergence for NAFNet Denoising.</figcaption>
+                </figure>
+
+                <h4>4.1.6 Model specific issues and optimizations</h4>
+                <p>NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, it splits channels in half and multiplies them together (<code>SimpleGate</code>). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising. A Structural FP16 Disable was engineered because <code>SimpleGate</code> multipliers easily crossed the FP16 ceiling, causing NaN overflows.</p>
+
+                <h4>4.1.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Mid-Training)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PSNR</strong></td><td>51.60 dB</td><td>~52.00 dB</td><td>-0.40 dB</td></tr>
+                        <tr><td><strong>SSIM</strong></td><td>0.9997</td><td>0.9999</td><td>-0.0002</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="nafnet-deblurring">
+                <h3>4.2 NAFNet Deblurring Scorer</h3>
+                
+                <h4>4.2.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NAFNet Deblurring</strong> handles complex spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts.</p>
+
+                <h4>4.2.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NAFNet (Standard Backbone)</li>
+                    <li><strong>Input Resolution</strong>: 512x512</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.2.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNafNetDebluring</code></li>
+                    <li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment.</li>
+                </ul>
+
+                <h4>4.2.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 54</li>
+                    <li><strong>Best PSNR</strong>: 33.4517 dB</li>
+                    <li><strong>Best SSIM</strong>: 0.9748</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00006789</li>
+                </ul>
+
+                <h4>4.2.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nafnet_debluring_training.png" alt="NAFNet Deblurring Training Curve">
+                    <figcaption>Figure: Training Convergence for NAFNet Deblurring.</figcaption>
+                </figure>
+
+                <h4>4.2.6 Model specific issues and optimizations</h4>
+                <p>Deblurring demands spatial reconstruction. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels. Like the Denoising track, it requires contiguous memory enforcement and strict FP32 precision clamps to prevent <code>misaligned address</code> crashes and NaN overflows.</p>
+
+                <h4>4.2.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Mid-Training)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PSNR</strong></td><td>33.45 dB</td><td>~34.00 dB</td><td>-0.55 dB</td></tr>
+                        <tr><td><strong>SSIM</strong></td><td>0.9748</td><td>0.9800</td><td>-0.0052</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+<section id="challenges">
+            <h2>5. Challenges &amp; Resilience Architecture</h2>
             <div class="card">
                 <h3 id="nan-overflows">6.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</h3>
                 <p><strong>Issue:</strong> NAFNet training initially exploded with infinite <code>NaN</code> losses. Because <code>SimpleGate</code> acts as a multiplicative layer, feature maps inside the encoder can easily cross the internal float ceiling of <code>65,504</code> dictated by FP16 (Automatic Mixed Precision).<br/>
@@ -816,180 +919,11 @@
             </div>
         </section>
 
-        <section id="deployment">
-            <h2>7. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</h2>
-            <div class="card">
-                <h3 id="standalone-exporters">7.1 Standalone Exporters</h3>
-                <p>We completely rebuilt the universal ONNX suite and PyTorch serialization hooks. Checkpoints saved under <code>DataParallel</code> (which inject a <code>module.</code> prefix) are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be downloaded and evaluated on local standalone PCs.</p>
-            </div>
-            <div class="card">
-                <h3 id="ghost-severing">7.2 The Ghost-Severing Protocol</h3>
-            <p><strong>Issue:</strong> When compressing massive 30MB FP32 tensors to FP16, legacy PyTorch ONNX C++ sub-compilers would illegally fork enormous <code>.onnx.data</code> sidecar files to disk (exceeding Protobuf serialization limits). This effectively poisoned WebGPU payloads with segmented external dependency.<br/>
-            <strong>Fix:</strong> Implemented the <strong>Ghost Severing Protocol</strong>. A clean-slate ONNX sweep detects and forcefully physically deletes orphaned <code>.onnx.data</code> graph fragments. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
-            </div>
-        </section>
 
-        <section id="kaggle">
-            <h2>8. Kaggle Cloud Execution Protocols</h2>
-            <p>Kaggle instances uniquely operate under hyper-ephemeral boundaries (12-hour session maximums, multi-GPU validation desyncs, random RAM evictions). We implemented the following deployment strategies to ensure robust convergence parity.</p>
-            
-            <h3 id="single-gpu">8.1 Single-GPU Specialization</h3>
-            <p>Kaggle frequently offers 2x T4 standard instances. Activating PyTorch <code>nn.DataParallel</code> physically splits NAFNet's SimpleGate multiplicative volumes directly across PCIe buses natively crippled by Kaggle's internal VM throttling. We actively deprecate the second GPU to double VRAM stability linearly on <code>cuda:0</code>.</p>
-
-            <h3 id="sub-epoch-continuity">8.2 Sub-Epoch Continuity</h3>
-            <p>Because an epoch can take 2-3 hours on massive HD topologies, standard <code>epoch-only</code> checkpoints are insufficient. We natively execute intra-epoch <code>progress.pth</code> serialization precisely tracking global <code>_batch_steps</code>. The SOTA Resumption Array guarantees hardware disruptions merely clip seconds off the training sequence.</p>
-
-            <h3 id="serial-extraction">8.3 Serial Extraction Mutex: Stable Global Alignment</h3>
-            <p><strong>Issue</strong>: Concurrent unzipping of massive datasets (FFHQ, DIV2K) previously triggered fatal OS freezes and I/O contention on localized storage arrays.</p>
-            <p><strong>Fix</strong>: Implemented the <strong>Serial Extraction Mutex</strong>. The dataset pipeline now acquires a **Global Named Mutex** (<em>Global\LemGendaryExtractionLock</em>) during the unzipping phase. While downloads operate in parallel to maximize bandwidth, extractions are strictly serialized. This ensures that NAFNet training threads maintain a rock-solid training stride without CPU starvation.</p>
-            <div class="card" style="background:var(--card-bg); padding:20px; border-radius:12px; border:1px solid var(--border-color); margin-top:20px;">
-                <h3 id="registry-first">8.4 Registry-First Dynamic Unification (v4.5)</h3>
-                <p><strong>Issue</strong>: Legacy NAFNet deployments required manual configuration of dataset paths and Kaggle slugs across multiple files, leading to frequent "Path Not Found" errors during multi-model orchestration.</p>
-                <p><strong>Fix</strong>: Synchronized NAFNet with the <strong>Registry-First Dynamic Orchestration</strong> protocol. All asset handles and Kaggle URLs are now natively resolved from the <em>unified_models.yaml</em> registry, ensuring that the NAFNet convergence pipeline is entirely self-managed and robust against local/cloud path shifts.</p>
-            </div>
-        </section>
-
-        <section id="sota-matrix">
-            <h2>9. SOTA Architectural Performance Matrix</h2>
-            <p>The following matrix isolates NAFNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).</p>
-            
-            <div style="overflow-x:auto; margin-top:20px;">
-                <table style="width:100%; border-collapse:collapse; text-align:left; background:var(--card-bg); border-radius:8px; overflow:hidden;">
-                    <thead style="background:var(--primary-color);">
-                        <tr>
-                            <th style="padding:12px; color:white;">Architecture</th>
-                            <th style="padding:12px; color:white;">Paradigm</th>
-                            <th style="padding:12px; color:white;">Parameters</th>
-                            <th style="padding:12px; color:white;">GPU Footprint</th>
-                            <th style="padding:12px; color:white;">PSNR</th>
-                            <th style="padding:12px; color:white;">LPIPS</th>
-                            <th style="padding:12px; color:white;">WebGPU Viability</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom:1px solid var(--border-color);">
-                            <td style="padding:12px;"><strong>DnCNN</strong></td>
-                            <td style="padding:12px;">Legacy CNN</td>
-                            <td style="padding:12px;">0.5M</td>
-                            <td style="padding:12px;">&lt; 1 GB</td>
-                            <td style="padding:12px;">~28.0dB</td>
-                            <td style="padding:12px;">0.29 (VGG)</td>
-                            <td style="padding:12px;"><span style="color:#28a745; font-weight:bold;">Highly Optimal</span></td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border-color);">
-                            <td style="padding:12px;"><strong>U-Net</strong></td>
-                            <td style="padding:12px;">Feature Pyramids</td>
-                            <td style="padding:12px;">13M</td>
-                            <td style="padding:12px;">~ 3 GB</td>
-                            <td style="padding:12px;">~30.2dB</td>
-                            <td style="padding:12px;">0.17 (VGG)</td>
-                            <td style="padding:12px;"><span style="color:#28a745; font-weight:bold;">Optimal</span></td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border-color);">
-                            <td style="padding:12px;"><strong>MIRNet</strong></td>
-                            <td style="padding:12px;">Multi-Scale Gating</td>
-                            <td style="padding:12px;">31M</td>
-                            <td style="padding:12px;">~ 11 GB</td>
-                            <td style="padding:12px;">~31.8dB</td>
-                            <td style="padding:12px;">0.08 (VGG)</td>
-                            <td style="padding:12px;"><span style="color:#ffc107; font-weight:bold;">Questionable</span></td>
-                        </tr>
-                        <tr style="border-bottom:1px solid var(--border-color);">
-                            <td style="padding:12px;"><strong>Restormer</strong></td>
-                            <td style="padding:12px;">Swin-Transformer</td>
-                            <td style="padding:12px;">26M</td>
-                            <td style="padding:12px;">~ 14 GB</td>
-                            <td style="padding:12px;">~32.4dB</td>
-                            <td style="padding:12px;">0.05 (VGG)</td>
-                            <td style="padding:12px;"><span style="color:#dc3545; font-weight:bold;">Degraded (Opset)</span></td>
-                        </tr>
-                        <tr style="background:rgba(123,97,255,0.1);">
-                            <td style="padding:12px; color:var(--primary-color);"><strong>LemGendary NAFNet</strong></td>
-                            <td style="padding:12px; color:var(--primary-color);">SCA SimpleGate</td>
-                            <td style="padding:12px; color:var(--primary-color);"><strong>17M</strong></td>
-                            <td style="padding:12px; color:var(--primary-color);"><strong>~ 6 GB</strong></td>
-                            <td style="padding:12px; color:var(--primary-color);"><strong>~32.5dB+</strong></td>
-                            <td style="padding:12px; color:var(--primary-color);"><strong>&lt; 0.06 (VGG)</strong></td>
-                            <td style="padding:12px;"><span style="color:var(--primary-color); font-weight:bold;">Production Grade</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p style="margin-top:20px;"><strong>Hardware Note</strong>: NAFNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for <code>[FP16]</code> browser exportation.</p>
-        </section>
-
-        <section id="conclusion">
-            <h2>10. Conclusion: The Browser Restoration Paradigm</h2>
+<section id="conclusion">
+            <h2>8. Conclusion: The Browser Restoration Paradigm</h2>
             <p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project.</p>
             <p>By overriding Kaggle architectural panics—disabling PyTorch's broken Multi-GPU layers, enforcing contiguous tensor mappings, and manually throttling PCIe validation chunks—we built a framework practically indestructible.</p>
             <p>The resulting NAFNet architecture, operating in FP32 inside the Kaggle Docker container and ultimately compiling down to self-contained FP16 ONNX nodes, proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
         </section>
 
-        <!-- Modals -->
-        <div id="gallery-modal" class="modal" onclick="closeModal()">
-            <span class="close-modal">&times;</span>
-            <img class="modal-content" id="modal-img">
-            <div id="modal-caption" class="modal-caption"></div>
-        </div>
-
-        <script>
-            function openModal(imgSrc, title, description) {
-                const modal = document.getElementById('gallery-modal');
-                const modalImg = document.getElementById('modal-img');
-                const modalCaption = document.getElementById('modal-caption');
-                
-                modalImg.src = imgSrc;
-                modalCaption.innerHTML = `<h4>${title}</h4><p>${description}</p>`;
-                
-                modal.classList.add('active');
-            }
-
-            function closeModal() {
-                const modal = document.getElementById('gallery-modal');
-                modal.classList.remove('active');
-            }
-
-            // Close on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModal();
-            });
-
-            // --- TOC Interaction Observer ---
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.3
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        const tocLink = document.querySelector(`.toc-sidebar a[href="#${id}"]`);
-                        
-                        if (tocLink) {
-                            // Remove active from all
-                            document.querySelectorAll('.toc-sidebar a').forEach(link => link.classList.remove('active'));
-                            document.querySelectorAll('.toc-sidebar li').forEach(li => li.classList.remove('is-active'));
-                            
-                            // Add active to current
-                            tocLink.classList.add('active');
-                            tocLink.closest('li').classList.add('is-active');
-                        }
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('section').forEach(section => {
-                observer.observe(section);
-            });
-        </script>
-
-        <footer>
-            <div class="container">
-                <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-            </div>
-        </footer>
-    </div>
-</body>
-</html>

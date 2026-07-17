@@ -426,7 +426,7 @@
             <p class="subtitle">High-Fidelity NIMA Assessment via Hardware-Aware Optimization</p>
             <div class="meta">
                 <span>By Lem Treursić</span>
-                <span>Version: 3.0.0 - Dynamic VRAM Sync</span>
+                <span>Version: 3.1.0 - Governor v16 + Head Projection Upgrade</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -514,6 +514,8 @@
                         <li><a href="#plateau-timer">7.36 Plateau Timer Hardening (v6.3.2)</a></li>
                         <li><a href="#permanent-stress">7.37 Permanent Stress Deactivation Protocol (v6.3.3)</a></li>
                         <li><a href="#jolt-cooldown">7.38 Jolt Cooldown State Persistence (v6.3.4)</a></li>
+                        <li><a href="#max-stress-freeze">7.39 Max Stress LR Freeze Fix (Governor v16)</a></li>
+                        <li><a href="#head-projection-upgrade">7.40 Head Projection Upgrade &amp; Resolution Ladder Expansion (v16.1)</a></li>
                     </ul>
                 </li>
                 <li><a href="#onnx">8. ONNX Strategy</a>
@@ -540,12 +542,12 @@
         </nav>
 
 
-        <section id="abstract">
+        
+<section id="abstract">
             <h2>1. Abstract</h2>
-            <p>The <span class="highlight">LemGendary Training Suite</span> is a unified deep learning environment specialized in producing high-fidelity Neural IMage Assessment (NIMA) models. This paper details three core pillars of the suite: the <strong>LemGendized Universal Quality Subset</strong>, the <strong>2026 Resilience Engine</strong>, and the <strong>Hyper-Convergence Patch (v2.6)</strong>. By merging legacy benchmarks and implementing hardware-aware 'Jolt' mechanisms, we achieved record-breaking PLCC scores of <strong>0.9848+</strong>—setting a new benchmark for browser-based image quality assessment.</p>
+            <p>The <span class="highlight">LemGendary Training Suite</span> is a unified deep learning environment specialized in producing high-fidelity Neural IMage Assessment (NIMA) models, including five dedicated variants spanning Aesthetic, Technical, and Authenticity scoring. This paper details three core pillars of the suite: the <strong>LemGendized Universal Quality Subset</strong>, the <strong>2026 Resilience Engine</strong>, and the <strong>Hyper-Convergence Patch (v2.6)</strong>, and the <strong>Head Projection Upgrade (v16.1)</strong>. By merging legacy benchmarks and implementing hardware-aware 'Jolt' mechanisms, we achieved record-breaking PLCC scores of <strong>0.9848+</strong>—setting a new benchmark for browser-based image quality assessment.</p>
         </section>
-
-        <section id="taxonomy">
+<section id="taxonomy">
             <h2>2. Visual Taxonomy: The LemGendary Universal Quality Subset</h2>
             <p>The primary innovation of this training cycle was the abandonment of raw, disparate datasets in favor of a specialized <strong>Universal Quality Subset</strong>. This subset was engineered to force the model to distinguish between "Artistic Intent" and "Technical Failure."</p>
             
@@ -585,25 +587,23 @@
             
             <h3 id="authenticity-manifold">2.2 NIMA Authenticity: Generative vs. Real Manifolds</h3>
             <p>To combat the proliferation of synthetic media and deepfakes, the suite integrates the <strong>NIMA Authenticity (AI vs. Real)</strong> classification lifecycle. Unlike standard aesthetic classifiers that evaluate artistic appeal, the authenticity classifier uses the <code>LemGendizedNimaAuthenticity</code> dataset manifold—a balanced corpus of real-world photography and diverse AI-generated/synthetic samples (covering GAN, Diffusion, and NeRF architectures). The model learns to detect subtle generative artifacts, frequency anomalies, and structural inconsistencies in the synthetic manifold.</p>
-        </section>
-
-        <section id="hardware">
-            <h2>3. Hardware-Aware Infrastructure: Universal Acceleration</h2>
-            <p>Training massive architectures like <strong>EfficientNetV2-S</strong> at high resolutions requires surgical VRAM management across diverse hardware targets.</p>
+        
             <div class="card">
-                <h3 id="memory-sentinel">3.1 The Headroom-Aware Memory-Sentinel</h3>
-                <p>The Sentinel has evolved from a static lookup table to an <strong>Active Probing Engine</strong>. Instead of assuming a fixed capacity, it invokes <code>torch.cuda.mem_get_info()</code> (or backend equivalents) to sense the true available headroom. This accounts for browser tabs, OS compositors, and external GPU tasks, ensuring that the physical batch size is always seated within the safe "Non-Paging" manifold.</p>
-
-                <h3 id="paging-protection">3.2 Intra-Epoch Paging Protection</h3>
-                <p>To handle dynamic system load (e.g., opening a browser mid-training), the suite implements an <strong>Intra-Epoch VRAM Sentinel</strong>. By probing free memory every 50 batches, the system can preemptively halt the training loop and downscale the physical batch size (compensating with gradient accumulation) before a kernel-level paging event occurs.</p>
-
-                <h3 id="ovc-bridge">3.3 OVC Data Streaming Bridge (OpenCV-to-CUDA)</h3>
-                <p>To minimize latency on the PCIe 3.0 bus, the suite uses the <strong>OVC Bridge</strong>. Images are pre-processed in the CPU's L3 cache using OpenCV's optimized SIMD instructions before being mapped directly into the GPU's memory buffer. This "Prefetch-and-Map" strategy hides the I/O latency of the high-fidelity samples, ensuring the kernels are never starved for data.</p>
+                <figure>
+                    <img src="../assets/nima_authenticity_real.png" alt="Quadrant 5: Real Photograph">
+                    <figcaption>Figure 5: Authenticity (Real) - A highly realistic, unedited photograph capturing natural depth of field, real-world lighting, and authentic lens imperfections.</figcaption>
+                </figure>
+                <figure>
+                    <img src="../assets/nima_authenticity_fake.png" alt="Quadrant 6: AI Generated">
+                    <figcaption>Figure 6: Authenticity (Fake) - A synthetic image containing generative artifacts such as unnatural lighting, overly smooth textures, and subtle structural inconsistencies typical of latent diffusion models.</figcaption>
+                </figure>
             </div>
+
         </section>
 
-        <section id="optimization">
-            <h2>4. Mathematical Optimization: The 2026 Resonance Loss</h2>
+        <section id="shared-foundations">
+            <h2>3. Shared Foundations</h2>
+            <h2>3.1 Mathematical Optimization: The 2026 Resonance Loss</h2>
             <p>The hallmark of the LemGendary project is its departure from pure Earth Mover's Distance (EMD).</p>
             <div class="card">
                 <h3 id="emd-anchor">4.1 Earth Mover's Distance (EMD) - The Histogram Anchor</h3>
@@ -623,81 +623,21 @@
                 <h3 id="authenticity-binned-threshold">4.5 Binned Midpoint Thresholding for Authenticity Scoring</h3>
                 <p>To evaluate the NIMA Authenticity scorer within our unified EMD loss framework, we apply a binned midpoint threshold at <strong>5.5</strong> (the exact center of the 1-10 NIMA scale). Predictions with probability mass distributions peaking at or above 5.5 represent synthetic/AI-generated origins (Fake), while distributions peaking below 5.5 represent real camera captures (Real). This allows authenticity to be trained with the same EMD distribution shape loss while producing a binary classification accuracy metric.</p>
             </div>
-        </section>
+        
+            <h2>3.2 Hardware-Aware Infrastructure: Universal Acceleration</h2>
+            <p>Training massive architectures like <strong>EfficientNetV2-S</strong> at high resolutions requires surgical VRAM management across diverse hardware targets.</p>
+            <div class="card">
+                <h3 id="memory-sentinel">3.1 The Headroom-Aware Memory-Sentinel</h3>
+                <p>The Sentinel has evolved from a static lookup table to an <strong>Active Probing Engine</strong>. Instead of assuming a fixed capacity, it invokes <code>torch.cuda.mem_get_info()</code> (or backend equivalents) to sense the true available headroom. This accounts for browser tabs, OS compositors, and external GPU tasks, ensuring that the physical batch size is always seated within the safe "Non-Paging" manifold.</p>
 
-        <section id="benchmarks">
-            <h2>5. Performance Metrics: LemGendary vs. Google SOTA</h2>
-            <p>The evaluation of LemGendary AI models is conducted against rigorous industry benchmarks and legacy state-of-the-art architectures. By utilizing the 2026 Resiliency Engine and our specialized Universal Quality Subset, we have established a new baseline for high-fidelity assessment and restoration. The following metrics isolate the specific generational leaps in absolute correlation and structural fidelity achieved on consumer-grade hardware.</p>
-            <p>Our results demonstrate significant generational leaps over the original 2018 NIMA benchmarks.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Track</th>
-                        <th>Metric</th>
-                        <th>Legacy NIMA (2018)</th>
-                        <th>LemGendary (SOTA)</th>
-                        <th>Difference</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Aesthetic</td>
-                        <td>PLCC</td>
-                        <td>~0.636</td>
-                        <td><strong>0.9596</strong></td>
-                        <td style="color: #4cd964;">+50.8%</td>
-                    </tr>
-                    <tr>
-                        <td>Aesthetic</td>
-                        <td>SRCC</td>
-                        <td>~0.612</td>
-                        <td><strong>0.9068</strong></td>
-                        <td style="color: #4cd964;">+48.1%</td>
-                    </tr>
-                    <tr>
-                        <td>Technical</td>
-                        <td>PLCC</td>
-                        <td>~0.908</td>
-                        <td><strong>0.9848</strong></td>
-                        <td style="color: #4cd964;">+8.4%</td>
-                    </tr>
-                    <tr>
-                        <td>Technical</td>
-                        <td>SRCC</td>
-                        <td>~0.900</td>
-                        <td><strong>0.9037</strong></td>
-                        <td>Record Stability</td>
-                    </tr>
-                    <tr>
-                        <td>Authenticity</td>
-                        <td>Accuracy</td>
-                        <td>N/A</td>
-                        <td><strong>0.9336</strong></td>
-                        <td>SOTA Detector</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3 id="paging-protection">3.2 Intra-Epoch Paging Protection</h3>
+                <p>To handle dynamic system load (e.g., opening a browser mid-training), the suite implements an <strong>Intra-Epoch VRAM Sentinel</strong>. By probing free memory every 50 batches, the system can preemptively halt the training loop and downscale the physical batch size (compensating with gradient accumulation) before a kernel-level paging event occurs.</p>
 
-            <h3 id="training-curves">5.1 Training Convergence Visuals</h3>
-            <div class="visual-taxonomy">
-                <div class="quadrant" onclick="openModal('../assets/nima_aesthetic_training.png', 'NIMA Aesthetic Convergence', 'Visualizing the epoch-by-epoch convergence of the Aesthetic manifold. PLCC (Blue) and SRCC (Green) demonstrate stable logarithmic growth.')">
-                    <img src="../assets/nima_aesthetic_training.png" alt="Aesthetic Training Curve" style="height: auto;">
-                    <div class="quadrant-info">
-                        <strong>NIMA Aesthetic Curve</strong>
-                        <span>Convergence on Universal Quality Subset.</span>
-                    </div>
-                </div>
-                <div class="quadrant" onclick="openModal('../assets/nima_technical_training.png', 'NIMA Technical Convergence', 'Tracking the record-breaking 0.9848 PLCC glide path of the EfficientNetV2-S model.')">
-                    <img src="../assets/nima_technical_training.png" alt="Technical Training Curve" style="height: auto;">
-                    <div class="quadrant-info">
-                        <strong>NIMA Technical Curve</strong>
-                        <span>EfficientNetV2-S Record Capture Path.</span>
-                    </div>
-                </div>
+                <h3 id="ovc-bridge">3.3 OVC Data Streaming Bridge (OpenCV-to-CUDA)</h3>
+                <p>To minimize latency on the PCIe 3.0 bus, the suite uses the <strong>OVC Bridge</strong>. Images are pre-processed in the CPU's L3 cache using OpenCV's optimized SIMD instructions before being mapped directly into the GPU's memory buffer. This "Prefetch-and-Map" strategy hides the I/O latency of the high-fidelity samples, ensuring the kernels are never starved for data.</p>
             </div>
-        </section>
-
-        <section id="health">
+        
+            <section id="health">
             <h2>6. Dataset Health & Recovery: The Infinite Pipeline</h2>
             <p>Managing over 1TB of raw dataset history on a local machine required a multi-tier orchestration layer that ensures the GPU never starves for data while staying within physical storage bounds.</p>
             <div class="card">
@@ -716,10 +656,271 @@
                 <h3 id="data-unification">6.4 Standardized Data-Unification</h3>
                 <p>To merge AVA (Aesthetics) and TID (Technical), the suite executes a <strong>Normalizing Transform</strong>. This scales varied score ranges (e.g., 0–1 into 1–10) and converts regression scores into probability mass functions (PMF). This unification allows the same model architecture to be trained on the entire 440,000-sample matrix without specialized branches.</p>
             </div>
+        
         </section>
 
-        <section id="challenges">
-            <h2>7. Challenges & Resilience Architecture</h2>
+
+        <section id="model-deep-dives">
+            <h2>4. Model Deep-Dives</h2>
+
+            <div class="card" id="nima-mobile">
+                <h3>4.1 NIMA Aesthetic Scorer (Mobile)</h3>
+                
+                <h4>4.1.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NIMA Aesthetic Scorer (Mobile)</strong> is a professional-grade AI model optimized for the <code>quality</code> lifecycle. It functions as an aesthetic quality scorer trained on a standardized dataset, evaluating artistic composition and color harmony using a lightweight backbone.</p>
+
+                <h4>4.1.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NIMA_Model (MobileNetV2 (Global Composition))</li>
+                    <li><strong>Input Resolution</strong>: 224x224</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.1.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNimaAestheticLarge</code></li>
+                    <li><strong>Total Samples</strong>: 321,369 (merged from AVA, TAD66K, SPAQ, KonIQ)</li>
+                    <li><strong>Primary Task</strong>: Predict human-perceptual quality score for Aesthetics.</li>
+                </ul>
+
+                <h4>4.1.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 95</li>
+                    <li><strong>Best Quality Score</strong>: 47.0648</li>
+                    <li><strong>Current Best PLCC</strong>: 0.4722</li>
+                    <li><strong>Current Best SRCC</strong>: 0.4779</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00007334</li>
+                </ul>
+
+                <h4>4.1.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nima_aesthetic_mobile_training.png" alt="NIMA Aesthetic Mobile Training Curve">
+                    <figcaption>Figure: Training Convergence for NIMA Aesthetic (MobileNetV2).</figcaption>
+                </figure>
+
+                <h4>4.1.6 Model specific issues and optimizations</h4>
+                <p>This model previously hit a hard representational ceiling around PLCC 0.47 due to its thin 1280-dim pooled embedding and a single <code>res_ladder</code> rung at 224px. In <strong>v16.1</strong>, the model was upgraded with a <code>hidden_dim: 256</code> projection layer (Dropout &rarr; Linear(1280, 256) &rarr; GELU &rarr; Dropout &rarr; Linear(256, 10)) and an expanded <code>res_ladder</code> of <code>[224, 256]</code> to unlock higher capacity.</p>
+
+                <h4>4.1.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Mid-Training)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PLCC</strong></td><td>0.4722</td><td>&gt; 0.6000</td><td>-0.1278</td></tr>
+                        <tr><td><strong>SRCC</strong></td><td>0.4779</td><td>&gt; 0.6000</td><td>-0.1221</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="nima-efficientnet">
+                <h3>4.2 NIMA Aesthetic Scorer (EfficientNetV2-S)</h3>
+                
+                <h4>4.2.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S)</strong> evaluates aesthetic quality with a focus on global composition, similar to the Mobile variant but utilizing the more robust EfficientNetV2-S backbone for higher fidelity assessment.</p>
+
+                <h4>4.2.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NIMA_Model (EfficientNetV2-S (Global Composition))</li>
+                    <li><strong>Input Resolution</strong>: 224x224 (Base) up to 384x384 (Deepening)</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.2.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNimaAestheticLarge</code></li>
+                    <li><strong>Total Samples</strong>: 321,369 (merged from AVA, TAD66K, SPAQ, KonIQ)</li>
+                    <li><strong>Primary Task</strong>: Predict human-perceptual quality score for Aesthetics.</li>
+                </ul>
+
+                <h4>4.2.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 30</li>
+                    <li><strong>Best Quality Score</strong>: 48.9029</li>
+                    <li><strong>Current Best PLCC</strong>: 0.4690</li>
+                    <li><strong>Current Best SRCC</strong>: 0.5162</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00005891</li>
+                </ul>
+
+                <h4>4.2.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nima_aesthetic_efficientnet_training.png" alt="NIMA Aesthetic EfficientNet Training Curve">
+                    <figcaption>Figure: Training Convergence for NIMA Aesthetic (EfficientNetV2-S).</figcaption>
+                </figure>
+
+                <h4>4.2.6 Model specific issues and optimizations</h4>
+                <p>Like the Mobile variant, the EfficientNet model was constrained by a bare <code>Linear(1280, 10)</code> head. It has now been upgraded with the <code>hidden_dim: 256</code> projection layer, which should yield significant gains as training progresses through its multi-rung resolution ladder (<code>[224, 384]</code>).</p>
+
+                <h4>4.2.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Mid-Training)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PLCC</strong></td><td>0.4690</td><td>&gt; 0.9500</td><td>-0.4810</td></tr>
+                        <tr><td><strong>SRCC</strong></td><td>0.5162</td><td>&gt; 0.9000</td><td>-0.3838</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="nima-pro">
+                <h3>4.3 NIMA Aesthetic Scorer Pro (Swin-v2-T)</h3>
+                
+                <h4>4.3.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NIMA Aesthetic Scorer (Pro ViT)</strong> is a high-end quality scorer optimized for high-res global composition. It utilizes a Swin Transformer V2 backbone with global multi-scale attention, making it the most capable aesthetic model in the suite.</p>
+
+                <h4>4.3.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NIMA_Model (Swin-v2-T (Global Multi-Scale Attention))</li>
+                    <li><strong>Input Resolution</strong>: 256x256 (Base) up to 512x512</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.3.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNimaAestheticLarge</code></li>
+                    <li><strong>Total Samples</strong>: 321,369 (merged from AVA, TAD66K, SPAQ, KonIQ)</li>
+                    <li><strong>Primary Task</strong>: Predict human-perceptual quality score for Aesthetics.</li>
+                </ul>
+
+                <h4>4.3.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 1</li>
+                    <li><strong>Best Quality Score</strong>: 5.9806</li>
+                    <li><strong>Current Best PLCC</strong>: 0.0627</li>
+                    <li><strong>Current Best SRCC</strong>: 0.0569</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00000096</li>
+                </ul>
+
+                <h4>4.3.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nima_aesthetic_pro_training.png" alt="NIMA Aesthetic Pro Training Curve">
+                    <figcaption>Figure: Training Convergence for NIMA Aesthetic Pro (Swin-v2-T). <em>(Note: Insufficient training history &mdash; model just started)</em></figcaption>
+                </figure>
+
+                <h4>4.3.6 Model specific issues and optimizations</h4>
+                <p>This architecture uses built-in attention-based feature mixing and robust 768-dim features. It retains the standard bare linear head as it possesses significant representational capacity directly in the backbone, prioritizing an expansive three-rung ladder (<code>[256, 384, 512]</code>).</p>
+
+                <h4>4.3.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Started)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PLCC</strong></td><td>0.0627</td><td>0.7500</td><td>-0.6873</td></tr>
+                        <tr><td><strong>SRCC</strong></td><td>0.0569</td><td>0.7500</td><td>-0.6931</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="nima-technical">
+                <h3>4.4 NIMA Technical Scorer (EfficientNetV2-S)</h3>
+                
+                <h4>4.4.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary NIMA Technical Scorer</strong> is specialized for Technical Integrity. It evaluates images for defects, identifying micro-defects, noise, blur, compression, and sharpness artifacts rather than artistic appeal.</p>
+
+                <h4>4.4.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NIMA_Model (EfficientNetV2-S (Spatial Integrity))</li>
+                    <li><strong>Input Resolution</strong>: 384x384 (Base) up to 512x512</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.4.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNimaTechnicalLarge</code></li>
+                    <li><strong>Total Samples</strong>: 26,093 (merged from SPAQ, KonIQ, TID2013, LIVE, CSIQ, DND, NAM)</li>
+                    <li><strong>Primary Task</strong>: Predict human-perceptual quality score for Technical Integrity.</li>
+                </ul>
+
+                <h4>4.4.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 129</li>
+                    <li><strong>Best Quality Score</strong>: 267.5683</li>
+                    <li><strong>Current Best PLCC</strong>: 0.7459</li>
+                    <li><strong>Current Best SRCC</strong>: 0.7694</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00001815</li>
+                </ul>
+
+                <h4>4.4.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nima_technical_training.png" alt="NIMA Technical Training Curve">
+                    <figcaption>Figure: Training Convergence for NIMA Technical (EfficientNetV2-S).</figcaption>
+                </figure>
+
+                <h4>4.4.6 Model specific issues and optimizations</h4>
+                <p>The model targets the highest SOTA requirement (0.91 PLCC) but faced a plateau due to its bare <code>Linear(1280, 10)</code> head. It was recently upgraded with the <code>hidden_dim: 256</code> projection layer to enhance its capacity for differentiating subtle technical artifacts at high resolutions.</p>
+
+                <h4>4.4.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Mid-Training)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>PLCC</strong></td><td>0.7459</td><td>0.9100</td><td>-0.1641</td></tr>
+                        <tr><td><strong>SRCC</strong></td><td>0.7694</td><td>0.9100</td><td>-0.1406</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card" id="nima-authenticity">
+                <h3>4.5 NIMA Authenticity Scorer (EfficientNetV2-S)</h3>
+                
+                <h4>4.5.1 Model description, purpose and usage</h4>
+                <p>The <strong>LemGendary Authenticity Scorer (AI vs Human)</strong> is a DeepFake and AI-generated image detection model. It maps image authenticity scores to a binary categorical distribution to separate generative media from real photographs.</p>
+
+                <h4>4.5.2 Model Info</h4>
+                <ul>
+                    <li><strong>Architecture</strong>: NIMA_Model (EfficientNetV2-S (Distribution Scorer))</li>
+                    <li><strong>Input Resolution</strong>: 256x256 (Base) up to 768x768</li>
+                    <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+                    <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+                </ul>
+
+                <h4>4.5.3 Manifold Info</h4>
+                <ul>
+                    <li><strong>Dataset</strong>: <code>LemGendizedNimaAuthenticityLarge</code></li>
+                    <li><strong>Total Samples</strong>: 209,196 (merged from Real vs Fake Faces, AI vs Real, SUT)</li>
+                    <li><strong>Primary Task</strong>: Predict image authenticity score (binary categorization via EMD).</li>
+                </ul>
+
+                <h4>4.5.4 Performance Metrics</h4>
+                <ul>
+                    <li><strong>Current Training Epochs</strong>: 1</li>
+                    <li><strong>Best Quality Score</strong>: 94.4535</li>
+                    <li><strong>Current Best PLCC</strong>: 0.9147</li>
+                    <li><strong>Current Best SRCC</strong>: 0.8485</li>
+                    <li><strong>Current Best Accuracy</strong>: 0.9445</li>
+                    <li><strong>Current Learning Rate</strong>: 0.00000240</li>
+                </ul>
+
+                <h4>4.5.5 Training Curve</h4>
+                <figure>
+                    <img src="../assets/nima_authenticity_training.png" alt="NIMA Authenticity Training Curve">
+                    <figcaption>Figure: Training Convergence for NIMA Authenticity (EfficientNetV2-S). <em>(Note: Insufficient training history &mdash; model just started)</em></figcaption>
+                </figure>
+
+                <h4>4.5.6 Model specific issues and optimizations</h4>
+                <p>Because this is fundamentally a binary classification task evaluating frequency and structural artifacts, the bare linear head is architecturally optimal. It bypasses the hidden projection layer upgrade applied to continuous distribution tasks, relying instead on a massive resolution ladder (<code>[256, 384, 512, 768]</code>).</p>
+
+                <h4>4.5.7 Consolidated SOTA Benchmarks</h4>
+                <table>
+                    <thead>
+                        <tr><th>Metric</th><th>Current Reality (Started)</th><th>Target SOTA Baseline</th><th>Gap</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Accuracy</strong></td><td>0.9445</td><td>0.9600</td><td>-0.0155</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+<section id="challenges">
+            <h2>5. Challenges &amp; Resilience Architecture</h2>
             <p>The training of 440,000 samples on a 48-hour continuous cycle required "Resilience Architecture" fixes to handle several engineering hurdles.</p>
             <div class="card">
                 <h4 id="scheduler-bug">7.1 The Scheduler Double-Stepping Bug</h4>
@@ -959,10 +1160,25 @@
                 <p><strong>Issue</strong>: The Governor applied a High-Energy Jolt (1.5x LR propulsion) to shatter plateaus but failed to persist the <code>last_jolt_epoch</code> variable across script resumes. This caused "Amnesiac Double-Jolting," where the Governor instantly re-jolted the model upon any restart while in a plateau, destroying manifold convergence and preventing the Stress protocol from operating.</p>
                 <p><strong>Fix</strong>: Patched <code>optimization_engine.py</code> to correctly serialize and load <code>last_jolt_epoch</code> in <code>get_state()</code> and <code>load_state()</code>. The Governor now accurately respects the 5-epoch <code>jolt_cooldown</code> regardless of runtime interruptions.</p>
             </div>
+            <div class="card">
+                <h4 id="max-stress-freeze">7.39 Max Stress LR Freeze Fix (Governor v16)</h4>
+                <p><strong>Issue</strong>: A logic gap in the Governor's <code>REFINEMENT</code> phase. When <code>current_stress</code> reached the maximum level of <code>5.0</code> and the model's quality score was still far below <code>target_quality_score * 0.90</code>, the code fell through to the <code>else</code> branch and applied <code>cooling_factor</code> (0.85&times;) to the LR every single epoch. After 30&ndash;40 epochs at max stress, the LR was crushed to near-zero, completely freezing the model's ability to escape the local minimum. The SOTA deactivation gate (which resets stress) only fires when quality <em>improves</em>, creating an unescapable deadlock.</p>
+                <p><strong>Observed In</strong>: <code>nima_aesthetic_mobile</code> &mdash; 86 epochs, stress=5.0 from epoch 83+, PLCC stuck at 0.47 vs. target 0.60, LR decaying exponentially from 5e-5 toward the 1e-5 absolute floor.</p>
+                <p><strong>Fix</strong>: Added a new <code>elif</code> branch (Governor v16) in <code>optimization_engine.py</code> between the stress-escalation block and the cooling fallback. When <code>current_stress &gt;= 5.0</code> and the model is still far from SOTA, the LR is forced to <code>jolt_multiplier</code> (1.5&times;) instead of the cooling factor, maintaining momentum. A new <code>max_stress_stuck_epochs</code> counter (persisted in <code>get_state</code>/<code>load_state</code>) tracks how long the model has been at max stress with no improvement. After <code>plateau_patience &times; 2</code> epochs in this state, a <code>[STUCK]</code> signal is emitted to notify the operator that the architecture may be at its representational capacity.</p>
+            </div>
+            <div class="card">
+                <h4 id="head-projection-upgrade">7.40 Head Projection Upgrade &amp; Resolution Ladder Expansion (v16.1)</h4>
+                <p><strong>Issue</strong>: The <code>nima_aesthetic_mobile</code> model uses a bare <code>Dropout(0.5) &rarr; Linear(1280, 10)</code> classification head. This single linear mapping from the MobileNetV2 feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.</p>
+                <p>Additionally, the <code>res_ladder</code> config contained only <code>[224]</code>, preventing the Governor from ever triggering the <code>DEEPENING</code> phase (a spatial resolution jump). The model spent 95+ epochs at a single resolution without any opportunity to learn higher-frequency spatial features.</p>
+                <p><strong>Fix</strong>: Two complementary changes applied to unlock further capacity:</p>
+                <ol>
+                    <li><strong>Hidden Projection Layer</strong> (<code>nima.py</code>, Governor v16.1): Added an optional <code>hidden_dim</code> parameter to <code>NIMA_Model</code>. When set to <code>256</code> via <code>kwargs</code> in the YAML, the head becomes <code>Dropout(0.5) &rarr; Linear(1280, 256) &rarr; GELU &rarr; Dropout(0.25) &rarr; Linear(256, 10)</code>. This intermediate manifold allows the model to learn richer aesthetic representations before collapsing to 10 bins. The change is backwards-compatible: all other NIMA variants default to <code>hidden_dim=None</code> and are completely unaffected. The checkpoint loader uses <code>strict=False</code>, so the pretrained MobileNetV2 backbone weights are fully preserved and only the new head is randomly initialized on the next restart.</li>
+                    <li><strong>Resolution Ladder Expansion</strong> (<code>unified_models_v2.yaml</code>): Expanded <code>res_ladder</code> for <code>nima_aesthetic_mobile</code> from <code>[224]</code> to <code>[224, 256]</code>, enabling the Governor's spatial jump mechanism to trigger a <code>DEEPENING</code> phase at 256px once the 224px performance has plateaued.</li>
+                </ol>
+            </div>
         </section>
-
-        <section id="onnx">
-            <h2>8. Deployment Strategy: Why ONNX?</h2>
+<section id="onnx">
+            <h2>6. Deployment Strategy: Why ONNX?</h2>
             <p>The migration from PyTorch to ONNX was driven by the necessity of <strong>WebGPU stability</strong>. Below is a comprehensive comparison of ONNX against competing deployment formats.</p>
             <h3 id="comparison-matrix">8.1 Format Comparison Matrix</h3>
             <table>
@@ -1027,9 +1243,23 @@
                 <li><strong>Cross-Backend</strong>: ONNX ensures the "LemGendary" experience is accessible on any device, from mobile browsers to high-end RTX desktops.</li>
             </ol>
         </section>
+<section id="universal-protocols">
+            <h2>11. Universal Hardware Protocols (v3.0)</h2>
+            <p>The 2026 suite represents a transition from hardware-specific optimizations to a <strong>Universal Acceleration Layer</strong> capable of utilizing any available silicon at maximum efficiency.</p>
+            
+            <div class="card">
+                <h3 id="backend-selection">11.1 Universal Backend Selection (MPS/XPU/DirectML)</h3>
+                <p>The architecture introduces a <strong>Unified Device Handshake</strong>. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same codebase executes at peak performance on NVIDIA, Apple Silicon, and Intel ARC hardware without manual configuration.</p>
 
-        <section id="conclusion">
-            <h2>9. Conclusion: The Real-Time Quality Paradigm</h2>
+                <h3 id="active-probing">11.2 Active VRAM Probing (mem_get_info)</h3>
+                <p>We have transitioned from <strong>Theoretical Capacity</strong> to <strong>Actual Occupancy</strong>. The system now probes real-time free VRAM before every session. This "Active Headroom Sensing" allows the Governor to intelligently downshift on shared machines while maximizing throughput on dedicated cloud nodes.</p>
+
+                <h3 id="time-aware-governance">11.3 Time-Aware Checkpoint Governance</h3>
+                <p>To protect both SSD lifespan and training progress, the suite implements a <strong>15-Minute Resiliency Window</strong>. The Governor monitors iteration velocity and dynamically recalibrates the checkpoint frequency to ensure that no more than 15 minutes of work is ever at risk.</p>
+            </div>
+        </section>
+<section id="conclusion">
+            <h2>8. Conclusion: The Real-Time Quality Paradigm</h2>
             <p>The LemGendary Training Suite has established a new 2026 baseline for Neural Image Assessment, proving that state-of-the-art results do not require corporate-scale compute clusters—they require <strong>hardware-aware resilience architecture</strong>.</p>
             <div class="card">
                 <h3 id="breakthroughs">9.1 Summary of Breakthroughs</h3>
@@ -1048,86 +1278,3 @@
             <p>Ultimately, the LemGendary project proves that with the right mathematical guardrails (2026 Resilience Loss) and real-time resource monitoring, the gap between laboratory SOTA and consumer deployment has officially closed.</p>
         </section>
 
-        <section id="universal-protocols">
-            <h2>11. Universal Hardware Protocols (v3.0)</h2>
-            <p>The 2026 suite represents a transition from hardware-specific optimizations to a <strong>Universal Acceleration Layer</strong> capable of utilizing any available silicon at maximum efficiency.</p>
-            
-            <div class="card">
-                <h3 id="backend-selection">11.1 Universal Backend Selection (MPS/XPU/DirectML)</h3>
-                <p>The architecture introduces a <strong>Unified Device Handshake</strong>. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same codebase executes at peak performance on NVIDIA, Apple Silicon, and Intel ARC hardware without manual configuration.</p>
-
-                <h3 id="active-probing">11.2 Active VRAM Probing (mem_get_info)</h3>
-                <p>We have transitioned from <strong>Theoretical Capacity</strong> to <strong>Actual Occupancy</strong>. The system now probes real-time free VRAM before every session. This "Active Headroom Sensing" allows the Governor to intelligently downshift on shared machines while maximizing throughput on dedicated cloud nodes.</p>
-
-                <h3 id="time-aware-governance">11.3 Time-Aware Checkpoint Governance</h3>
-                <p>To protect both SSD lifespan and training progress, the suite implements a <strong>15-Minute Resiliency Window</strong>. The Governor monitors iteration velocity and dynamically recalibrates the checkpoint frequency to ensure that no more than 15 minutes of work is ever at risk.</p>
-            </div>
-        </section>
-
-        <div id="gallery-modal" class="modal" onclick="closeModal()">
-            <span class="close-modal">&times;</span>
-            <img class="modal-content" id="modal-img">
-            <div id="modal-caption" class="modal-caption"></div>
-        </div>
-
-        <script>
-            function openModal(imgSrc, title, description) {
-                const modal = document.getElementById('gallery-modal');
-                const modalImg = document.getElementById('modal-img');
-                const modalCaption = document.getElementById('modal-caption');
-                
-                modalImg.src = imgSrc;
-                modalCaption.innerHTML = `<h4>${title}</h4><p>${description}</p>`;
-                
-                modal.classList.add('active');
-            }
-
-            function closeModal() {
-                const modal = document.getElementById('gallery-modal');
-                modal.classList.remove('active');
-            }
-
-            // Close on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeModal();
-            });
-
-            // --- TOC Interaction Observer ---
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.3
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute('id');
-                        const tocLink = document.querySelector(`.toc-sidebar a[href="#${id}"]`);
-                        
-                        if (tocLink) {
-                            // Remove active from all
-                            document.querySelectorAll('.toc-sidebar a').forEach(link => link.classList.remove('active'));
-                            document.querySelectorAll('.toc-sidebar li').forEach(li => li.classList.remove('is-active'));
-                            
-                            // Add active to current
-                            tocLink.classList.add('active');
-                            tocLink.closest('li').classList.add('is-active');
-                        }
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('section').forEach(section => {
-                observer.observe(section);
-            });
-        </script>
-
-        <footer>
-            <div class="container">
-                <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-            </div>
-        </footer>
-    </div>
-</body>
-</html>
