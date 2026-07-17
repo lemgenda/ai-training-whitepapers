@@ -3,7 +3,7 @@
 # Nuclear Stability: AI Training Pathology Master Guide (v1.1)
 
 **Author**: Lem Treursić
-**Version**: 1.1.0 - High-Fidelity Hardened (v16.2.8 Release)
+**Version**: 1.2.0 - Governor v16 Hardened (2026-07-17)
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
@@ -36,6 +36,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [The "CSV Lie" Pathology](#the-csv-lie-pathology)
     - [The Infinite Cooling Loop](#the-infinite-cooling-loop)
     - [The Permanent Stress Pathology](#the-permanent-stress-pathology)
+    - [The Max Stress LR Freeze (v16 Bug)](#the-max-stress-lr-freeze-v16-bug)
     - [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
     - [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
 6. [Best Practices Checklist](#7-best-practices-checklist)
@@ -194,6 +195,13 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (`Stress: 5.0`) for all subsequent epochs.
 - **Identification**: `metrics.csv` shows `Stress: 5.0` continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.
 - **Remedy**: **SOTA Deactivation Gate**. Patch the Governor's `Update Memory` phase in `optimization_engine.py`. When `current_quality > self.best_quality`, instantly neutralize `self.current_stress` back to `0.0` so the new manifold can anchor cleanly.
+
+### The Max Stress LR Freeze (v16 Bug)
+
+- **The Issue**: A logic gap in the Governor's `REFINEMENT` phase. When `current_stress` reaches the maximum level of `5.0` and the model's quality score is still far below `target_quality_score * 0.90`, the code falls through to the `else` branch and applies `cooling_factor` (e.g., `0.85×`) to the LR every single epoch. After 30–40 epochs at max stress, the LR is crushed to near-zero, completely freezing the model's ability to escape the local minimum. The stress plateau is permanent because the SOTA deactivation gate only fires when quality *improves*, which is impossible with a frozen LR.
+- **Identification**: `metrics.csv` shows `Stress: 5.0` persisting for 20+ epochs. PLCC/SRCC oscillate within a very narrow band (e.g., ±0.02). The LR column shows exponential decay (e.g., `5e-5 → 2e-5 → 8e-6 → ...`). The terminal emits `REFINEMENT: SOTA Precision Cooling` rather than any jolt message.
+- **Observed In**: `nima_aesthetic_mobile` run — 86 epochs, stress=5.0 from epoch 83+, PLCC stuck at 0.47 vs target 0.60, LR decaying from 5e-5 down toward the `1e-5` absolute floor.
+- **Remedy**: **Max-Stress Jolt Guard (v16)**. Add a new `elif` branch in `optimization_engine.py` between the stress-escalation block and the cooling fallback. When `current_stress >= 5.0` and the model is still far from SOTA, force the `jolt_multiplier` instead of the `cooling_factor`. Additionally, track a `max_stress_stuck_epochs` counter. After `plateau_patience × 2` epochs in this state with no improvement, emit a `[STUCK]` signal in the governor message so the operator can make an informed decision about stopping or switching the architecture backbone. This prevents indefinite silent degradation.
 
 ### The Amnesiac Double-Jolt (Cooldown Persistence)
 

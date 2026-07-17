@@ -399,6 +399,7 @@
                     <li><a href="#csv-lie">· The CSV Lie</a></li>
                     <li><a href="#infinite-cooling">· Infinite Cooling Loop</a></li>
                     <li><a href="#permanent-stress">· Permanent Stress</a></li>
+                    <li><a href="#max-stress-freeze">· Max Stress LR Freeze (v16)</a></li>
                     <li><a href="#amnesiac-jolt">· The Amnesiac Double-Jolt</a></li>
                 </ul>
             </li>
@@ -643,6 +644,12 @@
             <p><strong>The Issue:</strong> A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (<code>Stress: 5.0</code>) for all subsequent epochs.</p>
             <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.</p>
             <p><strong>Remedy:</strong> <strong>SOTA Deactivation Gate</strong>. Patch the Governor's <code>Update Memory</code> phase in <code>optimization_engine.py</code>. When <code>current_quality &gt; self.best_quality</code>, instantly neutralize <code>self.current_stress</code> back to <code>0.0</code> so the new manifold can anchor cleanly.</p>
+
+            <h3 id="max-stress-freeze">The Max Stress LR Freeze (v16 Bug)</h3>
+            <p><strong>The Issue:</strong> A logic gap in the Governor's <code>REFINEMENT</code> phase. When <code>current_stress</code> reaches the maximum level of <code>5.0</code> and the model's quality score is still far below <code>target_quality_score * 0.90</code>, the code falls through to the <code>else</code> branch and applies <code>cooling_factor</code> (e.g., <code>0.85&times;</code>) to the LR every single epoch. After 30&ndash;40 epochs at max stress, the LR is crushed to near-zero, completely freezing the model's ability to escape the local minimum. The stress plateau is permanent because the SOTA deactivation gate only fires when quality <em>improves</em>, which is impossible with a frozen LR.</p>
+            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> persisting for 20+ epochs. PLCC/SRCC oscillate within a very narrow band (e.g., &plusmn;0.02). The LR column shows exponential decay (e.g., <code>5e-5 &rarr; 2e-5 &rarr; 8e-6 &rarr; ...</code>). The terminal emits <code>REFINEMENT: SOTA Precision Cooling</code> rather than any jolt message.</p>
+            <p><strong>Observed In:</strong> <code>nima_aesthetic_mobile</code> run &mdash; 86 epochs, stress=5.0 from epoch 83+, PLCC stuck at 0.47 vs target 0.60, LR decaying from 5e-5 down toward the <code>1e-5</code> absolute floor.</p>
+            <p><strong>Remedy:</strong> <strong>Max-Stress Jolt Guard (v16)</strong>. Add a new <code>elif</code> branch in <code>optimization_engine.py</code> between the stress-escalation block and the cooling fallback. When <code>current_stress &gt;= 5.0</code> and the model is still far from SOTA, force the <code>jolt_multiplier</code> instead of the <code>cooling_factor</code>. Additionally, track a <code>max_stress_stuck_epochs</code> counter. After <code>plateau_patience &times; 2</code> epochs in this state with no improvement, emit a <code>[STUCK]</code> signal in the governor message so the operator can make an informed decision about stopping or switching the architecture backbone. This prevents indefinite silent degradation.</p>
 
             <h3 id="amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</h3>
             <p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.</p>
