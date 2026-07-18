@@ -414,7 +414,13 @@
         .toc-sidebar::-webkit-scrollbar {
             display: none;
         }
-        </style>
+        
+        .chart-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+</style>
 </head>
 <body>
     <div class="container">
@@ -585,6 +591,14 @@
 <em>Figure 3: Technical Failures - Visualizing the JPEG banding and blocking that the EfficientNetV2-S model is designed to catch at 384x384.</em></p>
 <p><img alt="Quadrant 4: Low Aesthetic, High Technical" src="../assets/technical_sharp_boring.png" />
 <em>Figure 4: High Technical (10/10) / Low Aesthetic (1/10) - A sharp, flawless image of a boring subject. This teaches the model that "sharpness" alone is not "art."</em></p>
+
+<div class="visual-taxonomy">
+                <div class="quadrant" onclick="openModal('../assets/aesthetic_masterpiece.png', 'Quadrant 1: High Aesthetic', 'This quadrant represents images with professional composition, color harmony, and artistic impact. The model learns to assign 10/10 scores here regardless of camera sensor characteristics.')">
+                    <img src="../assets/aesthetic_masterpiece.png" alt="High Aesthetic">
+                    <div class="quadrant-info">
+                        <strong>Quadrant 1: High Aesthetic</strong>
+                        <span>10/10 Aesthetic. Correct composition and color harmony.</span>
+                    </div>
 <h3 id="22-nima-authenticity-generative-vs-real-manifolds">2.2 NIMA Authenticity: Generative vs. Real Manifolds</h3>
 <p>To combat the proliferation of synthetic media and deepfakes, the suite integrates the <strong>NIMA Authenticity (AI vs. Real)</strong> classification lifecycle. Unlike standard aesthetic classifiers that evaluate artistic appeal, the authenticity classifier uses the <code>LemGendizedNimaAuthenticity</code> dataset manifold—a balanced corpus of real-world photography and diverse AI-generated/synthetic samples (covering GAN, Diffusion, and NeRF architectures). The model learns to detect subtle generative artifacts, frequency anomalies, and structural inconsistencies in the synthetic manifold.</p>
 <hr />
@@ -664,7 +678,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h4 id="416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
 <p>This model previously hit a hard representational ceiling around PLCC 0.47 due to its thin 1280-dim pooled embedding and a single <code>res_ladder</code> rung at 224px. In <strong>v16.1</strong>, the model was upgraded with a <code>hidden_dim: 256</code> projection layer (Dropout → Linear(1280, 256) → GELU → Dropout → Linear(256, 10)) and an expanded <code>res_ladder</code> of <code>[224, 256]</code> to unlock higher capacity.</p>
 <h4 id="417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -687,7 +701,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <td style="text-align: left;">-0.1221</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="42-nima-aesthetic-scorer-efficientnetv2-s">4.2 NIMA Aesthetic Scorer (EfficientNetV2-S)</h3>
 <h4 id="421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S)</strong> evaluates aesthetic quality with a focus on global composition, similar to the Mobile variant but utilizing the more robust EfficientNetV2-S backbone for higher fidelity assessment.</p>
@@ -718,7 +732,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h4 id="426-model-specific-issues-and-optimizations">4.2.6 Model specific issues and optimizations</h4>
 <p>Like the Mobile variant, the EfficientNet model was constrained by a bare <code>Linear(1280, 10)</code> head. It has now been upgraded with the <code>hidden_dim: 256</code> projection layer, which should yield significant gains as training progresses through its multi-rung resolution ladder (<code>[224, 384]</code>).</p>
 <h4 id="427-consolidated-sota-benchmarks">4.2.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -741,7 +755,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <td style="text-align: left;">-0.3838</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="43-nima-aesthetic-scorer-pro-swin-v2-t">4.3 NIMA Aesthetic Scorer Pro (Swin-v2-T)</h3>
 <h4 id="431-model-description-purpose-and-usage">4.3.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NIMA Aesthetic Scorer (Pro ViT)</strong> is a high-end quality scorer optimized for high-res global composition. It utilizes a Swin Transformer V2 backbone with global multi-scale attention, making it the most capable aesthetic model in the suite.</p>
@@ -772,7 +786,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h4 id="436-model-specific-issues-and-optimizations">4.3.6 Model specific issues and optimizations</h4>
 <p>This architecture uses built-in attention-based feature mixing and robust 768-dim features. It retains the standard bare linear head as it possesses significant representational capacity directly in the backbone, prioritizing an expansive three-rung ladder (<code>[256, 384, 512]</code>).</p>
 <h4 id="437-consolidated-sota-benchmarks">4.3.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -795,7 +809,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <td style="text-align: left;">-0.6931</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="44-nima-technical-scorer-efficientnetv2-s">4.4 NIMA Technical Scorer (EfficientNetV2-S)</h3>
 <h4 id="441-model-description-purpose-and-usage">4.4.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NIMA Technical Scorer</strong> is specialized for Technical Integrity. It evaluates images for defects, identifying micro-defects, noise, blur, compression, and sharpness artifacts rather than artistic appeal.</p>
@@ -826,7 +840,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h4 id="446-model-specific-issues-and-optimizations">4.4.6 Model specific issues and optimizations</h4>
 <p>The model targets the highest SOTA requirement (0.91 PLCC) but faced a plateau due to its bare <code>Linear(1280, 10)</code> head. It was recently upgraded with the <code>hidden_dim: 256</code> projection layer to enhance its capacity for differentiating subtle technical artifacts at high resolutions.</p>
 <h4 id="447-consolidated-sota-benchmarks">4.4.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -849,7 +863,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <td style="text-align: left;">-0.1406</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="45-nima-authenticity-scorer-efficientnetv2-s">4.5 NIMA Authenticity Scorer (EfficientNetV2-S)</h3>
 <h4 id="451-model-description-purpose-and-usage">4.5.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary Authenticity Scorer (AI vs Human)</strong> is a DeepFake and AI-generated image detection model. It maps image authenticity scores to a binary categorical distribution to separate generative media from real photographs.</p>
@@ -881,7 +895,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h4 id="456-model-specific-issues-and-optimizations">4.5.6 Model specific issues and optimizations</h4>
 <p>Because this is fundamentally a binary classification task evaluating frequency and structural artifacts, the bare linear head is architecturally optimal. It bypasses the hidden projection layer upgrade applied to continuous distribution tasks, relying instead on a massive resolution ladder (<code>[256, 384, 512, 768]</code>).</p>
 <h4 id="457-consolidated-sota-benchmarks">4.5.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -898,7 +912,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <td style="text-align: left;">-0.0155</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</h2>
 <p>The training of 440,000 samples on a 48-hour continuous cycle required "Resilience Architecture" fixes to handle several engineering hurdles.</p>

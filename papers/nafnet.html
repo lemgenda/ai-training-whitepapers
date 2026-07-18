@@ -452,11 +452,24 @@
         .toc-sidebar::-webkit-scrollbar {
             display: none;
         }
-        </style>
+        
+        .chart-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+</style>
 </head>
 <body>
     <div class="container">
-        <h1 id="architecture-of-lemgendary-ai-high-fidelity-nafnet-restoration-via-sota-infrastructure">Architecture of LemGendary AI: High-Fidelity NAFNet Restoration via SOTA Infrastructure</h1>
+        <div class="tabs-nav">
+            <a href="universal-hybrid.html" class="tab-link">Universal Hybrid</a>
+            <a href="nafnet.html" class="tab-link active">NAFNet</a>
+            <a href="mirnet.html" class="tab-link">MIRNet</a>
+            <a href="ffanet.html" class="tab-link">FFANet</a>
+            <a href="mprnet.html" class="tab-link">MPRNet</a>
+        </div>
+<h1 id="architecture-of-lemgendary-ai-high-fidelity-nafnet-restoration-via-sota-infrastructure">Architecture of LemGendary AI: High-Fidelity NAFNet Restoration via SOTA Infrastructure</h1>
 <p><strong>Author</strong>: Lem Treursić<br />
 <strong>Version</strong>: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)<br />
 <strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)</p>
@@ -627,7 +640,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <h4 id="416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
 <p>NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, it splits channels in half and multiplies them together (<code>SimpleGate</code>). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising. A Structural FP16 Disable was engineered because <code>SimpleGate</code> multipliers easily crossed the FP16 ceiling, causing NaN overflows.</p>
 <h4 id="417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -650,7 +663,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <td style="text-align: left;">-0.0002</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="42-nafnet-deblurring-scorer">4.2 NAFNet Deblurring Scorer</h3>
 <h4 id="421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NAFNet Deblurring</strong> handles complex spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts.</p>
@@ -679,7 +692,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <h4 id="426-model-specific-issues-and-optimizations">4.2.6 Model specific issues and optimizations</h4>
 <p>Deblurring demands spatial reconstruction. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels. Like the Denoising track, it requires contiguous memory enforcement and strict FP32 precision clamps to prevent <code>misaligned address</code> crashes and NaN overflows.</p>
 <h4 id="427-consolidated-sota-benchmarks">4.2.7 Consolidated SOTA Benchmarks</h4>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
@@ -702,7 +715,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <td style="text-align: left;">-0.0052</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <h2 id="5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</h2>
 <h3 id="51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</h3>
@@ -795,7 +808,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <hr />
 <hr />
 <h2 id="7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</h2>
-<table>
+<div class="chart-container"><table>
 <thead>
 <tr>
 <th style="text-align: left;">Architecture</th>
@@ -854,7 +867,7 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 <td style="text-align: left;"><strong>Production Grade</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <hr />
 <hr />
 <h2 id="8-conclusion-the-browser-restoration-paradigm">8. Conclusion: The Browser Restoration Paradigm</h2>
