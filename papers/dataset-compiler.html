@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Compiler Suite Whitepaper - LemGendary AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="toc-sidebar">
+        <a href="../index.html" class="toc-brand">
+            &larr; Hub
+        </a>
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#executive-summary">1. Executive Summary</a></li>
+            <li><a href="#high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
+            <li><a href="#hybrid-cloud-integration">3. Hybrid Cloud & Registry Integration</a></li>
+            <li><a href="#multi-modal-resilience">4. Multi-Modal & Format Resilience</a></li>
+            <li>
+                <a href="#synthesis-flow-topology">5. Synthesis Flow & Topology</a>
+                <ul class="sub-item">
+                    <li><a href="#the-dataset-hub">5.1. The Dataset Hub</a></li>
+                    <li><a href="#industrial-output-topology">5.2. Industrial Output Topology</a></li>
+                </ul>
+            </li>
+            <li><a href="#unified-models-registry">6. Unified Models Registry (Manifolds)</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <header class="doc-header">
+            <span class="category-badge">Category 01</span>
+            <h1>Dataset Compiler Suite Whitepaper</h1>
+            <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
+        </header>
+
+        <section id="executive-summary">
+            <h2>1. Executive Summary</h2>
+            <p>The LemGendary Dataset Pipeline (v16.2.8-NUCLEAR-HARDENED) is the industrial standard for Generative & Vision Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion and Vision datasets with industrial-grade CLIP styling, multi-domain balancing, and high-fidelity LANCZOS interpolation.</p>
+        </section>
+
+        <section id="high-velocity-optimizations">
+            <h2>2. High-Velocity Optimizations</h2>
+            <p>The v16.2.8 release introduces the High-Fidelity Compiler, optimized for processing 1.4M+ item manifolds while maintaining absolute structural integrity for restoration tasks.</p>
+            <ul>
+                <li><strong>O(1) Physical Skip-Indexing</strong>: Transitioned from slow recursive traversals to string-based <code>os.scandir</code> logic. The compiler skips already-processed samples with near-zero latency, even on massive 1M+ item manifolds.</li>
+                <li><strong>LANCZOS High-Fidelity Scaling</strong>: Native integration of Lanczos resampling for all resolution-locked tasks (Diffusion/VLM), ensuring zero feature aliasing during the downsampling phase.</li>
+                <li><strong>High-Fidelity Floor (v16.2.8)</strong>: Mandatory resolution filtering to prevent low-res "blur" pathologies. Enforced <strong>512px</strong> minimum floor for Quality & Diffusion, and <strong>224px</strong> minimum floor for Restoration & SR.</li>
+                <li><strong>ThreadPoolExecutor Zero-IPC</strong>: Streamlined execution model that eliminates Windows IPC serialization bottlenecks, maximizing throughput on high-speed NVMe hardware.</li>
+                <li><strong>1024px SOTA Baselines</strong>: Standardized diffusion manifold resolution to 1024px for native SDXL/Flux compatibility.</li>
+            </ul>
+        </section>
+
+        <section id="hybrid-cloud-integration">
+            <h2>3. Hybrid Cloud & Registry Integration</h2>
+            <ul>
+                <li><strong>Atomic Registry Resumption</strong>: Integrated SQLite-based checkpoints allow for instantaneous resumption of interrupted 1M-sample runs without redundant I/O.</li>
+                <li><strong>KaggleHub & HF Sync</strong>: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.</li>
+                <li><strong>Standardized dataset_info.yaml</strong>: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.</li>
+                <li><strong>UPNv2 Large Space-Recovery (v16.2.9)</strong>: Autonomously purged 1.36 million empty labels and compiled physical NTFS hardlinks in <code>targets/</code> mapping back to <code>images/</code> on duplicate synthetic structures, successfully recovering ~1.06 TB of disk space with zero pipeline disruption.</li>
+            </ul>
+        </section>
+
+        <section id="multi-modal-resilience">
+            <h2>4. Multi-Modal & Format Resilience</h2>
+            <ul>
+                <li><strong>Parquet & Safetensors Support</strong>: Native ingestion of highly compressed pyarrow binaries and model metadata (Kohya/Civitai tags).</li>
+                <li><strong>DPED Mirroring v2.1</strong>: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.</li>
+                <li><strong>VRAM De-fragmentation</strong>: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.</li>
+                <li><strong>Universal Film Restorer Dataset Hardening</strong>: Confirmed exactly 0 empty label files and 100% target physical hardlinking in <code>LemGendizedFilmRestorerLarge</code>, guaranteeing a pristine production state at 0 bytes disk overhead.</li>
+                <li><strong>Professional Multi-Task Restoration Dataset Integration (v16.3.0)</strong>: Structured unified source pipeline merging 11 individual manifolds with automated filename prefix preservation for downstream regular expression routing. Standardized target hardlinking layout with case-insensitive physically skip-indexed ingestion, and configured strict Lanczos/interpolation ceilings at 256px-640px to feed the Mixture-of-Experts (MoE) routing engine.</li>
+                <li><strong>ParseNet Semantic Extraction (v16.3.1)</strong>: Compiler explicitly outputs <code>masks/</code> directory, resolving paired masks as target images natively for face segmentation tasks rather than generic YOLO polygons.</li>
+                <li><strong>RetinaFace YOLO Landmarking (v16.3.1)</strong>: Integrated dynamic 5-point landmark extraction directly from <code>landmarks/</code> into standard YOLO format and strictly filtered all classes to <code>face</code> (index 0).</li>
+            </ul>
+        </section>
+
+        <section id="synthesis-flow-topology">
+            <h2>5. Synthesis Flow & Topology</h2>
+            
+            <h3 id="the-dataset-hub">5.1. The Dataset Hub (v6.0.0-SOTA)</h3>
+            <p>The modernized interactive dashboard for end-to-end manifold management. Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling).</p>
+            
+            <h3 id="industrial-output-topology">5.2. Industrial Output Topology (Nuclear Architecture)</h3>
+            <ul>
+                <li><code>raw-sets/</code> (Source datasets - Protected by Cleanup Guardian)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/images/</code> (Standard structured folders for Restoration)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/labels/</code> (NIMA 10-bin probabilities or YOLO vectors)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/targets/</code> (Ground truth targets for SR/Restoration)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/dataset_info.yaml</code> (Suite Metadata)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/manifold_registry.db</code> (Persistent SQLite metadata)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/README.md</code> (Kaggle-Optimized Manifest)</li>
+            </ul>
+        </section>
+
+        <section id="unified-models-registry">
+            <h2>6. Unified Models Registry (Manifolds)</h2>
+            
+            <div class="visual-taxonomy">
+                <div class="quadrant">
+                    <h4>LemGendizedClassificationMasterManifoldLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Classification</li>
+                        <li><strong>Total Samples:</strong> 788,034</li>
+                        <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification heads</li>
+                        <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedCodeFormerLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
+                        <li><strong>Total Samples:</strong> 22,000</li>
+                        <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedFfaNetIndoorLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 196,304</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedFfaNetOutdoorLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 217,113</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedFilmRestorerLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 67,542</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedMirNetExposureLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 1,416,459</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedMirNetLowLightLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 15,070</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedMprNetDerainingLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 248,190</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedNafNetDebluringLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Quality Assessment</li>
+                        <li><strong>Total Samples:</strong> 26,093</li>
+                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedNafNetDenoisingLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 7,727</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedNimaAestheticLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Quality Assessment</li>
+                        <li><strong>Total Samples:</strong> 321,369</li>
+                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedNimaAuthenticityLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Authenticity Assessment</li>
+                        <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
+                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                        <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedNimaTechnicalLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Quality Assessment</li>
+                        <li><strong>Total Samples:</strong> 26,093</li>
+                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedParseNetLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Segmentation</li>
+                        <li><strong>Total Samples:</strong> 853,546</li>
+                        <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
+                        <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedProfessionalMultitaskRestorationLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 343,911</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedRetinaFaceMobileNetLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
+                        <li><strong>Total Samples:</strong> 853,546</li>
+                        <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
+                        <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedUltraZoomLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Super-Resolution</li>
+                        <li><strong>Total Samples:</strong> 17,724</li>
+                        <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
+                        <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedUpnV2Large</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Image Restoration</li>
+                        <li><strong>Total Samples:</strong> 1,378,070</li>
+                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                    </ul>
+                </div>
+                <div class="quadrant">
+                    <h4>LemGendizedYoloV8nLarge</h4>
+                    <ul>
+                        <li><strong>Category:</strong> Object Detection</li>
+                        <li><strong>Total Samples:</strong> 153,972</li>
+                        <li><strong>Architecture Base:</strong> CSP-Darknet / Transformer backbones with Path Aggregation</li>
+                        <li><strong>Primary Task:</strong> Detect and localize multiple object classes with high precision.</li>
+                    </ul>
+                </div>
+            </div>
+            
+        </section>
+
+    </main>
+
+</body>
+</html>

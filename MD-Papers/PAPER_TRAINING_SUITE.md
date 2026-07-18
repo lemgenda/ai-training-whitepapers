@@ -1,6 +1,6 @@
 # Master Training Suite Guide: LemGendary AI
 
-## Category 07 | LemGendary AI Documentation Hub
+## Category 02 | LemGendary AI Documentation Hub
 
 ---
 
