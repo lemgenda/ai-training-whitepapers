@@ -9,37 +9,41 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-
-    <!-- Sidebar Navigation -->
-    <nav class="toc-sidebar">
-        <a href="../index.html" class="toc-brand">
-            &larr; Hub
-        </a>
-        <h4>Contents</h4>
-        <ul>
-            <li><a href="#executive-summary">1. Executive Summary</a></li>
-            <li><a href="#high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
-            <li><a href="#hybrid-cloud-integration">3. Hybrid Cloud & Registry Integration</a></li>
-            <li><a href="#multi-modal-resilience">4. Multi-Modal & Format Resilience</a></li>
-            <li>
-                <a href="#synthesis-flow-topology">5. Synthesis Flow & Topology</a>
-                <ul class="sub-item">
-                    <li><a href="#the-dataset-hub">5.1. The Dataset Hub</a></li>
-                    <li><a href="#industrial-output-topology">5.2. Industrial Output Topology</a></li>
-                </ul>
-            </li>
-            <li><a href="#unified-models-registry">6. Unified Models Registry (Manifolds)</a></li>
-        </ul>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="container">
-        
-        <header class="doc-header">
-            <span class="category-badge">Category 01</span>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
             <h1>Dataset Compiler Suite Whitepaper</h1>
             <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
+            <div class="meta">
+                <span>Category 01</span>
+            </div>
         </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h4>Navigation Matrix</h4>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-primary); border-left: none; padding-left: 0;">← Back to Index</a></li>
+                <li><a href="#executive-summary">1. Executive Summary</a></li>
+                <li><a href="#high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
+                <li><a href="#hybrid-cloud-integration">3. Hybrid Cloud & Registry Integration</a></li>
+                <li><a href="#multi-modal-resilience">4. Multi-Modal & Format Resilience</a></li>
+                <li>
+                    <a href="#synthesis-flow-topology">5. Synthesis Flow & Topology</a>
+                    <ul class="sub-item">
+                        <li><a href="#the-dataset-hub">5.1. The Dataset Hub</a></li>
+                        <li><a href="#industrial-output-topology">5.2. Industrial Output Topology</a></li>
+                    </ul>
+                </li>
+                <li><a href="#unified-models-registry">6. Unified Models Registry (Manifolds)</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
 
         <section id="executive-summary">
             <h2>1. Executive Summary</h2>
@@ -104,181 +108,222 @@
             
             <div class="visual-taxonomy">
                 <div class="quadrant">
-                    <h4>LemGendizedClassificationMasterManifoldLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Classification</li>
-                        <li><strong>Total Samples:</strong> 788,034</li>
-                        <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification heads</li>
-                        <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedClassificationMasterManifoldLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Classification</li>
+                            <li><strong>Total Samples:</strong> 788,034</li>
+                            <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification heads</li>
+                            <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedCodeFormerLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
-                        <li><strong>Total Samples:</strong> 22,000</li>
-                        <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedCodeFormerLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
+                            <li><strong>Total Samples:</strong> 22,000</li>
+                            <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedFfaNetIndoorLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 196,304</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedFfaNetIndoorLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 196,304</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedFfaNetOutdoorLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 217,113</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedFfaNetOutdoorLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 217,113</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedFilmRestorerLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 67,542</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedFilmRestorerLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 67,542</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedMirNetExposureLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 1,416,459</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedMirNetExposureLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,416,459</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedMirNetLowLightLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 15,070</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedMirNetLowLightLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 15,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedMprNetDerainingLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 248,190</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedMprNetDerainingLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 248,190</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedNafNetDebluringLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Quality Assessment</li>
-                        <li><strong>Total Samples:</strong> 26,093</li>
-                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedNafNetDebluringLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedNafNetDenoisingLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 7,727</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedNafNetDenoisingLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 7,727</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedNimaAestheticLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Quality Assessment</li>
-                        <li><strong>Total Samples:</strong> 321,369</li>
-                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedNimaAestheticLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 321,369</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedNimaAuthenticityLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Authenticity Assessment</li>
-                        <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
-                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                        <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedNimaAuthenticityLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Authenticity Assessment</li>
+                            <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedNimaTechnicalLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Quality Assessment</li>
-                        <li><strong>Total Samples:</strong> 26,093</li>
-                        <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                        <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedNimaTechnicalLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedParseNetLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Segmentation</li>
-                        <li><strong>Total Samples:</strong> 853,546</li>
-                        <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
-                        <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedParseNetLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Segmentation</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
+                            <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedProfessionalMultitaskRestorationLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 343,911</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedProfessionalMultitaskRestorationLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 343,911</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedRetinaFaceMobileNetLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
-                        <li><strong>Total Samples:</strong> 853,546</li>
-                        <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
-                        <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedRetinaFaceMobileNetLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
+                            <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedUltraZoomLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Super-Resolution</li>
-                        <li><strong>Total Samples:</strong> 17,724</li>
-                        <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
-                        <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedUltraZoomLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Super-Resolution</li>
+                            <li><strong>Total Samples:</strong> 17,724</li>
+                            <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
+                            <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedUpnV2Large</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Image Restoration</li>
-                        <li><strong>Total Samples:</strong> 1,378,070</li>
-                        <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                        <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedUpnV2Large</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,378,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="quadrant">
-                    <h4>LemGendizedYoloV8nLarge</h4>
-                    <ul>
-                        <li><strong>Category:</strong> Object Detection</li>
-                        <li><strong>Total Samples:</strong> 153,972</li>
-                        <li><strong>Architecture Base:</strong> CSP-Darknet / Transformer backbones with Path Aggregation</li>
-                        <li><strong>Primary Task:</strong> Detect and localize multiple object classes with high precision.</li>
-                    </ul>
+                    <div class="quadrant-info">
+                        <h4>LemGendizedYoloV8nLarge</h4>
+                        <ul>
+                            <li><strong>Category:</strong> Object Detection</li>
+                            <li><strong>Total Samples:</strong> 153,972</li>
+                            <li><strong>Architecture Base:</strong> CSP-Darknet / Transformer backbones with Path Aggregation</li>
+                            <li><strong>Primary Task:</strong> Detect and localize multiple object classes with high precision.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            
         </section>
 
-    </main>
+        <section id="conclusion">
+            <h2>7. Conclusion</h2>
+            <p>The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying previously disparate domains under the MoE routing engine, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.</p>
+        </section>
 
+    </div>
 </body>
 </html>
