@@ -30,7 +30,7 @@
             </a>
             <h4>Navigation Matrix</h4>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-primary); border-left: none; padding-left: 0;">← Back to Index</a></li>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
                 <li><a href="#1-abstract">1. Abstract</a></li>
 <li><a href="#2-visual-taxonomy-the-lemgendary-universal-quality-subset">2. Visual Taxonomy: The LemGendary Universal Quality Subset</a><ul class="sub-item">
 <li><a href="#21-the-four-quadrant-dataset-philosophy">2.1 The Four-Quadrant Dataset Philosophy</a></li>
@@ -713,21 +713,64 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 </li>
 <li>
 <p><strong>Resolution Ladder Expansion</strong> (<code>unified_models_v2.yaml</code>): Expanded <code>res_ladder</code> for <code>nima_aesthetic_mobile</code> from <code>[224]</code> to <code>[224, 256]</code>, enabling the Governor's spatial jump mechanism to trigger a <code>DEEPENING</code> phase at 256px once the 224px performance has plateaued.</p>
-</li>
-</ol>
-<hr />
-<hr />
 <h2 id="6-deployment-strategy-why-onnx">6. Deployment Strategy: Why ONNX?</h2>
-<p>The migration from PyTorch to ONNX was driven by the necessity of <strong>WebGPU stability</strong>. Below is a comprehensive comparison of ONNX against competing deployment formats.</p>
+<p>The migration from PyTorch to ONNX was driven by the necessity of <strong>WebGPU stability</strong>. Below is a comprehensive comparison of format options for the deployment phase.</p>
 <h3 id="61-format-comparison-matrix">6.1 Format Comparison Matrix</h3>
-<p>| Format | Perf (Browser) | Size (v1.0.10) | Portability | Strength | Weakness |</p>
-<p>| :--- | :--- | :--- | :--- | :--- | :--- |</p>
-<p>| <strong>ONNX</strong> | <strong>Elite (WebGPU)</strong> | <strong>~48MB</strong> | <strong>Universal</strong> | <strong>Best-in-class WebGPU/NPU support</strong> | Minor overhead on low-end CPUs |</p>
-<p>| <strong>TFLite</strong> | High (WebGL) | ~52MB | Android/Browser | Legacy compatibility | Slower on large kernels (384x384) |</p>
-<p>| <strong>TensorRT</strong> | Peak (Local) | ~60MB | NVIDIA Only | Raw NVIDIA hardware speed | Zero portability to non-NVIDIA GPUs |</p>
-<p>| <strong>Torch JIT</strong> | Mid-High | ~55MB | Python/Native | Python native debugging | Heavy runtime requirements for browser |</p>
-<p>| <strong>CoreML</strong> | High (Neural) | ~45MB | Apple Only | Optimal on M1/M2/M3 chips | Locked to macOS/iOS ecosystems |</p>
-<h3 id="62-why-onnx-wins-for-lemgendary">6.2 Why ONNX Wins for LemGendary</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Format</th>
+            <th>Browser Support</th>
+            <th>Portability</th>
+            <th>Quantization</th>
+            <th>Platform Constraints</th>
+            <th>LemGendary Verdict</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>ONNX</strong></td>
+            <td><span style="color:#4cd964; font-weight:bold;">✓ Full (WebGPU/WASM)</span></td>
+            <td>Universal</td>
+            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
+            <td>None</td>
+            <td><span style="color:#4cd964; font-weight:bold;">Production Grade</span></td>
+        </tr>
+        <tr>
+            <td><strong>TorchScript</strong></td>
+            <td><span style="color:#ffc107; font-weight:bold;">⚠ Slow</span></td>
+            <td>PyTorch-only</td>
+            <td><span style="color:#ffc107; font-weight:bold;">⚠ Limited</span></td>
+            <td>Tight PyTorch coupling</td>
+            <td><span style="color:#ffc107; font-weight:bold;">Non-optimal for browser</span></td>
+        </tr>
+        <tr>
+            <td><strong>TFLite</strong></td>
+            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
+            <td>Mobile-focused</td>
+            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
+            <td>No native Windows support</td>
+            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+        </tr>
+        <tr>
+            <td><strong>OpenVINO</strong></td>
+            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
+            <td>Intel hardware</td>
+            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
+            <td>Intel-only. No browser pathway</td>
+            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+        </tr>
+        <tr>
+            <td><strong>CoreML</strong></td>
+            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
+            <td>Apple-only</td>
+            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
+            <td>Incompatible with cross-platform targets</td>
+            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+        </tr>
+    </tbody>
+</table>
+
 <ol>
 <li><strong>WebGPU Destiny</strong>: The primary target is browser-based image restoration. ONNX provides the highest performance bridge to <strong>WebGPU</strong>, allowing the models to run at native speeds via <strong>OnnxRuntime-Web</strong>.</li>
 <li><strong>Graph Shrinking (Constant Folding)</strong>: During export, the suite executes graph optimization, stripping away training-only layers (Dropout, BatchNorm params) to reduce file size by ~15% compared to raw PyTorch.</li>
