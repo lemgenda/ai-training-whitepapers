@@ -1,85 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuclear Stability: Training Pathology Master Guide - LemGendary AI</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-</head>
-
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <h1>Nuclear Stability: AI Training Pathology Master Guide</h1>
-            <p class="subtitle">A technical roadmap for recognizing and remediating convergence failures in production-grade restoration models.</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 1.1.0 (High-Fidelity)</span>
-                <span>Category 03</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar">
+<nav class="toc-sidebar">
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
             <h4>Navigation Matrix</h4>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-            <li><a href="#abstract">1. Abstract</a></li>
-            <li><a href="#master-table">2. Diagnostic Master Table</a></li>
-            <li><a href="#audit-framework">3. Fast Audit Framework</a></li>
-            <li><a href="#modern-pathologies">4. Modern 2026 Pathologies</a>
-                <ul class="sub-item" style="list-style: none;">
-                    <li><a href="#mixed-precision">· Mixed Precision Underflow</a></li>
-                    <li><a href="#momentum-decay">· Optimizer Momentum Decay</a></li>
-                    <li><a href="#governor-loop">· The Governor Loop</a></li>
-                    <li><a href="#polarity-inversion">· Live Polarity Inversion</a></li>
-                    <li><a href="#dataparallel-misalignment">· DataParallel Misalignment</a></li>
-                </ul>
-            </li>
-            <li><a href="#high-fidelity">5. High-Fidelity Strategy</a>
-                <ul class="sub-item" style="list-style: none;">
-                    <li><a href="#blur-pathology">· Blur Pathology</a></li>
-                    <li><a href="#sentinel-drift">· Sentinel Drift</a></li>
-                    <li><a href="#atomic-audit">· Atomic Re-Audit</a></li>
-                    <li><a href="#serial-shield">· Serial Shield (v17.2)</a></li>
-                    <li><a href="#iron-clamp">· 4GB Lockdown (v22.0)</a></li>
-                    <li><a href="#false-positive-spike">· False-Positive Spike</a></li>
-                    <li><a href="#premature-sota">· Premature SOTA</a></li>
-                    <li><a href="#manifold-fragility">· Manifold Fragility</a></li>
-                    <li><a href="#csv-lie">· The CSV Lie</a></li>
-                    <li><a href="#infinite-cooling">· Infinite Cooling Loop</a></li>
-                    <li><a href="#permanent-stress">· Permanent Stress</a></li>
-                    <li><a href="#max-stress-freeze">· Max Stress LR Freeze (v16)</a></li>
-                    <li><a href="#amnesiac-jolt">· The Amnesiac Double-Jolt</a></li>
-                </ul>
-            </li>
-            <li><a href="#best-practices">6. Best Practices Checklist</a></li>
-            <li><a href="#pipeline-strategy">7. Multi-Model Strategy</a></li>
-            <li><a href="#mapping">8. Pipeline Mapping</a></li>
-            <li><a href="#nuclear-audit">9. Nuclear Audit</a></li>
-            <li><a href="#task-list">10. Optimization Task List</a></li>
-            <li><a href="#transformation">11. Before vs. After</a></li>
-            <li><a href="#conclusion">12. Conclusion</a></li>
-        </ul>
+<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+                <li><a href="#section-1">2. The Diagnostic Master Table</a>
+                </li>
+                <li><a href="#section-3">3. The "Fast Audit" Framework</a>
+                </li>
+                <li><a href="#section-5">4. Modern 2026 Pathologies</a>
+                    <ul class="sub-item">
+                        <li><a href="#mixed-precision">Mixed Precision Underflow (FP16/FP8)</a></li>
+                        <li><a href="#momentum-decay">Optimizer Momentum Decay</a></li>
+                        <li><a href="#governor-loop">The "Governor Loop" (Artificial Plateau Exploit)</a></li>
+                        <li><a href="#polarity-inversion">Live Polarity Inversion (Negative Manifold)</a></li>
+                        <li><a href="#dataparallel-misalignment">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-7">5. High-Fidelity Strategy (v16.2.8)</a>
+                    <ul class="sub-item">
+                        <li><a href="#blur-pathology">The "Low-Resolution Blur" Pathology</a></li>
+                        <li><a href="#sentinel-drift">Memory-Sentinel Drift</a></li>
+                        <li><a href="#atomic-audit">Atomic Hardware Re-Auditing</a></li>
+                        <li><a href="#serial-shield">The Serial Recovery Shield (v17.2)</a></li>
+                        <li><a href="#iron-clamp">The Sub-Nuclear 4GB Lockdown (v22.0)</a></li>
+                        <li><a href="#false-positive-spike">The False-Positive Spike (Absolute Energy Floor)</a></li>
+                        <li><a href="#premature-sota">Premature SOTA Termination</a></li>
+                        <li><a href="#manifold-fragility">Manifold Fragility (Glass Manifold Effect)</a></li>
+                        <li><a href="#thermal-glass-manifold-collapse">Thermal Glass Manifold Collapse (The Stress Loop)</a></li>
+                        <li><a href="#csv-lie">The "CSV Lie" Pathology</a></li>
+                        <li><a href="#infinite-cooling">The Infinite Cooling Loop</a></li>
+                        <li><a href="#permanent-stress">The Permanent Stress Pathology</a></li>
+                        <li><a href="#max-stress-freeze">The Max Stress LR Freeze (v16 Bug)</a></li>
+                        <li><a href="#amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-9">6. Best Practices Checklist</a>
+                </li>
+                <li><a href="#section-11">7. Multi-Model Pipeline Strategy</a>
+                </li>
+                <li><a href="#section-13">8. Mapping Pathologies to Pipeline Stages</a>
+                </li>
+                <li><a href="#section-15">9. Nuclear Audit: Optimization Checklist</a>
+                </li>
+                <li><a href="#section-17">10. SOTA Suite Optimization Task List</a>
+                </li>
+                <li><a href="#section-19">11. SOTA Transformation: Before vs. After</a>
+                </li>
+                <li><a href="#conclusion">12. Conclusion: The Indestructible Paradigm</a>
+                </li>
+            </ul>
     </nav>
 
-        <section id="abstract">
+        
             <div class="abstract-box">
                 <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern mixed-precision underflows. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 20 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence in production-grade AI environments.</p>
             </div>
-        </section>
+        
 
-        <section id="master-table">
-            <h2>2. The Diagnostic Master Table</h2>
+        
+            
+
+
+
+
+
+
+<section id="section-1">
+<h2>2. The Diagnostic Master Table</h2>
             <p>A front-line framework for recognizing and remediating training failures in the LemGendary ecosystem.</p>
             
             <div class="table-wrapper">
@@ -174,10 +163,26 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        
 
-        <section id="audit-framework">
-            <h2>3. The "Fast Audit" Framework</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-3">
+<h2>3. The "Fast Audit" Framework</h2>
             <p>Observe these three critical metrics to recognize issues in under 5 minutes of monitoring:</p>
             
             <div class="quad-grid">
@@ -199,10 +204,26 @@
                     <p>If 10<sup>-1</sup>: updates are <strong>Violent (Exploding)</strong>. If 10<sup>-5</sup>: you are <strong>Stagnating</strong>.</p>
                 </div>
             </div>
-        </section>
+        
 
-        <section id="modern-pathologies">
-            <h2>4. Modern 2026 Pathologies</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-5">
+<h2>4. Modern 2026 Pathologies</h2>
             
             <h3 id="mixed-precision">Mixed Precision Underflow (FP16/FP8)</h3>
             <p><strong>The Issue:</strong> Gradients are so small they become zero in 16-bit or 8-bit precision.</p>
@@ -226,10 +247,26 @@
             <p><strong>The Issue:</strong> When running PyTorch <code>DataParallel</code> on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (<code>_broadcast_coalesced</code>). If any parameter high up in the model architecture has an odd size (e.g. an <code>out_channels=3</code> output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for <em>every single parameter</em> that follows it. While most operations tolerate unaligned memory, heavily vectorized cuDNN algorithms (like <code>conv2d</code> and <code>conv_transpose2d</code>) will immediately crash with a fatal <code>CUDA error: misaligned address</code> or <code>unable to find an engine to execute this computation</code>.</p>
             <p><strong>Identification:</strong> Model successfully trains on a single GPU but crashes with <code>misaligned address</code> during the forward pass specifically on <code>replica 1</code> or higher. Tracebacks point directly to standard cuDNN operations.</p>
             <p><strong>Remedy:</strong> <strong>Global Alignment Monkey-Patch</strong>. Do not alter the model's <code>__init__</code> order (as this permanently corrupts the Optimizer state). Instead, inject a global monkey-patch over <code>nn.Conv2d.forward</code> and <code>nn.ConvTranspose2d.forward</code> that dynamically checks the raw memory pointer (<code>weight.data_ptr() % 16</code>). If the pointer is unaligned (indicating a DataParallel replica buffer), intercept the execution and force a <code>.clone()</code> to instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator before passing it to <code>F.conv2d</code>.</p>
-        </section>
+        
 
-        <section id="high-fidelity">
-            <h2>5. High-Fidelity Strategy (v16.2.8)</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-7">
+<h2>5. High-Fidelity Strategy (v16.2.8)</h2>
             <h3 id="blur-pathology">The "Low-Resolution Blur" Pathology</h3>
             <p><strong>The Issue:</strong> Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.</p>
             <p><strong>Remedy:</strong> <strong>Mandatory High-Fidelity Floor</strong>. As of v16.2.8, all models must start at a minimum of <strong>224px</strong> or <strong>512px</strong> (Metric Scorers).</p>
@@ -294,10 +331,26 @@
             <p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.</p>
             <p><strong>Identification:</strong> The terminal outputs <code>JOLT: Breaking Plateau with 1.50x LR Propulsion</code> immediately upon resuming from a checkpoint, and metrics regress heavily.</p>
             <p><strong>Remedy:</strong> <strong>State Persistence</strong>. Ensure <code>last_jolt_epoch</code> is correctly serialized in <code>get_state()</code> and loaded in <code>load_state()</code> inside <code>optimization_engine.py</code>.</p>
-        </section>
+        
 
-        <section id="best-practices">
-            <h2>6. Best Practices Checklist</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-9">
+<h2>6. Best Practices Checklist</h2>
             <ul class="checklist">
                 <li><strong>High-Fidelity Floor:</strong> Never start below 224px. Low-res warm-up is a legacy artifact.</li>
                 <li><strong>Baseline First:</strong> Build a simple model first. If a complex one fails, the issue is data.</li>
@@ -305,10 +358,26 @@
                 <li><strong>AdamW over Adam:</strong> Decouple weight decay from gradient updates.</li>
                 <li><strong>One Change at a Time:</strong> Only alter one hyperparameter per run.</li>
             </ul>
-        </section>
+        
 
-        <section id="pipeline-strategy">
-            <h2>7. Multi-Model Pipeline Strategy</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-11">
+<h2>7. Multi-Model Pipeline Strategy</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -353,10 +422,26 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        
 
-        <section id="mapping">
-            <h2>8. Mapping Pathologies to Pipeline Stages</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-13">
+<h2>8. Mapping Pathologies to Pipeline Stages</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -395,10 +480,26 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        
 
-        <section id="nuclear-audit">
-            <h2>9. Nuclear Audit: Optimization Checklist</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-15">
+<h2>9. Nuclear Audit: Optimization Checklist</h2>
             <h3>🚀 High-Velocity "DO's"</h3>
             <ul class="checklist">
                 <li><strong>Memory-Sentinel Probing:</strong> Decouple <code>batch_size</code> from registry.</li>
@@ -412,10 +513,26 @@
                 <li><strong>Terminal Progress Guard (v17.2):</strong> Epoch-advancing logic for ≥99.9% progress.</li>
                 <li><strong>Shared Memory Guard (v18.0):</strong> Detect and clamp batch size if Dedicated VRAM is exhausted.</li>
             </ul>
-        </section>
+        
 
-        <section id="task-list">
-            <h2>10. SOTA Suite Optimization Task List</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-17">
+<h2>10. SOTA Suite Optimization Task List</h2>
             <div class="card">
                 <ul class="checklist">
                     <li><strong>Task 1.1: Metric Rebalancing</strong> (Target: <code>train.py</code>)</li>
@@ -472,10 +589,26 @@
                     <li><strong>Task 15.3: Global Fraction Calibration (15%)</strong> (Target: <code>optimization_engine.py</code>)</li>
                 </ul>
             </div>
-        </section>
+        
 
-        <section id="transformation">
-            <h2>11. SOTA Transformation: Before vs. After</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-19">
+<h2>11. SOTA Transformation: Before vs. After</h2>
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -554,18 +687,42 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+        
 
-        <section id="conclusion">
+        
             <div class="conclusion">
-                <h2>12. Conclusion: The Indestructible Paradigm</h2>
+                
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="conclusion">
+<h2>12. Conclusion: The Indestructible Paradigm</h2>
                 <p>The transition from manual hyperparameter tuning to autonomous, <strong>"Nuclear-Hardened"</strong> training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the <strong>LemGendary</strong> ecosystem has achieved a state of indestructible convergence.</p>
                 <p>The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware.</p>
             </div>
             <p style="text-align: center; margin-top: 40px; color: var(--accent-primary); font-family: 'Outfit', sans-serif; font-weight: 700;">
                 Status: SOTA-Autonomous & High-Fidelity Hardened.
             </p>
-        </section>
-    </div>
+        
+    
+
+
+
+
+
+
+</section>
+</div>
 </body>
 </html>

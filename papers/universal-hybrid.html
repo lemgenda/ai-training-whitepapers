@@ -1,70 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: Universal Hybrid Restoration Pipelines</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="nafnet.html" class="tab-link">NAFNet</a>
-                <a href="mirnet.html" class="tab-link">MIRNet</a>
-                <a href="ffanet.html" class="tab-link">FFANet</a>
-                <a href="mprnet.html" class="tab-link">MPRNet</a>
-            </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">Universal Hybrid Restoration Pipelines</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 1.0.0 - Unified Multi-Modal Release</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar">
+<nav class="toc-sidebar">
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <h4>Navigation Matrix</h4>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-                <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#architectures">2. Unified Hybrid Architectures</a>
-                    <ul class="sub-item">
-                        <li><a href="#upnv2">2.1 UPN v2 Large</a></li>
-                        <li><a href="#filmrestorer">2.2 Universal Film Restorer</a></li>
-                        <li><a href="#multitask">2.3 Multi-Task Restorer</a></li>
-                    </ul>
+<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+                <li><a href="#section-1">1. Abstract</a>
                 </li>
-                <li><a href="#optimizations">3. Critical Optimizations</a>
-                    <ul class="sub-item">
-                        <li><a href="#attention">3.1 Downsampled Global Attention</a></li>
-                        <li><a href="#task-ingestion">3.2 Dynamic Filename Task Ingestion</a></li>
-                        <li><a href="#validation-expansion">3.3 Dynamic Validation Sharding & Auto-Expansion</a></li>
-                    </ul>
+                <li><a href="#section-3">2. Unified Hybrid Architectures</a>
                 </li>
-                <li><a href="#deployment">4. Deployment Strategy</a></li>
-                <li><a href="#conclusion">5. Conclusion</a></li>
+                <li><a href="#section-5">3. Critical Architectural Optimizations</a>
+                </li>
+                <li><a href="#section-7">4. Deployment Strategy & WebGPU Compatibility</a>
+                </li>
+                <li><a href="#conclusion">5. Conclusion</a>
+                </li>
             </ul>
         </nav>
 
-        <section id="abstract">
-            <h2>1. Abstract</h2>
-            <p>The <strong>LemGendary Training Suite</strong> achieves absolute multi-modal restoration parity through its <strong>Universal Hybrid Architecture</strong> release. By integrating parameterized steering networks, dynamic physical degradation modeling, and soft Mixture-of-Experts (MoE) multi-task routing, the suite expands beyond single-problem architectures. This paper presents the mathematical models, spatial complexity optimizations, and deployment pathways for three flagship models: <strong>UPN v2 Large</strong>, the <strong>Universal Film Restorer</strong>, and the <strong>Multi-Task Restorer</strong>. We demonstrate how memory-sentinel optimizations enable high-resolution restoration execution within highly constrained consumer hardware environments.</p>
-        </section>
+        
+            
 
-        <section id="architectures">
-            <h2>2. Unified Hybrid Architectures</h2>
+
+
+
+
+
+<section id="section-1">
+<h2>1. Abstract</h2>
+            <p>The <strong>LemGendary Training Suite</strong> achieves absolute multi-modal restoration parity through its <strong>Universal Hybrid Architecture</strong> release. By integrating parameterized steering networks, dynamic physical degradation modeling, and soft Mixture-of-Experts (MoE) multi-task routing, the suite expands beyond single-problem architectures. This paper presents the mathematical models, spatial complexity optimizations, and deployment pathways for three flagship models: <strong>UPN v2 Large</strong>, the <strong>Universal Film Restorer</strong>, and the <strong>Multi-Task Restorer</strong>. We demonstrate how memory-sentinel optimizations enable high-resolution restoration execution within highly constrained consumer hardware environments.</p>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-3">
+<h2>2. Unified Hybrid Architectures</h2>
             <p>Moving beyond dedicated single-task networks, modern restoration demands high generalizability. By combining modular structures with dynamically parameterized steering, these three engines comprise the primary SOTA hybrid restoration suite.</p>
 
             <div class="visual-taxonomy">
@@ -123,10 +108,26 @@
                     Y_hat = &Sigma; (w_i * H_i(Z))  [for i = 1 to 11]
                 </div>
             </div>
-        </section>
+        
 
-        <section id="optimizations">
-            <h2>3. Critical Architectural Optimizations</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-5">
+<h2>3. Critical Architectural Optimizations</h2>
             
             <div class="card" id="attention">
                 <h3>3.1 Downsampled Global Attention (OOM Remediation)</h3>
@@ -166,19 +167,59 @@
                     <li><strong>Refinement Phase:</strong> Once the model achieves maximum resolution and 100% training dataset fraction, the validation loader automatically auto-expands to <strong>100% (the full validation dataset)</strong>. This guarantees that final model checkpoints undergo a complete generalizability audit before production WebGPU deployment, protecting against local subset overfitting.</li>
                 </ul>
             </div>
-        </section>
+        
 
-        <section id="deployment">
-            <h2>4. Deployment Strategy & WebGPU Compatibility</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-7">
+<h2>4. Deployment Strategy & WebGPU Compatibility</h2>
             <p>All Universal Hybrid models are exported utilizing <strong>Opset 15/17</strong> validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and zero-latency shader execution inside modern WebGPU browser kernels.</p>
-        </section>
+        
 
-        <section id="conclusion">
-            <h2>5. Conclusion</h2>
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="conclusion">
+<h2>5. Conclusion</h2>
             <p>The <strong>Universal Hybrid Restoration</strong> paradigms set a new standard for efficient, high-fidelity AI processing. By combining dynamic physical degradation synthesis, parameterized steering, and memory-hardened global attention blocks, LemGendary AI models guarantee superior restoration performance across heterogeneous consumer hardware fleets.</p>
-        </section>
+        
 
-        <footer>
+        
+
+
+
+
+
+
+</section>
+<footer>
             <p>&copy; 2026 LemGenda AI Hub. All hybrid models designed and optimized for Universal Hardware resilience.</p>
         </footer>
     </div>

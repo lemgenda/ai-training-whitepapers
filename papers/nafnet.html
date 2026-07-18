@@ -1,33 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: High-Fidelity NAFNet Restoration</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;">
-            </a>
-            <div class="tabs-nav">
-                <a href="nafnet.html" class="tab-link active">NAFNet</a>
-                <a href="mirnet.html" class="tab-link">MIRNet</a>
-                <a href="ffanet.html" class="tab-link">FFANet</a>
-                <a href="mprnet.html" class="tab-link">MPRNet</a>
-            </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity NAFNet Restoration via SOTA Infrastructure</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 2.6.0 - Dynamic VRAM Sync</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
 <nav class="toc-sidebar">
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
@@ -36,99 +6,97 @@
             <h4>Navigation Matrix</h4>
             <ul>
 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a><ul class="sub-item">
-<li><a href="#21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</a></li>
-<li><a href="#22-the-deblurring-track-nafnet_debluring">2.2 The Deblurring Track (nafnet_debluring)</a></li>
-</ul>
-        
-</li>
-<li><a href="#3-shared-foundations">3. Shared Foundations</a><ul class="sub-item">
-<li><a href="#31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a><ul class="sub-item">
-<li><a href="#311-the-headroom-aware-memory-sentinel">3.1.1 The Headroom-Aware Memory-Sentinel</a></li>
-<li><a href="#312-ovc-data-streaming-bridge-opencv-to-cuda">3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)</a></li>
-</ul>
-</li>
-<li><a href="#32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a><ul class="sub-item">
-<li><a href="#321-structural-vs-perceptual-verification">3.2.1 Structural VS Perceptual Verification</a></li>
-<li><a href="#322-pcie-vram-thrashing-the-chunking-fix">3.2.2 PCIe VRAM Thrashing &amp; The Chunking Fix</a></li>
-<li><a href="#323-the-cpu-bottleneck-bypass">3.2.3 The CPU-Bottleneck Bypass</a></li>
-</ul>
-</li>
-<li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a><ul class="sub-item">
-<li><a href="#331-single-gpu-specialization-15gb-t4-node-strategy">3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)</a></li>
-<li><a href="#332-sub-epoch-continuity-progress-snapshots">3.3.2 Sub-Epoch Continuity (Progress Snapshots)</a></li>
-<li><a href="#333-serial-extraction-mutex-stable-global-alignment-v1042">3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)</a></li>
-<li><a href="#334-registry-first-dynamic-unification-v45">3.3.4 Registry-First Dynamic Unification (v4.5)</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a><ul class="sub-item">
-<li><a href="#41-nafnet-denoising-scorer">4.1 NAFNet Denoising Scorer</a><ul class="sub-item">
-<li><a href="#411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</a></li>
-<li><a href="#412-model-info">4.1.2 Model Info</a></li>
-<li><a href="#413-manifold-info">4.1.3 Manifold Info</a></li>
-<li><a href="#414-performance-metrics">4.1.4 Performance Metrics</a></li>
-<li><a href="#415-training-curve">4.1.5 Training Curve</a></li>
-<li><a href="#416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</a></li>
-<li><a href="#417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</a></li>
-</ul>
-</li>
-<li><a href="#42-nafnet-deblurring-scorer">4.2 NAFNet Deblurring Scorer</a><ul class="sub-item">
-<li><a href="#421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</a></li>
-<li><a href="#422-model-info">4.2.2 Model Info</a></li>
-<li><a href="#423-manifold-info">4.2.3 Manifold Info</a></li>
-<li><a href="#424-performance-metrics">4.2.4 Performance Metrics</a></li>
-<li><a href="#425-training-curve">4.2.5 Training Curve</a></li>
-<li><a href="#426-model-specific-issues-and-optimizations">4.2.6 Model specific issues and optimizations</a></li>
-<li><a href="#427-consolidated-sota-benchmarks">4.2.7 Consolidated SOTA Benchmarks</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a><ul class="sub-item">
-<li><a href="#51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</a></li>
-<li><a href="#52-the-contiguous-view-kernel-crash">5.2 The Contiguous View Kernel Crash</a></li>
-<li><a href="#53-the-onecyclelr-&quot;sudden-death&quot;-adamw-resume-shock">5.3 The OneCycleLR "Sudden Death" &amp; AdamW Resume Shock</a></li>
-<li><a href="#54-the-vgg-perceptual-convergence-collapse">5.4 The VGG Perceptual Convergence Collapse</a></li>
-<li><a href="#55-the-&quot;double-step&quot;-onecyclelr-matrix-paradox">5.5 The "Double-Step" OneCycleLR Matrix Paradox</a></li>
-<li><a href="#56-the-sota-sentry-" title="defibrillation-override">5.6 The SOTA Sentry "Defibrillation Override"</a></li>
-<li><a href="#57-the-universal-sota-optimization-vector">5.7 The Universal SOTA Optimization Vector</a></li>
-<li><a href="#58-the-stagnation-paradox-plateau-buster-v52">5.8 The Stagnation Paradox: Plateau-Buster v5.2</a></li>
-<li><a href="#59-the-quality-regression-mutex-sota-guardrail">5.9 The Quality-Regression Mutex (SOTA Guardrail)</a></li>
-<li><a href="#510-persistent-io-synchronization-v58">5.10 Persistent I/O Synchronization (v5.8)</a></li>
-<li><a href="#511-architectural-survival-profiles-v59">5.11 Architectural Survival Profiles (v5.9)</a></li>
-<li><a href="#512-mission-continuity-guard-v61">5.12 Mission Continuity Guard (v6.1)</a></li>
-<li><a href="#513-manifold-rescue-high-energy-jolt-v6117">5.13 Manifold Rescue &amp; High-Energy Jolt (v6.1.17)</a></li>
-<li><a href="#514-velocity-life-support-v6118">5.14 Velocity Life-Support (v6.1.18)</a></li>
-<li><a href="#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119">5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)</a></li>
-<li><a href="#516-telemetry-parity-plateau-resilience-v6131">5.16 Telemetry Parity &amp; Plateau Resilience (v6.1.31)</a></li>
-<li><a href="#517-true-stabilization-shield-synchronous-spatial-augmentation-v6126">5.17 True Stabilization Shield &amp; Synchronous Spatial Augmentation (v6.1.26)</a></li>
-<li><a href="#518-invariant-native-scorecarding-v620">5.18 Invariant Native Scorecarding (v6.2.0)</a></li>
-<li><a href="#519-universal-backend-selection-mpsxpudirectml">5.19 Universal Backend Selection (MPS/XPU/DirectML)</a></li>
-<li><a href="#520-time-aware-checkpoint-governance-15-min-window">5.20 Time-Aware Checkpoint Governance (15-min Window)</a></li>
-<li><a href="#521-dynamic-min_delta-scaling-for-high-range-quality">5.21 Dynamic min_delta Scaling for High-Range Quality</a></li>
-<li><a href="#522-resolution-aware-patience-reset-sota-guard">5.22 Resolution-Aware Patience Reset (SOTA Guard)</a></li>
-<li><a href="#523-validation-sharding-30%-fixed-audit">5.23 Validation Sharding (30% Fixed Audit)</a></li>
-<li><a href="#524-vram-defibrillation-for-inceptionv3">5.24 VRAM Defibrillation for InceptionV3</a></li>
-<li><a href="#525-restoration-quality-score-integration">5.25 Restoration Quality Score Integration</a></li>
-<li><a href="#526-governor-history-serialization">5.26 Governor History Serialization</a></li>
-</ul>
-</li>
-<li><a href="#6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</a><ul class="sub-item">
-<li><a href="#61-standalone-exporters">6.1 Standalone Exporters</a></li>
-<li><a href="#62-the-ghost-severing-protocol">6.2 The Ghost-Severing Protocol</a></li>
-</ul>
-</li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion-the-browser-restoration-paradigm">8. Conclusion: The Browser Restoration Paradigm</a></li>
-</ul>
+                <li><a href="#1-abstract">1. Abstract</a>
+                </li>
+                <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
+                    <ul class="sub-item">
+                        <li><a href="#21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</a></li>
+                        <li><a href="#22-the-deblurring-track-nafnet_debluring">2.2 The Deblurring Track (nafnet_debluring)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#3-shared-foundations">3. Shared Foundations</a>
+                    <ul class="sub-item">
+                        <li><a href="#31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
+                        <li><a href="#32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
+                        <li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
+                    </ul>
+                </li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+                    <ul class="sub-item">
+                        <li><a href="#41-nafnet-denoising-scorer">4.1 NAFNet Denoising Scorer</a></li>
+                        <li><a href="#42-nafnet-deblurring-scorer">4.2 NAFNet Deblurring Scorer</a></li>
+                    </ul>
+                </li>
+                <li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a>
+                    <ul class="sub-item">
+                        <li><a href="#51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</a></li>
+                        <li><a href="#52-the-contiguous-view-kernel-crash">5.2 The Contiguous View Kernel Crash</a></li>
+                        <li><a href="#53-the-onecyclelr-sudden-death-adamw-resume-shock">5.3 The OneCycleLR "Sudden Death" &amp; AdamW Resume Shock</a></li>
+                        <li><a href="#54-the-vgg-perceptual-convergence-collapse">5.4 The VGG Perceptual Convergence Collapse</a></li>
+                        <li><a href="#55-the-double-step-onecyclelr-matrix-paradox">5.5 The "Double-Step" OneCycleLR Matrix Paradox</a></li>
+                        <li><a href="#56-the-sota-sentry-defibrillation-override">5.6 The SOTA Sentry "Defibrillation Override"</a></li>
+                        <li><a href="#57-the-universal-sota-optimization-vector">5.7 The Universal SOTA Optimization Vector</a></li>
+                        <li><a href="#58-the-stagnation-paradox-plateau-buster-v52">5.8 The Stagnation Paradox: Plateau-Buster v5.2</a></li>
+                        <li><a href="#59-the-quality-regression-mutex-sota-guardrail">5.9 The Quality-Regression Mutex (SOTA Guardrail)</a></li>
+                        <li><a href="#510-persistent-io-synchronization-v58">5.10 Persistent I/O Synchronization (v5.8)</a></li>
+                        <li><a href="#511-architectural-survival-profiles-v59">5.11 Architectural Survival Profiles (v5.9)</a></li>
+                        <li><a href="#512-mission-continuity-guard-v61">5.12 Mission Continuity Guard (v6.1)</a></li>
+                        <li><a href="#513-manifold-rescue-high-energy-jolt-v6117">5.13 Manifold Rescue &amp; High-Energy Jolt (v6.1.17)</a></li>
+                        <li><a href="#514-velocity-life-support-v6118">5.14 Velocity Life-Support (v6.1.18)</a></li>
+                        <li><a href="#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119">5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)</a></li>
+                        <li><a href="#516-telemetry-parity-plateau-resilience-v6131">5.16 Telemetry Parity &amp; Plateau Resilience (v6.1.31)</a></li>
+                        <li><a href="#517-true-stabilization-shield-synchronous-spatial-augmentation-v6126">5.17 True Stabilization Shield &amp; Synchronous Spatial Augmentation (v6.1.26)</a></li>
+                        <li><a href="#518-invariant-native-scorecarding-v620">5.18 Invariant Native Scorecarding (v6.2.0)</a></li>
+                        <li><a href="#519-universal-backend-selection-mpsxpudirectml">5.19 Universal Backend Selection (MPS/XPU/DirectML)</a></li>
+                        <li><a href="#520-time-aware-checkpoint-governance-15-min-window">5.20 Time-Aware Checkpoint Governance (15-min Window)</a></li>
+                        <li><a href="#521-dynamic-min_delta-scaling-for-high-range-quality">5.21 Dynamic min_delta Scaling for High-Range Quality</a></li>
+                        <li><a href="#522-resolution-aware-patience-reset-sota-guard">5.22 Resolution-Aware Patience Reset (SOTA Guard)</a></li>
+                        <li><a href="#523-validation-sharding-30-fixed-audit">5.23 Validation Sharding (30% Fixed Audit)</a></li>
+                        <li><a href="#524-vram-defibrillation-for-inceptionv3">5.24 VRAM Defibrillation for InceptionV3</a></li>
+                        <li><a href="#525-restoration-quality-score-integration">5.25 Restoration Quality Score Integration</a></li>
+                        <li><a href="#526-governor-history-serialization">5.26 Governor History Serialization</a></li>
+                    </ul>
+                </li>
+                <li><a href="#6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</a>
+                    <ul class="sub-item">
+                        <li><a href="#61-standalone-exporters">6.1 Standalone Exporters</a></li>
+                        <li><a href="#62-the-ghost-severing-protocol">6.2 The Ghost-Severing Protocol</a></li>
+                    </ul>
+                </li>
+                <li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a>
+                </li>
+                <li><a href="#conclusion">8. Conclusion</a>
+                </li>
+            </ul>
 </nav>
+
+
+
+
+
+
+
+<section id="1-abstract">
 <h2 id="1-abstract">1. Abstract</h2>
 <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="2-visual-taxonomy-the-lemgendary-restoration-subset">
 <h2 id="2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
 <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.</p>
 <h3 id="21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</h3>
@@ -155,6 +123,22 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="3-shared-foundations">
 <h2 id="3-shared-foundations">3. Shared Foundations</h2>
 <h3 id="31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
 <p>Training massive architectures like NAFNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.</p>
@@ -186,6 +170,22 @@
 <p><strong>Fix</strong>: All asset handles and Kaggle URLs are resolved from the <code>unified_models.yaml</code> registry, ensuring the pipeline is robust against local/cloud path shifts.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="4-model-deep-dives">
 <h2 id="4-model-deep-dives">4. Model Deep-Dives</h2>
 <h3 id="41-nafnet-denoising-scorer">4.1 NAFNet Denoising Scorer</h3>
 <h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
@@ -200,13 +200,16 @@
 <h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedNafNetDenoising</code></li>
+<li><strong>Total Samples</strong>: 7,727 (merged from SIDD, DND, NAM, Multiple ISO, 9 Classes, Multi Noises, S&P)</li>
 <li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment.</li>
 </ul>
 <h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 24</li>
-<li><strong>Best PSNR</strong>: 51.5954 dB</li>
+<li><strong>Best PSNR</strong>: 51.60 dB</li>
 <li><strong>Best SSIM</strong>: 0.9997</li>
+<li><strong>Best LPIPS</strong>: 0.0019</li>
+<li><strong>Best FID</strong>: 1.8097</li>
 <li><strong>Current Learning Rate</strong>: 0.00006000</li>
 </ul>
 <h4 id="415-training-curve">4.1.5 Training Curve</h4>
@@ -228,14 +231,26 @@
 <tr>
 <td style="text-align: left;"><strong>PSNR</strong></td>
 <td style="text-align: left;">51.60 dB</td>
-<td style="text-align: left;">~52.00 dB</td>
-<td style="text-align: left;">-0.40 dB</td>
+<td style="text-align: left;">40.20 dB</td>
+<td style="text-align: left;">+11.40 dB</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>SSIM</strong></td>
 <td style="text-align: left;">0.9997</td>
-<td style="text-align: left;">0.9999</td>
-<td style="text-align: left;">-0.0002</td>
+<td style="text-align: left;">0.9650</td>
+<td style="text-align: left;">+0.0347</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LPIPS</strong></td>
+<td style="text-align: left;">0.0019</td>
+<td style="text-align: left;">0.0200</td>
+<td style="text-align: left;">+0.0181</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FID</strong></td>
+<td style="text-align: left;">1.8097</td>
+<td style="text-align: left;">4.0000</td>
+<td style="text-align: left;">+2.1903</td>
 </tr>
 </tbody>
 </table></div>
@@ -252,14 +267,17 @@
 <h4 id="423-manifold-info">4.2.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedNafNetDebluring</code></li>
+<li><strong>Total Samples</strong>: 26,093 (merged from GoPro, Performance Analysis, HIDE, RealBlur)</li>
 <li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment.</li>
 </ul>
 <h4 id="424-performance-metrics">4.2.4 Performance Metrics</h4>
 <ul>
-<li><strong>Current Training Epochs</strong>: 54</li>
-<li><strong>Best PSNR</strong>: 33.4517 dB</li>
+<li><strong>Current Training Epochs</strong>: 58</li>
+<li><strong>Best PSNR</strong>: 33.48 dB</li>
 <li><strong>Best SSIM</strong>: 0.9748</li>
-<li><strong>Current Learning Rate</strong>: 0.00006789</li>
+<li><strong>Best LPIPS</strong>: 0.0382</li>
+<li><strong>Best FID</strong>: 1.0823</li>
+<li><strong>Current Learning Rate</strong>: 0.00004515</li>
 </ul>
 <h4 id="425-training-curve">4.2.5 Training Curve</h4>
 <p><img alt="NAFNet Deblurring Training Curve" src="../assets/nafnet_debluring_training.png" />
@@ -279,19 +297,47 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>PSNR</strong></td>
-<td style="text-align: left;">33.45 dB</td>
-<td style="text-align: left;">~34.00 dB</td>
-<td style="text-align: left;">-0.55 dB</td>
+<td style="text-align: left;">33.48 dB</td>
+<td style="text-align: left;">33.90 dB</td>
+<td style="text-align: left;">-0.42 dB</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>SSIM</strong></td>
 <td style="text-align: left;">0.9748</td>
-<td style="text-align: left;">0.9800</td>
-<td style="text-align: left;">-0.0052</td>
+<td style="text-align: left;">0.9700</td>
+<td style="text-align: left;">+0.0048</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>LPIPS</strong></td>
+<td style="text-align: left;">0.0382</td>
+<td style="text-align: left;">0.0400</td>
+<td style="text-align: left;">+0.0018</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>FID</strong></td>
+<td style="text-align: left;">1.0823</td>
+<td style="text-align: left;">6.0000</td>
+<td style="text-align: left;">+4.9177</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="5-challenges-resilience-architecture">
 <h2 id="5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</h2>
 <h3 id="51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</h3>
 <p><strong>Issue</strong>: NAFNet training initially exploded with infinite <code>NaN</code> losses. Because <code>SimpleGate</code> acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of <code>65,504</code> in FP16.
@@ -375,6 +421,22 @@
 <strong>Fix:</strong> Hardened the governor state manager in <code>optimization_engine.py</code> to serialize and deserialize the <code>self.history</code> list. Plateau memory now persists seamlessly across arbitrary stops, resumes, and preemptions.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
 <h2 id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</h2>
 <h3 id="61-standalone-exporters">6.1 Standalone Exporters</h3>
 <p>Checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
@@ -382,6 +444,22 @@
 <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="7-sota-architectural-performance-matrix">
 <h2 id="7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</h2>
 <p>The following matrix isolates NAFNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).</p>
 
@@ -451,9 +529,35 @@
 
 <hr />
 <hr />
-<h2 id="8-conclusion-the-browser-restoration-paradigm">8. Conclusion: The Browser Restoration Paradigm</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="conclusion">
+<h2>8. Conclusion</h2>
 <p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.</p>
 <p>The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
-    </div>
+
+    
+
+
+
+
+
+
+</section>
+</div>
 </body>
 </html>

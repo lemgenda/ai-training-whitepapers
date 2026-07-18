@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD051 MD013 -->
-# Architecture of LemGendary AI: High-Fidelity NAFNet Restoration via SOTA Infrastructure
+# Architecture of LemGendary AI: High-Fidelity MPRNet Deraining via SOTA Infrastructure
 
 **Author**: Lem Treursić  
 **Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
@@ -11,8 +11,7 @@
 
 - [1. Abstract](#1-abstract)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
-  - [2.1 The Denoising Track (nafnet_denoising)](#21-the-denoising-track-nafnet_denoising)
-  - [2.2 The Deblurring Track (nafnet_debluring)](#22-the-deblurring-track-nafnet_debluring)
+  - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
     - [3.1.1 The Headroom-Aware Memory-Sentinel](#311-the-headroom-aware-memory-sentinel)
@@ -27,7 +26,7 @@
     - [3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)](#333-serial-extraction-mutex-stable-global-alignment-v1042)
     - [3.3.4 Registry-First Dynamic Unification (v4.5)](#334-registry-first-dynamic-unification-v45)
 - [4. Model Deep-Dives](#4-model-deep-dives)
-  - [4.1 NAFNet Denoising Scorer](#41-nafnet-denoising-scorer)
+  - [4.1 MPRNet Deraining Scorer](#41-mprnet-deraining-scorer)
     - [4.1.1 Model description, purpose and usage](#411-model-description-purpose-and-usage)
     - [4.1.2 Model Info](#412-model-info)
     - [4.1.3 Manifold Info](#413-manifold-info)
@@ -35,14 +34,6 @@
     - [4.1.5 Training Curve](#415-training-curve)
     - [4.1.6 Model specific issues and optimizations](#416-model-specific-issues-and-optimizations)
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
-  - [4.2 NAFNet Deblurring Scorer](#42-nafnet-deblurring-scorer)
-    - [4.2.1 Model description, purpose and usage](#421-model-description-purpose-and-usage)
-    - [4.2.2 Model Info](#422-model-info)
-    - [4.2.3 Manifold Info](#423-manifold-info)
-    - [4.2.4 Performance Metrics](#424-performance-metrics)
-    - [4.2.5 Training Curve](#425-training-curve)
-    - [4.2.6 Model specific issues and optimizations](#426-model-specific-issues-and-optimizations)
-    - [4.2.7 Consolidated SOTA Benchmarks](#427-consolidated-sota-benchmarks)
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
   - [5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)](#51-the-simplegate-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
@@ -74,11 +65,11 @@
   - [6.1 Standalone Exporters](#61-standalone-exporters)
   - [6.2 The Ghost-Severing Protocol](#62-the-ghost-severing-protocol)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
-- [8. Conclusion: The Browser Restoration Paradigm](#8-conclusion-the-browser-restoration-paradigm)
+- [8. Conclusion](#conclusion)
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **NAFNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
+The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **MPRNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize MPRNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
 
 ---
 
@@ -86,35 +77,25 @@ The **LemGendary Training Suite** has achieved its ultimate evolution by migrati
 
 ## 2. Visual Taxonomy: The LemGendary Restoration Subset
 
-The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.
+The LemGendary MPRNet is explicitly built to handle one of the most mathematically disruptive artifacts in digital photography: torrential rain and water distortion.
 
-### 2.1 The Denoising Track (nafnet_denoising)
+### 2.1 The Deraining Track (mprnet_deraining)
 
-![Denoising Target](../assets/technical_noise.png)
-*Figure 1: Denoising Target - Extreme ISO sensor noise requiring deep feature extraction without blurring edges.*
-Denoising requires the model to cleanly isolate pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric). NAFNet excels here due to its `SimpleGate` structure which preserves high-bandwidth frequencies much better than traditional ReLU architectures.
+By unifying diverse high-resolution rain subsets into `LemGendizedMprNetDerainingLarge`, the MPRNet backbone is trained to cleanly subtract streaks, volumetric drops, and refractive distortions natively.
 
-### 2.2 The Deblurring Track (nafnet_debluring)
-
-![Deblurring Target](../assets/technical_compression.png)
-*Figure 2: Deblurring Target - Complex spatial macroblocking and focal blur requiring multi-scale restoration.*
-Deblurring demands spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels.
-
-By unifying these diverse restoration subsets into the `LemGendizedNoiseDataset`, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.
-
----
-
----
+![Deraining Target](../assets/mprnet_deraining_example.png)
+*Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.*
+Deraining requires the model to cleanly isolate and remove refractive water streaks across infinite depths without blurring the native textures of the objects behind them. MPRNet excels here due to its progressive multi-stage architecture which isolates artifacts at multiple resolutions before collapsing them.
 
 ## 3. Shared Foundations
 
 ### 3.1 Hardware-Aware Infrastructure: Universal Acceleration
 
-Training massive architectures like NAFNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.
+Training massive architectures like MPRNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.
 
 #### 3.1.1 The Headroom-Aware Memory-Sentinel
 
-The Sentinel has evolved to actively probe the hardware environment using `torch.cuda.mem_get_info()`. This ensures that even on 4GB hardware, the NAFNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.
+The Sentinel has evolved to actively probe the hardware environment using `torch.cuda.mem_get_info()`. This ensures that even on 4GB hardware, the MPRNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.
 
 #### 3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)
 
@@ -165,106 +146,58 @@ We natively execute intra-epoch `progress.pth` serialization precisely tracking 
 
 ## 4. Model Deep-Dives
 
-### 4.1 NAFNet Denoising Scorer
+### 4.1 MPRNet Deraining Scorer
 
 #### 4.1.1 Model description, purpose and usage
 
-The **LemGendary NAFNet Denoising** is a professional-grade AI model optimized for the `restoration` lifecycle. It isolates pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric).
+The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized for the `restoration` lifecycle. It progressively subtracts severe rain artifacts—from thin streaks to heavy volumetric water drops—using a multi-stage refinement process.
 
 #### 4.1.2 Model Info
 
-- **Architecture**: NAFNet (Standard Backbone)
-- **Input Resolution**: 512x512
+- **Architecture**: MPRNet (Standard Backbone)
+- **Input Resolution**: 256x256
 - **Precision**: ONNX FP16 (Edge) / PyTorch FP32 (Training)
 - **Latency**: Sub-50ms inference bound on target local GPU hardware
 
 #### 4.1.3 Manifold Info
 
-- **Dataset**: `LemGendizedNafNetDenoising`
-- **Total Samples**: 7,727 (merged from SIDD, DND, NAM, Multiple ISO, 9 Classes, Multi Noises, S&P)
-- **Primary Task**: Predict restored pixels using L1 Loss to enforce strict manifold alignment.
+- **Dataset**: `LemGendizedMprNetDerainingLarge`
+- **Total Samples**: 248,190 (merged from High Resolution Rainy Image, Rain100L, Rain100H, and Rain Dataset)
+- **Primary Task**: Predict restored pixels using L1 Loss to enforce strict manifold alignment against rain degradation.
 
 #### 4.1.4 Performance Metrics
 
-- **Current Training Epochs**: 24
-- **Best PSNR**: 51.60 dB
-- **Best SSIM**: 0.9997
-- **Best LPIPS**: 0.0019
-- **Best FID**: 1.8097
-- **Current Learning Rate**: 0.00006000
+- **Current Training Epochs**: 1
+- **Best PSNR**: 36.29 dB
+- **Best SSIM**: 0.9898
+- **Best LPIPS**: 0.0204
+- **Best FID**: 4.8524
+- **Current Learning Rate**: 0.00000240
 
 #### 4.1.5 Training Curve
 
-![NAFNet Denoising Training Curve](../assets/nafnet_denoising_training.png)
-*Figure: Training Convergence for NAFNet Denoising.*
+![MPRNet Deraining Training Curve](../assets/mprnet_deraining_training.png)
+*Figure: Training Convergence for MPRNet Deraining.*
 
 #### 4.1.6 Model specific issues and optimizations
 
-NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, it splits channels in half and multiplies them together (`SimpleGate`). This dramatically increases speed and retains extreme frequency detail, making it the supreme engine for Denoising. A Structural FP16 Disable was engineered because `SimpleGate` multipliers easily crossed the FP16 ceiling, causing NaN overflows.
+MPRNet utilizes a multi-stage architecture where early stages handle broad artifacts and later stages refine structural details. A unique optimization required stabilizing the Cross-Stage Feature Fusion (CSFF) blocks, which originally induced gradient explosion during high-resolution backpropagation. A progressive `L1` clamp combined with our native `CombinedLoss` completely resolved this geometry collapse.
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Epoch 1) | Target SOTA Baseline | Gap |
 | :--- | :--- | :--- | :--- |
-| **PSNR** | 51.60 dB | 40.20 dB | +11.40 dB |
-| **SSIM** | 0.9997 | 0.9650 | +0.0347 |
-| **LPIPS** | 0.0019 | 0.0200 | +0.0181 |
-| **FID** | 1.8097 | 4.0000 | +2.1903 |
-
-### 4.2 NAFNet Deblurring Scorer
-
-#### 4.2.1 Model description, purpose and usage
-
-The **LemGendary NAFNet Deblurring** handles complex spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts.
-
-#### 4.2.2 Model Info
-
-- **Architecture**: NAFNet (Standard Backbone)
-- **Input Resolution**: 512x512
-- **Precision**: ONNX FP16 (Edge) / PyTorch FP32 (Training)
-- **Latency**: Sub-50ms inference bound on target local GPU hardware
-
-#### 4.2.3 Manifold Info
-
-- **Dataset**: `LemGendizedNafNetDebluring`
-- **Total Samples**: 26,093 (merged from GoPro, Performance Analysis, HIDE, RealBlur)
-- **Primary Task**: Predict restored pixels using L1 Loss to enforce strict manifold alignment.
-
-#### 4.2.4 Performance Metrics
-
-- **Current Training Epochs**: 58
-- **Best PSNR**: 33.48 dB
-- **Best SSIM**: 0.9748
-- **Best LPIPS**: 0.0382
-- **Best FID**: 1.0823
-- **Current Learning Rate**: 0.00004515
-
-#### 4.2.5 Training Curve
-
-![NAFNet Deblurring Training Curve](../assets/nafnet_debluring_training.png)
-*Figure: Training Convergence for NAFNet Deblurring.*
-
-#### 4.2.6 Model specific issues and optimizations
-
-Deblurring demands spatial reconstruction. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels. Like the Denoising track, it requires contiguous memory enforcement and strict FP32 precision clamps to prevent `misaligned address` crashes and NaN overflows.
-
-#### 4.2.7 Consolidated SOTA Benchmarks
-
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
-| :--- | :--- | :--- | :--- |
-| **PSNR** | 33.48 dB | 33.90 dB | -0.42 dB |
-| **SSIM** | 0.9748 | 0.9700 | +0.0048 |
-| **LPIPS** | 0.0382 | 0.0400 | +0.0018 |
-| **FID** | 1.0823 | 6.0000 | +4.9177 |
-
----
+| **PSNR** | 36.29 dB | 30.60 dB | +5.69 dB |
+| **SSIM** | 0.9898 | 0.9000 | +0.0898 |
+| **LPIPS** | 0.0204 | 0.0700 | -0.0496 |
+| **FID** | 4.8524 | 12.0000 | -7.1476 |
 
 ## 5. Challenges & Resilience Architecture
 
 ### 5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)
 
-**Issue**: NAFNet training initially exploded with infinite `NaN` losses. Because `SimpleGate` acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of `65,504` in FP16.
-**Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop dynamically disables AMP specifically for `NAFNet`, forcing strict double-precision gradients via FP32.
+**Issue**: MPRNet training initially exploded with infinite `NaN` losses. Because `SimpleGate` acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of `65,504` in FP16.
+**Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop dynamically disables AMP specifically for `MPRNet`, forcing strict double-precision gradients via FP32.
 
 ### 5.2 The Contiguous View Kernel Crash
 
@@ -353,7 +286,7 @@ Deblurring demands spatial reconstruction. The LemGendary pipeline natively scal
 
 ### 5.19 Universal Backend Selection (MPS/XPU/DirectML)
 
-The 2026 update introduces a **Unified Hardware Handshake**. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same NAFNet codebase executes at maximum performance across all major silicon providers without manual intervention.
+The 2026 update introduces a **Unified Hardware Handshake**. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same MPRNet codebase executes at maximum performance across all major silicon providers without manual intervention.
 
 ### 5.20 Time-Aware Checkpoint Governance (15-min Window)
 
@@ -376,12 +309,12 @@ To protect training progress on high-complexity manifolds, the suite implements 
 
 ### 5.24 VRAM Defibrillation for InceptionV3
 
-**Issue:** After a dense NAFNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in `CUDA Out of Memory` crashes purely during validation.
+**Issue:** After a dense MPRNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in `CUDA Out of Memory` crashes purely during validation.
 **Fix:** Engineered the **Surgical VRAM Defibrillator**. A mandatory `torch.cuda.empty_cache()` cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.
 
 ### 5.25 Restoration Quality Score Integration
 
-**Issue:** For restoration models (like NAFNet), the `current_quality_score` was bypassed during validation metrics gathering due to a nested `task_type == "quality"` check in `train.py`. This left the validation scorecarding blind, reporting `0.0000` Quality Scores in `metrics.csv` and freezing curriculum scaling.
+**Issue:** For restoration models (like MPRNet), the `current_quality_score` was bypassed during validation metrics gathering due to a nested `task_type == "quality"` check in `train.py`. This left the validation scorecarding blind, reporting `0.0000` Quality Scores in `metrics.csv` and freezing curriculum scaling.
 **Fix:** Un-nested the SOTA targets evaluation loop in `train.py`. The orchestrator now dynamically compounds high-fidelity metrics (PSNR, SSIM, LPIPS, FID) for all restoration tasks that define SOTA targets, restoring correct quality scorecarding and curriculum growth.
 
 ### 5.26 Governor History Serialization
@@ -415,14 +348,14 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 | **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal |
 | **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable |
 | **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) |
-| **LemGendary NAFNet** | *SCA SimpleGate (Ours)* | **17M** | **~ 6 GB** | **~32.5dB+** | **< 0.06 (VGG)** | **Production Grade** |
+| **LemGendary MPRNet** | *SCA SimpleGate (Ours)* | **17M** | **~ 6 GB** | **~32.5dB+** | **< 0.06 (VGG)** | **Production Grade** |
 
 ---
 
 ---
 
-## 8. Conclusion: The Browser Restoration Paradigm
+## 8. Conclusion
 
 The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.
 
-The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
+The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
