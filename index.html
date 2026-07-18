@@ -8,231 +8,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap"
         rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0a0a0c;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-hover: rgba(255, 255, 255, 0.06);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(0, 122, 255, 0.5);
-            --accent-primary: #007aff;
-            --accent-secondary: #00f2fe;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(0, 122, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.06) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        header {
-            text-align: center;
-            padding: 80px 20px 40px;
-        }
-
-        .logo {
-            height: 64px;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 0 20px rgba(0, 122, 255, 0.2));
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px 80px;
-            flex: 1;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 32px;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Hover glow effect */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(0, 122, 255, 0.1) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 0;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: var(--border-hover);
-            background: var(--card-hover);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 122, 255, 0.1);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .card.disabled:hover {
-            transform: none;
-            border-color: var(--border-color);
-            box-shadow: none;
-        }
-
-        .card-content {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .category-num {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            color: var(--accent-primary);
-            background: rgba(0, 122, 255, 0.1);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-        }
-
-        .status-badge {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: rgba(76, 217, 100, 0.15);
-            color: #4cd964;
-        }
-
-        .status-pending {
-            background: rgba(255, 149, 0, 0.15);
-            color: #ff9500;
-        }
-
-        h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .models-list {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-            flex-grow: 1;
-        }
-
-        .arrow {
-            text-align: right;
-            color: var(--accent-primary);
-            font-size: 1.5rem;
-            line-height: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover:not(.disabled) .arrow {
-            transform: translateX(5px);
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: #555;
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="hub-page">
     <header>
         <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
             <img src="assets/lemgenda-logo.svg" alt="LemGenda" class="logo"
@@ -242,11 +21,11 @@
         <p class="subtitle">Official documentation hub for our hardware-aware AI models and performance whitepapers.</p>
     </header>
 
-    <div class="container">
+    <div class="hub-container">
         <div class="grid">
 
             <!-- Category 1 -->
-            <a href="papers/training-pathology.html" class="card">
+            <a href="papers/training-pathology.html" class="hub-card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 01</span>
@@ -260,7 +39,7 @@
             </a>
 
             <!-- Category 2 -->
-            <a href="papers/nima-quality.html" class="card">
+            <a href="papers/nima-quality.html" class="hub-card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 02</span>
@@ -273,7 +52,7 @@
             </a>
 
             <!-- Category 3 -->
-            <a href="#" class="card disabled">
+            <a href="#" class="hub-card disabled">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 03</span>
@@ -286,7 +65,7 @@
             </a>
 
             <!-- Category 4 -->
-            <a href="#" class="card disabled">
+            <a href="#" class="hub-card disabled">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 04</span>
@@ -299,7 +78,7 @@
             </a>
 
             <!-- Category 5 -->
-            <a href="papers/nafnet.html" class="card">
+            <a href="papers/nafnet.html" class="hub-card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 05</span>
@@ -313,7 +92,7 @@
             </a>
 
             <!-- Category 6 -->
-            <a href="papers/universal-hybrid.html" class="card">
+            <a href="papers/universal-hybrid.html" class="hub-card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 06</span>
@@ -327,7 +106,7 @@
             </a>
 
             <!-- Category 7 -->
-            <a href="papers/training-suite-master.html" class="card">
+            <a href="papers/training-suite-master.html" class="hub-card">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 07</span>
