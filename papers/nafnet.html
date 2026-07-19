@@ -7,6 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -107,11 +108,23 @@
 
 
 
+
+
+
+
 <section id="1-abstract">
 <h2 id="1-abstract">1. Abstract</h2>
 <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -131,8 +144,10 @@
 <h2 id="2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
 <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.</p>
 <h3 id="21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</h3>
+<p>By unifying diverse sensor noise profiles into <code>LemGendizedNafNetDenoising</code>, the NAFNet backbone is trained to cleanly subtract extreme ISO sensor noise, Gaussian/Poisson noise, and digital defects natively.</p>
 
 <h3 id="22-the-deblurring-track-nafnet_debluring">2.2 The Deblurring Track (nafnet_debluring)</h3>
+<p>By unifying diverse kinetic distortion profiles into <code>LemGendizedNafNetDebluring</code>, the NAFNet backbone is trained to cleanly subtract motion blur, camera shake artifacts, and focal distortion natively.</p>
 
 <p>By unifying these diverse restoration subsets into the <code>LemGendizedNoiseDataset</code>, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.</p>
 <hr />
@@ -140,20 +155,28 @@
 
 <div class="visual-taxonomy">
     <div class="quadrant">
-        <img alt="Denoising Target" src="../assets/technical_noise.png" />
+        <img alt="Denoising Target" src="../assets/nafnet_denoising_example.png" />
         <div class="quadrant-info">
             <strong>Figure 1: Denoising Target - Extreme ISO sensor noise requiring deep feature extraction without blurring edges.</strong>
             <span>Denoising requires the model to cleanly isolate pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric). NAFNet excels here due to its <code>SimpleGate</code> structure which preserves high-bandwidth frequencies much better than traditional ReLU architectures.</span>
         </div>
     </div>
     <div class="quadrant">
-        <img alt="Deblurring Target" src="../assets/technical_compression.png" />
+        <img alt="Deblurring Target" src="../assets/nafnet_debluring_example.png" />
         <div class="quadrant-info">
             <strong>Figure 2: Deblurring Target - Complex spatial macroblocking and focal blur requiring multi-scale restoration.</strong>
             <span>Deblurring demands spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels.</span>
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -201,6 +224,14 @@
 <p><strong>Fix</strong>: All asset handles and Kaggle URLs are resolved from the <code>unified_models.yaml</code> registry, ensuring the pipeline is robust against local/cloud path shifts.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -366,6 +397,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </section>
 
 <section id="5-challenges-resilience-architecture">
@@ -465,6 +504,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </section>
 
 <section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
@@ -475,6 +522,14 @@
 <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -574,6 +629,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </section>
 
 <section id="conclusion">
@@ -582,6 +645,10 @@
 <p>The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
 
     
+
+
+
+
 
 
 

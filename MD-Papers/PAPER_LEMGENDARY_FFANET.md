@@ -38,17 +38,23 @@ The transition to FFANet architectures required distinct manifolds for processin
 
 ### 2.1 Indoor Dehazing Track (ffanet_indoor)
 
+By unifying diverse structured indoor scatter subsets into `LemGendizedFfaNetIndoorLarge`, the FFANet backbone is trained to cleanly subtract uniform physical scatter and dense artificial occlusions natively.
+
 ![Indoor Dehazing Target](../assets/ffanet_indoor_example.png)
 *Figure 1: Indoor Dehazing Target - Requires the model to navigate dense, artificial occlusions and uniform physical scatter in highly structured environments.*
 The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.
 
 ### 2.2 Outdoor Dehazing Track (ffanet_outdoor)
 
+By unifying diverse natural atmospheric scatter subsets into `LemGendizedFfaNetOutdoorLarge`, the FFANet backbone is trained to cleanly subtract complex depth-of-field scattering and natural fog gradients natively.
+
 ![Outdoor Dehazing Target](../assets/ffanet_outdoor_example.png)
 *Figure 2: Outdoor Dehazing Target - Demands robust spatial reconstruction against complex atmospheric scattering, infinite depth-of-field, and natural fog gradients.*
 The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.
 
 ### 2.3 Synthetic Smoke Evacuation
+
+By unifying heavy particle interference subsets into synthetic smoke evacuation training targets, the FFANet backbone is trained to cleanly subtract dense particulate columns and smoke occlusions natively.
 
 ![Smoke Removal Target](../assets/ffanet_smoke_example.png)
 *Figure 3: Synthetic Smoke Target - Validating the PA Layer's ability to zero out heavy particle interference while maintaining background structural integrity.*

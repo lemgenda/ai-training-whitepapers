@@ -11,6 +11,8 @@
 
 - [1. Abstract](#1-abstract)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
+  - [2.1 Low-Light Manifold (mirnet_lowlight)](#21-low-light-manifold-mirnet_lowlight)
+  - [2.2 Exposure Manifold (mirnet_exposure)](#22-exposure-manifold-mirnet_exposure)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
   - [3.2 Mathematical Optimization: High-Fidelity Perceptual Engines](#32-mathematical-optimization-high-fidelity-perceptual-engines)
@@ -37,11 +39,17 @@ The LemGendary MIRNet is explicitly built to handle the most mathematically disr
 
 Unlike standard UNet approaches that operate linearly, MIRNet maintains parallel high-to-low resolution streams, exchanging multi-scale features bidirectionally across the network to preserve exact spatial details while correcting global illumination.
 
-**Low-Light Manifold**
+### 2.1 Low-Light Manifold (mirnet_lowlight)
+
+By unifying diverse low-illumination and night subsets into `LemGendizedMirNetLowLight`, the MIRNet backbone is trained to cleanly restore dynamic range, amplify features, and suppress severe sensor noise natively.
+
 ![Low Light Enhancement](../assets/mirnet_lowlight_example.png)
 Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.
 
-**Exposure Manifold**
+### 2.2 Exposure Manifold (mirnet_exposure)
+
+By unifying diverse overexposed and dynamic range subsets into `LemGendizedMirNetExposure`, the MIRNet backbone is trained to cleanly restore blown-out highlights and balance overall contrast gradients natively.
+
 ![Exposure Correction](../assets/mirnet_exposure_example.png)
 Recovering blown-out highlights and balancing overall dynamic range in overexposed photography.
 

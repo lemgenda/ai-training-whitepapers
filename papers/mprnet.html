@@ -7,6 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -37,7 +38,7 @@
             <h4>Navigation Matrix</h4>
             <ul>
 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-                <li><a href="#executive-summary">1. Executive Summary</a>
+                <li><a href="#section-1">1. Executive Summary</a>
                 </li>
                 <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
                     <ul class="sub-item">
@@ -58,7 +59,7 @@
                 </li>
                 <li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a>
                     <ul class="sub-item">
-                        <li><a href="#51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</a></li>
+                        <li><a href="#51-the-progressive-stage-nan-overflows-structural-fp16-disable">5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)</a></li>
                         <li><a href="#52-the-contiguous-view-kernel-crash">5.2 The Contiguous View Kernel Crash</a></li>
                         <li><a href="#53-the-onecyclelr-sudden-death-adamw-resume-shock">5.3 The OneCycleLR "Sudden Death" &amp; AdamW Resume Shock</a></li>
                         <li><a href="#54-the-vgg-perceptual-convergence-collapse">5.4 The VGG Perceptual Convergence Collapse</a></li>
@@ -105,11 +106,23 @@
 
 
 
-        <section id="executive-summary">
-            <h2>1. Executive Summary</h2>
+        
+            
+
+
+<section id="section-1">
+<h2>1. Executive Summary</h2>
             <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by the <strong>Multi-Stage Progressive Image Restoration Network (MPRNet)</strong>. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +154,14 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -181,6 +202,14 @@
 <p><strong>Fix</strong>: All asset handles and Kaggle URLs are resolved from the <code>unified_models.yaml</code> registry, ensuring the pipeline is robust against local/cloud path shifts.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -273,6 +302,14 @@
 </tr>
 </tbody>
 </table>
+
+
+
+
+
+
+
+
 
 
 
@@ -378,6 +415,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </section>
 
 <section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
@@ -388,6 +433,14 @@
 <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
 
 
 
@@ -487,6 +540,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </section>
 
 <section id="conclusion">
@@ -495,6 +556,10 @@
 <p>The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
 
     
+
+
+
+
 
 
 

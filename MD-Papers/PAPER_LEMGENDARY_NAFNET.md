@@ -90,13 +90,17 @@ The transition to SOTA architectures required moving beyond basic geometric task
 
 ### 2.1 The Denoising Track (nafnet_denoising)
 
-![Denoising Target](../assets/technical_noise.png)
+By unifying diverse sensor noise profiles into `LemGendizedNafNetDenoising`, the NAFNet backbone is trained to cleanly subtract extreme ISO sensor noise, Gaussian/Poisson noise, and digital defects natively.
+
+![Denoising Target](../assets/nafnet_denoising_example.png)
 *Figure 1: Denoising Target - Extreme ISO sensor noise requiring deep feature extraction without blurring edges.*
 Denoising requires the model to cleanly isolate pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric). NAFNet excels here due to its `SimpleGate` structure which preserves high-bandwidth frequencies much better than traditional ReLU architectures.
 
 ### 2.2 The Deblurring Track (nafnet_debluring)
 
-![Deblurring Target](../assets/technical_compression.png)
+By unifying diverse kinetic distortion profiles into `LemGendizedNafNetDebluring`, the NAFNet backbone is trained to cleanly subtract motion blur, camera shake artifacts, and focal distortion natively.
+
+![Deblurring Target](../assets/nafnet_debluring_example.png)
 *Figure 2: Deblurring Target - Complex spatial macroblocking and focal blur requiring multi-scale restoration.*
 Deblurring demands spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts. The LemGendary pipeline natively scales up to 640px to capture the broad macro-strokes required to "re-align" motion-blurred pixels.
 
