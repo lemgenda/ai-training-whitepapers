@@ -9,7 +9,7 @@
 
 ## Table of Contents
 
-- [1. Abstract](#1-abstract)
+- [1. Executive Summary](#1-executive-summary)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
 - [3. Shared Foundations](#3-shared-foundations)
@@ -67,9 +67,9 @@
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#conclusion)
 
-## 1. Abstract
+## 1. Executive Summary
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **MPRNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize MPRNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
+The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
 
 ---
 
@@ -194,15 +194,15 @@ MPRNet utilizes a multi-stage architecture where early stages handle broad artif
 
 ## 5. Challenges & Resilience Architecture
 
-### 5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)
+### 5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)
 
-**Issue**: MPRNet training initially exploded with infinite `NaN` losses. Because `SimpleGate` acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of `65,504` in FP16.
+**Issue**: MPRNet training initially exploded with infinite `NaN` losses. Because of the progressive multi-stage recursive aggregation and Cross-Stage Feature Fusion (CSFF), feature map magnitudes easily cross the internal float ceiling of `65,504` in FP16.
 **Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop dynamically disables AMP specifically for `MPRNet`, forcing strict double-precision gradients via FP32.
 
 ### 5.2 The Contiguous View Kernel Crash
 
 **Issue**: When interacting with partial dataset views, PyTorch passed fragmented tensors into convolutions causing `misaligned address` crashes.
-**Fix**: Patched `models/core_restoration.py` with rigorous `.contiguous()` clamps. Every input passed to `Conv2d`, `Pool2d`, or a `SimpleGate` multiplier is physically forced into linear memory realignment.
+**Fix**: Patched `models/core_restoration.py` with rigorous `.contiguous()` clamps. Every input passed to `Conv2d`, `Pool2d`, or progressive fusion blocks is physically forced into linear memory realignment.
 
 ### 5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock
 
