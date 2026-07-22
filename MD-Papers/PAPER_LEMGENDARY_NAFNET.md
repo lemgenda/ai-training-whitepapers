@@ -27,7 +27,7 @@
     - [3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)](#333-serial-extraction-mutex-stable-global-alignment-v1042)
     - [3.3.4 Registry-First Dynamic Unification (v4.5)](#334-registry-first-dynamic-unification-v45)
 - [4. Model Deep-Dives](#4-model-deep-dives)
-  - [4.1 NAFNet Denoising Scorer](#41-nafnet-denoising-scorer)
+  - [4.1 NAFNet Denoising Model](#41-nafnet-denoising-model)
     - [4.1.1 Model description, purpose and usage](#411-model-description-purpose-and-usage)
     - [4.1.2 Model Info](#412-model-info)
     - [4.1.3 Manifold Info](#413-manifold-info)
@@ -35,7 +35,8 @@
     - [4.1.5 Training Curve](#415-training-curve)
     - [4.1.6 Model specific issues and optimizations](#416-model-specific-issues-and-optimizations)
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
-  - [4.2 NAFNet Deblurring Scorer](#42-nafnet-deblurring-scorer)
+    - [4.1.8 Training Process Analysis](#418-training-process-analysis)
+  - [4.2 NAFNet Deblurring Model](#42-nafnet-deblurring-model)
     - [4.2.1 Model description, purpose and usage](#421-model-description-purpose-and-usage)
     - [4.2.2 Model Info](#422-model-info)
     - [4.2.3 Manifold Info](#423-manifold-info)
@@ -43,6 +44,7 @@
     - [4.2.5 Training Curve](#425-training-curve)
     - [4.2.6 Model specific issues and optimizations](#426-model-specific-issues-and-optimizations)
     - [4.2.7 Consolidated SOTA Benchmarks](#427-consolidated-sota-benchmarks)
+    - [4.2.8 Training Process Analysis](#428-training-process-analysis)
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
   - [5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)](#51-the-simplegate-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
@@ -106,6 +108,23 @@ Deblurring demands spatial reconstruction. The model must learn how to reverse k
 
 By unifying these diverse restoration subsets into the `LemGendizedNoiseDataset`, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.
 
+### 2.3 Nonlinear Activation Free Operators (SimpleGate & SCA)
+
+To maximize runtime efficiency and retain high-frequency details, NAFNet replaces traditional nonlinear activations (e.g., ReLU or GELU) with multiplier gates, and replaces standard self-attention blocks with channel attention layers:
+
+- **The SimpleGate Operator**:
+  Standard neural architectures utilize activation functions such as $\text{GELU}(X) = X \odot \Phi(X)$, which require transcendental function evaluation. NAFNet simplifies this by splitting the intermediate feature map $X \in \mathbb{R}^{C \times H \times W}$ along the channel dimension into two equal halves $X_1, X_2 \in \mathbb{R}^{\frac{C}{2} \times H \times W}$, and executing element-wise multiplication:
+  $$\text{SimpleGate}(X_1, X_2) = X_1 \odot X_2$$
+  where $\odot$ denotes the Hadamard product. By avoiding activation functions, the network preserves linear gradient pathways, which are critical for restoration tasks.
+
+- Simple Channel Attention (SCA):
+  Traditional channel attention mechanisms (like Squeeze-and-Excitation blocks) utilize heavy multi-layer perceptrons (MLPs) and sigmoid functions. NAFNet streamlines this block by utilizing global average pooling, followed by a single linear projection layer $W_g$ without activation:
+  $$\text{SCA}(X) = X \odot \Psi(X)$$
+  where $\Psi(X)$ is the channel attention modulation vector computed as:
+  $$\Psi(X) = W_g \cdot \text{Pool}(X)$$
+  and global average pooling is defined for each channel $c$ as:
+  $$\text{Pool}(X)_c = \frac{1}{HW} \sum_{i=1}^H \sum_{j=1}^W X_{c,i,j}$$
+
 ---
 
 ---
@@ -126,18 +145,45 @@ The pipeline harnesses local NumPy/OpenCV workers to decode image tensors native
 
 ---
 
-### 3.2 Mathematical Optimization: High-Fidelity Perceptual Engines
+### 3.2 Mathematical Optimization & Evaluation Metrics
 
-#### 3.2.1 Structural VS Perceptual Verification
+To rigorously evaluate restoration outputs, the suite employs both structural fidelity and deep perceptual metrics.
 
-While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:
+#### 3.2.1 Structural Fidelity Formulations
 
-- **LPIPS (Learned Perceptual Image Patch Similarity)**: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.
-- **FID (Frechet Inception Distance)**: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.
+- **Peak Signal-to-Noise Ratio (PSNR)**:
+  Measures absolute pixel-wise reconstruction accuracy. For a target image $I$ and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
+  $$\text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)$$
+  where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean Squared Error:
+  $$\text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2$$
 
-#### 3.2.2 PCIe VRAM Thrashing & The Chunking Fix
+- **Structural Similarity Index (SSIM)**:
+  Evaluates luminance, contrast, and structural comparison between image patches:
+  $$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}$$
+  where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are stabilization constants.
 
-When attempting to validate a 425-image subset against LPIPS simultaneously, the 15GB VRAM ceiling immediately shattered. The Linux kernel initiated "PCIe Thrashing"—swapping VRAM back to System RAM, physically hanging the Kaggle instance for hours. We engineered a **Structural Chunking Loop** (Cap: 8), permanently restricting VRAM utilization to ~500MB without losing mathematical fidelity.
+#### 3.2.2 Deep Perceptual Metrics
+
+While structural metrics capture high-frequency alignment, they fail to correlate with human-visual preference. The training suite integrates:
+
+- **Learned Perceptual Image Patch Similarity (LPIPS)**:
+  Computes the distance between predicted and ground-truth features extracted from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by channel weights $w_l$:
+  $$d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2$$
+
+- **Fréchet Inception Distance (FID)**:
+  Measures the statistical distance between real ($r$) and generated ($g$) manifolds in the feature space of Inception-V3:
+  $$d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)$$
+  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+
+#### 3.2.3 PCIe VRAM Thrashing & The Chunking Fix
+
+When attempting to validate a subset of $N$ images ($N = 425$), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:
+$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$
+where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.
+
+To resolve this, we implemented a **Structural Chunking Loop** with a chunk boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a constant value:
+$$\text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$
+This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
 
 #### 3.2.3 The CPU-Bottleneck Bypass
 
@@ -169,7 +215,7 @@ We natively execute intra-epoch `progress.pth` serialization precisely tracking 
 
 ## 4. Model Deep-Dives
 
-### 4.1 NAFNet Denoising Scorer
+### 4.1 NAFNet Denoising Model
 
 #### 4.1.1 Model description, purpose and usage
 
@@ -208,14 +254,20 @@ NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, 
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Completed) | Target SOTA Baseline | Gap |
 | :--- | :--- | :--- | :--- |
 | **PSNR** | 51.60 dB | 40.20 dB | +11.40 dB |
 | **SSIM** | 0.9997 | 0.9650 | +0.0347 |
 | **LPIPS** | 0.0019 | 0.0200 | +0.0181 |
 | **FID** | 1.8097 | 4.0000 | +2.1903 |
 
-### 4.2 NAFNet Deblurring Scorer
+#### 4.1.8 Training Process Analysis
+
+The denoising model was trained over 24 epochs using the progressive resolution ladder: `256px -> 384px -> 512px -> 640px`. The learning rate was governed by the training suite scheduler, peaking at `6.0e-5` to maximize weight alignment under `L1 Loss` and the `L1-LPIPS` perceptual composite loss.
+
+Loss curves show exceptionally fast convergence due to NAFNet's non-linear activation free framework (`SimpleGate`). The model hit `37.36 dB` PSNR by Epoch 4, and crossed the target `40.20 dB` SOTA barrier by Epoch 7 (`41.92 dB`). Scale stability was successfully maintained up to `640px` resolution (achieved at Epoch 22), where the final model anchored at a massive `48.29 dB` PSNR, SSIM `0.9976`, and LPIPS `0.0040`. The structural FP16 disable prevented NaN explosions from the SimpleGate layers.
+
+### 4.2 NAFNet Deblurring Model
 
 #### 4.2.1 Model description, purpose and usage
 
@@ -236,12 +288,12 @@ The **LemGendary NAFNet Deblurring** handles complex spatial reconstruction. The
 
 #### 4.2.4 Performance Metrics
 
-- **Current Training Epochs**: 58
-- **Best PSNR**: 33.48 dB
-- **Best SSIM**: 0.9748
+- **Current Training Epochs**: 79
+- **Best PSNR**: 33.92 dB
+- **Best SSIM**: 0.9753
 - **Best LPIPS**: 0.0382
-- **Best FID**: 1.0823
-- **Current Learning Rate**: 0.00004515
+- **Best FID**: 1.0682
+- **Current Learning Rate**: 0.00004111
 
 #### 4.2.5 Training Curve
 
@@ -254,12 +306,18 @@ Deblurring demands spatial reconstruction. The LemGendary pipeline natively scal
 
 #### 4.2.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Completed) | Target SOTA Baseline | Gap |
 | :--- | :--- | :--- | :--- |
-| **PSNR** | 33.48 dB | 33.90 dB | -0.42 dB |
-| **SSIM** | 0.9748 | 0.9700 | +0.0048 |
+| **PSNR** | 33.92 dB | 33.90 dB | +0.02 dB |
+| **SSIM** | 0.9753 | 0.9700 | +0.0053 |
 | **LPIPS** | 0.0382 | 0.0400 | +0.0018 |
-| **FID** | 1.0823 | 6.0000 | +4.9177 |
+| **FID** | 1.0682 | 6.0000 | +4.9318 |
+
+#### 4.2.8 Training Process Analysis
+
+The deblurring model trained over 79 epochs. Unlike denoising, spatial reconstruction of kinetic motion blur required a longer convergence window and higher complexity. The resolution ladder scaled through `256px -> 384px -> 512px`, with validation anchored strictly at `512px` to verify performance against deployment resolution.
+
+At Epoch 70, the model achieved a validation PSNR of `33.72 dB`, which triggered the SOTA Guardrail to archive the weights. The absolute plateau guard subsequently initiated a tactical SOTA rollback to prevent stagnation, cooling the learning rate to `1.75e-5` and resetting the training stress to `0.0`. This precise cooling allowed the model to recover immediately. Over the next 8 epochs (Epochs 71-78), the model steadily climbed the final loss slopes, ultimately crossing the SOTA target of `33.90 dB` at Epoch 78 with a record-high `33.92 dB` PSNR, SSIM `0.9753`, and FID `1.0811` (with the final checkpoint concluding at Epoch 79 with a low FID of `1.0682`).
 
 ---
 

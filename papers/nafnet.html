@@ -44,19 +44,20 @@
                     <ul class="sub-item">
                         <li><a href="#21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</a></li>
                         <li><a href="#22-the-deblurring-track-nafnet_debluring">2.2 The Deblurring Track (nafnet_debluring)</a></li>
+                        <li><a href="#23-nonlinear-activation-free-operators-simplegate-sca">2.3 Nonlinear Activation Free Operators (SimpleGate &amp; SCA)</a></li>
                     </ul>
                 </li>
                 <li><a href="#3-shared-foundations">3. Shared Foundations</a>
                     <ul class="sub-item">
                         <li><a href="#31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
-                        <li><a href="#32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
+                        <li><a href="#32-mathematical-optimization-evaluation-metrics">3.2 Mathematical Optimization &amp; Evaluation Metrics</a></li>
                         <li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
                     </ul>
                 </li>
                 <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
                     <ul class="sub-item">
-                        <li><a href="#41-nafnet-denoising-scorer">4.1 NAFNet Denoising Scorer</a></li>
-                        <li><a href="#42-nafnet-deblurring-scorer">4.2 NAFNet Deblurring Scorer</a></li>
+                        <li><a href="#41-nafnet-denoising-model">4.1 NAFNet Denoising Model</a></li>
+                        <li><a href="#42-nafnet-deblurring-model">4.2 NAFNet Deblurring Model</a></li>
                     </ul>
                 </li>
                 <li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a>
@@ -112,11 +113,53 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section id="1-abstract">
 <h2 id="1-abstract">1. Abstract</h2>
 <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -150,6 +193,21 @@
 <p>By unifying diverse kinetic distortion profiles into <code>LemGendizedNafNetDebluring</code>, the NAFNet backbone is trained to cleanly subtract motion blur, camera shake artifacts, and focal distortion natively.</p>
 
 <p>By unifying these diverse restoration subsets into the <code>LemGendizedNoiseDataset</code>, the NAFNet backbones are trained to handle extreme multi-degradation scenarios natively found in modern mobile photography.</p>
+
+<h3 id="23-nonlinear-activation-free-operators-simplegate-sca">2.3 Nonlinear Activation Free Operators (SimpleGate &amp; SCA)</h3>
+<p>To maximize runtime efficiency and retain high-frequency details, NAFNet replaces traditional nonlinear activations (e.g., ReLU or GELU) with multiplier gates, and replaces standard self-attention blocks with channel attention layers:</p>
+<p><strong>The SimpleGate Operator</strong>:<br>
+Standard neural architectures utilize activation functions such as <code>GELU(X) = X &odot; &Phi;(X)</code>, which require transcendental function evaluation. NAFNet simplifies this by splitting the intermediate feature map <code>X</code> into two equal halves <code>X<sub>1</sub>, X<sub>2</sub></code> along the channel dimension and executing element-wise multiplication:<br>
+<code>SimpleGate(X<sub>1</sub>, X<sub>2</sub>) = X<sub>1</sub> &odot; X<sub>2</sub></code><br>
+where <code>&odot;</code> denotes the Hadamard product. By avoiding activation functions, the network preserves linear gradient pathways, which are critical for restoration tasks.</p>
+
+<p><strong>Simple Channel Attention (SCA)</strong>:<br>
+Traditional channel attention mechanisms (like Squeeze-and-Excitation blocks) utilize heavy multi-layer perceptrons (MLPs) and sigmoid functions. NAFNet streamlines this block by utilizing global average pooling, followed by a single linear projection layer <code>W<sub>g</sub></code> without activation:<br>
+<code>SCA(X) = X &odot; &Psi;(X)</code><br>
+where <code>&Psi;(X)</code> is the channel attention modulation vector computed as:<br>
+<code>&Psi;(X) = W<sub>g</sub> &middot; Pool(X)</code><br>
+and global average pooling is defined for each channel <i>c</i> as:<br>
+<code>Pool(X)<sub>c</sub> = (1/HW) &sum;<sub>i=1</sub><sup>H</sup> &sum;<sub>j=1</sub><sup>W</sup> X<sub>c,i,j</sub></code></p>
 <hr />
 <hr />
 
@@ -190,6 +248,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </section>
 
 <section id="3-shared-foundations">
@@ -201,16 +287,41 @@
 <h4 id="312-ovc-data-streaming-bridge-opencv-to-cuda">3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)</h4>
 <p>The pipeline harnesses local NumPy/OpenCV workers to decode image tensors natively in CPU cache before flushing them to the GPU. This prevents data-starvation of the GPU cores completely, hiding I/O latency behind raw throughput.</p>
 <hr />
-<h3 id="32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
-<h4 id="321-structural-vs-perceptual-verification">3.2.1 Structural VS Perceptual Verification</h4>
-<p>While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:</p>
-<ul>
-<li><strong>LPIPS (Learned Perceptual Image Patch Similarity)</strong>: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.</li>
-<li><strong>FID (Frechet Inception Distance)</strong>: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.</li>
-</ul>
-<h4 id="322-pcie-vram-thrashing-the-chunking-fix">3.2.2 PCIe VRAM Thrashing &amp; The Chunking Fix</h4>
-<p>When attempting to validate a 425-image subset against LPIPS simultaneously, the 15GB VRAM ceiling immediately shattered. The Linux kernel initiated "PCIe Thrashing"—swapping VRAM back to System RAM, physically hanging the Kaggle instance for hours. We engineered a <strong>Structural Chunking Loop</strong> (Cap: 8), permanently restricting VRAM utilization to ~500MB without losing mathematical fidelity.</p>
-<h4 id="323-the-cpu-bottleneck-bypass">3.2.3 The CPU-Bottleneck Bypass</h4>
+<h3 id="32-mathematical-optimization-evaluation-metrics">3.2 Mathematical Optimization &amp; Evaluation Metrics</h3>
+<p>To rigorously evaluate restoration outputs, the suite employs both structural fidelity and deep perceptual metrics.</p>
+
+<h4 id="321-structural-fidelity-formulations">3.2.1 Structural Fidelity Formulations</h4>
+<p><strong>Peak Signal-to-Noise Ratio (PSNR)</strong>:<br>
+Measures absolute pixel-wise reconstruction accuracy. For a target image <i>I</i> and restored image <i>K</i> of dimensions <i>H &times; W</i>, PSNR is defined as:<br>
+<code>PSNR(I, K) = 10 &middot; log<sub>10</sub>(MAX<sub>I</sub><sup>2</sup> / MSE(I, K))</code><br>
+where <code>MAX<sub>I</sub> = 1.0</code> (for normalized float tensors) and MSE is the Mean Squared Error:<br>
+<code>MSE(I, K) = (1/HW) &sum;<sub>i=1</sub><sup>H</sup> &sum;<sub>j=1</sub><sup>W</sup> (I<sub>i,j</sub> - K<sub>i,j</sub>)<sup>2</sup></code></p>
+
+<p><strong>Structural Similarity Index (SSIM)</strong>:<br>
+Evaluates luminance, contrast, and structural comparison between image patches:<br>
+<code>SSIM(x, y) = ((2&mu;<sub>x</sub>&mu;<sub>y</sub> + c<sub>1</sub>)(2&sigma;<sub>xy</sub> + c<sub>2</sub>)) / ((&mu;<sub>x</sub><sup>2</sup> + &mu;<sub>y</sub><sup>2</sup> + c<sub>1</sub>)(&sigma;<sub>x</sub><sup>2</sup> + &sigma;<sub>y</sub><sup>2</sup> + c<sub>2</sub>))</code><br>
+where <code>&mu;</code> and <code>&sigma;</code> denote the mean and variance, and <code>c<sub>1</sub>, c<sub>2</sub></code> are stabilization constants.</p>
+
+<h4 id="322-deep-perceptual-metrics">3.2.2 Deep Perceptual Metrics</h4>
+<p>While structural metrics capture high-frequency alignment, they fail to correlate with human-visual preference. The training suite integrates:</p>
+<p><strong>Learned Perceptual Image Patch Similarity (LPIPS)</strong>:<br>
+Computes the distance between predicted and ground-truth features extracted from layer <i>l</i> of a pre-trained VGG-16 backbone, normalized and scaled by channel weights <code>w<sub>l</sub></code>:<br>
+<code>d(x, y) = &sum;<sub>l</sub> (1 / (H<sub>l</sub> W<sub>l</sub>)) &sum;<sub>h,w</sub> \| w<sub>l</sub> &odot; (x̂<sup>l</sup><sub>h,w</sub> - ŷ<sup>l</sup><sub>h,w</sub>) \|<sub>2</sub><sup>2</sup></code></p>
+
+<p><strong>Fr&eacute;chet Inception Distance (FID)</strong>:<br>
+Measures the statistical distance between real (<i>r</i>) and generated (<i>g</i>) manifolds in the feature space of Inception-V3:<br>
+<code>d<sub>FID</sub><sup>2</sup> = \|\&mu;<sub>r</sub> - &mu;<sub>g</sub>\|<sub>2</sub><sup>2</sup> + Tr(&Sigma;<sub>r</sub> + &Sigma;<sub>g</sub> - 2(&Sigma;<sub>r</sub>&Sigma;<sub>g</sub>)<sup>1/2</sup>)</code><br>
+where <code>&mu;</code> and <code>&Sigma;</code> represent the feature mean vectors and covariance matrices.</p>
+
+<h4 id="323-pcie-vram-thrashing-the-chunking-fix">3.2.3 PCIe VRAM Thrashing &amp; The Chunking Fix</h4>
+<p>When attempting to validate a subset of <i>N</i> images (<i>N = 425</i>), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:<br>
+<code>Mem<sub>total</sub> = O(N &middot; H &middot; W &middot; C)</code><br>
+where <i>C</i> is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.</p>
+<p>To resolve this, we implemented a <strong>Structural Chunking Loop</strong> with a chunk boundary <code>b<sub>chunk</sub> &le; 8</code>. The peak memory footprint is bounded at a constant value:<br>
+<code>Mem<sub>peak</sub> = O(b<sub>chunk</sub> &middot; H &middot; W &middot; C)</code><br>
+This bounds VRAM utilization to ~500MB regardless of the total validation sample count <i>N</i>.</p>
+
+<h4 id="324-the-cpu-bottleneck-bypass">3.2.4 The CPU-Bottleneck Bypass</h4>
 <p>Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking <code>lpips(net="vgg")</code> against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks <code>.to(device)</code> directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.</p>
 <hr />
 <h3 id="33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
@@ -245,11 +356,39 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </section>
 
 <section id="4-model-deep-dives">
 <h2 id="4-model-deep-dives">4. Model Deep-Dives</h2>
-<h3 id="41-nafnet-denoising-scorer">4.1 NAFNet Denoising Scorer</h3>
+<h3 id="41-nafnet-denoising-model">4.1 NAFNet Denoising Model</h3>
 <h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NAFNet Denoising</strong> is a professional-grade AI model optimized for the <code>restoration</code> lifecycle. It isolates pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric).</p>
 <h4 id="412-model-info">4.1.2 Model Info</h4>
@@ -284,7 +423,7 @@
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
-<th style="text-align: left;">Current Reality (Mid-Training)</th>
+<th style="text-align: left;">Current Reality (Completed)</th>
 <th style="text-align: left;">Target SOTA Baseline</th>
 <th style="text-align: left;">Gap</th>
 </tr>
@@ -316,7 +455,12 @@
 </tr>
 </tbody>
 </table></div>
-<h3 id="42-nafnet-deblurring-scorer">4.2 NAFNet Deblurring Scorer</h3>
+
+<h4 id="418-training-process-analysis">4.1.8 Training Process Analysis</h4>
+<p>The denoising model was trained over 24 epochs using the progressive resolution ladder: <code>256px -&gt; 384px -&gt; 512px -&gt; 640px</code>. The learning rate was governed by the training suite scheduler, peaking at <code>6.0e-5</code> to maximize weight alignment under <code>L1 Loss</code> and the <code>L1-LPIPS</code> perceptual composite loss.</p>
+<p>Loss curves show exceptionally fast convergence due to NAFNet's non-linear activation free framework (<code>SimpleGate</code>). The model hit <code>37.36 dB</code> PSNR by Epoch 4, and crossed the target <code>40.20 dB</code> SOTA barrier by Epoch 7 (<code>41.92 dB</code>). Scale stability was successfully maintained up to <code>640px</code> resolution (achieved at Epoch 22), where the final model anchored at a massive <code>48.29 dB</code> PSNR, SSIM <code>0.9976</code>, and LPIPS <code>0.0040</code>. The structural FP16 disable prevented NaN explosions from the SimpleGate layers.</p>
+
+<h3 id="42-nafnet-deblurring-model">4.2 NAFNet Deblurring Model</h3>
 <h4 id="421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NAFNet Deblurring</strong> handles complex spatial reconstruction. The model must learn how to reverse kinetic motion blur and macro-blocking artifacts.</p>
 <h4 id="422-model-info">4.2.2 Model Info</h4>
@@ -334,12 +478,12 @@
 </ul>
 <h4 id="424-performance-metrics">4.2.4 Performance Metrics</h4>
 <ul>
-<li><strong>Current Training Epochs</strong>: 58</li>
-<li><strong>Best PSNR</strong>: 33.48 dB</li>
-<li><strong>Best SSIM</strong>: 0.9748</li>
+<li><strong>Current Training Epochs</strong>: 79</li>
+<li><strong>Best PSNR</strong>: 33.92 dB</li>
+<li><strong>Best SSIM</strong>: 0.9753</li>
 <li><strong>Best LPIPS</strong>: 0.0382</li>
-<li><strong>Best FID</strong>: 1.0823</li>
-<li><strong>Current Learning Rate</strong>: 0.00004515</li>
+<li><strong>Best FID</strong>: 1.0682</li>
+<li><strong>Current Learning Rate</strong>: 0.00004111</li>
 </ul>
 <h4 id="425-training-curve">4.2.5 Training Curve</h4>
 <p><img alt="NAFNet Deblurring Training Curve" src="../assets/nafnet_debluring_training.png" />
@@ -351,7 +495,7 @@
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
-<th style="text-align: left;">Current Reality (Mid-Training)</th>
+<th style="text-align: left;">Current Reality (Completed)</th>
 <th style="text-align: left;">Target SOTA Baseline</th>
 <th style="text-align: left;">Gap</th>
 </tr>
@@ -359,15 +503,15 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>PSNR</strong></td>
-<td style="text-align: left;">33.48 dB</td>
+<td style="text-align: left;">33.92 dB</td>
 <td style="text-align: left;">33.90 dB</td>
-<td style="text-align: left;">-0.42 dB</td>
+<td style="text-align: left;">+0.02 dB</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>SSIM</strong></td>
-<td style="text-align: left;">0.9748</td>
+<td style="text-align: left;">0.9753</td>
 <td style="text-align: left;">0.9700</td>
-<td style="text-align: left;">+0.0048</td>
+<td style="text-align: left;">+0.0053</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>LPIPS</strong></td>
@@ -377,13 +521,45 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>FID</strong></td>
-<td style="text-align: left;">1.0823</td>
+<td style="text-align: left;">1.0682</td>
 <td style="text-align: left;">6.0000</td>
-<td style="text-align: left;">+4.9177</td>
+<td style="text-align: left;">+4.9318</td>
 </tr>
 </tbody>
 </table></div>
+
+<h4 id="428-training-process-analysis">4.2.8 Training Process Analysis</h4>
+<p>The deblurring model trained over 79 epochs. Unlike denoising, spatial reconstruction of kinetic motion blur required a longer convergence window and higher complexity. The resolution ladder scaled through <code>256px -&gt; 384px -&gt; 512px</code>, with validation anchored strictly at <code>512px</code> to verify performance against deployment resolution.</p>
+<p>At Epoch 70, the model achieved a validation PSNR of <code>33.72 dB</code>, which triggered the SOTA Guardrail to archive the weights. The absolute plateau guard subsequently initiated a tactical SOTA rollback to prevent stagnation, cooling the learning rate to <code>1.75e-5</code> and resetting the training stress to <code>0.0</code>. This precise cooling allowed the model to recover immediately. Over the next 8 epochs (Epochs 71-78), the model steadily climbed the final loss slopes, ultimately crossing the SOTA target of <code>33.90 dB</code> at Epoch 78 with a record-high <code>33.92 dB</code> PSNR, SSIM <code>0.9753</code>, and FID <code>1.0811</code> (with the final checkpoint concluding at Epoch 79 with a low FID of <code>1.0682</code>).</p>
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -512,6 +688,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </section>
 
 <section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
@@ -522,6 +726,34 @@
 <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
 <hr />
 <hr />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -637,6 +869,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </section>
 
 <section id="conclusion">
@@ -645,6 +905,20 @@
 <p>The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
