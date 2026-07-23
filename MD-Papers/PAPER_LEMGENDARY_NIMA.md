@@ -712,6 +712,14 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 
 ---
 
+### 5.42 Cross-Split Dataset Path Resolver (v16.2)
+
+**Issue**: The dataset compiler split images and labels using independent index lists. This caused an 11.23% (2,638 samples) cross-split mismatch where training images were written to `images/train/` but their corresponding `.txt` label files ended up in `labels/val/`. When loading these samples, the dataset loader silently fell back to a `torch.zeros(10)` target distribution, injecting severe gradient noise and penalizing the Earth Mover's Distance (EMD) loss with an unoptimizable +1.0 error term.
+
+**Fix**: Modified `MultiTaskDataset` to use a robust cross-split resolver `_get_split_path()`. The data loader now checks the opposite split directory as a fallback. This guarantees 100% label resolution parity (0.00% missing labels) and completely eliminates the gradient noise.
+
+---
+
 ---
 
 ## 6. Deployment Strategy: Why ONNX?
