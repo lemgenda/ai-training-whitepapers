@@ -62,6 +62,7 @@
                         <li><a href="#permanent-stress">The Permanent Stress Pathology</a></li>
                         <li><a href="#max-stress-freeze">The Max Stress LR Freeze (v16 Bug)</a></li>
                         <li><a href="#amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</a></li>
+                        <li><a href="#onecyclelr-desynchronization">OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-9">6. Best Practices Checklist</a>
@@ -499,6 +500,11 @@
             <p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.</p>
             <p><strong>Identification:</strong> The terminal outputs <code>JOLT: Breaking Plateau with 1.50x LR Propulsion</code> immediately upon resuming from a checkpoint, and metrics regress heavily.</p>
             <p><strong>Remedy:</strong> <strong>State Persistence</strong>. Ensure <code>last_jolt_epoch</code> is correctly serialized in <code>get_state()</code> and loaded in <code>load_state()</code> inside <code>optimization_engine.py</code>.</p>
+
+            <h3 id="onecyclelr-desynchronization">OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)</h3>
+            <p><strong>The Issue:</strong> Instantiating a new <code>OneCycleLR</code> scheduler in PyTorch immediately resets the optimizer's active learning rate parameter groups to the initial cycle rate (e.g., <code>1e-6</code>). When manually setting <code>scheduler.last_epoch = ...</code> without subsequent synchronization, the optimizer remains stuck at the initial low rate for the entire next epoch. Once the next epoch completes, the scheduler steps, suddenly updating the optimizer's active rate to the high scaled step value (e.g., <code>2.5e-5</code>). This creates a sequence of alternating low-learning-rate "stagnant" epochs and high-learning-rate "velocity shock" epochs that degrades the manifold.</p>
+            <p><strong>Identification:</strong> The learning rate oscillates dramatically between epochs (e.g., <code>1e-6 &rarr; 2.5e-5 &rarr; 1e-6 &rarr; 2.5e-5</code>). The stagnant low-learning-rate epochs mimic SOTA stability, but are immediately followed by catastrophic regression (10%+ drops) when the high rate kicks in.</p>
+            <p><strong>Remedy:</strong> <strong>Active Scheduler-Optimizer Synchronization</strong>. Immediately after manually setting <code>scheduler.last_epoch</code> and <code>scheduler._step_count</code> on newly instantiated schedulers, manually synchronize the optimizer's active parameter groups with <code>scheduler.get_lr()</code> and update <code>scheduler._last_lr</code>.</p>
         
 
         

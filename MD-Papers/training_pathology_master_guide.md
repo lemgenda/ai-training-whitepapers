@@ -39,6 +39,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [The Max Stress LR Freeze (v16 Bug)](#the-max-stress-lr-freeze-v16-bug)
     - [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
     - [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
+    - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)](#onecyclelr-desynchronization-velocity-bomb-stagnation-loop)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -220,6 +221,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x the running average). In high-fidelity restoration, the running average can drop to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike the loss to 0.03. This triggers a 30x relative spike detection, causing the Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03 being physically harmless (3% error).
 - **Identification**: Console logs show `Sudden Loss Spike detected (0.0308 vs 0.0010)` resulting in `Manifold unstable. NPP Recoil active` on otherwise stable metrics.
 - **Remedy**: **Absolute Energy Floor**. Implement an absolute mathematical threshold (e.g., `> 0.05` unscaled) to the spike detection logic. A spike is now only considered dangerous if it represents a massive relative deviation *and* breaches the absolute baseline energy floor.
+
+### OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)
+
+- **The Issue**: Instantiating a new `OneCycleLR` scheduler in PyTorch immediately resets the optimizer's active learning rate parameter groups to the initial cycle rate (e.g., `1e-6`). When manually setting `scheduler.last_epoch = ...` without subsequent synchronization, the optimizer remains stuck at the initial low rate for the entire next epoch. Once the next epoch completes, the scheduler steps, suddenly updating the optimizer's active rate to the high scaled step value (e.g., `2.5e-5`). This creates a sequence of alternating low-learning-rate "stagnant" epochs and high-learning-rate "velocity shock" epochs that degrades the manifold.
+- **Identification**: The learning rate oscillates dramatically between epochs (e.g., `1e-6 → 2.5e-5 → 1e-6 → 2.5e-5`). The stagnant low-learning-rate epochs mimic SOTA stability, but are immediately followed by catastrophic regression (10%+ drops) when the high rate kicks in.
+- **Remedy**: **Active Scheduler-Optimizer Synchronization**. Immediately after manually setting `scheduler.last_epoch` and `scheduler._step_count` on newly instantiated schedulers, manually synchronize the optimizer's active parameter groups with `scheduler.get_lr()` and update `scheduler._last_lr`.
 
 ---
 
