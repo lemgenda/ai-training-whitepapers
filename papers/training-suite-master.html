@@ -38,6 +38,7 @@
                         <li><a href="#resolution-ladders">2.3. Hardened Resolution Ladders & SOTA Guards</a></li>
                         <li><a href="#checkpoint-resumption">2.4. Checkpoint Resumption & Singularity Hardening</a></li>
                         <li><a href="#moe-scaling">2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture</a></li>
+                        <li><a href="#forex-architecture">2.6. Multi-Scale Forex Trading Architecture (ForexPredictor)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-5">3. Judicial Audit Engine</a>
@@ -199,6 +200,14 @@
                 <li><strong>Double-Softmax Squeeze Protection</strong>: The <code>TaskClassifier</code> routing network natively isolates softmax activation from the loss engine, returning raw logits to prevent <code>log_softmax</code> gradient flattening when calculating Cross-Entropy gating loss.</li>
                 <li><strong>Dynamic Perceptual LPIPS Balancing</strong>: Automatically intercepts batch task indices during joint training to apply dynamic, sample-specific LPIPS multipliers scaling from <code>0.005</code> (Face Parsing) to <code>0.050</code> (Vintage &amp; Face Restoration). This permanently prevents aggressive structural tasks from mathematically overpowering subtle intensity-based manifolds (like Lowlight/Exposure) via head competition.</li>
                 <li><strong>Dynamic Regex Ingestion</strong>: Seamlessly routes tasks like Denoise, Deblur, Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction of physical dataset filenames on the fly.</li>
+            </ul>
+
+            <h3 id="forex-architecture">2.6. Multi-Scale Forex Trading Architecture (<code>ForexPredictor</code>)</h3>
+            <ul>
+                <li><strong>Causal Conv1D Timeframe Branches</strong>: Processes multi-timeframe OHLCV data (M1, M5, M15, H1, H4, D1) through strict causal Conv1D stacks with left-only padding, guaranteeing zero temporal data leakage.</li>
+                <li><strong>Cross-Timeframe Attention Fusion</strong>: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.</li>
+                <li><strong>Confidence-Gated Dual Head &amp; Loss</strong>: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (<code>ForexDualLoss</code>) to prevent fitting noise on low-confidence bars.</li>
+                <li><strong>Stateless ONNX Deployment</strong>: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.</li>
             </ul>
         
 
@@ -366,6 +375,7 @@
                     <tr><td>LemGendary LLaVA v1.5 Master VLM</td><td>N/A</td><td>vision_language_master_manifold</td><td>N/A</td></tr>
                     <tr><td>LemGendary BLIP-2 Master VLM</td><td>N/A</td><td>vision_language_master_manifold</td><td>N/A</td></tr>
                     <tr><td>LemGendary Universal NSFW Classifier</td><td>MobileNetV2 (Categorical Anchor)</td><td>classification_master_manifold</td><td>N/A</td></tr>
+                    <tr><td>LemGendary Forex Predictor</td><td>Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention)</td><td>ForexMT5Majors</td><td>Dir Acc: 0.60 | Win Rate: 0.55</td></tr>
                 </tbody>
             </table>
         

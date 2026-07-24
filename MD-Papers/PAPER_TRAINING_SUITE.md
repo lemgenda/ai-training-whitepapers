@@ -53,6 +53,13 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Dynamic Perceptual LPIPS Balancing**: Automatically intercepts batch task indices during joint training to apply dynamic, sample-specific LPIPS multipliers scaling from `0.005` (Face Parsing) to `0.050` (Vintage & Face Restoration). This permanently prevents aggressive structural tasks from mathematically overpowering subtle intensity-based manifolds (like Lowlight/Exposure) via head competition.
 - **Dynamic Regex Ingestion**: Seamlessly routes tasks like Denoise, Deblur, Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction of physical dataset filenames on the fly.
 
+### 2.6. Multi-Scale Forex Trading Architecture (`ForexPredictor`)
+
+- **Causal Conv1D Timeframe Branches**: Processes multi-timeframe OHLCV data (M1, M5, M15, H1, H4, D1) through strict causal Conv1D stacks with left-only padding, guaranteeing zero temporal data leakage.
+- **Cross-Timeframe Attention Fusion**: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.
+- **Confidence-Gated Dual Head & Loss**: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (`ForexDualLoss`) to prevent fitting noise on low-confidence bars.
+- **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
+
 ---
 
 ## 3. Judicial Audit Engine
@@ -103,6 +110,7 @@ Below is the exhaustive matrix of supported architectures natively integrated wi
 | LemGendary LLaVA v1.5 Master VLM | N/A | vision_language_master_manifold | N/A |
 | LemGendary BLIP-2 Master VLM | N/A | vision_language_master_manifold | N/A |
 | LemGendary Universal NSFW Classifier | MobileNetV2 (Categorical Anchor) | classification_master_manifold | N/A |
+| LemGendary Forex Predictor | Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention) | ForexMT5Majors | Dir Acc: 0.60 \| Win Rate: 0.55 |
 
 ---
 
