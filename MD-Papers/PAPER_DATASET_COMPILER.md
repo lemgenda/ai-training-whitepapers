@@ -8,6 +8,8 @@
 
 The LemGendary Dataset Pipeline (v16.2.8-NUCLEAR-HARDENED) is the industrial standard for Generative & Vision Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion and Vision datasets with industrial-grade CLIP styling, multi-domain balancing, and high-fidelity LANCZOS interpolation.
 
+* **Project Repository**: [lemgendary-dataset-generator](https://github.com/lemgenda/lemgendary-dataset-generator)
+
 ---
 
 ## 2. High-Velocity Optimizations & Complexity Mappings

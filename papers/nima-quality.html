@@ -925,6 +925,14 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <li><strong>Dynamic Regression Limit Relaxation</strong>: Added <code>get_active_regression_limit(config_limit)</code>, which dynamically relaxes the active <code>regression_limit</code> during loop recovery so static YAML limits never block resolution escalation.</li>
 </ol>
 
+<h3 id="544-proven-manifold-protection-intra-resolution-data-recoil-v1600">5.44 Proven-Manifold Protection &amp; Intra-Resolution Data Recoil (v16.0.0)</h3>
+<p><strong>Issue</strong>: During dataset fraction scaling (e.g., 55% -&gt; 75% -&gt; 100%) on high-resolution manifolds (such as <code>512px</code> on <code>nima_authenticity</code>), temporary validation loss spikes caused by dataset tail noise triggered an over-aggressive legacy Spatial Retreat rule (<code>epoch_count - last_res_jump_epoch &lt; 8</code>). The Governor erroneously dropped resolution back to <code>384px @ 100% Data</code>, completely discarding the model's proven 98.12% peak accuracy at 512px and exploding validation loss further to 1.64.</p>
+<p><strong>Fix</strong>: Implemented <strong>Proven-Manifold Protection</strong> and <strong>Intra-Resolution Data Recoil</strong> in <code>SmartTrainingGovernor</code> (<code>optimization_engine.py</code>):</p>
+<ol>
+<li><strong>Proven-Manifold Protection</strong>: If <code>best_quality</code> on the current resolution reached high fidelity (<code>best_quality &gt;= 0.75 * target_quality_score</code> or <code>&gt; 85.0</code>), Spatial Resolution Drops are BLOCKED.</li>
+<li><strong>Intra-Resolution Data Recoil</strong>: When regression occurs on a proven high-resolution manifold, the Governor retains <code>512px</code> resolution and steps dataset fraction back to the last safe level (e.g. <code>75% -&gt; 55%</code>), while cooling learning rate by 50% (<code>lr_multiplier = 0.5</code>) and locking stabilization for 5 epochs.</li>
+</ol>
+
 
 
 

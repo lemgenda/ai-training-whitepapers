@@ -733,6 +733,17 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 
 ---
 
+### 5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)
+
+**Issue**: During dataset fraction scaling (e.g., 55% -> 75% -> 100%) on high-resolution manifolds (such as `512px` on `nima_authenticity`), temporary validation loss spikes caused by dataset tail noise triggered an over-aggressive legacy Spatial Retreat rule (`epoch_count - last_res_jump_epoch < 8`). The Governor erroneously dropped resolution back to `384px @ 100% Data`, completely discarding the model's proven 98.12% peak accuracy at 512px and exploding validation loss further to 1.64.
+
+**Fix**: Implemented **Proven-Manifold Protection** and **Intra-Resolution Data Recoil** in `SmartTrainingGovernor` (`optimization_engine.py`):
+
+1. **Proven-Manifold Protection**: If `best_quality` on the current resolution reached high fidelity (`best_quality >= 0.75 * target_quality_score` or `> 85.0`), Spatial Resolution Drops are BLOCKED.
+2. **Intra-Resolution Data Recoil**: When regression occurs on a proven high-resolution manifold, the Governor retains `512px` resolution and steps dataset fraction back to the last safe level (e.g. `75% -> 55%`), while cooling learning rate by 50% (`lr_multiplier = 0.5`) and locking stabilization for 5 epochs.
+
+---
+
 ---
 
 ## 6. Deployment Strategy: Why ONNX?

@@ -39,7 +39,8 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [The Max Stress LR Freeze (v16 Bug)](#the-max-stress-lr-freeze-v16-bug)
     - [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
     - [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
-    - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)](#onecyclelr-desynchronization-velocity-bomb-stagnation-loop)
+    - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop)
+    - [Premature Spatial Retreat (The Over-Aggressive Recoil)](#premature-spatial-retreat-the-over-aggressive-recoil)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -227,6 +228,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: Instantiating a new `OneCycleLR` scheduler in PyTorch immediately resets the optimizer's active learning rate parameter groups to the initial cycle rate (e.g., `1e-6`). When manually setting `scheduler.last_epoch = ...` without subsequent synchronization, the optimizer remains stuck at the initial low rate for the entire next epoch. Once the next epoch completes, the scheduler steps, suddenly updating the optimizer's active rate to the high scaled step value (e.g., `2.5e-5`). This creates a sequence of alternating low-learning-rate "stagnant" epochs and high-learning-rate "velocity shock" epochs that degrades the manifold.
 - **Identification**: The learning rate oscillates dramatically between epochs (e.g., `1e-6 → 2.5e-5 → 1e-6 → 2.5e-5`). The stagnant low-learning-rate epochs mimic SOTA stability, but are immediately followed by catastrophic regression (10%+ drops) when the high rate kicks in.
 - **Remedy**: **Active Scheduler-Optimizer Synchronization**. Immediately after manually setting `scheduler.last_epoch` and `scheduler._step_count` on newly instantiated schedulers, manually synchronize the optimizer's active parameter groups with `scheduler.get_lr()` and update `scheduler._last_lr`.
+
+### Premature Spatial Retreat (The Over-Aggressive Recoil)
+
+- **The Issue**: When dataset fraction is expanded (e.g. `55% -> 75%`) on a high-resolution manifold, temporary validation variance occurs. Under legacy recoil rules (`epoch_count - last_res_jump_epoch < 8`), the Governor assumes the resolution jump itself was premature and triggers a hard **Spatial Retreat** (dropping resolution to `384px @ 100% Data`), even if the model already achieved a peak 98%+ score at 512px.
+- **Identification**: `metrics.csv` shows high accuracy/quality (e.g., 98.12%) at 512px @ 55% data, followed by a resolution drop to 384px @ 100% data where validation loss explodes further (e.g. `0.14` -> `1.64`).
+- **Remedy**: **Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)**. If `best_quality` on the active resolution has reached high fidelity (`best_quality >= 0.75 * target_quality_score` or `> 85.0`), Spatial Retreat is BLOCKED. Instead, the Governor steps `current_fraction` back to the last safe fraction (e.g. `75% -> 55%`) at 512px, cools LR by 50%, and locks stabilization for 5 epochs.
 
 ---
 
