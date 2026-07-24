@@ -727,6 +727,7 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 **Issue**: During continuous training of quality assessment models (such as `nima_technical`), models can encounter a 256px resolution saturation trap. Training loss decreases while validation metric jitter triggers consecutive SOTA Rollbacks via strict static configuration (`regression_limit: 3`). Because `regression_limit` fired before reaching `plateau_patience: 4`, the Governor was preempted from escalating training resolution to 384px, resulting in an infinite 256px rollback loop.
 
 **Fix**: Upgraded `SmartTrainingGovernor` in `optimization_engine.py` and `train.py` with two autonomous resilience mechanisms:
+
 1. **Autonomous Resolution Promotion**: In `register_rollback()`, when consecutive rollbacks occur at a given resolution, the governor inspects `res_ladder` and automatically promotes the training resolution to the next rung (`256px -> 384px`), resetting sample fraction to 15% for a clean warmup on the higher resolution manifold.
 2. **Dynamic Regression Limit Relaxation**: Added `get_active_regression_limit(config_limit)`, which dynamically relaxes the active `regression_limit` during loop recovery so static YAML limits never block resolution escalation.
 
