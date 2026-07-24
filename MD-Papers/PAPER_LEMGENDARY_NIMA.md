@@ -111,6 +111,8 @@
   - [5.38 Jolt Cooldown State Persistence (v6.3.4)](#538-jolt-cooldown-state-persistence-v634)
   - [5.39 Max Stress LR Freeze Fix (Governor v16)](#539-max-stress-lr-freeze-fix-governor-v16)
   - [5.40 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#540-head-projection-upgrade-resolution-ladder-expansion-v161)
+  - [5.42 Cross-Split Dataset Path Resolver (v16.2)](#542-cross-split-dataset-path-resolver-v162)
+  - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation-anti-loop-breakout-v1633)
 - [6. Deployment Strategy: Why ONNX?](#6-deployment-strategy-why-onnx)
   - [6.1 Format Comparison Matrix](#61-format-comparison-matrix)
   - [6.2 Why ONNX Wins for LemGendary](#62-why-onnx-wins-for-lemgendary)
@@ -717,6 +719,16 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 **Issue**: The dataset compiler split images and labels using independent index lists. This caused an 11.23% (2,638 samples) cross-split mismatch where training images were written to `images/train/` but their corresponding `.txt` label files ended up in `labels/val/`. When loading these samples, the dataset loader silently fell back to a `torch.zeros(10)` target distribution, injecting severe gradient noise and penalizing the Earth Mover's Distance (EMD) loss with an unoptimizable +1.0 error term.
 
 **Fix**: Modified `MultiTaskDataset` to use a robust cross-split resolver `_get_split_path()`. The data loader now checks the opposite split directory as a fallback. This guarantees 100% label resolution parity (0.00% missing labels) and completely eliminates the gradient noise.
+
+---
+
+### 5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)
+
+**Issue**: During continuous training of quality assessment models (such as `nima_technical`), models can encounter a 256px resolution saturation trap. Training loss decreases while validation metric jitter triggers consecutive SOTA Rollbacks via strict static configuration (`regression_limit: 3`). Because `regression_limit` fired before reaching `plateau_patience: 4`, the Governor was preempted from escalating training resolution to 384px, resulting in an infinite 256px rollback loop.
+
+**Fix**: Upgraded `SmartTrainingGovernor` in `optimization_engine.py` and `train.py` with two autonomous resilience mechanisms:
+1. **Autonomous Resolution Promotion**: In `register_rollback()`, when consecutive rollbacks occur at a given resolution, the governor inspects `res_ladder` and automatically promotes the training resolution to the next rung (`256px -> 384px`), resetting sample fraction to 15% for a clean warmup on the higher resolution manifold.
+2. **Dynamic Regression Limit Relaxation**: Added `get_active_regression_limit(config_limit)`, which dynamically relaxes the active `regression_limit` during loop recovery so static YAML limits never block resolution escalation.
 
 ---
 
