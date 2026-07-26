@@ -58,6 +58,12 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Causal Conv1D Timeframe Branches**: Processes multi-timeframe OHLCV data (M1, M5, M15, H1, H4, D1) through strict causal Conv1D stacks with left-only padding, guaranteeing zero temporal data leakage.
 - **Cross-Timeframe Attention Fusion**: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.
 - **Confidence-Gated Dual Head & Loss**: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (`ForexDualLoss`) to prevent fitting noise on low-confidence bars.
+
+### 2.7. Autonomous SOTA Hyperparameter Adaptation (v17.5)
+
+- **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks (`PLCC > 0.9100`, `SRCC > 0.9100`, `EMD < 0.0700`).
+- **Autonomous Rank-Boost Escalation**: Automatically scales pairwise `rank_weight` (up to `1.5`) and tightens `rank_margin` (down to `0.05`) when rank order metric plateaus occur in the Refinement Phase.
+- **Dynamic Softmax Sharpening**: Softmax temperature is dynamically annealed down toward `min_temp` (`0.90`) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
 ---

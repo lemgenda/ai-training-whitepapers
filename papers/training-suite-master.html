@@ -209,6 +209,13 @@
                 <li><strong>Confidence-Gated Dual Head &amp; Loss</strong>: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (<code>ForexDualLoss</code>) to prevent fitting noise on low-confidence bars.</li>
                 <li><strong>Stateless ONNX Deployment</strong>: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.</li>
             </ul>
+
+            <h3 id="autonomous-sota-adaptation">2.7. Autonomous SOTA Hyperparameter Adaptation (v17.5)</h3>
+            <ul>
+                <li><strong>Dynamic On-the-Fly Tuning</strong>: <code>SmartTrainingGovernor</code> dynamically audits model convergence against target SOTA benchmarks (<code>PLCC &gt; 0.9100</code>, <code>SRCC &gt; 0.9100</code>, <code>EMD &lt; 0.0700</code>).</li>
+                <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
+                <li><strong>Dynamic Softmax Sharpening</strong>: Softmax temperature is dynamically annealed down toward <code>min_temp</code> (<code>0.90</code>) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.</li>
+            </ul>
         
 
         

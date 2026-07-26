@@ -235,6 +235,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **Identification**: `metrics.csv` shows high accuracy/quality (e.g., 98.12%) at 512px @ 55% data, followed by a resolution drop to 384px @ 100% data where validation loss explodes further (e.g. `0.14` -> `1.64`).
 - **Remedy**: **Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)**. If `best_quality` on the active resolution has reached high fidelity (`best_quality >= 0.75 * target_quality_score` or `> 85.0`), Spatial Retreat is BLOCKED. Instead, the Governor steps `current_fraction` back to the last safe fraction (e.g. `75% -> 55%`) at 512px, cools LR by 50%, and locks stabilization for 5 epochs.
 
+### Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)
+
+- **The Issue**: Fixed loss hyperparameters (such as pairwise `rank_weight`, `rank_margin`, or static `softmax_temp`) in static configuration files limit late-stage convergence. Models reach a plateau near SOTA targets (`PLCC > 0.91`, `SRCC > 0.91`, `EMD < 0.07`), but manual mid-training YAML adjustments are error-prone and disrupt automated continuous training pipelines.
+- **Identification**: Model metrics stabilize at `PLCC ~0.87-0.88` and `SRCC ~0.79-0.80`, with EMD hovering around `0.088-0.095`. Manual mid-session editing of static configuration files is required to force rank loss scaling.
+- **Remedy**: **Autonomous SOTA Hyperparameter Adaptation (v17.5)**. The `SmartTrainingGovernor` dynamically audits late-stage convergence against target SOTA benchmarks (`sota_targets`). When plateauing below target benchmarks in the `REFINEMENT` phase, it automatically escalates `rank_weight` (up to `1.5`), tightens pairwise `rank_margin` (down to `0.05`), and sharpens `softmax_temp` (down to `0.90`) on the fly, writing the updated parameters into `criterion.stab` and checkpoint state.
+
 ---
 
 ## 7. Best Practices Checklist

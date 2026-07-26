@@ -110,7 +110,8 @@
   - [5.37 Permanent Stress Deactivation Protocol (v6.3.3)](#537-permanent-stress-deactivation-protocol-v633)
   - [5.38 Jolt Cooldown State Persistence (v6.3.4)](#538-jolt-cooldown-state-persistence-v634)
   - [5.39 Max Stress LR Freeze Fix (Governor v16)](#539-max-stress-lr-freeze-fix-governor-v16)
-  - [5.40 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#540-head-projection-upgrade-resolution-ladder-expansion-v161)
+  - [5.40 Autonomous SOTA Hyperparameter Adaptation (Governor v17.5)](#540-autonomous-sota-hyperparameter-adaptation-governor-v175)
+  - [5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#541-head-projection-upgrade-resolution-ladder-expansion-v161)
   - [5.42 Cross-Split Dataset Path Resolver (v16.2)](#542-cross-split-dataset-path-resolver-v162)
   - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation-anti-loop-breakout-v1633)
 - [6. Deployment Strategy: Why ONNX?](#6-deployment-strategy-why-onnx)
@@ -700,7 +701,19 @@ The training of 440,000 samples on a 48-hour continuous cycle required "Resilien
 
 ---
 
-### 5.40 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)
+### 5.40 Autonomous SOTA Hyperparameter Adaptation (Governor v17.5)
+
+**Issue**: Previously, loss function hyperparameters (such as pairwise `rank_weight` and `rank_margin` for SRCC optimization, and `softmax_temp` for EMD reduction) were statically fixed in `unified_models_v2.yaml`. Pushing late-stage model convergence toward strict SOTA targets (`PLCC > 0.9100`, `SRCC > 0.9100`, `EMD < 0.0700`) required manual YAML edits mid-training.
+
+**Fix**: Implemented **Autonomous SOTA Hyperparameter Adaptation** in `SmartTrainingGovernor`. During the `REFINEMENT` phase, the Governor continuously audits the model's progress against target SOTA benchmarks (`sota_targets`):
+
+1. **Dynamic Rank-Boost**: If SRCC/PLCC remains below SOTA targets, the Governor automatically escalates `rank_weight` (up to `1.5`) and tightens pairwise `rank_margin` (down to `0.05`).
+2. **Dynamic Softmax Sharpening**: Softmax temperature is dynamically annealed down toward `min_temp` (`0.90`) to sharpen predicted probability mass distributions and reduce EMD.
+3. **Idempotent Synchronization**: Dynamic parameters are synchronized directly with `criterion.stab` at each epoch boundary and serialized into checkpoint metadata, guaranteeing 100% autonomous operation without manual mid-training intervention.
+
+---
+
+### 5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)
 
 **Issue**: The `nima_aesthetic_mobile` model uses a bare `Dropout(0.5) → Linear(1280, 10)` classification head. This single linear mapping from the MobileNetV2 feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.
 
