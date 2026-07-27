@@ -64,6 +64,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks (`PLCC > 0.9100`, `SRCC > 0.9100`, `EMD < 0.0700`).
 - **Autonomous Rank-Boost Escalation**: Automatically scales pairwise `rank_weight` (up to `1.5`) and tightens `rank_margin` (down to `0.05`) when rank order metric plateaus occur in the Refinement Phase.
 - **Dynamic Softmax Sharpening**: Softmax temperature is dynamically annealed down toward `min_temp` (`0.90`) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.
+- **Multi-Path Candidate Directory Resolver**: All generated training notebooks in the matrix dynamically resolve working directory candidates (`/kaggle/working/lemgendary-training-suite`, `/kaggle/working/model-training/lemgendary-training-suite`, `/kaggle/working`) before executing `os.chdir()` or `%pip install`, permanently eliminating `FileNotFoundError` across all cloud platforms.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
 ---

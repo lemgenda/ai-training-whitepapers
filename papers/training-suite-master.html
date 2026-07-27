@@ -215,6 +215,7 @@
                 <li><strong>Dynamic On-the-Fly Tuning</strong>: <code>SmartTrainingGovernor</code> dynamically audits model convergence against target SOTA benchmarks (<code>PLCC &gt; 0.9100</code>, <code>SRCC &gt; 0.9100</code>, <code>EMD &lt; 0.0700</code>).</li>
                 <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
                 <li><strong>Dynamic Softmax Sharpening</strong>: Softmax temperature is dynamically annealed down toward <code>min_temp</code> (<code>0.90</code>) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.</li>
+                <li><strong>Multi-Path Candidate Directory Resolver</strong>: All generated training notebooks in the matrix dynamically resolve working directory candidates (<code>/kaggle/working/lemgendary-training-suite</code>, <code>/kaggle/working/model-training/lemgendary-training-suite</code>, <code>/kaggle/working</code>) before executing <code>os.chdir()</code> or <code>%pip install</code>, permanently eliminating <code>FileNotFoundError</code> across all cloud platforms.</li>
             </ul>
         
 
