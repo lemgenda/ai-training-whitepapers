@@ -1,104 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: High-Fidelity MPRNet Deraining - LemGendary AI</title>
+! 
+ ""
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;">
-            </a>
-        <div class="tabs-nav">
-            <a href="nafnet.html" class="tab-link">NAFNet</a>
-            <a href="mirnet.html" class="tab-link">MIRNet</a>
-            <a href="ffanet.html" class="tab-link">FFANet</a>
-            <a href="mprnet.html" class="tab-link active">MPRNet</a>
-        </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity MPRNet Deraining via SOTA Infrastructure</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 2.6.0 - Dynamic VRAM Sync</span>
-                <span>Category Restoration</span>
-            </div>
-        </header>
+     "-"
+     "" "-, -."
+        -   -  /
 
-<nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <h4>Navigation Matrix</h4>
-            <ul>
-<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-                <li><a href="#section-1">1. Executive Summary</a>
-                </li>
-                <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
-                    <ul class="sub-item">
-                        <li><a href="#21-the-deraining-track-mprnet_deraining">2.1 The Deraining Track (mprnet_deraining)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#3-shared-foundations">3. Shared Foundations</a>
-                    <ul class="sub-item">
-                        <li><a href="#31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
-                        <li><a href="#32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
-                        <li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
-                    </ul>
-                </li>
-                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
-                    <ul class="sub-item">
-                        <li><a href="#41-mprnet-deraining-scorer">4.1 MPRNet Deraining Scorer</a></li>
-                    </ul>
-                </li>
-                <li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a>
-                    <ul class="sub-item">
-                        <li><a href="#51-the-progressive-stage-nan-overflows-structural-fp16-disable">5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)</a></li>
-                        <li><a href="#52-the-contiguous-view-kernel-crash">5.2 The Contiguous View Kernel Crash</a></li>
-                        <li><a href="#53-the-onecyclelr-sudden-death-adamw-resume-shock">5.3 The OneCycleLR "Sudden Death" &amp; AdamW Resume Shock</a></li>
-                        <li><a href="#54-the-vgg-perceptual-convergence-collapse">5.4 The VGG Perceptual Convergence Collapse</a></li>
-                        <li><a href="#55-the-double-step-onecyclelr-matrix-paradox">5.5 The "Double-Step" OneCycleLR Matrix Paradox</a></li>
-                        <li><a href="#56-the-sota-sentry-defibrillation-override">5.6 The SOTA Sentry "Defibrillation Override"</a></li>
-                        <li><a href="#57-the-universal-sota-optimization-vector">5.7 The Universal SOTA Optimization Vector</a></li>
-                        <li><a href="#58-the-stagnation-paradox-plateau-buster-v52">5.8 The Stagnation Paradox: Plateau-Buster v5.2</a></li>
-                        <li><a href="#59-the-quality-regression-mutex-sota-guardrail">5.9 The Quality-Regression Mutex (SOTA Guardrail)</a></li>
-                        <li><a href="#510-persistent-io-synchronization-v58">5.10 Persistent I/O Synchronization (v5.8)</a></li>
-                        <li><a href="#511-architectural-survival-profiles-v59">5.11 Architectural Survival Profiles (v5.9)</a></li>
-                        <li><a href="#512-mission-continuity-guard-v61">5.12 Mission Continuity Guard (v6.1)</a></li>
-                        <li><a href="#513-manifold-rescue-high-energy-jolt-v6117">5.13 Manifold Rescue &amp; High-Energy Jolt (v6.1.17)</a></li>
-                        <li><a href="#514-velocity-life-support-v6118">5.14 Velocity Life-Support (v6.1.18)</a></li>
-                        <li><a href="#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119">5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)</a></li>
-                        <li><a href="#516-telemetry-parity-plateau-resilience-v6131">5.16 Telemetry Parity &amp; Plateau Resilience (v6.1.31)</a></li>
-                        <li><a href="#517-true-stabilization-shield-synchronous-spatial-augmentation-v6126">5.17 True Stabilization Shield &amp; Synchronous Spatial Augmentation (v6.1.26)</a></li>
-                        <li><a href="#518-invariant-native-scorecarding-v620">5.18 Invariant Native Scorecarding (v6.2.0)</a></li>
-                        <li><a href="#519-universal-backend-selection-mpsxpudirectml">5.19 Universal Backend Selection (MPS/XPU/DirectML)</a></li>
-                        <li><a href="#520-time-aware-checkpoint-governance-15-min-window">5.20 Time-Aware Checkpoint Governance (15-min Window)</a></li>
-                        <li><a href="#521-dynamic-min_delta-scaling-for-high-range-quality">5.21 Dynamic min_delta Scaling for High-Range Quality</a></li>
-                        <li><a href="#522-resolution-aware-patience-reset-sota-guard">5.22 Resolution-Aware Patience Reset (SOTA Guard)</a></li>
-                        <li><a href="#523-validation-sharding-30-fixed-audit">5.23 Validation Sharding (30% Fixed Audit)</a></li>
-                        <li><a href="#524-vram-defibrillation-for-inceptionv3">5.24 VRAM Defibrillation for InceptionV3</a></li>
-                        <li><a href="#525-restoration-quality-score-integration">5.25 Restoration Quality Score Integration</a></li>
-                        <li><a href="#526-governor-history-serialization">5.26 Governor History Serialization</a></li>
-                    </ul>
-                </li>
-                <li><a href="#6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</a>
-                    <ul class="sub-item">
-                        <li><a href="#61-standalone-exporters">6.1 Standalone Exporters</a></li>
-                        <li><a href="#62-the-ghost-severing-protocol">6.2 The Ghost-Severing Protocol</a></li>
-                    </ul>
-                </li>
-                <li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a>
-                </li>
-                <li><a href="#conclusion">8. Conclusion</a>
-                </li>
-            </ul>
-</nav>
+     "//../&&+&" ""
+     "" "../."
+     "..//-." /
+/
+
+     ""
+        
+             "//." "" "-"
+                 "..//-." " " "  - "
+            /
+         "-"
+             "." "-"/
+             "." "-"/
+             "." "-"/
+             "." "- "/
+        /
+               /
+             ""-     /
+             ""
+                  /
+                 .. -   /
+                 /
+            /
+        /
+
+ "-"
+             "../." "-"
+                 "..//-." " "
+                     ".'//..///-/---.'"
+            /
+             /
+            
+ "../." " (---) -  - "←   //
+                 "#-".  /
+                /
+                 "#------".      /
+                     "-"
+                         "#----".    ()//
+                    /
+                /
+                 "#--".  /
+                     "-"
+                         "#-----". -   //
+                         "#------".   -  //
+                         "#----".    //
+                    /
+                /
+                 "#---".  -/
+                     "-"
+                         "#---".   //
+                    /
+                /
+                 "#---".  &  /
+                     "-"
+                         "#--------".      (  )//
+                         "#-----".     //
+                         "#-------".   " " &   //
+                         "#-----".     //
+                         "#------".  "-"   //
+                         "#-----".    " "//
+                         "#-----".     //
+                         "#------".    - .//
+                         "#------".  -  ( )//
+                         "#----".  /  (.)//
+                         "#----".    (.)//
+                         "#----".    (.)//
+                         "#------".   & -  (..)//
+                         "#----".  - (..)//
+                         "#-------".    -  (..)//
+                         "#-----".   &   (..)//
+                         "#-------".    &    (..)//
+                         "#----".    (..)//
+                         "#----".    (//)//
+                         "#-------". -   (- )//
+                         "#-------".     - //
+                         "#------". -   ( )//
+                         "#-----".   (%  )//
+                         "#----".    //
+                         "#----".    //
+                         "#---".   //
+                    /
+                /
+                 "#--------".    ++  - /
+                     "-"
+                         "#--".  //
+                         "#----".  - //
+                    /
+                /
+                 "#----".    /
+                /
+                 "#". /
+                /
+            /
+/
 
 
 
@@ -126,11 +126,11 @@
 
 
 
-<section id="section-1">
-<h2>1. Executive Summary</h2>
-            <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by the <strong>Multi-Stage Progressive Image Restoration Network (MPRNet)</strong>. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.</p>
-<hr />
-<hr />
+ "-"
+.  /
+               /             -  (---) /,    -     ()/.            ' -    ' - .    - ,    ,        (/),   &.  —     -    ./
+ /
+ /
 
 
 
@@ -184,24 +184,24 @@
 
 
 
-</section>
+/
 
-<section id="2-visual-taxonomy-the-lemgendary-restoration-subset">
-<h2 id="2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
-<p>The LemGendary MPRNet is explicitly built to handle one of the most mathematically disruptive artifacts in digital photography: torrential rain and water distortion.</p>
+ "------"
+ "------".      /
+                      ./
 
-<h3 id="21-the-deraining-track-mprnet_deraining">2.1 The Deraining Track (mprnet_deraining)</h3>
-<p>By unifying diverse high-resolution rain subsets into <code>LemGendizedMprNetDerainingLarge</code>, the MPRNet backbone is trained to cleanly subtract streaks, volumetric drops, and refractive distortions natively.</p>
+ "----".    ()/
+   -    /,         ,  ,    ./
 
-<div class="visual-taxonomy">
-    <div class="quadrant" style="width: 100%;">
-        <img alt="Deraining Target" src="../assets/mprnet_deraining_example.png" />
-        <div class="quadrant-info">
-            <strong>Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.</strong>
-            <span>Deraining requires the model to cleanly isolate and remove refractive water streaks across infinite depths without blurring the native textures of the objects behind them. MPRNet excels here due to its progressive multi-stage architecture which isolates artifacts at multiple resolutions before collapsing them.</span>
-        </div>
-    </div>
-</div>
+ "-"
+     "" " %"
+         " " "..//." /
+         "-"
+                -       ./
+                                    .        -          ./
+        /
+    /
+/
 
 
 
@@ -248,41 +248,40 @@
 
 
 
-</section>
+/
 
-<section id="3-shared-foundations">
-<h2 id="3-shared-foundations">3. Shared Foundations</h2>
-<h3 id="31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
-<p>Training massive architectures like MPRNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.</p>
-<h4 id="311-the-headroom-aware-memory-sentinel">3.1.1 The Headroom-Aware Memory-Sentinel</h4>
-<p>The Sentinel has evolved to actively probe the hardware environment using <code>torch.cuda.mem_get_info()</code>. This ensures that even on 4GB hardware, the MPRNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.</p>
-<h4 id="312-ovc-data-streaming-bridge-opencv-to-cuda">3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)</h4>
-<p>The pipeline harnesses local NumPy/OpenCV workers to decode image tensors natively in CPU cache before flushing them to the GPU. This prevents data-starvation of the GPU cores completely, hiding I/O latency behind raw throughput.</p>
-<hr />
-<h3 id="32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
-<h4 id="321-structural-vs-perceptual-verification">3.2.1 Structural VS Perceptual Verification</h4>
-<p>While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:</p>
-<ul>
-<li><strong>LPIPS (Learned Perceptual Image Patch Similarity)</strong>: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.</li>
-<li><strong>FID (Frechet Inception Distance)</strong>: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.</li>
-</ul>
-<h4 id="322-pcie-vram-thrashing-the-chunking-fix">3.2.2 PCIe VRAM Thrashing &amp; The Chunking Fix</h4>
-<p>When attempting to validate a 425-image subset against LPIPS simultaneously, the 15GB VRAM ceiling immediately shattered. The Linux kernel initiated "PCIe Thrashing"—swapping VRAM back to System RAM, physically hanging the Kaggle instance for hours. We engineered a <strong>Structural Chunking Loop</strong> (Cap: 8), permanently restricting VRAM utilization to ~500MB without losing mathematical fidelity.</p>
-<h4 id="323-the-cpu-bottleneck-bypass">3.2.3 The CPU-Bottleneck Bypass</h4>
-<p>Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking <code>lpips(net="vgg")</code> against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks <code>.to(device)</code> directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.</p>
-<hr />
-<h3 id="33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
-<h4 id="331-single-gpu-specialization-15gb-t4-node-strategy">3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)</h4>
-<p>We actively deprecate the second GPU in Kaggle instances to double VRAM stability linearly on <code>cuda:0</code>.</p>
-<h4 id="332-sub-epoch-continuity-progress-snapshots">3.3.2 Sub-Epoch Continuity (Progress Snapshots)</h4>
-<p>We natively execute intra-epoch <code>progress.pth</code> serialization precisely tracking global <code>_batch_steps</code>.</p>
-<h4 id="333-serial-extraction-mutex-stable-global-alignment-v1042">3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)</h4>
-<p><strong>Fix</strong>: Implemented the <strong>Serial Extraction Mutex</strong>. Download and extractions are strictly serialized via a Global Named Mutex, ensuring training threads are never starved.</p>
-<h4 id="334-registry-first-dynamic-unification-v45">3.3.4 Registry-First Dynamic Unification (v4.5)</h4>
-<p><strong>Fix</strong>: All asset handles and Kaggle URLs are resolved from the <code>unified_models.yaml</code> registry, ensuring the pipeline is robust against local/cloud path shifts.</p>
-<hr />
-<hr />
+ "--"
+ "--".  /
+ "-----". -   /
+            -      ./
+ "-----"..  - -/
+           ..()/.       ,            ,  -    - ./
+ "-------"..     (--)/
+    /               .   -     ,  /    ./
+ /
+ "------".   -  /
+ "----"..    /
+      ,          " ."       /
 
+ (    )/          -       ./
+ (  )/  -      ./
+/
+ "------"..    &   /
+     -    ,      .     " "—     ,       .      / ( ),          ./
+ "----"..  - /
+          . ,  ("")/          -         .     -    .()/           ,         ./
+ /
+ "----".    /
+ "-------".. -  (   )/
+               /./
+ "-----".. -  ( )/
+   - ./     /./
+ "-------"..       (..)/
+/     /.           ,      ./
+ "-----".. -   (.)/
+/           ./ ,       /  ./
+ /
+ /
 
 
 
@@ -335,97 +334,86 @@
 
 
 
-</section>
 
-<section id="4-model-deep-dives">
-<h2 id="4-model-deep-dives">4. Model Deep-Dives</h2>
+/
 
-<h3 id="41-mprnet-deraining-scorer">4.1 MPRNet Deraining Scorer</h3>
+ "---"
+ "---".  -/
 
-<h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
-<p>The <strong>LemGendary MPRNet Deraining</strong> is a professional-grade AI model optimized for the <code>restoration</code> lifecycle. It progressively subtracts severe rain artifacts—from thin streaks to heavy volumetric water drops—using a multi-stage refinement process.</p>
+ "---".   /
 
-<h4 id="412-model-info">4.1.2 Model Info</h4>
-<ul>
-<li><strong>Architecture</strong>: MPRNet (Standard Backbone)</li>
-<li><strong>Input Resolution</strong>: 256x256</li>
-<li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
-<li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
-</ul>
+ "-----"..  ,   /
+   /   -      / .      —       —  -  ./
 
-<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
-<ul>
-<li><strong>Dataset</strong>: <code>LemGendizedMprNetDerainingLarge</code></li>
-<li><strong>Total Samples</strong>: 248,190 (merged from High Resolution Rainy Image, Rain100L, Rain100H, and Rain Dataset)</li>
-<li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment against rain degradation.</li>
-</ul>
+ "--"..  /
 
-<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
-<ul>
-<li><strong>Current Training Epochs</strong>: 1</li>
-<li><strong>Best PSNR</strong>: 36.29 dB</li>
-<li><strong>Best SSIM</strong>: 0.9898</li>
-<li><strong>Best LPIPS</strong>: 0.0204</li>
-<li><strong>Best FID</strong>: 4.8524</li>
-<li><strong>Current Learning Rate</strong>: 0.00000240</li>
-</ul>
+/  ( )/
+ / /
+/   () /   ()/
+/ -       /
+/
 
-<h4 id="415-training-curve">4.1.5 Training Curve</h4>
-<p><img alt="MPRNet Deraining Training Curve" src="../assets/mprnet_deraining_training.png" /><br />
-<em>Figure: Training Convergence for MPRNet Deraining.</em></p>
+ "--"..  /
 
-<h4 id="416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
-<p>MPRNet utilizes a multi-stage architecture where early stages handle broad artifacts and later stages refine structural details. A unique optimization required stabilizing the Cross-Stage Feature Fusion (CSFF) blocks, which originally induced gradient explosion during high-resolution backpropagation. A progressive <code>L1</code> clamp combined with our native <code>CombinedLoss</code> completely resolved this geometry collapse.</p>
+/ //
+ / , (     , , ,   )/
+ /              ./
+/
 
-<h4 id="417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Metric</th>
-<th style="text-align: left;">Current Reality (Epoch 1)</th>
-<th style="text-align: left;">Target SOTA Baseline</th>
-<th style="text-align: left;">Gap</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>PSNR</strong></td>
-<td style="text-align: left;">36.29 dB</td>
-<td style="text-align: left;">30.60 dB</td>
-<td style="text-align: left;">+5.69 dB</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>SSIM</strong></td>
-<td style="text-align: left;">0.9898</td>
-<td style="text-align: left;">0.9000</td>
-<td style="text-align: left;">+0.0898</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>LPIPS</strong></td>
-<td style="text-align: left;">0.0204</td>
-<td style="text-align: left;">0.0700</td>
-<td style="text-align: left;">-0.0496</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>FID</strong></td>
-<td style="text-align: left;">4.8524</td>
-<td style="text-align: left;">12.0000</td>
-<td style="text-align: left;">-7.1476</td>
-</tr>
-</tbody>
-</table>
+ "--"..  /
 
+  / /
+ / . /
+ / ./
+ / ./
+ / ./
+  / ./
+/
 
+ "--"..  /
+ "   " "..//." / /
+     .//
 
+ "-----"..     /
+   -             .       -   () ,       - .   /      /     ./
 
+ "---"..   /
 
 
 
+ "- "/
+ "- "  ( )/
+ "- "  /
+ "- "/
+/
+/
 
 
+ "- "//
+ "- ". /
+ "- ". /
+ "- "+. /
+/
 
+ "- "//
+ "- "./
+ "- "./
+ "- "+./
+/
 
+ "- "//
+ "- "./
+ "- "./
+ "- "-./
+/
 
+ "- "//
+ "- "./
+ "- "./
+ "- "-./
+/
+/
+/
 
 
 
@@ -460,92 +448,7 @@
 
 
 
-</section>
 
-<section id="5-challenges-resilience-architecture">
-<h2 id="5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</h2>
-<h3 id="51-the-progressive-stage-nan-overflows-structural-fp16-disable">5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)</h3>
-<p><strong>Issue</strong>: MPRNet training initially exploded with infinite <code>NaN</code> losses. Because of the progressive multi-stage recursive aggregation and Cross-Stage Feature Fusion (CSFF), feature map magnitudes easily cross the internal float ceiling of <code>65,504</code> in FP16.
-<strong>Fix</strong>: Engineered the <strong>Structural FP16 Disable</strong>. The <code>train.py</code> loop dynamically disables AMP specifically for <code>MPRNet</code>, forcing strict double-precision gradients via FP32.</p>
-<h3 id="52-the-contiguous-view-kernel-crash">5.2 The Contiguous View Kernel Crash</h3>
-<p><strong>Issue</strong>: When interacting with partial dataset views, PyTorch passed fragmented tensors into convolutions causing <code>misaligned address</code> crashes.
-<strong>Fix</strong>: Patched <code>models/core_restoration.py</code> with rigorous <code>.contiguous()</code> clamps. Every input passed to <code>Conv2d</code>, <code>Pool2d</code>, or progressive fusion blocks is physically forced into linear memory realignment.</p>
-<h3 id="53-the-onecyclelr-sudden-death-adamw-resume-shock">5.3 The OneCycleLR "Sudden Death" &amp; AdamW Resume Shock</h3>
-<p><strong>Issue</strong>: Standard Early Stopping mechanisms (patience=15) mathematically trigger "Sudden Death" at Epoch 39 due to MSE Val Loss wobbling on the floor, permanently locking the model out of the crucial OneCycleLR precision-cooling sequence (Epochs 40-50).
-<strong>Fix</strong>: Engineered an emergency <code>early_stopping_patience: 50</code> override to permanently disable MSE-based sudden death for high-complexity manifolds.</p>
-<h3 id="54-the-vgg-perceptual-convergence-collapse">5.4 The VGG Perceptual Convergence Collapse</h3>
-<p><strong>Issue</strong>: The convergence ceiling unexpectedly hard-locked at exactly ~22.70dB.
-<strong>Fix</strong>:</p>
-<ul>
-<li><strong>Strict ImageNet Normalization Anchor</strong>: We natively bound standard deviations that dynamically scale input tensors to pure VGG spatial geometry.</li>
-<li><strong>Magnitude Equalization</strong>: We radically depressed the scalar magnitude down to <code>0.005</code>, allowing VGG to provide sharp detail contours without overpowering PSNR.</li>
-</ul>
-<h3 id="55-the-double-step-onecyclelr-matrix-paradox">5.5 The "Double-Step" OneCycleLR Matrix Paradox</h3>
-<p><strong>Issue</strong>: Resuming from a checkpoint via PyTorch's <code>Fast-Forward</code> loop caused manual invocations of <code>scheduler.step()</code> to blindly advance the clock while the dataloader was merely skipping batches.
-<strong>Fix</strong>: Engineered the <strong>No-Manual-Stepping Resumption Logic</strong>.</p>
-<h3 id="56-the-sota-sentry-defibrillation-override">5.6 The SOTA Sentry "Defibrillation Override"</h3>
-<p><strong>Issue</strong>: Upon extending epochs, the model loaded schedulers where the learning rate had decayed down to terminal levels.
-<strong>Fix</strong>: SOTA Sentry dynamically bypasses <code>scheduler_state</code> injection during extended epoch bounds, slamming the architecture with a fresh "Phase-1" burst of velocity.</p>
-<h3 id="57-the-universal-sota-optimization-vector">5.7 The Universal SOTA Optimization Vector</h3>
-<p><strong>Fix</strong>:</p>
-<ul>
-<li><strong>The L1-LPIPS Harmonic Matrix</strong>: We structurally swapped to <code>L1Loss</code>, anchoring the true learned <code>lpips.LPIPS(net='vgg')</code> layer at exactly <code>0.025</code>.</li>
-<li><strong>Universal Visual SOTA Sentry</strong>: The orchestrator now mathematically compounds <code>current_quality_score = psnr + (ssim * 20) - (lpips * 20)</code>.</li>
-</ul>
-<h3 id="58-the-stagnation-paradox-plateau-buster-v52">5.8 The Stagnation Paradox: Plateau-Buster v5.2</h3>
-<p><strong>Fix</strong>: Implemented the <strong>v5.2 Plateau-Buster</strong>. The Governor now requires a minimum <strong>0.1% relative improvement</strong> and triggers a <strong>Kinetic Jolt</strong> if the model remains stagnant for more than 2 epochs.</p>
-<h3 id="59-the-quality-regression-mutex-sota-guardrail">5.9 The Quality-Regression Mutex (SOTA Guardrail)</h3>
-<p><strong>Fix</strong>: The SOTA export logic is now strictly bounded by the <code>current_quality_score</code>. The system will <strong>NOT</strong> coronation the model as "Best" unless its physical quality metrics have hit a record high.</p>
-<h3 id="510-persistent-io-synchronization-v58">5.10 Persistent I/O Synchronization (v5.8)</h3>
-<p><strong>Fix</strong>: Engineered the <strong>Persistent Mission Manifest</strong>. Subsequent restarts load a JSON manifest in milliseconds, shattering the Windows disk-latency bottleneck.</p>
-<h3 id="511-architectural-survival-profiles-v59">5.11 Architectural Survival Profiles (v5.9)</h3>
-<p><strong>Fix</strong>: Implementation of the <strong>Survival Profile</strong>. The environment dynamically detects VRAM constraints and enforces a <strong>Physical Batch Size 1</strong> strategy coupled with <strong>4x Gradient Accumulation</strong>.</p>
-<h3 id="512-mission-continuity-guard-v61">5.12 Mission Continuity Guard (v6.1)</h3>
-<p><strong>Fix</strong>: Engineered the <strong>Continuity Guard</strong>. A final <strong>Manifold Leak Guard</strong> audit-locks the epoch until 100% of the dataset is processed.</p>
-<h3 id="513-manifold-rescue-high-energy-jolt-v6117">5.13 Manifold Rescue &amp; High-Energy Jolt (v6.1.17)</h3>
-<p><strong>Fix</strong>: Implementation of the <strong>High-Energy Jolt</strong>. When a 12-epoch stagnation is detected, the Governor forces a <strong>Hard-Reset</strong> to the <code>base_lr</code> (0.0002).</p>
-<h3 id="514-velocity-life-support-v6118">5.14 Velocity Life-Support (v6.1.18)</h3>
-<p><strong>Fix</strong>: Implementation of <strong>Velocity Life-Support</strong>. If the current LR drops below 1% of the base training speed, an emergency <strong>Rescue Trigger</strong> forces an immediate Jolt.</p>
-<h3 id="515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119">5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)</h3>
-<p><strong>Fix</strong>: Engineered the <strong>Mitochondrial Pulse</strong>. The persistence trigger now utilizes a <strong>Mathematical Epsilon</strong> (<code>1e-5</code>), ensuring that save-states are biologically-synchronized.</p>
-<h3 id="516-telemetry-parity-plateau-resilience-v6131">5.16 Telemetry Parity &amp; Plateau Resilience (v6.1.31)</h3>
-<p><strong>Fix</strong>:</p>
-<ul>
-<li><strong>Velocity Shield (Survivor Floor)</strong>: The Regression Guard is now bound by a physical <code>5e-7</code> absolute LR floor.</li>
-<li><strong>Zero-Lag Telemetry Sync</strong>: Real-time LR readings are slaved directly to the physical <code>optimizer.param_groups</code>.</li>
-</ul>
-<h3 id="517-true-stabilization-shield-synchronous-spatial-augmentation-v6126">5.17 True Stabilization Shield &amp; Synchronous Spatial Augmentation (v6.1.26)</h3>
-<p><strong>Fix</strong>:</p>
-<ul>
-<li><strong>True Stabilization Shield</strong>: A hard-coded 3-epoch lockout period follows any structural shift or high-energy Jolt.</li>
-<li><strong>Synchronous Spatial Augmentation</strong>: Applied 50% randomized geometric flips to both noisy inputs and clean targets to shatter the feature memorization ceiling.</li>
-</ul>
-<h3 id="518-invariant-native-scorecarding-v620">5.18 Invariant Native Scorecarding (v6.2.0)</h3>
-<p><strong>Fix</strong>: Validation resolution is now fully decoupled from dynamic scaling, anchored to a native 640px evaluation resolution from Epoch 1 to 1000.</p>
-<h3 id="519-universal-backend-selection-mpsxpudirectml">5.19 Universal Backend Selection (MPS/XPU/DirectML)</h3>
-<p>The 2026 update introduces a <strong>Unified Hardware Handshake</strong>. By prioritizing CUDA &gt; MPS &gt; XPU &gt; DirectML, the suite ensures that the same MPRNet codebase executes at maximum performance across all major silicon providers without manual intervention.</p>
-<h3 id="520-time-aware-checkpoint-governance-15-min-window">5.20 Time-Aware Checkpoint Governance (15-min Window)</h3>
-<p>To protect training progress on high-complexity manifolds, the suite implements a <strong>Time-Aware Checkpoint Governor</strong>. It monitors iteration velocity and dynamically recalibrates the save frequency to target a 15-minute resiliency window, ensuring that no more than 15 minutes of work is ever at risk.</p>
-<h3 id="521-dynamic-min_delta-scaling-for-high-range-quality">5.21 Dynamic min_delta Scaling for High-Range Quality</h3>
-<p><strong>Issue:</strong> Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. <code>475.25</code>). The legacy Governor used a static <code>min_delta</code> of <code>0.0005</code> to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, thus completely freezing the dataset expansion engine.
-<strong>Fix:</strong> The Governor dynamically queries <code>task_type</code>. For <code>restoration</code> tasks, it multiplies the tolerance by 100x (<code>0.05</code>), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).</p>
-<h3 id="522-resolution-aware-patience-reset-sota-guard">5.22 Resolution-Aware Patience Reset (SOTA Guard)</h3>
-<p><strong>Issue:</strong> When the Governor triggered a spatial jump (e.g. expanding validation from 512px to 640px), the baseline metric mathematically plummeted (e.g. <code>450</code> down to <code>300</code>) because processing 6.25x more pixels is inherently more difficult. However, the Governor stubbornly held onto the old <code>450</code> score in its <code>best_quality</code> memory, declaring the model "stagnant" forever because it could never beat the low-res score.
-<strong>Fix:</strong> Engineered the <strong>Resolution-Aware SOTA Memory Purge</strong>. When a resolution shift occurs, the Governor explicitly purges its <code>best_quality</code> memory and resets the patience clock to zero. It natively anchors a new SOTA baseline at the new 640px complexity.</p>
-<h3 id="523-validation-sharding-30-fixed-audit">5.23 Validation Sharding (30% Fixed Audit)</h3>
-<p><strong>Issue:</strong> High-Fidelity Perceptual Metrics (CPU-based SSIM, InceptionV3 FID, VGG LPIPS) require immense computational overhead. Evaluating 100% of the 640px validation dataset took nearly as long as the training epoch itself, destroying mission velocity.
-<strong>Fix:</strong> Implemented <strong>Validation Sharding</strong>. The pipeline now evaluates a fixed <strong>30% random-seeded subset</strong> of the validation loader. Because <code>shuffle=False</code> is enforced, the exact same spatial features are evaluated every epoch, maintaining perfectly smooth LPIPS/FID metric geometry while accelerating the validation cycle by 300%.</p>
-<h3 id="524-vram-defibrillation-for-inceptionv3">5.24 VRAM Defibrillation for InceptionV3</h3>
-<p><strong>Issue:</strong> After a dense MPRNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in <code>CUDA Out of Memory</code> crashes purely during validation.
-<strong>Fix:</strong> Engineered the <strong>Surgical VRAM Defibrillator</strong>. A mandatory <code>torch.cuda.empty_cache()</code> cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.</p>
-<h3 id="525-restoration-quality-score-integration">5.25 Restoration Quality Score Integration</h3>
-<p><strong>Issue:</strong> For restoration models (like MPRNet), the <code>current_quality_score</code> was bypassed during validation metrics gathering due to a nested <code>task_type == "quality"</code> check in <code>train.py</code>. This left the validation scorecarding blind, reporting <code>0.0000</code> Quality Scores in <code>metrics.csv</code> and freezing curriculum scaling.
-<strong>Fix:</strong> Un-nested the SOTA targets evaluation loop in <code>train.py</code>. The orchestrator now dynamically compounds high-fidelity metrics (PSNR, SSIM, LPIPS, FID) for all restoration tasks that define SOTA targets, restoring correct quality scorecarding and curriculum growth.</p>
-<h3 id="526-governor-history-serialization">5.26 Governor History Serialization</h3>
-<p><strong>Issue:</strong> The Smart Training Governor's historical epoch memory buffer (<code>self.history</code>) was completely omitted from <code>get_state()</code> and <code>load_state()</code>. As a result, resuming training from a checkpoint completely reset the flatness detector patience, which (when combined with frequent cloud restarts) permanently locked the model at its initial curriculum resolution/variety.
-<strong>Fix:</strong> Hardened the governor state manager in <code>optimization_engine.py</code> to serialize and deserialize the <code>self.history</code> list. Plateau memory now persists seamlessly across arbitrary stops, resumes, and preemptions.</p>
-<hr />
-<hr />
 
 
 
@@ -557,11 +460,92 @@
 
 
 
+/
 
+ "---"
+ "---".  &  /
+ "--------".      (  )/
+/       / .     -    -   (),           ,/  .
+/     /.  ./       /,   -   ./
+ "-----".     /
+/      ,         / .
+/  /./   .()/ .     /, /,           ./
+ "-------".   " " &   /
+/     ()   " "            ,          -  ( -).
+/     /     -    - ./
+ "-----".     /
+/     -   ..
+//
 
+   /               ./
+ /         ./,          ./
+/
+ "------".  "-"   /
+/      ' -/      .()/            .
+/   --  /./
+ "-----".    " "/
+/   ,              .
+/     /     ,       "-"   ./
+ "-----".     /
+//
 
+ -  /     /,     .('')/    ././
+   /         + ( * ) - ( * )/./
+/
+ "------".    - ./
+/   . -/.       .%  /     /          ./
+ "------".  -  ( )/
+/           /.    /     ""          ./
+ "----".  /  (.)/
+/     /.        ,    - ./
+ "----".    (.)/
+/     /.             /      /./
+ "----".    (.)/
+/    /.     / -    %     ./
+ "------".   & -  (..)/
+/    - /.   -   ,     -/   / (.)./
+ "----".  - (..)/
+/    -/.       %     ,    /    ./
+ "-------".    -  (..)/
+/    /.        / (-/),   -  -./
+ "-----".   &   (..)/
+//
 
+  ( )/          -/   ./
+-  / -         ././
+/
+ "-------".    &    (..)/
+//
 
+  /  - -        - ./
+  /  %                ./
+/
+ "----".    (..)/
+/         ,            ./
+ "----".    (//)/
+       /.    &  &  & ,                    ./
+ "-------". -   (- )/
+     - ,     -  /.              -  ,             ./
+ "-------".     - /
+/   (    )   " " (.. ./).       /  ./   .     ,    .   ,           ,       .
+/     /.  / ,       (./),          "" (  )./
+ "------". -   ( )/
+/        (..      ),      (.. /   /)   .      . ,        /    / ,    ""        - .
+/   -   /.     ,      /        .            ./
+ "-----".   (%  )/
+/ -   (- ,  ,  )    .  %              ,   .
+/   /.       % - /    .  /  ,         ,    /         %./
+ "----".    /
+/      ,       -            ,      /    .
+/     /.   ..()/        ,              ./
+ "----".    /
+/    ( ),  /             ""/   ./.      ,  ./    ./    .
+/ -       ./.      -  (, , , )        ,       ./
+ "---".   /
+/    '     (./)     ()/  ()/.   ,           ,  (     )         /.
+/       ./      ./ .        , ,  ./
+ /
+ /
 
 
 
@@ -599,16 +583,7 @@
 
 
 
-</section>
 
-<section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
-<h2 id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</h2>
-<h3 id="61-standalone-exporters">6.1 Standalone Exporters</h3>
-<p>Checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
-<h3 id="62-the-ghost-severing-protocol">6.2 The Ghost-Severing Protocol</h3>
-<p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.</p>
-<hr />
-<hr />
 
 
 
@@ -624,7 +599,16 @@
 
 
 
+/
 
+ "--------"
+ "--------".    ++  - /
+ "--".  /
+   /         ,   -        ./
+ "----".  - /
+/     /.       -  ,   ,      ./
+ /
+ /
 
 
 
@@ -662,78 +646,9 @@
 
 
 
-</section>
 
-<section id="7-sota-architectural-performance-matrix">
-<h2 id="7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</h2>
-<p>The following matrix isolates MPRNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).</p>
 
-<div style="overflow-x:auto; margin-top:20px;">
-    <table style="width:100%; border-collapse:collapse; text-align:left; background:var(--card-bg); border-radius:8px; overflow:hidden;">
-        <thead style="background:rgba(255,255,255,0.05);">
-            <tr>
-                <th style="padding:12px; color:white;">Architecture</th>
-                <th style="padding:12px; color:white;">Paradigm</th>
-                <th style="padding:12px; color:white;">Parameters</th>
-                <th style="padding:12px; color:white;">GPU Footprint (1080p)</th>
-                <th style="padding:12px; color:white;">PSNR</th>
-                <th style="padding:12px; color:white;">Perceptual Integrity (LPIPS)</th>
-                <th style="padding:12px; color:white;">WebGPU Viability</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:12px;"><strong>DnCNN</strong></td>
-                <td style="padding:12px;"><em>Legacy CNN</em></td>
-                <td style="padding:12px;">0.5M</td>
-                <td style="padding:12px;">&lt; 1 GB</td>
-                <td style="padding:12px;">~28.0dB</td>
-                <td style="padding:12px;">0.29 (VGG)</td>
-                <td style="padding:12px;"><span style="color:#28a745; font-weight:bold;">Highly Optimal</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:12px;"><strong>U-Net</strong></td>
-                <td style="padding:12px;"><em>Feature Pyramids</em></td>
-                <td style="padding:12px;">13M</td>
-                <td style="padding:12px;">~ 3 GB</td>
-                <td style="padding:12px;">~30.2dB</td>
-                <td style="padding:12px;">0.17 (VGG)</td>
-                <td style="padding:12px;"><span style="color:#28a745; font-weight:bold;">Optimal</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:12px;"><strong>MIRNet</strong></td>
-                <td style="padding:12px;"><em>Multi-Scale Gating</em></td>
-                <td style="padding:12px;">31M</td>
-                <td style="padding:12px;">~ 11 GB</td>
-                <td style="padding:12px;">~31.8dB</td>
-                <td style="padding:12px;">0.08 (VGG)</td>
-                <td style="padding:12px;"><span style="color:#ffc107; font-weight:bold;">Questionable</span></td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border-color);">
-                <td style="padding:12px;"><strong>Restormer</strong></td>
-                <td style="padding:12px;"><em>Swin-Transformer MDTA</em></td>
-                <td style="padding:12px;">26M</td>
-                <td style="padding:12px;">~ 14 GB</td>
-                <td style="padding:12px;">~32.4dB</td>
-                <td style="padding:12px;">0.05 (VGG)</td>
-                <td style="padding:12px;"><span style="color:#dc3545; font-weight:bold;">Highly Degraded (Opset)</span></td>
-            </tr>
-            <tr style="background:rgba(0,122,255,0.1);">
-                <td style="padding:12px; color:var(--accent-color);"><strong>LemGendary MPRNet</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><em>SCA SimpleGate (Ours)</em></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>17M</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>~ 6 GB</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>~32.5dB+</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>&lt; 0.06 (VGG)</strong></td>
-                <td style="padding:12px;"><span style="color:var(--accent-color); font-weight:bold;">Production Grade</span></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<p style="margin-top:20px;"><strong>Hardware Note</strong>: MPRNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for <code>[FP16]</code> browser exportation.</p>
 
-<hr />
-<hr />
 
 
 
@@ -747,9 +662,78 @@
 
 
 
+/
 
+ "----"
+ "----".    /
+           (/-)   -   (/)./
 
+ "- -"
+     "% - - (---) - "
+         "(,,,.)"
+            
+                 " "/
+                 " "/
+                 " "/
+                 " "  ()/
+                 " "/
+                 " "  ()/
+                 " " /
+            /
+        /
+        
+             "-  (---)"
+                 ""//
+                 "" //
+                 ""./
+                 ""&  /
+                 ""./
+                 "". ()/
+                 "" "# -" //
+            /
+             "-  (---)"
+                 ""-//
+                 "" //
+                 ""/
+                 ""  /
+                 ""./
+                 "". ()/
+                 "" "# -"//
+            /
+             "-  (---)"
+                 ""//
+                 ""- //
+                 ""/
+                 ""  /
+                 ""./
+                 "". ()/
+                 "" "# -"//
+            /
+             "-  (---)"
+                 ""//
+                 ""- //
+                 ""/
+                 ""  /
+                 ""./
+                 "". ()/
+                 "" "# -"  ()//
+            /
+             "(,,,.)"
+                 " (---)" //
+                 " (---)"  ()//
+                 " (---)"//
+                 " (---)"  //
+                 " (---)".+//
+                 " (---)"& . ()//
+                 "" "(---) -" //
+            /
+        /
+    /
+/
+ "-" /    -       -   ,        /  ./
 
+ /
+ /
 
 
 
@@ -788,12 +772,28 @@
 
 
 
-</section>
 
-<section id="conclusion">
-<h2>8. Conclusion</h2>
-<p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.</p>
-<p>The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/
+
+ ""
+. /
+             .         ,      ./
+      -         ,     ./
 
     
 
@@ -822,7 +822,7 @@
 
 
 
-</section>
-</div>
-</body>
-</html>
+/
+/
+/
+/

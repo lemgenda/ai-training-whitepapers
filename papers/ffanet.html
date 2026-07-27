@@ -1,75 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: High-Fidelity FFANet Dehazing</title>
+! 
+ ""
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;">
-            </a>
-        <div class="tabs-nav">
-            <a href="nafnet.html" class="tab-link">NAFNet</a>
-            <a href="mirnet.html" class="tab-link">MIRNet</a>
-            <a href="ffanet.html" class="tab-link active">FFANet</a>
-            <a href="mprnet.html" class="tab-link">MPRNet</a>
-        </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity FFANet Dehazing via SOTA Infrastructure</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 2.6.0 - Dynamic VRAM Sync</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
+     "-"
+     "" "-, -."
+        -  /
 
-<nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <h4>Navigation Matrix</h4>
-            <ul>
-<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-                <li><a href="#section-1">1. Abstract</a>
-                </li>
-                <li><a href="#section-3">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
-                    <ul class="sub-item">
-                        <li><a href="#indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</a></li>
-                        <li><a href="#outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</a></li>
-                        <li><a href="#smoke">2.3 Synthetic Smoke Evacuation</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-5">3. Shared Foundations</a>
-                    <ul class="sub-item">
-                        <li><a href="#hardware">3.1 Hardware-Aware Infrastructure</a></li>
-                        <li><a href="#optimization">3.2 Mathematical Optimization</a></li>
-                        <li><a href="#cloud">3.3 Kaggle Cloud Execution Protocols</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-7">4. Model Deep-Dives</a>
-                    <ul class="sub-item">
-                        <li><a href="#indoor-scorer">4.1 BranchedFFANet Indoor Scorer</a></li>
-                        <li><a href="#outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-9">5. Challenges & Resilience Architecture</a>
-                </li>
-                <li><a href="#section-11">6. Deployment Strategy</a>
-                </li>
-                <li><a href="#section-13">7. SOTA Architectural Performance Matrix</a>
-                </li>
-                <li><a href="#conclusion">8. Conclusion</a>
-                </li>
-            </ul>
-        </nav>
+     "//../&&+&" ""
+     "" "../."
+     "..//-." /
+/
+
+     ""
+        
+             "//." "" "-"
+                 "..//-." " " "  - "
+            /
+         "-"
+             "." "-"/
+             "." "-"/
+             "." "- "/
+             "." "-"/
+        /
+               /
+             ""-     /
+             ""
+                  /
+                 .. -   /
+                  /  / /
+            /
+        /
+
+ "-"
+             "../." "-"
+                 "..//-." " "
+                     ".'//..///-/---.'"
+            /
+             /
+            
+ "../." " (---) -  - "←   //
+                 "#-". /
+                /
+                 "#-".      /
+                     "-"
+                         "#".    ()//
+                         "#".    ()//
+                         "#".   //
+                    /
+                /
+                 "#-".  /
+                     "-"
+                         "#". - //
+                         "#".  //
+                         "#".    //
+                    /
+                /
+                 "#-".  -/
+                     "-"
+                         "#-".   //
+                         "#-".   //
+                    /
+                /
+                 "#-".  &  /
+                /
+                 "#-".  /
+                /
+                 "#-".    /
+                /
+                 "#". /
+                /
+            /
+        /
 
         
             
@@ -99,106 +99,9 @@
 
 
 
-<section id="section-1">
-<h2>1. Abstract</h2>
-            <p>The LemGendary Training Suite has achieved unparalleled visual restoration by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike standard architectures, FFANet explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics. This enables high-bandwidth recovery of depth geometry while natively exporting multi-task object bounding boxes through the specialized BranchedFFANet topology.</p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-3">
-<h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
-            <p>The transition to FFANet architectures required distinct manifolds for processing atmospheric occlusions.</p>
-            
-            <h3 id="indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</h3>
-            <p>By unifying diverse structured indoor scatter subsets into <code>LemGendizedFfaNetIndoorLarge</code>, the FFANet backbone is trained to cleanly subtract uniform physical scatter and dense artificial occlusions natively.</p>
-            
-            <h3 id="outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</h3>
-            <p>By unifying diverse natural atmospheric scatter subsets into <code>LemGendizedFfaNetOutdoorLarge</code>, the FFANet backbone is trained to cleanly subtract complex depth-of-field scattering and natural fog gradients natively.</p>
-
-            <h3 id="smoke">2.3 Synthetic Smoke Evacuation</h3>
-            <p>By unifying heavy particle interference subsets into synthetic smoke evacuation training targets, the FFANet backbone is trained to cleanly subtract dense particulate columns and smoke occlusions natively.</p>
-            
-            <hr />
-            <hr />
-
-            <div class="visual-taxonomy">
-                <div class="quadrant">
-                    <img alt="Indoor Dehazing Target" src="../assets/ffanet_indoor_example.png" />
-                    <div class="quadrant-info">
-                        <strong>Figure 1: Indoor Dehazing Target - Requires the model to navigate dense, artificial occlusions and uniform physical scatter in highly structured environments.</strong>
-                        <span>The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.</span>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <img alt="Outdoor Dehazing Target" src="../assets/ffanet_outdoor_example.png" />
-                    <div class="quadrant-info">
-                        <strong>Figure 2: Outdoor Dehazing Target - Demands robust spatial reconstruction against complex atmospheric scattering, infinite depth-of-field, and natural fog gradients.</strong>
-                        <span>The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.</span>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <img alt="Smoke Removal Target" src="../assets/ffanet_smoke_example.png" />
-                    <div class="quadrant-info">
-                        <strong>Figure 3: Synthetic Smoke Target - Validating the PA Layer's ability to zero out heavy particle interference while maintaining background structural integrity.</strong>
-                        <span>The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.</span>
-                    </div>
-                </div>
-            </div>
+ "-"
+. /
+                             ().   ,     -        ()    () .   -        -        ./
         
 
         
@@ -255,21 +158,47 @@
 
 
 
-</section>
+/
 
-<section id="section-5">
-<h2>3. Shared Foundations</h2>
-            <p>FFANet leverages the unified LemGendary training pipeline shared with NAFNet.</p>
+ "-"
+.      /
+                       ./
             
-            <h3 id="hardware">3.1 Hardware-Aware Infrastructure</h3>
-            <p><strong>The Headroom-Aware Memory-Sentinel:</strong> Natively probes <code>torch.cuda.mem_get_info()</code> to dynamically adjust batch sizes, avoiding VRAM paging crashes on Kaggle T4 nodes.<br>
-            <strong>OVC Data Streaming Bridge:</strong> Pre-decodes multi-task tensors natively in CPU cache before flushing them to the GPU.</p>
+             "".    ()/
+                    /,                ./
+            
+             "".    ()/
+                    /,          --      ./
 
-            <h3 id="optimization">3.2 Mathematical Optimization</h3>
-            <p>The <code>CombinedLoss</code> optimizer natively unspools dictionary targets, running <code>L1Loss</code> on spatial pixels and <code>SmoothL1Loss</code> on bounding boxes simultaneously, locked via a <code>lambda=0.1</code> gradient throttle.</p>
+             "".   /
+                       ,               ./
+            
+             /
+             /
 
-            <h3 id="cloud">3.3 Kaggle Cloud Execution Protocols</h3>
-            <p>Single-GPU specialization combined with the Serial Extraction Mutex ensures constant data hydration without multi-processing kernel lockups.</p>
+             "-"
+                 ""
+                     "  " "..//." /
+                     "-"
+                             -      ,          ./
+                              -        ()    () ./
+                    /
+                /
+                 ""
+                     "  " "..//." /
+                     "-"
+                             -        ,  --,    ./
+                              -        ()    () ./
+                    /
+                /
+                 ""
+                     "  " "..//." /
+                     "-"
+                             -    '            ./
+                              -        ()    () ./
+                    /
+                /
+            /
         
 
         
@@ -326,160 +255,21 @@
 
 
 
-</section>
+/
 
-<section id="section-7">
-<h2>4. Model Deep-Dives</h2>
+ "-"
+.  /
+                     ./
+            
+             "". - /
+             - -/   ..()/     ,        .
+               / - -           ./
 
-            <h3 id="indoor-scorer">4.1 BranchedFFANet Indoor Scorer</h3>
-            
-            <h4>4.1.1 Model description, purpose and usage</h4>
-            <p>The <strong>LemGendary FFANet Indoor</strong> scorer is built to navigate dense artificial occlusions in structured indoor environments. It excels at reversing uniform physical scatter across confined depth profiles.</p>
-            
-            <h4>4.1.2 Model Info</h4>
-            <ul>
-                <li><strong>Architecture:</strong> BranchedFFANet (Dual Head)</li>
-                <li><strong>Input Resolution:</strong> 512x512</li>
-                <li><strong>Precision:</strong> ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
-                <li><strong>Latency:</strong> Sub-60ms inference bound on target local GPU hardware</li>
-            </ul>
-            
-            <h4>4.1.3 Manifold Info</h4>
-            <ul>
-                <li><strong>Dataset:</strong> LemGendizedFfaNetIndoorLarge</li>
-                <li><strong>Total Samples:</strong> 196,304 (merged from ITS, RESIDE-6k, Dehazing and Desmoking)</li>
-                <li><strong>Primary Task:</strong> Reverses artificial haze distributions while identifying key target boxes using the detection head.</li>
-            </ul>
-            
-            <h4>4.1.4 Performance Metrics</h4>
-            <ul>
-                <li><strong>Current Training Epochs:</strong> 1</li>
-                <li><strong>Best PSNR:</strong> 45.49 dB</li>
-                <li><strong>Best SSIM:</strong> 0.9975</li>
-                <li><strong>Best LPIPS:</strong> 0.0157</li>
-                <li><strong>Best FID:</strong> 0.2211</li>
-                <li><strong>Current Learning Rate:</strong> 0.00000240</li>
-            </ul>
-            
-            <h4>4.1.5 Training Curve</h4>
-            <p><img src="../assets/ffanet_indoor_training.png" alt="Indoor Training Curve" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'"></p>
-            <p><em>Figure 4: FFANet Indoor Training Convergence Matrix.</em></p>
-            
-            <h4>4.1.6 Model specific issues and optimizations</h4>
-            <p>The dual-attention heads originally choked the backward pass memory limit. We engineered an autonomous gradient-accumulation subroutine directly into the train loop to salvage GPU resources.</p>
-            
-            <h4>4.1.7 Consolidated SOTA Benchmarks</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Current Reality (Mid-Training)</th>
-                        <th>Target SOTA Baseline</th>
-                        <th>Gap</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>PSNR</strong></td>
-                        <td>45.49 dB</td>
-                        <td>36.50 dB</td>
-                        <td>+8.99 dB</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SSIM</strong></td>
-                        <td>0.9975</td>
-                        <td>0.9900</td>
-                        <td>+0.0075</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LPIPS</strong></td>
-                        <td>0.0157</td>
-                        <td>0.0800</td>
-                        <td>+0.0643</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FID</strong></td>
-                        <td>0.2211</td>
-                        <td>12.0000</td>
-                        <td>+11.7789</td>
-                    </tr>
-                </tbody>
-            </table>
+             "".  /
+             /     ,  /     /    ,    ./  ./
 
-            <h3 id="outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</h3>
-            
-            <h4>4.2.1 Model description, purpose and usage</h4>
-            <p>The <strong>LemGendary FFANet Outdoor</strong> handles unpredictable spatial reconstruction against complex atmospheric scattering, infinite depth-of-field, and dynamic natural fog gradients.</p>
-            
-            <h4>4.2.2 Model Info</h4>
-            <ul>
-                <li><strong>Architecture:</strong> BranchedFFANet (Dual Head)</li>
-                <li><strong>Input Resolution:</strong> 512x512</li>
-                <li><strong>Precision:</strong> ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
-                <li><strong>Latency:</strong> Sub-60ms inference bound on target local GPU hardware</li>
-            </ul>
-            
-            <h4>4.2.3 Manifold Info</h4>
-            <ul>
-                <li><strong>Dataset:</strong> LemGendizedFfaNetOutdoorLarge</li>
-                <li><strong>Total Samples:</strong> 217,113 (merged from Outdoor Dehazing, NH-HAZE, O-HAZE, CVPR 2019)</li>
-                <li><strong>Primary Task:</strong> Restores infinite depth-of-field structural clarity against organic atmospheric scattering.</li>
-            </ul>
-            
-            <h4>4.2.4 Performance Metrics</h4>
-            <ul>
-                <li><strong>Current Training Epochs:</strong> 1</li>
-                <li><strong>Best PSNR:</strong> 33.93 dB</li>
-                <li><strong>Best SSIM:</strong> 0.9326</li>
-                <li><strong>Best LPIPS:</strong> 0.1612</li>
-                <li><strong>Best FID:</strong> 12.4061</li>
-                <li><strong>Current Learning Rate:</strong> 0.00000240</li>
-            </ul>
-            
-            <h4>4.2.5 Training Curve</h4>
-            <p><img src="../assets/ffanet_outdoor_training.png" alt="Outdoor Training Curve" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'"></p>
-            <p><em>Figure 5: FFANet Outdoor Training Convergence Matrix.</em></p>
-            
-            <h4>4.2.6 Model specific issues and optimizations</h4>
-            <p>Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the detection head was prone to destabilizing the primary image reconstruction if bounding boxes varied wildly across natural environments.</p>
-            
-            <h4>4.2.7 Consolidated SOTA Benchmarks</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Current Reality (Mid-Training)</th>
-                        <th>Target SOTA Baseline</th>
-                        <th>Gap</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>PSNR</strong></td>
-                        <td>33.93 dB</td>
-                        <td>33.70 dB</td>
-                        <td>+0.23 dB</td>
-                    </tr>
-                    <tr>
-                        <td><strong>SSIM</strong></td>
-                        <td>0.9326</td>
-                        <td>0.9860</td>
-                        <td>-0.0534</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LPIPS</strong></td>
-                        <td>0.1612</td>
-                        <td>0.0800</td>
-                        <td>-0.0812</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FID</strong></td>
-                        <td>12.4061</td>
-                        <td>12.0000</td>
-                        <td>-0.4061</td>
-                    </tr>
-                </tbody>
-            </table>
+             "".    /
+            -             -  ./
         
 
         
@@ -536,12 +326,160 @@
 
 
 
-</section>
+/
 
-<section id="section-9">
-<h2>5. Challenges & Resilience Architecture</h2>
-            <p><strong>The Channel Attention Saturation Crash:</strong> At deep training iterations, the Sigmoid gate within <code>CALayer</code> locked at 1.0, neutralizing channel-variance extraction. We injected a localized epsilon jitter into the bottlenecks to enforce moving gradients.</p>
-            <p><strong>Detection Head Instability:</strong> Uncontrolled bounding box errors corrupted the primary image reconstruction early on. The <code>CombinedLoss</code> throttle was hardened to prioritize PSNR strictly.</p>
+ "-"
+.  -/
+
+             "-".   /
+            
+            ..  ,   /
+               /            .           ./
+            
+            ..  /
+            
+                /  ( )/
+                 / /
+                /   () /   ()/
+                / -       /
+            /
+            
+            ..  /
+            
+                / /
+                 / , (  , -,   )/
+                 /             ./
+            /
+            
+            ..  /
+            
+                  / /
+                 / . /
+                 / ./
+                 / ./
+                 / ./
+                  / ./
+            /
+            
+            ..  /
+             "..//." "  " ".'//..///-/---.'"/
+                  .//
+            
+            ..     /
+             -        .     -          ./
+            
+            ..   /
+            
+                
+                    
+                        /
+                          (-)/
+                          /
+                        /
+                    /
+                /
+                
+                    
+                        //
+                        . /
+                        . /
+                        +. /
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        +./
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        +./
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        +./
+                    /
+                /
+            /
+
+             "-".   /
+            
+            ..  ,   /
+               /        ,  --,     ./
+            
+            ..  /
+            
+                /  ( )/
+                 / /
+                /   () /   ()/
+                / -       /
+            /
+            
+            ..  /
+            
+                / /
+                 / , (   , -, -,  )/
+                 /   --      ./
+            /
+            
+            ..  /
+            
+                  / /
+                 / . /
+                 / ./
+                 / ./
+                 / ./
+                  / ./
+            /
+            
+            ..  /
+             "..//." "  " ".'//..///-/---.'"/
+                  .//
+            
+            ..     /
+               , -  . ,                   ./
+            
+            ..   /
+            
+                
+                    
+                        /
+                          (-)/
+                          /
+                        /
+                    /
+                /
+                
+                    
+                        //
+                        . /
+                        . /
+                        +. /
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        -./
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        -./
+                    /
+                    
+                        //
+                        ./
+                        ./
+                        -./
+                    /
+                /
+            /
         
 
         
@@ -598,11 +536,12 @@
 
 
 
-</section>
+/
 
-<section id="section-11">
-<h2>6. Deployment Strategy</h2>
-            <p>The ONNX Ghost-Severing protocol automatically prunes the auxiliary detection head when exporting to C++, generating a pure image-in, image-out inference engine.</p>
+ "-"
+.  &  /
+                /    ,     /   .,  - .             ./
+              /           .  /       ./
         
 
         
@@ -659,11 +598,11 @@
 
 
 
-</section>
+/
 
-<section id="section-13">
-<h2>7. SOTA Architectural Performance Matrix</h2>
-            <p>BranchedFFANet systematically outperforms legacy atmospheric restoration algorithms by treating haze as a dense 3D tensor map rather than a linear pixel overlay.</p>
+ "-"
+.  /
+              -           ++,    -, -  ./
         
 
         
@@ -720,11 +659,72 @@
 
 
 
-</section>
+/
 
-<section id="conclusion">
-<h2>8. Conclusion</h2>
-            <p>By upgrading to the BranchedFFANet infrastructure and implementing the multi-task <code>CombinedLoss</code> engine, the LemGendary Suite now wields a robust, mathematically resilient atmospheric processor capable of dynamic environmental dehazing while detecting tactical landmarks.</p>
+ "-"
+.    /
+                                 ./
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/
+
+ ""
+. /
+                     - / ,       ,             ./
         
 
         
@@ -754,12 +754,12 @@
 
 
 
-</section>
-<footer>
-            <div class="container">
-                <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-            </div>
-        </footer>
-    </div>
-</body>
-</html>
+/
+
+             ""
+                &     .   ./
+            /
+        /
+    /
+/
+/
