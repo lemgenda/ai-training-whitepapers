@@ -9,7 +9,7 @@
 
 ## Table of Contents
 
-- [1. Executive Summary](#1-executive-summary)
+- [1. Abstract](#1-abstract)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
 - [3. Shared Foundations](#3-shared-foundations)
@@ -26,7 +26,7 @@
     - [3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)](#333-serial-extraction-mutex-stable-global-alignment-v1042)
     - [3.3.4 Registry-First Dynamic Unification (v4.5)](#334-registry-first-dynamic-unification-v45)
 - [4. Model Deep-Dives](#4-model-deep-dives)
-  - [4.1 MPRNet Deraining Scorer](#41-mprnet-deraining-scorer)
+  - [4.1 MPRNet Deraining Engine](#41-mprnet-deraining-engine)
     - [4.1.1 Model description, purpose and usage](#411-model-description-purpose-and-usage)
     - [4.1.2 Model Info](#412-model-info)
     - [4.1.3 Manifold Info](#413-manifold-info)
@@ -67,9 +67,9 @@
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#conclusion)
 
-## 1. Executive Summary
+## 1. Abstract
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
+The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
 
 ---
 
@@ -146,7 +146,7 @@ We natively execute intra-epoch `progress.pth` serialization precisely tracking 
 
 ## 4. Model Deep-Dives
 
-### 4.1 MPRNet Deraining Scorer
+### 4.1 MPRNet Deraining Engine
 
 #### 4.1.1 Model description, purpose and usage
 
@@ -154,8 +154,8 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 
 #### 4.1.2 Model Info
 
-- **Architecture**: MPRNet (Standard Backbone)
-- **Input Resolution**: 256x256
+- **Architecture**: MPRNet (Multi-Stage Progressive Restoration Network)
+- **Input Resolution**: 512x512 (Dynamic Curriculum Scaling, 256x256 to 512x512)
 - **Precision**: ONNX FP16 (Edge) / PyTorch FP32 (Training)
 - **Latency**: Sub-50ms inference bound on target local GPU hardware
 
@@ -167,12 +167,12 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 
 #### 4.1.4 Performance Metrics
 
-- **Current Training Epochs**: 1
-- **Best PSNR**: 36.29 dB
-- **Best SSIM**: 0.9898
-- **Best LPIPS**: 0.0204
-- **Best FID**: 4.8524
-- **Current Learning Rate**: 0.00000240
+- **Current Training Epochs**: 22
+- **Best PSNR**: 53.95 dB
+- **Best SSIM**: 0.9996
+- **Best LPIPS**: 0.0013
+- **Best FID**: 0.2272
+- **Current Learning Rate**: 0.00000983
 
 #### 4.1.5 Training Curve
 
@@ -185,12 +185,12 @@ MPRNet utilizes a multi-stage architecture where early stages handle broad artif
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Epoch 1) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Epoch 22) | Target SOTA Baseline | Gap |
 | :--- | :--- | :--- | :--- |
-| **PSNR** | 36.29 dB | 30.60 dB | +5.69 dB |
-| **SSIM** | 0.9898 | 0.9000 | +0.0898 |
-| **LPIPS** | 0.0204 | 0.0700 | -0.0496 |
-| **FID** | 4.8524 | 12.0000 | -7.1476 |
+| **PSNR** | 53.95 dB | 30.60 dB | +23.35 dB |
+| **SSIM** | 0.9996 | 0.9000 | +0.0996 |
+| **LPIPS** | 0.0013 | 0.0700 | -0.0687 |
+| **FID** | 0.2272 | 12.0000 | -11.7728 |
 
 ## 5. Challenges & Resilience Architecture
 
@@ -348,7 +348,7 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 | **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal |
 | **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable |
 | **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) |
-| **LemGendary MPRNet** | *SCA SimpleGate (Ours)* | **17M** | **~ 6 GB** | **~32.5dB+** | **< 0.06 (VGG)** | **Production Grade** |
+| **LemGendary MPRNet** | *Multi-Stage Progressive (Ours)* | **17M** | **~ 6 GB** | **53.95 dB** | **0.0013 (VGG)** | **Production Grade** |
 
 ---
 

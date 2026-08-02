@@ -38,7 +38,7 @@
             <h4>Navigation Matrix</h4>
             <ul>
 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
-                <li><a href="#section-1">1. Executive Summary</a>
+                <li><a href="#1-abstract">1. Abstract</a>
                 </li>
                 <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
                     <ul class="sub-item">
@@ -54,7 +54,7 @@
                 </li>
                 <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
                     <ul class="sub-item">
-                        <li><a href="#41-mprnet-deraining-scorer">4.1 MPRNet Deraining Scorer</a></li>
+                        <li><a href="#41-mprnet-deraining-engine">4.1 MPRNet Deraining Engine</a></li>
                     </ul>
                 </li>
                 <li><a href="#5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</a>
@@ -126,9 +126,9 @@
 
 
 
-<section id="section-1">
-<h2>1. Executive Summary</h2>
-            <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by the <strong>Multi-Stage Progressive Image Restoration Network (MPRNet)</strong>. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.</p>
+<section id="1-abstract">
+<h2 id="1-abstract">1. Abstract</h2>
+            <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by the <strong>Multi-Stage Progressive Image Restoration Network (MPRNet)</strong>. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.</p>
 <hr />
 <hr />
 
@@ -340,15 +340,15 @@
 <section id="4-model-deep-dives">
 <h2 id="4-model-deep-dives">4. Model Deep-Dives</h2>
 
-<h3 id="41-mprnet-deraining-scorer">4.1 MPRNet Deraining Scorer</h3>
+<h3 id="41-mprnet-deraining-engine">4.1 MPRNet Deraining Engine</h3>
 
 <h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary MPRNet Deraining</strong> is a professional-grade AI model optimized for the <code>restoration</code> lifecycle. It progressively subtracts severe rain artifacts—from thin streaks to heavy volumetric water drops—using a multi-stage refinement process.</p>
 
 <h4 id="412-model-info">4.1.2 Model Info</h4>
 <ul>
-<li><strong>Architecture</strong>: MPRNet (Standard Backbone)</li>
-<li><strong>Input Resolution</strong>: 256x256</li>
+<li><strong>Architecture</strong>: MPRNet (Multi-Stage Progressive Restoration Network)</li>
+<li><strong>Input Resolution</strong>: 512x512 (Dynamic Curriculum Scaling, 256x256 to 512x512)</li>
 <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
 <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
 </ul>
@@ -362,12 +362,12 @@
 
 <h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
 <ul>
-<li><strong>Current Training Epochs</strong>: 1</li>
-<li><strong>Best PSNR</strong>: 36.29 dB</li>
-<li><strong>Best SSIM</strong>: 0.9898</li>
-<li><strong>Best LPIPS</strong>: 0.0204</li>
-<li><strong>Best FID</strong>: 4.8524</li>
-<li><strong>Current Learning Rate</strong>: 0.00000240</li>
+<li><strong>Current Training Epochs</strong>: 22</li>
+<li><strong>Best PSNR</strong>: 53.95 dB</li>
+<li><strong>Best SSIM</strong>: 0.9996</li>
+<li><strong>Best LPIPS</strong>: 0.0013</li>
+<li><strong>Best FID</strong>: 0.2272</li>
+<li><strong>Current Learning Rate</strong>: 0.00000983</li>
 </ul>
 
 <h4 id="415-training-curve">4.1.5 Training Curve</h4>
@@ -382,7 +382,7 @@
 <thead>
 <tr>
 <th style="text-align: left;">Metric</th>
-<th style="text-align: left;">Current Reality (Epoch 1)</th>
+<th style="text-align: left;">Current Reality (Epoch 22)</th>
 <th style="text-align: left;">Target SOTA Baseline</th>
 <th style="text-align: left;">Gap</th>
 </tr>
@@ -390,27 +390,27 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>PSNR</strong></td>
-<td style="text-align: left;">36.29 dB</td>
+<td style="text-align: left;">53.95 dB</td>
 <td style="text-align: left;">30.60 dB</td>
-<td style="text-align: left;">+5.69 dB</td>
+<td style="text-align: left;">+23.35 dB</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>SSIM</strong></td>
-<td style="text-align: left;">0.9898</td>
+<td style="text-align: left;">0.9996</td>
 <td style="text-align: left;">0.9000</td>
-<td style="text-align: left;">+0.0898</td>
+<td style="text-align: left;">+0.0996</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>LPIPS</strong></td>
-<td style="text-align: left;">0.0204</td>
+<td style="text-align: left;">0.0013</td>
 <td style="text-align: left;">0.0700</td>
-<td style="text-align: left;">-0.0496</td>
+<td style="text-align: left;">-0.0687</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>FID</strong></td>
-<td style="text-align: left;">4.8524</td>
+<td style="text-align: left;">0.2272</td>
 <td style="text-align: left;">12.0000</td>
-<td style="text-align: left;">-7.1476</td>
+<td style="text-align: left;">-11.7728</td>
 </tr>
 </tbody>
 </table>
@@ -720,11 +720,11 @@
             </tr>
             <tr style="background:rgba(0,122,255,0.1);">
                 <td style="padding:12px; color:var(--accent-color);"><strong>LemGendary MPRNet</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><em>SCA SimpleGate (Ours)</em></td>
+                <td style="padding:12px; color:var(--accent-color);"><em>Multi-Stage Progressive (Ours)</em></td>
                 <td style="padding:12px; color:var(--accent-color);"><strong>17M</strong></td>
                 <td style="padding:12px; color:var(--accent-color);"><strong>~ 6 GB</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>~32.5dB+</strong></td>
-                <td style="padding:12px; color:var(--accent-color);"><strong>&lt; 0.06 (VGG)</strong></td>
+                <td style="padding:12px; color:var(--accent-color);"><strong>53.95 dB</strong></td>
+                <td style="padding:12px; color:var(--accent-color);"><strong>0.0013 (VGG)</strong></td>
                 <td style="padding:12px;"><span style="color:var(--accent-color); font-weight:bold;">Production Grade</span></td>
             </tr>
         </tbody>
