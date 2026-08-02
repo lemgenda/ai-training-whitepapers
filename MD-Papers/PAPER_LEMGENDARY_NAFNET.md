@@ -114,16 +114,31 @@ To maximize runtime efficiency and retain high-frequency details, NAFNet replace
 
 - **The SimpleGate Operator**:
   Standard neural architectures utilize activation functions such as $\text{GELU}(X) = X \odot \Phi(X)$, which require transcendental function evaluation. NAFNet simplifies this by splitting the intermediate feature map $X \in \mathbb{R}^{C \times H \times W}$ along the channel dimension into two equal halves $X_1, X_2 \in \mathbb{R}^{\frac{C}{2} \times H \times W}$, and executing element-wise multiplication:
-  $$\text{SimpleGate}(X_1, X_2) = X_1 \odot X_2$$
+
+  $$
+  \text{SimpleGate}(X_1, X_2) = X_1 \odot X_2
+  $$
+
   where $\odot$ denotes the Hadamard product. By avoiding activation functions, the network preserves linear gradient pathways, which are critical for restoration tasks.
 
-- Simple Channel Attention (SCA):
+- **Simple Channel Attention (SCA)**:
   Traditional channel attention mechanisms (like Squeeze-and-Excitation blocks) utilize heavy multi-layer perceptrons (MLPs) and sigmoid functions. NAFNet streamlines this block by utilizing global average pooling, followed by a single linear projection layer $W_g$ without activation:
-  $$\text{SCA}(X) = X \odot \Psi(X)$$
+
+  $$
+  \text{SCA}(X) = X \odot \Psi(X)
+  $$
+
   where $\Psi(X)$ is the channel attention modulation vector computed as:
-  $$\Psi(X) = W_g \cdot \text{Pool}(X)$$
+
+  $$
+  \Psi(X) = W_g \cdot \text{Pool}(X)
+  $$
+
   and global average pooling is defined for each channel $c$ as:
-  $$\text{Pool}(X)_c = \frac{1}{HW} \sum_{i=1}^H \sum_{j=1}^W X_{c,i,j}$$
+
+  $$
+  \text{Pool}(X)_c = \frac{1}{HW} \sum_{i=1}^H \sum_{j=1}^W X_{c,i,j}
+  $$
 
 ---
 
@@ -153,13 +168,24 @@ To rigorously evaluate restoration outputs, the suite employs both structural fi
 
 - **Peak Signal-to-Noise Ratio (PSNR)**:
   Measures absolute pixel-wise reconstruction accuracy. For a target image $I$ and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
-  $$\text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)$$
+
+  $$
+  \text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)
+  $$
+
   where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean Squared Error:
-  $$\text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2$$
+
+  $$
+  \text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2
+  $$
 
 - **Structural Similarity Index (SSIM)**:
   Evaluates luminance, contrast, and structural comparison between image patches:
-  $$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}$$
+
+  $$
+  \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}
+  $$
+
   where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are stabilization constants.
 
 #### 3.2.2 Deep Perceptual Metrics
@@ -168,21 +194,44 @@ While structural metrics capture high-frequency alignment, they fail to correlat
 
 - **Learned Perceptual Image Patch Similarity (LPIPS)**:
   Computes the distance between predicted and ground-truth features extracted from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by channel weights $w_l$:
-  $$d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2$$
+
+  $$
+  d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2
+  $$
 
 - **Fréchet Inception Distance (FID)**:
   Measures the statistical distance between real ($r$) and generated ($g$) manifolds in the feature space of Inception-V3:
-  $$d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)$$
+
+  $$
+  d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
+  $$
+
   where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+
+- **Restoration Quality Score Formulation**:
+  The orchestrator unifies structural and perceptual metrics into a single scalar score:
+
+  $$
+  \text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)
+  $$
 
 #### 3.2.3 PCIe VRAM Thrashing & The Chunking Fix
 
 When attempting to validate a subset of $N$ images ($N = 425$), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:
-$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$
+
+$$
+\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)
+$$
+
 where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.
 
 To resolve this, we implemented a **Structural Chunking Loop** with a chunk boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a constant value:
-$$\text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$
+
+$$
+\text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)
+$$
+
+This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
 This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
 
 #### 3.2.3 The CPU-Bottleneck Bypass

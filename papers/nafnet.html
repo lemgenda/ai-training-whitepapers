@@ -8,6 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="../assets/sticky-tabs.js" defer></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
 </head>
 <body>
     <div class="container">
@@ -202,18 +216,27 @@
 
 <h3 id="23-nonlinear-activation-free-operators-simplegate-sca">2.3 Nonlinear Activation Free Operators (SimpleGate &amp; SCA)</h3>
 <p>To maximize runtime efficiency and retain high-frequency details, NAFNet replaces traditional nonlinear activations (e.g., ReLU or GELU) with multiplier gates, and replaces standard self-attention blocks with channel attention layers:</p>
-<p><strong>The SimpleGate Operator</strong>:<br>
-Standard neural architectures utilize activation functions such as <code>GELU(X) = X &odot; &Phi;(X)</code>, which require transcendental function evaluation. NAFNet simplifies this by splitting the intermediate feature map <code>X</code> into two equal halves <code>X<sub>1</sub>, X<sub>2</sub></code> along the channel dimension and executing element-wise multiplication:<br>
-<code>SimpleGate(X<sub>1</sub>, X<sub>2</sub>) = X<sub>1</sub> &odot; X<sub>2</sub></code><br>
-where <code>&odot;</code> denotes the Hadamard product. By avoiding activation functions, the network preserves linear gradient pathways, which are critical for restoration tasks.</p>
+<ul>
+<li><strong>The SimpleGate Operator</strong>:<br>
+Standard neural architectures utilize activation functions such as $\text{GELU}(X) = X \odot \Phi(X)$, which require transcendental function evaluation. NAFNet simplifies this by splitting the intermediate feature map $X \in \mathbb{R}^{C \times H \times W}$ along the channel dimension into two equal halves $X_1, X_2 \in \mathbb{R}^{\frac{C}{2} \times H \times W}$, and executing element-wise multiplication:
+<br>
+$$\text{SimpleGate}(X_1, X_2) = X_1 \odot X_2$$
+<br>
+where $\odot$ denotes the Hadamard product. By avoiding activation functions, the network preserves linear gradient pathways, which are critical for restoration tasks.</li>
 
-<p><strong>Simple Channel Attention (SCA)</strong>:<br>
-Traditional channel attention mechanisms (like Squeeze-and-Excitation blocks) utilize heavy multi-layer perceptrons (MLPs) and sigmoid functions. NAFNet streamlines this block by utilizing global average pooling, followed by a single linear projection layer <code>W<sub>g</sub></code> without activation:<br>
-<code>SCA(X) = X &odot; &Psi;(X)</code><br>
-where <code>&Psi;(X)</code> is the channel attention modulation vector computed as:<br>
-<code>&Psi;(X) = W<sub>g</sub> &middot; Pool(X)</code><br>
-and global average pooling is defined for each channel <i>c</i> as:<br>
-<code>Pool(X)<sub>c</sub> = (1/HW) &sum;<sub>i=1</sub><sup>H</sup> &sum;<sub>j=1</sub><sup>W</sup> X<sub>c,i,j</sub></code></p>
+<li><strong>Simple Channel Attention (SCA)</strong>:<br>
+Traditional channel attention mechanisms (like Squeeze-and-Excitation blocks) utilize heavy multi-layer perceptrons (MLPs) and sigmoid functions. NAFNet streamlines this block by utilizing global average pooling, followed by a single linear projection layer $W_g$ without activation:
+<br>
+$$\text{SCA}(X) = X \odot \Psi(X)$$
+<br>
+where $\Psi(X)$ is the channel attention modulation vector computed as:
+<br>
+$$\Psi(X) = W_g \cdot \text{Pool}(X)$$
+<br>
+and global average pooling is defined for each channel $c$ as:
+<br>
+$$\text{Pool}(X)_c = \frac{1}{HW} \sum_{i=1}^H \sum_{j=1}^W X_{c,i,j}$$</li>
+</ul>
 <hr />
 <hr />
 
@@ -301,35 +324,56 @@ and global average pooling is defined for each channel <i>c</i> as:<br>
 <p>To rigorously evaluate restoration outputs, the suite employs both structural fidelity and deep perceptual metrics.</p>
 
 <h4 id="321-structural-fidelity-formulations">3.2.1 Structural Fidelity Formulations</h4>
-<p><strong>Peak Signal-to-Noise Ratio (PSNR)</strong>:<br>
-Measures absolute pixel-wise reconstruction accuracy. For a target image <i>I</i> and restored image <i>K</i> of dimensions <i>H &times; W</i>, PSNR is defined as:<br>
-<code>PSNR(I, K) = 10 &middot; log<sub>10</sub>(MAX<sub>I</sub><sup>2</sup> / MSE(I, K))</code><br>
-where <code>MAX<sub>I</sub> = 1.0</code> (for normalized float tensors) and MSE is the Mean Squared Error:<br>
-<code>MSE(I, K) = (1/HW) &sum;<sub>i=1</sub><sup>H</sup> &sum;<sub>j=1</sub><sup>W</sup> (I<sub>i,j</sub> - K<sub>i,j</sub>)<sup>2</sup></code></p>
+<ul>
+<li><strong>Peak Signal-to-Noise Ratio (PSNR)</strong>:<br>
+Measures absolute pixel-wise reconstruction accuracy. For a target image $I$ and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
+<br>
+$$\text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)$$
+<br>
+where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean Squared Error:
+<br>
+$$\text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2$$</li>
 
-<p><strong>Structural Similarity Index (SSIM)</strong>:<br>
-Evaluates luminance, contrast, and structural comparison between image patches:<br>
-<code>SSIM(x, y) = ((2&mu;<sub>x</sub>&mu;<sub>y</sub> + c<sub>1</sub>)(2&sigma;<sub>xy</sub> + c<sub>2</sub>)) / ((&mu;<sub>x</sub><sup>2</sup> + &mu;<sub>y</sub><sup>2</sup> + c<sub>1</sub>)(&sigma;<sub>x</sub><sup>2</sup> + &sigma;<sub>y</sub><sup>2</sup> + c<sub>2</sub>))</code><br>
-where <code>&mu;</code> and <code>&sigma;</code> denote the mean and variance, and <code>c<sub>1</sub>, c<sub>2</sub></code> are stabilization constants.</p>
+<li><strong>Structural Similarity Index (SSIM)</strong>:<br>
+Evaluates luminance, contrast, and structural comparison between image patches:
+<br>
+$$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}$$
+<br>
+where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are stabilization constants.</li>
+</ul>
 
 <h4 id="322-deep-perceptual-metrics">3.2.2 Deep Perceptual Metrics</h4>
 <p>While structural metrics capture high-frequency alignment, they fail to correlate with human-visual preference. The training suite integrates:</p>
-<p><strong>Learned Perceptual Image Patch Similarity (LPIPS)</strong>:<br>
-Computes the distance between predicted and ground-truth features extracted from layer <i>l</i> of a pre-trained VGG-16 backbone, normalized and scaled by channel weights <code>w<sub>l</sub></code>:<br>
-<code>d(x, y) = &sum;<sub>l</sub> (1 / (H<sub>l</sub> W<sub>l</sub>)) &sum;<sub>h,w</sub> \| w<sub>l</sub> &odot; (x̂<sup>l</sup><sub>h,w</sub> - ŷ<sup>l</sup><sub>h,w</sub>) \|<sub>2</sub><sup>2</sup></code></p>
+<ul>
+<li><strong>Learned Perceptual Image Patch Similarity (LPIPS)</strong>:<br>
+Computes the distance between predicted and ground-truth features extracted from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by channel weights $w_l$:
+<br>
+$$d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2$$</li>
 
-<p><strong>Fr&eacute;chet Inception Distance (FID)</strong>:<br>
-Measures the statistical distance between real (<i>r</i>) and generated (<i>g</i>) manifolds in the feature space of Inception-V3:<br>
-<code>d<sub>FID</sub><sup>2</sup> = \|\&mu;<sub>r</sub> - &mu;<sub>g</sub>\|<sub>2</sub><sup>2</sup> + Tr(&Sigma;<sub>r</sub> + &Sigma;<sub>g</sub> - 2(&Sigma;<sub>r</sub>&Sigma;<sub>g</sub>)<sup>1/2</sup>)</code><br>
-where <code>&mu;</code> and <code>&Sigma;</code> represent the feature mean vectors and covariance matrices.</p>
+<li><strong>Fréchet Inception Distance (FID)</strong>:<br>
+Measures the statistical distance between real ($r$) and generated ($g$) manifolds in the feature space of Inception-V3:
+<br>
+$$d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)$$
+<br>
+where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.</li>
+
+<li><strong>Restoration Quality Score Formulation</strong>:<br>
+The orchestrator unifies structural and perceptual metrics into a single scalar score:
+<br>
+$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</li>
+</ul>
 
 <h4 id="323-pcie-vram-thrashing-the-chunking-fix">3.2.3 PCIe VRAM Thrashing &amp; The Chunking Fix</h4>
-<p>When attempting to validate a subset of <i>N</i> images (<i>N = 425</i>), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:<br>
-<code>Mem<sub>total</sub> = O(N &middot; H &middot; W &middot; C)</code><br>
-where <i>C</i> is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.</p>
-<p>To resolve this, we implemented a <strong>Structural Chunking Loop</strong> with a chunk boundary <code>b<sub>chunk</sub> &le; 8</code>. The peak memory footprint is bounded at a constant value:<br>
-<code>Mem<sub>peak</sub> = O(b<sub>chunk</sub> &middot; H &middot; W &middot; C)</code><br>
-This bounds VRAM utilization to ~500MB regardless of the total validation sample count <i>N</i>.</p>
+<p>When attempting to validate a subset of $N$ images ($N = 425$), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:
+<br>
+$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$
+<br>
+where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.</p>
+<p>To resolve this, we implemented a <strong>Structural Chunking Loop</strong> with a chunk boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a constant value:
+<br>
+$$\text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$
+<br>
+This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.</p>
 
 <h4 id="324-the-cpu-bottleneck-bypass">3.2.4 The CPU-Bottleneck Bypass</h4>
 <p>Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking <code>lpips(net="vgg")</code> against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks <code>.to(device)</code> directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.</p>
