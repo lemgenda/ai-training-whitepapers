@@ -176,7 +176,7 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 
 #### 4.1.5 Training Curve
 
-![MPRNet Deraining Training Curve](../assets/mprnet_deraining_training.png)
+![MPRNet Deraining Training Curve](../assets/mprnet_deraining_training_v2.png)
 *Figure: Training Convergence for MPRNet Deraining.*
 
 #### 4.1.6 Model specific issues and optimizations
