@@ -12,14 +12,16 @@
 - [1. Abstract](#1-abstract)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
+  - [2.2 Multi-Stage Progressive Operators (CSFF & SAM)](#22-multi-stage-progressive-operators-csff--sam)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
     - [3.1.1 The Headroom-Aware Memory-Sentinel](#311-the-headroom-aware-memory-sentinel)
     - [3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)](#312-ovc-data-streaming-bridge-opencv-to-cuda)
-  - [3.2 Mathematical Optimization: High-Fidelity Perceptual Engines](#32-mathematical-optimization-high-fidelity-perceptual-engines)
-    - [3.2.1 Structural VS Perceptual Verification](#321-structural-vs-perceptual-verification)
-    - [3.2.2 PCIe VRAM Thrashing & The Chunking Fix](#322-pcie-vram-thrashing--the-chunking-fix)
-    - [3.2.3 The CPU-Bottleneck Bypass](#323-the-cpu-bottleneck-bypass)
+  - [3.2 Mathematical Optimization & Evaluation Metrics](#32-mathematical-optimization--evaluation-metrics)
+    - [3.2.1 Structural Fidelity Formulations](#321-structural-fidelity-formulations)
+    - [3.2.2 Deep Perceptual Metrics](#322-deep-perceptual-metrics)
+    - [3.2.3 PCIe VRAM Thrashing & The Chunking Fix](#323-pcie-vram-thrashing--the-chunking-fix)
+    - [3.2.4 The CPU-Bottleneck Bypass](#324-the-cpu-bottleneck-bypass)
   - [3.3 Kaggle Cloud Execution Protocols](#33-kaggle-cloud-execution-protocols)
     - [3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)](#331-single-gpu-specialization-15gb-t4-node-strategy)
     - [3.3.2 Sub-Epoch Continuity (Progress Snapshots)](#332-sub-epoch-continuity-progress-snapshots)
@@ -34,6 +36,7 @@
     - [4.1.5 Training Curve](#415-training-curve)
     - [4.1.6 Model specific issues and optimizations](#416-model-specific-issues-and-optimizations)
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
+    - [4.1.8 Training Process Analysis](#418-training-process-analysis)
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
   - [5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)](#51-the-simplegate-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
@@ -87,6 +90,26 @@ By unifying diverse high-resolution rain subsets into `LemGendizedMprNetDerainin
 *Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.*
 Deraining requires the model to cleanly isolate and remove refractive water streaks across infinite depths without blurring the native textures of the objects behind them. MPRNet excels here due to its progressive multi-stage architecture which isolates artifacts at multiple resolutions before collapsing them.
 
+### 2.2 Multi-Stage Progressive Operators (CSFF & SAM)
+
+To handle severe torrential rain streaks and refractive drops without losing structural sharpness, MPRNet utilizes a multi-stage architecture ($S_1, S_2, S_3$) equipped with Cross-Stage Feature Fusion (CSFF) and Supervised Attention Modules (SAM):
+
+- **Cross-Stage Feature Fusion (CSFF)**:
+  Features from earlier encoder-decoder stages ($S_{k-1}$) are dynamically fused into the subsequent stage ($S_k$) to prevent spatial detail degradation across multi-scale downsampling. For feature tensor $F^{k-1}$ from stage $k-1$ and feature tensor $F^k$ from stage $k$:
+  $$F_{\text{fused}}^k = F^k + \Phi_{k-1 \to k}\left( \text{Conv}_{1\times 1}(F^{k-1}) \right)$$
+  where $\Phi_{k-1 \to k}(\cdot)$ denotes spatial rescalers (up/downsampling convolutions) aligning spatial dimensions $H \times W$.
+
+- **Supervised Attention Module (SAM)**:
+  Instead of propagating raw intermediate predictions, SAM generates stage-wise spatial attention maps $M^k \in [0, 1]^{1 \times H \times W}$ slaved directly to intermediate residual targets:
+  $$M^k = \sigma\left( \text{Conv}_{1\times 1}\left( \delta\left( \text{Conv}_{3\times 3}(\hat{I}^k) \right) \right) \right)$$
+  $$F_{\text{attended}}^k = F^k \odot M^k + F^k$$
+  where $\hat{I}^k$ is the intermediate RGB reconstruction at stage $k$, $\sigma(\cdot)$ is the sigmoid function, and $\odot$ represents element-wise Hadamard multiplication.
+
+- **Progressive Stage-Wise Loss Formulation**:
+  Total loss is computed as a weighted summation across all 3 stages:
+  $$\mathcal{L}_{\text{total}} = \sum_{k=1}^3 \left( \|\hat{I}^k - I_{\text{gt}}\|_1 + \lambda_{\text{edge}} \mathcal{L}_{\text{edge}}(\hat{I}^k, I_{\text{gt}}) \right) + \lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\hat{I}^3, I_{\text{gt}})$$
+  where $\mathcal{L}_{\text{edge}}$ computes the Charbonnier loss over horizontal and vertical gradient fields $\Delta \hat{I}^k$.
+
 ## 3. Shared Foundations
 
 ### 3.1 Hardware-Aware Infrastructure: Universal Acceleration
@@ -103,20 +126,51 @@ The pipeline harnesses local NumPy/OpenCV workers to decode image tensors native
 
 ---
 
-### 3.2 Mathematical Optimization: High-Fidelity Perceptual Engines
+### 3.2 Mathematical Optimization & Evaluation Metrics
 
-#### 3.2.1 Structural VS Perceptual Verification
+To rigorously evaluate restoration outputs, the suite employs both structural fidelity and deep perceptual metrics.
 
-While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:
+#### 3.2.1 Structural Fidelity Formulations
 
-- **LPIPS (Learned Perceptual Image Patch Similarity)**: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.
-- **FID (Frechet Inception Distance)**: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.
+- **Peak Signal-to-Noise Ratio (PSNR)**:
+  Measures absolute pixel-wise reconstruction accuracy. For a target image $I$ and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
+  $$\text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)$$
+  where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean Squared Error:
+  $$\text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2$$
 
-#### 3.2.2 PCIe VRAM Thrashing & The Chunking Fix
+- **Structural Similarity Index (SSIM)**:
+  Evaluates luminance, contrast, and structural comparison between image patches:
+  $$\text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}$$
+  where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are stabilization constants.
 
-When attempting to validate a 425-image subset against LPIPS simultaneously, the 15GB VRAM ceiling immediately shattered. The Linux kernel initiated "PCIe Thrashing"—swapping VRAM back to System RAM, physically hanging the Kaggle instance for hours. We engineered a **Structural Chunking Loop** (Cap: 8), permanently restricting VRAM utilization to ~500MB without losing mathematical fidelity.
+#### 3.2.2 Deep Perceptual Metrics
 
-#### 3.2.3 The CPU-Bottleneck Bypass
+While structural metrics capture high-frequency alignment, they fail to correlate with human-visual preference. The training suite integrates:
+
+- **Learned Perceptual Image Patch Similarity (LPIPS)**:
+  Computes the distance between predicted and ground-truth features extracted from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by channel weights $w_l$:
+  $$d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2$$
+
+- **Fréchet Inception Distance (FID)**:
+  Measures the statistical distance between real ($r$) and generated ($g$) manifolds in the feature space of Inception-V3:
+  $$d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)$$
+  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+
+- **Restoration Quality Score Formulation**:
+  The orchestrator unifies structural and perceptual metrics into a single scalar score:
+  $$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$
+
+#### 3.2.3 PCIe VRAM Thrashing & The Chunking Fix
+
+When attempting to validate a subset of $N$ images ($N = 425$), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:
+$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$
+where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.
+
+To resolve this, we implemented a **Structural Chunking Loop** with a chunk boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a constant value:
+$$\text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$
+This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
+
+#### 3.2.4 The CPU-Bottleneck Bypass
 
 Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking `lpips(net="vgg")` against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks `.to(device)` directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.
 
@@ -191,6 +245,16 @@ MPRNet utilizes a multi-stage architecture where early stages handle broad artif
 | **SSIM** | 0.9996 | 0.9000 | +0.0996 |
 | **LPIPS** | 0.0013 | 0.0700 | -0.0687 |
 | **FID** | 0.2272 | 12.0000 | -11.7728 |
+
+#### 4.1.8 Training Process Analysis
+
+The MPRNet Deraining model was trained over 22 total epochs utilizing the progressive spatial ladder: `256px -> 384px -> 512px`.
+
+- **Stage 1 (Epochs 1-8)**: Resolution anchored at `256x256`. PSNR converged rapidly from `36.29 dB` (Epoch 1) to `47.93 dB` (Epoch 8), with SSIM reaching `0.9987` as the multi-stage encoder-decoder learned to isolate heavy volumetric rain streaks.
+- **Stage 2 (Epochs 9-15)**: Resolution expanded to `384x384`. Val loss decreased from `0.001487` down to `0.001087`, while PSNR advanced to `51.22 dB` and LPIPS dropped to `0.0023`.
+- **Stage 3 (Epochs 16-22)**: Resolution scaled to the `512x512` native curriculum ceiling with 100% dataset stream fraction (`Data = 1.0`). At Epoch 22, the architecture reached its peak performance ceiling: **PSNR 53.95 dB**, **SSIM 0.9996**, **LPIPS 0.0013**, **FID 0.2272**, and **Quality Score 719.21**.
+
+The structural FP16 disable prevented Cross-Stage Feature Fusion (CSFF) gradient explosions, while the surgical VRAM defibrillator enabled seamless 512px Inception-V3 FID scoring without memory fragmentation.
 
 ## 5. Challenges & Resilience Architecture
 
