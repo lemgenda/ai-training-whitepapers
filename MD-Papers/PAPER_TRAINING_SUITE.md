@@ -67,6 +67,13 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Multi-Path Candidate Directory Resolver**: All generated training notebooks in the matrix dynamically resolve working directory candidates (`/kaggle/working/lemgendary-training-suite`, `/kaggle/working/model-training/lemgendary-training-suite`, `/kaggle/working`) before executing `os.chdir()` or `%pip install`, permanently eliminating `FileNotFoundError` across all cloud platforms.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
+### 2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety Sentinels (v16.4.0)
+
+- **3-Epoch Sustained Jolt Window**: Replaces single-epoch sawtooth LR thrashing with a 3-epoch sustained propulsion window, allowing AdamW momentum buffers to seat into new loss basins without premature cooling.
+- **Early-Collapse Safety Valve**: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses ($\Delta \text{Quality} < -0.015$), the window collapses immediately, triggering soft LR cooling ($0.85\times$) and momentum dampening.
+- **Head-Differential LR Propulsion**: During REFINEMENT jolts, scales classification/regression head LR by $1.50\times$ while dampening backbone LR to $0.50\times$, protected by a strict ratio clamp ($\text{LR}_{\text{head}} \le 3.0 \times \text{LR}_{\text{backbone}}$).
+- **Mini-SWA Plateau Recovery Pulse & Rollback Guard**: Averages recent top checkpoints when trapped in plateau. Stores a CPU backup prior to SWA, executes a mandatory 20-batch `update_bn` pass over the dataset to re-estimate Batch/LayerNorm statistics, and automatically rolls back if post-SWA quality degrades.
+
 ---
 
 ## 3. Judicial Audit Engine

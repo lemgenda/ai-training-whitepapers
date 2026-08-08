@@ -39,6 +39,8 @@
                         <li><a href="#checkpoint-resumption">2.4. Checkpoint Resumption & Singularity Hardening</a></li>
                         <li><a href="#moe-scaling">2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture</a></li>
                         <li><a href="#forex-architecture">2.6. Multi-Scale Forex Trading Architecture (ForexPredictor)</a></li>
+                        <li><a href="#autonomous-sota-adaptation">2.7. Autonomous SOTA Hyperparameter Adaptation (v17.5)</a></li>
+                        <li><a href="#governor-plateau-engine">2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety Sentinels (v16.4.0)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-5">3. Judicial Audit Engine</a>
@@ -216,6 +218,15 @@
                 <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
                 <li><strong>Dynamic Softmax Sharpening</strong>: Softmax temperature is dynamically annealed down toward <code>min_temp</code> (<code>0.90</code>) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.</li>
                 <li><strong>Multi-Path Candidate Directory Resolver</strong>: All generated training notebooks in the matrix dynamically resolve working directory candidates (<code>/kaggle/working/lemgendary-training-suite</code>, <code>/kaggle/working/model-training/lemgendary-training-suite</code>, <code>/kaggle/working</code>) before executing <code>os.chdir()</code> or <code>%pip install</code>, permanently eliminating <code>FileNotFoundError</code> across all cloud platforms.</li>
+                <li><strong>Stateless ONNX Deployment</strong>: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.</li>
+            </ul>
+
+            <h3 id="governor-plateau-engine">2.8. Smart Governor Plateau-Breaking Engine &amp; Nuclear Safety Sentinels (v16.4.0)</h3>
+            <ul>
+                <li><strong>3-Epoch Sustained Jolt Window</strong>: Replaces single-epoch sawtooth LR thrashing with a 3-epoch sustained propulsion window, allowing AdamW momentum buffers to seat into new loss basins without premature cooling.</li>
+                <li><strong>Early-Collapse Safety Valve</strong>: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses (&Delta;Quality &lt; -0.015), the window collapses immediately, triggering soft LR cooling (0.85&times;) and momentum dampening.</li>
+                <li><strong>Head-Differential LR Propulsion</strong>: During REFINEMENT jolts, scales classification/regression head LR by 1.50&times; while dampening backbone LR to 0.50&times;, protected by a strict ratio clamp (LR<sub>head</sub> &le; 3.0 &times; LR<sub>backbone</sub>).</li>
+                <li><strong>Mini-SWA Plateau Recovery Pulse &amp; Rollback Guard</strong>: Averages recent top checkpoints when trapped in plateau. Stores a CPU backup prior to SWA, executes a mandatory 20-batch <code>update_bn</code> pass over the dataset to re-estimate Batch/LayerNorm statistics, and automatically rolls back if post-SWA quality degrades.</li>
             </ul>
         
 
