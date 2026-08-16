@@ -102,6 +102,7 @@
                         <li><a href="#543-dynamic-resolution-escalation-anti-loop-breakout-v1633">5.43 Dynamic Resolution Escalation &amp; Anti-Loop Breakout (v16.3.3)</a></li>
                         <li><a href="#544-proven-manifold-protection-intra-resolution-data-recoil-v1600">5.44 Proven-Manifold Protection &amp; Intra-Resolution Data Recoil (v16.0.0)</a></li>
                         <li><a href="#545-srcc-driven-dynamic-governance-rank-margin-ceiling-calibration-v180">5.45 SRCC-Driven Dynamic Governance &amp; Rank Margin Ceiling Calibration (v18.0)</a></li>
+                        <li><a href="#546-dynamic-manifold-scaled-jolt-shield-calibration-v181">5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)</a></li>
                     </ul>
                 </li>
                 <li><a href="#6-deployment-strategy-why-onnx">6. Deployment Strategy: Why ONNX?</a>
@@ -899,6 +900,14 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <li><strong>Explicit SRCC Parameter Binding</strong>: Updated <code>audit_epoch</code> signature in <code>optimization_engine.py</code> and both invocation sites in <code>train.py</code> to pass the live <code>srcc=srcc</code> metric directly into the decision engine.</li>
 <li><strong>True Rank-Order Trigger</strong>: The autonomous boost condition now directly monitors <code>srcc &lt; target_srcc</code>, ensuring rank boosting activates whenever rank correlation lags, regardless of PLCC saturation.</li>
 <li><strong>Configurable Ceiling &amp; Floor Governance</strong>: Decoupled hardcoded limits by introducing <code>max_rank_weight</code> (up to <code>2.0</code>) and <code>min_rank_margin</code> (<code>0.05</code>) in model stabilizers (<code>unified_models_v2.yaml</code>), allowing the Governor to dynamically scale ranking gradients up to 2.0x while safely maintaining margin tightening down to the exact 0.05 target floor.</li>
+</ol>
+<hr />
+<h3 id="546-dynamic-manifold-scaled-jolt-shield-calibration-v181">5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)</h3>
+<p><strong>Issue</strong>: During late-stage plateau breaking on high-scalar quality manifolds (such as <code>nima_technical</code> where Quality Score operates in the $200–300$ scalar regime), the <strong>Jolt Shield</strong> early collapse valve utilized a hardcoded absolute regression floor (<code>delta_q &lt; -0.015</code>). On normalized metrics $[0, 1]$, a drop of $-0.015$ represents a $1.5\%$ regression; however, on a Quality Score scale of $\sim 284$, a delta of $-0.015$ corresponds to an imperceptible $0.005\%$ fluctuation. Consequently, normal exploratory weight updates under differential propulsion ($2.25\times$ Head LR) produced natural $\pm 0.8$ metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This resulted in an infinite oscillating loop: <em>Plateau Detection (4 epochs) $\rightarrow$ Jolt Injection $\rightarrow$ False-Alarm Jolt Collapse Abort $\rightarrow$ Precision Cooling $\rightarrow$ Stagnation</em>.</p>
+<p><strong>Fix</strong>: Implemented <strong>Dynamic Manifold Scale Guarding</strong> in <code>SmartTrainingGovernor</code> (<code>optimization_engine.py</code>):</p>
+<ol>
+<li><strong>Adaptive Collapse Threshold</strong>: Replaced the static $-0.015$ constant with an adaptive threshold $\text{collapse\_threshold} = -0.03 \times Q_{\text{prev}}$ for high-scalar manifolds ($Q_{\text{prev}} &gt; 1.0$), while retaining $-0.015$ for normalized $[0, 1]$ tasks.</li>
+<li><strong>Sustained Exploration Window</strong>: The 3-epoch propulsion window is now protected against exploratory variance, allowing head-differential gradients to persist across multiple consecutive epochs to escape local attractors.</li>
 </ol>
 <hr />
 </section>

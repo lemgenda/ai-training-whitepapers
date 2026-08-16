@@ -41,6 +41,8 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
     - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop)
     - [Premature Spatial Retreat (The Over-Aggressive Recoil)](#premature-spatial-retreat-the-over-aggressive-recoil)
+    - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier)
+    - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -240,6 +242,12 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: Fixed loss hyperparameters (such as pairwise `rank_weight`, `rank_margin`, or static `softmax_temp`) in static configuration files limit late-stage convergence. Models reach a plateau near SOTA targets (`PLCC > 0.91`, `SRCC > 0.91`, `EMD < 0.07`), but manual mid-training YAML adjustments are error-prone and disrupt automated continuous training pipelines.
 - **Identification**: Model metrics stabilize at `PLCC ~0.87-0.88` and `SRCC ~0.79-0.80`, with EMD hovering around `0.088-0.095`. Manual mid-session editing of static configuration files is required to force rank loss scaling.
 - **Remedy**: **Autonomous SOTA Hyperparameter Adaptation (v17.5)**. The `SmartTrainingGovernor` dynamically audits late-stage convergence against target SOTA benchmarks (`sota_targets`). When plateauing below target benchmarks in the `REFINEMENT` phase, it automatically escalates `rank_weight` (up to `1.5`), tightens pairwise `rank_margin` (down to `0.05`), and sharpens `softmax_temp` (down to `0.90`) on the fly, writing the updated parameters into `criterion.stab` and checkpoint state.
+
+### The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)
+
+- **The Issue**: During late-stage plateau breaking on high-scalar quality manifolds (such as `nima_technical` where Quality Score is ~284), the **Jolt Shield** early collapse valve utilized a hardcoded absolute regression floor (`delta_q < -0.015`). On normalized metrics $[0, 1]$, a drop of $-0.015$ represents a $1.5\%$ regression; however, on a Quality Score scale of $\sim 284$, a delta of $-0.015$ corresponds to an imperceptible $0.005\%$ fluctuation. Consequently, normal exploratory weight updates under differential propulsion ($2.25\times$ Head LR) produced natural $\pm 0.8$ metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: *Plateau Detection (4 epochs) $\rightarrow$ Jolt Injection $\rightarrow$ False-Alarm Jolt Collapse Abort $\rightarrow$ Precision Cooling $\rightarrow$ Stagnation*.
+- **Identification**: Terminal logs show `JOLT: Breaking Plateau ... (3-Epoch Window)` on one epoch, immediately followed on the very next epoch by `[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.` with repetitive cooling and 4-epoch plateau cycles.
+- **Remedy**: **Dynamic Manifold-Scaled Jolt Shield (v18.1)**. Scale the early collapse threshold dynamically based on `prev_quality`: $\text{collapse\_threshold} = -0.03 \times Q_{\text{prev}}$ if $Q_{\text{prev}} > 1.0$ else $-0.015$. This allows the model to sustain exploratory propulsion across its full 3-epoch window without false-alarm cancellation.
 
 ---
 
