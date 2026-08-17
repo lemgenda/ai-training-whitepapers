@@ -43,6 +43,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [Premature Spatial Retreat (The Over-Aggressive Recoil)](#premature-spatial-retreat-the-over-aggressive-recoil)
     - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier)
     - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization)
+    - [Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -248,6 +249,16 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: During late-stage plateau breaking on high-scalar quality manifolds (such as `nima_technical` where Quality Score is ~284), the **Jolt Shield** early collapse valve utilized a hardcoded absolute regression floor (`delta_q < -0.015`). On normalized metrics $[0, 1]$, a drop of $-0.015$ represents a $1.5\%$ regression; however, on a Quality Score scale of $\sim 284$, a delta of $-0.015$ corresponds to an imperceptible $0.005\%$ fluctuation. Consequently, normal exploratory weight updates under differential propulsion ($2.25\times$ Head LR) produced natural $\pm 0.8$ metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: *Plateau Detection (4 epochs) $\rightarrow$ Jolt Injection $\rightarrow$ False-Alarm Jolt Collapse Abort $\rightarrow$ Precision Cooling $\rightarrow$ Stagnation*.
 - **Identification**: Terminal logs show `JOLT: Breaking Plateau ... (3-Epoch Window)` on one epoch, immediately followed on the very next epoch by `[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.` with repetitive cooling and 4-epoch plateau cycles.
 - **Remedy**: **Dynamic Manifold-Scaled Jolt Shield (v18.1)**. Scale the early collapse threshold dynamically based on `prev_quality`: $\text{collapse\_threshold} = -0.03 \times Q_{\text{prev}}$ if $Q_{\text{prev}} > 1.0$ else $-0.015$. This allows the model to sustain exploratory propulsion across its full 3-epoch window without false-alarm cancellation.
+
+### Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)
+
+- **The Issue**: In high-resolution image restoration pipelines, transferring validation predictions to CPU host RAM for single-threaded `skimage.metrics.structural_similarity` calculations causes severe CPU saturation (pinned at 100%+ on dual-vCPU VMs like Kaggle) and PCIe bus ping-pong thrashing. GPUs drop to 15–25% utilization, stalling execution and causing single validation passes to take upwards of 2–3 hours. Static workspace caps further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2.
+- **Identification**: Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization drops to 18–27%, GPU memory is underutilized, and validation progress moves at >1.5s per iteration across thousands of micro-batches.
+- **Remedy**: **Zero-Copy GPU-Native Evaluation & Dynamic VRAM-Tiered Batching (v19.2)**:
+  1. **GPU-Native PyTorch SSIM**: Vectorized 2D Gaussian convolution SSIM (`compute_ssim_gpu`) evaluated directly on CUDA tensors in $< 1\text{ms}$.
+  2. **Zero-Copy VRAM Pipeline**: Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.
+  3. **Dynamic VRAM Tier Validation Cap**: Scales validation batch size dynamically based on VRAM capacity ($\ge 14\text{GB} \rightarrow 32$, $\ge 8\text{GB} \rightarrow 16$, $<4.5\text{GB} \rightarrow 4$).
+  4. **Dynamic CPU Worker Topology**: Aligns `num_workers = min(cpu_count, 2)` on Kaggle to prevent CPU core oversubscription.
 
 ---
 

@@ -66,6 +66,7 @@
                         <li><a href="#premature-spatial-retreat">Premature Spatial Retreat (The Over-Aggressive Recoil)</a></li>
                         <li><a href="#static-loss-hyperparameter-saturation">Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)</a></li>
                         <li><a href="#false-alarm-jolt-collapse">The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)</a></li>
+                        <li><a href="#cpu-validation-thrashing">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-9">6. Best Practices Checklist</a>
@@ -523,6 +524,17 @@
             <p><strong>The Issue:</strong> During late-stage plateau breaking on high-scalar quality manifolds (such as <code>nima_technical</code> where Quality Score is ~284), the <strong>Jolt Shield</strong> early collapse valve utilized a hardcoded absolute regression floor (<code>delta_q &lt; -0.015</code>). On normalized metrics [0, 1], a drop of -0.015 represents a 1.5% regression; however, on a Quality Score scale of ~284, a delta of -0.015 corresponds to an imperceptible 0.005% fluctuation. Consequently, normal exploratory weight updates under differential propulsion (2.25x Head LR) produced natural ±0.8 metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: <em>Plateau Detection (4 epochs) &rarr; Jolt Injection &rarr; False-Alarm Jolt Collapse Abort &rarr; Precision Cooling &rarr; Stagnation</em>.</p>
             <p><strong>Identification:</strong> Terminal logs show <code>JOLT: Breaking Plateau ... (3-Epoch Window)</code> on one epoch, immediately followed on the very next epoch by <code>[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.</code> with repetitive cooling and 4-epoch plateau cycles.</p>
             <p><strong>Remedy:</strong> <strong>Dynamic Manifold-Scaled Jolt Shield (v18.1)</strong>. Scale the early collapse threshold dynamically based on <code>prev_quality</code>: <code>collapse_threshold = -0.03 * prev_quality</code> if <code>prev_quality &gt; 1.0</code> else <code>-0.015</code>. This allows the model to sustain exploratory propulsion across its full 3-epoch window without false-alarm cancellation.</p>
+
+            <h3 id="cpu-validation-thrashing">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</h3>
+            <p><strong>The Issue:</strong> In high-resolution image restoration pipelines, transferring validation predictions to CPU host RAM for single-threaded <code>skimage.metrics.structural_similarity</code> calculations causes severe CPU saturation (pinned at 100%+ on dual-vCPU VMs like Kaggle) and PCIe bus ping-pong thrashing. GPUs drop to 15–25% utilization, stalling execution and causing single validation passes to take upwards of 2–3 hours. Static workspace caps further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2.</p>
+            <p><strong>Identification:</strong> Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization drops to 18–27%, GPU memory is underutilized, and validation progress moves at &gt;1.5s per iteration across thousands of micro-batches.</p>
+            <p><strong>Remedy:</strong> <strong>Zero-Copy GPU-Native Evaluation &amp; Dynamic VRAM-Tiered Batching (v19.2)</strong>:</p>
+            <ol>
+                <li><strong>GPU-Native PyTorch SSIM:</strong> Vectorized 2D Gaussian convolution SSIM (<code>compute_ssim_gpu</code>) evaluated directly on CUDA tensors in &lt; 1ms.</li>
+                <li><strong>Zero-Copy VRAM Pipeline:</strong> Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.</li>
+                <li><strong>Dynamic VRAM Tier Validation Cap:</strong> Scales validation batch size dynamically based on VRAM capacity (&ge; 14GB &rarr; 32, &ge; 8GB &rarr; 16, &lt; 4.5GB &rarr; 4).</li>
+                <li><strong>Dynamic CPU Worker Topology:</strong> Aligns <code>num_workers = min(cpu_count, 2)</code> on Kaggle to prevent CPU core oversubscription.</li>
+            </ol>
         
 
         
