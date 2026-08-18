@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Executive Summary
+## 1. Abstract
 
 The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.2.9 "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
 
@@ -73,6 +73,32 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Early-Collapse Safety Valve**: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses ($\Delta \text{Quality} < -0.015$), the window collapses immediately, triggering soft LR cooling ($0.85\times$) and momentum dampening.
 - **Head-Differential LR Propulsion**: During REFINEMENT jolts, scales classification/regression head LR by $1.50\times$ while dampening backbone LR to $0.50\times$, protected by a strict ratio clamp ($\text{LR}_{\text{head}} \le 3.0 \times \text{LR}_{\text{backbone}}$).
 - **Mini-SWA Plateau Recovery Pulse & Rollback Guard**: Averages recent top checkpoints when trapped in plateau. Stores a CPU backup prior to SWA, executes a mandatory 20-batch `update_bn` pass over the dataset to re-estimate Batch/LayerNorm statistics, and automatically rolls back if post-SWA quality degrades.
+
+---
+
+
+### 2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)
+
+- **Continuous Ranking Supervision**: Replaces non-differentiable sort operations with a continuous sigmoid-based soft ranking formulation:
+  $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
+- **Micro-Batch Contrastive Memory Bank**: Employs a detached FIFO queue ($N=32/64$) to maintain historical representation context across gradient accumulation steps. On 4GB GPUs where physical micro-batch size is $b=2$, this scales active pair comparisons from $\binom{2}{2} = 1$ to $\binom{32}{2} = 496$ pairs per backward pass ($41.3\times$ rank gradient density) without increasing VRAM allocations.
+
+### 2.10. Spatial Statistical Pooling Upgrade ($	ext{Mean} \oplus \text{Std}$) & Universal Safety Filter
+
+- **Variance-Aware Feature Aggregation**: Augments standard Global Average Pooling ($	ext{GAP}$) with spatial standard deviation channels:
+  $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
+- **Localized Defect Retention**: Prevents localized micro-defects (compression blocking, fine sensor noise) and small NSFW triggers occupying $5\%\text{--}15\%$ canvas area from being diluted by $85\%\text{--}95\%$ background pixels.
+
+### 2.11. Headless Kaggle Cloud Engine (Headless API Orchestration)
+
+- **Zero-Browser Cloud Deployment**: Launches, monitors, and downloads full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell without manual web browser intervention.
+- **Autonomous Checkpoint Syncing**: Uses `kagglehub` model registry and kernel output endpoints to seamlessly pull trained `.pth` weights and `metrics.csv` logs into `LemGendaryModels/<model_name>/`.
+- **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`), `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
+
+### 2.12. Universal Post-Training Target Audit & Interactive Guidance
+
+- **Benchmark Gap Audit**: Automatically tabulates achieved metrics against mathematical `sota_targets` upon reaching the maximum epoch ceiling.
+- **Interactive Action Matrix**: Presents operators with immediate in-process options to extend training, launch cloud GPU escalation, fine-tune from the best checkpoint, or export ONNX matrices.
 
 ---
 

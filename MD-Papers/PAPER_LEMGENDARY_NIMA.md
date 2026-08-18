@@ -117,6 +117,9 @@
   - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)](#544-proven-manifold-protection-intra-resolution-data-recoil-v1600)
   - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration (v18.0)](#545-srcc-driven-dynamic-governance-rank-margin-ceiling-calibration-v180)
   - [5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)](#546-dynamic-manifold-scaled-jolt-shield-calibration-v181)
+  - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
+  - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
+  - [5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud Engine](#549-universal-post-training-target-audit--headless-kaggle-cloud-engine)
 - [6. Deployment Strategy: Why ONNX?](#6-deployment-strategy-why-onnx)
   - [6.1 Format Comparison Matrix](#61-format-comparison-matrix)
   - [6.2 Why ONNX Wins for LemGendary](#62-why-onnx-wins-for-lemgendary)
@@ -785,6 +788,30 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 2. **Sustained Exploration Window**: The 3-epoch propulsion window is now protected against exploratory variance, allowing head-differential gradients to persist across multiple consecutive epochs to escape local attractors.
 
 ---
+
+---
+
+### 5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)
+
+Under constrained edge hardware (GTX 1650 4GB @ 512px), physical micro-batch size $b=2$ creates a severe pairwise ranking bottleneck. While Earth Mover's Distance (EMD) loss optimizes linear density correlation (driving $\text{PLCC} \ge 0.9102$), evaluating only $\binom{2}{2} = 1$ pair per step starves monotonic rank gradients, stalling $\text{SRCC}$ at $\sim 0.8178$.
+
+To eliminate this bottleneck, the v19.0 architecture integrates:
+1. **Differentiable Soft-Spearman Loss**: Computes smooth surrogate ranks via temperature-scaled logistic sigmoids:
+   $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \frac{1}{1 + \exp\left(-\frac{p_i - p_j}{\tau}\right)}$$
+2. **Cross-Microbatch Rank Memory Bank**: A detached FIFO queue ($N=32$) caches recent predictions and targets across gradient accumulation cycles. On every forward step, active predictions are concatenated with memory bank tensors, computing pairwise rank correlation across $\binom{32}{2} = 496$ sample pairs.
+
+### 5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization
+
+Global Average Pooling (GAP) calculates $\frac{1}{HW}\sum x_{h,w}$, which attenuates high-frequency localized micro-defects (e.g. ISO grain, compression ringing) when defects occupy only a fraction of the 512px canvas. 
+
+The upgraded NIMA head adopts dual-moment statistical pooling:
+$$\mu_c = \frac{1}{HW} \sum_{h,w} x_{c,h,w}, \quad \sigma_c = \sqrt{\frac{1}{HW} \sum_{h,w} (x_{c,h,w} - \mu_c)^2 + \epsilon}$$
+$$\text{Pooling}_{\text{stats}}(x) = [\mu_1, \dots, \mu_C, \sigma_1, \dots, \sigma_C]^T \in \mathbb{R}^{2C}$$
+This doubles feature sensitivity to localized high-frequency texture variations without altering convolutional backbone weights.
+
+### 5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud Engine
+
+When local training finishes its maximum epoch budget (e.g. 300 epochs) without satisfying all SOTA criteria, `train.py` triggers an autonomous diagnostic audit. It reports metric gaps against `sota_targets` and allows seamless escalation to high-VRAM Kaggle Cloud instances (Tesla T4 x2 / 16GB) via `kaggle_cloud_manager.py`, unlocking batch size 16–32 training with zero manual web configuration.
 
 ---
 
