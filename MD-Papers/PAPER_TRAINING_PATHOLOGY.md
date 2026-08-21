@@ -365,6 +365,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 - [x] **Task 16.6: Hierarchical Parent Domain UI Navigation** (Target: `lemgendary_models_hub.ps1`)
 - [x] **Task 17.1: Walk-Forward Curriculum Orchestrator** (Target: `train_forex_curriculum.py`)
 - [x] **Task 17.2: Adaptive Loss Sentinel for Financial Models** (Target: `train.py`)
+- [x] **Task 17.3: Dynamic Domain-Aware Telemetry Engine** (Target: `telemetry.py`)
 
 ---
 
@@ -382,6 +383,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **Cloud Escalation** | Requires manual browser navigation to Kaggle site. | **Headless Cloud Engine**: Launch, monitor, and pull GPU jobs via PowerShell. |
 | **Post-Training UX** | Silent termination with raw `Press Enter to return...`. | **Target Audit & Guidance**: Diagnostic breakdown with action choices. |
 | **Financial Walk-Forward** | Manual dataset slicing and script restarts per pair. | **Curriculum Orchestrator**: Automated multi-phase 6-Fold expansion. |
+| **Telemetry Schema** | Static 28-column image metric array across all domains. | **Domain-Aware Telemetry**: 21-column Financial auto-scaling array. |
 
 ---
 
