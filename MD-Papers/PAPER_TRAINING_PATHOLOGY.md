@@ -135,7 +135,7 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   $$\mathcal{L}_{\text{rank}} = \frac{1}{|\mathcal{P}|} \sum_{(i,j) \in \mathcal{P}} \text{ReLU}\left(m - \text{sign}(t_i - t_j)(p_i - p_j)\right)$$
   When hardware VRAM constraints (GTX 1650 4GB @ 512px) enforce micro-batch size $b=2$ with gradient accumulation $K=12$ ($N_{\text{eff}}=24$), pairwise combinations within each forward pass collapse to $|\mathcal{P}| = \binom{2}{2} = 1$ pair. Across 12 micro-batches, only $12 \times 1 = 12$ pairs are compared, whereas a unified 24-sample batch evaluates $\binom{24}{2} = 276$ pairs ($95.6\%$ ranking information loss). EMD loss optimizes linear correlation ($\text{PLCC} \ge 0.91$), but monotonic ranking supervision is starved, causing $\text{SRCC}$ to plateau at $\sim 0.81$.
 - **Identification**: Training runs display strong $\text{PLCC} \ge 0.9102$ alongside stagnant $\text{SRCC} \approx 0.815\text{--}0.818$ across 150+ epochs, with high validation rank margin variance.
-- **Remedy**: 
+- **Remedy**:
   1. **Differentiable Soft-Spearman Loss**: Replace sparse hinge penalties with continuous sigmoid-ranked correlation:
      $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
   2. **Cross-Microbatch Rank Memory Bank**: Maintain a detached FIFO queue ($N=32/64$) to compute soft ranking across $\binom{32}{2} = 496$ sample pairs on every forward step, backpropagating gradients exclusively through the active micro-batch.
@@ -325,14 +325,14 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 
 ## 10. Nuclear Audit: The Optimization Checklist
 
-### 🚀 High-Velocity "DO's" (Keep Doing These)
+### High-Velocity "DO's" (Keep Doing These)
 
 - [x] **Memory-Sentinel Probing**: Decouple `batch_size` from registry to allow autonomous peak hardware utilization.
 - [x] **NPP Loop Detection**: Trust the Governor's "Recoil" logic to save the manifold during turbulence.
 - [x] **Atomic Save Protocol**: Use the `.tmp` swap method to prevent corrupted weights.
 - [x] **Headless Cloud Escalation**: Seamlessly push high-resolution training jobs to Kaggle GPU cloud when local VRAM limits batch size.
 
-### 🛠️ Critical "FIX's" (SOTA Blockers)
+### Critical "FIX's" (SOTA Blockers)
 
 - [x] **Metric Rebalancing**: Change `METRIC_WEIGHTS['psnr']` from `1` to `10` in `train.py`.
 - [x] **Differentiable Soft-Spearman Loss**: Eliminate pairwise ranking starvation under micro-batch sizes.
