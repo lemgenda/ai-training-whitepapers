@@ -308,7 +308,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **Group C: Restoration** | `nafnet_denoising`, `film_restorer`, `ffanet_indoor` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 256→384→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty at 512px; switch to L1 + LPIPS loss. |
 | **Group D: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 512→768→1024<br>**Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant.<br>**Tactic**: Switch to EMA weights and dynamic CFG scaling. |
 | **Group E: Vision-Language** | `vlm_llava`, `vlm_blip2` | Caption Accuracy | **Res**: 224→336→448<br>**Fraction**: 0.10→0.50 (Polish) | **Plateau**: Model repetitive or hallucinating.<br>**Tactic**: Reset Optimizer Momentum; apply Softmax Temperature (0.05). |
-| **Group F: Financial & Time-Series** | `forex_predictor` | Accuracy > 0.65, Directional Edge | **Timeframe Ladder**: M1→M5→M15→H1→H4→D1<br>**Batch**: 64 (Effective) | **Plateau**: Magnitude loss overfits noisy chop.<br>**Tactic**: Dual Forex Huber Loss with direction entropy confidence gating. |
+| **Group F: Financial & Time-Series** | `forex_predictor` | DirAcc > 0.787, WinRate > 0.682, PF > 2.2, Sharpe > 2.31, Sortino > 2.94, MaxDD < 9.5, TP/SL_MAE < 3.8 | **Timeframe Ladder**: M1→M5→M15→H1→H4→D1<br>**Batch**: 64 (Effective) | **Plateau**: Magnitude loss overfits noisy chop.<br>**Tactic**: Dual Forex Huber Loss with direction entropy confidence gating. |
 
 ---
 

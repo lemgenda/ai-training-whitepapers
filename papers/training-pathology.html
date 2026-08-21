@@ -731,42 +731,55 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Group</th>
+                            <th>Model Group</th>
                             <th>Key Models</th>
                             <th>SOTA Goal</th>
-                            <th>Plateau Tactic</th>
+                            <th>Progression Strategy</th>
+                            <th>Plateau Recognition & Breakthrough</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>A: Metric Scorers</strong></td>
-                            <td><code>nima_aesthetic</code>, <code>nima_authenticity</code></td>
-                            <td>SRCC > 0.90</td>
-                            <td>LR "Jolt" (1.5x) and SWA at 65% mark.</td>
+                            <td><strong>Group A: Metric Scorers</strong></td>
+                            <td><code>nima_aesthetic</code>, <code>nima_technical</code>, <code>nima_authenticity</code></td>
+                            <td>PLCC &gt; 0.91, SRCC &gt; 0.91, RM &lt; 0.05</td>
+                            <td><strong>Res</strong>: 256→384→512<br><strong>Fraction</strong>: 0.15→0.75→1.0</td>
+                            <td><strong>Plateau</strong>: SRCC bottlenecks at ~0.81 while PLCC is ~0.91.<br><strong>Tactic</strong>: Deploy Soft-Spearman ranking loss with Rank Memory Bank ($N=32$) and transition to Kaggle GPU for batch 16/32.</td>
                         </tr>
                         <tr>
-                            <td><strong>B: Restoration</strong></td>
-                            <td><code>nafnet_denoising</code>, <code>film_restorer</code></td>
-                            <td>PSNR > 33.0 (Restoration)<br>PSNR > 24.0, SSIM > 0.80, LPIPS < 0.25 (Film Restorer SOTA)</td>
-                            <td>Increase degradation difficulty at 512px; switch to L1 + LPIPS loss.</td>
+                            <td><strong>Group B: Safety &amp; Categorical</strong></td>
+                            <td><code>universal_nsfw_classification</code></td>
+                            <td>Accuracy &gt; 0.98</td>
+                            <td><strong>Res</strong>: 224px (Locked)<br><strong>Fraction</strong>: 0.20 increments</td>
+                            <td><strong>Plateau</strong>: Localized trigger false negatives.<br><strong>Tactic</strong>: Activate Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$) and Focal Loss ($\gamma=2.0$).</td>
                         </tr>
                         <tr>
-                            <td><strong>C: Generative</strong></td>
+                            <td><strong>Group C: Restoration</strong></td>
+                            <td><code>nafnet_denoising</code>, <code>film_restorer</code>, <code>ffanet_indoor</code></td>
+                            <td>PSNR &gt; 33.0, LPIPS &lt; 0.06</td>
+                            <td><strong>Res</strong>: 256→384→512 (Patch-based)<br><strong>Fraction</strong>: 0.15 increments</td>
+                            <td><strong>Plateau</strong>: SSIM improves but visual artifacts persist.<br><strong>Tactic</strong>: Increase degradation difficulty at 512px; switch to L1 + LPIPS loss.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Group D: Generative</strong></td>
                             <td><code>diffusion_sdxl</code>, <code>diffusion_flux</code></td>
-                            <td>FID < 14.5</td>
-                            <td>Switch to EMA (Exponential Moving Average) weights.</td>
+                            <td>FID &lt; 14.5</td>
+                            <td><strong>Res</strong>: 512→768→1024<br><strong>Fraction</strong>: 0.10 increments</td>
+                            <td><strong>Plateau</strong>: Text alignment is high but FID is stagnant.<br><strong>Tactic</strong>: Switch to EMA weights and dynamic CFG scaling.</td>
                         </tr>
                         <tr>
-                            <td><strong>D: Vision-Language</strong></td>
+                            <td><strong>Group E: Vision-Language</strong></td>
                             <td><code>vlm_llava</code>, <code>vlm_blip2</code></td>
                             <td>Caption Accuracy</td>
-                            <td>Reset Momentum; apply Softmax Temperature (0.05).</td>
+                            <td><strong>Res</strong>: 224→336→448<br><strong>Fraction</strong>: 0.10→0.50 (Polish)</td>
+                            <td><strong>Plateau</strong>: Model repetitive or hallucinating.<br><strong>Tactic</strong>: Reset Optimizer Momentum; apply Softmax Temperature (0.05).</td>
                         </tr>
                         <tr>
-                            <td><strong>E: Parameter Regression</strong></td>
-                            <td><code>upn_v2</code></td>
-                            <td>MAE < 0.03</td>
-                            <td>Switch to SmoothL1 loss and apply $\pi$-boundary normalization.</td>
+                            <td><strong>Group F: Financial &amp; Time-Series</strong></td>
+                            <td><code>forex_predictor</code></td>
+                            <td>DirAcc &gt; 0.787, WinRate &gt; 0.682, PF &gt; 2.2, Sharpe &gt; 2.31, Sortino &gt; 2.94, MaxDD &lt; 9.5, TP/SL_MAE &lt; 3.8</td>
+                            <td><strong>Timeframe Ladder</strong>: M1→M5→M15→H1→H4→D1<br><strong>Batch</strong>: 64 (Effective)</td>
+                            <td><strong>Plateau</strong>: Magnitude loss overfits noisy chop.<br><strong>Tactic</strong>: Dual Forex Huber Loss with direction entropy confidence gating.</td>
                         </tr>
                     </tbody>
                 </table>
