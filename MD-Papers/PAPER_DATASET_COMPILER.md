@@ -205,6 +205,13 @@ The modernized interactive dashboard for end-to-end manifold management. Hardwar
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
+### LemGendizedForexPredictorLarge
+
+* **Category:** Financial Time-Series
+* **Total Samples:** 428,940
+* **Architecture Base:** Multi-Scale CNN-Transformer (TCN + CT-MHA)
+* **Primary Task:** Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.
+
 ### LemGendizedMirNetExposureLarge
 
 * **Category:** Image Restoration

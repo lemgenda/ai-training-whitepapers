@@ -241,6 +241,17 @@ Direction Accuracy (%)
 
 The Smart Governor expands the dataset fraction from 15% to 100% across the Walk-Forward matrix while advancing through the Timeframe Confluence Ladder ($\text{H1}+\text{H4} \rightarrow \text{M15}+\text{H1}+\text{H4}+\text{D1}$). Across 250 epochs, learning rate cooling ($10^{-4} \rightarrow 10^{-6}$) and stochastic weight averaging (SWA at 70% progress) ensure that the weights converge to broad, noise-resilient minima.
 
+#### 4.8.1 Walk-Forward Curriculum Expansion
+
+To robustly learn complex non-stationary regimes, the architecture is supervised through a `train_forex_curriculum.py` orchestration loop:
+
+1. **Phase 1 (Titan 4 Core)**: Training initialized on 4 major pairs (EURUSD, GBPUSD, USDJPY, XAUUSD) for 50 epochs per fold.
+2. **Phase 2 (G7 Majors)**: Expanded to 8 pairs for 40 epochs per fold.
+3. **Phase 3 (High-Beta Crosses)**: Expanded to 12 pairs for 30 epochs per fold.
+4. **Phase 4 (Full Universe)**: Final fine-tuning across the entire 16-pair universe for 20 epochs per fold.
+
+This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix.
+
 ---
 
 ## 5. Challenges & Resilience Architecture

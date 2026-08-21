@@ -1056,6 +1056,14 @@
                     <li><strong>Task 15.1: SOTA Benchmark Injection</strong> (Target: <code>unified_models_v2.yaml</code>)</li>
                     <li><strong>Task 15.2: Hardware-Aware Authority Overrides</strong> (Target: <code>train.py</code>)</li>
                     <li><strong>Task 15.3: Global Fraction Calibration (15%)</strong> (Target: <code>optimization_engine.py</code>)</li>
+                    <li><strong>Task 16.1: Soft-Spearman Differentiable Rank Loss</strong> (Target: <code>losses.py</code>)</li>
+                    <li><strong>Task 16.2: Cross-Microbatch Rank Memory Bank</strong> (Target: <code>losses.py</code>)</li>
+                    <li><strong>Task 16.3: Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong> (Target: <code>models/nima.py</code>)</li>
+                    <li><strong>Task 16.4: Universal Post-Training Target Audit & Guidance</strong> (Target: <code>train.py</code>)</li>
+                    <li><strong>Task 16.5: Headless Kaggle Cloud Engine</strong> (Target: <code>kaggle_cloud_manager.py</code>)</li>
+                    <li><strong>Task 16.6: Hierarchical Parent Domain UI Navigation</strong> (Target: <code>lemgendary_models_hub.ps1</code>)</li>
+                    <li><strong>Task 17.1: Walk-Forward Curriculum Orchestrator</strong> (Target: <code>train_forex_curriculum.py</code>)</li>
+                    <li><strong>Task 17.2: Adaptive Loss Sentinel for Financial Models</strong> (Target: <code>train.py</code>)</li>
                 </ul>
             </div>
         
@@ -1147,6 +1155,36 @@
                             <td><strong>Plateau Management</strong></td>
                             <td>Manual waiting; high stagnation risk.</td>
                             <td><strong>Propulsion Jolt:</strong> Auto-triggers 1.5x surge.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Restoration Balance</strong></td>
+                            <td>PSNR (1) vs SSIM (40); Metric effectively ignored.</td>
+                            <td><strong>Balanced Fidelity:</strong> PSNR (10) vs SSIM (40); SOTA parity achieved.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ranking Loss Under Low VRAM</strong></td>
+                            <td>Micro-batch $b=2$ evaluates 1 pair per step; SRCC stagnates.</td>
+                            <td><strong>Soft-Spearman + Rank Memory Bank:</strong> Evaluates 496 pairs across accumulation.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spatial Feature Pooling</strong></td>
+                            <td>Global Average Pooling dilutes small localized triggers.</td>
+                            <td><strong>Statistical Pooling ($\text{Mean} \oplus \text{Std}$):</strong> Captures localized defect variance.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cloud Escalation</strong></td>
+                            <td>Requires manual browser navigation to Kaggle site.</td>
+                            <td><strong>Headless Cloud Engine:</strong> Launch, monitor, and pull GPU jobs via PowerShell.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Post-Training UX</strong></td>
+                            <td>Silent termination with raw <code>Press Enter to return...</code>.</td>
+                            <td><strong>Target Audit & Guidance:</strong> Diagnostic breakdown with action choices.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Walk-Forward</strong></td>
+                            <td>Manual dataset slicing and script restarts per pair.</td>
+                            <td><strong>Curriculum Orchestrator:</strong> Automated multi-phase 6-Fold expansion.</td>
                         </tr>
                         <tr>
                             <td><strong>Stability Guard</strong></td>

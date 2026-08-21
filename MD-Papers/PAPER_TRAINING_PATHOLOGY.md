@@ -363,6 +363,8 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 - [x] **Task 16.4: Universal Post-Training Target Audit & Guidance** (Target: `train.py`)
 - [x] **Task 16.5: Headless Kaggle Cloud Engine** (Target: `kaggle_cloud_manager.py`)
 - [x] **Task 16.6: Hierarchical Parent Domain UI Navigation** (Target: `lemgendary_models_hub.ps1`)
+- [x] **Task 17.1: Walk-Forward Curriculum Orchestrator** (Target: `train_forex_curriculum.py`)
+- [x] **Task 17.2: Adaptive Loss Sentinel for Financial Models** (Target: `train.py`)
 
 ---
 
@@ -379,6 +381,7 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 | **Spatial Feature Pooling** | Global Average Pooling dilutes small localized triggers. | **Statistical Pooling ($\text{Mean} \oplus \text{Std}$)**: Captures localized defect variance. |
 | **Cloud Escalation** | Requires manual browser navigation to Kaggle site. | **Headless Cloud Engine**: Launch, monitor, and pull GPU jobs via PowerShell. |
 | **Post-Training UX** | Silent termination with raw `Press Enter to return...`. | **Target Audit & Guidance**: Diagnostic breakdown with action choices. |
+| **Financial Walk-Forward** | Manual dataset slicing and script restarts per pair. | **Curriculum Orchestrator**: Automated multi-phase 6-Fold expansion. |
 
 ---
 
