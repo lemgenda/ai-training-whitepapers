@@ -191,7 +191,14 @@
             <p>where $\mathbf{E}_{\text{pair}}(p) \in \mathbb{R}^{d_{\text{model}}}$ is the learned pair embedding representing currency-specific volatility dynamics.</p>
 
             <h3 id="33-6-fold-anchored-walk-forward-cross-validation-matrix">3.3 6-Fold Anchored Walk-Forward Cross-Validation Matrix</h3>
-            <p>Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary suite implements an <strong>Anchored Walk-Forward Matrix</strong> spanning 2019 to 2026 with a <strong>14-day Embargo Gap</strong> between training and validation sets.</p>
+            <p>Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary suite implements an <strong>Anchored Walk-Forward Matrix</strong> spanning 2019 to 2026 with a <strong>14-day Embargo Gap</strong> between training and validation sets:</p>
+
+            <pre><code>Fold 1: [2019 ------------- 2021] --(14d Embargo)--> [Val: Jan-Jun 2022] (Global Rate Hikes)
+Fold 2: [2019 -------------------- 2022] --(14d)--> [Val: Jan-Jun 2023] (Inflation Peaks)
+Fold 3: [2019 --------------------------- 2023] --> [Val: Jan-Jun 2024] (Geopolitical Stress)
+Fold 4: [2019 ---------------------------------- 2024] --> [Val: Jan-Jun 2025] (Central Bank Pivot)
+Fold 5: [2019 ----------------------------------------- Jun 2025] --> [Val: Jul-Dec 2025]
+Fold 6: [2019 -------------------------------------------------- 2025] --> [Val: Jan-Aug 2026]</code></pre>
 
             <h3 id="34-quantitative-evaluation-formulations--scoring">3.4 Quantitative Evaluation Formulations & Scoring</h3>
             <p>Model predictions are evaluated using both classification accuracy and rigorous quantitative trading metrics:</p>
