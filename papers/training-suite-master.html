@@ -496,7 +496,7 @@
 
 <section id="section-9">
 <h2>5. Universal SOTA Telemetry & Cloud Sync</h2>
-            <p>Standardized historical audit (<code>metrics.csv</code>) captures the complete state including Epoch, Loss, LR, Accuracy, Res, Data, Temp, Clamp, Batch, Accumulation, and Stress. The <strong>Metrics Sanitizer</strong> explicitly sanitizes <code>inf</code>/<code>NaN</code> artifacts to prevent numerical poison.</p>
+            <p>Standardized historical audit (<code>metrics.csv</code>) captures the complete state including Epoch, Loss, LR, Accuracy, Res, Data, Temp, Clamp, Batch, Accumulation, Stress, and dynamic pair counts. The telemetry engine utilizes dynamic attribute resolution to gracefully handle <code>MultiTaskDataset</code> environments where specific domain attributes (like <code>.pairs</code>) are not globally defined, preventing runtime <code>AttributeError</code> disruptions during multi-domain logging. The <strong>Metrics Sanitizer</strong> explicitly sanitizes <code>inf</code>/<code>NaN</code> artifacts to prevent numerical poison.</p>
             <p>The Governor automatically synchronizes with the <code>LemGendaryModels</code> repository, saving <code>_latest.pth</code> and <code>_best.pth</code> directly to the Hub. It uses Dual-Token PATs (<code>SUITE_PAT</code> and <code>GITHUB_PAT</code>) for secure, headless authentication on Kaggle deployment matrices.</p>
 
             <h3 id="multi-gpu-dataparallel">5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)</h3>

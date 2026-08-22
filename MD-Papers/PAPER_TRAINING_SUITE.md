@@ -156,7 +156,7 @@ Below is the exhaustive matrix of supported architectures natively integrated wi
 
 ## 5. Universal SOTA Telemetry & Cloud Sync
 
-Standardized historical audit (`metrics.csv`) captures the complete state including Epoch, Loss, LR, Accuracy, Res, Data, Temp, Clamp, Batch, Accumulation, and Stress. The **Metrics Sanitizer** explicitly sanitizes `inf`/`NaN` artifacts to prevent numerical poison.
+Standardized historical audit (`metrics.csv`) captures the complete state including Epoch, Loss, LR, Accuracy, Res, Data, Temp, Clamp, Batch, Accumulation, Stress, and dynamic pair counts. The telemetry engine utilizes dynamic attribute resolution to gracefully handle `MultiTaskDataset` environments where specific domain attributes (like `.pairs`) are not globally defined, preventing runtime `AttributeError` disruptions during multi-domain logging. The **Metrics Sanitizer** explicitly sanitizes `inf`/`NaN` artifacts to prevent numerical poison.
 
 The Governor automatically synchronizes with the `LemGendaryModels` repository, saving `_latest.pth` and `_best.pth` directly to the Hub. It uses Dual-Token PATs (`SUITE_PAT` and `GITHUB_PAT`) for secure, headless authentication on Kaggle deployment matrices.
 

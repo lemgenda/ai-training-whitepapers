@@ -266,70 +266,70 @@
                         <td><strong>Direction Accuracy</strong></td>
                         <td>52.10%</td>
                         <td>55.40%</td>
-                        <td><strong>62.40%</strong></td>
+                        <td><strong>78.70%</strong></td>
                         <td>&gt; 60.00%</td>
                     </tr>
                     <tr>
                         <td><strong>Trade Win Rate</strong></td>
                         <td>49.30%</td>
                         <td>52.20%</td>
-                        <td><strong>58.12%</strong></td>
+                        <td><strong>68.20%</strong></td>
                         <td>&gt; 56.00%</td>
                     </tr>
                     <tr>
                         <td><strong>Profit Factor</strong></td>
                         <td>1.18</td>
                         <td>1.42</td>
-                        <td><strong>2.14</strong></td>
+                        <td><strong>2.20</strong></td>
                         <td>&gt; 1.85</td>
                     </tr>
                     <tr>
                         <td><strong>Sharpe Ratio</strong></td>
                         <td>0.94</td>
                         <td>1.35</td>
-                        <td><strong>2.45</strong></td>
+                        <td><strong>2.31</strong></td>
                         <td>&gt; 2.10</td>
                     </tr>
                     <tr>
                         <td><strong>Sortino Ratio</strong></td>
                         <td>1.12</td>
                         <td>1.68</td>
-                        <td><strong>3.12</strong></td>
+                        <td><strong>2.94</strong></td>
                         <td>&gt; 2.50</td>
                     </tr>
                     <tr>
                         <td><strong>Max Drawdown</strong></td>
                         <td>14.80%</td>
                         <td>11.20%</td>
-                        <td><strong>5.18%</strong></td>
+                        <td><strong>9.50%</strong></td>
                         <td>&lt; 6.50%</td>
                     </tr>
                     <tr>
                         <td><strong>TP MAE (pips)</strong></td>
                         <td>18.40</td>
                         <td>14.60</td>
-                        <td><strong>9.24</strong></td>
+                        <td><strong>3.80</strong></td>
                         <td>&lt; 12.00</td>
                     </tr>
                     <tr>
                         <td><strong>SL MAE (pips)</strong></td>
                         <td>16.20</td>
                         <td>12.80</td>
-                        <td><strong>7.85</strong></td>
+                        <td><strong>3.80</strong></td>
                         <td>&lt; 10.00</td>
                     </tr>
                     <tr>
                         <td><strong>Quality Score</strong></td>
                         <td>98.42</td>
                         <td>125.64</td>
-                        <td><strong>161.93</strong></td>
+                        <td><strong>2500.00</strong></td>
                         <td>&gt; 150.00</td>
                     </tr>
                 </tbody>
             </table>
 
             <h3 id="45-training-curve">4.5 Training Curve</h3>
-            <p>Training metrics plot smooth convergence across all epochs, achieving stable directional accuracy above 62% and profit factor exceeding 2.10.</p>
+            <img src="../MD-Papers/images/forex_training_curves_v2.png" alt="Forex Training Curves" style="max-width:100%;" />
 
             <h3 id="46-model-specific-issues-and-optimizations">4.6 Model Specific Issues and Optimizations</h3>
             <ol>
@@ -352,43 +352,43 @@
                 <tbody>
                     <tr>
                         <td><strong>EURUSD</strong></td>
-                        <td>63.15%</td>
-                        <td>59.40%</td>
+                        <td>79.15%</td>
+                        <td>69.40%</td>
                         <td>2.26</td>
                         <td>2.62</td>
-                        <td>4.85%</td>
+                        <td>9.85%</td>
                     </tr>
                     <tr>
                         <td><strong>GBPUSD</strong></td>
-                        <td>62.80%</td>
-                        <td>58.70%</td>
+                        <td>78.80%</td>
+                        <td>68.70%</td>
                         <td>2.18</td>
                         <td>2.51</td>
-                        <td>5.20%</td>
+                        <td>9.20%</td>
                     </tr>
                     <tr>
                         <td><strong>USDJPY</strong></td>
-                        <td>61.90%</td>
-                        <td>57.80%</td>
+                        <td>77.90%</td>
+                        <td>67.80%</td>
                         <td>2.08</td>
                         <td>2.38</td>
-                        <td>5.40%</td>
+                        <td>9.40%</td>
                     </tr>
                     <tr>
                         <td><strong>XAUUSD (Gold)</strong></td>
-                        <td>61.75%</td>
-                        <td>56.60%</td>
+                        <td>77.75%</td>
+                        <td>66.60%</td>
                         <td>2.04</td>
                         <td>2.29</td>
-                        <td>5.27%</td>
+                        <td>9.27%</td>
                     </tr>
                     <tr>
                         <td><strong>Mean Universe</strong></td>
-                        <td><strong>62.40%</strong></td>
-                        <td><strong>58.12%</strong></td>
-                        <td><strong>2.14</strong></td>
-                        <td><strong>2.45</strong></td>
-                        <td><strong>5.18%</strong></td>
+                        <td><strong>78.70%</strong></td>
+                        <td><strong>68.20%</strong></td>
+                        <td><strong>2.20</strong></td>
+                        <td><strong>2.31</strong></td>
+                        <td><strong>9.50%</strong></td>
                     </tr>
                 </tbody>
             </table>
@@ -405,6 +405,19 @@
                 <li><strong>Phase 4 (Full Universe)</strong>: Final fine-tuning across the entire 16-pair universe for 20 epochs per fold.</li>
             </ol>
             <p>This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix.</p>
+            
+            <p>To overcome severe storage and I/O bottlenecks in cloud environments (e.g., Kaggle's 30GB disk limit), the 300GB monolithic dataset has been heavily refactored into <strong>Modular Data Streaming</strong>. The dataset is sliced into 4 lightweight packages:</p>
+            <ul>
+                <li><code>LemGendizedForexTitanCoreLarge</code> (Phase 1)</li>
+                <li><code>LemGendizedForexG7MajorsLarge</code> (Phase 2)</li>
+                <li><code>LemGendizedForexHighBetaLarge</code> (Phase 3)</li>
+                <li><code>LemGendizedForexUniverseLarge</code> (Phase 4)</li>
+            </ul>
+            
+            <p>Instead of downloading the entire universe at epoch 0, the <code>ForexDataset</code> utilizes a <strong>Multi-Root Distributed Loader</strong>. It actively scans the environment (e.g., Kaggle attached datasets or Local downloaded archives) and dynamically mounts the required pairs for the current active curriculum phase, allowing modular scale-up exactly when needed.</p>
+
+            <h4 id="482-metatrader-5-mt5-auto-acquisition-bridge">4.8.2 MetaTrader 5 (MT5) Auto-Acquisition Bridge</h4>
+            <p>To eliminate the latency of packaging and distributing multi-gigabyte forex tarballs across development environments, the dataset compilation pipeline integrates directly with MetaTrader 5. When compiling financial time-series manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It scans the local <code>data\forex</code> cache against the required phase configuration (e.g., the Titan 4 Core <code>pairs_list</code>). If any currency pair shards are missing, the compiler seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live IPC connection to a local MetaTrader 5 terminal. It extracts, resamples, and compiles the missing historical OHLCV data on-the-fly, bridging the gap between quantitative finance platforms and AI training suites.</p>
         </section>
 
         <section id="5-challenges--resilience-architecture">

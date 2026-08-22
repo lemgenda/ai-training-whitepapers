@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Executive Summary
+## 1. Abstract
 
 The LemGendary Dataset Pipeline (v16.2.8-NUCLEAR-HARDENED) is the industrial standard for Generative & Vision Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion and Vision datasets with industrial-grade CLIP styling, multi-domain balancing, and high-fidelity LANCZOS interpolation.
 
@@ -77,6 +77,9 @@ To empirically validate these system-level optimizations, execution profiles wer
 * **Metadata Synchronization**:
   * **KaggleHub & HF Sync**: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.
   * **Standardized `dataset_info.yaml`**: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.
+
+* **MetaTrader 5 (MT5) Auto-Acquisition**:
+  For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It scans the local `data\forex` cache against the requested configuration (`pairs_list`). If any currency pair shards are missing, the compiler seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It extracts, resamples, and compiles the missing historical OHLCV data on-the-fly, bridging the gap between quantitative finance platforms and AI training suites.
 
 ---
 
