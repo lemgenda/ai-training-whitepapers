@@ -340,7 +340,7 @@
             </div>
 
             <h4>Exposure Specific Issues and Optimizations</h4>
-            <p>Correcting overexposure without dulling midtones requires precise gradient scaling. Because MSE excessively blurs specular highlights, the architecture was explicitly transitioned to <code>L1Loss</code> to retain sharp pixel intensity boundaries during dynamic range compression.</p>
+            <p>Correcting overexposure without dulling midtones requires precise gradient scaling. Because MSE excessively blurs specular highlights, the architecture was explicitly transitioned to <code>L1 + LPIPS</code> loss to retain sharp pixel intensity boundaries and preserve deep perceptual textures during dynamic range compression.</p>
         
 
         

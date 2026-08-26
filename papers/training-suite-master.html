@@ -229,6 +229,7 @@
             <ul>
                 <li><strong>3-Epoch Sustained Jolt Window</strong>: Replaces single-epoch sawtooth LR thrashing with a 3-epoch sustained propulsion window, allowing AdamW momentum buffers to seat into new loss basins without premature cooling.</li>
                 <li><strong>Early-Collapse Safety Valve</strong>: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses (&Delta;Quality &lt; -0.015), the window collapses immediately, triggering soft LR cooling (0.85&times;) and momentum dampening.</li>
+                <li><strong>Financial Manifold Hardening (Forex/Commodities)</strong>: Dynamically disables standard Turbulence Shields for high-entropy financial time-series, doubles Jolt Protocol intensity (2.0&times; multiplier with 5-epoch sustained windows), and extends absolute plateau patience (15+ epochs) to prevent false-positive manifold panic retreats. Collapse guard thresholds are explicitly recalibrated to &lt; 45.0% Directional Accuracy.</li>
                 <li><strong>Head-Differential LR Propulsion</strong>: During REFINEMENT jolts, scales classification/regression head LR by 1.50&times; while dampening backbone LR to 0.50&times;, protected by a strict ratio clamp (LR<sub>head</sub> &le; 3.0 &times; LR<sub>backbone</sub>).</li>
                 <li><strong>Mini-SWA Plateau Recovery Pulse &amp; Rollback Guard</strong>: Averages recent top checkpoints when trapped in plateau. Stores a CPU backup prior to SWA, executes a mandatory 20-batch <code>update_bn</code> pass over the dataset to re-estimate Batch/LayerNorm statistics, and automatically rolls back if post-SWA quality degrades.</li>
             </ul>
@@ -303,7 +304,7 @@
 
             <h3 id="statistical-pooling">2.10. Spatial Statistical Pooling Upgrade (Mean ⊕ Std) & Universal Safety Filter</h3>
             <ul>
-                <li><strong>Variance-Aware Feature Aggregation</strong>: Augments standard Global Average Pooling ($	ext{GAP}$) with spatial standard deviation channels:
+                <li><strong>Variance-Aware Feature Aggregation</strong>: Augments standard Global Average Pooling ($\text{GAP}$) with spatial standard deviation channels:
                     <div class="equation-box" style="margin: 15px 0; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 6px; font-family: 'Fira Code', monospace;">
                         $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
                     </div>

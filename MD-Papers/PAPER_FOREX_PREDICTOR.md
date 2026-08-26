@@ -217,6 +217,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 
 1. **Anti-Hold Entropy Regularization**: In financial classification, models frequently collapse into predicting the majority "HOLD" class to minimize cross-entropy loss. We inject an explicit entropy penalty $-\lambda_{\mathcal{H}} \mathcal{H}(p)$ with $\lambda_{\mathcal{H}} = 0.05$ that forces the model to maintain decisive directional conviction.
 2. **Confidence-Gated Magnitude Regression**: Magnitude loss is modulated by directional certainty. If directional entropy is high, the sample's contribution to pip regression loss is dynamically attenuated.
+3. **High-Entropy Governor Resilience**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $2.0\times$ multiplier across a sustained 5-epoch window. The manifold collapse guard is recalibrated to trigger only if Directional Accuracy falls below $45.0\%$, preventing false-positive training retreats.
 
 ### 4.7 Consolidated SOTA Benchmarks
 

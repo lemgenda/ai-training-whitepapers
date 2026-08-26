@@ -274,6 +274,7 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: Hardcoded regression thresholds ($-0.015$) trip on normal exploratory steps on high-scalar quality manifolds ($\sim 284$).
 - **Identification**: Jolt injections are immediately aborted on the subsequent epoch due to false-alarm regression detection.
 - **Remedy**: **Dynamic Manifold-Scaled Jolt Shield (v18.1)**. Scale collapse thresholds dynamically based on prior quality ($\text{threshold} = -0.03 \times Q_{\text{prev}}$).
+- **Remedy 2**: **Financial Manifold Hardening (Forex/Commodities)**. Financial models trigger Jolt panics due to extreme natural entropy and Sharpe Ratio (`plcc`) tracking. The Governor now bypasses standard Turbulence Shields for Forex, doubles Jolt Protocol intensity ($2.0\times$), extends absolute plateau patience ($15+$ epochs), and explicitly recalibrates collapse guard thresholds to $< 45.0\%$ Directional Accuracy to prevent false-positive retreats.
 
 ### Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)
 

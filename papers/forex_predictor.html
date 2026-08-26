@@ -342,6 +342,7 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             <ol>
                 <li><strong>Anti-Hold Entropy Regularization</strong>: In financial classification, models frequently collapse into predicting the majority "HOLD" class to minimize cross-entropy loss. We inject an explicit entropy penalty $-\lambda_{\mathcal{H}} \mathcal{H}(p)$ with $\lambda_{\mathcal{H}} = 0.05$ that forces the model to maintain decisive directional conviction.</li>
                 <li><strong>Confidence-Gated Magnitude Regression</strong>: Magnitude loss is modulated by directional certainty. If directional entropy is high, the sample's contribution to pip regression loss is dynamically attenuated.</li>
+                <li><strong>High-Entropy Governor Resilience</strong>: Financial time-series contain massive natural variance (turbulence). The <code>SmartTrainingGovernor</code> bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $2.0\times$ multiplier across a sustained 5-epoch window. The manifold collapse guard is recalibrated to trigger only if Directional Accuracy falls below $45.0\%$, preventing false-positive training retreats.</li>
             </ol>
 
             <h3 id="47-consolidated-sota-benchmarks">4.7 Consolidated SOTA Benchmarks</h3>

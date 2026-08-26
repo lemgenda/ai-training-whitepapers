@@ -71,11 +71,11 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 
 - **3-Epoch Sustained Jolt Window**: Replaces single-epoch sawtooth LR thrashing with a 3-epoch sustained propulsion window, allowing AdamW momentum buffers to seat into new loss basins without premature cooling.
 - **Early-Collapse Safety Valve**: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses ($\Delta \text{Quality} < -0.015$), the window collapses immediately, triggering soft LR cooling ($0.85\times$) and momentum dampening.
+- **Financial Manifold Hardening (Forex/Commodities)**: Dynamically disables standard Turbulence Shields for high-entropy financial time-series, doubles Jolt Protocol intensity ($2.0\times$ multiplier with 5-epoch sustained windows), and extends absolute plateau patience ($15+$ epochs) to prevent false-positive manifold panic retreats. Collapse guard thresholds are explicitly recalibrated to $< 45.0\%$ Directional Accuracy.
 - **Head-Differential LR Propulsion**: During REFINEMENT jolts, scales classification/regression head LR by $1.50\times$ while dampening backbone LR to $0.50\times$, protected by a strict ratio clamp ($\text{LR}_{\text{head}} \le 3.0 \times \text{LR}_{\text{backbone}}$).
 - **Mini-SWA Plateau Recovery Pulse & Rollback Guard**: Averages recent top checkpoints when trapped in plateau. Stores a CPU backup prior to SWA, executes a mandatory 20-batch `update_bn` pass over the dataset to re-estimate Batch/LayerNorm statistics, and automatically rolls back if post-SWA quality degrades.
 
 ---
-
 
 ### 2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)
 
@@ -83,9 +83,9 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
   $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
 - **Micro-Batch Contrastive Memory Bank**: Employs a detached FIFO queue ($N=32/64$) to maintain historical representation context across gradient accumulation steps. On 4GB GPUs where physical micro-batch size is $b=2$, this scales active pair comparisons from $\binom{2}{2} = 1$ to $\binom{32}{2} = 496$ pairs per backward pass ($41.3\times$ rank gradient density) without increasing VRAM allocations.
 
-### 2.10. Spatial Statistical Pooling Upgrade ($	ext{Mean} \oplus \text{Std}$) & Universal Safety Filter
+### 2.10. Spatial Statistical Pooling Upgrade ($\text{Mean} \oplus \text{Std}$) & Universal Safety Filter
 
-- **Variance-Aware Feature Aggregation**: Augments standard Global Average Pooling ($	ext{GAP}$) with spatial standard deviation channels:
+- **Variance-Aware Feature Aggregation**: Augments standard Global Average Pooling ($\text{GAP}$) with spatial standard deviation channels:
   $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
 - **Localized Defect Retention**: Prevents localized micro-defects (compression blocking, fine sensor noise) and small NSFW triggers occupying $5\%\text{--}15\%$ canvas area from being diluted by $85\%\text{--}95\%$ background pixels.
 

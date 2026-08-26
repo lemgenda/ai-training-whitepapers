@@ -142,7 +142,7 @@ MIRNet requires high VRAM to maintain parallel feature streams. To prevent OOM e
 
 #### Exposure Specific Issues and Optimizations
 
-Correcting overexposure without dulling midtones requires precise gradient scaling. Because MSE excessively blurs specular highlights, the architecture was explicitly transitioned to `L1Loss` to retain sharp pixel intensity boundaries during dynamic range compression.
+Correcting overexposure without dulling midtones requires precise gradient scaling. Because MSE excessively blurs specular highlights, the architecture was explicitly transitioned to `L1 + LPIPS` loss to retain sharp pixel intensity boundaries and preserve deep perceptual textures during dynamic range compression.
 
 ---
 
