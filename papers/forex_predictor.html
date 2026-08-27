@@ -426,6 +426,8 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             </ol>
             <p>This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix.</p>
             
+            <p><strong>Dynamic Orchestrator Target Scaling</strong>: The orchestrator is designed to safely interact with the <code>train.py</code> Resiliency Guardrail. If a fold dynamically extends past its base epochs to force SOTA convergence, the curriculum orchestrator will automatically read the actual model epoch from <code>metrics.csv</code> upon the next fold's launch. It then dynamically scales the next fold's target (e.g., <code>current_epoch + epochs_per_fold</code>), ensuring no future folds are starved of their intended training cycles due to previous resiliency extensions.</p>
+
             <p>To overcome severe storage and I/O bottlenecks in cloud environments (e.g., Kaggle's 30GB disk limit), the 300GB monolithic dataset has been heavily refactored into <strong>Modular Data Streaming</strong>. The dataset is sliced into 4 lightweight packages:</p>
             <ul>
                 <li><code>LemGendizedForexTitanCoreLarge</code> (Phase 1)</li>

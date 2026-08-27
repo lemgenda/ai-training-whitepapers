@@ -254,7 +254,10 @@ To robustly learn complex non-stationary regimes, the architecture is supervised
 2. **Phase 2 (G7 Majors)**: Expanded to 8 pairs for 40 epochs per fold.
 3. **Phase 3 (High-Beta Crosses)**: Expanded to 12 pairs for 30 epochs per fold.
 4. **Phase 4 (Full Universe)**: Final fine-tuning across the entire 16-pair universe for 20 epochs per fold.
+
 This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix.
+
+**Dynamic Orchestrator Target Scaling**: The orchestrator is designed to safely interact with the `train.py` Resiliency Guardrail. If a fold dynamically extends past its base epochs to force SOTA convergence, the curriculum orchestrator will automatically read the actual model epoch from `metrics.csv` upon the next fold's launch. It then dynamically scales the next fold's target (e.g., `current_epoch + epochs_per_fold`), ensuring no future folds are starved of their intended training cycles due to previous resiliency extensions.
 
 To overcome severe storage and I/O bottlenecks in cloud environments (e.g., Kaggle's 30GB disk limit), the 300GB monolithic dataset has been heavily refactored into **Modular Data Streaming**. The dataset is sliced into 4 lightweight packages:
 
