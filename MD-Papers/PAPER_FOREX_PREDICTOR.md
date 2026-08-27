@@ -12,7 +12,9 @@
 - [1. Abstract](#1-abstract)
 - [2. Visual Taxonomy: Multi-Asset & Temporal Manifolds](#2-visual-taxonomy-multi-asset--temporal-manifolds)
   - [2.1 The Titan Four Asset Universe](#21-the-titan-four-asset-universe)
-  - [2.2 Multi-Timeframe Confluence Ladder](#22-multi-timeframe-confluence-ladder)
+  - [2.2 The 16-Symbol Financial Foundation Model](#22-the-16-symbol-financial-foundation-model)
+  - [2.3 Future Expansion Strategy (Crosses & Exotics)](#23-future-expansion-strategy-crosses--exotics)
+  - [2.4 Multi-Timeframe Confluence Ladder](#24-multi-timeframe-confluence-ladder)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Causal Convolution & Temporal Invariance](#31-causal-convolution--temporal-invariance)
   - [3.2 Cross-Timeframe Multi-Head Attention Fusion](#32-cross-timeframe-multi-head-attention-fusion)
@@ -63,7 +65,18 @@ The primary production deployment focuses on the **Titan Four** core instruments
 
 $$\mathcal{U}_{\text{core}} = \{ \text{EURUSD}, \text{GBPUSD}, \text{USDJPY}, \text{XAUUSD} \}$$
 
-### 2.2 Multi-Timeframe Confluence Ladder
+### 2.2 The 16-Symbol Financial Foundation Model
+
+The overarching strategy of the LemGendary ForexPredictor is to construct a **Financial Foundation Model**. Financial markets are not isolated bubbles; they are a deeply interconnected ecosystem. For instance, when global equities (e.g., US500, GER40) experience severe drawdowns, capital typically flows into safe-haven assets (XAUUSD spikes, USDJPY drops). By exposing the neural network to 16 diverse assets simultaneously during training, the model is forced to learn these hidden macro-economic correlations. This Cross-Asset Regularization prevents the model from overfitting to the micro-structure of a single currency pair, yielding a vastly more intelligent and resilient core brain that understands universal market dynamics.
+
+### 2.3 Future Expansion Strategy (Crosses & Exotics)
+
+While the 16-symbol Foundation Model captures over 85% of global trading volume, extending the network into illiquid markets requires a specialized deployment strategy:
+
+1. **Crosses Extension Model**: A dedicated model trained on secondary crosses (e.g., AUDCAD, NZDCHF) that are less liquid than the G7 Majors but still maintain stable micro-structure.
+2. **Exotics Extension Model**: An entirely isolated model for exotic pairs (e.g., USDTRY, USDMXN). Exotics suffer from massive spreads, severe noise, and unpredictable central bank manipulations. Injecting them into the primary 16-symbol Foundation Model risks poisoning the core weights. Isolating them ensures the primary model remains uncorrupted while providing a bespoke solution for high-volatility, low-liquidity environments.
+
+### 2.4 Multi-Timeframe Confluence Ladder
 
 Professional quant traders evaluate confluence across multiple temporal resolutions. The Smart Governor executes a progressive curriculum ladder across 6 canonical rungs:
 
