@@ -28,6 +28,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck)
     - [Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect)
     - [Silent Epoch Limit Termination (The Raw Exit Pathology)](#silent-epoch-limit-termination-the-raw-exit-pathology)
+    - [Metric Asymmetry (The Manifold Plateau)](#metric-asymmetry-the-manifold-plateau)
 5. [High-Fidelity Strategy (v16.2.8)](#6-high-fidelity-strategy-v1628)
     - [The "Low-Resolution Blur" Pathology](#the-low-resolution-blur-pathology)
     - [Memory-Sentinel Drift](#memory-sentinel-drift)
@@ -79,6 +80,7 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 | **Micro-Batch Rank Starvation** | Small physical VRAM forces micro-batch $b=2$; pairwise ranking loss evaluates only $\binom{2}{2}=1$ pair per step, starving rank gradients. | **PLCC/SRCC Divergence**: PLCC reaches target ($\ge 0.91$) via EMD, but SRCC stagnates at $\sim 0.81$ with high pairwise variance. | Implement **Differentiable Soft-Spearman Loss** ($\mathcal{L}_{\text{soft\_spearman}}$) and **Cross-Microbatch Rank Memory Bank** ($N=32/64$) to evaluate $\binom{32}{2}=496$ pairs per backward pass. |
 | **Spatial Pooling Dilution** | Global Average Pooling (GAP) averages activations over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers occupying $5\text{--}15\%$ area. | **Micro-Defect Blindness**: Model classifies large blurred scenes well but misses localized micro-noise, compression artifacts, or anatomical triggers. | Implement **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling** to capture localized feature variance. |
 | **Silent Epoch Limit Termination** | Model hits maximum epoch budget (e.g. 300) without meeting SOTA targets; training abruptly terminates with uninformative prompt. | **Abrupt Exit**: Terminal prints raw exit prompt with no target audit, diagnostic guidance, or recovery options. | Implement **Universal Post-Training Target Audit & Interactive Guidance** with headless Kaggle Cloud escalation. |
+| **Metric Asymmetry (The Manifold Plateau)** | Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS). | **Metric Divergence**: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement. | Implement **Omni-Metric Autonomous Governor** with **Metric Deficit Engine** ($\Delta_m$) to dynamically actuate specialized loss weights. |
 
 ---
 
@@ -162,6 +164,15 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
      - `[1]` Transition the checkpoint to **Kaggle Cloud Hub** for high-VRAM batch training.
      - `[2]` Export the current best model binaries to production ONNX and standalone PyTorch.
      - `[3]` Extend local training in-process or exit cleanly.
+
+### Metric Asymmetry (The Manifold Plateau)
+
+- **The Issue**: During multi-objective optimization, the model discovers a "lazy" minima where it optimizes a mathematically simpler metric (like global intensity PSNR or linear correlation PLCC) while completely ignoring complex structural metrics (like perceptual LPIPS or rank-order SRCC).
+- **Identification**: One metric successfully breaches the 100% SOTA target line, while its counterpart plateaus aggressively (e.g. SRCC hard-locks at 0.81 while PLCC reaches 0.92).
+- **Remedy**: **Omni-Metric Autonomous Governor**. The `SmartTrainingGovernor` must calculate exact real-time metric deficits $\Delta_{m} = \max(0, \text{Target}_m - \text{Current}_m)$ and dynamically shift the loss actuators:
+  1. Boost `soft_spearman_weight` up to `2.0` if SRCC is lagging.
+  2. Increase `lpips_weight` dynamically if perceptual geometry is lagging behind PSNR.
+  3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if Directional Accuracy plateaus.
 
 ---
 

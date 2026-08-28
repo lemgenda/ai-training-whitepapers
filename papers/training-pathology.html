@@ -47,6 +47,7 @@
                         <li><a href="#microbatch-rank-starvation">Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)</a></li>
                         <li><a href="#spatial-pooling-dilution">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)</a></li>
                         <li><a href="#silent-epoch-limit">Silent Epoch Limit Termination (The Raw Exit Pathology)</a></li>
+                        <li><a href="#metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-7">5. High-Fidelity Strategy (v16.2.8)</a>
@@ -234,6 +235,12 @@
                         <td>Model hits maximum epoch budget (e.g. 300) without meeting SOTA targets; training abruptly terminates with uninformative prompt.</td>
                         <td><strong>Abrupt Exit</strong>: Terminal prints raw exit prompt with no target audit, diagnostic guidance, or recovery options.</td>
                         <td>Implement <strong>Universal Post-Training Target Audit & Interactive Guidance</strong> with headless Kaggle Cloud escalation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Metric Asymmetry (The Manifold Plateau)</strong></td>
+                        <td>Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS).</td>
+                        <td><strong>Metric Divergence</strong>: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement.</td>
+                        <td>Implement <strong>Omni-Metric Autonomous Governor</strong> with <strong>Metric Deficit Engine</strong> ($\Delta_m$) to dynamically actuate specialized loss weights.</td>
                     </tr>
 </tbody>
                 </table>
@@ -498,6 +505,19 @@
                         <li>Print a structured benchmark audit comparing achieved metrics against <code>sota_targets</code>.</li>
                         <li>Emit diagnostic analysis identifying hardware micro-batch limits and manifold properties.</li>
                         <li>Offer an interactive action matrix allowing operators to transition to Kaggle Cloud Hub, export ONNX binaries, or extend local training in-process.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3 id="metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: During multi-objective optimization, the model discovers a "lazy" minima where it optimizes a mathematically simpler metric (like global intensity PSNR or linear correlation PLCC) while completely ignoring complex structural metrics (like perceptual LPIPS or rank-order SRCC).</li>
+                <li><strong>Identification</strong>: One metric successfully breaches the 100% SOTA target line, while its counterpart plateaus aggressively (e.g. SRCC hard-locks at 0.81 while PLCC reaches 0.92).</li>
+                <li><strong>Remedy</strong>: <strong>Omni-Metric Autonomous Governor</strong>. The <code>SmartTrainingGovernor</code> must calculate exact real-time metric deficits $\Delta_{m} = \max(0, \text{Target}_m - \text{Current}_m)$ and dynamically shift the loss actuators:
+                    <ol>
+                        <li>Boost <code>soft_spearman_weight</code> up to <code>2.0</code> if SRCC is lagging.</li>
+                        <li>Increase <code>lpips_weight</code> dynamically if perceptual geometry is lagging behind PSNR.</li>
+                        <li>Modulate <code>dir_weight</code> versus <code>mag_weight</code> in Forex manifolds if Directional Accuracy plateaus.</li>
                     </ol>
                 </li>
             </ul>
