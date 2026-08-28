@@ -337,3 +337,11 @@ The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
 ## 8. Conclusion
 
 The **LemGendary ForexPredictor** sets a new standard for quantitative deep learning in foreign exchange and commodity trading. By combining multi-timeframe causal dilated convolutions with cross-temporal attention fusion and 6-fold walk-forward validation, the model achieves superior risk-adjusted returns while eliminating future lookahead bias. The lightweight stateless architecture guarantees sub-5ms deployment readiness for live MetaTrader 5 algorithmic execution.
+
+
+### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
+
+- **Metric Deficit Engine**: The `SmartTrainingGovernor` tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).
+- **Metric Focus Burst**: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting `srcc` rank weight).
+- **Metric-Specific SWA (MS-SWA)**: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.
+- **Differentiable Soft-Spearman Loss**: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue ($N=32$) to maintain ranking context across micro-batches ($b=2$).

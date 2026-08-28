@@ -881,3 +881,11 @@ The graduation of these models to the **ONNX / WebGPU** ecosystem marks the begi
 - **Edge Refinement**: Implementing LoRA-based local adaptation for specific user-camera characteristics.
 
 Ultimately, the LemGendary project proves that with the right mathematical guardrails (2026 Resilience Loss) and real-time resource monitoring, the gap between laboratory SOTA and consumer deployment has officially closed.
+
+
+### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
+
+- **Metric Deficit Engine**: The `SmartTrainingGovernor` tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).
+- **Metric Focus Burst**: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting `srcc` rank weight).
+- **Metric-Specific SWA (MS-SWA)**: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.
+- **Differentiable Soft-Spearman Loss**: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue ($N=32$) to maintain ranking context across micro-batches ($b=2$).
