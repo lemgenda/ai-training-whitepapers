@@ -216,10 +216,11 @@
                 <li><strong>Stateless ONNX Deployment</strong>: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.</li>
             </ul>
 
-            <h3 id="autonomous-sota-adaptation">2.7. Autonomous SOTA Hyperparameter Adaptation (v17.5)</h3>
+            <h3 id="27-omni-metric-autonomous-sota-adaptation-v175">2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)</h3>
             <ul>
-                <li><strong>Dynamic On-the-Fly Tuning</strong>: <code>SmartTrainingGovernor</code> dynamically audits model convergence against target SOTA benchmarks (<code>PLCC &gt; 0.9100</code>, <code>SRCC &gt; 0.9100</code>, <code>EMD &lt; 0.0700</code>).</li>
-                <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
+                <li><strong>Dynamic On-the-Fly Tuning</strong>: <code>SmartTrainingGovernor</code> dynamically audits model convergence against target SOTA benchmarks across all metrics simultaneously (e.g., PLCC, SRCC, EMD, PSNR, LPIPS, DirAcc).</li>
+                <li><strong>Metric Deficit Engine</strong>: Computes the exact shortfall for any lagging metric $\Delta_m = \max(0, \text{Target}_m - \text{Current}_m)$ and continuously adjusts specific loss function components (actuators) to compensate: $w_{t+1} = \min(w_{\text{max}}, w_t + \alpha \cdot \Delta_{m})$.</li>
+                <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>), <code>soft_spearman_weight</code> (up to <code>2.0</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
                 <li><strong>Dynamic Softmax Sharpening</strong>: Softmax temperature is dynamically annealed down toward <code>min_temp</code> (<code>0.90</code>) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.</li>
                 <li><strong>Multi-Path Candidate Directory Resolver</strong>: All generated training notebooks in the matrix dynamically resolve working directory candidates (<code>/kaggle/working/lemgendary-training-suite</code>, <code>/kaggle/working/model-training/lemgendary-training-suite</code>, <code>/kaggle/working</code>) before executing <code>os.chdir()</code> or <code>%pip install</code>, permanently eliminating <code>FileNotFoundError</code> across all cloud platforms.</li>
                 <li><strong>Stateless ONNX Deployment</strong>: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.</li>
@@ -312,9 +313,10 @@
                 <li><strong>Localized Defect Retention</strong>: Prevents localized micro-defects (compression blocking, fine sensor noise) and small NSFW triggers occupying $5\%\text{--}15\%$ canvas area from being diluted by $85\%\text{--}95\%$ background pixels.</li>
             </ul>
 
-            <h3 id="headless-kaggle-cloud">2.11. Headless Kaggle Cloud Engine (Headless API Orchestration)</h3>
+            <h3 id="211-headless-kaggle-cloud-engine-dataset-bypass-v164">2.11. Headless Kaggle Cloud Engine &amp; Dataset Bypass (v16.4)</h3>
             <ul>
                 <li><strong>Zero-Browser Cloud Deployment</strong>: Launches, monitors, and downloads full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell without manual web browser intervention.</li>
+                <li><strong>Autonomous Dataset Bypass</strong>: Autonomously bypasses unnecessary 200GB+ dataset downloads by inspecting <code>/images</code> and <code>/targets</code> structures directly on the Kaggle root block.</li>
                 <li><strong>Autonomous Checkpoint Syncing</strong>: Uses <code>kagglehub</code> model registry and kernel output endpoints to seamlessly pull trained <code>.pth</code> weights and <code>metrics.csv</code> logs into <code>LemGendaryModels/&lt;model_name&gt;/</code>.</li>
                 <li><strong>Credential Fallback Hierarchy</strong>: Automatically cascades from user UI prompt to environment variables (<code>KAGGLE_USERNAME</code>, <code>KAGGLE_KEY</code>), <code>~/.kaggle/kaggle.json</code>, and local <code>.kaggle_token</code>.</li>
             </ul>

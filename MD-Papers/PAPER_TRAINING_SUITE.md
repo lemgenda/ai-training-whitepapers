@@ -59,10 +59,11 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Cross-Timeframe Attention Fusion**: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.
 - **Confidence-Gated Dual Head & Loss**: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (`ForexDualLoss`) to prevent fitting noise on low-confidence bars.
 
-### 2.7. Autonomous SOTA Hyperparameter Adaptation (v17.5)
+### 2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)
 
-- **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks (`PLCC > 0.9100`, `SRCC > 0.9100`, `EMD < 0.0700`).
-- **Autonomous Rank-Boost Escalation**: Automatically scales pairwise `rank_weight` (up to `1.5`) and tightens `rank_margin` (down to `0.05`) when rank order metric plateaus occur in the Refinement Phase.
+- **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks across all metrics simultaneously (e.g., PLCC, SRCC, EMD, PSNR, LPIPS, DirAcc).
+- **Metric Deficit Engine**: Computes the exact shortfall for any lagging metric $\Delta_m = \max(0, \text{Target}_m - \text{Current}_m)$ and continuously adjusts specific loss function components (actuators) to compensate: $w_{t+1} = \min(w_{\text{max}}, w_t + \alpha \cdot \Delta_{m})$.
+- **Autonomous Rank-Boost Escalation**: Automatically scales pairwise `rank_weight` (up to `1.5`), `soft_spearman_weight` (up to `2.0`) and tightens `rank_margin` (down to `0.05`) when rank order metric plateaus occur in the Refinement Phase.
 - **Dynamic Softmax Sharpening**: Softmax temperature is dynamically annealed down toward `min_temp` (`0.90`) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.
 - **Multi-Path Candidate Directory Resolver**: All generated training notebooks in the matrix dynamically resolve working directory candidates (`/kaggle/working/lemgendary-training-suite`, `/kaggle/working/model-training/lemgendary-training-suite`, `/kaggle/working`) before executing `os.chdir()` or `%pip install`, permanently eliminating `FileNotFoundError` across all cloud platforms.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
@@ -89,9 +90,10 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
   $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
 - **Localized Defect Retention**: Prevents localized micro-defects (compression blocking, fine sensor noise) and small NSFW triggers occupying $5\%\text{--}15\%$ canvas area from being diluted by $85\%\text{--}95\%$ background pixels.
 
-### 2.11. Headless Kaggle Cloud Engine (Headless API Orchestration)
+### 2.11. Headless Kaggle Cloud Engine & Dataset Bypass (v16.4)
 
 - **Zero-Browser Cloud Deployment**: Launches, monitors, and downloads full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell without manual web browser intervention.
+- **Autonomous Dataset Bypass**: Autonomously bypasses unnecessary 200GB+ dataset downloads by inspecting `/images` and `/targets` structures directly on the Kaggle root block.
 - **Autonomous Checkpoint Syncing**: Uses `kagglehub` model registry and kernel output endpoints to seamlessly pull trained `.pth` weights and `metrics.csv` logs into `LemGendaryModels/<model_name>/`.
 - **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`), `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
 
