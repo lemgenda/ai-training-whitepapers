@@ -555,7 +555,8 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
 <section>
     <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
     <ul>
-        <li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
+                <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification (≥ 10% = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
+<li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
         <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
         <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
         <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue (N=32) to maintain ranking context across micro-batches (b=2).</li>

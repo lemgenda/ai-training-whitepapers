@@ -219,7 +219,8 @@
             <h3 id="27-omni-metric-autonomous-sota-adaptation-v175">2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)</h3>
             <ul>
                 <li><strong>Dynamic On-the-Fly Tuning</strong>: <code>SmartTrainingGovernor</code> dynamically audits model convergence against target SOTA benchmarks across all metrics simultaneously (e.g., PLCC, SRCC, EMD, PSNR, LPIPS, DirAcc).</li>
-                <li><strong>Metric Deficit Engine</strong>: Computes the exact shortfall for any lagging metric $\Delta_m = \max(0, \text{Target}_m - \text{Current}_m)$ and continuously adjusts specific loss function components (actuators) to compensate: $w_{t+1} = \min(w_{\text{max}}, w_t + \alpha \cdot \Delta_{m})$.</li>
+                        <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification (≥ 10% = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
+<li><strong>Metric Deficit Engine</strong>: Computes the exact shortfall for any lagging metric $\Delta_m = \max(0, \text{Target}_m - \text{Current}_m)$ and continuously adjusts specific loss function components (actuators) to compensate: $w_{t+1} = \min(w_{\text{max}}, w_t + \alpha \cdot \Delta_{m})$.</li>
                 <li><strong>Autonomous Rank-Boost Escalation</strong>: Automatically scales pairwise <code>rank_weight</code> (up to <code>1.5</code>), <code>soft_spearman_weight</code> (up to <code>2.0</code>) and tightens <code>rank_margin</code> (down to <code>0.05</code>) when rank order metric plateaus occur in the Refinement Phase.</li>
                 <li><strong>Dynamic Softmax Sharpening</strong>: Softmax temperature is dynamically annealed down toward <code>min_temp</code> (<code>0.90</code>) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.</li>
                 <li><strong>Multi-Path Candidate Directory Resolver</strong>: All generated training notebooks in the matrix dynamically resolve working directory candidates (<code>/kaggle/working/lemgendary-training-suite</code>, <code>/kaggle/working/model-training/lemgendary-training-suite</code>, <code>/kaggle/working</code>) before executing <code>os.chdir()</code> or <code>%pip install</code>, permanently eliminating <code>FileNotFoundError</code> across all cloud platforms.</li>
@@ -679,7 +680,8 @@
 <section>
     <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
     <ul>
-        <li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
+                <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification (≥ 10% = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
+<li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
         <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
         <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
         <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue (N=32) to maintain ranking context across micro-batches (b=2).</li>

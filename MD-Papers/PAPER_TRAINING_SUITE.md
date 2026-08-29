@@ -62,6 +62,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 ### 2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)
 
 - **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks across all metrics simultaneously (e.g., PLCC, SRCC, EMD, PSNR, LPIPS, DirAcc).
+- **Dynamic Severity Thresholds**: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.
 - **Metric Deficit Engine**: Computes the exact shortfall for any lagging metric $\Delta_m = \max(0, \text{Target}_m - \text{Current}_m)$ and continuously adjusts specific loss function components (actuators) to compensate: $w_{t+1} = \min(w_{\text{max}}, w_t + \alpha \cdot \Delta_{m})$.
 - **Autonomous Rank-Boost Escalation**: Automatically scales pairwise `rank_weight` (up to `1.5`), `soft_spearman_weight` (up to `2.0`) and tightens `rank_margin` (down to `0.05`) when rank order metric plateaus occur in the Refinement Phase.
 - **Dynamic Softmax Sharpening**: Softmax temperature is dynamically annealed down toward `min_temp` (`0.90`) to sharpen predicted score probability mass distributions and minimize Earth Mover's Distance.
@@ -198,6 +199,7 @@ The Master Training Suite provides the critical nuclear-hardened infrastructure 
 
 ### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
 
+- **Dynamic Severity Thresholds**: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.
 - **Metric Deficit Engine**: The `SmartTrainingGovernor` tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).
 - **Metric Focus Burst**: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting `srcc` rank weight).
 - **Metric-Specific SWA (MS-SWA)**: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.
