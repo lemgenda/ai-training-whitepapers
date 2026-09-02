@@ -38,6 +38,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
+- **Unified Hub Checkpoints**: Completely obsoletes volatile local checkpoint directories. All models, whether training locally or on Kaggle, directly sync `_latest`, `_best`, `_progress`, and `_vault_` checkpoints exclusively to their respective `LemGendaryModels/<model_name>/checkpoints` vault.
 - **The Scheduler Shield**: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.
 - **Velocity Bomb Prevention (Rollback Isolation)**: During a SOTA Rollback, the Governor surgically decouples the model weights from the learning rate chronometer. It reverts the weights to the safe baseline but intentionally bypasses chronological scheduler rewinding. This prevents the learning rate from violently spiking back to early-stage `max_lr` values, ensuring the model gently seats into a cold, stable manifold.
 - **Metric Singularity & Live Polarity Shield**: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN. **New in v1.2.2**: The Live Polarity Shield monitors the manifold directly during training; if `SRCC < 0.0` or `PLCC < 0.0` is detected mid-epoch, it immediately flags a "Polarity Collapse", rejecting the epoch and triggering an instant SOTA rollback to purge inverted weights.
@@ -195,7 +196,6 @@ The suite integrates a multi-node, collision-resistant **LemGendary Cloud Link**
 ## 7. Conclusion
 
 The Master Training Suite provides the critical nuclear-hardened infrastructure necessary to orchestrate, audit, and deploy high-fidelity generative models. By integrating dynamic memory management, SOTA verification gates, and multi-GPU distributed orchestration natively, LemGendary AI ensures maximum hardware efficiency and an unbroken trajectory toward optimal perceptual performance.
-
 
 ### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
 
