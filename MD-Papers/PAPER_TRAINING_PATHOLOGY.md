@@ -163,6 +163,18 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   3. Offer an interactive action matrix allowing operators to:
      - `[1]` Transition the checkpoint to **Kaggle Cloud Hub** for high-VRAM batch training.
      - `[2]` Export the current best model binaries to production ONNX and standalone PyTorch.
+
+### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)
+
+- **The Issue**: In constrained environments like Kaggle (16GB T4/P100), PyTorch DataLoader workers (when `persistent_workers=True`) hold onto fragmented C++ VRAM allocations even after the training iterator terminates. When the validation dataloader spawns, the fragmented VRAM causes an immediate Out-Of-Memory exception, crashing the script.
+- **Identification**: Training loop completes successfully, but the script immediately crashes with `CUDA Out of memory` the exact second the validation phase begins.
+- **Remedy**: **GC Teardown & Worker Capping**. Set `persistent_workers=False` and limit `num_workers` to a safe threshold (e.g., 2) based on `is_constrained_env`. Inject explicit `gc.collect()` and `torch.cuda.empty_cache()` teardown sequences exactly between the training and validation phases to force the C++ allocator to flush the VRAM footprint.
+
+### The Catastrophic Model Wipe (Unsafe Folder Initialization)
+
+- **The Issue**: To prevent overlapping legacy checkpoints, `shutil.rmtree` was historically used to purge the output directory before a fresh start. However, if this targets `LemGendaryModels/<model_name>`, it destroys all existing checkpoints, metrics, and ONNX binaries if it fails to correctly detect active repository state (e.g., ignoring hidden `.git` structures).
+- **Identification**: Previous SOTA `.pth` models and `metrics.csv` are entirely wiped upon initiating a new training session or notebook.
+- **Remedy**: **Safe Non-Destructive Export Instantiation**. Replace all overarching `rmtree` calls with precise `os.makedirs(exist_ok=True)` directory creations. Models must incrementally append to `metrics.csv` and overwrite specific checkpoint files (`_latest.pth`, `_best.pth`) rather than destroying their parent container.
      - `[3]` Extend local training in-process or exit cleanly.
 
 ### Metric Asymmetry (The Manifold Plateau)
@@ -173,6 +185,18 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   1. Boost `soft_spearman_weight` up to `2.0` if SRCC is lagging.
   2. Increase `lpips_weight` dynamically if perceptual geometry is lagging behind PSNR.
   3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if Directional Accuracy plateaus.
+
+### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)
+
+- **The Issue**: Kaggle environments using dual T4s or P100s crash with Out-Of-Memory (OOM) errors during the validation phase transitions. PyTorch `DataLoader` instances with `persistent_workers=True` keep memory allocated for workers across epochs, leading to extreme VRAM fragmentation and exhaustion when transitioning between training and validation passes.
+- **Identification**: Validation loop crashes instantly with CUDA OOM, despite training loop succeeding on the same batch size.
+- **Remedy**: **Constrained Environment Auto-Detection**. Detect Kaggle/Colab constraints (`is_constrained_env()`), enforce `persistent_workers=False`, cap workers to `4` max, and inject explicit `gc.collect()` and `torch.cuda.empty_cache()` teardown sequences before engaging new data loader iterators.
+
+### The Catastrophic Model Wipe (Unsafe Folder Initialization)
+
+- **The Issue**: Aggressive repository cleanup logic uses `shutil.rmtree` to wipe the `LemGendaryModels` export directory if `.git` is not explicitly found, leading to the deletion of all trained physical model checkpoints across projects.
+- **Identification**: Entire `LemGendaryModels` folder suddenly vanishes when initiating a new training run.
+- **Remedy**: **Safe Non-Destructive Export Instantiation**. Remove overarching `shutil.rmtree` directory wipes and replace with safe `os.makedirs(export_dir, exist_ok=True)`. Let the version control system (Git) handle untracked file management rather than brute-forcing filesystem wipes in the core loop.
 
 ---
 
@@ -378,6 +402,8 @@ Based on the **`unified_models_v2.yaml`** stack, these are the optimal progressi
 - [x] **Task 17.1: Walk-Forward Curriculum Orchestrator** (Target: `train_forex_curriculum.py`)
 - [x] **Task 17.2: Adaptive Loss Sentinel for Financial Models** (Target: `train.py`)
 - [x] **Task 17.3: Dynamic Domain-Aware Telemetry Engine** (Target: `telemetry.py`)
+- [x] **Task 18.1: Persistent Worker GC Teardown for Kaggle** (Target: `core_loop.py`)
+- [x] **Task 18.2: Safe Non-Destructive Export Guards** (Target: `core_loop.py`)
 
 ---
 

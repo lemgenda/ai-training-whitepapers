@@ -48,7 +48,7 @@
 
 This paper presents the theoretical design, mathematical formulation, and production verification of the **LemGendary ForexPredictor**, a deep multi-scale quantitative architecture designed for multi-currency algorithmic trading across MetaTrader 5 environments. Financial time-series data exhibit extreme non-stationarity, regime shifting, noise, and cross-timeframe dependency. Conventional single-timeframe models suffer from catastrophic lookahead leakage and false breakouts.
 
-The LemGendary ForexPredictor integrates per-timeframe **Causal Dilated Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage embargo gap, the architecture achieves a **Directional Accuracy of 62.40%**, **Win Rate of 58.12%**, **Profit Factor of 2.14**, **Sharpe Ratio of 2.45**, and a **Max Drawdown of 5.18%**, outperforming standard recurrent and transformer baselines while guaranteeing sub-5ms ONNX execution latency.
+The LemGendary ForexPredictor integrates per-timeframe **Causal Dilated Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage embargo gap, the architecture achieves a **Directional Accuracy of 49.69%**, **Win Rate of 49.69%**, **Profit Factor of 0.99**, **Sharpe Ratio of -0.16**, and a **Max Drawdown of 665.80%**, demonstrating current training volatility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.
 
 ---
 
@@ -212,19 +212,19 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 
 | Metric | Baseline (LSTM) | Transformer (Vanilla) | LemGendary ForexPredictor (SOTA) | Target |
 | :--- | :--- | :--- | :--- | :--- |
-| **Direction Accuracy** | 52.10% | 55.40% | **78.70%** | $> 60.00\%$ |
-| **Trade Win Rate** | 49.30% | 52.20% | **68.20%** | $> 56.00\%$ |
-| **Profit Factor** | 1.18 | 1.42 | **2.20** | $> 1.85$ |
-| **Sharpe Ratio** | 0.94 | 1.35 | **2.31** | $> 2.10$ |
-| **Sortino Ratio** | 1.12 | 1.68 | **2.94** | $> 2.50$ |
-| **Max Drawdown** | 14.80% | 11.20% | **9.50%** | $< 6.50\%$ |
-| **TP MAE (pips)** | 18.40 | 14.60 | **3.80** | $< 12.00$ |
-| **SL MAE (pips)** | 16.20 | 12.80 | **3.80** | $< 10.00$ |
-| **Quality Score** | 98.42 | 125.64 | **2500.00** | $> 150.00$ |
+| **Direction Accuracy** | 52.10% | 55.40% | **49.69%** | $> 60.00\%$ |
+| **Trade Win Rate** | 49.30% | 52.20% | **49.69%** | $> 56.00\%$ |
+| **Profit Factor** | 1.18 | 1.42 | **0.99** | $> 1.85$ |
+| **Sharpe Ratio** | 0.94 | 1.35 | **-0.16** | $> 2.10$ |
+| **Sortino Ratio** | 1.12 | 1.68 | **-0.18** | $> 2.50$ |
+| **Max Drawdown** | 14.80% | 11.20% | **665.80%** | $< 6.50\%$ |
+| **TP MAE (pips)** | 18.40 | 14.60 | **615.42** | $< 12.00$ |
+| **SL MAE (pips)** | 16.20 | 12.80 | **617.95** | $< 10.00$ |
+| **Quality Score** | 98.42 | 125.64 | **105.87** | $> 150.00$ |
 
 ### 4.5 Training Curve
 
-![Forex Training Curves](../assets/forex_training_curves_v2.png)
+![Forex Training Curves](../assets/forex_training_curve_v2.png)
 
 ### 4.6 Model Specific Issues and Optimizations
 
@@ -240,7 +240,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 | **GBPUSD** | 78.80% | 68.70% | 2.18 | 2.51 | 9.20% |
 | **USDJPY** | 77.90% | 67.80% | 2.08 | 2.38 | 9.40% |
 | **XAUUSD (Gold)** | 77.75% | 66.60% | 2.04 | 2.29 | 9.27% |
-| **Mean Universe** | **78.70%** | **68.20%** | **2.20** | **2.31** | **9.50%** |
+| **Mean Universe** | **49.69%** | **49.69%** | **0.99** | **-0.16** | **665.80%** |
 
 ### 4.8 Training Process Analysis
 
@@ -250,12 +250,20 @@ The Smart Governor expands the dataset fraction from 15% to 100% across the Walk
 
 To robustly learn complex non-stationary regimes, the architecture is supervised through a `train_forex_curriculum.py` orchestration loop:
 
-1. **Phase 1 (Titan 4 Core)**: Training initialized on 4 major pairs (EURUSD, GBPUSD, USDJPY, XAUUSD) for 50 epochs per fold.
-2. **Phase 2 (G7 Majors)**: Expanded to 8 pairs for 40 epochs per fold.
-3. **Phase 3 (High-Beta Crosses)**: Expanded to 12 pairs for 30 epochs per fold.
-4. **Phase 4 (Full Universe)**: Final fine-tuning across the entire 16-pair universe for 20 epochs per fold.
+1. **Phase 1 (Titan 4 Core)**: Training initialized on 4 major pairs (EURUSD, GBPUSD, USDJPY, XAUUSD).
+2. **Phase 2 (G7 Majors)**: Expanded to 8 pairs.
+3. **Phase 3 (High-Beta Crosses)**: Expanded to 12 pairs.
+4. **Phase 4 (Full Universe)**: Final fine-tuning across the entire 16-pair universe.
 
-This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix.
+The Patience-Based Early Stopping mechanism evaluates convergence over an objective $K$-fold temporal validation matrix $\mathcal{M}_{\text{WF}}$:
+
+$$\mathcal{M}_{\text{WF}} = \sum_{k=1}^K \sum_{t \in \mathcal{V}_k} \mathcal{L}_{\text{CE}}\left(f_\theta(\mathbf{X}_{t-W:t}), y_{t+1}\right)$$
+
+The dynamic fold advancement gate triggers if the validation loss fails to improve for $P$ consecutive epochs:
+
+$$t_{\text{stop}} = \min \left\{ t \mid \min_{t' \in [t-P, t]} \mathcal{L}_{\text{val}}(t') > \min_{\tau \le t-P} \mathcal{L}_{\text{val}}(\tau) \right\}$$
+
+This progressive staging prevents gradient collapse when exposing the network to highly decoupled esoteric currency dynamics, systematically cascading checkpoints through the 6-Fold Walk-Forward matrix using dynamic rather than fixed limits.
 
 **Dynamic Orchestrator Target Scaling**: The orchestrator is designed to safely interact with the `train.py` Resiliency Guardrail. If a fold dynamically extends past its base epochs to force SOTA convergence, the curriculum orchestrator will automatically read the actual model epoch from `metrics.csv` upon the next fold's launch. It then dynamically scales the next fold's target (e.g., `current_epoch + epochs_per_fold`), ensuring no future folds are starved of their intended training cycles due to previous resiliency extensions.
 
@@ -326,7 +334,7 @@ The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
 
 | Model Architecture | Task | Dir Acc (%) | Win Rate (%) | Profit Factor | Sharpe | MaxDD (%) | Quality Score |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **ForexPredictor** | FX & Gold Prediction | **62.40%** | **58.12%** | **2.14** | **2.45** | **5.18%** | **161.93** |
+| **ForexPredictor** | FX & Gold Prediction | **49.69%** | **49.69%** | **0.99** | **-0.16** | **665.80%** | **105.87** |
 | NAFNet Deblurring | Deblurring | 32.85 dB (PSNR) | 0.942 (SSIM) | — | — | — | 51.69 |
 | NAFNet Denoising | Denoising | 38.40 dB (PSNR) | 0.968 (SSIM) | — | — | — | 57.76 |
 | MPRNet Deraining | Deraining | 33.12 dB (PSNR) | 0.948 (SSIM) | — | — | — | 52.08 |

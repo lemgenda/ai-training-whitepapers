@@ -47,6 +47,8 @@
                         <li><a href="#microbatch-rank-starvation">Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)</a></li>
                         <li><a href="#spatial-pooling-dilution">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)</a></li>
                         <li><a href="#silent-epoch-limit">Silent Epoch Limit Termination (The Raw Exit Pathology)</a></li>
+                        <li><a href="#vram-fragmentation">The Persistent Worker VRAM Fragmentation (Kaggle OOM)</a></li>
+                        <li><a href="#catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</a></li>
                         <li><a href="#metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</a></li>
                     </ul>
                 </li>
@@ -507,6 +509,20 @@
                         <li>Offer an interactive action matrix allowing operators to transition to Kaggle Cloud Hub, export ONNX binaries, or extend local training in-process.</li>
                     </ol>
                 </li>
+            </ul>
+
+            <h3 id="vram-fragmentation">The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: In constrained environments like Kaggle (16GB T4/P100), PyTorch DataLoader workers (when <code>persistent_workers=True</code>) hold onto fragmented C++ VRAM allocations even after the training iterator terminates. When the validation dataloader spawns, the fragmented VRAM causes an immediate Out-Of-Memory exception, crashing the script.</li>
+                <li><strong>Identification</strong>: Training loop completes successfully, but the script immediately crashes with <code>CUDA Out of memory</code> the exact second the validation phase begins.</li>
+                <li><strong>Remedy</strong>: <strong>GC Teardown & Worker Capping</strong>. Set <code>persistent_workers=False</code> and limit <code>num_workers</code> to a safe threshold (e.g., 2) based on <code>is_constrained_env</code>. Inject explicit <code>gc.collect()</code> and <code>torch.cuda.empty_cache()</code> teardown sequences exactly between the training and validation phases to force the C++ allocator to flush the VRAM footprint.</li>
+            </ul>
+
+            <h3 id="catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: To prevent overlapping legacy checkpoints, <code>shutil.rmtree</code> was historically used to purge the output directory before a fresh start. However, if this targets <code>LemGendaryModels/&lt;model_name&gt;</code>, it destroys all existing checkpoints, metrics, and ONNX binaries if it fails to correctly detect active repository state (e.g., ignoring hidden <code>.git</code> structures).</li>
+                <li><strong>Identification</strong>: Previous SOTA <code>.pth</code> models and <code>metrics.csv</code> are entirely wiped upon initiating a new training session or notebook.</li>
+                <li><strong>Remedy</strong>: <strong>Safe Non-Destructive Export Instantiation</strong>. Replace all overarching <code>rmtree</code> calls with precise <code>os.makedirs(exist_ok=True)</code> directory creations. Models must incrementally append to <code>metrics.csv</code> and overwrite specific checkpoint files (<code>_latest.pth</code>, <code>_best.pth</code>) rather than destroying their parent container.</li>
             </ul>
 
             <h3 id="metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</h3>
