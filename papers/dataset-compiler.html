@@ -26,7 +26,7 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h4>Navigation Matrix</h4>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
             <ul>
 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
                 <li><a href="#section-1">1. Abstract</a>
@@ -291,11 +291,11 @@
             <code>Adopt(O) = &cup;<sub>k=1</sub><sup>ceil(\|O\|/C)</sup> Commit(O<sub>k &middot; C</sub>)</code><br>
             where <i>C = 100,000</i> represents the batch memory chunk limit, preventing memory spikes during massive recovery operations.</p>
 
-            <p><strong>Metadata Synchronization</strong>:<br>
+            <strong>Metadata Synchronization</strong>:<br>
             <ul>
                 <li><strong>KaggleHub &amp; HF Sync</strong>: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.</li>
                 <li><strong>Standardized dataset_info.yaml</strong>: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.</li>
-            </ul></p>
+            </ul>
 
             <p><strong>MetaTrader 5 (MT5) Auto-Acquisition</strong>:<br>
             For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It scans the local <code>data\forex</code> cache against the requested configuration (<code>pairs_list</code>). If any currency pair shards are missing, the compiler seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It extracts, resamples, and compiles the missing historical OHLCV data on-the-fly, bridging the gap between quantitative finance platforms and AI training suites.</p>
@@ -517,7 +517,7 @@
             <div class="visual-taxonomy" style="margin-top: 20px;">
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h4>5.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h4>
+                        <h3>5.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
                         <ul>
                             <li><strong>Pros:</strong> Blazing GPU-accelerated MinHash deduplication &amp; VLM semantic filtering; native integration with NeMo training framework.</li>
                             <li><strong>Cons:</strong> Requires multi-GPU DGX/HGX clusters for heavy tasks; significant VRAM overhead during pre-processing; locked to NVIDIA ecosystem.</li>
@@ -527,7 +527,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h4>5.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h4>
+                        <h3>5.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Gold standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); seamless HF Hub integration and dataset sharing.</li>
                             <li><strong>Cons:</strong> High Windows IPC serialization penalty; tarball creation forces physical data duplication; slow random-access seek times.</li>
@@ -537,7 +537,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h4>5.2.3 Ray Data / Anyscale Distributed Compiler</h4>
+                        <h3>5.2.3 Ray Data / Anyscale Distributed Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Highly scalable distributed batch execution across thousands of CPU/GPU worker nodes; resilient task graphs.</li>
                             <li><strong>Cons:</strong> High memory footprint due to Plasma Object Store serialization overhead; complex cluster orchestration and setup.</li>
@@ -547,7 +547,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h4>5.2.4 Cohere / DeepSpeed Data Engine</h4>
+                        <h3>5.2.4 Cohere / DeepSpeed Data Engine</h3>
                         <ul>
                             <li><strong>Pros:</strong> Optimized for massive-scale LLM/VLM text-image tokenization and multi-modal sharding; excellent multi-node streaming.</li>
                             <li><strong>Cons:</strong> Poor support for image restoration/super-resolution paired targets; high multi-node network bandwidth requirements.</li>
@@ -557,7 +557,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h4>5.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h4>
+                        <h3>5.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
                         <ul>
                             <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem compatibility; zero external framework dependencies.</li>
                             <li><strong>Cons:</strong> Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.</li>
@@ -567,7 +567,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px; border-left: 4px solid var(--accent-color);">
                     <div class="quadrant-info">
-                        <h4>5.2.6 LemGendary Dataset Compiler Suite (v16.2.8)</h4>
+                        <h3>5.2.6 LemGendary Dataset Compiler Suite (v16.2.8)</h3>
                         <ul>
                             <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
                             <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>
@@ -658,7 +658,7 @@
             <div class="visual-taxonomy">
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedClassificationMasterManifoldLarge</h4>
+                        <h3>LemGendizedClassificationMasterManifoldLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Classification</li>
                             <li><strong>Total Samples:</strong> 788,034</li>
@@ -669,7 +669,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedCodeFormerLarge</h4>
+                        <h3>LemGendizedCodeFormerLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
                             <li><strong>Total Samples:</strong> 22,000</li>
@@ -680,7 +680,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedFfaNetIndoorLarge</h4>
+                        <h3>LemGendizedFfaNetIndoorLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 196,304</li>
@@ -691,7 +691,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedFfaNetOutdoorLarge</h4>
+                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 217,113</li>
@@ -702,7 +702,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedFilmRestorerLarge</h4>
+                        <h3>LemGendizedFilmRestorerLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 67,542</li>
@@ -713,7 +713,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedForexPredictorLarge</h4>
+                        <h3>LemGendizedForexPredictorLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Financial Time-Series</li>
                             <li><strong>Total Samples:</strong> 428,940</li>
@@ -724,7 +724,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedMirNetExposureLarge</h4>
+                        <h3>LemGendizedMirNetExposureLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 1,416,459</li>
@@ -735,7 +735,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedMirNetLowLightLarge</h4>
+                        <h3>LemGendizedMirNetLowLightLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 15,070</li>
@@ -746,7 +746,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedMprNetDerainingLarge</h4>
+                        <h3>LemGendizedMprNetDerainingLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 248,190</li>
@@ -757,7 +757,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedNafNetDebluringLarge</h4>
+                        <h3>LemGendizedNafNetDebluringLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
@@ -768,7 +768,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedNafNetDenoisingLarge</h4>
+                        <h3>LemGendizedNafNetDenoisingLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 7,727</li>
@@ -779,7 +779,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedNimaAestheticLarge</h4>
+                        <h3>LemGendizedNimaAestheticLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 321,369</li>
@@ -790,7 +790,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedNimaAuthenticityLarge</h4>
+                        <h3>LemGendizedNimaAuthenticityLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Authenticity Assessment</li>
                             <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
@@ -801,7 +801,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedNimaTechnicalLarge</h4>
+                        <h3>LemGendizedNimaTechnicalLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
@@ -812,7 +812,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedParseNetLarge</h4>
+                        <h3>LemGendizedParseNetLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Segmentation</li>
                             <li><strong>Total Samples:</strong> 853,546</li>
@@ -823,7 +823,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedProfessionalMultitaskRestorationLarge</h4>
+                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 343,911</li>
@@ -834,7 +834,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedRetinaFaceMobileNetLarge</h4>
+                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
                             <li><strong>Total Samples:</strong> 853,546</li>
@@ -845,7 +845,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedUltraZoomLarge</h4>
+                        <h3>LemGendizedUltraZoomLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Super-Resolution</li>
                             <li><strong>Total Samples:</strong> 17,724</li>
@@ -856,7 +856,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedUpnV2Large</h4>
+                        <h3>LemGendizedUpnV2Large</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 1,378,070</li>
@@ -867,7 +867,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h4>LemGendizedYoloV8nLarge</h4>
+                        <h3>LemGendizedYoloV8nLarge</h3>
                         <ul>
                             <li><strong>Category:</strong> Object Detection</li>
                             <li><strong>Total Samples:</strong> 153,972</li>

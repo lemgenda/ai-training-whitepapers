@@ -224,7 +224,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 
 ### 4.5 Training Curve
 
-![Forex Training Curves](images/forex_training_curves_v2.png)
+![Forex Training Curves](../assets/forex_training_curves_v2.png)
 
 ### 4.6 Model Specific Issues and Optimizations
 
@@ -337,7 +337,6 @@ The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
 ## 8. Conclusion
 
 The **LemGendary ForexPredictor** sets a new standard for quantitative deep learning in foreign exchange and commodity trading. By combining multi-timeframe causal dilated convolutions with cross-temporal attention fusion and 6-fold walk-forward validation, the model achieves superior risk-adjusted returns while eliminating future lookahead bias. The lightweight stateless architecture guarantees sub-5ms deployment readiness for live MetaTrader 5 algorithmic execution.
-
 
 ### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
 

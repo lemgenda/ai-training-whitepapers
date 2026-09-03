@@ -51,7 +51,7 @@
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
-            <h4>Navigation Matrix</h4>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
             <ul>
                 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
                 <li><a href="#1-abstract">1. Abstract</a></li>
@@ -220,11 +220,11 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             <p>$$\text{WinRate} = \frac{\sum_{i \in \text{Trades}} \mathbb{I}\left(R_i > 0\right)}{N_{\text{trades}}} \times 100\%$$</p>
 
             <h4>2. Profit Factor & Return Metrics</h4>
-            <p>$$\text{Profit Factor} = \frac{\sum_{i: R_i > 0} R_i}{\sum_{j: R_j < 0} |R_j|}$$</p>
+            <p>$$\text{Profit Factor} = \frac{\sum_{i: R_i > 0} R_i}{\sum_{j: R_j &lt; 0} |R_j|}$$</p>
 
             <h4>3. Annualized Sharpe & Sortino Ratios</h4>
             <p>$$\text{Sharpe} = \frac{\mathbb{E}[R] - R_f}{\sigma(R)} \times \sqrt{252 \times 24}, \quad \text{Sortino} = \frac{\mathbb{E}[R] - R_f}{\sigma_{\text{downside}}(R)} \times \sqrt{252 \times 24}$$</p>
-            <p>$$\sigma_{\text{downside}} = \sqrt{\frac{1}{N} \sum_{i: R_i < 0} R_i^2}$$</p>
+            <p>$$\sigma_{\text{downside}} = \sqrt{\frac{1}{N} \sum_{i: R_i &lt; 0} R_i^2}$$</p>
 
             <h4>4. Maximum Drawdown</h4>
             <p>$$\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t} \text{Equity}(\tau) - \text{Equity}(t)}{\max_{\tau \le t} \text{Equity}(\tau)} \right) \times 100\%$$</p>
@@ -348,7 +348,7 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             </table>
 
             <h3 id="45-training-curve">4.5 Training Curve</h3>
-            <img src="../MD-Papers/images/forex_training_curves_v2.png" alt="Forex Training Curves" style="max-width:100%;" />
+            <img src="../assets/forex_training_curves_v2.png" alt="Forex Training Curves" style="max-width:100%;" />
 
             <h3 id="46-model-specific-issues-and-optimizations">4.6 Model Specific Issues and Optimizations</h3>
             <ol>

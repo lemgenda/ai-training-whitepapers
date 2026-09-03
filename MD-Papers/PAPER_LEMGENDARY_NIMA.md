@@ -796,13 +796,14 @@ Additionally, the `res_ladder` config contained only `[224]`, preventing the Gov
 Under constrained edge hardware (GTX 1650 4GB @ 512px), physical micro-batch size $b=2$ creates a severe pairwise ranking bottleneck. While Earth Mover's Distance (EMD) loss optimizes linear density correlation (driving $\text{PLCC} \ge 0.9102$), evaluating only $\binom{2}{2} = 1$ pair per step starves monotonic rank gradients, stalling $\text{SRCC}$ at $\sim 0.8178$.
 
 To eliminate this bottleneck, the v19.0 architecture integrates:
+
 1. **Differentiable Soft-Spearman Loss**: Computes smooth surrogate ranks via temperature-scaled logistic sigmoids:
    $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \frac{1}{1 + \exp\left(-\frac{p_i - p_j}{\tau}\right)}$$
 2. **Cross-Microbatch Rank Memory Bank**: A detached FIFO queue ($N=32$) caches recent predictions and targets across gradient accumulation cycles. On every forward step, active predictions are concatenated with memory bank tensors, computing pairwise rank correlation across $\binom{32}{2} = 496$ sample pairs.
 
 ### 5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization
 
-Global Average Pooling (GAP) calculates $\frac{1}{HW}\sum x_{h,w}$, which attenuates high-frequency localized micro-defects (e.g. ISO grain, compression ringing) when defects occupy only a fraction of the 512px canvas. 
+Global Average Pooling (GAP) calculates $\frac{1}{HW}\sum x_{h,w}$, which attenuates high-frequency localized micro-defects (e.g. ISO grain, compression ringing) when defects occupy only a fraction of the 512px canvas.
 
 The upgraded NIMA head adopts dual-moment statistical pooling:
 $$\mu_c = \frac{1}{HW} \sum_{h,w} x_{c,h,w}, \quad \sigma_c = \sqrt{\frac{1}{HW} \sum_{h,w} (x_{c,h,w} - \mu_c)^2 + \epsilon}$$
@@ -881,7 +882,6 @@ The graduation of these models to the **ONNX / WebGPU** ecosystem marks the begi
 - **Edge Refinement**: Implementing LoRA-based local adaptation for specific user-camera characteristics.
 
 Ultimately, the LemGendary project proves that with the right mathematical guardrails (2026 Resilience Loss) and real-time resource monitoring, the gap between laboratory SOTA and consumer deployment has officially closed.
-
 
 ### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
 

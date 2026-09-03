@@ -49,7 +49,7 @@
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
-            <h4>Navigation Matrix</h4>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
             <ul>
 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
                 <li><a href="#1-abstract">1. Abstract</a>
@@ -144,7 +144,7 @@
 
 
 <section id="1-abstract">
-<h2 id="1-abstract">1. Abstract</h2>
+<h2>1. Abstract</h2>
 <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
 <hr />
 <hr />
@@ -204,7 +204,7 @@
 </section>
 
 <section id="2-visual-taxonomy-the-lemgendary-restoration-subset">
-<h2 id="2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
+<h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
 <p>The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.</p>
 <h3 id="21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</h3>
 <p>By unifying diverse sensor noise profiles into <code>LemGendizedNafNetDenoising</code>, the NAFNet backbone is trained to cleanly subtract extreme ISO sensor noise, Gaussian/Poisson noise, and digital defects natively.</p>
@@ -312,7 +312,7 @@ $$\text{Pool}(X)_c = \frac{1}{HW} \sum_{i=1}^H \sum_{j=1}^W X_{c,i,j}$$</li>
 </section>
 
 <section id="3-shared-foundations">
-<h2 id="3-shared-foundations">3. Shared Foundations</h2>
+<h2>3. Shared Foundations</h2>
 <h3 id="31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
 <p>Training massive architectures like NAFNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.</p>
 <h4 id="311-the-headroom-aware-memory-sentinel">3.1.1 The Headroom-Aware Memory-Sentinel</h4>
@@ -445,7 +445,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 </section>
 
 <section id="4-model-deep-dives">
-<h2 id="4-model-deep-dives">4. Model Deep-Dives</h2>
+<h2>4. Model Deep-Dives</h2>
 <h3 id="41-nafnet-denoising-model">4.1 NAFNet Denoising Model</h3>
 <h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary NAFNet Denoising</strong> is a professional-grade AI model optimized for the <code>restoration</code> lifecycle. It isolates pure Gaussian/Poisson signal noise from true high-frequency image textures (like hair or fabric).</p>
@@ -646,7 +646,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 </section>
 
 <section id="5-challenges-resilience-architecture">
-<h2 id="5-challenges-resilience-architecture">5. Challenges &amp; Resilience Architecture</h2>
+<h2>5. Challenges &amp; Resilience Architecture</h2>
 <h3 id="51-the-simplegate-nan-overflows-structural-fp16-disable">5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)</h3>
 <p><strong>Issue</strong>: NAFNet training initially exploded with infinite <code>NaN</code> losses. Because <code>SimpleGate</code> acts as a multiplicative layer, feature maps can easily cross the internal float ceiling of <code>65,504</code> in FP16.
 <strong>Fix</strong>: Engineered the <strong>Structural FP16 Disable</strong>. The <code>train.py</code> loop dynamically disables AMP specifically for <code>NAFNet</code>, forcing strict double-precision gradients via FP32.</p>
@@ -785,7 +785,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 </section>
 
 <section id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">
-<h2 id="6-deployment-strategy-the-c-onnx-ghost-severing-protocol">6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</h2>
+<h2>6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol</h2>
 <h3 id="61-standalone-exporters">6.1 Standalone Exporters</h3>
 <p>Checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
 <h3 id="62-the-ghost-severing-protocol">6.2 The Ghost-Severing Protocol</h3>
@@ -848,7 +848,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 </section>
 
 <section id="7-sota-architectural-performance-matrix">
-<h2 id="7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</h2>
+<h2>7. SOTA Architectural Performance Matrix</h2>
 <p>The following matrix isolates NAFNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).</p>
 
 <div style="overflow-x:auto; margin-top:20px;">
