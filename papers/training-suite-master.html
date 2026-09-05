@@ -201,6 +201,7 @@
                 <li><strong>Model-Aware Adaptive Loop-Breaker &amp; Loop Guards (v16.3.2)</strong>: Tracks checkpoint rollback history to detect resolution-regression locks. It automatically triggers spatial resolution promotion (Strategy A) or dynamic drift-gate relaxation (Strategy B), protected by an anti-self-fighting <code>breakout_lock</code> retreat shield, to resolve infinite training loops autonomously. Configurable on a per-model basis in the master registry.</li>
                 <li><strong>Autonomous Resolution Escalation &amp; Dynamic Limits (v16.3.3)</strong>: <code>SmartTrainingGovernor</code> dynamically detects resolution-regression locks when rollback thresholds are met and automatically promotes the training resolution to the next rung in <code>res_ladder</code> (<code>256px -&gt; 384px</code>), resetting sample fraction to 15% for a fresh warmup. <code>get_active_regression_limit()</code> dynamically relaxes <code>regression_limit</code> during loop recovery so static YAML limits never block resolution escalation.</li>
                 <li><strong>Proven-Manifold Protection &amp; Intra-Resolution Data Recoil (v16.0.0)</strong>: If a model regresses during dataset fraction expansion on a resolution where it already achieved a high peak score (<code>best_quality &gt;= 0.75 * target_quality_score</code> or <code>&gt; 85.0</code>), the Governor blocks premature Spatial Retreats (resolution drops) and instead executes Intra-Resolution Data Recoil. It steps dataset fraction back to the last safe fraction on the high-resolution manifold (e.g. <code>75% -&gt; 55%</code> at <code>512px</code>) while cooling the learning rate by 50% and locking stabilization for 5 epochs.</li>
+                <li><strong>Atomic Governor Fraction Expansion Persistence &amp; Checkpoint State Flush (v16.3.4)</strong>: Solves cloud session preemption rollback during dynamic dataset fraction expansion. When the SOTA Guard triggers sample fraction promotion (e.g. <code>75% -&gt; 90% -&gt; 100%</code>), the engine immediately updates the active DataLoader topology, flushes <code>governor.get_state()</code> into the checkpoint payload, and overwrites both <code>_latest.pth</code> and <code>_best.pth</code> on disk. Hub Lock skip-paths are anchored directly to live governor telemetry, guaranteeing that cloud restarts resume precisely at the expanded manifold fraction rather than reverting to pre-expansion checkpoints.</li>
                 <li><strong>ONNX Trace Resilience (FakeTensor Guards)</strong>: Dynamically wraps unmapped <code>FakeTensor</code> memory pointer access (<code>data_ptr()</code>) during FX/ONNX graph tracing within the DataParallel multi-GPU engine to prevent false-positive segmentation faults during structural graph export.</li>
             </ul>
 
@@ -290,11 +291,6 @@
 
 
 
-
-
-
-
-</section>
 
 
             <h3 id="soft-spearman-loss">2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)</h3>

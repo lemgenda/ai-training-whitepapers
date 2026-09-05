@@ -48,6 +48,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
     - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier)
     - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization)
     - [Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck)
+    - [Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop)
 6. [Best Practices Checklist](#7-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
@@ -81,6 +82,7 @@ This guide provides a "Front-Line" diagnostic framework for recognizing and reme
 | **Spatial Pooling Dilution** | Global Average Pooling (GAP) averages activations over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers occupying $5\text{--}15\%$ area. | **Micro-Defect Blindness**: Model classifies large blurred scenes well but misses localized micro-noise, compression artifacts, or anatomical triggers. | Implement **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling** to capture localized feature variance. |
 | **Silent Epoch Limit Termination** | Model hits maximum epoch budget (e.g. 300) without meeting SOTA targets; training abruptly terminates with uninformative prompt. | **Abrupt Exit**: Terminal prints raw exit prompt with no target audit, diagnostic guidance, or recovery options. | Implement **Universal Post-Training Target Audit & Interactive Guidance** with headless Kaggle Cloud escalation. |
 | **Metric Asymmetry (The Manifold Plateau)** | Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS). | **Metric Divergence**: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement. | Implement **Omni-Metric Autonomous Governor** with **Metric Deficit Engine** ($\Delta_m$) to dynamically actuate specialized loss weights. |
+| **Checkpoint Fraction Desynchronization** | Model expands dataset fraction (e.g. 75% → 90%) on preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior to expansion. Preemption rolls state back to 75%. | **Fraction Recoil**: Terminal logs report fraction expansion, but subsequent session resumes revert to previous fraction, trapping training in a fraction loop. | **Atomic Fraction Persistence (v16.3.4)**. Flush live `governor.get_state()` into checkpoint payload immediately upon fraction promotion and re-save both `_latest.pth` and `_best.pth`. Anchor Hub Lock to live governor state. |
 
 ---
 
@@ -163,6 +165,7 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   3. Offer an interactive action matrix allowing operators to:
      - `[1]` Transition the checkpoint to **Kaggle Cloud Hub** for high-VRAM batch training.
      - `[2]` Export the current best model binaries to production ONNX and standalone PyTorch.
+     - `[3]` Extend local training in-process or exit cleanly.
 
 ### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)
 
@@ -175,7 +178,6 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: To prevent overlapping legacy checkpoints, `shutil.rmtree` was historically used to purge the output directory before a fresh start. However, if this targets `LemGendaryModels/<model_name>`, it destroys all existing checkpoints, metrics, and ONNX binaries if it fails to correctly detect active repository state (e.g., ignoring hidden `.git` structures).
 - **Identification**: Previous SOTA `.pth` models and `metrics.csv` are entirely wiped upon initiating a new training session or notebook.
 - **Remedy**: **Safe Non-Destructive Export Instantiation**. Replace all overarching `rmtree` calls with precise `os.makedirs(exist_ok=True)` directory creations. Models must incrementally append to `metrics.csv` and overwrite specific checkpoint files (`_latest.pth`, `_best.pth`) rather than destroying their parent container.
-     - `[3]` Extend local training in-process or exit cleanly.
 
 ### Metric Asymmetry (The Manifold Plateau)
 
@@ -185,18 +187,6 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   1. Boost `soft_spearman_weight` up to `2.0` if SRCC is lagging.
   2. Increase `lpips_weight` dynamically if perceptual geometry is lagging behind PSNR.
   3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if Directional Accuracy plateaus.
-
-### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)
-
-- **The Issue**: Kaggle environments using dual T4s or P100s crash with Out-Of-Memory (OOM) errors during the validation phase transitions. PyTorch `DataLoader` instances with `persistent_workers=True` keep memory allocated for workers across epochs, leading to extreme VRAM fragmentation and exhaustion when transitioning between training and validation passes.
-- **Identification**: Validation loop crashes instantly with CUDA OOM, despite training loop succeeding on the same batch size.
-- **Remedy**: **Constrained Environment Auto-Detection**. Detect Kaggle/Colab constraints (`is_constrained_env()`), enforce `persistent_workers=False`, cap workers to `4` max, and inject explicit `gc.collect()` and `torch.cuda.empty_cache()` teardown sequences before engaging new data loader iterators.
-
-### The Catastrophic Model Wipe (Unsafe Folder Initialization)
-
-- **The Issue**: Aggressive repository cleanup logic uses `shutil.rmtree` to wipe the `LemGendaryModels` export directory if `.git` is not explicitly found, leading to the deletion of all trained physical model checkpoints across projects.
-- **Identification**: Entire `LemGendaryModels` folder suddenly vanishes when initiating a new training run.
-- **Remedy**: **Safe Non-Destructive Export Instantiation**. Remove overarching `shutil.rmtree` directory wipes and replace with safe `os.makedirs(export_dir, exist_ok=True)`. Let the version control system (Git) handle untracked file management rather than brute-forcing filesystem wipes in the core loop.
 
 ---
 
@@ -319,6 +309,15 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
   1. **GPU-Native PyTorch SSIM**: Vectorized 2D Gaussian convolution SSIM evaluated directly on CUDA tensors in $< 1\text{ms}$.
   2. **Zero-Copy VRAM Pipeline**: Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.
   3. **Dynamic VRAM Tier Validation Cap**: Scales validation batch size dynamically based on VRAM capacity ($\ge 14\text{GB} \rightarrow 32$, $\ge 8\text{GB} \rightarrow 16$, $<4.5\text{GB} \rightarrow 4$).
+
+### Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)
+
+- **The Issue**: In cloud training environments with session quotas (e.g., Kaggle 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and expanded dataset fractions (e.g., $75\% \rightarrow 90\%$) *after* assembling the epoch checkpoint dictionary (`ckpt_state`) and saving to disk. If a preemptive shutdown occurred during the expansion epoch or before the subsequent SOTA milestone, reloading the checkpoint restored the stale governor state, silently rolling the training fraction back to $75\%$ and trapping the model in an infinite fraction expansion loop.
+- **Identification**: Training logs indicate dataset fraction expansion to $90\%$ or $100\%$, but upon session restart or preemption recovery, the active dataset fraction drops back to the earlier rung (e.g., $75\%$).
+- **Remedy**: **Atomic Governor Fraction Expansion Persistence & Checkpoint State Flush (v16.3.4)**:
+  1. Immediately after calling `train_ds.update_strategy(fraction=next_frac)` and rebuilding DataLoaders, flush the live `governor.get_state()` dictionary directly into `ckpt_state['governor_state']`.
+  2. Overwrite both `_latest.pth` and `_best.pth` on physical storage atomically so restarts cannot reload stale pre-expansion fractions.
+  3. Anchor Hub Lock skip-paths directly to live `governor.get_state()` so local progress checkpoints never persist stale governor snapshots.
 
 ---
 

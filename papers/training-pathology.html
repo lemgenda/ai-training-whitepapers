@@ -73,6 +73,7 @@
                         <li><a href="#static-loss-hyperparameter-saturation">Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)</a></li>
                         <li><a href="#false-alarm-jolt-collapse">The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)</a></li>
                         <li><a href="#cpu-validation-thrashing">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</a></li>
+                        <li><a href="#checkpoint-fraction-desync">Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-9">6. Best Practices Checklist</a>
@@ -243,6 +244,12 @@
                         <td>Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS).</td>
                         <td><strong>Metric Divergence</strong>: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement.</td>
                         <td>Implement <strong>Omni-Metric Autonomous Governor</strong> with <strong>Metric Deficit Engine</strong> ($\Delta_m$) to dynamically actuate specialized loss weights.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Checkpoint Fraction Desynchronization</strong></td>
+                        <td>Model expands dataset fraction (e.g. 75% &rarr; 90%) on preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior to expansion. Preemption rolls state back to 75%.</td>
+                        <td><strong>Fraction Recoil</strong>: Terminal logs report fraction expansion, but subsequent session resumes revert to previous fraction, trapping training in a fraction loop.</td>
+                        <td><strong>Atomic Fraction Persistence (v16.3.4)</strong>. Flush live <code>governor.get_state()</code> into checkpoint payload immediately upon fraction promotion and re-save both <code>_latest.pth</code> and <code>_best.pth</code>. Anchor Hub Lock to live governor state.</td>
                     </tr>
 </tbody>
                 </table>
@@ -636,6 +643,16 @@
                 <li><strong>Zero-Copy VRAM Pipeline:</strong> Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.</li>
                 <li><strong>Dynamic VRAM Tier Validation Cap:</strong> Scales validation batch size dynamically based on VRAM capacity (&ge; 14GB &rarr; 32, &ge; 8GB &rarr; 16, &lt; 4.5GB &rarr; 4).</li>
                 <li><strong>Dynamic CPU Worker Topology:</strong> Aligns <code>num_workers = min(cpu_count, 2)</code> on Kaggle to prevent CPU core oversubscription.</li>
+            </ol>
+
+            <h3 id="checkpoint-fraction-desync">Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)</h3>
+            <p><strong>The Issue:</strong> In cloud training environments with session quotas (e.g., Kaggle 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and expanded dataset fractions (e.g., 75% &rarr; 90%) <em>after</em> assembling the epoch checkpoint dictionary (<code>ckpt_state</code>) and saving to disk. If a preemptive shutdown occurred during the expansion epoch or before the subsequent SOTA milestone, reloading the checkpoint restored the stale governor state, silently rolling the training fraction back to 75% and trapping the model in an infinite fraction expansion loop.</p>
+            <p><strong>Identification:</strong> Training logs indicate dataset fraction expansion to 90% or 100%, but upon session restart or preemption recovery, the active dataset fraction drops back to the earlier rung (e.g., 75%).</p>
+            <p><strong>Remedy:</strong> <strong>Atomic Governor Fraction Expansion Persistence &amp; Checkpoint State Flush (v16.3.4)</strong>:</p>
+            <ol>
+                <li>Immediately after calling <code>train_ds.update_strategy(fraction=next_frac)</code> and rebuilding DataLoaders, flush the live <code>governor.get_state()</code> dictionary directly into <code>ckpt_state['governor_state']</code>.</li>
+                <li>Overwrite both <code>_latest.pth</code> and <code>_best.pth</code> on physical storage atomically so restarts cannot reload stale pre-expansion fractions.</li>
+                <li>Anchor Hub Lock skip-paths directly to live <code>governor.get_state()</code> so local progress checkpoints never persist stale governor snapshots.</li>
             </ol>
         
 
