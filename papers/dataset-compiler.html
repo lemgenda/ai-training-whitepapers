@@ -295,6 +295,7 @@
             <ul>
                 <li><strong>KaggleHub &amp; HF Sync</strong>: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.</li>
                 <li><strong>Standardized dataset_info.yaml</strong>: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.</li>
+                <li><strong>Decoupled Documentation Generation (v16.4.1)</strong>: Extracted all dataset documentation generation (<code>README.md</code>, <code>dataset_info.yaml</code>, <code>category.txt</code>, <code>classes.txt</code>, <code>index.json</code>) from the monolithic compiler pipeline into a dedicated <code>doc_generator.py</code> module for robust maintainability and standardized outputs. It dynamically generates model-specific architecture mapping and extrapolated baseline metric tables directly from <code>models_metadata</code> and <code>task_metadata</code> residing in <code>unified_data.yaml</code>.</li>
             </ul>
 
             <p><strong>MetaTrader 5 (MT5) Auto-Acquisition</strong>:<br>
