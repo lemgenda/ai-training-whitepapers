@@ -17,6 +17,8 @@ import re
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from bs4 import BeautifulSoup
 
@@ -149,7 +151,7 @@ def check_html_structural_integrity(hf: Path) -> list[str]:
             errs.append(f"Image missing src attribute: {img}")
         if img.get("alt") is None:
             errs.append(f"Image missing alt attribute: {img}")
-    ids = [elem.get("id") for elem in soup.find_all(attrs={"id": True})]
+    ids = [str(elem.get("id")) for elem in soup.find_all() if elem.has_attr("id")]
     dup_ids = set([x for x in ids if ids.count(x) > 1])
     if dup_ids:
         errs.append(f"Duplicate element IDs found: {dup_ids}")
@@ -188,12 +190,11 @@ def check_html_validation(target_files: list[Path] | None = None) -> bool:
             continue
 
         # 2. Cached W3C Check
-        if cache.get(str(hf.name)) == h:
+        if cache.get(hf.name) == h:
             print(f"  [PASS] {rel_path} (W3C Validated - Cached)")
             continue
 
         # 3. Live W3C Nu Validator Check
-        import urllib.request
         content = hf.read_bytes()
         req = urllib.request.Request(
             "https://validator.w3.org/nu/?out=json",
@@ -212,7 +213,7 @@ def check_html_validation(target_files: list[Path] | None = None) -> bool:
                 errors = [m for m in data.get("messages", []) if m.get("type") == "error"]
                 if not errors:
                     print(f"  [PASS] {rel_path} (W3C Nu Validator 100% Compliant)")
-                    cache[str(hf.name)] = h
+                    cache[hf.name] = h
                 else:
                     print(f"  [FAIL] {rel_path} (W3C Errors Detected):")
                     for e in errors[:5]:
@@ -224,13 +225,13 @@ def check_html_validation(target_files: list[Path] | None = None) -> bool:
             # Handle rate-limiting gracefully when structural standards pass
             if e.code in (429, 403, 503):
                 print(f"  [PASS] {rel_path} (W3C Structural Pass; Nu Validator Service Throttled HTTP {e.code})")
-                cache[str(hf.name)] = h
+                cache[hf.name] = h
             else:
                 print(f"  [WARN] {rel_path}: HTTP {e.code} from validator service.")
-                cache[str(hf.name)] = h
+                cache[hf.name] = h
         except Exception as e:
             print(f"  [PASS] {rel_path} (W3C Structural Pass; Nu Validator Service Offline)")
-            cache[str(hf.name)] = h
+            cache[hf.name] = h
 
     save_w3c_cache(cache)
     if all_passed:
