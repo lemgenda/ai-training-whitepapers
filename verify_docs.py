@@ -36,6 +36,8 @@ PAPER_PAIRS = [
     ("MD-Papers/PAPER_LEMGENDARY_NIMA.md", "papers/nima-quality.html"),
     ("MD-Papers/PAPER_TRAINING_PATHOLOGY.md", "papers/training-pathology.html"),
     ("MD-Papers/PAPER_TRAINING_SUITE.md", "papers/training-suite-master.html"),
+    ("MD-Papers/PAPER_AI_STUDIO_GUI.md", "papers/ai-studio-whitepaper.html"),
+    ("MD-Papers/MANUAL_AI_STUDIO_GUI.md", "papers/ai-studio-manual.html"),
 ]
 
 
