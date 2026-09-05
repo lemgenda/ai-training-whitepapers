@@ -569,18 +569,16 @@ The <code>train_forex_curriculum.py</code> orchestrator supports explicit YAML-b
         <section id="8-conclusion">
             <h2>8. Conclusion</h2>
             <p>The <strong>LemGendary ForexPredictor</strong> sets a new standard for quantitative deep learning in foreign exchange and commodity trading. By combining multi-timeframe causal dilated convolutions with cross-temporal attention fusion and 6-fold walk-forward validation, the model achieves superior risk-adjusted returns while eliminating future lookahead bias. The lightweight stateless architecture guarantees sub-5ms deployment readiness for live MetaTrader 5 algorithmic execution.</p>
-        </section>
 
-<section>
-    <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
-    <ul>
+            <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
+            <ul>
                 <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification (≥ 10% = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
-<li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
-        <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
-        <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
-        <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue (N=32) to maintain ranking context across micro-batches (b=2).</li>
-    </ul>
-</section>
+                <li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
+                <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
+                <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
+                <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue (N=32) to maintain ranking context across micro-batches (b=2).</li>
+            </ul>
+        </section>
 
 
         <footer>

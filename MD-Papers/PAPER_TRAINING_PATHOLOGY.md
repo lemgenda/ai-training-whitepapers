@@ -1,10 +1,10 @@
-<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD033 MD024 -->
 
 # Nuclear Stability: AI Training Pathology Master Guide (v1.3)
 
-**Author**: Lem Treursić
-**Version**: 1.3.0 - Governor v17 Hardened (2026-08-18)
-**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud
+**Author**: Lem Treursić  
+**Version**: 1.3.0 - Governor v17 Hardened (2026-08-18)  
+**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud  
 
 ---
 
@@ -14,158 +14,132 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
 
 ---
 
-## 2. Table of Contents
+## Table of Contents
 
 1. [Abstract](#1-abstract)
-2. [The Diagnostic Master Table](#3-the-diagnostic-master-table)
-3. [The "Fast Audit" Framework (Diagnostics)](#4-the-fast-audit-framework-diagnostics)
-4. [Modern 2026 Pathologies](#5-modern-2026-pathologies)
-    - [Mixed Precision Underflow (FP16/FP8)](#mixed-precision-underflow-fp16fp8)
-    - [Optimizer Momentum Decay](#optimizer-momentum-decay)
-    - [The "Governor Loop" (Artificial Plateau Exploit)](#the-governor-loop-artificial-plateau-exploit)
-    - [Live Polarity Inversion (Negative Manifold)](#live-polarity-inversion-negative-manifold)
-    - [Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault)
-    - [Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck)
-    - [Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect)
-    - [Silent Epoch Limit Termination (The Raw Exit Pathology)](#silent-epoch-limit-termination-the-raw-exit-pathology)
-    - [Metric Asymmetry (The Manifold Plateau)](#metric-asymmetry-the-manifold-plateau)
-5. [High-Fidelity Strategy (v16.2.8)](#6-high-fidelity-strategy-v1628)
-    - [The "Low-Resolution Blur" Pathology](#the-low-resolution-blur-pathology)
-    - [Memory-Sentinel Drift](#memory-sentinel-drift)
-    - [Atomic Hardware Re-Auditing](#atomic-hardware-re-auditing)
-    - [The Serial Recovery Shield (v17.2)](#the-serial-recovery-shield-v172)
-    - [Premature SOTA Termination](#premature-sota-termination)
-    - [Manifold Fragility (The "Glass Manifold" Effect)](#manifold-fragility-the-glass-manifold-effect)
-    - [Thermal Glass Manifold Collapse (The Stress Loop)](#thermal-glass-manifold-collapse-the-stress-loop)
-    - [The "CSV Lie" Pathology](#the-csv-lie-pathology)
-    - [The Infinite Cooling Loop](#the-infinite-cooling-loop)
-    - [The Permanent Stress Pathology](#the-permanent-stress-pathology)
-    - [The Max Stress LR Freeze (v16 Bug)](#the-max-stress-lr-freeze-v16-bug)
-    - [The Sub-Nuclear 4GB Lockdown (v22.0)](#the-sub-nuclear-4gb-lockdown-v220)
-    - [The False-Positive Spike (Absolute Energy Floor)](#the-false-positive-spike-absolute-energy-floor)
-    - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop)
-    - [Premature Spatial Retreat (The Over-Aggressive Recoil)](#premature-spatial-retreat-the-over-aggressive-recoil)
-    - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier)
-    - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization)
-    - [Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck)
-    - [Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop)
-6. [Best Practices Checklist](#7-best-practices-checklist)
-7. [Multi-Model Pipeline Strategy](#8-multi-model-pipeline-strategy)
-8. [Mapping Pathologies to Pipeline Stages](#9-mapping-pathologies-to-pipeline-stages)
-9. [Nuclear Audit: The Optimization Checklist](#10-nuclear-audit-the-optimization-checklist)
-10. [SOTA Suite Optimization Task List](#11-sota-suite-optimization-task-list)
-11. [SOTA Transformation: Before vs. After](#12-sota-transformation-before-vs-after)
-12. [Conclusion: The Indestructible Convergence Paradigm](#13-conclusion-the-indestructible-convergence-paradigm)
+2. [The Diagnostic Master Table](#2-the-diagnostic-master-table)
+3. [The "Fast Audit" Framework](#3-the-fast-audit-framework)
+4. [Modern 2026 Pathologies](#4-modern-2026-pathologies)
+5. [High-Fidelity Strategy (v16.2.8)](#5-high-fidelity-strategy-v1628)
+6. [Best Practices Checklist](#6-best-practices-checklist)
+7. [Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
+8. [Mapping Pathologies to Pipeline Stages](#8-mapping-pathologies-to-pipeline-stages)
+9. [Nuclear Audit: Optimization Checklist](#9-nuclear-audit-optimization-checklist)
+10. [SOTA Suite Optimization Task List](#10-sota-suite-optimization-task-list)
+11. [SOTA Transformation: Before vs. After](#11-sota-transformation-before-vs-after)
+12. [Conclusion: The Indestructible Paradigm](#12-conclusion-the-indestructible-paradigm)
 
 ---
 
-## 3. The Diagnostic Master Table
+## 2. The Diagnostic Master Table
 
-This guide provides a "Front-Line" diagnostic framework for recognizing and remediating training failures in the LemGendary ecosystem.
+A front-line framework for recognizing and remediating training failures in the LemGendary ecosystem.
 
-| Issue | When & Why it Happens | Fast Recognition (Identify Correctly) | Best Remedy (Remediate) |
+| Issue | When & Why it Happens | Recognition Metrics | Remediation Strategy |
 | :--- | :--- | :--- | :--- |
-| **Vanishing Gradients** | Deep networks with sigmoid/tanh; saturation in early layers prevents updates. | **Gradient Histograms**: Check early layers for values near zero. **Learning Rate**: Model fails to learn even with high LR. | Switch to **ReLU/GELU**; implement **Batch/Layer Normalization**; add **Residual Connections**. |
-| **Exploding Gradients** | Unstable weight updates in deep/recurrent networks; poor initialization. | **Loss Curve**: Massive vertical spikes or immediate `NaN`. **Gradient Norms**: Global norm exceeds threshold (e.g., >10.0). | **Gradient Clipping** (Norm-based); lower Learning Rate; use **He Initialization**. |
-| **Dying ReLUs** | High LR causes neurons to output zero permanently; weights become stuck. | **Activation Histograms**: Significant portion of the layer outputting exactly zero. | Use **Leaky ReLU** or **ELU**; reduce Learning Rate; use **Batch Normalization**. |
-| **Overfitting** | Model memorizes noise; capacity is too high for the dataset size. | **Divergence**: Training loss drops while Validation loss rises. | **Data Augmentation**; **Dropout** (0.2–0.5); **Weight Decay (L2)**; **Overfitting Rescue Protocol** (Governor dynamic dataset expansion). |
-| **NaN Divergence** | Numerical instability in Mixed Precision (FP16/FP8); log(0) or division by zero. | **Instant Failure**: Loss becomes `NaN` or `Inf` within 10–50 steps. | **Loss Scaling** (Static or Dynamic); check for `eps` in epsilon-sensitive layers; use **FP32** for loss. |
-| **Mode Collapse** | (GANs) Generator finds a single output that "fools" the discriminator. | **Output Visuals**: Model generates identical/similar images regardless of noise input. | **Mini-batch Discrimination**; **Unrolled GANs**; use **Wasserstein Loss (WGAN-GP)**. |
-| **Training Plateau** | Optimizer stuck in flat regions or local minima; LR is too high/low. | **Stagnation**: Loss curve is flat for many epochs despite no convergence. | **Learning Rate Scheduler** (Cosine Annealing/ReduceOnPlateau); try **SWA** (Stochastic Weight Averaging). |
-| **Internal Covariate Shift** | Distribution of layer inputs changes during training, slowing convergence. | **Jitter**: Training loss fluctuates wildly between batches. | **Batch Normalization** or **Layer Normalization**; implement **Skip Connections**. |
-| **Catastrophic Forgetting** | Fine-tuning on new data overwrites weights for original tasks. | **Regression**: Accuracy on original validation set drops sharply after fine-tuning. | **Elastic Weight Consolidation (EWC)**; **Replay Buffer** (mix old data with new); lower LR. |
-| **Label Noise Sensitivity** | Model overfits to mislabeled samples, causing high variance. | **Loss Spikes**: Random, huge spikes in training loss that don't affect validation trends. | **Robust Loss Functions** (MAE instead of MSE); **Label Smoothing**; **SALI** vetting. |
-| **Regression Boundary Collapse** | Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes. | **Param Clamping**: Regression MAE flatlines; outputs clamp to domain boundaries. | Switch to **SmoothL1 (Huber) Loss** and implement **$\pi$-boundary normalization** to scale gradients symmetrically. |
-| **Multi-Task Gradient Conflict** | Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure. | **Dual-Failures**: PSNR improves but restored color is washed out or noise removal is imperfect. | Combine **L1 + Perceptual Loss (LPIPS)** and implement **Global Residual Connections (`out + x`)** to learn delta differences. |
-| **MoE Routing Collapse** | Multi-task models (e.g., Multi-Task Restorer) trained on composite datasets where specific task labels are missing or unified under a generic category. | **Routing Lock**: Routing weight vectors permanently lock to a single head index; secondary heads fail to learn. | Implement **Dynamic Filename Task Ingestion** to extract task targets directly from file metadata/filenames. |
+| **Vanishing Gradients** | Deep networks with sigmoid/tanh; saturation in early layers prevents updates. | Early layers near zero in `Gradient Histograms`; failure to learn even with high LR. | Switch to **ReLU/GELU**; implement **Normalization**; add **Residual Connections**. |
+| **Exploding Gradients** | Unstable weight updates in deep/recurrent networks; poor initialization. | Massive vertical spikes or `NaN` in loss curve; global norm > 10.0. | **Gradient Clipping**; lower Learning Rate; use **He Initialization**. |
+| **Dying ReLUs** | High LR causes neurons to output zero permanently; weights become stuck. | Significant portion of layer outputting exactly zero in `Activation Histograms`. | Use **Leaky ReLU** or **ELU**; reduce LR; use **Batch Normalization**. |
+| **Overfitting** | Model memorizes noise; capacity is too high for the dataset size. | Training loss drops while `Validation loss` rises (Divergence). | **Data Augmentation**; **Dropout** (0.2–0.5); **Weight Decay (L2)**; **Overfitting Rescue Protocol** (Governor dynamic dataset expansion). |
+| **NaN Divergence** | Numerical instability in Mixed Precision (FP16/FP8); log(0) or division by zero. | Loss becomes `NaN` or `Inf` within 10–50 steps. | **Loss Scaling**; check for `eps` stability; use **FP32** for loss calculation. |
+| **Mode Collapse** | Generator finds a single output that "fools" the discriminator in GANs. | Model generates identical images regardless of noise input. | **Mini-batch Discrimination**; **Unrolled GANs**; **Wasserstein Loss (WGAN-GP)**. |
+| **Training Plateau** | Optimizer stuck in flat regions or local minima. | Loss curve is flat for many epochs despite no convergence. | **LR Scheduler** (Cosine/Plateau); try **SWA** (Stochastic Weight Averaging). |
+| **Internal Covariate Shift** | Distribution of layer inputs changes during training, slowing convergence. | Training loss fluctuates wildly between batches (Jitter). | **Batch/Layer Normalization**; implement **Skip Connections**. |
+| **Catastrophic Forgetting** | Fine-tuning on new data overwrites weights for original tasks. | Accuracy on original validation set drops sharply after fine-tuning. | **Elastic Weight Consolidation (EWC)**; **Replay Buffer**; lower LR. |
+| **Label Noise Sensitivity** | Model overfits to mislabeled samples, causing high variance. | Random, huge spikes in training loss that don't affect validation trends. | **Robust Loss Functions** (MAE over MSE); **Label Smoothing**; **SALI** vetting. |
+| **Regression Boundary Collapse** | Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes. | Continuous regression MAE flatlines; predictions clamp to extreme boundary outputs. | Switch to **SmoothL1 (Huber) Loss** and implement **$\pi$-boundary normalization** to scale gradients symmetrically. |
+| **Multi-Task Gradient Conflict** | Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure. | PSNR improves but restored color is washed out or noise removal is imperfect. | Combine **L1 + Perceptual Loss (LPIPS)** and implement **Global Residual Connections (`out + x`)** to learn delta differences. |
+| **MoE Routing Collapse** | Multi-task models (e.g., Multi-Task Restorer) trained on composite datasets where specific task labels are missing or unified under a generic category. | Routing weight vectors permanently lock to a single head index; secondary heads fail to learn. | Implement **Dynamic Filename Task Ingestion** to extract task targets directly from file metadata/filenames. |
 | **Micro-Batch Rank Starvation** | Small physical VRAM forces micro-batch $b=2$; pairwise ranking loss evaluates only $\binom{2}{2}=1$ pair per step, starving rank gradients. | **PLCC/SRCC Divergence**: PLCC reaches target ($\ge 0.91$) via EMD, but SRCC stagnates at $\sim 0.81$ with high pairwise variance. | Implement **Differentiable Soft-Spearman Loss** ($\mathcal{L}_{\text{soft\_spearman}}$) and **Cross-Microbatch Rank Memory Bank** ($N=32/64$) to evaluate $\binom{32}{2}=496$ pairs per backward pass. |
-| **Spatial Pooling Dilution** | Global Average Pooling (GAP) averages activations over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers occupying $5\text{--}15\%$ area. | **Micro-Defect Blindness**: Model classifies large blurred scenes well but misses localized micro-noise, compression artifacts, or anatomical triggers. | Implement **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling** to capture localized feature variance. |
+| **Spatial Pooling Dilution** | Global Average Pooling (GAP) averages activations over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers occupying $5\%\text{--}15\%$ area. | **Micro-Defect Blindness**: Model classifies large blurred scenes well but misses localized micro-noise, compression artifacts, or anatomical triggers. | Implement **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling** to capture localized feature variance. |
 | **Silent Epoch Limit Termination** | Model hits maximum epoch budget (e.g. 300) without meeting SOTA targets; training abruptly terminates with uninformative prompt. | **Abrupt Exit**: Terminal prints raw exit prompt with no target audit, diagnostic guidance, or recovery options. | Implement **Universal Post-Training Target Audit & Interactive Guidance** with headless Kaggle Cloud escalation. |
 | **Metric Asymmetry (The Manifold Plateau)** | Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS). | **Metric Divergence**: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement. | Implement **Omni-Metric Autonomous Governor** with **Metric Deficit Engine** ($\Delta_m$) to dynamically actuate specialized loss weights. |
 | **Checkpoint Fraction Desynchronization** | Model expands dataset fraction (e.g. 75% → 90%) on preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior to expansion. Preemption rolls state back to 75%. | **Fraction Recoil**: Terminal logs report fraction expansion, but subsequent session resumes revert to previous fraction, trapping training in a fraction loop. | **Atomic Fraction Persistence (v16.3.4)**. Flush live `governor.get_state()` into checkpoint payload immediately upon fraction promotion and re-save both `_latest.pth` and `_best.pth`. Anchor Hub Lock to live governor state. |
 
 ---
 
-## 4. The "Fast Audit" Framework (Diagnostics)
+## 3. The "Fast Audit" Framework
 
-To recognize these issues in under 5 minutes of monitoring, observe these three critical "Nuclear" metrics:
+Observe these three critical metrics to recognize issues in under 5 minutes of monitoring:
 
-1. **The Gradient Global Norm**:
-    - **Healthy**: Stable, non-zero trend (usually 0.1 to 5.0).
-    - **Exploding**: Vertical climb to 100+ followed by NaN.
-    - **Vanishing**: Flat line at $10^{-6}$ or lower.
-2. **Activation Sparsity**:
-    - Monitor the percentage of zeros in your layer outputs. If a layer is >80% sparse (dead neurons), your initialization is too aggressive or your LR is too high.
-3. **Weight-to-Update Ratio**:
-    - Calculate $|\Delta w| / |w|$. For stable training, this ratio should be approximately **$10^{-3}$**. If it is $10^{-1}$, your updates are too violent (Exploding). If it is $10^{-5}$, you are "Stagnating."
+### 1. Gradient Global Norm
+
+- **Healthy:** Stable trend (0.1 to 5.0).
+- **Exploding:** Vertical climb to 100+ → NaN.
+- **Vanishing:** Flat line at 10^-6 or lower.
+
+#### 2. Activation Sparsity
+
+Monitor the percentage of zeros in layer outputs. If a layer is **>80% sparse**, your initialization is too aggressive or LR is too high.
+
+#### 3. Weight-to-Update Ratio
+
+Calculate `|Δw| / |w|`. Target ratio: 10^-3.
+
+If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 ---
 
-## 5. Modern 2026 Pathologies
+## 4. Modern 2026 Pathologies
 
 ### Mixed Precision Underflow (FP16/FP8)
 
-- **The Issue**: Gradients are so small they become zero in 16-bit or 8-bit precision.
-- **Identification**: Global gradient norm is exactly `0.0` but weights are not zero.
-- **Remedy**: Increase **Loss Scale** (e.g., `scaler.scale(loss)`) or switch to `BFloat16` which has a larger dynamic range.
+**The Issue:** Gradients are so small they become zero in 16-bit or 8-bit precision.
+
+**Remedy:** Increase `Loss Scale` or switch to **BFloat16** which has a larger dynamic range.
 
 ### Optimizer Momentum Decay
 
-- **The Issue**: Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.
-- **Identification**: Learning rate is still high, but weight updates are tiny.
-- **Remedy**: Reset optimizer state; use **Lookahead Optimizer**; or increase Momentum parameters.
+**The Issue:** Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.
+
+**Remedy:** Reset optimizer state; use **Lookahead Optimizer**; or increase Momentum parameters.
 
 ### The "Governor Loop" (Artificial Plateau Exploit)
 
-- **The Issue**: The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.
-- **Identification**: Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.
-- **Remedy**: Implement an **Absolute Patience Limit** (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.
+**The Issue:** The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.
+
+**Identification:** Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.
+
+**Remedy:** Implement an **Absolute Patience Limit** (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.
 
 ### Live Polarity Inversion (Negative Manifold)
 
-- **The Issue**: The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.
-- **Identification**: The `SRCC` or `PLCC` correlation metrics suddenly turn negative (`< 0.0`) despite high theoretical quality scores.
-- **Remedy**: Integrate a **Live Polarity Shield** into the telemetry engine to actively monitor `SRCC` and `PLCC` during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.
+**The Issue:** The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.
+
+**Identification:** The `SRCC` or `PLCC` correlation metrics suddenly turn negative (`< 0.0`) despite high theoretical quality scores.
+
+**Remedy:** Integrate a **Live Polarity Shield** into the telemetry engine to actively monitor `SRCC` and `PLCC` during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.
 
 ### Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)
 
-- **The Issue**: When running PyTorch `DataParallel` on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (`_broadcast_coalesced`). If any parameter high up in the model architecture has an odd size (e.g. an `out_channels=3` output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for *every single parameter* that follows it. Vectorized cuDNN algorithms immediately crash with `CUDA error: misaligned address`.
-- **Identification**: Model successfully trains on a single GPU but crashes with `misaligned address` during the forward pass specifically on `replica 1` or higher.
-- **Remedy**: **Global Alignment Monkey-Patch**. Inject a global monkey-patch over `nn.Conv2d.forward` that checks `weight.data_ptr() % 16`. If unaligned, force a `.clone()` to reallocate on PyTorch's native 256-byte aligned allocator before invoking `F.conv2d`.
+**The Issue:** When running PyTorch `DataParallel` on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (`_broadcast_coalesced`). If any parameter high up in the model architecture has an odd size (e.g. an `out_channels=3` output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for *every single parameter* that follows it. While most operations tolerate unaligned memory, heavily vectorized cuDNN algorithms (like `conv2d` and `conv_transpose2d`) will immediately crash with a fatal `CUDA error: misaligned address` or `unable to find an engine to execute this computation`.
+
+**Identification:** Model successfully trains on a single GPU but crashes with `misaligned address` during the forward pass specifically on `replica 1` or higher. Tracebacks point directly to standard cuDNN operations.
+
+**Remedy:** **Global Alignment Monkey-Patch**. Do not alter the model's `__init__` order (as this permanently corrupts the Optimizer state). Instead, inject a global monkey-patch over `nn.Conv2d.forward` and `nn.ConvTranspose2d.forward` that dynamically checks the raw memory pointer (`weight.data_ptr() % 16`). If the pointer is unaligned (indicating a DataParallel replica buffer), intercept the execution and force a `.clone()` to instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator before passing it to `F.conv2d`.
 
 ### Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)
 
-- **The Issue**: In technical and aesthetic quality scoring (NIMA architectures), models are supervised with both pointwise distribution loss (EMD) and pairwise ranking margin loss:
-  $$\mathcal{L}_{\text{rank}} = \frac{1}{|\mathcal{P}|} \sum_{(i,j) \in \mathcal{P}} \text{ReLU}\left(m - \text{sign}(t_i - t_j)(p_i - p_j)\right)$$
-  When hardware VRAM constraints (GTX 1650 4GB @ 512px) enforce micro-batch size $b=2$ with gradient accumulation $K=12$ ($N_{\text{eff}}=24$), pairwise combinations within each forward pass collapse to $|\mathcal{P}| = \binom{2}{2} = 1$ pair. Across 12 micro-batches, only $12 \times 1 = 12$ pairs are compared, whereas a unified 24-sample batch evaluates $\binom{24}{2} = 276$ pairs ($95.6\%$ ranking information loss). EMD loss optimizes linear correlation ($\text{PLCC} \ge 0.91$), but monotonic ranking supervision is starved, causing $\text{SRCC}$ to plateau at $\sim 0.81$.
+- **The Issue**: In technical and aesthetic quality scoring (NIMA architectures), models are supervised with both pointwise distribution loss (EMD) and pairwise ranking margin loss: $$\mathcal{L}_{\text{rank}} = \frac{1}{|\mathcal{P}|} \sum_{(i,j) \in \mathcal{P}} \text{ReLU}\left(m - \text{sign}(t_i - t_j)(p_i - p_j)\right)$$ When hardware VRAM constraints (GTX 1650 4GB @ 512px) enforce micro-batch size $b=2$ with gradient accumulation $K=12$ ($N_{\text{eff}}=24$), pairwise combinations within each forward pass collapse to $|\mathcal{P}| = \binom{2}{2} = 1$ pair. Across 12 micro-batches, only $12 \times 1 = 12$ pairs are compared, whereas a unified 24-sample batch evaluates $\binom{24}{2} = 276$ pairs ($95.6\%$ ranking information loss). EMD loss optimizes linear correlation ($\text{PLCC} \ge 0.91$), but monotonic ranking supervision is starved, causing $\text{SRCC}$ to plateau at $\sim 0.81$.
 - **Identification**: Training runs display strong $\text{PLCC} \ge 0.9102$ alongside stagnant $\text{SRCC} \approx 0.815\text{--}0.818$ across 150+ epochs, with high validation rank margin variance.
 - **Remedy**:
-  1. **Differentiable Soft-Spearman Loss**: Replace sparse hinge penalties with continuous sigmoid-ranked correlation:
-     $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
-  2. **Cross-Microbatch Rank Memory Bank**: Maintain a detached FIFO queue ($N=32/64$) to compute soft ranking across $\binom{32}{2} = 496$ sample pairs on every forward step, backpropagating gradients exclusively through the active micro-batch.
+    1. **Differentiable Soft-Spearman Loss**: Replace sparse hinge penalties with continuous sigmoid-ranked correlation: $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
+    2. **Cross-Microbatch Rank Memory Bank**: Maintain a detached FIFO queue ($N=32/64$) to compute soft ranking across $\binom{32}{2} = 496$ sample pairs on every forward step, backpropagating gradients exclusively through the active micro-batch.
 
 ### Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)
 
-- **The Issue**: Standard Global Average Pooling ($\text{GAP}$) collapses a $H \times W \times C$ spatial activation tensor to $1 \times 1 \times C$ by averaging all spatial locations:
-  $$\text{GAP}(x)_c = \frac{1}{H \cdot W} \sum_{h=1}^H \sum_{w=1}^W x_{c,h,w}$$
-  For fine-grained tasks like micro-defect detection (compression blocking, localized noise, sensor blur) and safety filtering (`universal_nsfw_classification`), critical features occupy only $5\%\text{--}15\%$ of the image canvas. Averaging across the entire background dilutes the activation magnitude by $85\%\text{--}95\%$, preventing the classifier from learning decisive decision boundaries.
+- **The Issue**: Standard Global Average Pooling ($\text{GAP}$) collapses a $H \times W \times C$ spatial activation tensor to $1 \times 1 \times C$ by averaging all spatial locations: $$\text{GAP}(x)_c = \frac{1}{H \cdot W} \sum_{h=1}^H \sum_{w=1}^W x_{c,h,w}$$ For fine-grained tasks like micro-defect detection (compression blocking, localized noise, sensor blur) and safety filtering (`universal_nsfw_classification`), critical features occupy only $5\%\text{--}15\%$ of the image canvas. Averaging across the entire background dilutes the activation magnitude by $85\%\text{--}95\%$, preventing the classifier from learning decisive decision boundaries.
 - **Identification**: High false negatives on localized micro-defects or small NSFW triggers; models require excessive global contrast to trigger classification responses.
-- **Remedy**: **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling**:
-  $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
-  $$\text{GeM}(x)_c = \left(\frac{1}{H \cdot W} \sum_{h,w} x_{c,h,w}^p\right)^{1/p}, \quad p \ge 3.0$$
-  Statistical pooling preserves localized peak activation variance alongside scene-level context without adding convolutional FLOPs.
+- **Remedy**: **Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling**: $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$ $$\text{GeM}(x)_c = \left(\frac{1}{H \cdot W} \sum_{h,w} x_{c,h,w}^p\right)^{1/p}, \quad p \ge 3.0$$ Statistical pooling preserves localized peak activation variance alongside scene-level context without adding convolutional FLOPs.
 
 ### Silent Epoch Limit Termination (The Raw Exit Pathology)
 
 - **The Issue**: When a model finishes its total epoch budget (e.g. 300 epochs) without breaching SOTA benchmarks, training scripts traditionally exit silently to a generic terminal prompt. Operators are left without diagnostic context regarding hardware bottlenecks, metric trade-offs, or actionable next steps.
 - **Identification**: The terminal prints `Press Enter to return...` immediately after the last epoch without reporting SOTA benchmark gaps or offering continuation options.
 - **Remedy**: **Universal Post-Training Target Audit & Interactive Guidance**. Upon reaching the epoch ceiling without SOTA attainment:
-  1. Print a structured benchmark audit comparing achieved metrics against `sota_targets`.
-  2. Emit diagnostic analysis identifying hardware micro-batch limits and manifold properties.
-  3. Offer an interactive action matrix allowing operators to:
-     - `[1]` Transition the checkpoint to **Kaggle Cloud Hub** for high-VRAM batch training.
-     - `[2]` Export the current best model binaries to production ONNX and standalone PyTorch.
-     - `[3]` Extend local training in-process or exit cleanly.
+    1. Print a structured benchmark audit comparing achieved metrics against `sota_targets`.
+    2. Emit diagnostic analysis identifying hardware micro-batch limits and manifold properties.
+    3. Offer an interactive action matrix allowing operators to transition to Kaggle Cloud Hub, export ONNX binaries, or extend local training in-process.
 
 ### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)
 
@@ -184,250 +158,324 @@ To recognize these issues in under 5 minutes of monitoring, observe these three 
 - **The Issue**: During multi-objective optimization, the model discovers a "lazy" minima where it optimizes a mathematically simpler metric (like global intensity PSNR or linear correlation PLCC) while completely ignoring complex structural metrics (like perceptual LPIPS or rank-order SRCC).
 - **Identification**: One metric successfully breaches the 100% SOTA target line, while its counterpart plateaus aggressively (e.g. SRCC hard-locks at 0.81 while PLCC reaches 0.92).
 - **Remedy**: **Omni-Metric Autonomous Governor**. The `SmartTrainingGovernor` must calculate exact real-time metric deficits $\Delta_{m} = \max(0, \text{Target}_m - \text{Current}_m)$ and dynamically shift the loss actuators:
-  1. Boost `soft_spearman_weight` up to `2.0` if SRCC is lagging.
-  2. Increase `lpips_weight` dynamically if perceptual geometry is lagging behind PSNR.
-  3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if Directional Accuracy plateaus.
+    1. Boost `soft_spearman_weight` up to `2.0` if SRCC is lagging.
+    2. Increase `lpips_weight` dynamically if perceptual geometry is lagging behind PSNR.
+    3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if Directional Accuracy plateaus.
 
 ---
 
-## 6. High-Fidelity Strategy (v16.2.8)
+## 5. High-Fidelity Strategy (v16.2.8)
 
 ### The "Low-Resolution Blur" Pathology
 
-- **The Issue**: Initializing training at ultra-low resolutions (e.g., 64px or 128px) results in the model learning to ignore high-frequency details, leading to persistent blurring artifacts even after the resolution ladder increases to 512px.
-- **Identification**: High validation loss at high resolutions; model generates coarse features where sharp textures should exist.
-- **Remedy**: **Mandatory High-Fidelity Floor**. All models must start at a minimum of **224px** (Restoration) or **512px** (Metric Scorers).
+**The Issue:** Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.
+
+**Remedy:** **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** or **512px** (Metric Scorers).
 
 ### Memory-Sentinel Drift
 
-- **The Issue**: Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.
-- **Identification**: Sudden OOM crashes during epoch transitions or spatial scaling.
-- **Remedy**: **Active Memory-Sentinel Probing**. Decouple physical batch size from the registry and probe hardware headroom before every resolution jump.
+**The Issue:** Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.
+
+**Remedy:** **Active Memory-Sentinel Probing**. Decouple batch size from registry and probe hardware headroom before every resolution jump.
 
 ### Atomic Hardware Re-Auditing
 
-- **The Issue**: Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card fits 4 batches at 256px but only 1 at 512px.
-- **Identification**: Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
-- **Remedy**: **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
+**The Issue:** Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
+
+**Identification:** Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.
+
+**Remedy:** **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
 
 ### The Serial Recovery Shield (v17.2)
 
-- **The Issue**: On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks that freeze the entire training suite.
-- **Identification**: Training bar stops moving; CPU usage drops to 0%; script does not respond to `Ctrl+C`.
-- **Remedy**: **Serial Lockdown**. After an OOM event, force-disable parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
+**The Issue:** On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.
 
-### Premature SOTA Termination
-
-- **The Issue**: The training suite terminates immediately upon reaching SOTA targets at a low-resolution rung (e.g., 256px), resulting in high-fidelity "ghosting".
-- **Identification**: Training stops with a "Mission Complete" message despite being at a sub-maximal resolution.
-- **Remedy**: **Ladder-Aware SOTA Guard (v18.0)**. The mission is only allowed to terminate at the **Final Resolution**. Targets met at lower rungs trigger an autonomous **Force-Jump** to the next resolution.
-
-### Manifold Fragility (The "Glass Manifold" Effect)
-
-- **The Issue**: Rapid resolution jumps destabilize the model's weight distribution before it has "hardened" at the new scale.
-- **Identification**: Massive loss spikes or "Numerical Recoil" immediately following a resolution jump.
-- **Remedy**: **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period before jumping to subsequent rungs.
-
-### Thermal Glass Manifold Collapse (The Stress Loop)
-
-- **The Issue**: Aggressive temperature sharpening (e.g. down to `0.92`) on fragile manifolds shatters weights, causing $>10\%$ regression, SOTA rollbacks, and repetitive stress cycles.
-- **Identification**: Logs show `Deploying Stress Protocol` followed immediately by `Performance drift detected (>10%)` and `SOTA Rollback triggered!`.
-- **Remedy**: **Strict Thermal Floors**. Constrain the Governor with a strict `min_temp` in configuration (e.g., `min_temp: 0.96`).
-
-### The "CSV Lie" Pathology
-
-- **The Issue**: Telemetry logging pulls background hardware metrics instead of the Governor's internal state machine, displaying `0.0` Dataset Stress during active stress protocols.
-- **Identification**: `metrics.csv` shows `Stress: 0.0` despite terminal logs indicating active stress protocol deployment.
-- **Remedy**: **Engine Synchronization**. Hardwire telemetry to extract `current_epoch_governor_state['stress']`.
-
-### The Infinite Cooling Loop
-
-- **The Issue**: Resetting plateau counters on routine learning rate adjustments prevents plateau timers from reaching thresholds required to deploy stress protocols.
-- **Identification**: Model flatlines for dozens of epochs; LR repeatedly cools without dataset fraction expansion or stress injection.
-- **Remedy**: **Action Hardening**. Plateau timers must explicitly ignore standard learning rate cooling, resetting only on spatial jumps, dataset fraction expansions, or positive propulsion jolts.
-
-### The Permanent Stress Pathology
-
-- **The Issue**: Stress noise generators remain active (`Stress: 5.0`) even after setting a new SOTA Best Quality Score.
-- **Identification**: `metrics.csv` shows `Stress: 5.0` persisting endlessly after new metric ceilings are broken.
-- **Remedy**: **SOTA Deactivation Gate**. When `current_quality > self.best_quality`, instantly neutralize `current_stress` back to `0.0`.
-
-### The Max Stress LR Freeze (v16 Bug)
-
-- **The Issue**: At maximum stress level `5.0`, falling through to the cooling fallback repeatedly crushes the LR, freezing optimization.
-- **Identification**: `Stress: 5.0` persists for 20+ epochs with exponential LR decay and stagnant metrics.
-- **Remedy**: **Max-Stress Jolt Guard (v16)**. Force a `jolt_multiplier` propulsion step when stuck at max stress and emit a `[STUCK]` diagnostic signal after `2 × plateau_patience` epochs.
-
-### The Amnesiac Double-Jolt (Cooldown Persistence)
-
-- **The Issue**: Failure to persist `last_jolt_epoch` across script restarts causes immediate re-application of 1.5x LR jolts upon resume.
-- **Identification**: Terminal emits `JOLT: Breaking Plateau` immediately upon resuming from a checkpoint, degrading weights.
-- **Remedy**: **State Persistence**. Serialize and restore `last_jolt_epoch` in governor state dictionaries.
+**Remedy:** **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
 
 ### The Sub-Nuclear 4GB Lockdown (v22.0)
 
-- **The Issue**: 4GB cards trigger Windows System RAM paging when VRAM exceeds ~3.5GB, dropping speed by 10x–20x.
-- **Identification**: Shared GPU Memory in Task Manager exceeds 1GB; training speed drops below 0.5 img/s.
-- **Remedy**: **Absolute Sentinel Authority**. Dynamic hardware probing clamps batch sizes to keep allocations strictly within physical VRAM.
+**The Issue:** 4GB cards (GTX 1650) trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.
+
+**Identification:** "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops below 0.5 img/s.
+
+**Remedy:** **Absolute Sentinel Authority**. The Memory Sentinel now acts as the absolute physical authority, overriding any hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to fit entirely within physical VRAM, preventing Windows System RAM paging.
 
 ### The False-Positive Spike (Absolute Energy Floor)
 
-- **The Issue**: Relative loss spike detection triggers panics when microscopic baseline loss (e.g. 0.001) experiences a harmless fluctuation to 0.03.
-- **Identification**: Logs show `Sudden Loss Spike detected` resulting in unnecessary NPP recoils on healthy metrics.
-- **Remedy**: **Absolute Energy Floor**. Enforce an absolute threshold ($> 0.05$ unscaled) before relative deviations can trigger spike alerts.
+**The Issue:** The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x the running average). In high-fidelity restoration, the running average can drop to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike the loss to 0.03. This triggers a 30x relative spike detection, causing the Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03 being physically harmless (3% error).
+
+**Identification:** Console logs show `Sudden Loss Spike detected (0.0308 vs 0.0010)` resulting in `Manifold unstable. NPP Recoil active` on otherwise stable metrics.
+
+**Remedy:** **Absolute Energy Floor**. Implement an absolute mathematical threshold (e.g., `> 0.05` unscaled) to the spike detection logic. A spike is now only considered dangerous if it represents a massive relative deviation *and* breaches the absolute baseline energy floor.
+
+### Premature SOTA Termination
+
+**The Issue:** The training suite terminates immediately upon reaching SOTA targets at low-resolution rungs, resulting in lack of high-frequency spatial maturity.
+
+**Remedy:** **Ladder-Aware SOTA Guard (v18.0)**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution instead of mission shutdown.
+
+### Manifold Fragility (Glass Manifold Effect)
+
+**The Issue:** Rapid resolution jumps can destabilize the model's weight distribution before it has "hardened" at the new scale.
+
+**Remedy:** **SOTA Hardening Guard (v19.0)**. Enforce a mandatory **2-epoch Manifold Maturity** period. The model is forbidden from jumping until it has solidified weights for 2 full epochs.
+
+### Thermal Glass Manifold Collapse (The Stress Loop)
+
+**The Issue:** When a model plateaus far away from its final SOTA target, the Governor assumes it is trapped and deploys the **Stress Protocol** by sharpening the Softmax Temperature. If the model's manifold is highly fragile (which is common immediately after setting a new SOTA), this extreme sharpening shatters the weights, causing a >10% regression. The Regression Guard then rolls back to SOTA, causing an endless loop.
+
+**Remedy:** **Strict Thermal Floors**. Constrain the Governor with a strict `min_temp` in the `unified_models_v2.yaml` configuration (e.g., `min_temp: 0.96`). This physically blocks the Stress Protocol from dropping the temperature into the shattering zone.
+
+### The "CSV Lie" Pathology
+
+**The Issue:** Telemetry logging natively pulls background hardware metrics instead of the Governor's internal state machine, causing visualizations to show `0.0` Dataset Stress even when the model is actively being subjected to the Stress Protocol.
+
+**Identification:** `metrics.csv` shows `Stress: 0.0` despite the training terminal outputting `REFINEMENT: Trapped in Plateau. Deploying Stress Protocol`.
+
+**Remedy:** **Engine Synchronization**. The telemetry engine (`telemetry.py`) must be hardwired to extract `current_epoch_governor_state['stress']` instead of hardware memory stress.
+
+### The Infinite Cooling Loop
+
+**The Issue:** A mathematical logic flaw in the training loop resets the `epochs_no_improve` counter to `0` whenever any action is taken by the Governor. Because the Governor frequently cools the learning rate (an action), the plateau timer never reaches its threshold (e.g., 5 epochs) to deploy the Stress Protocol.
+
+**Identification:** The model is completely flatlined for dozens of epochs. The learning rate is repeatedly cooled, but the dataset fraction never drops and the Stress Protocol is never deployed.
+
+**Remedy:** **Action Hardening**. The plateau timer must explicitly ignore standard learning rate adjustments (`lr_changed = True`), resetting only upon spatial jumps, dataset fraction expansions, or positive 'Jolt' multipliers.
+
+### The Permanent Stress Pathology
+
+**The Issue:** A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (`Stress: 5.0`) for all subsequent epochs.
+
+**Identification:** `metrics.csv` shows `Stress: 5.0` continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.
+
+**Remedy:** **SOTA Deactivation Gate**. Patch the Governor's `Update Memory` phase in `optimization_engine.py`. When `current_quality > self.best_quality`, instantly neutralize `self.current_stress` back to `0.0` so the new manifold can anchor cleanly.
+
+### The Max Stress LR Freeze (v16 Bug)
+
+**The Issue:** A logic gap in the Governor's `REFINEMENT` phase. When `current_stress` reaches the maximum level of `5.0` and the model's quality score is still far below `target_quality_score * 0.90`, the code falls through to the `else` branch and applies `cooling_factor` (e.g., `0.85×`) to the LR every single epoch. After 30–40 epochs at max stress, the LR is crushed to near-zero, completely freezing the model's ability to escape the local minimum. The stress plateau is permanent because the SOTA deactivation gate only fires when quality *improves*, which is impossible with a frozen LR.
+
+**Identification:** `metrics.csv` shows `Stress: 5.0` persisting for 20+ epochs. PLCC/SRCC oscillate within a very narrow band (e.g., ±0.02). The LR column shows exponential decay (e.g., `5e-5 → 2e-5 → 8e-6 → ...`). The terminal emits `REFINEMENT: SOTA Precision Cooling` rather than any jolt message.
+
+**Observed In:** `nima_aesthetic_mobile` run — 86 epochs, stress=5.0 from epoch 83+, PLCC stuck at 0.47 vs target 0.60, LR decaying from 5e-5 down toward the `1e-5` absolute floor.
+
+**Remedy:** **Max-Stress Jolt Guard (v16)**. Add a new `elif` branch in `optimization_engine.py` between the stress-escalation block and the cooling fallback. When `current_stress >= 5.0` and the model is still far from SOTA, force the `jolt_multiplier` instead of the `cooling_factor`. Additionally, track a `max_stress_stuck_epochs` counter. After `plateau_patience × 2` epochs in this state with no improvement, emit a `[STUCK]` signal in the governor message so the operator can make an informed decision about stopping or switching the architecture backbone. This prevents indefinite silent degradation.
+
+### The Amnesiac Double-Jolt (Cooldown Persistence)
+
+**The Issue:** The Governor fails to persist the `last_jolt_epoch` timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.
+
+**Identification:** The terminal outputs `JOLT: Breaking Plateau with 1.50x LR Propulsion` immediately upon resuming from a checkpoint, and metrics regress heavily.
+
+**Remedy:** **State Persistence**. Ensure `last_jolt_epoch` is correctly serialized in `get_state()` and loaded in `load_state()` inside `optimization_engine.py`.
 
 ### OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)
 
-- **The Issue**: Re-instantiating `OneCycleLR` without parameter group synchronization traps the optimizer in alternating stagnant and velocity-shock epochs.
-- **Identification**: Learning rate oscillates between epochs (`1e-6 → 2.5e-5 → 1e-6 → 2.5e-5`), followed by sudden regressions.
-- **Remedy**: **Active Scheduler-Optimizer Synchronization**. Synchronize parameter groups with `scheduler.get_lr()` immediately after manually setting `last_epoch`.
+**The Issue:** Instantiating a new `OneCycleLR` scheduler in PyTorch immediately resets the optimizer's active learning rate parameter groups to the initial cycle rate (e.g., `1e-6`). When manually setting `scheduler.last_epoch = ...` without subsequent synchronization, the optimizer remains stuck at the initial low rate for the entire next epoch. Once the next epoch completes, the scheduler steps, suddenly updating the optimizer's active rate to the high scaled step value (e.g., `2.5e-5`). This creates a sequence of alternating low-learning-rate "stagnant" epochs and high-learning-rate "velocity shock" epochs that degrades the manifold.
+
+**Identification:** The learning rate oscillates dramatically between epochs (e.g., `1e-6 → 2.5e-5 → 1e-6 → 2.5e-5`). The stagnant low-learning-rate epochs mimic SOTA stability, but are immediately followed by catastrophic regression (10%+ drops) when the high rate kicks in.
+
+**Remedy:** **Active Scheduler-Optimizer Synchronization**. Immediately after manually setting `scheduler.last_epoch` and `scheduler._step_count` on newly instantiated schedulers, manually synchronize the optimizer's active parameter groups with `scheduler.get_lr()` and update `scheduler._last_lr`.
 
 ### Premature Spatial Retreat (The Over-Aggressive Recoil)
 
-- **The Issue**: Dataset fraction expansion variance on proven high-resolution manifolds falsely triggers a retreat to lower resolutions.
-- **Identification**: Resolution drops from 512px @ 55% data to 384px @ 100% data where validation loss explodes.
-- **Remedy**: **Proven-Manifold Protection**. Block spatial retreats if the active resolution has achieved high fidelity ($Q \ge 0.75 \times Q_{\text{target}}$), stepping back only the dataset fraction.
+**The Issue:** When dataset fraction is expanded (e.g. `55% -> 75%`) on a high-resolution manifold, temporary validation variance occurs. Under legacy recoil rules (`epoch_count - last_res_jump_epoch < 8`), the Governor assumes the resolution jump itself was premature and triggers a hard **Spatial Retreat** (dropping resolution to `384px @ 100% Data`), even if the model already achieved a peak 98%+ score at 512px.
+
+**Identification:** `metrics.csv` shows high accuracy/quality (e.g., 98.12%) at 512px @ 55% data, followed by a resolution drop to 384px @ 100% data where validation loss explodes further (e.g. `0.14` -> `1.64`).
+
+**Remedy:** **Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)**. If `best_quality` on the active resolution has reached high fidelity (`best_quality >= 0.75 * target_quality_score` or `> 85.0`), Spatial Retreat is BLOCKED. Instead, the Governor steps `current_fraction` back to the last safe fraction (e.g. `75% -> 55%`) at 512px, cools LR by 50%, and locks stabilization for 5 epochs.
 
 ### Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)
 
-- **The Issue**: Static loss weights in YAML files limit late-stage convergence near SOTA targets.
-- **Identification**: Metrics plateau at `PLCC ~0.87-0.88` and `SRCC ~0.79-0.80`, requiring manual YAML edits.
-- **Remedy**: **Autonomous SOTA Hyperparameter Adaptation (v17.5)**. Dynamically escalate `rank_weight`, tighten `rank_margin`, and sharpen `softmax_temp` during the `REFINEMENT` phase.
+**The Issue:** Fixed loss hyperparameters (such as pairwise `rank_weight`, `rank_margin`, or static `softmax_temp`) in static configuration files limit late-stage convergence. Models reach a plateau near SOTA targets (`PLCC > 0.91`, `SRCC > 0.91`, `EMD < 0.07`), but manual mid-training YAML adjustments are error-prone and disrupt automated continuous training pipelines.
+
+**Identification:** Model metrics stabilize at `PLCC ~0.87-0.88` and `SRCC ~0.79-0.80`, with EMD hovering around `0.088-0.095`. Manual mid-session editing of static configuration files is required to force rank loss scaling.
+
+**Remedy:** **Autonomous SOTA Hyperparameter Adaptation (v17.5)**. The `SmartTrainingGovernor` dynamically audits late-stage convergence against target SOTA benchmarks (`sota_targets`). When plateauing below target benchmarks in the `REFINEMENT` phase, it automatically escalates `rank_weight` (up to `1.5`), tightens pairwise `rank_margin` (down to `0.05`), and sharpens `softmax_temp` (down to `0.90`) on the fly, writing the updated parameters into `criterion.stab` and checkpoint state.
 
 ### The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)
 
-- **The Issue**: Hardcoded regression thresholds ($-0.015$) trip on normal exploratory steps on high-scalar quality manifolds ($\sim 284$).
-- **Identification**: Jolt injections are immediately aborted on the subsequent epoch due to false-alarm regression detection.
-- **Remedy**: **Dynamic Manifold-Scaled Jolt Shield (v18.1)**. Scale collapse thresholds dynamically based on prior quality ($\text{threshold} = -0.03 \times Q_{\text{prev}}$).
-- **Remedy 2**: **Financial Manifold Hardening (Forex/Commodities)**. Financial models trigger Jolt panics due to extreme natural entropy and Sharpe Ratio (`plcc`) tracking. The Governor now bypasses standard Turbulence Shields for Forex, doubles Jolt Protocol intensity ($2.0\times$), extends absolute plateau patience ($15+$ epochs), and explicitly recalibrates collapse guard thresholds to $< 45.0\%$ Directional Accuracy to prevent false-positive retreats.
+**The Issue:** During late-stage plateau breaking on high-scalar quality manifolds (such as `nima_technical` where Quality Score is ~284), the **Jolt Shield** early collapse valve utilized a hardcoded absolute regression floor (`delta_q < -0.015`). On normalized metrics [0, 1], a drop of -0.015 represents a 1.5% regression; however, on a Quality Score scale of ~284, a delta of -0.015 corresponds to an imperceptible 0.005% fluctuation. Consequently, normal exploratory weight updates under differential propulsion (2.25x Head LR) produced natural ±0.8 metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: *Plateau Detection (4 epochs) → Jolt Injection → False-Alarm Jolt Collapse Abort → Precision Cooling → Stagnation*.
+
+**Identification:** Terminal logs show `JOLT: Breaking Plateau ... (3-Epoch Window)` on one epoch, immediately followed on the very next epoch by `[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.` with repetitive cooling and 4-epoch plateau cycles.
+
+**Remedy:** **Dynamic Manifold-Scaled Jolt Shield (v18.1)**. Scale the early collapse threshold dynamically based on `prev_quality`: `collapse_threshold = -0.03 * prev_quality` if `prev_quality > 1.0` else `-0.015`. This allows the model to sustain exploratory propulsion across its full 3-epoch window without false-alarm cancellation.
+
+**Remedy 2:** **Financial Manifold Hardening (Forex/Commodities)**. Financial models trigger Jolt panics due to extreme natural entropy and Sharpe Ratio (`plcc`) tracking. The Governor now bypasses standard Turbulence Shields for Forex, doubles Jolt Protocol intensity (2.0×), extends absolute plateau patience (15+ epochs), and explicitly recalibrates collapse guard thresholds to < 45.0% Directional Accuracy to prevent false-positive retreats.
 
 ### Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)
 
-- **The Issue**: Transferring high-res predictions to CPU RAM for single-threaded evaluation pins CPU at 100% and drops GPU utilization to 15–25%.
-- **Identification**: Kaggle dashboard shows CPU at 103%, GPU utilization drops to 18–27%, and validation passes take hours.
-- **Remedy**: **Zero-Copy GPU-Native Evaluation & Dynamic VRAM-Tiered Batching (v19.2)**:
-  1. **GPU-Native PyTorch SSIM**: Vectorized 2D Gaussian convolution SSIM evaluated directly on CUDA tensors in $< 1\text{ms}$.
-  2. **Zero-Copy VRAM Pipeline**: Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.
-  3. **Dynamic VRAM Tier Validation Cap**: Scales validation batch size dynamically based on VRAM capacity ($\ge 14\text{GB} \rightarrow 32$, $\ge 8\text{GB} \rightarrow 16$, $<4.5\text{GB} \rightarrow 4$).
+**The Issue:** In high-resolution image restoration pipelines, transferring validation predictions to CPU host RAM for single-threaded `skimage.metrics.structural_similarity` calculations causes severe CPU saturation (pinned at 100%+ on dual-vCPU VMs like Kaggle) and PCIe bus ping-pong thrashing. GPUs drop to 15–25% utilization, stalling execution and causing single validation passes to take upwards of 2–3 hours. Static workspace caps further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2.
+
+**Identification:** Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization drops to 18–27%, GPU memory is underutilized, and validation progress moves at >1.5s per iteration across thousands of micro-batches.
+
+**Remedy:** **Zero-Copy GPU-Native Evaluation & Dynamic VRAM-Tiered Batching (v19.2)**:
+
+1. **GPU-Native PyTorch SSIM:** Vectorized 2D Gaussian convolution SSIM (`compute_ssim_gpu`) evaluated directly on CUDA tensors in < 1ms.
+2. **Zero-Copy VRAM Pipeline:** Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.
+3. **Dynamic VRAM Tier Validation Cap:** Scales validation batch size dynamically based on VRAM capacity (≥ 14GB → 32, ≥ 8GB → 16, < 4.5GB → 4).
+4. **Dynamic CPU Worker Topology:** Aligns `num_workers = min(cpu_count, 2)` on Kaggle to prevent CPU core oversubscription.
 
 ### Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)
 
-- **The Issue**: In cloud training environments with session quotas (e.g., Kaggle 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and expanded dataset fractions (e.g., $75\% \rightarrow 90\%$) *after* assembling the epoch checkpoint dictionary (`ckpt_state`) and saving to disk. If a preemptive shutdown occurred during the expansion epoch or before the subsequent SOTA milestone, reloading the checkpoint restored the stale governor state, silently rolling the training fraction back to $75\%$ and trapping the model in an infinite fraction expansion loop.
-- **Identification**: Training logs indicate dataset fraction expansion to $90\%$ or $100\%$, but upon session restart or preemption recovery, the active dataset fraction drops back to the earlier rung (e.g., $75\%$).
-- **Remedy**: **Atomic Governor Fraction Expansion Persistence & Checkpoint State Flush (v16.3.4)**:
-  1. Immediately after calling `train_ds.update_strategy(fraction=next_frac)` and rebuilding DataLoaders, flush the live `governor.get_state()` dictionary directly into `ckpt_state['governor_state']`.
-  2. Overwrite both `_latest.pth` and `_best.pth` on physical storage atomically so restarts cannot reload stale pre-expansion fractions.
-  3. Anchor Hub Lock skip-paths directly to live `governor.get_state()` so local progress checkpoints never persist stale governor snapshots.
+**The Issue:** In cloud training environments with session quotas (e.g., Kaggle 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and expanded dataset fractions (e.g., 75% → 90%) *after* assembling the epoch checkpoint dictionary (`ckpt_state`) and saving to disk. If a preemptive shutdown occurred during the expansion epoch or before the subsequent SOTA milestone, reloading the checkpoint restored the stale governor state, silently rolling the training fraction back to 75% and trapping the model in an infinite fraction expansion loop.
+
+**Identification:** Training logs indicate dataset fraction expansion to 90% or 100%, but upon session restart or preemption recovery, the active dataset fraction drops back to the earlier rung (e.g., 75%).
+
+**Remedy:** **Atomic Governor Fraction Expansion Persistence & Checkpoint State Flush (v16.3.4)**:
+
+1. Immediately after calling `train_ds.update_strategy(fraction=next_frac)` and rebuilding DataLoaders, flush the live `governor.get_state()` dictionary directly into `ckpt_state['governor_state']`.
+2. Overwrite both `_latest.pth` and `_best.pth` on physical storage atomically so restarts cannot reload stale pre-expansion fractions.
+3. Anchor Hub Lock skip-paths directly to live `governor.get_state()` so local progress checkpoints never persist stale governor snapshots.
 
 ---
 
-## 7. Best Practices Checklist
+## 6. Best Practices Checklist
 
-- [x] **High-Fidelity Floor**: Never start below 224px. Low-res warm-up is a legacy artifact.
-- [x] **Baseline First**: Build a simple model first. If a complex one fails, the issue is data.
-- [x] **Warm-up Strategy**: Use a linear warm-up for the first 5% of training.
-- [x] **AdamW over Adam**: Decouple weight decay from gradient updates.
-- [x] **One Change at a Time**: Only alter one hyperparameter per run.
-- [x] **Headless Cloud Portability**: Maintain unified kernel descriptors for seamless local $\leftrightarrow$ Kaggle Cloud transitions.
+- **High-Fidelity Floor:** Never start below 224px. Low-res warm-up is a legacy artifact.
+- **Baseline First:** Build a simple model first. If a complex one fails, the issue is data.
+- **Warm-up Strategy:** Use a linear warm-up for the first 5% of training.
+- **AdamW over Adam:** Decouple weight decay from gradient updates.
+- **One Change at a Time:** Only alter one hyperparameter per run.
 
 ---
 
-## 8. Multi-Model Pipeline Strategy
-
-Based on the **`unified_models_v2.yaml`** stack, these are the optimal progression paths to SOTA.
+## 7. Multi-Model Pipeline Strategy
 
 | Model Group | Key Models | SOTA Goal | Progression Strategy | Plateau Recognition & Breakthrough |
 | :--- | :--- | :--- | :--- | :--- |
-| **Group A: Metric Scorers** | `nima_aesthetic`, `nima_technical`, `nima_authenticity` | PLCC > 0.91, SRCC > 0.91, RM < 0.05 | **Res**: 256→384→512<br>**Fraction**: 0.15→0.75→1.0 | **Plateau**: SRCC bottlenecks at ~0.81 while PLCC is ~0.91.<br>**Tactic**: Deploy Soft-Spearman ranking loss with Rank Memory Bank ($N=32$) and transition to Kaggle GPU for batch 16/32. |
-| **Group B: Safety & Categorical** | `universal_nsfw_classification` | Accuracy > 0.98 | **Res**: 224px (Locked)<br>**Fraction**: 0.20 increments | **Plateau**: Localized trigger false negatives.<br>**Tactic**: Activate Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$) and Focal Loss ($\gamma=2.0$). |
-| **Group C: Restoration** | `nafnet_denoising`, `film_restorer`, `ffanet_indoor` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 256→384→512 (Patch-based)<br>**Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist.<br>**Tactic**: Increase degradation difficulty at 512px; switch to L1 + LPIPS loss. |
-| **Group D: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 512→768→1024<br>**Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant.<br>**Tactic**: Switch to EMA weights and dynamic CFG scaling. |
-| **Group E: Vision-Language** | `vlm_llava`, `vlm_blip2` | Caption Accuracy | **Res**: 224→336→448<br>**Fraction**: 0.10→0.50 (Polish) | **Plateau**: Model repetitive or hallucinating.<br>**Tactic**: Reset Optimizer Momentum; apply Softmax Temperature (0.05). |
-| **Group F: Financial & Time-Series** | `forex_predictor` | DirAcc > 0.787, WinRate > 0.682, PF > 2.2, Sharpe > 2.31, Sortino > 2.94, MaxDD < 9.5, TP/SL_MAE < 3.8 | **Timeframe Ladder**: M1→M5→M15→H1→H4→D1<br>**Batch**: 64 (Effective) | **Plateau**: Magnitude loss overfits noisy chop.<br>**Tactic**: Dual Forex Huber Loss with direction entropy confidence gating. |
+| **Group A: Metric Scorers** | `nima_aesthetic`, `nima_technical`, `nima_authenticity` | PLCC > 0.91, SRCC > 0.91, RM < 0.05 | **Res**: 256→384→512 **Fraction**: 0.15→0.75→1.0 | **Plateau**: SRCC bottlenecks at ~0.81 while PLCC is ~0.91. **Tactic**: Deploy Soft-Spearman ranking loss with Rank Memory Bank ($N=32$) and transition to Kaggle GPU for batch 16/32. |
+| **Group B: Safety & Categorical** | `universal_nsfw_classification` | Accuracy > 0.98 | **Res**: 224px (Locked) **Fraction**: 0.20 increments | **Plateau**: Localized trigger false negatives. **Tactic**: Activate Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$) and Focal Loss ($\gamma=2.0$). |
+| **Group C: Restoration** | `nafnet_denoising`, `film_restorer`, `ffanet_indoor` | PSNR > 33.0, LPIPS < 0.06 | **Res**: 256→384→512 (Patch-based) **Fraction**: 0.15 increments | **Plateau**: SSIM improves but visual artifacts persist. **Tactic**: Increase degradation difficulty at 512px; switch to L1 + LPIPS loss. |
+| **Group D: Generative** | `diffusion_sdxl`, `diffusion_flux` | FID < 14.5 | **Res**: 512→768→1024 **Fraction**: 0.10 increments | **Plateau**: Text alignment is high but FID is stagnant. **Tactic**: Switch to EMA weights and dynamic CFG scaling. |
+| **Group E: Vision-Language** | `vlm_llava`, `vlm_blip2` | Caption Accuracy | **Res**: 224→336→448 **Fraction**: 0.10→0.50 (Polish) | **Plateau**: Model repetitive or hallucinating. **Tactic**: Reset Optimizer Momentum; apply Softmax Temperature (0.05). |
+| **Group F: Financial & Time-Series** | `forex_predictor` | DirAcc > 0.787, WinRate > 0.682, PF > 2.2, Sharpe > 2.31, Sortino > 2.94, MaxDD < 9.5, TP/SL_MAE < 3.8 | **Timeframe Ladder**: M1→M5→M15→H1→H4→D1 **Batch**: 64 (Effective) | **Plateau**: Magnitude loss overfits noisy chop. **Tactic**: Dual Forex Huber Loss with direction entropy confidence gating. |
 
 ---
 
-## 9. Mapping Pathologies to Pipeline Stages
+## 8. Mapping Pathologies to Pipeline Stages
 
-| Pipeline Stage | Likely Pathology | Warning Sign | Correction Strategy |
+| Stage | Likely Pathology | Warning Sign | Correction |
 | :--- | :--- | :--- | :--- |
-| **Foundation (224px-512px)** | **Exploding Gradients** | Loss spikes or NaN in first 50 steps. | Implement **Linear Warm-up** (1k steps) and Grad Clipping. |
-| **Expansion (512px-768px)** | **Training Plateau** | Loss decreases by less than 0.001 per epoch. | **LR Jolt** (1.5x) or use **Dynamic Stride Thresholds** (0.75). |
-| **Deepening (768px+)** | **Vanishing Gradients** | Gradient norm falls to $10^{-7}$; early layers stop updating. | Switch to **BFloat16** to prevent underflow; use LayerNorm. |
-| **Refinement (100% Data)** | **Rank Starvation / Overfitting** | SRCC bottlenecks while PLCC converges; validation metric diverges. | Deploy **Soft-Spearman Loss**, **Rank Memory Bank**, and **Dropout (0.3)**. |
+| **Foundation (224px-512px)** | **Exploding Gradients** | Loss spikes in first 50 steps. | Linear Warm-up & Grad Clipping. |
+| **Expansion (512px-768px)** | **Training Plateau** | Loss Delta < 0.001 per epoch. | **LR Jolt** (1.5x) or Stride Threshold (0.75). |
+| **Deepening (768px+)** | **Vanishing Gradients** | Norm falls to 10^-7. | Switch to **BFloat16**. |
+| **Refinement (100% Data)** | **Overfitting** | Val metric diverges from Train. | Increase **Dropout** (0.3) & L2. |
 
 ---
 
-## 10. Nuclear Audit: The Optimization Checklist
+## 9. Nuclear Audit: Optimization Checklist
 
-### High-Velocity "DO's" (Keep Doing These)
+### High-Velocity "DO's"
 
-- [x] **Memory-Sentinel Probing**: Decouple `batch_size` from registry to allow autonomous peak hardware utilization.
-- [x] **NPP Loop Detection**: Trust the Governor's "Recoil" logic to save the manifold during turbulence.
-- [x] **Atomic Save Protocol**: Use the `.tmp` swap method to prevent corrupted weights.
-- [x] **Headless Cloud Escalation**: Seamlessly push high-resolution training jobs to Kaggle GPU cloud when local VRAM limits batch size.
+- **Memory-Sentinel Probing:** Decouple `batch_size` from registry.
+- **NPP Loop Detection:** Trust the Governor's "Recoil" logic.
+- **Atomic Save Protocol:** Use the `.tmp` swap method.
 
-### Critical "FIX's" (SOTA Blockers)
+### Critical "FIX's"
 
-- [x] **Metric Rebalancing**: Change `METRIC_WEIGHTS['psnr']` from `1` to `10` in `train.py`.
-- [x] **Differentiable Soft-Spearman Loss**: Eliminate pairwise ranking starvation under micro-batch sizes.
-- [x] **Spatial Statistical Pooling**: Replace naive GAP with $\text{Mean} \oplus \text{Std}$ in NIMA and Universal Classifier architectures.
-- [x] **Interactive Post-Training Target Audit**: Provide immediate diagnostic review and cloud escalation choices upon epoch limit completion.
+- **Metric Rebalancing:** Scale `METRIC_WEIGHTS['psnr']` to 10.
+- **Terminal Progress Guard (v17.2):** Epoch-advancing logic for ≥99.9% progress.
+- **Shared Memory Guard (v18.0):** Detect and clamp batch size if Dedicated VRAM is exhausted.
 
 ---
 
-## 11. SOTA Suite Optimization Task List
+## 10. SOTA Suite Optimization Task List
 
-- [x] **Task 1.1: Metric Rebalancing** (Target: `train.py`)
-- [x] **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
-- [x] **Task 2.1: The Propulsion Jolt** (Target: `optimization_engine.py`)
-- [x] **Task 2.2: Hot-Reload DataLoader** (Target: `train.py`)
-- [x] **Task 3.1: Gradient Sentinel Injection** (Target: `train.py`)
-- [x] **Task 4.1: Momentum Dampening** (Target: `train.py`)
-- [x] **Task 4.2: VRAM De-fragmentation** (Target: `train.py`)
-- [x] **Task 5.1: Emergency Shield Breakout** (Target: `optimization_engine.py`)
-- [x] **Task 5.2: Jolt Cooldown Protocol** (Target: `optimization_engine.py`)
-- [x] **Task 5.3: Autonomous Temp Sharpening** (Target: `optimization_engine.py`)
-- [x] **Task 8.1: Atomic Git-LFS Synchronizer** (Target: `cloud_sync.py`)
-- [x] **Task 10.1: Temperature-Aware Softmax Head** (Target: `nima.py`)
-- [x] **Task 10.2: Dynamic Architecture Registry** (Target: `factory.py`)
-- [x] **Task 10.4: Logit Clamping Guard (±10.0)** (Target: `nima.py`)
-- [x] **Task 16.1: Soft-Spearman Differentiable Rank Loss** (Target: `losses.py`)
-- [x] **Task 16.2: Cross-Microbatch Rank Memory Bank** (Target: `losses.py`)
-- [x] **Task 16.3: Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** (Target: `models/nima.py`)
-- [x] **Task 16.4: Universal Post-Training Target Audit & Guidance** (Target: `train.py`)
-- [x] **Task 16.5: Headless Kaggle Cloud Engine** (Target: `kaggle_cloud_manager.py`)
-- [x] **Task 16.6: Hierarchical Parent Domain UI Navigation** (Target: `lemgendary_models_hub.ps1`)
-- [x] **Task 17.1: Walk-Forward Curriculum Orchestrator** (Target: `train_forex_curriculum.py`)
-- [x] **Task 17.2: Adaptive Loss Sentinel for Financial Models** (Target: `train.py`)
-- [x] **Task 17.3: Dynamic Domain-Aware Telemetry Engine** (Target: `telemetry.py`)
-- [x] **Task 18.1: Persistent Worker GC Teardown for Kaggle** (Target: `core_loop.py`)
-- [x] **Task 18.2: Safe Non-Destructive Export Guards** (Target: `core_loop.py`)
+- **Task 1.1: Metric Rebalancing** (Target: `train.py`)
+- **Task 1.2: LPIPS Device Agnosticism** (Target: `losses.py`)
+- **VLM Temperature Warm-up:** Update `unified_models_v2.yaml` to sharpen from 0.1 to 0.05.
+- **Terminal Progress Guard (v17.2):** Implement epoch-advancing logic for checkpoints at ≥99.9% progress.
+- **Shared Memory Guard (v18.0):** Detect and clamp batch size if Dedicated VRAM is exhausted.
+- **Task 2.1: The Propulsion Jolt** (Target: `optimization_engine.py`)
+- **Task 2.2: Hot-Reload DataLoader** (Target: `train.py`)
+- **Task 3.1: Gradient Sentinel Injection** (Target: `train.py`)
+- **Task 4.1: Momentum Dampening** (Target: `train.py`)
+- **Task 4.2: VRAM De-fragmentation** (Target: `train.py`)
+- **Task 4.3: Surgical Weight Decay** (Target: `train.py`)
+- **Task 5.1: Emergency Shield Breakout** (Target: `optimization_engine.py`)
+- **Task 5.2: Jolt Cooldown Protocol** (Target: `optimization_engine.py`)
+- **Task 5.3: Autonomous Temp Sharpening** (Target: `optimization_engine.py`)
+- **Task 6.1: Atomic Cell Fragmentation** (Target: `notebook_generator.py`)
+- **Task 6.2: Pre-flight Hardware Sentinel** (Target: `notebook_generator.py`)
+- **Task 6.3: Multi-Path Dataset Symlinker** (Target: `notebook_generator.py`)
+- **Task 6.4: Stealth PAT Masking** (Target: `notebook_generator.py`)
+- **Task 7.1: SOTA Metric Badging** (Target: `doc_generator.py`)
+- **Task 7.2: Mermaid Topology Integration** (Target: `doc_generator.py`)
+- **Task 7.3: v16.0 Stealth Usage Snippets** (Target: `doc_generator.py`)
+- **Task 7.4: Automated Quality Vector Badges** (Target: `doc_generator.py`)
+- **Task 8.1: Atomic Git-LFS Synchronizer** (Target: `cloud_sync.py`)
+- **Task 8.2: Metrics Merge-Persistence** (Target: `cloud_sync.py`)
+- **Task 8.3: Diagnostic Stealth (Token Masking)** (Target: `cloud_sync.py`)
+- **Task 8.4: Multi-Threaded Sync Manager** (Target: `cloud_sync.py`)
+- **Task 8.5: NPP Loop Mitigation** (Target: `optimization_engine.py`)
+- **Task 9.1: Neutral Grey Fallback Shield** (Target: `dataset.py`)
+- **Task 9.2: High-Fidelity LANCZOS Scaling** (Target: `dataset.py`)
+- **Task 9.3: Stratified Label Distribution** (Target: `dataset.py`)
+- **Task 9.4: Atomic Parquet Recovery** (Target: `data_utils.py`)
+- **Task 10.1: Temperature-Aware Softmax Head** (Target: `nima.py`)
+- **Task 10.2: Dynamic Architecture Registry** (Target: `factory.py`)
+- **Task 10.3: WebGPU-Safe Tensor Permutations** (Target: `core_restoration.py`)
+- **Task 10.4: Logit Clamping Guard (±10.0)** (Target: `nima.py`)
+- **Task 11.1: SOTA Overwrite Force-Flag** (Target: `train_all.py`)
+- **Task 11.2: Persistent Failure-Report Matrix** (Target: `train_all.py`)
+- **Task 11.3: Inter-Model Driver Cooldown** (Target: `train_all.py`)
+- **Task 11.4: Global SOTA Dashboard (README Gen)** (Target: `train_all.py`)
+- **Task 12.1: Nuclear v16.0 Schema Update** (Target: `config.yaml`)
+- **Task 12.2: Governor Threshold Tuning** (Target: `config.yaml`)
+- **Task 12.3: Fleet Synchronization Flags** (Target: `config.yaml`)
+- **Task 12.4: Hardware-Specific Profiles** (Target: `config.yaml`)
+- **Task 13.1: Stale Lock (.processing) Clearance** (Target: `train.py` / `notebook_generator.py`)
+- **Task 13.2: Hub Clone Diagnostic Verbosity** (Target: `train.py`)
+- **Task 13.3: Global Notebook Matrix Refresh** (Target: `notebook_generator.py`)
+- **Task 14.1: Ladder-Aware SOTA Guard (v18.0)** (Target: `train.py`)
+- **Task 14.2: SOTA Hardening Guard (v19.0)** (Target: `optimization_engine.py`)
+- **Task 14.3: SOTA-Sync DataLoader Protocol** (Target: `train.py`)
+- **Task 15.1: SOTA Benchmark Injection** (Target: `unified_models_v2.yaml`)
+- **Task 15.2: Hardware-Aware Authority Overrides** (Target: `train.py`)
+- **Task 15.3: Global Fraction Calibration (15%)** (Target: `optimization_engine.py`)
+- **Task 16.1: Soft-Spearman Differentiable Rank Loss** (Target: `losses.py`)
+- **Task 16.2: Cross-Microbatch Rank Memory Bank** (Target: `losses.py`)
+- **Task 16.3: Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)** (Target: `models/nima.py`)
+- **Task 16.4: Universal Post-Training Target Audit & Guidance** (Target: `train.py`)
+- **Task 16.5: Headless Kaggle Cloud Engine** (Target: `kaggle_cloud_manager.py`)
+- **Task 16.6: Hierarchical Parent Domain UI Navigation** (Target: `lemgendary_models_hub.ps1`)
+- **Task 17.1: Walk-Forward Curriculum Orchestrator** (Target: `train_forex_curriculum.py`)
+- **Task 17.2: Adaptive Loss Sentinel for Financial Models** (Target: `train.py`)
+- **Task 17.3: Dynamic Domain-Aware Telemetry Engine** (Target: `telemetry.py`)
 
 ---
 
-## 12. SOTA Transformation: Before vs. After
+## 11. SOTA Transformation: Before vs. After
 
-| Feature | **Before Intervention** (Passive) | **After Intervention** (Autonomous) |
+| Feature | Before (Passive) | After (Autonomous) |
 | :--- | :--- | :--- |
-| **Fidelity Floor** | 64px-112px warm-up; risks blurred feature learning. | **224px-512px Mandatory Floor**: Ensures high-frequency detection. |
-| **Batch Management** | Static registry values; prone to OOM on mixed hardware. | **Absolute Sentinel Authority**: Dynamic VRAM probing overrides YAML. |
+| **Fidelity Floor** | 64px-112px warm-up; blurred learning. | **224px-512px Mandatory Floor**. |
+| **Batch Management** | Static registry values; OOM risk. | **Absolute Sentinel Authority**: Dynamic VRAM probing overrides YAML. |
 | **Fraction Baseline** | 50% start; slow foundational convergence. | **15% Global Baseline**: Hyper-light foundational scaling. |
-| **Plateau Management** | Manual waiting or slow decay; high stagnation risk. | **Propulsion Jolt**: Auto-triggers 1.5x LR surge to break local minima. |
-| **Restoration Balance** | PSNR (1) vs SSIM (40); Metric effectively ignored. | **Balanced Fidelity**: PSNR (10) vs SSIM (40); SOTA parity achieved. |
-| **Ranking Loss Under Low VRAM** | Micro-batch $b=2$ evaluates 1 pair per step; SRCC stagnates. | **Soft-Spearman + Rank Memory Bank**: Evaluates 496 pairs across accumulation. |
-| **Spatial Feature Pooling** | Global Average Pooling dilutes small localized triggers. | **Statistical Pooling ($\text{Mean} \oplus \text{Std}$)**: Captures localized defect variance. |
-| **Cloud Escalation** | Requires manual browser navigation to Kaggle site. | **Headless Cloud Engine**: Launch, monitor, and pull GPU jobs via PowerShell. |
-| **Post-Training UX** | Silent termination with raw `Press Enter to return...`. | **Target Audit & Guidance**: Diagnostic breakdown with action choices. |
-| **Financial Walk-Forward** | Manual dataset slicing and script restarts per pair. | **Curriculum Orchestrator**: Automated multi-phase 6-Fold expansion. |
-| **Telemetry Schema** | Static 28-column image metric array across all domains. | **Domain-Aware Telemetry**: 21-column Financial auto-scaling array. |
+| **Plateau Management** | Manual waiting; high stagnation risk. | **Propulsion Jolt:** Auto-triggers 1.5x surge. |
+| **Restoration Balance** | PSNR (1) vs SSIM (40); Metric effectively ignored. | **Balanced Fidelity:** PSNR (10) vs SSIM (40); SOTA parity achieved. |
+| **Ranking Loss Under Low VRAM** | Micro-batch $b=2$ evaluates 1 pair per step; SRCC stagnates. | **Soft-Spearman + Rank Memory Bank:** Evaluates 496 pairs across accumulation. |
+| **Spatial Feature Pooling** | Global Average Pooling dilutes small localized triggers. | **Statistical Pooling ($\text{Mean} \oplus \text{Std}$):** Captures localized defect variance. |
+| **Cloud Escalation** | Requires manual browser navigation to Kaggle site. | **Headless Cloud Engine:** Launch, monitor, and pull GPU jobs via PowerShell. |
+| **Post-Training UX** | Silent termination with raw `Press Enter to return...`. | **Target Audit & Guidance:** Diagnostic breakdown with action choices. |
+| **Financial Walk-Forward** | Manual dataset slicing and script restarts per pair. | **Curriculum Orchestrator:** Automated multi-phase 6-Fold expansion. |
+| **Telemetry Schema** | Static 28-column image metric array across all domains. | **Domain-Aware Telemetry:** 21-column Financial auto-scaling array. |
+| **Stability Guard** | Reactive (Post-epoch). | **Proactive Sentinels:** Real-time monitoring. |
+| **Stride Protocol** | Fixed 0.90 barrier; slow early progress. | **Dynamic Thresholds** (0.75 / 0.90). |
+| **Hardware Auditing** | Single probe at startup. | **Atomic Re-Audit**: Probe on every spatial jump. |
+| **4GB Stability** | Parallel workers; prone to deadlocks. | **Serial Shield**: Forced 0 workers on low-VRAM OOM. |
+| **VRAM Paging** | Unrestricted batch; triggers System RAM paging. | **Absolute Sentinel Authority**: Dynamic clamping inside Dedicated VRAM. |
+| **Progress Recovery** | Recursive loops on finished epochs. | **Progress Guard**: Auto-advances epochs at 99.9%. |
+| **SOTA Progression** | Premature mission termination. | **Ladder-Aware Guard**: Targets trigger jumps, not shutdowns. |
+| **Manifold Maturity** | High-speed resolution jumping. | **Hardening Guard**: Mandatory 2-epoch lock for stabilization. |
+| **Overfitting Rescue** | Overfitting triggers panic recoil & data variety starvation. | **Rescue Protocol**: Automatically overrides cooldowns and force-expands dataset fraction (+15%) on overfitting trends. |
 
 ---
 
-## 13. Conclusion: The Indestructible Convergence Paradigm
+## 12. Conclusion: The Indestructible Paradigm
 
 The transition from manual hyperparameter tuning to autonomous, **"Nuclear-Hardened"** training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the **LemGendary** ecosystem has achieved a state of indestructible convergence.
 
-The combination of real-time memory sentinels, differentiable Soft-Spearman rank memory banks, spatial statistical pooling, and headless Kaggle cloud execution ensures that training missions—even under restricted 4GB edge hardware—are robust against the stochastic instabilities of modern deep learning. This framework secures current SOTA metrics while establishing the foundation for next-generation automated model deployment.
+The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware.
 
-**Status: The LemGendary Training Suite is now SOTA-Autonomous, Cloud-Linked & High-Fidelity Hardened.**
+Status: SOTA-Autonomous & High-Fidelity Hardened.

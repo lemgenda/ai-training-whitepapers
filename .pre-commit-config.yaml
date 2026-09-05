@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: verify-docs
+        name: Verify LemGendary Docs (Lint, W3C HTML, Text Sync)
+        entry: python verify_docs.py --staged
+        language: system
+        pass_filenames: false
+        always_run: true

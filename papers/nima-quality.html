@@ -914,63 +914,64 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 
 <section id="6-deployment-strategy-why-onnx">
 <h2>6. Deployment Strategy: Why ONNX?</h2>
-<p>The migration from PyTorch to ONNX was driven by the necessity of <strong>WebGPU stability</strong>. Below is a comprehensive comparison of format options for the deployment phase.</p>
+<p>The migration from PyTorch to ONNX was driven by the necessity of <strong>WebGPU stability</strong>. Below is a comprehensive comparison of ONNX against competing deployment formats.</p>
 <h3 id="61-format-comparison-matrix">6.1 Format Comparison Matrix</h3>
 <table>
     <thead>
         <tr>
             <th>Format</th>
-            <th>Browser Support</th>
+            <th>Perf (Browser)</th>
+            <th>Size (v1.0.10)</th>
             <th>Portability</th>
-            <th>Quantization</th>
-            <th>Platform Constraints</th>
-            <th>LemGendary Verdict</th>
+            <th>Strength</th>
+            <th>Weakness</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td><strong>ONNX</strong></td>
-            <td><span style="color:#4cd964; font-weight:bold;">✓ Full (WebGPU/WASM)</span></td>
-            <td>Universal</td>
-            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
-            <td>None</td>
-            <td><span style="color:#4cd964; font-weight:bold;">Production Grade</span></td>
-        </tr>
-        <tr>
-            <td><strong>TorchScript</strong></td>
-            <td><span style="color:#ffc107; font-weight:bold;">⚠ Slow</span></td>
-            <td>PyTorch-only</td>
-            <td><span style="color:#ffc107; font-weight:bold;">⚠ Limited</span></td>
-            <td>Tight PyTorch coupling</td>
-            <td><span style="color:#ffc107; font-weight:bold;">Non-optimal for browser</span></td>
+            <td><strong>Elite (WebGPU)</strong></td>
+            <td><strong>~48MB</strong></td>
+            <td><strong>Universal</strong></td>
+            <td><strong>Best-in-class WebGPU/NPU support</strong></td>
+            <td>Minor overhead on low-end CPUs</td>
         </tr>
         <tr>
             <td><strong>TFLite</strong></td>
-            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
-            <td>Mobile-focused</td>
-            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
-            <td>No native Windows support</td>
-            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+            <td>High (WebGL)</td>
+            <td>~52MB</td>
+            <td>Android/Browser</td>
+            <td>Legacy compatibility</td>
+            <td>Slower on large kernels (384x384)</td>
         </tr>
         <tr>
-            <td><strong>OpenVINO</strong></td>
-            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
-            <td>Intel hardware</td>
-            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
-            <td>Intel-only. No browser pathway</td>
-            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+            <td><strong>TensorRT</strong></td>
+            <td>Peak (Local)</td>
+            <td>~60MB</td>
+            <td>NVIDIA Only</td>
+            <td>Raw NVIDIA hardware speed</td>
+            <td>Zero portability to non-NVIDIA GPUs</td>
+        </tr>
+        <tr>
+            <td><strong>Torch JIT</strong></td>
+            <td>Mid-High</td>
+            <td>~55MB</td>
+            <td>Python/Native</td>
+            <td>Python native debugging</td>
+            <td>Heavy runtime requirements for browser</td>
         </tr>
         <tr>
             <td><strong>CoreML</strong></td>
-            <td><span style="color:#dc3545; font-weight:bold;">✗ No</span></td>
-            <td>Apple-only</td>
-            <td><span style="color:#4cd964; font-weight:bold;">✓ Supported</span></td>
-            <td>Incompatible with cross-platform targets</td>
-            <td><span style="color:#dc3545; font-weight:bold;">Incompatible</span></td>
+            <td>High (Neural)</td>
+            <td>~45MB</td>
+            <td>Apple Only</td>
+            <td>Optimal on M1/M2/M3 chips</td>
+            <td>Locked to macOS/iOS ecosystems</td>
         </tr>
     </tbody>
 </table>
 
+<h3 id="62-why-onnx-wins-for-lemgendary">6.2 Why ONNX Wins for LemGendary</h3>
 <ol>
 <li><strong>WebGPU Destiny</strong>: The primary target is browser-based image restoration. ONNX provides the highest performance bridge to <strong>WebGPU</strong>, allowing the models to run at native speeds via <strong>OnnxRuntime-Web</strong>.</li>
 <li><strong>Graph Shrinking (Constant Folding)</strong>: During export, the suite executes graph optimization, stripping away training-only layers (Dropout, BatchNorm params) to reduce file size by ~15% compared to raw PyTorch.</li>
@@ -1111,46 +1112,21 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <li><strong>Edge Refinement</strong>: Implementing LoRA-based local adaptation for specific user-camera characteristics.</li>
 </ul>
 <p>Ultimately, the LemGendary project proves that with the right mathematical guardrails (2026 Resilience Loss) and real-time resource monitoring, the gap between laboratory SOTA and consumer deployment has officially closed.</p>
-    
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="omni-metric-autonomous-sota-adaptation-ms-swa-v175">Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
+<ul>
+    <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
+    <li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
+    <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
+    <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
+    <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue ($N=32$) to maintain ranking context across micro-batches ($b=2$).</li>
+</ul>
 </section>
-
-<section>
-    <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA (v17.5)</h3>
-    <ul>
-                <li><strong>Dynamic Severity Thresholds</strong>: Automatically tightens deficit classification (≥ 10% = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.</li>
-<li><strong>Metric Deficit Engine</strong>: The <code>SmartTrainingGovernor</code> tracks individual deficits (Δ_m) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).</li>
-        <li><strong>Metric Focus Burst</strong>: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting <code>srcc</code> rank weight).</li>
-        <li><strong>Metric-Specific SWA (MS-SWA)</strong>: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.</li>
-        <li><strong>Differentiable Soft-Spearman Loss</strong>: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue (N=32) to maintain ranking context across micro-batches (b=2).</li>
-    </ul>
-</section>
-
+<footer>
+    <div class="container">
+        <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
+    </div>
+</footer>
 </div>
 </body>
 </html>

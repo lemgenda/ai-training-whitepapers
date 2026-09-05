@@ -450,6 +450,8 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 
 ## 7. SOTA Architectural Performance Matrix
 
+The following matrix isolates MPRNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).
+
 | Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal |
@@ -458,7 +460,7 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 | **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) |
 | **LemGendary MPRNet** | *Multi-Stage Progressive (Ours)* | **17M** | **~ 6 GB** | **53.95 dB** | **0.0013 (VGG)** | **Production Grade** |
 
----
+**Hardware Note**: MPRNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for [FP16] browser exportation.
 
 ---
 

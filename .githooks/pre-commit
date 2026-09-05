@@ -1,0 +1,10 @@
+#!/bin/sh
+# Pre-commit hook for lemgendary-docs
+echo "[PRE-COMMIT] Running LemGendary Docs Verification Suite..."
+python verify_docs.py --staged
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "[PRE-COMMIT] Verification failed with exit code $EXIT_CODE. Aborting commit."
+    exit $EXIT_CODE
+fi
+exit 0
