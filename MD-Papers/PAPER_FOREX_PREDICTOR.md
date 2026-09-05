@@ -129,17 +129,19 @@ $$\mathbf{e}_{\text{fused}} = \text{Concat}\left(\text{head}_1, \dots, \text{hea
 
 where $\mathbf{E}_{\text{pair}}(p) \in \mathbb{R}^{d_{\text{model}}}$ is the learned pair embedding representing currency-specific volatility dynamics.
 
-### 3.3 6-Fold Anchored Walk-Forward Cross-Validation Matrix
+### 3.3 1-Year Progressive Chronological Walk-Forward Matrix
 
-Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary suite implements an **Anchored Walk-Forward Matrix** spanning 2019 to 2026 with a **14-day Embargo Gap** between training and validation sets:
+Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary dataset compiler implements a strictly isolated, **1-Year Progressive Chronological Walk-Forward Matrix** (Fold 1 spans 2 years as a baseline, Folds 2-6 expand by 1 year each) feeding into a global Out-of-Sample 2026 validation set:
 
 ```text
-Fold 1: [2019 ------------- 2021] --(14d Embargo)--> [Val: Jan-Jun 2022] (Global Rate Hikes)
-Fold 2: [2019 -------------------- 2022] --(14d)--> [Val: Jan-Jun 2023] (Inflation Peaks)
-Fold 3: [2019 --------------------------- 2023] --> [Val: Jan-Jun 2024] (Geopolitical Stress)
-Fold 4: [2019 ---------------------------------- 2024] --> [Val: Jan-Jun 2025] (Central Bank Pivot)
-Fold 5: [2019 ----------------------------------------- Jun 2025] --> [Val: Jul-Dec 2025]
-Fold 6: [2019 -------------------------------------------------- 2025] --> [Val: Jan-Aug 2026]
+Fold 1: [2019 ------------- 2020] (Pre-Pandemic & Peak Volatility Baseline)
+Fold 2: [2021] (Recovery & Supply Chain Stress)
+Fold 3: [2022] (Global Rate Hikes & Dollar Surge)
+Fold 4: [2023] (Inflation Peaks & Consolidation)
+Fold 5: [2024] (Central Bank Pivot)
+Fold 6: [2025] (Modern High-Fidelity Consolidations)
+
+Global Validation Set (Val): [2026] (Current Live Market Out-of-Sample)
 ```
 
 ### 3.4 Quantitative Evaluation Formulations & Scoring
@@ -279,6 +281,9 @@ To overcome severe storage and I/O bottlenecks in cloud environments (e.g., Kagg
 - `LemGendizedForexUniverseLarge` (Phase 4)
 
 Instead of downloading the entire universe at epoch 0, the `ForexDataset` utilizes a **Multi-Root Distributed Loader**. It actively scans the environment (e.g., Kaggle attached datasets or Local downloaded archives) and dynamically mounts the required pairs for the current active curriculum phase, allowing modular scale-up exactly when needed.
+
+**Configurable Curriculum Reductions & Timeframe Auto-Detection**
+The `train_forex_curriculum.py` orchestrator supports explicit YAML-based reduction of the curriculum matrix. By defining an `active_phases` and `active_folds` block under `forex_predictor.curriculum` in `unified_models_v2.yaml`, the orchestrator filters the execution loop to only process the requested subsets. Furthermore, the `ForexDataset` dynamically computes the strict intersection of all available timeframes across all attached manifolds on disk, automatically dropping any missing timeframes to prevent topology mismatches during training. When Folds are reduced (e.g. from 6 to $N$), the dataset compiler automatically slides the chronological window to the most recent $N+1$ folds, merging the earliest two into a unified pre-training base fold while preserving the validation sequence.
 
 #### 4.8.2 MetaTrader 5 (MT5) Auto-Acquisition Bridge
 

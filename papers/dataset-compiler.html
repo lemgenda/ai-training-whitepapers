@@ -298,8 +298,8 @@
                 <li><strong>Decoupled Documentation Generation (v16.4.1)</strong>: Extracted all dataset documentation generation (<code>README.md</code>, <code>dataset_info.yaml</code>, <code>category.txt</code>, <code>classes.txt</code>, <code>index.json</code>) from the monolithic compiler pipeline into a dedicated <code>doc_generator.py</code> module for robust maintainability and standardized outputs. It dynamically generates model-specific architecture mapping and extrapolated baseline metric tables directly from <code>models_metadata</code> and <code>task_metadata</code> residing in <code>unified_data.yaml</code>.</li>
             </ul>
 
-            <p><strong>MetaTrader 5 (MT5) Auto-Acquisition</strong>:<br>
-            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It compiles the missing historical OHLCV data on-the-fly, computing 14 high-fidelity quantitative features (including RSI, MACD, ATR, BBW, Time-Session Encodings, ATR Percentiles, and Bar Range Ratios) and synchronizing shards end-to-end.</p>
+            <p><strong>MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)</strong>:<br>
+            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into strictly isolated 4-symbol manifolds (TitanCore, G7Majors, HighBeta, Universe) with zero cross-manifold hardlinking to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
         
 
         
@@ -583,7 +583,7 @@
 <h2>6. Synthesis Flow &amp; Topology</h2>
             
             <h3 id="the-dataset-hub">6.1. The Dataset Hub (v6.0.0-SOTA)</h3>
-            <p>The modernized interactive dashboard for end-to-end manifold management. Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling).</p>
+            <p>The modernized interactive dashboard for end-to-end manifold management, backed by a decoupled modular engine (<code>compiler_core.py</code>, <code>manifold_compile.py</code>, <code>manifold_reduce.py</code>, and <code>manifold_sync.py</code>). Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling). The advanced <code>manifold_sync.py</code> orchestrator supports full duplex Kaggle synchronization (Upload via auto-Zipping and Download with disk-space collision safeguards).</p>
             
             <h3 id="industrial-output-topology">6.2. Industrial Output Topology (Nuclear Architecture)</h3>
             <ul>
