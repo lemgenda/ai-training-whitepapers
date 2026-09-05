@@ -298,7 +298,7 @@
             </ul>
 
             <p><strong>MetaTrader 5 (MT5) Auto-Acquisition</strong>:<br>
-            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It scans the local <code>data\forex</code> cache against the requested configuration (<code>pairs_list</code>). If any currency pair shards are missing, the compiler seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It extracts, resamples, and compiles the missing historical OHLCV data on-the-fly, bridging the gap between quantitative finance platforms and AI training suites.</p>
+            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It compiles the missing historical OHLCV data on-the-fly, computing 14 high-fidelity quantitative features (including RSI, MACD, ATR, BBW, Time-Session Encodings, ATR Percentiles, and Bar Range Ratios) and synchronizing shards end-to-end.</p>
         
 
         

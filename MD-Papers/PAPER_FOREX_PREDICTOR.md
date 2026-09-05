@@ -115,6 +115,8 @@ Layer 2 (d=2):        h2[t-1]  h2[t]
 Output Embedding:         z[t] (Zero Future Information Flow)
 ```
 
+The CausalConv1D blocks implement **Stochastic Depth** (drop-path regularization), which randomly drops entire layers during training, forcing the network to learn robust, noise-invariant temporal features and preventing overfitting to market idiosyncrasies.
+
 ### 3.2 Cross-Timeframe Multi-Head Attention Fusion
 
 Given $T$ active timeframes, each timeframe encoder yields a summary representation $\mathbf{z}_m \in \mathbb{R}^{d_{\text{model}}}$. The timeframe embeddings are stacked into matrix $\mathbf{Z} \in \mathbb{R}^{T \times d_{\text{model}}}$. Cross-timeframe multi-head attention computes dynamic relational weights between all temporal horizons:
@@ -160,9 +162,11 @@ $$\text{Sharpe} = \frac{\mathbb{E}[R] - R_f}{\sigma(R)} \times \sqrt{252 \times 
 
 $$\sigma_{\text{downside}} = \sqrt{\frac{1}{N} \sum_{i: R_i < 0} R_i^2}$$
 
-#### 4. Maximum Drawdown
+#### 4. Maximum Drawdown (Account-Percentage Anchored)
 
-$$\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t} \text{Equity}(\tau) - \text{Equity}(t)}{\max_{\tau \le t} \text{Equity}(\tau)} \right) \times 100\%$$
+$$\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t} (\text{Equity}(\tau) + \text{Base}) - (\text{Equity}(t) + \text{Base})}{\max_{\tau \le t} (\text{Equity}(\tau) + \text{Base})} \right) \times 100\%$$
+
+where $\text{Base} = 10,000$ pips representing the initial account margin.
 
 #### 5. Scalar Quantitative Quality Score
 
@@ -187,17 +191,17 @@ This minimal memory complexity allows real-time evaluation on consumer hardware 
 The **ForexPredictor** outputs dual synchronous heads:
 
 1. **Direction Head ($\hat{\mathbf{y}}_{\text{dir}}$)**: 3-class probability distribution ($\text{Class } 0 = \text{SELL}, \text{Class } 1 = \text{HOLD}, \text{Class } 2 = \text{BUY}$).
-2. **Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)**: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips.
+2. **Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)**: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips, clamped to a maximum of 200 pips to ensure stability.
 
-$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$
+$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$
 
 ### 4.2 Model Info
 
 - **Model Key**: `forex_predictor`
-- **Architecture**: Multi-Scale Causal TCN + Cross-Timeframe Attention
-- **Embedding Dimension ($d_{\text{model}}$)**: 128
-- **Attention Heads**: 4
-- **Parameters**: 1.84M FP32 Parameters (7.36 MB)
+- **Architecture**: Multi-Scale Causal TCN + Cross-Timeframe Attention (with Stochastic Depth)
+- **Embedding Dimension ($d_{\text{model}}$)**: 192
+- **Attention Heads**: 6
+- **Parameters**: 2.75M FP32 Parameters (~11 MB)
 - **Primary Checkpoint**: `ForexPredictorWeights_FP32.pth`
 - **ONNX Export**: `ForexPredictor.onnx` (Opset 17, Fixed Shape)
 
@@ -206,7 +210,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 - **Dataset Identifier**: `LemGendizedForexPredictorLarge`
 - **Total Physical Size**: 767.57 MB
 - **Samples**: 428,940 windowed sequences
-- **Normalized Features (10)**: Open, High, Low, Close, Tick Volume, RSI (14), MACD (12,26,9), MACD Signal, ATR (14), Bollinger Band Width (20,2).
+- **Normalized Features (14)**: Open, High, Low, Close, Tick Volume, RSI (14), MACD (12,26,9), MACD Signal, ATR (14), Bollinger Band Width (20,2), Session Sine, Session Cosine, ATR Percentile, Bar Range Ratio.
 
 ### 4.4 Performance Metrics
 
@@ -228,9 +232,9 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{d
 
 ### 4.6 Model Specific Issues and Optimizations
 
-1. **Anti-Hold Entropy Regularization**: In financial classification, models frequently collapse into predicting the majority "HOLD" class to minimize cross-entropy loss. We inject an explicit entropy penalty $-\lambda_{\mathcal{H}} \mathcal{H}(p)$ with $\lambda_{\mathcal{H}} = 0.05$ that forces the model to maintain decisive directional conviction.
-2. **Confidence-Gated Magnitude Regression**: Magnitude loss is modulated by directional certainty. If directional entropy is high, the sample's contribution to pip regression loss is dynamically attenuated.
-3. **High-Entropy Governor Resilience**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $2.0\times$ multiplier across a sustained 5-epoch window. The manifold collapse guard is recalibrated to trigger only if Directional Accuracy falls below $45.0\%$, preventing false-positive training retreats.
+1. **Focal Loss Regularization**: We replace standard Cross-Entropy with a focal loss ($\gamma = 2.0$) heavily penalizing false convictions and asymmetric class weights ([1.3, 0.7, 1.3]) to avert class collapse into the Sideways/Hold category.
+2. **Directional Entropy (DirEntropy)**: The framework dynamically tracks Shannon Entropy across class predictions. High entropy lowers the contribution of magnitude gradients via the confidence gate, preventing the model from fitting arbitrary pip magnitudes on uncertain direction bars.
+3. **High-Entropy Governor Resilience**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $1.5\times$ multiplier.
 
 ### 4.7 Consolidated SOTA Benchmarks
 

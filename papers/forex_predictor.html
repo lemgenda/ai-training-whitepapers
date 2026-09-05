@@ -192,8 +192,15 @@
             <h3 id="31-causal-convolution--temporal-invariance">3.1 Causal Convolution & Temporal Invariance</h3>
             <p>To strictly prevent future lookahead leakage, all convolutional operations employ left-sided zero padding. The dilated causal Conv1D operator at time $t$ for dilation rate $d$ and kernel size $K$ is defined as:</p>
             <p>$$\mathbf{h}_t = \text{GELU}\left( \sum_{k=0}^{K-1} \mathbf{W}_k \cdot \mathbf{x}_{t - d \cdot k} + \mathbf{b} \right)$$</p>
-            <p>By cascading $M$ layers with exponentially increasing dilation $d = 2^m$ for $m \in \{0, 1, \dots, M-1\}$, the receptive field expands exponentially without downsampling:</p>
-            <p>$$\text{RF} = 1 + \sum_{m=0}^{M-1} (K - 1) \cdot 2^m = 1 + (K - 1)(2^M - 1)$$</p>
+            <pre><code>Input Sequence:   x[t-3]   x[t-2]   x[t-1]   x[t]
+                    \        \        \       /
+Layer 1 (d=1):     h1[t-2]  h1[t-1]  h1[t]
+                      \        \      /
+Layer 2 (d=2):        h2[t-1]  h2[t]
+                         \     /
+Output Embedding:         z[t] (Zero Future Information Flow)
+</code></pre>
+            <p>The CausalConv1D blocks implement <strong>Stochastic Depth</strong> (drop-path regularization), which randomly drops entire layers during training, forcing the network to learn robust, noise-invariant temporal features and preventing overfitting to market idiosyncrasies.</p>
 
             <h3 id="32-cross-timeframe-multi-head-attention-fusion">3.2 Cross-Timeframe Multi-Head Attention Fusion</h3>
             <p>Given $T$ active timeframes, each timeframe encoder yields a summary representation $\mathbf{z}_m \in \mathbb{R}^{d_{\text{model}}}$. The timeframe embeddings are stacked into matrix $\mathbf{Z} \in \mathbb{R}^{T \times d_{\text{model}}}$. Cross-timeframe multi-head attention computes dynamic relational weights between all temporal horizons:</p>
@@ -226,8 +233,9 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             <p>$$\text{Sharpe} = \frac{\mathbb{E}[R] - R_f}{\sigma(R)} \times \sqrt{252 \times 24}, \quad \text{Sortino} = \frac{\mathbb{E}[R] - R_f}{\sigma_{\text{downside}}(R)} \times \sqrt{252 \times 24}$$</p>
             <p>$$\sigma_{\text{downside}} = \sqrt{\frac{1}{N} \sum_{i: R_i &lt; 0} R_i^2}$$</p>
 
-            <h4>4. Maximum Drawdown</h4>
-            <p>$$\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t} \text{Equity}(\tau) - \text{Equity}(t)}{\max_{\tau \le t} \text{Equity}(\tau)} \right) \times 100\%$$</p>
+            <h4>4. Maximum Drawdown (Account-Percentage Anchored)</h4>
+            <p>$$\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t} (\text{Equity}(\tau) + \text{Base}) - (\text{Equity}(t) + \text{Base})}{\max_{\tau \le t} (\text{Equity}(\tau) + \text{Base})} \right) \times 100\%$$</p>
+            <p>where $\text{Base} = 10,000$ pips representing the initial account margin.</p>
 
             <h4>5. Scalar Quantitative Quality Score</h4>
             <p>$$\text{Quality Score} = (\text{DirAcc} \times 1.0) + (\text{WinRate} \times 1.0) + (\text{ProfitFactor} \times 10.0) + (\text{Sharpe} \times 10.0) - (\text{MaxDD} \times 1.0)$$</p>
@@ -246,17 +254,17 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
             <p>The <strong>ForexPredictor</strong> outputs dual synchronous heads:</p>
             <ol>
                 <li><strong>Direction Head ($\hat{\mathbf{y}}_{\text{dir}}$)</strong>: 3-class probability distribution ($\text{Class } 0 = \text{SELL}, \text{Class } 1 = \text{HOLD}, \text{Class } 2 = \text{BUY}$).</li>
-                <li><strong>Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)</strong>: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips.</li>
+                <li><strong>Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)</strong>: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips, clamped to a maximum of 200 pips to ensure stability.</li>
             </ol>
-            <p>$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{CE}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$</p>
+            <p>$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$</p>
 
             <h3 id="42-model-info">4.2 Model Info</h3>
             <ul>
                 <li><strong>Model Key</strong>: <code>forex_predictor</code></li>
-                <li><strong>Architecture</strong>: Multi-Scale Causal TCN + Cross-Timeframe Attention</li>
-                <li><strong>Embedding Dimension ($d_{\text{model}}$)</strong>: 128</li>
-                <li><strong>Attention Heads</strong>: 4</li>
-                <li><strong>Parameters</strong>: 1.84M FP32 Parameters (7.36 MB)</li>
+                <li><strong>Architecture</strong>: Multi-Scale Causal TCN + Cross-Timeframe Attention (with Stochastic Depth)</li>
+                <li><strong>Embedding Dimension ($d_{\text{model}}$)</strong>: 192</li>
+                <li><strong>Attention Heads</strong>: 6</li>
+                <li><strong>Parameters</strong>: 2.75M FP32 Parameters (~11 MB)</li>
                 <li><strong>Primary Checkpoint</strong>: <code>ForexPredictorWeights_FP32.pth</code></li>
                 <li><strong>ONNX Export</strong>: <code>ForexPredictor.onnx</code> (Opset 17, Fixed Shape)</li>
             </ul>
@@ -266,7 +274,7 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
                 <li><strong>Dataset Identifier</strong>: <code>LemGendizedForexPredictorLarge</code></li>
                 <li><strong>Total Physical Size</strong>: 767.57 MB</li>
                 <li><strong>Samples</strong>: 428,940 windowed sequences</li>
-                <li><strong>Normalized Features (10)</strong>: Open, High, Low, Close, Tick Volume, RSI (14), MACD (12,26,9), MACD Signal, ATR (14), Bollinger Band Width (20,2).</li>
+                <li><strong>Normalized Features (14)</strong>: Open, High, Low, Close, Tick Volume, RSI (14), MACD (12,26,9), MACD Signal, ATR (14), Bollinger Band Width (20,2), Session Sine, Session Cosine, ATR Percentile, Bar Range Ratio.</li>
             </ul>
 
             <h3 id="44-performance-metrics">4.4 Performance Metrics</h3>
@@ -352,9 +360,9 @@ Fold 6: [2019 -------------------------------------------------- 2025] --> [Val:
 
             <h3 id="46-model-specific-issues-and-optimizations">4.6 Model Specific Issues and Optimizations</h3>
             <ol>
-                <li><strong>Anti-Hold Entropy Regularization</strong>: In financial classification, models frequently collapse into predicting the majority "HOLD" class to minimize cross-entropy loss. We inject an explicit entropy penalty $-\lambda_{\mathcal{H}} \mathcal{H}(p)$ with $\lambda_{\mathcal{H}} = 0.05$ that forces the model to maintain decisive directional conviction.</li>
-                <li><strong>Confidence-Gated Magnitude Regression</strong>: Magnitude loss is modulated by directional certainty. If directional entropy is high, the sample's contribution to pip regression loss is dynamically attenuated.</li>
-                <li><strong>High-Entropy Governor Resilience</strong>: Financial time-series contain massive natural variance (turbulence). The <code>SmartTrainingGovernor</code> bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $2.0\times$ multiplier across a sustained 5-epoch window. The manifold collapse guard is recalibrated to trigger only if Directional Accuracy falls below $45.0\%$, preventing false-positive training retreats.</li>
+                <li><strong>Focal Loss Regularization</strong>: We replace standard Cross-Entropy with a focal loss ($\gamma = 2.0$) heavily penalizing false convictions and asymmetric class weights ([1.3, 0.7, 1.3]) to avert class collapse into the Sideways/Hold category.</li>
+                <li><strong>Directional Entropy (DirEntropy)</strong>: The framework dynamically tracks Shannon Entropy across class predictions. High entropy lowers the contribution of magnitude gradients via the confidence gate, preventing the model from fitting arbitrary pip magnitudes on uncertain direction bars.</li>
+                <li><strong>High-Entropy Governor Resilience</strong>: Financial time-series contain massive natural variance (turbulence). The <code>SmartTrainingGovernor</code> bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $1.5\times$ multiplier.</li>
             </ol>
 
             <h3 id="47-consolidated-sota-benchmarks">4.7 Consolidated SOTA Benchmarks</h3>

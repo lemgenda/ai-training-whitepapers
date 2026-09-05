@@ -79,7 +79,7 @@ To empirically validate these system-level optimizations, execution profiles wer
   * **Standardized `dataset_info.yaml`**: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.
 
 * **MetaTrader 5 (MT5) Auto-Acquisition**:
-  For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It scans the local `data\forex` cache against the requested configuration (`pairs_list`). If any currency pair shards are missing, the compiler seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It extracts, resamples, and compiles the missing historical OHLCV data on-the-fly, bridging the gap between quantitative finance platforms and AI training suites.
+  For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It compiles the missing historical OHLCV data on-the-fly, computing 14 high-fidelity quantitative features (including RSI, MACD, ATR, BBW, Time-Session Encodings, ATR Percentiles, and Bar Range Ratios) and synchronizing shards end-to-end.
 
 ---
 
