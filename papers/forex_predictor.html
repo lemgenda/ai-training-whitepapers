@@ -256,9 +256,9 @@ Global Validation Set (Val): [2026] (Current Live Market Out-of-Sample)</code></
             <p>The <strong>ForexPredictor</strong> outputs dual synchronous heads:</p>
             <ol>
                 <li><strong>Direction Head ($\hat{\mathbf{y}}_{\text{dir}}$)</strong>: 3-class probability distribution ($\text{Class } 0 = \text{SELL}, \text{Class } 1 = \text{HOLD}, \text{Class } 2 = \text{BUY}$).</li>
-                <li><strong>Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)</strong>: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips, clamped to a maximum of 200 pips to ensure stability.</li>
+                <li><strong>Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)</strong>: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in Normalized Pip Units (NPUs, $[0, 100]$), normalized across varied asset classes via dynamic pair scaling factors ($\text{NPU} = \text{Raw Pips} / \text{PAIR\_PIP\_SCALE}$).</li>
             </ol>
-            <p>$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$</p>
+            <p>$$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + 0.02 \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$</p>
 
             <h3 id="42-model-info">4.2 Model Info</h3>
             <ul>
@@ -365,6 +365,8 @@ Global Validation Set (Val): [2026] (Current Live Market Out-of-Sample)</code></
                 <li><strong>Focal Loss Regularization</strong>: We replace standard Cross-Entropy with a focal loss ($\gamma = 2.0$) heavily penalizing false convictions and asymmetric class weights ([1.3, 0.7, 1.3]) to avert class collapse into the Sideways/Hold category.</li>
                 <li><strong>Directional Entropy (DirEntropy)</strong>: The framework dynamically tracks Shannon Entropy across class predictions. High entropy lowers the contribution of magnitude gradients via the confidence gate, preventing the model from fitting arbitrary pip magnitudes on uncertain direction bars.</li>
                 <li><strong>High-Entropy Governor Resilience</strong>: Financial time-series contain massive natural variance (turbulence). The <code>SmartTrainingGovernor</code> bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $1.5\times$ multiplier.</li>
+                <li><strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong>: Commodity assets (Gold, Oil) and equity indices (US500, USTEC, GER40) exhibit multi-thousand pip volatility swings that overpower standard currency majors. The framework standardizes all target and predicted magnitudes into Normalized Pip Units ($\text{NPU} = \text{Pips} / \text{PAIR\_PIP\_SCALE}$), applying a scale factor of $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices. This eliminates magnitude head saturation and stabilizes validation losses.</li>
+                <li><strong>Governor Financial Hardening &amp; Thermal Anchoring</strong>: In high-entropy, low signal-to-noise financial regimes, standard temperature sharpening causes severe gradient instability. The <code>SmartTrainingGovernor</code> enforces a strict temperature floor ($\min T = 0.75$), constrains the Stress Protocol ($\le 2.0$), limits differential learning rate jolts to $\le 1.15\times$, and categorizes training as <code>CURRICULUM_FOLD</code> to prevent erroneous spatial ladder transitions.</li>
             </ol>
 
             <h3 id="47-consolidated-sota-benchmarks">4.7 Consolidated SOTA Benchmarks</h3>

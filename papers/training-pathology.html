@@ -22,7 +22,7 @@
             <div class="meta">
                 <span>By Lem Treursić</span>
                 <span>Version: 1.3.0 (Governor v17 Hardened)</span>
-                <span>Category 03</span>
+                <span>Category 05</span>
             </div>
         </header>
 
@@ -50,6 +50,7 @@
                         <li><a href="#vram-fragmentation">The Persistent Worker VRAM Fragmentation (Kaggle OOM)</a></li>
                         <li><a href="#catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</a></li>
                         <li><a href="#metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</a></li>
+                        <li><a href="#financial-pip-mismatch">Multi-Asset Pip Magnitude Mismatch &amp; Temperature Sharpening Collapse</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-7">5. High-Fidelity Strategy (v16.2.8)</a>
@@ -223,6 +224,12 @@
                         <td>Model expands dataset fraction (e.g. 75% &rarr; 90%) on preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior to expansion. Preemption rolls state back to 75%.</td>
                         <td><strong>Fraction Recoil</strong>: Terminal logs report fraction expansion, but subsequent session resumes revert to previous fraction, trapping training in a fraction loop.</td>
                         <td><strong>Atomic Fraction Persistence (v16.3.4)</strong>. Flush live <code>governor.get_state()</code> into checkpoint payload immediately upon fraction promotion and re-save both <code>_latest.pth</code> and <code>_best.pth</code>. Anchor Hub Lock to live governor state.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Asset Pip Scale Mismatch &amp; Thermal Sharpening Collapse</strong></td>
+                        <td>Multi-asset financial models trained concurrently on currencies, commodities, and indices; commodity/index volatility (1,000–8,000 pips) overpowers a clamped magnitude head (200 pips), while low-SNR temperature sharpening (&lt; 0.20) causes extreme logit sensitivity.</td>
+                        <td>Validation loss explodes to 230+, TP/SL MAE flatlines at ~1,440 pips, and Governor false-triggers Stress Protocol Level 4.0 due to fixed 100% sample fraction.</td>
+                        <td>Implement <strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong> standardizing targets to Normalized Pip Units ($[0, 100]$ NPUs); enforce <strong>Financial Governor Hardening</strong> with a strict temperature floor ($\min T = 0.75$), bounded LR jolts (&le; 1.15&times;), and <code>CURRICULUM_FOLD</code> phase classification.</td>
                     </tr>
 </tbody>
                 </table>
@@ -455,6 +462,19 @@
                         <li>Boost <code>soft_spearman_weight</code> up to <code>2.0</code> if SRCC is lagging.</li>
                         <li>Increase <code>lpips_weight</code> dynamically if perceptual geometry is lagging behind PSNR.</li>
                         <li>Modulate <code>dir_weight</code> versus <code>mag_weight</code> in Forex manifolds if Directional Accuracy plateaus.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3 id="financial-pip-mismatch">Multi-Asset Pip Magnitude Mismatch &amp; Temperature Sharpening Collapse (Financial Manifolds)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: In multi-asset financial models trained concurrently across currencies, commodities, and indices, pip magnitude scales differ by orders of magnitude (e.g. EURUSD moves 15–50 pips, whereas Spot Gold moves 1,500–3,000 pips and NASDAQ moves 4,000–8,000 pips). When models employ a clamped magnitude head (e.g. 200 pips) without cross-asset normalization, commodity errors generate an irreducible ~1,400 pip loss gradient per batch, inflating validation loss from ~9.3 to 232+ and locking TP/SL MAE at 1,415–1,440 pips. Simultaneously, applying image-domain temperature sharpening down to $T \le 0.14$ scales low signal-to-noise financial logits by $7\times$, causing severe probability overconfidence and gradient explosions. Furthermore, because causal time-series data cannot be randomly subsampled (fixed sample fraction = 1.0), the Governor diagnoses false dataset exhaustion and deploys destructive Level 4.0 Stress Protocols.</li>
+                <li><strong>Identification</strong>: Validation loss explodes to 230+ while training loss remains low (~9.3); TP/SL MAE flatlines at ~1,415–1,440 pips; <code>softmax_temp</code> drops to 0.14 or below; and Governor logs report <code>[RESCUE] [OVERFITTING] Dataset exhausted. Deploying Stress Protocol (Level 4.0)</code>.</li>
+                <li><strong>Remedy</strong>:
+                    <ol>
+                        <li><strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong>: Standardize all prediction targets and magnitude outputs into Normalized Pip Units ($\text{NPU} = \text{Raw Pips} / \text{PAIR\_PIP\_SCALE} \in [0, 100]$), applying scaling factors: $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices.</li>
+                        <li><strong>Calibrated Dual Loss</strong>: Rebalance <code>ForexDualLoss</code> with <code>direction_weight=0.5</code> and <code>magnitude_weight=0.02</code> ($\delta=2.0$ Huber on NPUs), returning loss values to the clean $0.05\text{--}1.0$ numerical range.</li>
+                        <li><strong>Governor Financial Safeguards</strong>: Enforce a strict temperature floor ($\min T = 0.75$), constrain Stress Protocol regularization (&le; 2.0), limit differential LR jolts to &le; 1.15&times;, and classify financial training phases as <code>CURRICULUM_FOLD</code>.</li>
                     </ol>
                 </li>
             </ul>

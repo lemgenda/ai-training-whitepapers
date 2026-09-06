@@ -193,9 +193,9 @@ This minimal memory complexity allows real-time evaluation on consumer hardware 
 The **ForexPredictor** outputs dual synchronous heads:
 
 1. **Direction Head ($\hat{\mathbf{y}}_{\text{dir}}$)**: 3-class probability distribution ($\text{Class } 0 = \text{SELL}, \text{Class } 1 = \text{HOLD}, \text{Class } 2 = \text{BUY}$).
-2. **Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)**: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in pips, clamped to a maximum of 200 pips to ensure stability.
+2. **Magnitude Head ($\hat{\mathbf{y}}_{\text{mag}}$)**: Continuous 2-dimensional regression predicting optimal Take-Profit ($\text{TP}$) and Stop-Loss ($\text{SL}$) boundaries in Normalized Pip Units (NPUs, $[0, 100]$), normalized across varied asset classes via dynamic pair scaling factors ($\text{NPU} = \text{Raw Pips} / \text{PAIR\_PIP\_SCALE}$).
 
-$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + \alpha \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$
+$$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\text{dir}}, \mathbf{y}_{\text{dir}}) + 0.02 \cdot \mathcal{L}_{\text{Huber}}(\hat{\mathbf{y}}_{\text{mag}}, \mathbf{y}_{\text{mag}}) - \lambda_{\mathcal{H}} \cdot \mathcal{H}(\sigma(\hat{\mathbf{y}}_{\text{dir}}))$$
 
 ### 4.2 Model Info
 
@@ -237,6 +237,8 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{Focal}}(\hat{\mathbf{y}}_{\tex
 1. **Focal Loss Regularization**: We replace standard Cross-Entropy with a focal loss ($\gamma = 2.0$) heavily penalizing false convictions and asymmetric class weights ([1.3, 0.7, 1.3]) to avert class collapse into the Sideways/Hold category.
 2. **Directional Entropy (DirEntropy)**: The framework dynamically tracks Shannon Entropy across class predictions. High entropy lowers the contribution of magnitude gradients via the confidence gate, preventing the model from fitting arbitrary pip magnitudes on uncertain direction bars.
 3. **High-Entropy Governor Resilience**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $1.5\times$ multiplier.
+4. **Multi-Asset Pip Scale Normalization (`PAIR_PIP_SCALE`)**: Commodity assets (Gold, Oil) and equity indices (US500, USTEC, GER40) exhibit multi-thousand pip volatility swings that overpower standard currency majors. The framework standardizes all target and predicted magnitudes into Normalized Pip Units ($\text{NPU} = \text{Pips} / \text{PAIR\_PIP\_SCALE}$), applying a scale factor of $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices. This eliminates magnitude head saturation and stabilizes validation losses.
+5. **Governor Financial Hardening & Thermal Anchoring**: In high-entropy, low signal-to-noise financial regimes, standard temperature sharpening causes severe gradient instability. The `SmartTrainingGovernor` enforces a strict temperature floor ($\min T = 0.75$), constrains the Stress Protocol ($\le 2.0$), limits differential learning rate jolts to $\le 1.15\times$, and categorizes training as `CURRICULUM_FOLD` to prevent erroneous spatial ladder transitions.
 
 ### 4.7 Consolidated SOTA Benchmarks
 

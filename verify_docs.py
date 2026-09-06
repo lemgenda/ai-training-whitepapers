@@ -38,6 +38,7 @@ PAPER_PAIRS = [
     ("MD-Papers/PAPER_TRAINING_SUITE.md", "papers/training-suite-master.html"),
     ("MD-Papers/PAPER_AI_STUDIO_GUI.md", "papers/ai-studio-whitepaper.html"),
     ("MD-Papers/MANUAL_AI_STUDIO_GUI.md", "papers/ai-studio-manual.html"),
+    ("MD-Papers/PAPER_ENV_MANAGER.md", "papers/env_manager.html"),
 ]
 
 
@@ -276,8 +277,10 @@ def extract_md_sections(md_text: str) -> dict[str, str]:
 
 def extract_html_sections(html_text: str) -> dict[str, str]:
     soup = BeautifulSoup(html_text, "html.parser")
-    for tag in soup.find_all(["nav", "header", "footer", "script", "style"]):
+    for tag in soup.find_all(["nav", "header", "footer", "script", "style", "pre"]):
         tag.decompose()
+    for cb in soup.find_all(class_="cli-block"):
+        cb.decompose()
     for modal in soup.find_all("div", class_="modal"):
         modal.decompose()
 
@@ -333,11 +336,19 @@ def check_word_synchronization(min_similarity: float = 0.85, target_pairs: list[
             matched_md = None
             h_num = html_title.split(".")[0].strip() if "." in html_title else ""
 
+            # Prioritize title text match to avoid collisions when numbering restarts across document parts
             for md_title, md_content in md_secs.items():
-                m_num = md_title.split(".")[0].strip() if "." in md_title else ""
-                if (h_num and h_num == m_num) or (html_title.lower() in md_title.lower()) or (md_title.lower() in html_title.lower()):
+                if (html_title.lower() == md_title.lower()) or (html_title.lower() in md_title.lower()) or (md_title.lower() in html_title.lower()):
                     matched_md = md_content
                     break
+
+            # Fallback to section number match if title did not match
+            if not matched_md:
+                for md_title, md_content in md_secs.items():
+                    m_num = md_title.split(".")[0].strip() if "." in md_title else ""
+                    if h_num and h_num == m_num:
+                        matched_md = md_content
+                        break
 
             w_html = tokenize(html_content)
             total_html_words += len(w_html)

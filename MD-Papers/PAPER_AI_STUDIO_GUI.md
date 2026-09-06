@@ -1,5 +1,22 @@
 # LemGendary AI Studio GUI: Architectural Whitepaper
 
+## Category 04 | LemGendary AI Documentation Hub
+
+---
+
+## Table of Contents
+
+- [1. Abstract](#1-abstract)
+- [2. High-Velocity Optimizations](#2-high-velocity-optimizations)
+- [3. Hybrid Cloud & Registry Integration](#3-hybrid-cloud--registry-integration)
+- [4. Multi-Modal & Format Resilience](#4-multi-modal--format-resilience)
+- [5. Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
+- [6. Synthesis Flow & Topology](#6-synthesis-flow--topology)
+- [7. Unified Models Registry](#7-unified-models-registry)
+- [8. Conclusion](#8-conclusion)
+
+---
+
 ## 1. Abstract
 
 The LemGendary AI Studio Desktop GUI establishes an authoritative, hardware-aware desktop orchestration system engineered to provide a low-latency, deterministic control plane for machine learning workflows. Addressing developer friction, process fragmentation, and high memory footprints inherent in traditional web wrappers, this architecture decouples native operating system integration from presentation logic using a high-throughput Rust sidecar boundary, a reactive React 18 frontend, and a local WebSocket telemetry channel. Through asynchronous process multiplexing, strict zero-copy IPC streaming, and native DirectML/CUDA accelerator probing, the system achieves sub-millisecond control loop responsiveness while minimizing memory overhead to under 45 megabytes.

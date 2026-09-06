@@ -1,5 +1,22 @@
 # LemGendary AI Studio GUI: Comprehensive Operator Manual
 
+## Category 04 | LemGendary AI Documentation Hub
+
+---
+
+## Table of Contents
+
+- [1. Abstract](#1-abstract)
+- [2. Interface Topology & Navigation](#2-interface-topology--navigation)
+- [3. Control Dashboard & System Probing](#3-control-dashboard--system-probing)
+- [4. Smart Clean Install Pipeline Execution](#4-smart-clean-install-pipeline-execution)
+- [5. Health Matrix & Version Drift Analytics](#5-health-matrix--version-drift-analytics)
+- [6. Real-Time Telemetry & Console Diagnostics](#6-real-time-telemetry--console-diagnostics)
+- [7. Dataset Compiler Operations via GUI](#7-dataset-compiler-operations-via-gui)
+- [8. Training Suite Operations via GUI](#8-training-suite-operations-via-gui)
+
+---
+
 ## 1. Abstract
 
 This comprehensive operator manual provides exhaustive, step-by-step documentation for the LemGendary AI Studio Desktop GUI, its real-time telemetry control plane, and its unified management interface spanning the Dataset Compiler Suite and Master Training Suite. Designed for researchers, machine learning engineers, and algorithmic traders, this guide details every interactive screen, menu, action button, toggle, and status readout across the system. In addition, this manual systematically documents operational workflows, industrial synthesis tricks, memory protection governors, dynamic spatial ladders, and cloud synchronization procedures executed via graphical controls and automated sidecar commands.
