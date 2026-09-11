@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: Multi-Scale CNN-Transformer Forex & Commodity Predictor
 
 **Author**: Lem Treursić  
-**Version**: 2.6.0 - Quantitative Manifold Matrix (2026 Specialization)  
+**Version**: 2.7.0 - Quantitative Manifold Matrix (2026 Specialization - v17.6 Engine)  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
 ---
@@ -69,6 +69,12 @@ $$\mathcal{U}_{\text{core}} = \{ \text{EURUSD}, \text{GBPUSD}, \text{USDJPY}, \t
 
 The overarching strategy of the LemGendary ForexPredictor is to construct a **Financial Foundation Model**. Financial markets are not isolated bubbles; they are a deeply interconnected ecosystem. For instance, when global equities (e.g., US500, GER40) experience severe drawdowns, capital typically flows into safe-haven assets (XAUUSD spikes, USDJPY drops). By exposing the neural network to 16 diverse assets simultaneously during training, the model is forced to learn these hidden macro-economic correlations. This Cross-Asset Regularization prevents the model from overfitting to the micro-structure of a single currency pair, yielding a vastly more intelligent and resilient core brain that understands universal market dynamics.
 
+The 16-symbol physical manifold (`LemGendizedForexUniverseLarge`, 2019–2026) encapsulates 30,810,572 windowed samples across G7 currency pairs, precious metals, crude energy, and major equity indices:
+
+$$\mathcal{U}_{\text{universe}} = \mathcal{U}_{\text{core}} \cup \{ \text{USDCAD}, \text{USDCHF}, \text{AUDUSD}, \text{NZDUSD}, \text{EURJPY}, \text{GBPJPY}, \text{EURGBP}, \text{XAGUSD}, \text{USOIL}, \text{US500}, \text{NAS100}, \text{DE40} \}$$
+
+To resolve heterogeneous brokerage ticker nomenclatures across live MetaTrader 5 terminals, the ingestion engine implements bidirectional **Symbol Aliasing** ($\text{NAS100} \leftrightarrow \text{USTEC}$, $\text{DE40} \leftrightarrow \text{GER40}$). Alternate symbols are dynamically mapped to canonical embedding indices and pip scale configurations, preventing missing tensor key errors during multi-broker deployment.
+
 ### 2.3 Future Expansion Strategy (Crosses & Exotics)
 
 While the 16-symbol Foundation Model captures over 85% of global trading volume, extending the network into illiquid markets requires a specialized deployment strategy:
@@ -129,19 +135,29 @@ $$\mathbf{e}_{\text{fused}} = \text{Concat}\left(\text{head}_1, \dots, \text{hea
 
 where $\mathbf{E}_{\text{pair}}(p) \in \mathbb{R}^{d_{\text{model}}}$ is the learned pair embedding representing currency-specific volatility dynamics.
 
-### 3.3 1-Year Progressive Chronological Walk-Forward Matrix
+#### Timeframe Dropout Regularizer ($p=0.15$)
 
-Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary dataset compiler implements a strictly isolated, **1-Year Progressive Chronological Walk-Forward Matrix** (Fold 1 spans 2 years as a baseline, Folds 2-6 expand by 1 year each) feeding into a global Out-of-Sample 2026 validation set:
+To prevent the attention mechanism from over-relying on high-frequency noise from any single temporal rung or suffering from co-adaptation across adjacent horizons, the fusion block incorporates **Timeframe Dropout Regularization**. During training when $T > 1$ timeframes are active, a stochastic masking vector $\mathbf{m} \in \{0, 1\}^T$ is sampled with drop probability $p_{\text{tf}} = 0.15$:
+
+$$m_j \sim \text{Bernoulli}(1 - p_{\text{tf}}), \quad j \in \{1, \dots, T\}$$
+
+To eliminate catastrophic information blackout where all timeframes are dropped simultaneously, an unconditional fallback gate ensures at least one timeframe remains active:
+
+$$\mathbf{m}^* = \begin{cases} \mathbf{m}, & \text{if } \sum_{j=1}^T m_j > 0 \\ \mathbf{e}_{j^*}, \quad j^* \sim \mathcal{U}(1, T), & \text{if } \sum_{j=1}^T m_j = 0 \end{cases}$$
+
+The masked timeframe embedding matrix $\tilde{\mathbf{Z}} = \mathbf{Z} \odot (\mathbf{m}^* \mathbf{1}_{d_{\text{model}}}^T)$ is then supplied to the cross-timeframe projection matrices ($\mathbf{Q} = \tilde{\mathbf{Z}} \mathbf{W}_Q, \mathbf{K} = \tilde{\mathbf{Z}} \mathbf{W}_K, \mathbf{V} = \tilde{\mathbf{Z}} \mathbf{W}_V$). This forces each temporal encoder to maintain standalone predictive utility while compelling the attention fusion layer to learn robust inter-temporal representations.
+
+### 3.3 6-Fold Anchored Walk-Forward Cross-Validation Matrix
+
+Time-series cross-validation must strictly preserve chronological order. Standard random $K$-fold cross-validation suffers from lookahead leakage. The LemGendary dataset compiler implements a strictly isolated, **6-Fold Expanding-Window Walk-Forward Matrix** (2019–2026) with a 14-day anti-leakage embargo gap between training partitions and evaluation windows:
 
 ```text
-Fold 1: [2019 ------------- 2020] (Pre-Pandemic & Peak Volatility Baseline)
-Fold 2: [2021] (Recovery & Supply Chain Stress)
-Fold 3: [2022] (Global Rate Hikes & Dollar Surge)
-Fold 4: [2023] (Inflation Peaks & Consolidation)
-Fold 5: [2024] (Central Bank Pivot)
-Fold 6: [2025] (Modern High-Fidelity Consolidations)
-
-Global Validation Set (Val): [2026] (Current Live Market Out-of-Sample)
+Fold 1: Train [2019-2020] -> Validation [2021] (Baseline & Recovery Stress)
+Fold 2: Train [2019-2021] -> Validation [2022] (Global Rate Hikes & Dollar Surge)
+Fold 3: Train [2019-2022] -> Validation [2023] (Inflation Peaks & Regime Shifts)
+Fold 4: Train [2019-2023] -> Validation [2024] (Central Bank Pivot)
+Fold 5: Train [2019-2024] -> Validation [2025] (Modern High-Fidelity Consolidations)
+Fold 6: Train [2019-2025] -> Validation [2026] (Current Live Market Out-of-Sample)
 ```
 
 ### 3.4 Quantitative Evaluation Formulations & Scoring
@@ -209,9 +225,10 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 
 ### 4.3 Manifold Info
 
-- **Dataset Identifier**: `LemGendizedForexPredictorLarge`
-- **Total Physical Size**: 767.57 MB
-- **Samples**: 428,940 windowed sequences
+- **Dataset Identifier**: `LemGendizedForexUniverseLarge` (with modular packages: `LemGendizedForexTitanCoreLarge`, `LemGendizedForexG7MajorsLarge`, `LemGendizedForexHighBetaLarge`)
+- **Total Physical Samples**: 30,810,572 windowed sequences (2019–2026) across 16 symbols and 6 timeframe rungs
+- **Windowed Subsets**: 428,940 core windowed sequences per training epoch fraction
+- **Broker Symbol Aliases**: `NAS100` $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`
 - **Normalized Features (14)**: Open, High, Low, Close, Tick Volume, RSI (14), MACD (12,26,9), MACD Signal, ATR (14), Bollinger Band Width (20,2), Session Sine, Session Cosine, ATR Percentile, Bar Range Ratio.
 
 ### 4.4 Performance Metrics
@@ -236,9 +253,11 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 
 1. **Focal Loss Regularization**: We replace standard Cross-Entropy with a focal loss ($\gamma = 2.0$) heavily penalizing false convictions and asymmetric class weights ([1.3, 0.7, 1.3]) to avert class collapse into the Sideways/Hold category.
 2. **Directional Entropy (DirEntropy)**: The framework dynamically tracks Shannon Entropy across class predictions. High entropy lowers the contribution of magnitude gradients via the confidence gate, preventing the model from fitting arbitrary pip magnitudes on uncertain direction bars.
-3. **High-Entropy Governor Resilience**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, allowing the Intense Cyclical Learning Rate (Jolt Protocol) to execute a $1.5\times$ multiplier.
-4. **Multi-Asset Pip Scale Normalization (`PAIR_PIP_SCALE`)**: Commodity assets (Gold, Oil) and equity indices (US500, USTEC, GER40) exhibit multi-thousand pip volatility swings that overpower standard currency majors. The framework standardizes all target and predicted magnitudes into Normalized Pip Units ($\text{NPU} = \text{Pips} / \text{PAIR\_PIP\_SCALE}$), applying a scale factor of $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices. This eliminates magnitude head saturation and stabilizes validation losses.
-5. **Governor Financial Hardening & Thermal Anchoring**: In high-entropy, low signal-to-noise financial regimes, standard temperature sharpening causes severe gradient instability. The `SmartTrainingGovernor` enforces a strict temperature floor ($\min T = 0.75$), constrains the Stress Protocol ($\le 2.0$), limits differential learning rate jolts to $\le 1.15\times$, and categorizes training as `CURRICULUM_FOLD` to prevent erroneous spatial ladder transitions.
+3. **High-Entropy Governor Resilience (v17.2)**: Financial time-series contain massive natural variance (turbulence). The `SmartTrainingGovernor` bypasses the standard Turbulence Shield specifically for Forex, doubling the Intense Cyclical Learning Rate (Jolt Protocol) intensity ($2.0\times$ multiplier over 5-epoch windows) while extending absolute plateau patience to prevent false-positive retreats.
+4. **Multi-Asset Pip Scale Normalization (`PAIR_PIP_SCALE`) (v17.4)**: Commodity assets (Gold, Oil) and equity indices (US500, USTEC, GER40) exhibit multi-thousand pip volatility swings that overpower standard currency majors. The framework standardizes all target and predicted magnitudes into Normalized Pip Units ($\text{NPU} = \text{Pips} / \text{PAIR\_PIP\_SCALE}$), applying a scale factor of $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices. This eliminates magnitude head saturation and stabilizes validation losses.
+5. **Governor Financial Hardening & Thermal Anchoring (v17.4)**: In high-entropy, low signal-to-noise financial regimes, standard temperature sharpening causes severe gradient instability. The `SmartTrainingGovernor` enforces a strict temperature floor ($\min T = 0.75$), constrains the Stress Protocol ($\le 2.0$), limits differential learning rate jolts to $\le 1.15\times$, and categorizes training as `CURRICULUM_FOLD` to prevent erroneous spatial ladder transitions.
+6. **Timeframe Dropout Regularization (v17.6)**: Injects stochastic temporal masking ($p=0.15$) during training forward passes to prevent single-timeframe co-adaptation and high-frequency noise fitting across the multi-scale attention heads.
+7. **Clean Training Execution & Checkpoint Isolation (v17.5)**: The CLI (`train.py`) and curriculum orchestrator (`train_forex_curriculum.py`) support `--clean` / `--fresh` flags to initiate runs from epoch 1 without phantom checkpoint resurrection. When active, Hub Sync bypasses `git lfs pull`, purges local residual checkpoints, resets `curriculum_state.json`, and wipes `metrics.csv`. All checkpoints (`_latest`, `_best`, `_progress`, and `_vault_`) are strictly saved to and loaded from isolated model directories (`LemGendaryModels/<model>/checkpoints/`).
 
 ### 4.7 Consolidated SOTA Benchmarks
 
@@ -359,10 +378,11 @@ The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
 
 The **LemGendary ForexPredictor** sets a new standard for quantitative deep learning in foreign exchange and commodity trading. By combining multi-timeframe causal dilated convolutions with cross-temporal attention fusion and 6-fold walk-forward validation, the model achieves superior risk-adjusted returns while eliminating future lookahead bias. The lightweight stateless architecture guarantees sub-5ms deployment readiness for live MetaTrader 5 algorithmic execution.
 
-### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
+### Quantitative Financial Foundation Innovations (v17.1–v17.6)
 
-- **Dynamic Severity Thresholds**: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.
-- **Metric Deficit Engine**: The `SmartTrainingGovernor` tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).
-- **Metric Focus Burst**: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting `srcc` rank weight).
-- **Metric-Specific SWA (MS-SWA)**: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.
-- **Differentiable Soft-Spearman Loss**: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue ($N=32$) to maintain ranking context across micro-batches ($b=2$).
+- **Walk-Forward Curriculum Orchestration (v17.1)**: Automated 6-fold spatial-temporal expansion matrix (Phase 1: 4 Pairs $\to$ Phase 4: 16 Pairs) featuring dynamic patience-based early stopping to sever unpromising folds and cascade checkpoints forward without fixed epoch starvation.
+- **Forex High-Entropy Resilience (v17.2)**: `SmartTrainingGovernor` bypasses standard Turbulence Shields for financial manifolds, doubling the Intense Cyclical Learning Rate (Jolt Protocol) intensity ($2.0\times$ multiplier over 5-epoch windows) while extending absolute plateau patience to prevent false-positive retreats.
+- **Multi-Phase Fold Parity Verification (v17.3)**: Proactively verifies identical fold counts across all active curriculum phases before execution, preventing mismatched Walk-Forward Cross-Validation splits when using reduced manifold subsets.
+- **Normalized Pip Scaling & Financial Governance Hardening (v17.4)**: Solves commodity and equity index pip scale divergence via `PAIR_PIP_SCALE` mapping (FX Majors 1.0, Commodities 5.0–10.0, Indices 20.0–40.0) standardizing regression targets to 0–100 NPUs, enforcing a 0.75 temperature floor, and gating differential LR jolts to $\le 1.15\times$.
+- **Clean Training Execution & Checkpoint Isolation (v17.5)**: Clean execution CLI flags (`--clean` / `--fresh`) reset `curriculum_state.json`, wipe `metrics.csv`, and strictly isolate all checkpoints into `LemGendaryModels/<model>/checkpoints/`.
+- **16-Symbol Forex Universe & Timeframe Dropout Regularizer (v17.6)**: Ingestion of `LemGendizedForexUniverseLarge` (30.8M samples across 2019–2026) with expanding-window 6-fold WFCV, broker symbol aliasing (`NAS100` $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`), and stochastic timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.
