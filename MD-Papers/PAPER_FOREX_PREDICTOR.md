@@ -225,7 +225,7 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 
 ### 4.3 Manifold Info
 
-- **Dataset Identifier**: `LemGendizedForexUniverseLarge` (with modular packages: `LemGendizedForexTitanCoreLarge`, `LemGendizedForexG7MajorsLarge`, `LemGendizedForexHighBetaLarge`)
+- **Dataset Identifier**: `LemGendizedForexUniverseLarge` (Unified 16-Symbol Financial Foundation Manifold)
 - **Total Physical Samples**: 30,810,572 windowed sequences (2019–2026) across 16 symbols and 6 timeframe rungs
 - **Windowed Subsets**: 428,940 core windowed sequences per training epoch fraction
 - **Broker Symbol Aliases**: `NAS100` $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`
@@ -275,12 +275,12 @@ The Smart Governor expands the dataset fraction from 15% to 100% across the Walk
 
 #### 4.8.1 Walk-Forward Curriculum Expansion
 
-To robustly learn complex non-stationary regimes, the architecture is supervised through a `train_forex_curriculum.py` orchestration loop:
+To robustly learn complex non-stationary regimes, the architecture is supervised through a `train_forex_curriculum.py` orchestration loop executing across the 6-Fold Walk-Forward matrix (`active_folds: [1, 2, 3, 4, 5, 6]`):
 
-1. **Phase 1 (Titan 4 Core)**: Training initialized on 4 major pairs (EURUSD, GBPUSD, USDJPY, XAUUSD).
-2. **Phase 2 (G7 Majors)**: Expanded to 8 pairs.
-3. **Phase 3 (High-Beta Crosses)**: Expanded to 12 pairs.
-4. **Phase 4 (Full Universe)**: Final fine-tuning across the entire 16-pair universe.
+1. **Stage 1 (Macro Confluence)**: Initial training on macro horizons ($\text{H1}, \text{H4}, \text{D1}$) across all 16 symbols to establish stable trend and regime representations.
+2. **Stage 2 (Swing Confluence)**: Expanded to incorporate intermediate swing horizons ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$).
+3. **Stage 3 (Intraday Confluence)**: Expanded to incorporate high-frequency intraday momentum ($\text{M5}, \text{M15}, \text{H1}, \text{H4}, \text{D1}$).
+4. **Stage 4 (Full Multi-Scale Universe)**: Complete multi-scale confluence training across all 6 timeframes ($\text{M1}, \text{M5}, \text{M15}, \text{H1}, \text{H4}, \text{D1}$).
 
 The Patience-Based Early Stopping mechanism evaluates convergence over an objective $K$-fold temporal validation matrix $\mathcal{M}_{\text{WF}}$:
 
@@ -294,19 +294,16 @@ This progressive staging prevents gradient collapse when exposing the network to
 
 **Dynamic Orchestrator Target Scaling**: The orchestrator is designed to safely interact with the `train.py` Resiliency Guardrail. If a fold dynamically extends past its base epochs to force SOTA convergence, the curriculum orchestrator will automatically read the actual model epoch from `metrics.csv` upon the next fold's launch. It then dynamically scales the next fold's target (e.g., `current_epoch + epochs_per_fold`), ensuring no future folds are starved of their intended training cycles due to previous resiliency extensions.
 
-To overcome severe storage and I/O bottlenecks in cloud environments (e.g., Kaggle's 30GB disk limit), the 300GB monolithic dataset has been heavily refactored into **Modular Data Streaming**. The dataset is sliced into 4 lightweight packages:
+To optimize storage and training throughput, the 30.8M sample physical manifold is packaged into a unified dataset:
 
-- `LemGendizedForexTitanCoreLarge` (Phase 1)
-- `LemGendizedForexG7MajorsLarge` (Phase 2)
-- `LemGendizedForexHighBetaLarge` (Phase 3)
-- `LemGendizedForexUniverseLarge` (Phase 4)
+- `LemGendizedForexUniverseLarge`
 
-Instead of downloading the entire universe at epoch 0, the `ForexDataset` utilizes a **Multi-Root Distributed Loader**. It actively scans the environment (e.g., Kaggle attached datasets or Local downloaded archives) and dynamically mounts the required pairs for the current active curriculum phase, allowing modular scale-up exactly when needed.
+The `ForexDataset` utilizes dynamic timeframe filtering and multi-root discovery. It scans local directory trees or attached archives and mounts the complete 16-symbol universe with zero redundant downloads, scaling timeframe rungs dynamically according to the curriculum stage.
 
 **Configurable Curriculum Reductions & Timeframe Auto-Detection**
-The `train_forex_curriculum.py` orchestrator supports explicit YAML-based reduction of the curriculum matrix. By defining an `active_phases` and `active_folds` block under `forex_predictor.curriculum` in `unified_models_v2.yaml`, the orchestrator filters the execution loop to only process the requested subsets. Furthermore, the `ForexDataset` dynamically computes the strict intersection of all available timeframes across all attached manifolds on disk, automatically dropping any missing timeframes to prevent topology mismatches during training. When Folds are reduced (e.g. from 6 to $N$), the dataset compiler automatically slides the chronological window to the most recent $N+1$ folds, merging the earliest two into a unified pre-training base fold while preserving the validation sequence.
+The `train_forex_curriculum.py` orchestrator supports explicit YAML-based reduction of the curriculum matrix. By defining an `active_folds` block under `forex_predictor.curriculum` in `unified_models_v2.yaml`, the orchestrator filters the execution loop to only process the requested folds. Furthermore, the `ForexDataset` dynamically computes the strict intersection of all available timeframes across attached manifolds on disk, automatically dropping any missing timeframes to prevent topology mismatches during training. When Folds are reduced (e.g. from 6 to $N$), the dataset compiler automatically slides the chronological window to the most recent $N+1$ folds, merging the earliest two into a unified pre-training base fold while preserving the validation sequence.
 
-**Multi-Phase Fold Parity Verification**: When multiple reduced manifolds are supplied across curriculum phases, the orchestrator explicitly verifies that all candidate manifolds share the identical number of folds before starting training. If a fold count discrepancy is detected between active phases, training execution halts immediately with actionable diagnostics to prevent mismatched Walk-Forward cross-validation splits.
+**Dynamic Data Fraction Progression**: The Smart Governor dynamically scales the data fraction from 15% (`initial_fraction: 0.15`) up to 100% in 15% increments (`fraction_increment: 0.15`) as validation loss stabilizes, ensuring rapid epoch iteration during initial feature formation followed by high-capacity convergence.
 
 #### 4.8.2 MetaTrader 5 (MT5) Auto-Acquisition Bridge
 
@@ -380,9 +377,9 @@ The **LemGendary ForexPredictor** sets a new standard for quantitative deep lear
 
 ### Quantitative Financial Foundation Innovations (v17.1–v17.6)
 
-- **Walk-Forward Curriculum Orchestration (v17.1)**: Automated 6-fold spatial-temporal expansion matrix (Phase 1: 4 Pairs $\to$ Phase 4: 16 Pairs) featuring dynamic patience-based early stopping to sever unpromising folds and cascade checkpoints forward without fixed epoch starvation.
+- **Walk-Forward Curriculum Orchestration (v17.1)**: Automated 6-fold temporal expansion matrix with staged timeframe confluence progression featuring dynamic patience-based early stopping to sever unpromising folds and cascade checkpoints forward without fixed epoch starvation.
 - **Forex High-Entropy Resilience (v17.2)**: `SmartTrainingGovernor` bypasses standard Turbulence Shields for financial manifolds, doubling the Intense Cyclical Learning Rate (Jolt Protocol) intensity ($2.0\times$ multiplier over 5-epoch windows) while extending absolute plateau patience to prevent false-positive retreats.
-- **Multi-Phase Fold Parity Verification (v17.3)**: Proactively verifies identical fold counts across all active curriculum phases before execution, preventing mismatched Walk-Forward Cross-Validation splits when using reduced manifold subsets.
+- **Walk-Forward Fold Parity Verification (v17.3)**: Proactively verifies fold count integrity across active curriculum runs before execution, preventing mismatched Walk-Forward Cross-Validation splits when using reduced fold configurations.
 - **Normalized Pip Scaling & Financial Governance Hardening (v17.4)**: Solves commodity and equity index pip scale divergence via `PAIR_PIP_SCALE` mapping (FX Majors 1.0, Commodities 5.0–10.0, Indices 20.0–40.0) standardizing regression targets to 0–100 NPUs, enforcing a 0.75 temperature floor, and gating differential LR jolts to $\le 1.15\times$.
 - **Clean Training Execution & Checkpoint Isolation (v17.5)**: Clean execution CLI flags (`--clean` / `--fresh`) reset `curriculum_state.json`, wipe `metrics.csv`, and strictly isolate all checkpoints into `LemGendaryModels/<model>/checkpoints/`.
 - **16-Symbol Forex Universe & Timeframe Dropout Regularizer (v17.6)**: Ingestion of `LemGendizedForexUniverseLarge` (30.8M samples across 2019–2026) with expanding-window 6-fold WFCV, broker symbol aliasing (`NAS100` $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`), and stochastic timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.
