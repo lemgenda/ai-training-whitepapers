@@ -189,6 +189,14 @@ The training suite natively intercepts execution environments with multiple GPUs
 
 All inference notebooks and training engines natively fall back to **DirectML** on local machines, providing zero-config GPU acceleration for AMD and Intel graphics cards on Windows.
 
+### 5.3. Hybrid Cloud Synchronization & Tiered Lifecycle
+
+The training suite implements an atomic, zero-drift synchronization architecture unifying Kaggle Models and Google Drive (`142G7B9ONfUkXAhVkPeN4NeJ3YXU0UmJX`):
+
+- **Startup Discovery**: Checkpoints are resolved exclusively from attached Kaggle Models (`/kaggle/input/models/...`), sorting version directories in descending numerical order to bind to the latest release without manual version pinning.
+- **Mid-Epoch Preemption Resilience**: Intra-epoch iterations, optimizer momentum, and dynamic governor states are committed to local progress checkpoints (`_progress.pth`). If preempted or interrupted, an emergency signal hook commits the progress checkpoint solely to the Kaggle model artifact.
+- **Epoch Completion Gating**: The trained model manifold is pushed to Google Drive strictly after an epoch has completed and `kagglehub.model_upload()` confirms successful creation of a new Kaggle model version.
+
 ---
 
 ## 6. Distributed Edge Training: LemGendary Cloud Link

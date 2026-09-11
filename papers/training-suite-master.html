@@ -56,9 +56,9 @@
                 <li><a href="#section-7">4. Universal Models Registry & SOTA Baselines</a>
                 </li>
                 <li><a href="#section-9">5. Universal SOTA Telemetry & Cloud Sync</a>
-                    <ul class="sub-item">
                         <li><a href="#multi-gpu-dataparallel">5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)</a></li>
                         <li><a href="#universal-inference">5.2. Universal Hardware Inference</a></li>
+                        <li><a href="#hybrid-cloud-sync">5.3. Hybrid Cloud Synchronization & Tiered Lifecycle</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-11">6. Distributed Edge Training: LemGendary Cloud Link</a>
@@ -520,6 +520,14 @@
 
             <h3 id="universal-inference">5.2. Universal Hardware Inference</h3>
             <p>All inference notebooks and training engines natively fall back to <strong>DirectML</strong> on local machines, providing zero-config GPU acceleration for AMD and Intel graphics cards on Windows.</p>
+
+            <h3 id="hybrid-cloud-sync">5.3. Hybrid Cloud Synchronization &amp; Tiered Lifecycle</h3>
+            <p>The training suite implements an atomic, zero-drift synchronization architecture unifying Kaggle Models and Google Drive (<code>142G7B9ONfUkXAhVkPeN4NeJ3YXU0UmJX</code>):</p>
+            <ul>
+                <li><strong>Startup Discovery</strong>: Checkpoints are resolved exclusively from attached Kaggle Models (<code>/kaggle/input/models/...</code>), sorting version directories in descending numerical order to bind to the latest release without manual version pinning.</li>
+                <li><strong>Mid-Epoch Preemption Resilience</strong>: Intra-epoch iterations, optimizer momentum, and dynamic governor states are committed to local progress checkpoints (<code>_progress.pth</code>). If preempted or interrupted, an emergency signal hook commits the progress checkpoint solely to the Kaggle model artifact.</li>
+                <li><strong>Epoch Completion Gating</strong>: The trained model manifold is pushed to Google Drive strictly after an epoch has completed and <code>kagglehub.model_upload()</code> confirms successful creation of a new Kaggle model version.</li>
+            </ul>
         
 
         
