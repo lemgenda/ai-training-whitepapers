@@ -381,6 +381,7 @@ def main():
     parser = argparse.ArgumentParser(description="Pre-commit Verification Suite for LemGendary Docs Hub")
     parser.add_argument("--staged", action="store_true", help="Only validate git-staged files where applicable")
     parser.add_argument("--skip-html-w3c", action="store_true", help="Skip remote W3C HTML validation")
+    parser.add_argument("--with-datasets", action="store_true", help="Include lemgendary-datasets verification suite")
     args = parser.parse_args()
 
     print("=" * 70)
@@ -419,13 +420,26 @@ def main():
         g2 = check_html_validation(target_html)
     g3 = check_word_synchronization(target_pairs=target_pairs)
 
+    g4 = True
+    if args.with_datasets:
+        datasets_script = PROJECT_ROOT / "lemgendary-datasets" / "verify_datasets.py"
+        if datasets_script.exists():
+            log_header("INTEGRATED: LemGendary Datasets Audit Suite")
+            cmd = [sys.executable, str(datasets_script)]
+            if args.staged:
+                cmd.append("--staged")
+            res = subprocess.run(cmd, cwd=PROJECT_ROOT / "lemgendary-datasets")
+            g4 = (res.returncode == 0)
+
     log_header("AUDIT SUMMARY")
     print(f"  Gate 1: Markdown Linting (markdownlint) : {'PASSED' if g1 else 'FAILED'}")
     print(f"  Gate 2: W3C HTML Validation (W3C Nu)   : {'PASSED' if g2 else 'FAILED'}")
     print(f"  Gate 3: Word-for-Word Synchronization   : {'PASSED' if g3 else 'FAILED'}")
+    if args.with_datasets:
+        print(f"  Gate 4: LemGendary Datasets Suite       : {'PASSED' if g4 else 'FAILED'}")
     print("=" * 70)
 
-    if g1 and g2 and g3:
+    if g1 and g2 and g3 and g4:
         print("[SUCCESS] All pre-commit document checks PASSED successfully.\n")
         sys.exit(0)
     else:
