@@ -5,3 +5,24 @@ __pycache__/
 
 # Validation Cache
 .w3c_cache.json
+
+# Local Tooling & Linters
+pyrightconfig.json
+.markdownlint.json
+typings/
+
+# IDE & Editor Files
+.vscode/
+.idea/
+.gemini/
+.antigravity/
+
+# Virtual Environments
+.venv*/
+
+# Caches & Logs
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+scratch/
