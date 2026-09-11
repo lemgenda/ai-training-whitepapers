@@ -21,7 +21,7 @@
             <p class="subtitle">A technical roadmap for recognizing and remediating convergence failures in production-grade restoration models.</p>
             <div class="meta">
                 <span>By Lem Treursić</span>
-                <span>Version: 1.3.0 (Governor v17 Hardened)</span>
+                <span>Version: 1.4.0 (Governor v17 Hardened)</span>
                 <span>Category 05</span>
             </div>
         </header>
@@ -51,6 +51,8 @@
                         <li><a href="#catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</a></li>
                         <li><a href="#metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</a></li>
                         <li><a href="#financial-pip-mismatch">Multi-Asset Pip Magnitude Mismatch &amp; Temperature Sharpening Collapse</a></li>
+                        <li><a href="#windows-multiprocessing">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing</a></li>
+                        <li><a href="#checkpoint-resumption-desync">Checkpoint Resumption Fraction Desynchronization</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-7">5. High-Fidelity Strategy (v16.2.8)</a>
@@ -97,7 +99,7 @@
                <section id="section-1">
             <h2>1. Abstract</h2>
             <div class="abstract-box">
-                <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration, technical quality assessment, and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern micro-batch pairwise ranking starvation and spatial average pooling feature dilution. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 23 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM cloud GPU clusters.</p>
+                <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration, technical quality assessment, and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern micro-batch pairwise ranking starvation and spatial average pooling feature dilution. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 25 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM cloud GPU clusters.</p>
             </div>
         </section>
 
@@ -230,6 +232,18 @@
                         <td>Multi-asset financial models trained concurrently on currencies, commodities, and indices; commodity/index volatility (1,000–8,000 pips) overpowers a clamped magnitude head (200 pips), while low-SNR temperature sharpening (&lt; 0.20) causes extreme logit sensitivity.</td>
                         <td>Validation loss explodes to 230+, TP/SL MAE flatlines at ~1,440 pips, and Governor false-triggers Stress Protocol Level 4.0 due to fixed 100% sample fraction.</td>
                         <td>Implement <strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong> standardizing targets to Normalized Pip Units ($[0, 100]$ NPUs); enforce <strong>Financial Governor Hardening</strong> with a strict temperature floor ($\min T = 0.75$), bounded LR jolts (&le; 1.15&times;), and <code>CURRICULUM_FOLD</code> phase classification.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing</strong></td>
+                        <td>PyTorch DataLoader with <code>num_workers &gt; 0</code> on Windows uses <code>spawn</code>, duplicating large memory-mapped sequence datasets across child processes. 4 workers consume 20+ GB, driving committed memory to 53GB / 55.5GB and exhausting physical RAM to 1.3GB.</td>
+                        <td>GPU utilization collapses to 0%; batch retrieval latency balloons from 0.27s to 3.43s/batch; committed memory exceeds 95%; task manager shows 4 child workers holding 5GB RAM each.</td>
+                        <td>Enforce <strong>Zero-Worker Execution (<code>num_workers=0</code>)</strong> for memory-mapped sequence datasets on Windows. In-process execution operates at 1.1GB RAM total, preserving 20+ GB free RAM for OS filesystem caching and accelerating batch retrieval by $12.5\times$.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)</strong></td>
+                        <td>Resuming training from an earlier checkpoint saved prior to curriculum fractional scaling (where <code>sample_fraction</code> was 1.0) overrides the active curriculum, expanding batch count by 7x (3,900 to 27,300 batches) and diluting convergence rate.</td>
+                        <td>Checkpoint telemetry reports <code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code> (instead of ~3,900), and epoch progress bar indicates 24–26+ hours remaining for Epoch 1.</td>
+                        <td>Implement <strong>Curriculum Checkpoint Fraction Override</strong> in <code>SmartTrainingGovernor.load_state</code>. For sequence curricula during early epochs (&le; 2), override legacy &ge; 0.99 fractions with configured <code>initial_fraction: 0.15</code> and synchronize DataLoader instances.</td>
                     </tr>
 </tbody>
                 </table>
@@ -477,6 +491,20 @@
                         <li><strong>Governor Financial Safeguards</strong>: Enforce a strict temperature floor ($\min T = 0.75$), constrain Stress Protocol regularization (&le; 2.0), limit differential LR jolts to &le; 1.15&times;, and classify financial training phases as <code>CURRICULUM_FOLD</code>.</li>
                     </ol>
                 </li>
+            </ul>
+
+            <h3 id="windows-multiprocessing">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing (Pathology 24)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: On Windows platforms, PyTorch <code>DataLoader</code> with <code>num_workers &gt; 0</code> cannot leverage UNIX <code>fork()</code> with Copy-On-Write memory semantics; it must use <code>multiprocessing.spawn</code>. When training on extensive multi-timeframe sequence manifolds (e.g. 16-symbol Forex arrays across 8 years), each child worker process unpickles the dataset sample index and establishes isolated file descriptors for memory-mapped <code>.npy</code> files. Each worker allocates 4.5–5.5 GB of RAM. Spawning 4 workers consumes 20+ GB of physical RAM, driving committed memory to 53.0 GB / 55.5 GB on a 32 GB workstation. Available RAM collapses to 1.3 GB, forcing Windows into continuous pagefile disk thrashing. Every sample read triggers disk I/O page faults, inflating batch latency from 0.27s to 3.43s and starving the GPU (0% utilization).</li>
+                <li><strong>Identification</strong>: Task Manager displays 4 <code>python.exe</code> worker processes holding ~5 GB RAM each; committed memory approaches the pagefile limit (&gt; 95%); batch retrieval time stalls at 3.4–4.0s/batch; and GPU utilization drops to 0%.</li>
+                <li><strong>Remedy</strong>: <strong>Zero-Worker Windows In-Process Execution (<code>num_workers=0</code>)</strong>. Enforce <code>num_workers = 0</code> on Windows for memory-mapped sequence datasets. Execution runs directly in the parent process at 1.1 GB total RAM, leaving 20+ GB of physical memory free. The Windows filesystem cache retains <code>.npy</code> array blocks resident in RAM, eliminating pagefile swapping and accelerating batch retrieval by $12.5\times$ (0.275s/batch).</li>
+            </ul>
+
+            <h3 id="checkpoint-resumption-desync">Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution) (Pathology 25)</h3>
+            <ul>
+                <li><strong>The Issue</strong>: When <code>SmartTrainingGovernor</code> saves progress checkpoints (<code>_progress.pth</code>), it serializes the active <code>sample_fraction</code>. If a run is interrupted and resumed from an older checkpoint generated before fractional curriculum fixes (where the sample fraction was hardcoded to 1.0), the checkpoint restoration logic blindly restores <code>current_fraction = 1.0</code>. This expands the training dataloader from the intended curriculum fraction (e.g. 15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning rates across 7 million samples.</li>
+                <li><strong>Identification</strong>: Resumption telemetry logs report <code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code>, and <code>Iteration 1362/27300</code> despite configuration specifying <code>initial_fraction: 0.15</code>.</li>
+                <li><strong>Remedy</strong>: <strong>Curriculum Checkpoint Fraction Override</strong>. In <code>SmartTrainingGovernor.load_state</code>, detect whether early-epoch training ($\text{epoch} \le 2$) is resuming with a legacy 100% fraction against an active fractional curriculum. Automatically override the legacy fraction with <code>initial_fraction: 0.15</code>, trigger <code>train_loader</code> re-instantiation, and proportionally scale resumption iterations to the actual loader length.</li>
             </ul>
 
 </section>
