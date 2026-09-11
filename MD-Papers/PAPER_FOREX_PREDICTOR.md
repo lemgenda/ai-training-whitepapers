@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: Multi-Scale CNN-Transformer Forex & Commodity Predictor
 
 **Author**: Lem Treursić  
-**Version**: 2.7.0 - Quantitative Manifold Matrix (2026 Specialization - v17.6 Engine)  
+**Version**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
 ---
@@ -258,6 +258,7 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 5. **Governor Financial Hardening & Thermal Anchoring (v17.4)**: In high-entropy, low signal-to-noise financial regimes, standard temperature sharpening causes severe gradient instability. The `SmartTrainingGovernor` enforces a strict temperature floor ($\min T = 0.75$), constrains the Stress Protocol ($\le 2.0$), limits differential learning rate jolts to $\le 1.15\times$, and categorizes training as `CURRICULUM_FOLD` to prevent erroneous spatial ladder transitions.
 6. **Timeframe Dropout Regularization (v17.6)**: Injects stochastic temporal masking ($p=0.15$) during training forward passes to prevent single-timeframe co-adaptation and high-frequency noise fitting across the multi-scale attention heads.
 7. **Clean Training Execution & Checkpoint Isolation (v17.5)**: The CLI (`train.py`) and curriculum orchestrator (`train_forex_curriculum.py`) support `--clean` / `--fresh` flags to initiate runs from epoch 1 without phantom checkpoint resurrection. When active, Hub Sync bypasses `git lfs pull`, purges local residual checkpoints, resets `curriculum_state.json`, and wipes `metrics.csv`. All checkpoints (`_latest`, `_best`, `_progress`, and `_vault_`) are strictly saved to and loaded from isolated model directories (`LemGendaryModels/<model>/checkpoints/`).
+8. **Vectorized Alignment Caching, Fractional Striding & Zero-Worker Windows Execution (v17.7)**: Resolves GPU data starvation (0% utilization) and Windows multiprocessing pagefile thrashing. The data pipeline precomputes cross-timeframe temporal alignment matrices in vector space ($O(1)$ integer index lookup replacing $35\text{M}$ individual $O(\log N)$ binary searches per epoch). Physical batch sizes scale dynamically by GPU VRAM tier ($256$ on 4GB GTX 1650 to maximize memory-sentinel headroom). Uniform chronological striding represents all 16 symbols proportionally at early curriculum fractions ($15\%$), and Windows multiprocessing is strictly gated to in-process execution (`num_workers=0`), eliminating child process memory duplication (dropping RAM from $53\text{ GB}$ committed down to $1.1\text{ GB}$) and accelerating batch throughput by $12.5\times$ while reducing single-epoch training iterations by $28\times$. Checkpoint resumption enforces curriculum fraction overrides to prevent legacy $100\%$ fraction resurrected states from diluting early-epoch convergence.
 
 ### 4.7 Consolidated SOTA Benchmarks
 
