@@ -112,6 +112,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Autonomous Dataset Bypass**: Autonomously bypasses unnecessary 200GB+ dataset downloads by inspecting `/images` and `/targets` structures directly on the Kaggle root block.
 - **Autonomous Checkpoint Syncing**: Uses `kagglehub` model registry and kernel output endpoints to seamlessly pull trained `.pth` weights and `metrics.csv` logs into `LemGendaryModels/<model_name>/`.
 - **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`), `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
+- **Multi-Account Live Cloud Telemetry (`kaggle_monitor.py`)**: Supports multi-user credential switching across registered `.kaggle_users` profiles with on-demand custom account entry. Concurrently resolves active and recent kernel execution states via multi-threaded workers, streaming live runtime logs and status transitions incrementally via Kaggle API endpoints directly into the local terminal.
 
 ### 2.12. Universal Post-Training Target Audit & Interactive Guidance
 
@@ -196,6 +197,19 @@ The training suite implements an atomic, zero-drift synchronization architecture
 - **Startup Discovery**: Checkpoints are resolved exclusively from attached Kaggle Models (`/kaggle/input/models/...`), sorting version directories in descending numerical order to bind to the latest release without manual version pinning.
 - **Mid-Epoch Preemption Resilience**: Intra-epoch iterations, optimizer momentum, and dynamic governor states are committed to local progress checkpoints (`_progress.pth`). If preempted or interrupted, an emergency signal hook commits the progress checkpoint solely to the Kaggle model artifact.
 - **Epoch Completion Gating**: The trained model manifold is pushed to Google Drive strictly after an epoch has completed and `kagglehub.model_upload()` confirms successful creation of a new Kaggle model version.
+
+### 5.4. Multi-Account Kaggle Cloud Telemetry & Live Monitor
+
+The suite integrates a multi-account cloud monitoring and execution engine (`kaggle_monitor.py`) accessible via Option 3 ("Kaggle Cloud Engine"):
+
+- **Registry Authentication**: Reads user credentials directly from `.kaggle_users`, supporting seamless runtime profile switching across saved accounts or on-demand registration of new user accounts and API tokens.
+- **Headless GPU Orchestration Submenu**:
+  - **1. Train on Kaggle**: Prompts operator for user credential selection, queries user notebooks (or deploys registered local model manifolds), launches headless GPU execution on Kaggle, streams live runtime telemetry to the local console, and automatically pulls updated weights and checkpoints to `LemGendaryModels/<model_name>/` after each completed epoch.
+  - **2. Monitor Active Cloud Jobs**: Concurrently discovers active kernels and streams live stdout and stderr telemetry in monitor-only mode with zero artifact pulling.
+  - **3. Pull & Save Checkpoints**: Synchronizes latest checkpoints and metrics to local storage.
+  - **4. Setup / Verify Credentials**: Configures and validates API authentication keys.
+- **Concurrent Kernel Discovery**: Queries user kernel manifolds via multi-threaded workers (`ThreadPoolExecutor`), checking execution states (`RUNNING`, `QUEUED`, `COMPLETE`, `ERROR`) with near-zero latency.
+- **Incremental Telemetry Stream**: Streams stdout and stderr logs incrementally via Kaggle API midtier endpoints, rendering live progress lines and status notifications in real time with non-destructive detachment (`Ctrl+C`).
 
 ---
 
