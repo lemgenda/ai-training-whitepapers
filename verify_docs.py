@@ -83,11 +83,14 @@ def check_markdown_lint(target_files: list[Path] | None = None) -> bool:
         print("[INFO] No Markdown files to lint.")
         return True
 
-    cfg_path = PROJECT_ROOT / ".markdownlint.yaml"
+    cfg_path = REPO_ROOT / ".markdownlint.json"
+    if not cfg_path.exists():
+        cfg_path = REPO_ROOT / ".markdownlint.yaml"
     cmd = ["npx.cmd" if os.name == "nt" else "npx", "markdownlint-cli"]
     if cfg_path.exists():
         cmd.extend(["-c", str(cfg_path)])
     cmd.extend([str(p) for p in md_files])
+
 
     print(f"[RUN] Checking {len(md_files)} markdown files with markdownlint...")
     try:
