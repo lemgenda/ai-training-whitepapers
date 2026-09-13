@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master CLI Operations Manual - LemGendary AI Ecosystem</title>
+    <meta name="description" content="Authoritative Master Command-Line Interface Operations Manual for the LemGendary AI Ecosystem and all seven projects.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>LemGendary Ecosystem: Master CLI Operations Manual</h1>
+            <p class="subtitle">Authoritative Command-Line Interface Reference for Ecosystem Management</p>
+            <div class="meta">
+                <span>Category 00</span>
+                <span>Version 2.1.0</span>
+                <span>Component: Ecosystem Toolchain</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-1">1. Executive Overview</a></li>
+                <li><a href="#section-2">2. Environment Manager CLI (lem-env)</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-2-1">2.1 Global Options &amp; Invocation</a></li>
+                        <li><a href="#section-2-2">2.2 Hardware Probing (probe)</a></li>
+                        <li><a href="#section-2-3">2.3 Ecosystem Health Audit (audit)</a></li>
+                        <li><a href="#section-2-4">2.4 Smart Clean Install Pipeline (install)</a></li>
+                        <li><a href="#section-2-5">2.5 Safe Bottom-Up Package Upgrades (update)</a></li>
+                        <li><a href="#section-2-6">2.6 Manifest Synchronization (sync)</a></li>
+                        <li><a href="#section-2-7">2.7 Multi-Gate Validation Engine (validate)</a></li>
+                        <li><a href="#section-2-8">2.8 Workspace Cache &amp; Residue Purge (clean)</a></li>
+                        <li><a href="#section-2-9">2.9 Telemetry Daemon &amp; Background Server (serve)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-3">3. Interactive PowerShell Host</a></li>
+                <li><a href="#section-4">4. AI Studio Desktop GUI CLI &amp; Toolchain</a></li>
+                <li><a href="#section-5">5. Datasets Compilation Suite CLI</a></li>
+                <li><a href="#section-6">6. Training Suite &amp; Neural Model Registry CLI</a></li>
+                <li><a href="#section-7">7. Models Hub &amp; Verification Toolchain</a></li>
+                <li><a href="#section-8">8. Documentation Hub &amp; Static Validation</a></li>
+                <li><a href="#section-9">9. Exit Codes, Automation &amp; CI/CD Integration</a></li>
+            </ul>
+        </nav>
+
+        <section id="section-1">
+            <h2>1. Executive Overview</h2>
+            <p>
+                The LemGendary Ecosystem comprises seven specialized repositories orchestrated under a unified architectural contract.
+                All command-line operations are standardized, deterministic, and free of external visual noise or emojis.
+                The single authoritative command-line tool for ecosystem health, virtual environment lifecycles, and verification is <code>lem-env</code>,
+                located in <code>lemgendary-env-manager</code>.
+            </p>
+            <p>
+                Every toolchain command adheres strictly to semantic exit codes, making them directly suited for automated continuous integration,
+                local terminal workflows, and cross-project orchestration.
+            </p>
+        </section>
+
+        <section id="section-2">
+            <h2>2. Environment Manager CLI (lem-env)</h2>
+            <p>
+                <code>lem-env</code> is packaged as a standard Python console application using Typer and Rich. It provides the central management interface
+                for inspecting hardware capabilities, provisioning isolated virtual environments, upgrading packages in dependency order,
+                and enforcing strict linting and compilation gates across all seven workspaces.
+            </p>
+
+            <h3 id="section-2-1">2.1 Global Options &amp; Invocation</h3>
+            <pre><code># General invocation syntax
+lem-env [COMMAND] [OPTIONS]
+
+# Help and discovery
+lem-env --help</code></pre>
+
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Global Option</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--help</code></td>
+                        <td>Flag</td>
+                        <td>Display comprehensive command usage, available subcommands, and flags</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="section-2-2">2.2 Hardware Probing (probe)</h3>
+            <p>
+                The <code>probe</code> command discovers system hardware, compute accelerators, operating system architecture, MetaTrader 5 availability,
+                and checks for software update releases against upstream registries.
+            </p>
+            <pre><code>lem-env probe</code></pre>
+            <p>Key features:</p>
+            <ul>
+                <li>Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Apple Metal Performance Shaders, and CPU fallback.</li>
+                <li>Detects MetaTrader 5 terminal installations, install directories, and software versions.</li>
+                <li>Queries GitHub and package registries to notify operators of available toolchain updates.</li>
+            </ul>
+
+            <h3 id="section-2-3">2.3 Ecosystem Health Audit (audit)</h3>
+            <p>
+                The <code>audit</code> command executes an exhaustive diagnostic audit of all seven repositories in the ecosystem.
+            </p>
+            <pre><code>lem-env audit</code></pre>
+            <p>Diagnostic checks performed:</p>
+            <ul>
+                <li>Toolchain prerequisites verification for Python, Git, NPM, and MetaTrader 5.</li>
+                <li>Virtual environment presence, Python executable health, and missing package count for each repository.</li>
+                <li>Node.js workspace health, inspecting <code>package.json</code>, <code>node_modules</code>, and declared dependencies.</li>
+                <li>Detailed NPM Package Dependency Matrix inspecting declared versus installed package versions.</li>
+                <li>Version Drift Matrix identifying package version discrepancies across project boundaries.</li>
+            </ul>
+
+            <h3 id="section-2-4">2.4 Smart Clean Install Pipeline (install)</h3>
+            <p>
+                The <code>install</code> command runs the automated seven-step environment creation and package installation pipeline.
+            </p>
+            <pre><code># Execute clean install across all ecosystem projects
+lem-env install
+
+# Target a specific repository
+lem-env install --project lemgendary-training-suite
+
+# Install without purging existing virtual environments
+lem-env install --no-clean</code></pre>
+
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Flag</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--project</code></td>
+                        <td><code>-p</code></td>
+                        <td>Text</td>
+                        <td><code>None</code></td>
+                        <td>Restrict installation to a single target repository</td>
+                    </tr>
+                    <tr>
+                        <td><code>--clean / --no-clean</code></td>
+                        <td>None</td>
+                        <td>Bool</td>
+                        <td><code>True</code></td>
+                        <td>Completely purge existing .venv and node_modules before fresh recreation</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>The pipeline executes in sequential order:</p>
+            <ol>
+                <li>Hardware discovery and backend acceleration detection.</li>
+                <li>Global toolchain verification (Python, Git, NPM).</li>
+                <li>Virtual environment provisioning and purge.</li>
+                <li>Python package installation using locked manifests.</li>
+                <li>Node.js package installation via NPM.</li>
+                <li>Post-install validation and import sanity tests.</li>
+                <li>Final ecosystem health audit generation.</li>
+            </ol>
+
+            <h3 id="section-2-5">2.5 Safe Bottom-Up Package Upgrades (update)</h3>
+            <p>
+                The <code>update</code> command safely resolves outdated dependencies and upgrades them bottom-up across the dependency hierarchy:
+                <code>lemgendary-env-manager</code> -&gt; <code>lemgendary-datasets</code> -&gt; <code>lemgendary-training-suite</code> -&gt; <code>lemgendary-ai-studio-gui</code>.
+            </p>
+            <pre><code># Inspect potential upgrades without modifying files
+lem-env update --dry-run
+
+# Apply upgrades and auto-sync requirement manifests
+lem-env update</code></pre>
+
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Flag</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--project</code></td>
+                        <td><code>-p</code></td>
+                        <td>Text</td>
+                        <td><code>None</code></td>
+                        <td>Target package upgrades for a specific repository</td>
+                    </tr>
+                    <tr>
+                        <td><code>--dry-run</code></td>
+                        <td>None</td>
+                        <td>Bool</td>
+                        <td><code>False</code></td>
+                        <td>Display proposed version changes without executing installations</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="section-2-6">2.6 Manifest Synchronization (sync)</h3>
+            <p>
+                The <code>sync</code> command captures currently installed packages from active virtual environments and synchronizes pinned requirement manifests
+                under <code>lemgendary-env-manager/requirements/</code>.
+            </p>
+            <pre><code>lem-env sync</code></pre>
+            <p>Manifests maintained:</p>
+            <ul>
+                <li><code>requirements-env-manager.txt</code></li>
+                <li><code>requirements-datasets.txt</code></li>
+                <li><code>requirements-training.txt</code></li>
+                <li><code>requirements-docs.txt</code></li>
+            </ul>
+
+            <h3 id="section-2-7">2.7 Multi-Gate Validation Engine (validate)</h3>
+            <p>
+                The <code>validate</code> command enforces strict quality, formatting, compilation, and domain integrity gates across all seven workspaces.
+            </p>
+            <pre><code># Validate entire ecosystem
+lem-env validate
+
+# Validate specific project
+lem-env validate --project lemgendary-docs</code></pre>
+            <p>Validation gates enforced:</p>
+            <ul>
+                <li>Python Compilation: Bytecode verification with <code>py_compile</code>.</li>
+                <li>Zero-Emoji Compliance: Scans all scannable text files for forbidden emoji glyphs.</li>
+                <li>YAML Linting: Syntax validation with <code>yamllint</code>.</li>
+                <li>JSON Validation: RFC 8259 syntax validation across all .json files.</li>
+                <li>Markdown Linting: Style compliance via local <code>markdownlint-cli</code> with root configuration.</li>
+                <li>PowerShell Analysis: Script quality checks with Microsoft <code>PSScriptAnalyzer</code>.</li>
+                <li>ESLint &amp; TypeScript: Static type checking (<code>tsc --noEmit</code>) and strict accessibility linting.</li>
+                <li>W3C &amp; WCAG 2.2 AA: Static HTML standards verification and accessibility checking via <code>pa11y</code>.</li>
+                <li>Domain Gates: Whitepaper word-for-word synchronization, manifold integrity, and model checkpoint validity.</li>
+            </ul>
+
+            <h3 id="section-2-8">2.8 Workspace Cache &amp; Residue Purge (clean)</h3>
+            <p>
+                The <code>clean</code> command removes volatile temporary files, caches, and build artifacts to maintain absolute workspace hygiene.
+            </p>
+            <pre><code># Clean entire workspace
+lem-env clean
+
+# Clean specific repository
+lem-env clean --project lemgendary-training-suite</code></pre>
+            <p>Purged items include:</p>
+            <ul>
+                <li><code>__pycache__</code> directories and <code>.pyc</code> bytecode files.</li>
+                <li><code>.pytest_cache</code>, <code>.mypy_cache</code>, and <code>.ruff_cache</code>.</li>
+                <li>Temporary build residues (<code>dist/</code>, <code>build/</code>, <code>*.egg-info</code>).</li>
+                <li>Staging artifacts (<code>.staging_*</code>, <code>staging_*</code>, <code>.kaggle-partial</code>, <code>.tmp</code>, <code>.log</code>).</li>
+            </ul>
+
+            <h3 id="section-2-9">2.9 Telemetry Daemon &amp; Background Server (serve)</h3>
+            <p>
+                The <code>serve</code> command launches the FastAPI REST API and WebSocket real-time telemetry server.
+            </p>
+            <pre><code># Start server on default address
+lem-env serve
+
+# Start on custom interface and port
+lem-env serve --host 0.0.0.0 --port 8765</code></pre>
+
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Flag</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>--host</code></td>
+                        <td><code>-h</code></td>
+                        <td>Text</td>
+                        <td><code>127.0.0.1</code></td>
+                        <td>Network interface address to bind the HTTP listener</td>
+                    </tr>
+                    <tr>
+                        <td><code>--port</code></td>
+                        <td><code>-p</code></td>
+                        <td>Int</td>
+                        <td><code>8765</code></td>
+                        <td>TCP port for incoming REST and WebSocket connections</td>
+                    </tr>
+                    <tr>
+                        <td><code>--reload</code></td>
+                        <td>None</td>
+                        <td>Bool</td>
+                        <td><code>False</code></td>
+                        <td>Enable auto-reload on source file changes for local development</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="section-3">
+            <h2>3. Interactive PowerShell Host (lemgendary_env_manager.ps1)</h2>
+            <p>
+                For Windows terminal operators, <code>lemgendary_env_manager.ps1</code> provides an interactive, keyboard-driven management console.
+            </p>
+            <pre><code>powershell -ExecutionPolicy Bypass -File .\lemgendary_env_manager.ps1</code></pre>
+            <p>Interactive Menu Matrix:</p>
+            <ul>
+                <li><code>[1] Probe System &amp; Hardware Accelerators</code>: Executes hardware discovery and checks for updates.</li>
+                <li><code>[2] Run Full Ecosystem Health Audit</code>: Displays toolchain, virtual environment, and NPM dependency matrix.</li>
+                <li><code>[3] Execute Smart Clean Install Pipeline</code>: Purges environments and installs clean dependencies.</li>
+                <li><code>[4] Run Safe Package Updates</code>: Executes bottom-up dependency upgrades and syncs manifests.</li>
+                <li><code>[5] Validate Projects</code>: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG 2.2 AA, and domain gates.</li>
+                <li><code>[6] Start Background API Server</code>: Launches the FastAPI server with live WebSocket streaming.</li>
+                <li><code>[7] Purge Build &amp; Cache Artifacts</code>: Cleans temporary residues and caches across all projects.</li>
+                <li><code>[8] Exit</code>: Gracefully terminates the management console.</li>
+            </ul>
+        </section>
+
+        <section id="section-4">
+            <h2>4. AI Studio Desktop GUI CLI &amp; Toolchain</h2>
+            <p>
+                The desktop application <code>lemgendary-ai-studio-gui</code> utilizes Node.js, React 18, Vite, and Tauri v2.
+            </p>
+            <pre><code># Navigate to GUI directory
+cd lemgendary-ai-studio-gui
+
+# Start development frontend server
+npm run dev
+
+# Run TypeScript static type check
+npm run typecheck
+
+# Run ESLint with strict JSX accessibility rules
+npm run lint
+
+# Build production bundle
+npm run build
+
+# Run Tauri desktop development application
+cargo tauri dev
+
+# Build native desktop installer
+cargo tauri build</code></pre>
+        </section>
+
+        <section id="section-5">
+            <h2>5. Datasets Compilation Suite CLI</h2>
+            <p>
+                The <code>lemgendary-datasets</code> repository contains data synthesis and manifold compilation pipelines.
+            </p>
+            <pre><code># Navigate to datasets directory
+cd lemgendary-datasets
+
+# Compile all registered image restoration and vision datasets
+python compile_all_datasets.py
+
+# Compile specific dataset manifold
+python compile_dataset.py --target LemGendizedFFANet
+
+# Compile Forex &amp; Commodities trading manifold
+python compile_forex_dataset.py --timeframe M5 --symbols EURUSD,GBPUSD,USDJPY,XAUUSD
+
+# Synchronize compiled manifolds with remote cloud storage
+python cloud_sync.py --direction upload --provider gcs</code></pre>
+        </section>
+
+        <section id="section-6">
+            <h2>6. Training Suite &amp; Neural Model Registry CLI</h2>
+            <p>
+                The <code>lemgendary-training-suite</code> repository provides training engines, loss functions, and evaluation scripts.
+            </p>
+            <pre><code># Navigate to training suite
+cd lemgendary-training-suite
+
+# Launch neural training run with Sawtooth Governor and Memory Sentinel
+python train.py --config configs/nafnet_baseline.yaml --backend cuda
+
+# Run SOTA validation ladder evaluation
+python evaluate.py --model checkpoints/nafnet_best.pth --dataset LemGendizedNAFNet
+
+# Export trained PyTorch weights to WebGPU optimized ONNX
+python export_onnx.py --model checkpoints/nafnet_best.pth --opset 17 --output webgpu/nafnet.onnx
+
+# Run hardware inference benchmark
+python benchmark.py --model webgpu/nafnet.onnx --batch-size 1</code></pre>
+        </section>
+
+        <section id="section-7">
+            <h2>7. Models Hub &amp; Verification Toolchain</h2>
+            <p>
+                The <code>LemGendaryModels</code> repository hosts trained neural checkpoints and model cards.
+            </p>
+            <pre><code># Model validation is executed centrally via Environment Manager:
+lem-env validate --project LemGendaryModels
+
+# Check model checkpoint integrity directly
+python -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"</code></pre>
+        </section>
+
+        <section id="section-8">
+            <h2>8. Documentation Hub &amp; Static Validation</h2>
+            <p>
+                The <code>lemgendary-docs</code> repository contains technical research whitepapers, HTML documentation, and operational manuals.
+            </p>
+            <pre><code># Documentation validation is executed centrally via Environment Manager:
+lem-env validate --project lemgendary-docs
+
+# Serve documentation hub locally using Python HTTP server
+python -m http.server 8080 --directory lemgendary-docs</code></pre>
+        </section>
+
+        <section id="section-9">
+            <h2>9. Exit Codes, Automation &amp; CI/CD Integration</h2>
+            <p>
+                All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:
+            </p>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Exit Code</th>
+                        <th>Meaning</th>
+                        <th>Operator Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>0</code></td>
+                        <td>Success</td>
+                        <td>Operation completed successfully with zero violations or errors</td>
+                    </tr>
+                    <tr>
+                        <td><code>1</code></td>
+                        <td>General Failure</td>
+                        <td>Unhandled exception or syntax failure during execution</td>
+                    </tr>
+                    <tr>
+                        <td><code>2</code></td>
+                        <td>Validation Error</td>
+                        <td>One or more quality, linting, or domain gates failed verification</td>
+                    </tr>
+                    <tr>
+                        <td><code>3</code></td>
+                        <td>Missing Prerequisites</td>
+                        <td>Required toolchain component (Python, Git, NPM) is not installed</td>
+                    </tr>
+                    <tr>
+                        <td><code>4</code></td>
+                        <td>Network / IO Error</td>
+                        <td>Failed to reach remote registry or download necessary assets</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Continuous Integration Workflow Example:</p>
+            <pre><code># Standard CI/CD verification pipeline
+lem-env audit || exit 1
+lem-env validate || exit 2</code></pre>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 LemGenda AI Hub. Master CLI Operations Manual.</p>
+        </footer>
+    </div>
+</body>
+</html>

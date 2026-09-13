@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master API Reference Manual - LemGendary AI Ecosystem</title>
+    <meta name="description" content="Authoritative Master Application Programming Interface Reference Manual for the LemGendary AI Ecosystem REST, WebSocket, and IPC services.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
+            <p class="subtitle">Authoritative REST, WebSocket, and IPC Interface Reference for Machine Integration</p>
+            <div class="meta">
+                <span>Category 00</span>
+                <span>Version 2.1.0</span>
+                <span>Component: Ecosystem API Surface</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-1">1. Executive Overview</a></li>
+                <li><a href="#section-2">2. Environment Manager REST API</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-2-1">2.1 Server Configuration &amp; Startup</a></li>
+                        <li><a href="#section-2-2">2.2 Interactive OpenAPI Documentation</a></li>
+                        <li><a href="#section-2-3">2.3 Health &amp; System Discovery Endpoints</a></li>
+                        <li><a href="#section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</a></li>
+                        <li><a href="#section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</a></li>
+                        <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry (/ws/events)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
+                <li><a href="#section-4">4. Training Suite Python API Engine</a></li>
+                <li><a href="#section-5">5. Datasets Compilation &amp; Stream Pipeline API</a></li>
+                <li><a href="#section-6">6. Error Handling, Status Codes &amp; Resilience</a></li>
+            </ul>
+        </nav>
+
+        <section id="section-1">
+            <h2>1. Executive Overview</h2>
+            <p>
+                The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine integration,
+                desktop UI orchestration, and automated pipeline execution.
+                Central to the ecosystem is the authoritative FastAPI daemon running in <code>lemgendary-env-manager</code>, providing both
+                high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
+            </p>
+            <p>
+                All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to Pydantic models,
+                and maintain zero extraneous metadata.
+            </p>
+        </section>
+
+        <section id="section-2">
+            <h2>2. Environment Manager REST API</h2>
+            <p>
+                The Environment Manager server runs locally or inside CI environments to expose hardware discovery, ecosystem audits,
+                package synchronization, and multi-gate validations over HTTP.
+            </p>
+
+            <h3 id="section-2-1">2.1 Server Configuration &amp; Startup</h3>
+            <p>
+                The server is launched via the <code>lem-env</code> command or PowerShell management console:
+            </p>
+            <pre><code># Default binding: http://127.0.0.1:8765
+lem-env serve --host 127.0.0.1 --port 8765</code></pre>
+
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>Configuration Parameter</th>
+                        <th>Default Value</th>
+                        <th>CLI Flag</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Host Interface</td>
+                        <td><code>127.0.0.1</code></td>
+                        <td><code>--host</code></td>
+                        <td>Network IP address to bind HTTP and WebSocket listener</td>
+                    </tr>
+                    <tr>
+                        <td>TCP Port</td>
+                        <td><code>8765</code></td>
+                        <td><code>--port</code></td>
+                        <td>Local listening port for incoming requests</td>
+                    </tr>
+                    <tr>
+                        <td>Hot Reload</td>
+                        <td><code>False</code></td>
+                        <td><code>--reload</code></td>
+                        <td>Auto-reloads server when Python source files change</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="section-2-2">2.2 Interactive OpenAPI Documentation</h3>
+            <p>When the server is active, auto-generated interactive OpenAPI specifications are served at:</p>
+            <ul>
+                <li>Swagger UI: <code>http://127.0.0.1:8765/docs</code></li>
+                <li>ReDoc UI: <code>http://127.0.0.1:8765/redoc</code></li>
+                <li>Raw OpenAPI JSON: <code>http://127.0.0.1:8765/openapi.json</code></li>
+            </ul>
+
+            <h3 id="section-2-3">2.3 Health &amp; System Discovery Endpoints</h3>
+            <h4><code>GET /</code></h4>
+            <p>Returns service identifier, ecosystem version, and operational status.</p>
+            <pre><code>{
+  "service": "lemgendary-env-manager",
+  "version": "2.1.0",
+  "status": "online"
+}</code></pre>
+
+            <h4><code>GET /api/v1/health</code></h4>
+            <p>Lightweight liveness probe for monitoring tools and orchestrators.</p>
+            <pre><code>{
+  "status": "healthy",
+  "python_version": "3.11.9",
+  "timestamp": "2026-09-13T00:00:00Z"
+}</code></pre>
+
+            <h4><code>GET /api/v1/probe</code></h4>
+            <p>Performs comprehensive hardware, OS, and GPU accelerator discovery.</p>
+            <pre><code>{
+  "os_name": "Windows",
+  "os_release": "11",
+  "architecture": "AMD64",
+  "cpu_count_logical": 32,
+  "cpu_count_physical": 16,
+  "total_ram_mb": 65536,
+  "primary_backend": "cuda",
+  "recommended_torch_index": "https://download.pytorch.org/whl/cu121",
+  "accelerators": [
+    {
+      "name": "NVIDIA GeForce RTX 4090",
+      "backend": "cuda",
+      "total_memory_mb": 24576,
+      "index": 0,
+      "driver_version": "552.22"
+    }
+  ],
+  "metatrader5": {
+    "installed": true,
+    "version": "5.0.38",
+    "install_path": "C:\\Program Files\\MetaTrader 5"
+  }
+}</code></pre>
+
+            <h4><code>GET /api/v1/hardware</code></h4>
+            <p>Returns the cached accelerator profile without re-probing external devices.</p>
+
+            <h3 id="section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</h3>
+            <h4><code>GET /api/v1/projects</code></h4>
+            <p>Enumerates all seven discovered ecosystem repositories, their paths, virtual environment status, and health indicators.</p>
+            <pre><code>[
+  {
+    "name": "lemgendary-env-manager",
+    "path": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
+    "venv_exists": true,
+    "is_healthy": true,
+    "total_installed": 38,
+    "missing_packages": []
+  }
+]</code></pre>
+
+            <h4><code>GET /api/v1/projects/{project_name}</code></h4>
+            <p>Returns in-depth health, dependency status, and package manifest details for a single target project.</p>
+
+            <h4><code>GET /api/v1/audit</code></h4>
+            <p>Executes an exhaustive ecosystem audit, returning prerequisites, all project environments, NPM package matrices, and version drift data.</p>
+
+            <h4><code>GET /api/v1/npm</code></h4>
+            <p>Returns the complete Node.js workspace status and NPM Package Dependency Matrix inspecting declared versus installed package versions.</p>
+
+            <h4><code>GET /api/v1/drift</code></h4>
+            <p>Returns the cross-project package version drift matrix.</p>
+
+            <h3 id="section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</h3>
+            <h4><code>POST /api/v1/install</code></h4>
+            <p>Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket connections.</p>
+            <pre><code>{
+  "target_project": null,
+  "clean": true
+}</code></pre>
+
+            <h4><code>GET /api/v1/pipeline/status</code></h4>
+            <p>Returns the execution state of the background pipeline orchestrator.</p>
+            <pre><code>{
+  "is_running": false,
+  "last_status": "idle",
+  "current_step": 7,
+  "total_steps": 7,
+  "last_run_timestamp": "2026-09-13T00:15:00Z"
+}</code></pre>
+
+            <h4><code>POST /api/v1/upgrade-plan</code></h4>
+            <p>Analyzes outdated packages and constructs a safe bottom-up upgrade plan.</p>
+
+            <h4><code>POST /api/v1/apply-upgrade</code></h4>
+            <p>Applies proposed package upgrades and regenerates requirement manifests.</p>
+
+            <h4><code>POST /api/v1/sync</code></h4>
+            <p>Synchronizes active virtual environment package states into pinned requirements manifests.</p>
+
+            <h4><code>POST /api/v1/validate</code></h4>
+            <p>Executes the multi-gate validation engine across one or all projects.</p>
+            <pre><code>{
+  "project_name": "lemgendary-docs"
+}</code></pre>
+
+            <h4><code>POST /api/v1/clean</code></h4>
+            <p>Purges temporary build artifacts, cache directories, and volatile residue across projects.</p>
+
+            <h3 id="section-2-6">2.6 WebSocket Real-Time Telemetry (/ws/events)</h3>
+            <p>
+                Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a persistent WebSocket connection:
+                <code>ws://127.0.0.1:8765/ws/events</code>
+            </p>
+            <pre><code>{
+  "timestamp": "2026-09-13T00:15:02.123456Z",
+  "step_number": 3,
+  "total_steps": 7,
+  "step_name": "Virtual Environment Creation",
+  "status": "info",
+  "message": "Provisioning virtual environment for lemgendary-training-suite...",
+  "data": {
+    "project": "lemgendary-training-suite",
+    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\.venv"
+  }
+}</code></pre>
+            <p>Event Status Values:</p>
+            <ul>
+                <li><code>info</code>: Informational milestone during pipeline processing.</li>
+                <li><code>success</code>: Step completed cleanly without warnings.</li>
+                <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
+                <li><code>error</code>: Fatal error encountered in step execution.</li>
+            </ul>
+        </section>
+
+        <section id="section-3">
+            <h2>3. Desktop GUI Tauri IPC API Contracts</h2>
+            <p>
+                The desktop frontend <code>lemgendary-ai-studio-gui</code> communicates with the native Rust backend via Tauri v2 IPC invocations.
+            </p>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>IPC Command</th>
+                        <th>Arguments</th>
+                        <th>Return Type</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>run_system_probe</code></td>
+                        <td>None</td>
+                        <td><code>SystemProbeResult</code></td>
+                        <td>Triggers hardware discovery from native desktop thread</td>
+                    </tr>
+                    <tr>
+                        <td><code>get_ecosystem_status</code></td>
+                        <td>None</td>
+                        <td><code>EcosystemReport</code></td>
+                        <td>Queries active environment manager daemon for health metrics</td>
+                    </tr>
+                    <tr>
+                        <td><code>trigger_clean_install</code></td>
+                        <td><code>project: Option&lt;String&gt;</code></td>
+                        <td><code>PipelineLaunchResult</code></td>
+                        <td>Starts environment provisioning pipeline</td>
+                    </tr>
+                    <tr>
+                        <td><code>execute_validation</code></td>
+                        <td><code>project: Option&lt;String&gt;</code></td>
+                        <td><code>ValidationResult</code></td>
+                        <td>Runs multi-gate verification suite</td>
+                    </tr>
+                    <tr>
+                        <td><code>connect_telemetry_stream</code></td>
+                        <td>None</td>
+                        <td><code>WebSocketHandle</code></td>
+                        <td>Subscribes frontend to /ws/events channel</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="section-4">
+            <h2>4. Training Suite Python API Engine</h2>
+            <p>
+                The <code>lemgendary-training-suite</code> provides specialized Python classes for neural network training and validation.
+            </p>
+            <p>Key API interfaces:</p>
+            <ul>
+                <li><code>SawtoothGovernor</code>: Dynamic gradient scaling and learning rate scheduling preventing NaN divergence.</li>
+                <li><code>MemorySentinel</code>: Continuous VRAM monitoring that adjusts batch dimensions when nearing hardware limits.</li>
+                <li><code>SOTAValidationLadder</code>: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics against historical checkpoints.</li>
+                <li><code>ModelRegistry</code>: Typed metadata manager for reading and validating unified_models_v2.yaml.</li>
+            </ul>
+            <pre><code>from training.governor import SawtoothGovernor
+from training.sentinel import MemorySentinel
+from models.registry import ModelRegistry
+
+registry = ModelRegistry.load_unified("unified_models_v2.yaml")
+sentinel = MemorySentinel(target_device="cuda:0", headroom_mb=2048)
+governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)</code></pre>
+        </section>
+
+        <section id="section-5">
+            <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
+            <p>
+                The <code>lemgendary-datasets</code> repository exposes Python APIs for compiling and reading structured image and market data.
+            </p>
+            <p>Key API interfaces:</p>
+            <ul>
+                <li><code>ManifoldCompiler</code>: High-throughput image pairing, bicubic downsampling, and synthetic noise generation.</li>
+                <li><code>ForexStreamCompiler</code>: Parquet chunking engine converting tick and candlestick data into normalized training tensors.</li>
+                <li><code>CloudSyncManager</code>: Authenticated transfer client interfacing with Google Cloud Storage and S3 buckets.</li>
+            </ul>
+            <pre><code>from datasets.compiler import ManifoldCompiler
+from datasets.forex import ForexStreamCompiler
+
+compiler = ManifoldCompiler(target_dir="LemGendizedNAFNet")
+compiler.compile_pairs(hr_source="data/raw_hr", lr_dest="data/compiled_lr")</code></pre>
+        </section>
+
+        <section id="section-6">
+            <h2>6. Error Handling, Status Codes &amp; Resilience</h2>
+            <p>
+                All ecosystem APIs implement strict error resilience:
+            </p>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>HTTP Status</th>
+                        <th>Code String</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>200 OK</code></td>
+                        <td><code>SUCCESS</code></td>
+                        <td>Request processed successfully</td>
+                    </tr>
+                    <tr>
+                        <td><code>400 Bad Request</code></td>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>Request body or query parameters failed schema validation</td>
+                    </tr>
+                    <tr>
+                        <td><code>404 Not Found</code></td>
+                        <td><code>PROJECT_NOT_FOUND</code></td>
+                        <td>Specified target repository does not exist in workspace</td>
+                    </tr>
+                    <tr>
+                        <td><code>409 Conflict</code></td>
+                        <td><code>PIPELINE_ACTIVE</code></td>
+                        <td>An install or update pipeline is currently executing</td>
+                    </tr>
+                    <tr>
+                        <td><code>500 Server Error</code></td>
+                        <td><code>INTERNAL_FAILURE</code></td>
+                        <td>Unhandled internal exception occurred during toolchain execution</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Error Response Format:</p>
+            <pre><code>{
+  "detail": "Project 'unknown-suite' was not found in ecosystem registry",
+  "error_code": "PROJECT_NOT_FOUND",
+  "timestamp": "2026-09-13T00:00:00Z"
+}</code></pre>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 LemGenda AI Hub. Master API Reference Manual.</p>
+        </footer>
+    </div>
+</body>
+</html>
