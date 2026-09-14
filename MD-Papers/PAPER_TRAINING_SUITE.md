@@ -109,6 +109,7 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 ### 2.11. Headless Kaggle Cloud Engine & Dataset Bypass (v16.4)
 
 - **Zero-Browser Cloud Deployment**: Launches, monitors, and downloads full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell without manual web browser intervention.
+- **Kaggle Metadata API Hardening (v16.4.1)**: Strictly enforces string serialization (`"true"` / `"false"`) across all boolean fields (`enable_gpu`, `enable_internet`, `is_private`) in `kernel-metadata.json`. Resolves Kaggle API deserialization behavior where Python boolean values (`True`) led Kaggle's backend to ignore GPU flags and default worker allocation to CPU.
 - **Autonomous Dataset Bypass**: Autonomously bypasses unnecessary 200GB+ dataset downloads by inspecting `/images` and `/targets` structures directly on the Kaggle root block.
 - **Autonomous Checkpoint Syncing**: Uses `kagglehub` model registry and kernel output endpoints to seamlessly pull trained `.pth` weights and `metrics.csv` logs into `LemGendaryModels/<model_name>/`.
 - **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`), `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
