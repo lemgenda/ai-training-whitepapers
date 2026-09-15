@@ -17,6 +17,7 @@
   - [2.7 Multi-Gate Validation Engine (`validate`)](#27-multi-gate-validation-engine-validate)
   - [2.8 Workspace Cache & Residue Purge (`clean`)](#28-workspace-cache--residue-purge-clean)
   - [2.9 Telemetry Daemon & Background Server (`serve`)](#29-telemetry-daemon--background-server-serve)
+  - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
 - [4. AI Studio Desktop GUI CLI & Toolchain](#4-ai-studio-desktop-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
@@ -72,9 +73,17 @@ lem-env probe
 
 Key features:
 
-- Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Apple Metal Performance Shaders, and CPU fallback.
+- Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Windows DirectML, and CPU fallback.
 - Detects MetaTrader 5 terminal installations, install directories, and software versions.
-- Queries GitHub and package registries to notify operators of available toolchain updates.
+- Queries `winget list` (installed version) and `winget show` (available version) to report both current and latest software versions with a status of `UP TO DATE`, `UPDATE AVAILABLE`, `NOT INSTALLED`, or `INSTALLED (not in winget)`.
+
+MetaTrader 5 detection priority:
+
+1. Windows registry keys under `HKCU`/`HKLM\SOFTWARE\MetaQuotes\Terminal` (fast, ~5 ms)
+2. Well-known install paths (`C:\Program Files\MetaTrader 5\terminal64.exe`)
+3. PowerShell `Get-Package -Name '*MetaTrader*'` (slow fallback)
+
+When an install path is available, the version is read directly from `terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo` property. This gives an authoritative version number even when winget has no record of the installation (typical for MT5, which is often installed outside winget's package database).
 
 ---
 
@@ -83,16 +92,31 @@ Key features:
 The `audit` command executes an exhaustive diagnostic audit of all seven repositories in the ecosystem.
 
 ```bash
+# Full audit with per-project safety classification (~30-90s)
 lem-env audit
+
+# Fast audit — skips pip dry-runs
+lem-env audit --fast
 ```
+
+| Option | Flag | Type | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `--fast` | None | Bool | `False` | Skip per-project pip safety dry-runs. Audit completes in seconds but the Safe-↑ column in the drift matrix is left empty. |
 
 Diagnostic checks performed:
 
 - Toolchain prerequisites verification for Python, Git, NPM, and MetaTrader 5.
 - Virtual environment presence, Python executable health, and missing package count for each repository.
 - Node.js workspace health, inspecting `package.json`, `node_modules`, and declared dependencies.
-- Detailed NPM Package Dependency Matrix inspecting declared versus installed package versions.
-- Version Drift Matrix identifying package version discrepancies across project boundaries.
+- Manifest Coverage: declared vs installed vs missing vs extra vs platform-skipped counts per project.
+- Python Package Drift & Upgrade Status matrix. Every package declared in two or more manifests appears with:
+  - **Pin type glyph**: `=` (exact `==`), `~` (range), `*` (floating), `·` (transitive install), empty (declared but not installed)
+  - **Upgrade marker**: `↑` (safe update available), `⊘` (blocked by reverse dependency), none (at latest version)
+- Packages Declared in Only One Manifest: full inventory of drift-invisible packages.
+- NPM Package Dependency Matrix inspecting declared versus installed package versions.
+- NPM Package Drift Across Workspaces.
+
+Blocked upgrades include a reason string naming the requiring package and constraint, e.g. `pylint requires astroid<=4.1.dev0,>=4.0.2`.
 
 ---
 
@@ -114,16 +138,16 @@ lem-env install --no-clean
 | Option | Flag | Type | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `--project` | `-p` | Text | `None` | Restrict installation to a single target repository |
-| `--clean / --no-clean` | None | Bool | `True` | Completely purge existing `.venv` and `node_modules` before fresh recreation |
+| `--clean / --no-clean` | None | Bool | `True` | Completely purge existing `.venv` and `node_modules` before fresh recreation. The venv currently executing the pipeline is preserved automatically. |
 
 The pipeline executes in sequential order:
 
 1. Hardware discovery and backend acceleration detection.
 2. Global toolchain verification (Python, Git, NPM).
-3. Virtual environment provisioning and purge.
-4. Python package installation using locked manifests.
+3. Virtual environment provisioning and purge (skips the running venv).
+4. Python package installation using locked manifests, followed by OpenCV variant normalization.
 5. Node.js package installation via NPM.
-6. Post-install validation and import sanity tests.
+6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).
 7. Final ecosystem health audit generation.
 
 ---
@@ -146,6 +170,15 @@ lem-env update
 | `--project` | `-p` | Text | `None` | Target package upgrades for a specific repository |
 | `--dry-run` | None | Bool | `False` | Display proposed version changes without executing installations |
 
+Every candidate upgrade passes through a multi-layer safety pipeline before being applied:
+
+1. **Reverse-dependency check**: `pip inspect --local` is used to build a reverse-dependency graph of every installed package. Any candidate whose target version would violate an installed package's requirement is marked `BLOCKED` with an explanation.
+2. **Constraint-preserving dry-run**: Every non-target installed package is written into a temporary pip constraints file. If pip cannot resolve the target batch without downgrading or removing anything, the batch is split into per-package checks so a single bad candidate does not poison the whole set.
+3. **CUDA-aware torch handling**: On CUDA hosts, `torch`, `torchvision`, and `torchaudio` are resolved against the PyTorch CUDA index (`download.pytorch.org/whl/cu121`). Only packages already installed in the project are considered; packages already at the newest CUDA build produce a `VERIFIED` event instead of a spurious `UPGRADED` event.
+4. **Snapshot + rollback**: Each batch is snapshotted via `pip freeze`, applied, and verified with `pip check`. If the check fails, the batch is rolled back from the snapshot.
+
+After all pip/npm upgrades complete, centralized manifests in `lemgendary-env-manager/requirements/` are automatically re-written to reflect actual installed versions. Packages in `PROTECTED_FROM_SYNC` (`astroid`, `pylint`, `pydantic`, `pydantic-core`) are passed through untouched to prevent a transient upgrade-time drift from being permanently encoded into the manifest.
+
 ---
 
 ### 2.6 Manifest Synchronization (`sync`)
@@ -162,7 +195,9 @@ Manifests maintained:
 - `requirements-env-manager.txt`
 - `requirements-datasets.txt`
 - `requirements-training.txt`
-- `requirements-docs.txt`
+- `lemgendary-ai-studio-gui.package.json`
+
+This is called automatically by `install` and `update` — use directly only when you need to reset a project's requirements without running the full pipeline.
 
 ---
 
@@ -180,15 +215,24 @@ lem-env validate --project lemgendary-docs
 
 Validation gates enforced:
 
-- Python Compilation: Bytecode verification with `py_compile`.
-- Zero-Emoji Compliance: Scans all scannable text files for forbidden emoji glyphs.
-- YAML Linting: Syntax validation with `yamllint`.
-- JSON Validation: RFC 8259 syntax validation across all `.json` files.
-- Markdown Linting: Style compliance via local `markdownlint-cli` with root configuration.
-- PowerShell Analysis: Script quality checks with Microsoft `PSScriptAnalyzer`.
-- ESLint & TypeScript: Static type checking (`tsc --noEmit`) and strict accessibility linting.
-- W3C & WCAG 2.2 AA: Static HTML standards verification and accessibility checking via `pa11y`.
-- Domain Gates: Whitepaper word-for-word synchronization, manifold integrity, and model checkpoint validity.
+| Check | Tool | Projects |
+| :--- | :--- | :--- |
+| Python bytecode | `py_compile` | Python projects |
+| Zero-emoji | Regex scan | All projects |
+| JS/TS linting | ESLint (`--format json`) | `lemgendary-ai-studio-gui` |
+| TypeScript types | `tsc --noEmit` | `lemgendary-ai-studio-gui` |
+| JSON RFC 8259 | Python `json` (in-process) | All 7 repos |
+| PowerShell syntax | `PSScriptAnalyzer` (`pwsh` preferred) | Repositories with `.ps1` |
+| Markdown lint | `markdownlint-cli` | All 7 repos |
+| YAML lint | `yamllint` (env-manager .venv) | All 7 repos |
+| W3C HTML | `html-validate` | `lemgendary-docs` |
+| CSS lint | `stylelint` | `lemgendary-docs` |
+| WCAG 2.2 AA | `pa11y` | `lemgendary-docs` (static HTML) |
+| Domain Verifications | `validator.py` ecosystem gates | All 7 repos (doc sync, parquet schemas, weights, Tauri) |
+
+All Node.js validation tools are resolved locally from `lemgendary-env-manager/node_modules/.bin` via `_resolve_tool_cmd()`, eliminating global toolchain pollution.
+
+> **Note on WCAG for the React app (`lemgendary-ai-studio-gui`)**: The Vite/React build produces a minimal `index.html` shell with a single `<div id="root">`. WCAG accessibility validation of the fully rendered UI requires a running dev server. The `validate` command runs ESLint and TypeScript checks for the GUI instead; WCAG should be run manually via `npx pa11y http://localhost:5173` against a live dev server.
 
 ---
 
@@ -222,14 +266,31 @@ The `serve` command launches the FastAPI REST API and WebSocket real-time teleme
 lem-env serve
 
 # Start on custom interface and port
-lem-env serve --host 0.0.0.0 --port 8765
+lem-env serve --host 0.0.0.0 --port 8000
 ```
 
 | Option | Flag | Type | Default | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `--host` | `-h` | Text | `127.0.0.1` | Network interface address to bind the HTTP listener |
-| `--port` | `-p` | Int | `8765` | TCP port for incoming REST and WebSocket connections |
-| `--reload` | None | Bool | `False` | Enable auto-reload on source file changes for local development |
+| `--port` | `-p` | Int | `8000` | TCP port for incoming REST and WebSocket connections |
+
+Server lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler, ensuring the background event-drain task is cancelled cleanly on shutdown.
+
+---
+
+### 2.10 Git Hook Installation (`setup-hooks`)
+
+The `setup-hooks` command installs or repairs standardized pre-commit hooks across all ecosystem projects.
+
+```bash
+# Install hooks across all projects
+lem-env setup-hooks
+
+# Install for a single project
+lem-env setup-hooks --project lemgendary-datasets
+```
+
+The installed hook delegates validation to `lem-env validate --project <name>` and blocks the commit if any gate fails. This ensures every repository runs the same validation pipeline regardless of local toolchain state.
 
 ---
 
@@ -246,13 +307,12 @@ powershell -ExecutionPolicy Bypass -File .\lemgendary_env_manager.ps1
 Interactive Menu Matrix:
 
 - `[1] Probe System & Hardware Accelerators`: Executes hardware discovery and checks for updates.
-- `[2] Run Full Ecosystem Health Audit`: Displays toolchain, virtual environment, and NPM dependency matrix.
+- `[2] Run Full Ecosystem Health Audit`: Displays toolchain, virtual environment, manifest coverage, drift matrix, single-manifest inventory, and NPM dependency matrix.
 - `[3] Execute Smart Clean Install Pipeline`: Purges environments and installs clean dependencies.
 - `[4] Run Safe Package Updates`: Executes bottom-up dependency upgrades and syncs manifests.
 - `[5] Validate Projects`: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG 2.2 AA, and domain gates.
-- `[6] Start Background API Server`: Launches the FastAPI server with live WebSocket streaming.
-- `[7] Purge Build & Cache Artifacts`: Cleans temporary residues and caches across all projects.
-- `[8] Exit`: Gracefully terminates the management console.
+- `[6] Start/Stop Background API Server`: Launches or stops the FastAPI server as a background PowerShell job with live WebSocket streaming.
+- `[Q] Quit`: Gracefully terminates the management console.
 
 ---
 
@@ -385,6 +445,15 @@ Continuous Integration Workflow Example:
 
 ```bash
 # Standard CI/CD verification pipeline
-lem-env audit || exit 1
+lem-env audit --fast || exit 1
 lem-env validate || exit 2
 ```
+
+---
+
+## Companion Documentation
+
+- [Technical Whitepaper (Markdown)](PAPER_ENV_MANAGER.md)
+- [Technical Whitepaper (HTML)](env_manager.html)
+- [Master REST & WebSocket API Specification (Markdown)](MANUAL_API.md)
+- [Master REST & WebSocket API Specification (HTML)](api-manual.html)

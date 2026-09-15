@@ -13,7 +13,7 @@
   - [2.3 Health & System Discovery Endpoints](#23-health--system-discovery-endpoints)
   - [2.4 Projects & Ecosystem Audit Endpoints](#24-projects--ecosystem-audit-endpoints)
   - [2.5 Orchestration & Lifecycle Action Endpoints](#25-orchestration--lifecycle-action-endpoints)
-  - [2.6 WebSocket Real-Time Telemetry (`/ws/events`)](#26-websocket-real-time-telemetry-wsevents)
+  - [2.6 WebSocket Real-Time Telemetry](#26-websocket-real-time-telemetry)
 - [3. Desktop GUI Tauri IPC API Contracts](#3-desktop-gui-tauri-ipc-api-contracts)
 - [4. Training Suite Python API Engine](#4-training-suite-python-api-engine)
 - [5. Datasets Compilation & Stream Pipeline API](#5-datasets-compilation--stream-pipeline-api)
@@ -43,15 +43,16 @@ package synchronization, and multi-gate validations over HTTP.
 The server is launched via the `lem-env` command or PowerShell management console:
 
 ```bash
-# Default binding: http://127.0.0.1:8765
-lem-env serve --host 127.0.0.1 --port 8765
+# Default binding: http://127.0.0.1:8000
+lem-env serve --host 127.0.0.1 --port 8000
 ```
 
 | Configuration Parameter | Default Value | CLI Flag | Description |
 | :--- | :--- | :--- | :--- |
 | Host Interface | `127.0.0.1` | `--host` | Network IP address to bind HTTP and WebSocket listener |
-| TCP Port | `8765` | `--port` | Local listening port for incoming requests |
-| Hot Reload | `False` | `--reload` | Auto-reloads server when Python source files change |
+| TCP Port | `8000` | `--port` | Local listening port for incoming requests |
+
+The server's lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler. A background asyncio task drains the WebSocket event queue for the lifetime of the server and is cancelled cleanly on shutdown.
 
 ---
 
@@ -59,132 +60,203 @@ lem-env serve --host 127.0.0.1 --port 8765
 
 When the server is active, auto-generated interactive OpenAPI specifications are served at:
 
-- Swagger UI: `http://127.0.0.1:8765/docs`
-- ReDoc UI: `http://127.0.0.1:8765/redoc`
-- Raw OpenAPI JSON: `http://127.0.0.1:8765/openapi.json`
+- Swagger UI: `http://127.0.0.1:8000/docs`
+- ReDoc UI: `http://127.0.0.1:8000/redoc`
+- Raw OpenAPI JSON: `http://127.0.0.1:8000/openapi.json`
 
 ---
 
 ### 2.3 Health & System Discovery Endpoints
 
-#### `GET /`
+#### `GET /api/health`
 
-Returns service identifier, ecosystem version, and operational status.
+Returns the complete ecosystem health audit. This is the largest response body in the API, containing bootstrap status, hardware profile, project environments, version drift entries, manifest coverage, single-manifest inventory, and npm status.
 
-Response:
+Query parameters:
 
-```json
-{
-  "service": "lemgendary-env-manager",
-  "version": "2.1.0",
-  "status": "online"
-}
-```
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `include_safety` | Boolean | `false` | When true, runs per-project pip safety dry-runs to classify each outdated package as safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project. |
 
-#### `GET /api/v1/health`
-
-Lightweight liveness probe for monitoring tools and orchestrators.
-
-Response:
+Response structure (top-level keys):
 
 ```json
 {
-  "status": "healthy",
-  "python_version": "3.11.9",
-  "timestamp": "2026-09-13T00:00:00Z"
+  "bootstrap": { "python_valid": true, "python_version": "3.12.10" },
+  "hardware": { "os_name": "Windows", "primary_backend": "cuda" },
+  "projects": [
+    {
+      "name": "lemgendary-datasets",
+      "venv_exists": true,
+      "total_required": 36,
+      "total_installed": 105,
+      "missing_packages": [],
+      "is_healthy": true
+    }
+  ],
+  "version_drift": [
+    {
+      "package_name": "numpy",
+      "versions": { "lemgendary-datasets": "2.5.3", "lemgendary-training-suite": "2.5.3" },
+      "pins": { "lemgendary-datasets": { "pin_type": "range", "specifier": ">=2.2.6,<2.6" } },
+      "upgrades": { "lemgendary-datasets": { "current": "2.5.3", "latest": null, "safe": false } },
+      "has_drift": false,
+      "has_pin_mismatch": false,
+      "projects_declared": 2
+    }
+  ],
+  "manifest_coverage": [
+    {
+      "project_name": "lemgendary-datasets",
+      "declared_count": 36,
+      "installed_count": 105,
+      "missing": [],
+      "extra": ["setuptools"],
+      "platform_skipped": []
+    }
+  ],
+  "single_manifest_packages": [
+    {
+      "package_name": "mediapipe",
+      "project": "lemgendary-datasets",
+      "installed_version": "1.0.1",
+      "pin_type": "exact",
+      "specifier": "==1.0.1"
+    }
+  ],
+  "npm_packages": [],
+  "npm_drift": [],
+  "overall_healthy": true
 }
 ```
 
-#### `GET /api/v1/probe`
+#### `GET /api/drift`
 
-Performs comprehensive hardware, OS, and GPU accelerator discovery.
+Compact alternative to `/api/health` that returns only the drift-related data. Useful for GUI dashboards that only need the matrix view.
 
-Response:
+Query parameters:
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `include_safety` | Boolean | `false` | Same semantics as `/api/health?include_safety`. |
+
+Response structure:
+
+```json
+{
+  "python": [],
+  "coverage": [],
+  "single_manifest": [],
+  "npm": [],
+  "include_safety": false
+}
+```
+
+`python` entries are drift rows (packages declared in two or more manifests). `coverage` entries reconcile each manifest's declared set against its installed set. `single_manifest` lists packages declared in exactly one manifest. `npm` entries track version drift across npm workspaces.
+
+#### `GET /api/hardware`
+
+Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU devices, primary backend, recommended PyTorch index, and MetaTrader 5 info.
+
+Example response:
 
 ```json
 {
   "os_name": "Windows",
   "os_release": "11",
   "architecture": "AMD64",
-  "cpu_count_logical": 32,
-  "cpu_count_physical": 16,
-  "total_ram_mb": 65536,
+  "cpu_count_logical": 16,
+  "cpu_count_physical": 8,
+  "total_ram_mb": 32768,
   "primary_backend": "cuda",
   "recommended_torch_index": "https://download.pytorch.org/whl/cu121",
   "accelerators": [
     {
-      "name": "NVIDIA GeForce RTX 4090",
+      "name": "NVIDIA GeForce GTX 1650",
       "backend": "cuda",
-      "total_memory_mb": 24576,
+      "total_memory_mb": 4096,
       "index": 0,
       "driver_version": "552.22"
     }
   ],
   "metatrader5": {
     "installed": true,
-    "version": "5.0.38",
+    "version": "5.0.0.6182",
     "install_path": "C:\\Program Files\\MetaTrader 5"
   }
 }
 ```
 
-#### `GET /api/v1/hardware`
+The `metatrader5.version` field is populated from `terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo` property. This is authoritative even when winget has no record of the MT5 installation.
 
-Returns the cached accelerator profile without re-probing external devices.
+#### `GET /api/projects`
 
----
-
-### 2.4 Projects & Ecosystem Audit Endpoints
-
-#### `GET /api/v1/projects`
-
-Enumerates all seven discovered ecosystem repositories, their paths, virtual environment status, and health indicators.
-
-Response:
+Enumerates all discovered ecosystem repositories with their virtual environment status, installed package count, and health indicators.
 
 ```json
 [
   {
     "name": "lemgendary-env-manager",
-    "path": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
-    "venv_exists": true,
-    "is_healthy": true,
-    "total_installed": 38,
-    "missing_packages": []
+    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
+    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
+    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
+    "is_valid": true,
+    "python_version": "Python 3.12.10",
+    "installed_packages_count": 45,
+    "is_node_project": false,
+    "node_modules_present": false
   }
 ]
 ```
 
-#### `GET /api/v1/projects/{project_name}`
+#### `GET /api/npm`
 
-Returns in-depth health, dependency status, and package manifest details for a single target project.
+Returns Node.js workspace status and the npm package dependency matrix for every workspace containing `package.json`.
 
-#### `GET /api/v1/audit`
+---
 
-Executes an exhaustive ecosystem audit, returning prerequisites, all project environments, NPM package matrices, and version drift data.
+### 2.4 Projects & Ecosystem Audit Endpoints
 
-#### `GET /api/v1/npm`
+#### `GET /api/pipeline/status`
 
-Returns the complete Node.js workspace status and NPM Package Dependency Matrix inspecting declared versus installed package versions.
+Returns the execution state of the background pipeline orchestrator together with the last 50 telemetry events.
 
-#### `GET /api/v1/drift`
+```json
+{
+  "is_running": false,
+  "last_status": "success",
+  "last_run_timestamp": "2026-09-15T00:15:00Z",
+  "recent_events": []
+}
+```
 
-Returns the cross-project package version drift matrix.
+#### `GET /api/manifests`
+
+Lists every centralized requirements manifest with its raw contents.
+
+```json
+{
+  "manifests": {
+    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
+  }
+}
+```
 
 ---
 
 ### 2.5 Orchestration & Lifecycle Action Endpoints
 
-#### `POST /api/v1/install`
+#### `POST /api/pipeline/run`
 
 Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket connections.
 
-Request Body:
+Request body:
 
 ```json
 {
-  "target_project": null,
-  "clean": true
+  "target_project": null
 }
 ```
 
@@ -192,50 +264,140 @@ Response:
 
 ```json
 {
-  "status": "started",
-  "message": "Smart Clean Install Pipeline launched",
-  "target_project": null,
-  "clean": true
+  "status": "accepted",
+  "message": "Pipeline initiated."
 }
 ```
 
-#### `GET /api/v1/pipeline/status`
+If a pipeline is already running, returns:
 
-Returns the execution state of the background pipeline orchestrator.
+```json
+{
+  "status": "error",
+  "message": "Pipeline is already running."
+}
+```
+
+#### `POST /api/update`
+
+Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.
+
+Request body:
+
+```json
+{
+  "project": null,
+  "dry_run": false
+}
+```
+
+When `dry_run=true`, returns the plan without applying:
+
+```json
+{
+  "status": "dry_run",
+  "plan": {
+    "total_outdated": 34,
+    "total_safe": 24,
+    "total_blocked": 10,
+    "cuda_detected": true,
+    "cuda_index_url": "https://download.pytorch.org/whl/cu121",
+    "projects": []
+  }
+}
+```
+
+When `dry_run=false`, applies the plan and returns the collected events:
+
+```json
+{
+  "status": "success",
+  "events": [
+    {
+      "project": "lemgendary-datasets",
+      "package": "pandas-ta-classic",
+      "old_version": "0.6.52",
+      "new_version": "0.8.32",
+      "status": "upgraded",
+      "message": "Upgraded 0.6.52 -> 0.8.32."
+    }
+  ]
+}
+```
+
+Event status values:
+
+- `upgraded`: package was successfully upgraded.
+- `blocked`: upgrade blocked by reverse dependency; `message` contains the reason.
+- `verified`: environment verified as healthy without a version change (`pip check`, `torch-cuda-verify`, or torch-family no-op).
+- `failed`: batch or rollback failure.
+- `skipped`: nothing to do.
+
+#### `POST /api/validate`
+
+Executes the multi-gate validation suite across all projects or a single project.
+
+Request body:
+
+```json
+{
+  "project": null
+}
+```
 
 Response:
 
 ```json
 {
-  "is_running": false,
-  "last_status": "idle",
-  "current_step": 7,
-  "total_steps": 7,
-  "last_run_timestamp": "2026-09-13T00:15:00Z"
+  "status": "success",
+  "all_passed": true,
+  "projects": {
+    "lemgendary-datasets": {
+      "project_name": "lemgendary-datasets",
+      "compiled_files_count": 24,
+      "compile_errors": [],
+      "emoji_violations": [],
+      "yaml_errors": [],
+      "json_errors": [],
+      "lint_errors": [],
+      "html_errors": [],
+      "wcag_violations": [],
+      "domain_errors": [],
+      "passed": true
+    }
+  }
 }
 ```
 
-#### `POST /api/v1/upgrade-plan`
+#### `POST /api/manifests/sync`
 
-Analyzes outdated packages and constructs a safe bottom-up upgrade plan.
-
-#### `POST /api/v1/apply-upgrade`
-
-Applies proposed package upgrades and regenerates requirement manifests.
-
-#### `POST /api/v1/sync`
-
-Synchronizes active virtual environment package states into pinned requirements manifests.
-
-#### `POST /api/v1/validate`
-
-Executes the multi-gate validation engine across one or all projects.
-
-Request Body:
+One-way copy of centralized manifests to project directories. Returns per-project sync status.
 
 ```json
 {
-  "project_name": "lemgendary-docs"
+  "status": "success",
+  "results": {
+    "lemgendary-training-suite": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
+    },
+    "lemgendary-datasets": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
+    }
+  }
+}
+```
+
+#### `POST /api/clean`
+
+Purges orphaned bytecode caches and temporary build artifacts.
+
+Request body:
+
+```json
+{
+  "project": null
 }
 ```
 
@@ -243,44 +405,39 @@ Response:
 
 ```json
 {
-  "project_name": "lemgendary-docs",
-  "passed": true,
-  "total_violations": 0,
-  "compile_errors": [],
-  "emoji_violations": [],
-  "yaml_errors": [],
-  "json_errors": [],
-  "lint_errors": [],
-  "html_errors": [],
-  "wcag_violations": [],
-  "domain_errors": []
+  "status": "success",
+  "cleaned_count": 42,
+  "reclaimed_bytes": 1258291,
+  "reclaimed_mb": 1.2
 }
 ```
-
-#### `POST /api/v1/clean`
-
-Purges temporary build artifacts, cache directories, and volatile residue across projects.
 
 ---
 
-### 2.6 WebSocket Real-Time Telemetry (`/ws/events`)
+### 2.6 WebSocket Real-Time Telemetry
 
 Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a persistent WebSocket connection:
-`ws://127.0.0.1:8765/ws/events`
 
-#### Telemetry Event Schema (`PipelineEvent`)
+```bash
+ws://127.0.0.1:8000/ws/log
+ws://127.0.0.1:8000/ws/logs
+```
+
+Both paths are aliases for the same handler. On connect, the client receives the last 20 buffered events, then continues to receive new events as they are emitted by the pipeline.
+
+Telemetry Event Schema (`PipelineEvent`):
 
 ```json
 {
-  "timestamp": "2026-09-13T00:15:02.123456Z",
+  "timestamp": "2026-09-15T00:15:02.123456Z",
   "step_number": 3,
   "total_steps": 7,
-  "step_name": "Virtual Environment Creation",
+  "step_name": "Virtual Environments",
   "status": "info",
-  "message": "Provisioning virtual environment for lemgendary-training-suite...",
+  "message": "Creating fresh virtual environment for lemgendary-datasets...",
   "data": {
-    "project": "lemgendary-training-suite",
-    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\.venv"
+    "project": "lemgendary-datasets",
+    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
   }
 }
 ```
@@ -291,6 +448,8 @@ Event Status Values:
 - `success`: Step completed cleanly without warnings.
 - `warning`: Step completed with non-fatal advisory notice.
 - `error`: Fatal error encountered in step execution.
+
+Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`, which allows the background pipeline thread to broadcast events on the server's running event loop without blocking.
 
 ---
 
@@ -304,7 +463,7 @@ The desktop frontend `lemgendary-ai-studio-gui` communicates with the native Rus
 | `get_ecosystem_status` | None | `EcosystemReport` | Queries active environment manager daemon for health metrics |
 | `trigger_clean_install` | `project: Option<String>` | `PipelineLaunchResult` | Starts environment provisioning pipeline |
 | `execute_validation` | `project: Option<String>` | `ValidationResult` | Runs multi-gate verification suite |
-| `connect_telemetry_stream` | None | `WebSocketHandle` | Subscribes frontend to `/ws/events` channel |
+| `connect_telemetry_stream` | None | `WebSocketHandle` | Subscribes frontend to `/ws/log` channel |
 
 ---
 
@@ -319,7 +478,7 @@ Key API interfaces:
 - `SOTAValidationLadder`: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics against historical checkpoints.
 - `ModelRegistry`: Typed metadata manager for reading and validating `unified_models_v2.yaml`.
 
-Example Usage:
+Example usage:
 
 ```python
 from training.governor import SawtoothGovernor
@@ -343,7 +502,7 @@ Key API interfaces:
 - `ForexStreamCompiler`: Parquet chunking engine converting tick and candlestick data into normalized training tensors.
 - `CloudSyncManager`: Authenticated transfer client interfacing with Google Cloud Storage and S3 buckets.
 
-Example Usage:
+Example usage:
 
 ```python
 from datasets.compiler import ManifoldCompiler
@@ -373,6 +532,22 @@ Error Response Format:
 {
   "detail": "Project 'unknown-suite' was not found in ecosystem registry",
   "error_code": "PROJECT_NOT_FOUND",
-  "timestamp": "2026-09-13T00:00:00Z"
+  "timestamp": "2026-09-15T00:00:00Z"
 }
 ```
+
+Additional resilience features:
+
+- **Automatic cache recovery**: `run_pip_with_recovery` detects corruption signatures in pip's output (`access violation`, hash mismatch, truncated download) and purges the HTTP cache before retrying once with `--no-cache-dir`.
+- **Reverse-dependency safety**: No upgrade is applied if it would violate an installed package's requirement. The blocked reason is returned in the event stream.
+- **Snapshot rollback**: Every package batch is snapshotted via `pip freeze` before apply. If `pip check` fails afterward, the batch is rolled back automatically.
+- **Graceful WebSocket shutdown**: The event drain task is cancelled cleanly by the FastAPI lifespan handler on server shutdown, so no `Task was destroyed but it is pending!` warnings appear in the log.
+
+---
+
+## Companion Documentation
+
+- [Technical Whitepaper (Markdown)](PAPER_ENV_MANAGER.md)
+- [Technical Whitepaper (HTML)](env_manager.html)
+- [Master CLI Operations Manual (Markdown)](MANUAL_CLI.md)
+- [Master CLI Operations Manual (HTML)](cli-manual.html)
