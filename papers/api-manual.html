@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master API Reference Manual - LemGendary AI Ecosystem</title>
-    <meta name="description" content="Authoritative Master Application Programming Interface Reference Manual for the LemGendary AI Ecosystem REST, WebSocket, and IPC services.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Authoritative Master Application Programming Interface Reference Manual for the LemGendary AI Ecosystem REST, WebSocket, and IPC services.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
                 <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+                    onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
             <p class="subtitle">Authoritative REST, WebSocket, and IPC Interface Reference for Machine Integration</p>
             <div class="meta">
                 <span>Category 00</span>
-                <span>Version 2.1.0</span>
+                <span>Version 2.3.0</span>
                 <span>Component: Ecosystem API Surface</span>
             </div>
         </header>
@@ -30,7 +35,8 @@
             </a>
             <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back
+                        to Index</a></li>
                 <li><a href="#section-1">1. Executive Overview</a></li>
                 <li><a href="#section-2">2. Environment Manager REST API</a>
                     <ul class="sub-item">
@@ -39,358 +45,607 @@
                         <li><a href="#section-2-3">2.3 Health &amp; System Discovery Endpoints</a></li>
                         <li><a href="#section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</a></li>
                         <li><a href="#section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</a></li>
-                        <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry (/ws/events)</a></li>
+                        <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
                 <li><a href="#section-4">4. Training Suite Python API Engine</a></li>
                 <li><a href="#section-5">5. Datasets Compilation &amp; Stream Pipeline API</a></li>
                 <li><a href="#section-6">6. Error Handling, Status Codes &amp; Resilience</a></li>
+                <li><a href="#companion-documentation">Companion Documentation</a></li>
             </ul>
         </nav>
 
-        <section id="section-1">
-            <h2>1. Executive Overview</h2>
-            <p>
-                The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine integration,
-                desktop UI orchestration, and automated pipeline execution.
-                Central to the ecosystem is the authoritative FastAPI daemon running in <code>lemgendary-env-manager</code>, providing both
-                high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
-            </p>
-            <p>
-                All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to Pydantic models,
-                and maintain zero extraneous metadata.
-            </p>
-        </section>
+        <main class="content">
+            <section id="section-1">
+                <h2>1. Executive Overview</h2>
+                <p>
+                    The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine
+                    integration,
+                    desktop UI orchestration, and automated pipeline execution.
+                    Central to the ecosystem is the authoritative FastAPI daemon running in
+                    <code>lemgendary-env-manager</code>, providing both
+                    high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
+                </p>
+                <p>
+                    All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to
+                    Pydantic models,
+                    and maintain zero extraneous metadata.
+                </p>
+            </section>
 
-        <section id="section-2">
-            <h2>2. Environment Manager REST API</h2>
-            <p>
-                The Environment Manager server runs locally or inside CI environments to expose hardware discovery, ecosystem audits,
-                package synchronization, and multi-gate validations over HTTP.
-            </p>
+            <section id="section-2">
+                <h2>2. Environment Manager REST API</h2>
+                <p>
+                    The Environment Manager server runs locally or inside CI environments to expose hardware discovery,
+                    ecosystem audits,
+                    package synchronization, and multi-gate validations over HTTP.
+                </p>
 
-            <h3 id="section-2-1">2.1 Server Configuration &amp; Startup</h3>
-            <p>
-                The server is launched via the <code>lem-env</code> command or PowerShell management console:
-            </p>
-            <pre><code># Default binding: http://127.0.0.1:8765
-lem-env serve --host 127.0.0.1 --port 8765</code></pre>
+                <h3 id="section-2-1">2.1 Server Configuration &amp; Startup</h3>
+                <p>
+                    The server is launched via the <code>lem-env</code> command or PowerShell management console:
+                </p>
+                <pre><code># Default binding: http://127.0.0.1:8000
+lem-env serve --host 127.0.0.1 --port 8000</code></pre>
 
-            <table class="reference-table">
-                <thead>
-                    <tr>
-                        <th>Configuration Parameter</th>
-                        <th>Default Value</th>
-                        <th>CLI Flag</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Host Interface</td>
-                        <td><code>127.0.0.1</code></td>
-                        <td><code>--host</code></td>
-                        <td>Network IP address to bind HTTP and WebSocket listener</td>
-                    </tr>
-                    <tr>
-                        <td>TCP Port</td>
-                        <td><code>8765</code></td>
-                        <td><code>--port</code></td>
-                        <td>Local listening port for incoming requests</td>
-                    </tr>
-                    <tr>
-                        <td>Hot Reload</td>
-                        <td><code>False</code></td>
-                        <td><code>--reload</code></td>
-                        <td>Auto-reloads server when Python source files change</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Configuration Parameter</th>
+                            <th>Default Value</th>
+                            <th>CLI Flag</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Host Interface</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td><code>--host</code></td>
+                            <td>Network IP address to bind HTTP and WebSocket listener</td>
+                        </tr>
+                        <tr>
+                            <td>TCP Port</td>
+                            <td><code>8000</code></td>
+                            <td><code>--port</code></td>
+                            <td>Local listening port for incoming requests</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <h3 id="section-2-2">2.2 Interactive OpenAPI Documentation</h3>
-            <p>When the server is active, auto-generated interactive OpenAPI specifications are served at:</p>
-            <ul>
-                <li>Swagger UI: <code>http://127.0.0.1:8765/docs</code></li>
-                <li>ReDoc UI: <code>http://127.0.0.1:8765/redoc</code></li>
-                <li>Raw OpenAPI JSON: <code>http://127.0.0.1:8765/openapi.json</code></li>
-            </ul>
+                <p>The server's lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler. A
+                    background asyncio task drains the WebSocket event queue for the lifetime of the server and is
+                    cancelled cleanly on shutdown.</p>
 
-            <h3 id="section-2-3">2.3 Health &amp; System Discovery Endpoints</h3>
-            <h4><code>GET /</code></h4>
-            <p>Returns service identifier, ecosystem version, and operational status.</p>
-            <pre><code>{
-  "service": "lemgendary-env-manager",
-  "version": "2.1.0",
-  "status": "online"
+                <h3 id="section-2-2">2.2 Interactive OpenAPI Documentation</h3>
+                <p>When the server is active, auto-generated interactive OpenAPI specifications are served at:</p>
+                <ul>
+                    <li>Swagger UI: <code>http://127.0.0.1:8000/docs</code></li>
+                    <li>ReDoc UI: <code>http://127.0.0.1:8000/redoc</code></li>
+                    <li>Raw OpenAPI JSON: <code>http://127.0.0.1:8000/openapi.json</code></li>
+                </ul>
+
+                <h3 id="section-2-3">2.3 Health &amp; System Discovery Endpoints</h3>
+
+                <h4><code>GET /api/health</code></h4>
+                <p>Returns the complete ecosystem health audit. This is the largest response body in the API, containing
+                    bootstrap status, hardware profile, project environments, version drift entries, manifest coverage,
+                    single-manifest inventory, and npm status.</p>
+                <p>Query parameters:</p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>include_safety</code></td>
+                            <td>Boolean</td>
+                            <td><code>false</code></td>
+                            <td>When true, runs per-project pip safety dry-runs to classify each outdated package as
+                                safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Response structure (top-level keys):</p>
+                <pre><code>{
+  "bootstrap": { "python_valid": true, "python_version": "3.12.10" },
+  "hardware": { "os_name": "Windows", "primary_backend": "cuda" },
+  "projects": [
+    {
+      "name": "lemgendary-datasets",
+      "venv_exists": true,
+      "total_required": 36,
+      "total_installed": 105,
+      "missing_packages": [],
+      "is_healthy": true
+    }
+  ],
+  "version_drift": [
+    {
+      "package_name": "numpy",
+      "versions": { "lemgendary-datasets": "2.5.3", "lemgendary-training-suite": "2.5.3" },
+      "pins": { "lemgendary-datasets": { "pin_type": "range", "specifier": "&gt;=2.2.6,&lt;2.6" } },
+      "upgrades": { "lemgendary-datasets": { "current": "2.5.3", "latest": null, "safe": false } },
+      "has_drift": false,
+      "has_pin_mismatch": false,
+      "projects_declared": 2
+    }
+  ],
+  "manifest_coverage": [
+    {
+      "project_name": "lemgendary-datasets",
+      "declared_count": 36,
+      "installed_count": 105,
+      "missing": [],
+      "extra": ["setuptools"],
+      "platform_skipped": []
+    }
+  ],
+  "single_manifest_packages": [
+    {
+      "package_name": "mediapipe",
+      "project": "lemgendary-datasets",
+      "installed_version": "1.0.1",
+      "pin_type": "exact",
+      "specifier": "==1.0.1"
+    }
+  ],
+  "npm_packages": [],
+  "npm_drift": [],
+  "overall_healthy": true
 }</code></pre>
 
-            <h4><code>GET /api/v1/health</code></h4>
-            <p>Lightweight liveness probe for monitoring tools and orchestrators.</p>
-            <pre><code>{
-  "status": "healthy",
-  "python_version": "3.11.9",
-  "timestamp": "2026-09-13T00:00:00Z"
+                <h4><code>GET /api/drift</code></h4>
+                <p>Compact alternative to <code>/api/health</code> that returns only the drift-related data. Useful for
+                    GUI dashboards that only need the matrix view.</p>
+                <p>Query parameters:</p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>include_safety</code></td>
+                            <td>Boolean</td>
+                            <td><code>false</code></td>
+                            <td>Same semantics as <code>/api/health?include_safety</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Response structure:</p>
+                <pre><code>{
+  "python": [],
+  "coverage": [],
+  "single_manifest": [],
+  "npm": [],
+  "include_safety": false
 }</code></pre>
+                <p><code>python</code> entries are drift rows (packages declared in two or more manifests).
+                    <code>coverage</code> entries reconcile each manifest's declared set against its installed set.
+                    <code>single_manifest</code> lists packages declared in exactly one manifest. <code>npm</code>
+                    entries track version drift across npm workspaces.
+                </p>
 
-            <h4><code>GET /api/v1/probe</code></h4>
-            <p>Performs comprehensive hardware, OS, and GPU accelerator discovery.</p>
-            <pre><code>{
+                <h4><code>GET /api/hardware</code></h4>
+                <p>Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU devices, primary
+                    backend, recommended PyTorch index, and MetaTrader 5 info.</p>
+                <p>Example response:</p>
+                <pre><code>{
   "os_name": "Windows",
   "os_release": "11",
   "architecture": "AMD64",
-  "cpu_count_logical": 32,
-  "cpu_count_physical": 16,
-  "total_ram_mb": 65536,
+  "cpu_count_logical": 16,
+  "cpu_count_physical": 8,
+  "total_ram_mb": 32768,
   "primary_backend": "cuda",
   "recommended_torch_index": "https://download.pytorch.org/whl/cu121",
   "accelerators": [
     {
-      "name": "NVIDIA GeForce RTX 4090",
+      "name": "NVIDIA GeForce GTX 1650",
       "backend": "cuda",
-      "total_memory_mb": 24576,
+      "total_memory_mb": 4096,
       "index": 0,
       "driver_version": "552.22"
     }
   ],
   "metatrader5": {
     "installed": true,
-    "version": "5.0.38",
+    "version": "5.0.0.6182",
     "install_path": "C:\\Program Files\\MetaTrader 5"
   }
 }</code></pre>
+                <p>The <code>metatrader5.version</code> field is populated from <code>terminal64.exe</code>'s
+                    <code>FileVersion</code> metadata via PowerShell's <code>VersionInfo</code> property. This is
+                    authoritative even when winget has no record of the MT5 installation.
+                </p>
 
-            <h4><code>GET /api/v1/hardware</code></h4>
-            <p>Returns the cached accelerator profile without re-probing external devices.</p>
-
-            <h3 id="section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</h3>
-            <h4><code>GET /api/v1/projects</code></h4>
-            <p>Enumerates all seven discovered ecosystem repositories, their paths, virtual environment status, and health indicators.</p>
-            <pre><code>[
+                <h4><code>GET /api/projects</code></h4>
+                <p>Enumerates all discovered ecosystem repositories with their virtual environment status, installed
+                    package count, and health indicators.</p>
+                <pre><code>[
   {
     "name": "lemgendary-env-manager",
-    "path": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
-    "venv_exists": true,
-    "is_healthy": true,
-    "total_installed": 38,
-    "missing_packages": []
+    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
+    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
+    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
+    "is_valid": true,
+    "python_version": "Python 3.12.10",
+    "installed_packages_count": 45,
+    "is_node_project": false,
+    "node_modules_present": false
   }
 ]</code></pre>
 
-            <h4><code>GET /api/v1/projects/{project_name}</code></h4>
-            <p>Returns in-depth health, dependency status, and package manifest details for a single target project.</p>
+                <h4><code>GET /api/npm</code></h4>
+                <p>Returns Node.js workspace status and the npm package dependency matrix for every workspace containing
+                    <code>package.json</code>.
+                </p>
 
-            <h4><code>GET /api/v1/audit</code></h4>
-            <p>Executes an exhaustive ecosystem audit, returning prerequisites, all project environments, NPM package matrices, and version drift data.</p>
+                <h3 id="section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</h3>
 
-            <h4><code>GET /api/v1/npm</code></h4>
-            <p>Returns the complete Node.js workspace status and NPM Package Dependency Matrix inspecting declared versus installed package versions.</p>
-
-            <h4><code>GET /api/v1/drift</code></h4>
-            <p>Returns the cross-project package version drift matrix.</p>
-
-            <h3 id="section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</h3>
-            <h4><code>POST /api/v1/install</code></h4>
-            <p>Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket connections.</p>
-            <pre><code>{
-  "target_project": null,
-  "clean": true
-}</code></pre>
-
-            <h4><code>GET /api/v1/pipeline/status</code></h4>
-            <p>Returns the execution state of the background pipeline orchestrator.</p>
-            <pre><code>{
+                <h4><code>GET /api/pipeline/status</code></h4>
+                <p>Returns the execution state of the background pipeline orchestrator together with the last 50
+                    telemetry events.</p>
+                <pre><code>{
   "is_running": false,
-  "last_status": "idle",
-  "current_step": 7,
-  "total_steps": 7,
-  "last_run_timestamp": "2026-09-13T00:15:00Z"
+  "last_status": "success",
+  "last_run_timestamp": "2026-09-15T00:15:00Z",
+  "recent_events": []
 }</code></pre>
 
-            <h4><code>POST /api/v1/upgrade-plan</code></h4>
-            <p>Analyzes outdated packages and constructs a safe bottom-up upgrade plan.</p>
-
-            <h4><code>POST /api/v1/apply-upgrade</code></h4>
-            <p>Applies proposed package upgrades and regenerates requirement manifests.</p>
-
-            <h4><code>POST /api/v1/sync</code></h4>
-            <p>Synchronizes active virtual environment package states into pinned requirements manifests.</p>
-
-            <h4><code>POST /api/v1/validate</code></h4>
-            <p>Executes the multi-gate validation engine across one or all projects.</p>
-            <pre><code>{
-  "project_name": "lemgendary-docs"
-}</code></pre>
-
-            <h4><code>POST /api/v1/clean</code></h4>
-            <p>Purges temporary build artifacts, cache directories, and volatile residue across projects.</p>
-
-            <h3 id="section-2-6">2.6 WebSocket Real-Time Telemetry (/ws/events)</h3>
-            <p>
-                Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a persistent WebSocket connection:
-                <code>ws://127.0.0.1:8765/ws/events</code>
-            </p>
-            <pre><code>{
-  "timestamp": "2026-09-13T00:15:02.123456Z",
-  "step_number": 3,
-  "total_steps": 7,
-  "step_name": "Virtual Environment Creation",
-  "status": "info",
-  "message": "Provisioning virtual environment for lemgendary-training-suite...",
-  "data": {
-    "project": "lemgendary-training-suite",
-    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\.venv"
+                <h4><code>GET /api/manifests</code></h4>
+                <p>Lists every centralized requirements manifest with its raw contents.</p>
+                <pre><code>{
+  "manifests": {
+    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
   }
 }</code></pre>
-            <p>Event Status Values:</p>
-            <ul>
-                <li><code>info</code>: Informational milestone during pipeline processing.</li>
-                <li><code>success</code>: Step completed cleanly without warnings.</li>
-                <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
-                <li><code>error</code>: Fatal error encountered in step execution.</li>
-            </ul>
-        </section>
 
-        <section id="section-3">
-            <h2>3. Desktop GUI Tauri IPC API Contracts</h2>
-            <p>
-                The desktop frontend <code>lemgendary-ai-studio-gui</code> communicates with the native Rust backend via Tauri v2 IPC invocations.
-            </p>
-            <table class="reference-table">
-                <thead>
-                    <tr>
-                        <th>IPC Command</th>
-                        <th>Arguments</th>
-                        <th>Return Type</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>run_system_probe</code></td>
-                        <td>None</td>
-                        <td><code>SystemProbeResult</code></td>
-                        <td>Triggers hardware discovery from native desktop thread</td>
-                    </tr>
-                    <tr>
-                        <td><code>get_ecosystem_status</code></td>
-                        <td>None</td>
-                        <td><code>EcosystemReport</code></td>
-                        <td>Queries active environment manager daemon for health metrics</td>
-                    </tr>
-                    <tr>
-                        <td><code>trigger_clean_install</code></td>
-                        <td><code>project: Option&lt;String&gt;</code></td>
-                        <td><code>PipelineLaunchResult</code></td>
-                        <td>Starts environment provisioning pipeline</td>
-                    </tr>
-                    <tr>
-                        <td><code>execute_validation</code></td>
-                        <td><code>project: Option&lt;String&gt;</code></td>
-                        <td><code>ValidationResult</code></td>
-                        <td>Runs multi-gate verification suite</td>
-                    </tr>
-                    <tr>
-                        <td><code>connect_telemetry_stream</code></td>
-                        <td>None</td>
-                        <td><code>WebSocketHandle</code></td>
-                        <td>Subscribes frontend to /ws/events channel</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+                <h3 id="section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</h3>
 
-        <section id="section-4">
-            <h2>4. Training Suite Python API Engine</h2>
-            <p>
-                The <code>lemgendary-training-suite</code> provides specialized Python classes for neural network training and validation.
-            </p>
-            <p>Key API interfaces:</p>
-            <ul>
-                <li><code>SawtoothGovernor</code>: Dynamic gradient scaling and learning rate scheduling preventing NaN divergence.</li>
-                <li><code>MemorySentinel</code>: Continuous VRAM monitoring that adjusts batch dimensions when nearing hardware limits.</li>
-                <li><code>SOTAValidationLadder</code>: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics against historical checkpoints.</li>
-                <li><code>ModelRegistry</code>: Typed metadata manager for reading and validating unified_models_v2.yaml.</li>
-            </ul>
-            <pre><code>from training.governor import SawtoothGovernor
+                <h4><code>POST /api/pipeline/run</code></h4>
+                <p>Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket
+                    connections.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "target_project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "accepted",
+  "message": "Pipeline initiated."
+}</code></pre>
+                <p>If a pipeline is already running, returns:</p>
+                <pre><code>{
+  "status": "error",
+  "message": "Pipeline is already running."
+}</code></pre>
+
+                <h4><code>POST /api/update</code></h4>
+                <p>Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null,
+  "dry_run": false
+}</code></pre>
+                <p>When <code>dry_run=true</code>, returns the plan without applying:</p>
+                <pre><code>{
+  "status": "dry_run",
+  "plan": {
+    "total_outdated": 34,
+    "total_safe": 24,
+    "total_blocked": 10,
+    "cuda_detected": true,
+    "cuda_index_url": "https://download.pytorch.org/whl/cu121",
+    "projects": []
+  }
+}</code></pre>
+                <p>When <code>dry_run=false</code>, applies the plan and returns the collected events:</p>
+                <pre><code>{
+  "status": "success",
+  "events": [
+    {
+      "project": "lemgendary-datasets",
+      "package": "pandas-ta-classic",
+      "old_version": "0.6.52",
+      "new_version": "0.8.32",
+      "status": "upgraded",
+      "message": "Upgraded 0.6.52 -&gt; 0.8.32."
+    }
+  ]
+}</code></pre>
+                <p>Event status values:</p>
+                <ul>
+                    <li><code>upgraded</code>: package was successfully upgraded.</li>
+                    <li><code>blocked</code>: upgrade blocked by reverse dependency; <code>message</code> contains the
+                        reason.</li>
+                    <li><code>verified</code>: environment verified as healthy without a version change
+                        (<code>pip check</code>, <code>torch-cuda-verify</code>, or torch-family no-op).</li>
+                    <li><code>failed</code>: batch or rollback failure.</li>
+                    <li><code>skipped</code>: nothing to do.</li>
+                </ul>
+
+                <h4><code>POST /api/validate</code></h4>
+                <p>Executes the multi-gate validation suite across all projects or a single project.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "all_passed": true,
+  "projects": {
+    "lemgendary-datasets": {
+      "project_name": "lemgendary-datasets",
+      "compiled_files_count": 24,
+      "compile_errors": [],
+      "emoji_violations": [],
+      "yaml_errors": [],
+      "json_errors": [],
+      "lint_errors": [],
+      "html_errors": [],
+      "wcag_violations": [],
+      "domain_errors": [],
+      "passed": true
+    }
+  }
+}</code></pre>
+
+                <h4><code>POST /api/manifests/sync</code></h4>
+                <p>One-way copy of centralized manifests to project directories. Returns per-project sync status.</p>
+                <pre><code>{
+  "status": "success",
+  "results": {
+    "lemgendary-training-suite": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
+    },
+    "lemgendary-datasets": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
+    }
+  }
+}</code></pre>
+
+                <h4><code>POST /api/clean</code></h4>
+                <p>Purges orphaned bytecode caches and temporary build artifacts.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "cleaned_count": 42,
+  "reclaimed_bytes": 1258291,
+  "reclaimed_mb": 1.2
+}</code></pre>
+
+                <h3 id="section-2-6">2.6 WebSocket Real-Time Telemetry</h3>
+                <p>Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a
+                    persistent WebSocket connection:</p>
+                <pre><code>ws://127.0.0.1:8000/ws/log
+ws://127.0.0.1:8000/ws/logs</code></pre>
+                <p>Both paths are aliases for the same handler. On connect, the client receives the last 20 buffered
+                    events, then continues to receive new events as they are emitted by the pipeline.</p>
+                <p>Telemetry Event Schema (<code>PipelineEvent</code>):</p>
+                <pre><code>{
+  "timestamp": "2026-09-15T00:15:02.123456Z",
+  "step_number": 3,
+  "total_steps": 7,
+  "step_name": "Virtual Environments",
+  "status": "info",
+  "message": "Creating fresh virtual environment for lemgendary-datasets...",
+  "data": {
+    "project": "lemgendary-datasets",
+    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
+  }
+}</code></pre>
+                <p>Event Status Values:</p>
+                <ul>
+                    <li><code>info</code>: Informational milestone during pipeline processing.</li>
+                    <li><code>success</code>: Step completed cleanly without warnings.</li>
+                    <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
+                    <li><code>error</code>: Fatal error encountered in step execution.</li>
+                </ul>
+                <p>Thread-safe dispatch is guaranteed via <code>asyncio.run_coroutine_threadsafe()</code>, which allows
+                    the background pipeline thread to broadcast events on the server's running event loop without
+                    blocking.</p>
+            </section>
+
+            <section id="section-3">
+                <h2>3. Desktop GUI Tauri IPC API Contracts</h2>
+                <p>
+                    The desktop frontend <code>lemgendary-ai-studio-gui</code> communicates with the native Rust backend
+                    via Tauri v2 IPC invocations.
+                </p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>IPC Command</th>
+                            <th>Arguments</th>
+                            <th>Return Type</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>run_system_probe</code></td>
+                            <td>None</td>
+                            <td><code>SystemProbeResult</code></td>
+                            <td>Triggers hardware discovery from native desktop thread</td>
+                        </tr>
+                        <tr>
+                            <td><code>get_ecosystem_status</code></td>
+                            <td>None</td>
+                            <td><code>EcosystemReport</code></td>
+                            <td>Queries active environment manager daemon for health metrics</td>
+                        </tr>
+                        <tr>
+                            <td><code>trigger_clean_install</code></td>
+                            <td><code>project: Option&lt;String&gt;</code></td>
+                            <td><code>PipelineLaunchResult</code></td>
+                            <td>Starts environment provisioning pipeline</td>
+                        </tr>
+                        <tr>
+                            <td><code>execute_validation</code></td>
+                            <td><code>project: Option&lt;String&gt;</code></td>
+                            <td><code>ValidationResult</code></td>
+                            <td>Runs multi-gate verification suite</td>
+                        </tr>
+                        <tr>
+                            <td><code>connect_telemetry_stream</code></td>
+                            <td>None</td>
+                            <td><code>WebSocketHandle</code></td>
+                            <td>Subscribes frontend to <code>/ws/log</code> channel</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="section-4">
+                <h2>4. Training Suite Python API Engine</h2>
+                <p>
+                    The <code>lemgendary-training-suite</code> provides specialized Python classes for neural network
+                    training and validation.
+                </p>
+                <p>Key API interfaces:</p>
+                <ul>
+                    <li><code>SawtoothGovernor</code>: Dynamic gradient scaling and learning rate scheduling preventing
+                        NaN divergence.</li>
+                    <li><code>MemorySentinel</code>: Continuous VRAM monitoring that adjusts batch dimensions when
+                        nearing hardware limits.</li>
+                    <li><code>SOTAValidationLadder</code>: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics
+                        against historical checkpoints.</li>
+                    <li><code>ModelRegistry</code>: Typed metadata manager for reading and validating
+                        <code>unified_models_v2.yaml</code>.
+                    </li>
+                </ul>
+                <p>Example usage:</p>
+                <pre><code>from training.governor import SawtoothGovernor
 from training.sentinel import MemorySentinel
 from models.registry import ModelRegistry
 
 registry = ModelRegistry.load_unified("unified_models_v2.yaml")
 sentinel = MemorySentinel(target_device="cuda:0", headroom_mb=2048)
 governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)</code></pre>
-        </section>
+            </section>
 
-        <section id="section-5">
-            <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
-            <p>
-                The <code>lemgendary-datasets</code> repository exposes Python APIs for compiling and reading structured image and market data.
-            </p>
-            <p>Key API interfaces:</p>
-            <ul>
-                <li><code>ManifoldCompiler</code>: High-throughput image pairing, bicubic downsampling, and synthetic noise generation.</li>
-                <li><code>ForexStreamCompiler</code>: Parquet chunking engine converting tick and candlestick data into normalized training tensors.</li>
-                <li><code>CloudSyncManager</code>: Authenticated transfer client interfacing with Google Cloud Storage and S3 buckets.</li>
-            </ul>
-            <pre><code>from datasets.compiler import ManifoldCompiler
+            <section id="section-5">
+                <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
+                <p>
+                    The <code>lemgendary-datasets</code> repository exposes Python APIs for compiling and reading
+                    structured image and market data.
+                </p>
+                <p>Key API interfaces:</p>
+                <ul>
+                    <li><code>ManifoldCompiler</code>: High-throughput image pairing, bicubic downsampling, and
+                        synthetic noise generation.</li>
+                    <li><code>ForexStreamCompiler</code>: Parquet chunking engine converting tick and candlestick data
+                        into normalized training tensors.</li>
+                    <li><code>CloudSyncManager</code>: Authenticated transfer client interfacing with Google Cloud
+                        Storage and S3 buckets.</li>
+                </ul>
+                <p>Example usage:</p>
+                <pre><code>from datasets.compiler import ManifoldCompiler
 from datasets.forex import ForexStreamCompiler
 
 compiler = ManifoldCompiler(target_dir="LemGendizedNAFNet")
 compiler.compile_pairs(hr_source="data/raw_hr", lr_dest="data/compiled_lr")</code></pre>
-        </section>
+            </section>
 
-        <section id="section-6">
-            <h2>6. Error Handling, Status Codes &amp; Resilience</h2>
-            <p>
-                All ecosystem APIs implement strict error resilience:
-            </p>
-            <table class="reference-table">
-                <thead>
-                    <tr>
-                        <th>HTTP Status</th>
-                        <th>Code String</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>200 OK</code></td>
-                        <td><code>SUCCESS</code></td>
-                        <td>Request processed successfully</td>
-                    </tr>
-                    <tr>
-                        <td><code>400 Bad Request</code></td>
-                        <td><code>VALIDATION_ERROR</code></td>
-                        <td>Request body or query parameters failed schema validation</td>
-                    </tr>
-                    <tr>
-                        <td><code>404 Not Found</code></td>
-                        <td><code>PROJECT_NOT_FOUND</code></td>
-                        <td>Specified target repository does not exist in workspace</td>
-                    </tr>
-                    <tr>
-                        <td><code>409 Conflict</code></td>
-                        <td><code>PIPELINE_ACTIVE</code></td>
-                        <td>An install or update pipeline is currently executing</td>
-                    </tr>
-                    <tr>
-                        <td><code>500 Server Error</code></td>
-                        <td><code>INTERNAL_FAILURE</code></td>
-                        <td>Unhandled internal exception occurred during toolchain execution</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p>Error Response Format:</p>
-            <pre><code>{
+            <section id="section-6">
+                <h2>6. Error Handling, Status Codes &amp; Resilience</h2>
+                <p>
+                    All ecosystem APIs implement strict error resilience:
+                </p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>HTTP Status</th>
+                            <th>Code String</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>200 OK</code></td>
+                            <td><code>SUCCESS</code></td>
+                            <td>Request processed successfully</td>
+                        </tr>
+                        <tr>
+                            <td><code>400 Bad Request</code></td>
+                            <td><code>VALIDATION_ERROR</code></td>
+                            <td>Request body or query parameters failed schema validation</td>
+                        </tr>
+                        <tr>
+                            <td><code>404 Not Found</code></td>
+                            <td><code>PROJECT_NOT_FOUND</code></td>
+                            <td>Specified target repository does not exist in workspace</td>
+                        </tr>
+                        <tr>
+                            <td><code>409 Conflict</code></td>
+                            <td><code>PIPELINE_ACTIVE</code></td>
+                            <td>An install or update pipeline is currently executing</td>
+                        </tr>
+                        <tr>
+                            <td><code>500 Server Error</code></td>
+                            <td><code>INTERNAL_FAILURE</code></td>
+                            <td>Unhandled internal exception occurred during toolchain execution</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Error Response Format:</p>
+                <pre><code>{
   "detail": "Project 'unknown-suite' was not found in ecosystem registry",
   "error_code": "PROJECT_NOT_FOUND",
-  "timestamp": "2026-09-13T00:00:00Z"
+  "timestamp": "2026-09-15T00:00:00Z"
 }</code></pre>
-        </section>
+                <p>Additional resilience features:</p>
+                <ul>
+                    <li><strong>Automatic cache recovery</strong>: <code>run_pip_with_recovery</code> detects corruption
+                        signatures in pip's output (<code>access violation</code>, hash mismatch, truncated download)
+                        and purges the HTTP cache before retrying once with <code>--no-cache-dir</code>.</li>
+                    <li><strong>Reverse-dependency safety</strong>: No upgrade is applied if it would violate an
+                        installed package's requirement. The blocked reason is returned in the event stream.</li>
+                    <li><strong>Snapshot rollback</strong>: Every package batch is snapshotted via
+                        <code>pip freeze</code> before apply. If <code>pip check</code> fails afterward, the batch is
+                        rolled back automatically.
+                    </li>
+                    <li><strong>Graceful WebSocket shutdown</strong>: The event drain task is cancelled cleanly by the
+                        FastAPI lifespan handler on server shutdown, so no
+                        <code>Task was destroyed but it is pending!</code> warnings appear in the log.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="companion-documentation">
+                <h2>Companion Documentation</h2>
+                <ul>
+                    <li><a href="env_manager.html">Technical Whitepaper (HTML)</a></li>
+                    <li><a href="cli-manual.html">Master CLI Operations Manual (HTML)</a></li>
+                </ul>
+            </section>
+        </main>
 
         <footer>
             <p>&copy; 2026 LemGenda AI Hub. Master API Reference Manual.</p>
         </footer>
     </div>
 </body>
+
 </html>

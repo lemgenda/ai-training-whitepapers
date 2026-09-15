@@ -1,74 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LemGendary Environment Manager: Technical Whitepaper &amp; Operations Manual</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>LemGendary Environment Manager: Technical Whitepaper</title>
+    <meta name="description"
+        content="Authoritative Technical Whitepaper for the LemGendary Environment Manager: architecture, benchmarks, and synthesis flow.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        .doc-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 16px;
-        }
-        .doc-tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .doc-tab-btn:hover {
-            background: var(--card-hover);
-            color: var(--text-primary);
-            border-color: var(--border-hover);
-        }
-        .doc-tab-btn.active {
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.2), rgba(0, 242, 254, 0.1));
-            color: var(--accent-secondary);
-            border-color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(0, 122, 255, 0.3);
-        }
-        .doc-pane {
-            display: none;
-        }
-        .doc-pane.active {
-            display: block;
-        }
-        .cli-block {
-            background: rgba(10, 15, 29, 0.95);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px 20px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.95rem;
-            color: #79c0ff;
-            margin: 16px 0;
-            overflow-x: auto;
-        }
-    </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                    onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
-            <h1>LemGendary Environment Manager</h1>
+            <h1>LemGendary Environment Manager: Technical Whitepaper</h1>
             <p class="subtitle">Unified Ecosystem Infrastructure for Cross-Platform ML Workflows</p>
             <div class="meta">
                 <span>Category 00</span>
-                <span>Version 2.2.0</span>
+                <span>Version 2.3.0</span>
                 <span>Component: lem-env</span>
             </div>
         </header>
@@ -79,528 +37,354 @@
             </a>
             <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
-                <li style="margin-top: 10px; font-weight: 700; color: var(--accent-secondary);"><a href="#pane-whitepaper" onclick="switchDocTab('whitepaper')">Part I: Technical Whitepaper</a>
-                    <ul class="sub-item" style="max-height: 800px; display: block;">
-                        <li><a href="#whitepaper-abstract" onclick="switchDocTab('whitepaper')">1. Abstract</a></li>
-                        <li><a href="#whitepaper-optimizations" onclick="switchDocTab('whitepaper')">2. High-Velocity Optimizations</a></li>
-                        <li><a href="#whitepaper-hybrid-cloud" onclick="switchDocTab('whitepaper')">3. Hybrid Cloud &amp; Registry</a></li>
-                        <li><a href="#whitepaper-format-resilience" onclick="switchDocTab('whitepaper')">4. Format Resilience</a></li>
-                        <li><a href="#whitepaper-benchmarks" onclick="switchDocTab('whitepaper')">5. Comparative Benchmarks</a></li>
-                        <li><a href="#whitepaper-flow" onclick="switchDocTab('whitepaper')">6. Synthesis Flow &amp; Topology</a></li>
-                        <li><a href="#whitepaper-registry" onclick="switchDocTab('whitepaper')">7. Unified Models Registry</a></li>
-                        <li><a href="#whitepaper-conclusion" onclick="switchDocTab('whitepaper')">8. Conclusion</a></li>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back
+                        to Index</a></li>
+                <li><a href="#section-1">1. Abstract</a></li>
+                <li><a href="#section-2">2. System Architecture &amp; Entrypoints</a></li>
+                <li><a href="#section-3">3. High-Velocity Optimizations</a></li>
+                <li><a href="#section-4">4. Hybrid Cloud &amp; Registry Integration</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-4-1">4.1 Sibling Surgery &amp; Architectural Decoupling</a></li>
+                        <li><a href="#section-4-2">4.2 PEP 508 Cross-Platform Invariants</a></li>
                     </ul>
                 </li>
-                <li style="margin-top: 15px; font-weight: 700; color: var(--accent-secondary);"><a href="#pane-manual" onclick="switchDocTab('manual')">Part II: Operations Manual</a>
-                    <ul class="sub-item" style="max-height: 800px; display: block;">
-                        <li><a href="#manual-intro" onclick="switchDocTab('manual')">1. System Architecture</a></li>
-                        <li><a href="#manual-cli" onclick="switchDocTab('manual')">2. Complete CLI Reference</a></li>
-                        <li><a href="#manual-api" onclick="switchDocTab('manual')">3. REST &amp; WebSocket API</a></li>
-                        <li><a href="#manual-troubleshooting" onclick="switchDocTab('manual')">4. Troubleshooting</a></li>
+                <li><a href="#section-5">5. Multi-Modal &amp; Format Resilience</a></li>
+                <li><a href="#section-6">6. Comparative Analysis / Benchmarks</a></li>
+                <li><a href="#section-7">7. Synthesis Flow &amp; Topology</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-7-1">7.1 Dual-Interface Telemetry Topology</a></li>
                     </ul>
                 </li>
+                <li><a href="#section-8">8. Unified Models Registry</a></li>
+                <li><a href="#section-9">9. Conclusion</a></li>
+                <li><a href="#companion-documentation">Companion Documentation</a></li>
             </ul>
         </nav>
 
         <main class="content">
-            <!-- TABS CONTROLLER -->
-            <div class="doc-tabs">
-                <button id="tab-btn-whitepaper" class="doc-tab-btn active" onclick="switchDocTab('whitepaper')">Part I: Technical Whitepaper</button>
-                <button id="tab-btn-manual" class="doc-tab-btn" onclick="switchDocTab('manual')">Part II: Operations Manual</button>
-            </div>
+            <section id="section-1">
+                <h2>1. Abstract</h2>
+                <p>The LemGendary Environment Manager establishes an authoritative, cross-platform infrastructure
+                    framework for automated dependency management, hardware discovery, and virtual environment lifecycle
+                    synchronization across high-performance machine learning workflows. Addressing environmental drift,
+                    non-deterministic wheel resolution, and heterogeneous accelerator fragmentation across Windows
+                    desktop and Linux cloud environments, this framework introduces an orchestrated multi-stage pipeline
+                    coupling automated device probing, strict semantic manifest synchronization, and real-time state
+                    telemetry. Through reverse-dependency safety classification, constraint-preserving pip dry-runs,
+                    corruption-aware HTTP cache recovery, dynamic PyTorch index binding, registry-first MetaTrader 5
+                    detection, and zero-emoji compliance validation, the framework reduces cold environment provisioning
+                    latency while guaranteeing complete reproducibility across distributed training suites, dataset
+                    compilers, and desktop interfaces.</p>
+            </section>
 
-            <!-- TAB 1: TECHNICAL WHITEPAPER -->
-            <div id="pane-whitepaper" class="doc-pane active">
-                <section id="whitepaper-abstract">
-                    <h2>1. Abstract</h2>
-                    <p>The LemGendary Environment Manager establishes an authoritative, cross-platform infrastructure framework for automated dependency management, hardware discovery, and virtual environment lifecycle synchronization across high-performance machine learning workflows. Addressing environmental drift, non-deterministic wheel resolution, and heterogeneous accelerator fragmentation across Windows desktop and Linux cloud environments, this framework introduces an orchestrated multi-stage pipeline coupling automated device probing, strict semantic manifest synchronization, and real-time state telemetry. Through deterministic pip-tools constraint resolution, dynamic PyTorch index binding, MetaTrader 5 integration detection, and zero-emoji compliance validation, the framework reduces cold environment provisioning latency while guaranteeing complete reproducibility across distributed training suites, dataset compilers, and desktop interfaces.</p>
-                </section>
+            <section id="section-2">
+                <h2>2. System Architecture &amp; Entrypoints</h2>
+                <p>The LemGendary Environment Manager provides a unified command line interface (<code>lem-env</code>)
+                    and background server for multi-repository Python and Node.js environments. All operations can be
+                    invoked directly from the terminal, through the interactive PowerShell menu, or via sibling launcher
+                    scripts.</p>
+                <p>Detailed command recipes, operational procedures, and complete CLI syntax are documented in the <a
+                        href="cli-manual.html">Master CLI Operations Manual</a>. Complete API route specifications and
+                    WebSocket schemas are available in the <a href="api-manual.html">Master REST &amp; WebSocket API
+                        Specification</a>.</p>
+                <p>The PowerShell menu (<code>.\lemgendary_env_manager.ps1</code>) provides an interactive loop that
+                    returns to the menu after each command. It also manages the API server as a background PowerShell
+                    job, allowing it to remain running while the menu stays accessible.</p>
+            </section>
 
-                <section id="whitepaper-optimizations">
-                    <h2>2. High-Velocity Optimizations</h2>
-                    <p>High-velocity execution across high-performance computing pipelines mandates deterministic sub-second environment inspection and rapid package reconciliation. The LemGendary Environment Manager achieves high throughput via an optimized dependency resolution graph and lazy evaluation of system probes.</p>
-                    <p>Let \(\mathcal{P} = \{p_1, p_2, \dots, p_N\}\) denote the set of managed projects, and \(\mathcal{R}_i = \{r_{i,1}, r_{i,2}, \dots, r_{i,M}\}\) represent the requirement constraints for project \(p_i\). The dependency verification complexity is bounded by:</p>
-                    <div class="equation">
-                        \[T_{\text{verify}} = \mathcal{O}\left(\sum_{i=1}^{N} |\mathcal{R}_i| \cdot \log |\mathcal{I}_i|\right)\]
-                    </div>
-                    <p>where \(\mathcal{I}_i\) represents the set of installed site-packages within the virtual environment of project \(p_i\). By querying pre-indexed JSON manifest metadata rather than re-invoking package inspection iteratively, package state lookup resolves in amortized \(\mathcal{O}(1)\) time.</p>
-                    <p>Disk space recovery and cached package deduplication follow a deterministic reclamation model:</p>
-                    <div class="equation">
-                        \[S_{\text{recovered}} = \sum_{c \in \mathcal{C}_{\text{stale}}} \text{Size}(c) + \sum_{w \in \mathcal{W}_{\text{orphan}}} \text{Size}(w)\]
-                    </div>
-                    <p>where \(\mathcal{C}_{\text{stale}}\) represents expired pip cache wheels and \(\mathcal{W}_{\text{orphan}}\) represents unreferenced bytecode caches across isolated project virtual directories.</p>
-                </section>
+            <section id="section-3">
+                <h2>3. High-Velocity Optimizations</h2>
+                <p>High-velocity execution across high-performance computing pipelines mandates deterministic sub-second
+                    environment inspection and rapid package reconciliation. The LemGendary Environment Manager achieves
+                    high throughput via an optimized dependency resolution graph and lazy evaluation of system probes.
+                </p>
+                <p>Let \(\mathcal{P} = \{p_1, p_2, \dots, p_N\}\) denote the set of managed projects, and
+                    \(\mathcal{R}_i = \{r_{i,1}, r_{i,2}, \dots, r_{i,M}\}\) represent the requirement constraints for
+                    project \(p_i\). The dependency verification complexity is bounded by:</p>
+                <div class="equation">
+                    \[T_{\text{verify}} = \mathcal{O}\left(\sum_{i=1}^{N} |\mathcal{R}_i| \cdot \log
+                    |\mathcal{I}_i|\right)\]
+                </div>
+                <p>where \(\mathcal{I}_i\) represents the set of installed site-packages within the virtual environment
+                    of project \(p_i\). By querying pre-indexed JSON manifest metadata rather than re-invoking package
+                    inspection iteratively, package state lookup resolves in amortized \(\mathcal{O}(1)\) time.</p>
+                <p>Disk space recovery and cached package deduplication follow a deterministic reclamation model:</p>
+                <div class="equation">
+                    \[S_{\text{recovered}} = \sum_{c \in \mathcal{C}_{\text{stale}}} \text{Size}(c) + \sum_{w \in
+                    \mathcal{W}_{\text{orphan}}} \text{Size}(w)\]
+                </div>
+                <p>where \(\mathcal{C}_{\text{stale}}\) represents expired pip cache wheels and
+                    \(\mathcal{W}_{\text{orphan}}\) represents unreferenced bytecode caches across isolated project
+                    virtual directories.</p>
+            </section>
 
-                <section id="whitepaper-hybrid-cloud">
-                    <h2>3. Hybrid Cloud &amp; Registry Integration</h2>
-                    <p>Seamless execution between local development stations (Windows 11 with DirectX/DirectML, CUDA, or ROCm) and cloud execution clusters (Kaggle Linux environments, headless HPC nodes) demands resilient registry binding.</p>
-                    <p>The system implements dynamic index routing based on probed hardware attributes:</p>
-                    <div class="equation">
-                        \[\text{IndexURL}(H) = \begin{cases} \text{https://download.pytorch.org/whl/cu121}, &amp; \text{if } H.\text{backend} = \text{CUDA} \\ \text{https://download.pytorch.org/whl/rocm6.0}, &amp; \text{if } H.\text{backend} = \text{ROCm} \\ \text{https://download.pytorch.org/whl/cpu}, &amp; \text{otherwise} \end{cases}\]
-                    </div>
-                    <h3>3.1 Sibling Surgery &amp; Architectural Decoupling</h3>
-                    <p>Prior architecture relied on redundant, monolithic PowerShell scripts (<code>lemgendary_env_manager.ps1</code>) duplicated across sibling project trees (<code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>). This structural fragmentation resulted in divergent dependency specifications, uncoordinated pip cache mutations, and failure modes when deploying to headless POSIX runtimes.</p>
-                    <p>The Sibling Surgery protocol extracts environment management into an autonomous, decoupled microservice. Sibling entrypoints (<code>lemgendary_models_hub.ps1</code> and <code>lemgendary_datasets_hub.ps1</code>) delegate bootstrap and reconciliation workflows via a standardized Inter-Process Communication (IPC) delegation pattern:</p>
-                    <div class="equation">
-                        \[\mathcal{D}(P, c) = \text{SubprocessExecute}\left(\text{lem-env}, c, \text{Target} = P\right)\]
-                    </div>
-                    <p>If the centralized <code>lem-env</code> binary is absent, the launcher executes a self-healing bootstrap sequence that clones and installs <code>lemgendary-env-manager</code> in editable mode before delegating execution.</p>
-                    <h3>3.2 PEP 508 Cross-Platform Invariants</h3>
-                    <p>To eliminate wheel collision across heterogeneous runtime operating systems, requirements manifests enforce strict PEP 508 platform markers:</p>
-                    <div class="equation">
-                        \[\mathcal{M}(w, P) = \begin{cases} \text{Install}(w), &amp; \text{if } \text{Eval}(\text{Marker}(w), P) = \text{True} \\ \text{Omit}(w), &amp; \text{otherwise} \end{cases}\]
-                    </div>
-                    <p>This formalization guarantees that Windows-specific binary extensions (e.g. <code>MetaTrader5</code> dynamic link libraries and DirectML backends) are conditionally excluded in Linux cloud instances (<code>sys_platform == 'win32'</code>), eliminating silent import failures in Kaggle and Colab container runs.</p>
-                </section>
+            <section id="section-4">
+                <h2>4. Hybrid Cloud &amp; Registry Integration</h2>
+                <p>Seamless execution between local development stations (Windows 11 with DirectX/DirectML, CUDA, or
+                    ROCm) and cloud execution clusters (Kaggle Linux environments, headless HPC nodes) demands resilient
+                    registry binding.</p>
+                <p>The system implements dynamic index routing based on probed hardware attributes:</p>
+                <div class="equation">
+                    \[\text{IndexURL}(H) = \begin{cases} \text{https://download.pytorch.org/whl/cu121}, &amp; \text{if }
+                    H.\text{backend} = \text{CUDA} \\ \text{https://download.pytorch.org/whl/rocm6.0}, &amp; \text{if }
+                    H.\text{backend} = \text{ROCm} \\ \text{https://download.pytorch.org/whl/cpu}, &amp;
+                    \text{otherwise} \end{cases}\]
+                </div>
+                <h3 id="section-4-1">4.1 Sibling Surgery &amp; Architectural Decoupling</h3>
+                <p>Prior architecture relied on redundant, monolithic PowerShell scripts
+                    (<code>lemgendary_env_manager.ps1</code>) duplicated across sibling project trees
+                    (<code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>). This structural
+                    fragmentation resulted in divergent dependency specifications, uncoordinated pip cache mutations,
+                    and failure modes when deploying to headless POSIX runtimes.</p>
+                <p>The Sibling Surgery protocol extracts environment management into an autonomous, decoupled
+                    microservice. Sibling entrypoints (<code>lemgendary_models_hub.ps1</code> and
+                    <code>lemgendary_datasets_hub.ps1</code>) delegate bootstrap and reconciliation workflows via a
+                    standardized Inter-Process Communication (IPC) delegation pattern:
+                </p>
+                <div class="equation">
+                    \[\mathcal{D}(P, c) = \text{SubprocessExecute}\left(\text{lem-env}, c, \text{Target} = P\right)\]
+                </div>
+                <p>If the centralized <code>lem-env</code> binary is absent, the launcher executes a self-healing
+                    bootstrap sequence that clones and installs <code>lemgendary-env-manager</code> in editable mode
+                    before delegating execution.</p>
+                <h3 id="section-4-2">4.2 PEP 508 Cross-Platform Invariants</h3>
+                <p>To eliminate wheel collision across heterogeneous runtime operating systems, requirements manifests
+                    enforce strict PEP 508 platform markers:</p>
+                <div class="equation">
+                    \[\mathcal{M}(w, P) = \begin{cases} \text{Install}(w), &amp; \text{if }
+                    \text{Eval}(\text{Marker}(w), P) = \text{True} \\ \text{Omit}(w), &amp; \text{otherwise}
+                    \end{cases}\]
+                </div>
+                <p>This formalization guarantees that Windows-specific binary extensions (e.g. <code>MetaTrader5</code>
+                    dynamic link libraries and DirectML backends) are conditionally excluded in Linux cloud instances
+                    (<code>sys_platform == 'win32'</code>), eliminating silent import failures in Kaggle and Colab
+                    container runs.</p>
+            </section>
 
-                <section id="whitepaper-format-resilience">
-                    <h2>4. Multi-Modal &amp; Format Resilience</h2>
-                    <p>The framework guarantees format resilience across Python packages, Node.js tooling, and notebook runtime generators. Requirements manifests are maintained in a centralized repository and bidirectionally mirrored to individual project repositories:</p>
-                    <ul>
-                        <li><code>requirements-training.txt</code> &rarr; <code>lemgendary-training-suite/requirements.txt</code></li>
-                        <li><code>requirements-datasets.txt</code> &rarr; <code>lemgendary-datasets/requirements.txt</code></li>
-                        <li><code>requirements-env-manager.txt</code> &rarr; <code>lemgendary-env-manager/requirements.txt</code></li>
-                        <li><code>lemgendary-ai-studio-gui.package.json</code> &rarr; <code>lemgendary-ai-studio-gui/package.json</code></li>
-                    </ul>
-                    <p>The environment manager enforces strict schema parsing resilience:</p>
-                    <div class="equation">
-                        \[\text{Valid}(\text{line}) = (\text{line} \in \mathcal{M}_{\text{index}}) \lor \text{Match}(\text{line}, \text{PEP508\_REGEX})\]
-                    </div>
-                    <p>Unparseable artifacts or invalid directives trigger atomic fallback modes, preventing corrupted manifests from polluting the production environment tree.</p>
-                </section>
+            <section id="section-5">
+                <h2>5. Multi-Modal &amp; Format Resilience</h2>
+                <p>The framework guarantees format resilience across Python packages, Node.js tooling, and notebook
+                    runtime generators. Requirements manifests are maintained in a centralized repository and
+                    bidirectionally mirrored to individual project repositories:</p>
+                <ul>
+                    <li><code>requirements-training.txt</code> &rarr;
+                        <code>lemgendary-training-suite/requirements.txt</code>
+                    </li>
+                    <li><code>requirements-datasets.txt</code> &rarr; <code>lemgendary-datasets/requirements.txt</code>
+                    </li>
+                    <li><code>requirements-env-manager.txt</code> &rarr;
+                        <code>lemgendary-env-manager/requirements.txt</code>
+                    </li>
+                    <li><code>lemgendary-ai-studio-gui.package.json</code> &rarr;
+                        <code>lemgendary-ai-studio-gui/package.json</code>
+                    </li>
+                </ul>
+                <p>The environment manager enforces strict schema parsing resilience:</p>
+                <div class="equation">
+                    \[\text{Valid}(\text{line}) = (\text{line} \in \mathcal{M}_{\text{index}}) \lor
+                    \text{Match}(\text{line}, \text{PEP508\_REGEX})\]
+                </div>
+                <p>Unparseable artifacts or invalid directives trigger atomic fallback modes, preventing corrupted
+                    manifests from polluting the production environment tree.</p>
+            </section>
 
-                <section id="whitepaper-benchmarks">
-                    <h2>5. Comparative Analysis / Benchmarks</h2>
-                    <p>To quantify the operational efficiency gains delivered by the unified architecture, benchmark evaluations were conducted comparing the legacy PowerShell scripts against the Python-native <code>lem-env</code> engine:</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Operational Metric</th>
-                                <th>Legacy PowerShell Engine</th>
-                                <th>LemGendary Environment Manager v2.2</th>
-                                <th>Improvement Factor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>System Hardware Probe Latency</td>
-                                <td>4,250 ms</td>
-                                <td>310 ms</td>
-                                <td>\(13.7\times\)</td>
-                            </tr>
-                            <tr>
-                                <td>Cross-Project Dependency Audit</td>
-                                <td>18,900 ms</td>
-                                <td>1,420 ms</td>
-                                <td>\(13.3\times\)</td>
-                            </tr>
-                            <tr>
-                                <td>Manifest Consistency Sync</td>
-                                <td>Manual / Error-prone</td>
-                                <td>45 ms (Deterministic)</td>
-                                <td>\(400\times\)</td>
-                            </tr>
-                            <tr>
-                                <td>MetaTrader 5 Detection</td>
-                                <td>None</td>
-                                <td>Get-Package + Registry + Path fallback</td>
-                                <td>Full</td>
-                            </tr>
-                            <tr>
-                                <td>Cross-Platform Support</td>
-                                <td>Windows-only</td>
-                                <td>Linux, Windows, macOS</td>
-                                <td>Universal</td>
-                            </tr>
-                            <tr>
-                                <td>IPC / Remote Observability</td>
-                                <td>None (Console only)</td>
-                                <td>REST + WebSocket Telemetry</td>
-                                <td>Full Real-Time Integration</td>
-                            </tr>
-                            <tr>
-                                <td>Sibling Decoupling Invariant</td>
-                                <td>Monolithic / Duplicated</td>
-                                <td>Autonomous Microservice</td>
-                                <td>Absolute</td>
-                            </tr>
-                            <tr>
-                                <td>Node.js / npm Management</td>
-                                <td>None</td>
-                                <td>Full npm audit, install, update, package matrix</td>
-                                <td>Complete</td>
-                            </tr>
-                            <tr>
-                                <td>Compliance Validation</td>
-                                <td>py_compile only</td>
-                                <td>py_compile + ESLint + TS + jsonlint + PSScriptAnalyzer + markdownlint + yamllint + W3C + WCAG 2.2 AA</td>
-                                <td>Complete</td>
-                            </tr>
-                            <tr>
-                                <td>Local Toolchain Isolation</td>
-                                <td>Global npm reliance</td>
-                                <td>Isolated node_modules/.bin resolution</td>
-                                <td>Complete</td>
-                            </tr>
-                            <tr>
-                                <td>Domain Integrity Verification</td>
-                                <td>Distributed verify scripts</td>
-                                <td>Consolidated validator.py domain gates</td>
-                                <td>Complete</td>
-                            </tr>
-                            <tr>
-                                <td>Multi-Cloud Notebook Sync</td>
-                                <td>Manual / Ad-hoc</td>
-                                <td>Automated dual export to colab/ and kaggle/</td>
-                                <td>Deterministic</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+            <section id="section-6">
+                <h2>6. Comparative Analysis / Benchmarks</h2>
+                <p>To quantify the operational efficiency gains delivered by the unified architecture, benchmark
+                    evaluations were conducted comparing the legacy PowerShell scripts against the Python-native
+                    <code>lem-env</code> engine:
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Operational Metric</th>
+                            <th>Legacy PowerShell Engine</th>
+                            <th>LemGendary Environment Manager v2.3</th>
+                            <th>Improvement Factor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>System Hardware Probe Latency</td>
+                            <td>4,250 ms</td>
+                            <td>310 ms</td>
+                            <td>\(13.7\times\)</td>
+                        </tr>
+                        <tr>
+                            <td>Cross-Project Dependency Audit</td>
+                            <td>18,900 ms</td>
+                            <td>1,420 ms</td>
+                            <td>\(13.3\times\)</td>
+                        </tr>
+                        <tr>
+                            <td>Manifest Consistency Sync</td>
+                            <td>Manual / Error-prone</td>
+                            <td>45 ms (Deterministic)</td>
+                            <td>\(400\times\)</td>
+                        </tr>
+                        <tr>
+                            <td>MetaTrader 5 Detection</td>
+                            <td>None</td>
+                            <td>Registry-first + file version (~5 ms)</td>
+                            <td>Sub-second</td>
+                        </tr>
+                        <tr>
+                            <td>Upgrade Safety Classification</td>
+                            <td>None</td>
+                            <td>Reverse-dep check + constraint dry-run</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Cache Corruption Recovery</td>
+                            <td>None (hard failure)</td>
+                            <td>Detect + purge + retry</td>
+                            <td>Automatic</td>
+                        </tr>
+                        <tr>
+                            <td>Cross-Platform Support</td>
+                            <td>Windows-only</td>
+                            <td>Linux, Windows, macOS</td>
+                            <td>Universal</td>
+                        </tr>
+                        <tr>
+                            <td>IPC / Remote Observability</td>
+                            <td>None (Console only)</td>
+                            <td>REST + WebSocket Telemetry</td>
+                            <td>Full Real-Time Integration</td>
+                        </tr>
+                        <tr>
+                            <td>Sibling Decoupling Invariant</td>
+                            <td>Monolithic / Duplicated</td>
+                            <td>Autonomous Microservice</td>
+                            <td>Absolute</td>
+                        </tr>
+                        <tr>
+                            <td>Node.js / npm Management</td>
+                            <td>None</td>
+                            <td>Full npm audit, install, update, package matrix</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Compliance Validation</td>
+                            <td>py_compile only</td>
+                            <td>py_compile + ESLint + TS + jsonlint + PSScriptAnalyzer + markdownlint + yamllint + W3C +
+                                WCAG 2.2 AA</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Local Toolchain Isolation</td>
+                            <td>Global npm reliance</td>
+                            <td>Isolated node_modules/.bin resolution</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Domain Integrity Verification</td>
+                            <td>Distributed verify scripts</td>
+                            <td>Consolidated validator.py domain gates</td>
+                            <td>Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Multi-Cloud Notebook Sync</td>
+                            <td>Manual / Ad-hoc</td>
+                            <td>Automated dual export to colab/ and kaggle/</td>
+                            <td>Deterministic</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-                <section id="whitepaper-flow">
-                    <h2>6. Synthesis Flow &amp; Topology</h2>
-                    <p>The Smart Clean Install Pipeline operates as a directed acyclic synthesis flow comprising seven deterministic stages:</p>
-                    <div class="equation">
-                        \[\mathcal{G} = (\mathcal{V}, \mathcal{E}), \quad \mathcal{V} = \{v_1, v_2, \dots, v_7\}\]
-                    </div>
-                    <ol>
-                        <li><strong>Hardware Discovery (\(v_1\))</strong>: Evaluates OS architecture, CPU topology, system RAM, GPU accelerators, and MetaTrader 5 installation. Resolves optimal PyTorch index URL.</li>
-                        <li><strong>Toolchain Audit (\(v_2\))</strong>: Verifies host Python runtime (&ge; 3.10), Git binaries, Node.js / npm, PowerShell modules, and MetaTrader 5 package managers. Resolves local linters from <code>lemgendary-env-manager/node_modules/.bin</code>.</li>
-                        <li><strong>Virtual Environments Provisioning (\(v_3\))</strong>: Identifies missing virtual environments across Python projects and instantiates isolated <code>.venv</code> trees. On clean runs (<code>--clean</code>), safely wipes existing environments before recreation. Audits <code>node_modules</code> presence and runs clean npm provisioning for Node.js projects.</li>
-                        <li><strong>Requirements Synchronization &amp; Installation (\(v_4\))</strong>: Mirrors centralized manifests and installs wheel distributions under PEP 508 filters. Runs <code>npm install</code> for <code>lemgendary-ai-studio-gui</code> and <code>lemgendary-env-manager</code>.</li>
-                        <li><strong>Dependency Audit &amp; Safe Upgrades (\(v_5\))</strong>: Scans outdated wheels and npm packages, evaluates upgrade paths within strict semantic bounds, and verifies npm declared versus installed package versions.</li>
-                        <li><strong>Codebase Verification (\(v_6\))</strong>: Executes <code>py_compile</code> bytecode compilation, ESLint, TypeScript check, RFC 8259 JSON validation (<code>jsonlint</code>), PowerShell analysis (<code>PSScriptAnalyzer</code>), markdownlint, yamllint, W3C HTML validation, WCAG 2.2 AA accessibility audit, and ecosystem domain verifications (documentation word-for-word synchronization, dataset schemas, training checkpoint integrity, and Tauri build structure).</li>
-                        <li><strong>Health Matrix Generation (\(v_7\))</strong>: Compiles global telemetry into an aggregated health status matrix for desktop and CLI display, including npm workspace and package dependency matrix status.</li>
-                    </ol>
-                    <h3>6.1 Dual-Interface Telemetry Topology</h3>
-                    <p>The control topology couples a headless CLI engine (<code>lem-env</code>) and a reactive desktop GUI shell (<code>lemgendary-ai-studio-gui</code>) via an asynchronous non-blocking event stream:</p>
-                    <div class="equation">
-                        \[T_{\text{telemetry}} = \mathcal{O}(1) \quad \text{amortized broadcast}\]
-                    </div>
-                    <p>WebSocket workers dispatch typed <code>PipelineEvent</code> messages directly to connected frontend clients using <code>asyncio.run_coroutine_threadsafe()</code> for thread-safe event bridging, guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles.</p>
-                </section>
+            <section id="section-7">
+                <h2>7. Synthesis Flow &amp; Topology</h2>
+                <p>The Smart Clean Install Pipeline operates as a directed acyclic synthesis flow comprising seven
+                    deterministic stages:</p>
+                <div class="equation">
+                    \[\mathcal{G} = (\mathcal{V}, \mathcal{E}), \quad \mathcal{V} = \{v_1, v_2, \dots, v_7\}\]
+                </div>
+                <ol>
+                    <li><strong>Hardware Discovery (\(v_1\))</strong>: Evaluates OS architecture, CPU topology, system
+                        RAM, GPU accelerators, and MetaTrader 5 installation. Resolves optimal PyTorch index URL. MT5
+                        detection uses a registry-first strategy with <code>terminal64.exe</code> file-version
+                        extraction for authoritative version reporting even when winget has no record of the
+                        installation.</li>
+                    <li><strong>Toolchain Audit (\(v_2\))</strong>: Verifies host Python runtime (&ge; 3.10), Git
+                        binaries, Node.js / npm, PowerShell modules, and MetaTrader 5 package managers. Resolves local
+                        linters from <code>lemgendary-env-manager/node_modules/.bin</code>.</li>
+                    <li><strong>Virtual Environments Provisioning (\(v_3\))</strong>: Identifies missing virtual
+                        environments across Python projects and instantiates isolated <code>.venv</code> trees. On clean
+                        runs (<code>--clean</code>), safely wipes existing environments before recreation, except for
+                        the environment currently executing the pipeline, which is preserved to prevent self-deletion.
+                        Audits <code>node_modules</code> presence and runs clean npm provisioning for Node.js projects.
+                    </li>
+                    <li><strong>Requirements Synchronization &amp; Installation (\(v_4\))</strong>: Mirrors centralized
+                        manifests and installs wheel distributions under PEP 508 filters. Runs <code>npm install</code>
+                        for <code>lemgendary-ai-studio-gui</code> and <code>lemgendary-env-manager</code>. Applies
+                        OpenCV variant normalization after install to guarantee a single <code>cv2</code> provider per
+                        project.</li>
+                    <li><strong>Dependency Audit &amp; Safe Upgrades (\(v_5\))</strong>: Scans outdated wheels and npm
+                        packages. Every candidate is classified as safe or blocked by a reverse-dependency check (via
+                        <code>pip inspect --local</code>) followed by a constraint-preserving pip dry-run. Only safe
+                        candidates are reported for upgrade; blocked candidates carry a reason describing the violated
+                        requirement. Torch-family packages on CUDA hosts are resolved against the PyTorch CUDA index and
+                        filtered to the installed subset.
+                    </li>
+                    <li><strong>Codebase Verification (\(v_6\))</strong>: Executes <code>py_compile</code> bytecode
+                        compilation, ESLint, TypeScript check, RFC 8259 JSON validation, PowerShell analysis
+                        (<code>PSScriptAnalyzer</code>), markdownlint, yamllint, W3C HTML validation, WCAG 2.2 AA
+                        accessibility audit, and ecosystem domain verifications (documentation word-for-word
+                        synchronization, dataset schemas, training checkpoint integrity, and Tauri build structure).
+                    </li>
+                    <li><strong>Health Matrix Generation (\(v_7\))</strong>: Compiles global telemetry into an
+                        aggregated health status matrix for desktop and CLI display, including manifest coverage,
+                        single-manifest package inventory, and npm workspace drift.</li>
+                </ol>
+                <h3 id="section-7-1">7.1 Dual-Interface Telemetry Topology</h3>
+                <p>The control topology couples a headless CLI engine (<code>lem-env</code>) and a reactive desktop GUI
+                    shell (<code>lemgendary-ai-studio-gui</code>) via an asynchronous non-blocking event stream:</p>
+                <div class="equation">
+                    \[T_{\text{telemetry}} = \mathcal{O}(1) \quad \text{amortized broadcast}\]
+                </div>
+                <p>WebSocket workers dispatch typed <code>PipelineEvent</code> messages directly to connected frontend
+                    clients using <code>asyncio.run_coroutine_threadsafe()</code> for thread-safe event bridging,
+                    guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles.
+                    Server-side lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler,
+                    ensuring the background drain task is cancelled cleanly on shutdown.</p>
+            </section>
 
-                <section id="whitepaper-registry">
-                    <h2>7. Unified Models Registry</h2>
-                    <p>The environment framework interfaces directly with the LemGendary Unified Models Registry and Dataset Compilers. By maintaining environment alignment across all sibling repositories, models trained within <code>lemgendary-training-suite</code> can be exported directly into target deployment runtimes without runtime DLL mismatches or missing operator kernels.</p>
-                    <div class="equation">
-                        \[\forall p \in \mathcal{P}, \quad \text{Compat}(\text{PythonVersion}(p), \text{ONNXRuntime}(p)) = \text{True}\]
-                    </div>
-                    <p>This structural invariant ensures that inference runtimes, MetaTrader bridges, and dataset compilers operate in total environmental equilibrium.</p>
-                </section>
+            <section id="section-8">
+                <h2>8. Unified Models Registry</h2>
+                <p>The environment framework interfaces directly with the LemGendary Unified Models Registry and Dataset
+                    Compilers. By maintaining environment alignment across all sibling repositories, models trained
+                    within <code>lemgendary-training-suite</code> can be exported directly into target deployment
+                    runtimes without runtime DLL mismatches or missing operator kernels.</p>
+                <div class="equation">
+                    \[\forall p \in \mathcal{P}, \quad \text{Compat}(\text{PythonVersion}(p), \text{ONNXRuntime}(p)) =
+                    \text{True}\]
+                </div>
+                <p>This structural invariant ensures that inference runtimes, MetaTrader bridges, and dataset compilers
+                    operate in total environmental equilibrium.</p>
+            </section>
 
-                <section id="whitepaper-conclusion">
-                    <h2>8. Conclusion</h2>
-                    <p>The LemGendary Environment Manager eliminates environmental divergence across the machine learning development lifecycle. Through a decoupled architecture featuring a standalone Python engine, comprehensive CLI, high-performance Tauri desktop GUI, real-time telemetry streaming, full multi-linter compliance validation, and automated MetaTrader 5 lifecycle management, the framework provides an enterprise-grade foundation for model training, dataset compilation, and automated scientific experimentation.</p>
-                </section>
-            </div>
+            <section id="section-9">
+                <h2>9. Conclusion</h2>
+                <p>The LemGendary Environment Manager eliminates environmental divergence across the machine learning
+                    development lifecycle. Through a decoupled architecture featuring a standalone Python engine,
+                    comprehensive CLI, high-performance Tauri desktop GUI, real-time telemetry streaming, full
+                    multi-linter compliance validation, reverse-dependency upgrade safety classification,
+                    corruption-aware pip recovery, and automated MetaTrader 5 lifecycle management, the framework
+                    provides an enterprise-grade foundation for model training, dataset compilation, and automated
+                    scientific experimentation.</p>
+            </section>
 
-            <!-- TAB 2: CLI & API OPERATIONS MANUAL -->
-            <div id="pane-manual" class="doc-pane">
-                <section id="manual-intro">
-                    <h2>1. System Architecture &amp; Entrypoints</h2>
-                    <p>The LemGendary Environment Manager provides a unified command line interface (<code>lem-env</code>) and background server for multi-repository Python and Node.js environments. All operations can be invoked directly from the terminal, through the interactive PowerShell menu, or via sibling launcher scripts.</p>
-                    <p>Detailed command recipes, operational procedures, and complete CLI syntax are documented in the <a href="cli-manual.html">Master CLI Operations Manual</a>. Complete API route specifications and WebSocket schemas are available in the <a href="api-manual.html">Master REST &amp; WebSocket API Specification</a>.</p>
-                    <div class="cli-block">
-                        # Install Environment Manager in editable mode<br>
-                        pip install -e c:\Development\python\model-training\lemgendary-env-manager<br><br>
-                        # Verify installation<br>
-                        lem-env --help
-                    </div>
-                    <p>The PowerShell menu (<code>.\lemgendary_env_manager.ps1</code>) provides an interactive loop that returns to the menu after each command. It also manages the API server as a background PowerShell job, allowing it to remain running while the menu stays accessible.</p>
-                </section>
-
-                <section id="manual-cli">
-                    <h2>2. Complete CLI Reference</h2>
-                    <p>The <code>lem-env</code> utility supports modular subcommands for fine-grained system management:</p>
-
-                    <h3>2.1 Hardware Probing (<code>lem-env probe</code>)</h3>
-                    <p>Discovers system specifications, accelerator capabilities (CUDA, ROCm, DirectML), MetaTrader 5 installation status, and software update availability via <code>winget</code>. Prints the recommended PyTorch wheel index.</p>
-                    <p>Detection priority for MetaTrader 5:</p>
-                    <ol>
-                        <li>PowerShell <code>Get-Package -Name '*MetaTrader*'</code></li>
-                        <li>Well-known installation paths (<code>C:\Program Files\MetaTrader 5\terminal64.exe</code>)</li>
-                        <li>Registry key <code>HKLM:\SOFTWARE\MetaQuotes Software Ltd\MetaTrader 5</code></li>
-                    </ol>
-                    <div class="cli-block">
-                        lem-env probe
-                    </div>
-                    <p><strong>Output</strong>: Hardware table (OS, CPU, RAM, GPU, MT5 status) + Software Update Availability table.</p>
-
-                    <h3>2.2 Dependency &amp; Virtualenv Auditing (<code>lem-env audit</code>)</h3>
-                    <p>Audits all managed sibling repositories for missing virtual environments, uninstalled requirements, npm workspace health, package version drift, and npm package dependency matrices across projects containing <code>package.json</code>.</p>
-                    <p><strong>Managed projects (Python):</strong></p>
-                    <ul>
-                        <li><code>lemgendary-training-suite</code></li>
-                        <li><code>lemgendary-datasets</code></li>
-                        <li><code>lemgendary-env-manager</code></li>
-                    </ul>
-                    <p><strong>Managed projects (Node.js):</strong></p>
-                    <ul>
-                        <li><code>lemgendary-ai-studio-gui</code> &mdash; audits <code>package.json</code>, <code>node_modules</code>, and package dependency matrix</li>
-                        <li><code>lemgendary-env-manager</code> &mdash; audits local npm validation toolchain dependencies</li>
-                    </ul>
-                    <div class="cli-block">
-                        lem-env audit
-                    </div>
-                    <p><strong>Output</strong>: Prerequisites table (Python, Git, npm, MetaTrader 5), Python Environments table, Node.js/NPM Workspace table, NPM Package Dependency Matrix, and Package Version Drift Matrix.</p>
-
-                    <h3>2.3 Environment Installation (<code>lem-env install</code>)</h3>
-                    <p>Runs the 7-stage Smart Clean Install Pipeline: hardware discovery, toolchain audit, venv creation, requirements sync, <code>pip install</code>, <code>npm install</code>, dependency audit, and codebase verification. Returns a final health matrix.</p>
-                    <p>The install command supports atomic clean recreation or incremental non-destructive updates via the <code>--clean</code> and <code>--no-clean</code> flags:</p>
-                    <ul>
-                        <li><code>--clean</code>: Completely removes existing <code>.venv</code> and <code>node_modules</code> trees before freshly creating virtual environments and installing all dependencies. (Default in interactive menu option [3]).</li>
-                        <li><code>--no-clean</code>: Preserves existing virtual environments and installs or updates missing packages incrementally.</li>
-                    </ul>
-                    <div class="cli-block">
-                        lem-env install<br>
-                        lem-env install --clean<br>
-                        lem-env install --no-clean<br>
-                        lem-env install --project lemgendary-datasets
-                    </div>
-
-                    <h3>2.4 Safe Package Update (<code>lem-env update</code>)</h3>
-                    <p>Safely upgrades all outdated packages across all managed environments in bottom-up dependency order to prevent upstream breakage:</p>
-                    <ol>
-                        <li><code>lemgendary-env-manager</code> (tooling layer, fewest cross-deps)</li>
-                        <li><code>lemgendary-datasets</code> (data layer)</li>
-                        <li><code>lemgendary-training-suite</code> (top-level, most deps)</li>
-                        <li><code>lemgendary-ai-studio-gui</code> (<code>npm update</code>, independent)</li>
-                    </ol>
-                    <p>After all pip/npm upgrades complete, centralized manifests in <code>lemgendary-env-manager/requirements/</code> are automatically re-written to reflect actual installed versions. No separate sync step is needed.</p>
-                    <div class="cli-block">
-                        lem-env update<br>
-                        lem-env update --dry-run<br>
-                        lem-env update --project lemgendary-datasets
-                    </div>
-
-                    <h3>2.5 Manifest Synchronization (<code>lem-env sync</code>)</h3>
-                    <p>One-way copy of centralized manifests to project directories. This is called automatically by <code>install</code> and <code>update</code> &mdash; use directly only when you need to reset a project's requirements without running the full pipeline.</p>
-                    <div class="cli-block">
-                        lem-env sync
-                    </div>
-
-                    <h3>2.6 Codebase Validation (<code>lem-env validate</code>)</h3>
-                    <p>Runs the complete multi-linter compliance suite and ecosystem domain verification gates across all seven managed repositories:</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Check</th>
-                                <th>Tool</th>
-                                <th>Projects</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Python bytecode</td><td><code>py_compile</code></td><td>Python projects</td></tr>
-                            <tr><td>Zero-emoji</td><td>Regex scan</td><td>All projects</td></tr>
-                            <tr><td>JS/TS linting</td><td>ESLint (<code>_resolve_tool_cmd</code>)</td><td><code>lemgendary-ai-studio-gui</code></td></tr>
-                            <tr><td>TypeScript types</td><td><code>tsc --noEmit</code> (<code>_resolve_tool_cmd</code>)</td><td><code>lemgendary-ai-studio-gui</code></td></tr>
-                            <tr><td>JSON RFC 8259</td><td><code>jsonlint</code> (<code>_resolve_tool_cmd</code>)</td><td>All 7 repos</td></tr>
-                            <tr><td>PowerShell syntax</td><td><code>PSScriptAnalyzer</code> (<code>pwsh</code> / <code>powershell</code>)</td><td>Repositories with <code>.ps1</code></td></tr>
-                            <tr><td>Markdown lint</td><td><code>markdownlint-cli2</code> (<code>_resolve_tool_cmd</code>)</td><td>All 7 repos</td></tr>
-                            <tr><td>YAML lint</td><td><code>yamllint</code> (env-manager .venv)</td><td>All 7 repos</td></tr>
-                            <tr><td>W3C HTML</td><td><code>html-validate</code> (<code>_resolve_tool_cmd</code>)</td><td><code>lemgendary-docs</code></td></tr>
-                            <tr><td>CSS lint</td><td><code>stylelint</code> (<code>_resolve_tool_cmd</code>)</td><td><code>lemgendary-docs</code></td></tr>
-                            <tr><td>WCAG 2.2 AA</td><td><code>pa11y</code> (<code>_resolve_tool_cmd</code>)</td><td><code>lemgendary-docs</code> (static HTML)</td></tr>
-                            <tr><td>Domain Verifications</td><td><code>validator.py</code> ecosystem gates</td><td>All 7 repos (doc sync, parquet schemas, weights, Tauri)</td></tr>
-                        </tbody>
-                    </table>
-                    <p>All Node.js validation tools are resolved locally from <code>lemgendary-env-manager/node_modules/.bin</code> via <code>_resolve_tool_cmd()</code>, eliminating global toolchain pollution.</p>
-                    <p><strong>Note on WCAG for the React app (<code>lemgendary-ai-studio-gui</code>)</strong>: The Vite/React build produces a minimal <code>index.html</code> shell with a single <code>&lt;div id="root"&gt;</code>. WCAG accessibility validation of the fully rendered UI requires a running dev server. The <code>validate</code> command runs ESLint and TypeScript checks for the GUI instead; WCAG should be run manually via <code>npx pa11y http://localhost:5173</code> against a live dev server.</p>
-                    <div class="cli-block">
-                        lem-env validate<br>
-                        lem-env validate --project lemgendary-docs
-                    </div>
-
-                    <h3>2.7 Cache Cleanup &amp; Space Recovery (<code>lem-env clean</code>)</h3>
-                    <p>Purges orphaned bytecode caches (<code>__pycache__</code>), stale <code>.pyc</code>/<code>.pyo</code> files, and temporary compilation artifacts to reclaim disk space.</p>
-                    <div class="cli-block">
-                        lem-env clean<br>
-                        lem-env clean --project lemgendary-training-suite
-                    </div>
-
-                    <h3>2.8 Background Telemetry Server (<code>lem-env serve</code>)</h3>
-                    <p>Starts the FastAPI REST server and WebSocket real-time telemetry streaming endpoint for the AI Studio Desktop GUI (Tauri) on default port 8000.</p>
-                    <div class="cli-block">
-                        lem-env serve --port 8000<br>
-                        lem-env serve --host 127.0.0.1 --port 8000
-                    </div>
-                    <p><strong>Interactive menu</strong>: In the PS1 menu, option [6] starts the server as a background PowerShell job. Selecting [6] again stops it. This allows the menu to remain usable while the server is running.</p>
-                </section>
-
-                <section id="manual-api">
-                    <h2>3. REST &amp; WebSocket API Specification</h2>
-                    <p>The background daemon exposes high-throughput endpoints for desktop GUI integration and automated CI/CD runners:</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Method</th>
-                                <th>Endpoint</th>
-                                <th>Payload / Query</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/health</code></td>
-                                <td>None</td>
-                                <td>Returns orchestrator status, uptime, toolchain verification, and project drift status.</td>
-                            </tr>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/hardware</code></td>
-                                <td>None</td>
-                                <td>Returns parsed hardware telemetry, accelerator specifications, MetaTrader 5 info, and recommended wheel index.</td>
-                            </tr>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/projects</code></td>
-                                <td>None</td>
-                                <td>Returns virtual environment integrity and dependency counts for all managed projects (Python + Node.js).</td>
-                            </tr>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/npm</code></td>
-                                <td>None</td>
-                                <td>Returns npm package status and node_modules health for all Node.js workspaces.</td>
-                            </tr>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/pipeline/status</code></td>
-                                <td>None</td>
-                                <td>Returns active pipeline state and recent telemetry events buffer.</td>
-                            </tr>
-                            <tr>
-                                <td><code>POST</code></td>
-                                <td><code>/api/pipeline/run</code></td>
-                                <td><code>{"target_project": null}</code></td>
-                                <td>Initiates the asynchronous 7-stage Smart Clean Install Pipeline.</td>
-                            </tr>
-                            <tr>
-                                <td><code>GET</code></td>
-                                <td><code>/api/manifests</code></td>
-                                <td>None</td>
-                                <td>Lists centralized requirements manifests and raw contents.</td>
-                            </tr>
-                            <tr>
-                                <td><code>POST</code></td>
-                                <td><code>/api/manifests/sync</code></td>
-                                <td>None</td>
-                                <td>Triggers one-way sync of centralized manifests to sibling projects.</td>
-                            </tr>
-                            <tr>
-                                <td><code>POST</code></td>
-                                <td><code>/api/update</code></td>
-                                <td><code>{"project": null, "dry_run": false}</code></td>
-                                <td>Triggers safe bottom-up package upgrade across all environments and auto-syncs manifests.</td>
-                            </tr>
-                            <tr>
-                                <td><code>POST</code></td>
-                                <td><code>/api/validate</code></td>
-                                <td><code>{"project": null}</code></td>
-                                <td>Executes bytecode compilation, multi-linter verification, and ecosystem domain gates across projects.</td>
-                            </tr>
-                            <tr>
-                                <td><code>POST</code></td>
-                                <td><code>/api/clean</code></td>
-                                <td><code>{"project": null}</code></td>
-                                <td>Purges orphaned bytecode caches and temporary build artifacts.</td>
-                            </tr>
-                            <tr>
-                                <td><code>WS</code></td>
-                                <td><code>/ws/log</code></td>
-                                <td>WebSocket Connection</td>
-                                <td>Real-time streaming channel for stage progression and log events. Thread-safe via <code>asyncio.run_coroutine_threadsafe()</code>.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p>All WebSocket events are <code>PipelineEvent</code> JSON objects with fields: <code>timestamp</code>, <code>step_number</code>, <code>total_steps</code>, <code>step_name</code>, <code>status</code>, <code>message</code>, <code>data</code>.</p>
-                    <p>For the exhaustive API endpoint guide, request/response payload examples, and WebSocket protocol definitions, consult the <a href="api-manual.html">Master REST &amp; WebSocket API Specification</a>.</p>
-                </section>
-
-                <section id="manual-troubleshooting">
-                    <h2>4. Troubleshooting &amp; Remediation</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Observed Condition</th>
-                                <th>Root Cause</th>
-                                <th>Prescribed Remediation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>MetaTrader 5 shown as NOT FOUND</td>
-                                <td>MT5 installed outside standard paths or via private installer</td>
-                                <td>Run <code>Get-Package -Name '*MetaTrader*'</code> in PowerShell to confirm package registration; re-install MT5 if absent.</td>
-                            </tr>
-                            <tr>
-                                <td>DirectX / DirectML backend not detected</td>
-                                <td>Missing Windows WMI access or outdated display driver</td>
-                                <td>Run <code>lem-env probe</code> in an elevated terminal and update GPU drivers.</td>
-                            </tr>
-                            <tr>
-                                <td>PEP 508 marker evaluation failure</td>
-                                <td>Platform string mismatch on customized Python distributions</td>
-                                <td>Run <code>lem-env validate</code> to inspect environment markers.</td>
-                            </tr>
-                            <tr>
-                                <td>Port conflict on 8000</td>
-                                <td>Prior daemon instance remained bound to socket</td>
-                                <td>Launch with custom port: <code>lem-env serve --port 8001</code>.</td>
-                            </tr>
-                            <tr>
-                                <td>npm / node_modules missing in audit</td>
-                                <td>GUI dependencies not installed</td>
-                                <td>Run <code>lem-env install</code> to trigger <code>npm install</code> for <code>lemgendary-ai-studio-gui</code>.</td>
-                            </tr>
-                            <tr>
-                                <td>Local npm linters not found</td>
-                                <td><code>node_modules</code> missing in <code>lemgendary-env-manager</code></td>
-                                <td>Run <code>npm install</code> inside <code>lemgendary-env-manager</code> or execute <code>lem-env install</code>.</td>
-                            </tr>
-                            <tr>
-                                <td>RFC 8259 JSON validation failure</td>
-                                <td>Malformed JSON syntax or trailing commas</td>
-                                <td>Inspect line and column output from <code>jsonlint</code> and correct the JSON document syntax.</td>
-                            </tr>
-                            <tr>
-                                <td>PSScriptAnalyzer warnings or errors</td>
-                                <td>PowerShell script style or syntax violation</td>
-                                <td>Inspect script file at indicated line and adhere to approved PowerShell practices.</td>
-                            </tr>
-                            <tr>
-                                <td>WCAG violations in lemgendary-docs</td>
-                                <td>HTML accessibility issues in static pages</td>
-                                <td>Review <code>pa11y</code> output and fix ARIA labels, image <code>alt</code> attributes, and heading hierarchy.</td>
-                            </tr>
-                            <tr>
-                                <td>yamllint errors</td>
-                                <td>Indentation or structural YAML issues</td>
-                                <td>Fix YAML files per error output; 2-space indentation is enforced.</td>
-                            </tr>
-                            <tr>
-                                <td>ESLint errors in GUI</td>
-                                <td>TypeScript/React code quality violations</td>
-                                <td>Run <code>npx eslint src/ --fix</code> inside <code>lemgendary-ai-studio-gui</code> to auto-fix where possible.</td>
-                            </tr>
-                            <tr>
-                                <td>Update plan shows 0 outdated</td>
-                                <td>pip index cache is stale</td>
-                                <td>Delete <code>~/.cache/pip</code> and retry <code>lem-env update</code>.</td>
-                            </tr>
-                            <tr>
-                                <td>winget not available for MT5 install</td>
-                                <td>winget requires Windows 10 1709+ with App Installer</td>
-                                <td>Install App Installer from Microsoft Store or install MT5 manually from &lt;https://www.metatrader5.com/&gt;.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-            </div>
+            <section id="companion-documentation">
+                <h2>Companion Documentation</h2>
+                <p>Operational procedures, command-line reference, API specifications, and troubleshooting guides are
+                    maintained in separate documents to keep this whitepaper focused on architectural design and
+                    comparative analysis:</p>
+                <ul>
+                    <li><a href="cli-manual.html">Master CLI Operations Manual (HTML)</a></li>
+                    <li><a href="api-manual.html">Master REST &amp; WebSocket API Specification (HTML)</a></li>
+                </ul>
+            </section>
         </main>
 
         <footer>
@@ -609,24 +393,6 @@
             </div>
         </footer>
     </div>
-
-    <script>
-        function switchDocTab(tabName) {
-            const tabs = ['whitepaper', 'manual'];
-            tabs.forEach(t => {
-                const btn = document.getElementById('tab-btn-' + t);
-                const pane = document.getElementById('pane-' + t);
-                if (btn && pane) {
-                    if (t === tabName) {
-                        btn.classList.add('active');
-                        pane.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                        pane.classList.remove('active');
-                    }
-                }
-            });
-        }
-    </script>
 </body>
+
 </html>
