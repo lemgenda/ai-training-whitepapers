@@ -14,9 +14,16 @@
   - [2.4 Projects & Ecosystem Audit Endpoints](#24-projects--ecosystem-audit-endpoints)
   - [2.5 Orchestration & Lifecycle Action Endpoints](#25-orchestration--lifecycle-action-endpoints)
   - [2.6 WebSocket Real-Time Telemetry](#26-websocket-real-time-telemetry)
+  - [2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem Endpoints](#27-desktop-gui-aggregation--multi-sidecar-ecosystem-endpoints)
 - [3. Desktop GUI Tauri IPC API Contracts](#3-desktop-gui-tauri-ipc-api-contracts)
 - [4. Training Suite Python API Engine](#4-training-suite-python-api-engine)
 - [5. Datasets Compilation & Stream Pipeline API](#5-datasets-compilation--stream-pipeline-api)
+  - [5.1 Server Architecture & Discovery](#51-server-architecture--discovery)
+  - [5.2 Security & Authentication](#52-security--authentication)
+  - [5.3 Endpoint Reference Matrix](#53-endpoint-reference-matrix)
+  - [5.4 WebSocket Real-Time Log Streaming](#54-websocket-real-time-log-streaming)
+  - [5.5 SQLite Job Persistence & Restart Recovery](#55-sqlite-job-persistence--restart-recovery)
+  - [5.6 Desktop GUI Aggregated Endpoints & Presets (Phase 8)](#56-desktop-gui-aggregated-endpoints--presets-phase-8)
 - [6. Error Handling, Status Codes & Resilience](#6-error-handling-status-codes--resilience)
 
 ---
@@ -453,6 +460,64 @@ Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`, whi
 
 ---
 
+### 2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem Endpoints
+
+The Environment Manager provides specialized endpoints for high-velocity hydration in `lemgendary-ai-studio-gui`:
+
+#### `GET /api/gui/state`
+
+Returns a consolidated snapshot containing service identity, hardware profile (`probe_hardware()`), discovered projects summary (`discover_projects()`), and pipeline execution status (`orchestrator.is_running`) in a single non-blocking payload.
+
+Example response:
+
+```json
+{
+  "service": {
+    "name": "lemgendary-env-manager",
+    "version": "2.0.0",
+    "port": 8000,
+    "status": "online"
+  },
+  "hardware": {
+    "os_name": "Windows",
+    "primary_backend": "cuda"
+  },
+  "projects": [],
+  "pipeline": {
+    "is_running": false,
+    "last_status": "success",
+    "last_run_timestamp": "2026-09-17T20:00:00Z"
+  }
+}
+```
+
+#### `GET /api/gui/ecosystem`
+
+Monitors health and connectivity across local ecosystem sidecars by actively probing `http://127.0.0.1:8100/api/health` with a non-blocking timeout. Powers the desktop GUI top-bar status indicator:
+
+```json
+{
+  "env_manager": {
+    "service": "lemgendary-env-manager",
+    "port": 8000,
+    "status": "online",
+    "reachable": true
+  },
+  "dataset_compiler": {
+    "service": "lemgendary-datasets",
+    "port": 8100,
+    "status": "online",
+    "reachable": true,
+    "data": {
+      "status": "ok",
+      "service": "LemGendary Dataset Compiler API"
+    }
+  }
+}
+```
+
+---
+
 ## 3. Desktop GUI Tauri IPC API Contracts
 
 The desktop frontend `lemgendary-ai-studio-gui` communicates with the native Rust backend via Tauri v2 IPC invocations.
@@ -544,6 +609,11 @@ All operational endpoints under `/api` requiring modification privileges enforce
 | `GET` | `/api/kaggle/status` | None | Check Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env) |
 | `POST` | `/api/kaggle/sync` | Required | Queue a Kaggle push/pull metadata synchronization job |
 | `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
+| `GET` | `/api/gui/state` | None | Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets |
+| `GET` | `/api/gui/datasets/with-stats` | None | Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics |
+| `GET` | `/api/gui/jobs/active` | None | Real-time execution telemetry for active compiler background tasks |
+| `GET` | `/api/gui/presets` | None | Canonical compiler preset parameter definitions and descriptions |
+| `POST` | `/api/gui/quick-compile` | Required | Fast-dispatch compilation using a predefined compiler preset profile |
 | `GET` | `/api/env/status` | Required | Passthrough delegating to `lem-env audit --fast` |
 | `POST` | `/api/env/validate` | Required | Passthrough delegating to `lem-env validate --project lemgendary-datasets` |
 
@@ -573,6 +643,30 @@ When execution concludes, a terminal chunk `[PROCESS_TERMINATED] Job <id> COMPLE
 
 All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in `.lgd_server/jobs.db` via SQLite.
 If the API server or host reboots while jobs are in `running` or `pending` state, an automated recovery pass on boot transitions orphaned jobs to `interrupted`, preventing zombie job tracking and providing clean diagnostic records.
+
+### 5.6 Desktop GUI Aggregated Endpoints & Presets (Phase 8)
+
+The Dataset Compiler API exposes specialized endpoints tailored for `lemgendary-ai-studio-gui` desktop integration and Cross-Project Automation (CPA):
+
+#### `GET /api/gui/state`
+
+Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
+
+#### `GET /api/gui/datasets/with-stats`
+
+Returns comprehensive manifold storage and format statistics, including file distribution counts across formats (`webp`, `jpg`, `png`, `parquet`), total byte footprint, and physical NTFS hardlink deduplication ratios.
+
+#### `GET /api/gui/jobs/active`
+
+Streams execution progress telemetry for currently running compilation and degradation tasks, including percentage complete, current sample index, elapsed duration, and processing frames-per-second (`fps`).
+
+#### `GET /api/gui/presets`
+
+Catalogs canonical compiler preset profiles (`quality-vision`, `restoration-hardlinked`, `detection-variable`, `cloud-archival`) loaded from `presets.yaml`. Each entry documents target image formats, quality floors, NIMA vetting thresholds, YOLO auto-labeling flags, and container targets.
+
+#### `POST /api/gui/quick-compile`
+
+Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
 
 ---
 

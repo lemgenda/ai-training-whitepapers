@@ -46,6 +46,7 @@
                         <li><a href="#section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</a></li>
                         <li><a href="#section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</a></li>
                         <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry</a></li>
+                        <li><a href="#section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
@@ -465,6 +466,50 @@ ws://127.0.0.1:8000/ws/logs</code></pre>
                 <p>Thread-safe dispatch is guaranteed via <code>asyncio.run_coroutine_threadsafe()</code>, which allows
                     the background pipeline thread to broadcast events on the server's running event loop without
                     blocking.</p>
+
+                <h3 id="section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</h3>
+                <p>The Environment Manager provides specialized endpoints for high-velocity hydration in <code>lemgendary-ai-studio-gui</code>:</p>
+                <h4><code>GET /api/gui/state</code></h4>
+                <p>Returns a consolidated snapshot containing service identity, hardware profile (<code>probe_hardware()</code>), discovered projects summary (<code>discover_projects()</code>), and pipeline execution status (<code>orchestrator.is_running</code>) in a single non-blocking payload.</p>
+                <p>Example response:</p>
+                <pre><code>{
+  "service": {
+    "name": "lemgendary-env-manager",
+    "version": "2.0.0",
+    "port": 8000,
+    "status": "online"
+  },
+  "hardware": {
+    "os_name": "Windows",
+    "primary_backend": "cuda"
+  },
+  "projects": [],
+  "pipeline": {
+    "is_running": false,
+    "last_status": "success",
+    "last_run_timestamp": "2026-09-17T20:00:00Z"
+  }
+}</code></pre>
+                <h4><code>GET /api/gui/ecosystem</code></h4>
+                <p>Monitors health and connectivity across local ecosystem sidecars by actively probing <code>http://127.0.0.1:8100/api/health</code> with a non-blocking timeout. Powers the desktop GUI top-bar status indicator:</p>
+                <pre><code>{
+  "env_manager": {
+    "service": "lemgendary-env-manager",
+    "port": 8000,
+    "status": "online",
+    "reachable": true
+  },
+  "dataset_compiler": {
+    "service": "lemgendary-datasets",
+    "port": 8100,
+    "status": "online",
+    "reachable": true,
+    "data": {
+      "status": "ok",
+      "service": "LemGendary Dataset Compiler API"
+    }
+  }
+}</code></pre>
             </section>
 
             <section id="section-3">
@@ -712,6 +757,36 @@ python cli.py server stop</code></pre>
                         </tr>
                         <tr>
                             <td><code>GET</code></td>
+                            <td><code>/api/gui/state</code></td>
+                            <td>None</td>
+                            <td>Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/datasets/with-stats</code></td>
+                            <td>None</td>
+                            <td>Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/jobs/active</code></td>
+                            <td>None</td>
+                            <td>Real-time execution telemetry for active compiler background tasks</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/presets</code></td>
+                            <td>None</td>
+                            <td>Canonical compiler preset parameter definitions and descriptions</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/quick-compile</code></td>
+                            <td>Required</td>
+                            <td>Fast-dispatch compilation using a predefined compiler preset profile</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
                             <td><code>/api/env/status</code></td>
                             <td>Required</td>
                             <td>Passthrough delegating to <code>lem-env audit --fast</code></td>
@@ -747,6 +822,31 @@ python cli.py server stop</code></pre>
                 <p>
                     All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in <code>.lgd_server/jobs.db</code> via SQLite.
                     If the API server or host reboots while jobs are in <code>running</code> or <code>pending</code> state, an automated recovery pass on boot transitions orphaned jobs to <code>interrupted</code>, preventing zombie job tracking and providing clean diagnostic records.
+                </p>
+
+                <h3 id="section-5-6">5.6 Desktop GUI Aggregated Endpoints &amp; Presets (Phase 8)</h3>
+                <p>
+                    The Dataset Compiler API exposes specialized endpoints tailored for <code>lemgendary-ai-studio-gui</code> desktop integration and Cross-Project Automation (CPA):
+                </p>
+                <h4><code>GET /api/gui/state</code></h4>
+                <p>
+                    Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
+                </p>
+                <h4><code>GET /api/gui/datasets/with-stats</code></h4>
+                <p>
+                    Returns comprehensive manifold storage and format statistics, including file distribution counts across formats (<code>webp</code>, <code>jpg</code>, <code>png</code>, <code>parquet</code>), total byte footprint, and physical NTFS hardlink deduplication ratios.
+                </p>
+                <h4><code>GET /api/gui/jobs/active</code></h4>
+                <p>
+                    Streams execution progress telemetry for currently running compilation and degradation tasks, including percentage complete, current sample index, elapsed duration, and processing frames-per-second (<code>fps</code>).
+                </p>
+                <h4><code>GET /api/gui/presets</code></h4>
+                <p>
+                    Catalogs canonical compiler preset profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) loaded from <code>presets.yaml</code>. Each entry documents target image formats, quality floors, NIMA vetting thresholds, YOLO auto-labeling flags, and container targets.
+                </p>
+                <h4><code>POST /api/gui/quick-compile</code></h4>
+                <p>
+                    Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
                 </p>
             </section>
 

@@ -53,6 +53,7 @@
                 <li><a href="#section-7">7. Synthesis Flow &amp; Topology</a>
                     <ul class="sub-item">
                         <li><a href="#section-7-1">7.1 Dual-Interface Telemetry Topology</a></li>
+                        <li><a href="#section-7-2">7.2 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem Observability</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">8. Unified Models Registry</a></li>
@@ -348,6 +349,14 @@
                     guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles.
                     Server-side lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler,
                     ensuring the background drain task is cancelled cleanly on shutdown.</p>
+
+                <h3 id="section-7-2">7.2 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem Observability</h3>
+                <p>To minimize HTTP handshake overhead in desktop graphical clients, the Environment Manager daemon exposes high-density aggregated endpoints:</p>
+                <ul>
+                    <li><strong>State Aggregation (<code>/api/gui/state</code>)</strong>: Packages system identity, hardware sensors, discovered repository trees, and active pipeline statuses into a single non-blocking payload, eliminating waterfall polling.</li>
+                    <li><strong>Ecosystem Sidecar Interoperability (<code>/api/gui/ecosystem</code>)</strong>: Probes the <code>lemgendary-datasets</code> compiler sidecar on port 8100 concurrently, reporting unified health vectors to the <code>lemgendary-ai-studio-gui</code> status bar.</li>
+                    <li><strong>Frozen API Contract</strong>: Ships <code>openapi.json</code> guaranteeing zero-drift type generation for Tauri Rust and TypeScript clients.</li>
+                </ul>
             </section>
 
             <section id="section-8">

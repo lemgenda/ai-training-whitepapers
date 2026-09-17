@@ -508,6 +508,14 @@
                 <li><strong>WebSocket Streaming</strong>: Live logs stream to subscribers via <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
                 <li><strong>Hybrid Transparent CLI</strong>: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.</li>
             </ul>
+
+            <h3 id="57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets (Phase 8)</h3>
+            <ul>
+                <li><strong>Canonical Compiler Presets (<code>presets.yaml</code>, <code>presets.py</code>)</strong>: Shipped formal compilation profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) defining standard quality floors, resampling filters, auto-labeling toggles, and container targets.</li>
+                <li><strong>Aggregated Desktop GUI Endpoints (<code>api/routes/gui.py</code>)</strong>: Unified <code>/api/gui/state</code>, <code>/api/gui/datasets/with-stats</code>, <code>/api/gui/jobs/active</code>, <code>/api/gui/presets</code>, and <code>/api/gui/quick-compile</code> for instant hydration of the <code>lemgendary-ai-studio-gui</code> desktop dashboard.</li>
+                <li><strong>Frozen OpenAPI 3.1 Contract</strong>: Formally exported <code>openapi.json</code> guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.</li>
+                <li><strong>Multi-Sidecar Top-Bar Observability</strong>: Interoperable with <code>lemgendary-env-manager</code> (port 8000) for synchronized cross-project governance.</li>
+            </ul>
 </section>
 
 <section id="section-8">

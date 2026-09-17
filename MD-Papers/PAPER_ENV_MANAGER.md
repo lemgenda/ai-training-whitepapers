@@ -16,6 +16,7 @@
 - [6. Comparative Analysis / Benchmarks](#6-comparative-analysis--benchmarks)
 - [7. Synthesis Flow & Topology](#7-synthesis-flow--topology)
   - [7.1 Dual-Interface Telemetry Topology](#71-dual-interface-telemetry-topology)
+  - [7.2 Desktop GUI State Aggregation & Multi-Sidecar Ecosystem Observability](#72-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability)
 - [8. Unified Models Registry](#8-unified-models-registry)
 - [9. Conclusion](#9-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -153,6 +154,14 @@ The control topology couples a headless CLI engine (`lem-env`) and a reactive de
 $$T_{\text{telemetry}} = \mathcal{O}(1) \quad \text{amortized broadcast}$$
 
 WebSocket workers dispatch typed `PipelineEvent` messages directly to connected frontend clients using `asyncio.run_coroutine_threadsafe()` for thread-safe event bridging, guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles. Server-side lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler, ensuring the background drain task is cancelled cleanly on shutdown.
+
+### 7.2 Desktop GUI State Aggregation & Multi-Sidecar Ecosystem Observability
+
+To minimize HTTP handshake overhead in desktop graphical clients, the Environment Manager daemon exposes high-density aggregated endpoints:
+
+- **State Aggregation (`/api/gui/state`)**: Packages system identity, hardware sensors, discovered repository trees, and active pipeline statuses into a single non-blocking payload, eliminating waterfall polling.
+- **Ecosystem Sidecar Interoperability (`/api/gui/ecosystem`)**: Probes the `lemgendary-datasets` compiler sidecar on port 8100 concurrently, reporting unified health vectors to the `lemgendary-ai-studio-gui` status bar.
+- **Frozen API Contract**: Ships `openapi.json` guaranteeing zero-drift type generation for Tauri Rust and TypeScript clients.
 
 ---
 

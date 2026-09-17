@@ -600,6 +600,9 @@ python cli.py [COMMAND] --help</code></pre>
                 <pre><code># Standard compilation with default WebP q=92
 python cli.py compile --model nima_aesthetic --max-gb 50
 
+# Compile using canonical compiler preset (Phase 8)
+python cli.py compile --model nima_aesthetic --preset quality-vision
+
 # Concurrently emit WebP directory and MosaicML Streaming (MDS) container
 python cli.py compile --model nima_aesthetic --image-format webp --image-quality 92 --also-format mds
 
@@ -627,6 +630,12 @@ python cli.py compile --model nima_technical --no-server</code></pre>
                             <td>String</td>
                             <td><code>None</code></td>
                             <td>Dataset registry key in <code>unified_data.yaml</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>--preset</code>, <code>-p</code></td>
+                            <td>String</td>
+                            <td><code>None</code></td>
+                            <td>Predefined compiler preset profile (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>)</td>
                         </tr>
                         <tr>
                             <td><code>--max-gb</code></td>
@@ -852,6 +861,16 @@ python cli.py docs regen
 
 # Schema validation
 python cli.py config validate</code></pre>
+
+                <h3>5.11 Canonical Compiler Presets (<code>presets</code>)</h3>
+                <p>
+                    Inspects canonical compilation profiles defined in <code>presets.yaml</code>:
+                </p>
+                <pre><code># Display formatted table of available compiler presets
+python cli.py presets list</code></pre>
+                <p>
+                    The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
+                </p>
             </section>
 
             <section id="section-6">

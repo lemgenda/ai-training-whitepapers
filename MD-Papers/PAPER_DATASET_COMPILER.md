@@ -168,6 +168,13 @@ Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic resto
 * **WebSocket Streaming**: Live logs stream to subscribers via `ws://127.0.0.1:8100/api/ws/jobs/{id}/logs`.
 * **Hybrid Transparent CLI**: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.
 
+### 5.7 Cross-Project Automation (CPA) Integration & Desktop GUI Presets (Phase 8)
+
+* **Canonical Compiler Presets (`presets.yaml`, `presets.py`)**: Shipped formal compilation profiles (`quality-vision`, `restoration-hardlinked`, `detection-variable`, `cloud-archival`) defining standard quality floors, resampling filters, auto-labeling toggles, and container targets.
+* **Aggregated Desktop GUI Endpoints (`api/routes/gui.py`)**: Unified `/api/gui/state`, `/api/gui/datasets/with-stats`, `/api/gui/jobs/active`, `/api/gui/presets`, and `/api/gui/quick-compile` for instant hydration of the `lemgendary-ai-studio-gui` desktop dashboard.
+* **Frozen OpenAPI 3.1 Contract**: Formally exported `openapi.json` guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.
+* **Multi-Sidecar Top-Bar Observability**: Interoperable with `lemgendary-env-manager` (port 8000) for synchronized cross-project governance.
+
 ---
 
 ## 6. Comparative Analysis | 2026 Manifold Compilers Benchmark

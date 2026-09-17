@@ -21,6 +21,17 @@
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
 - [4. AI Studio Desktop GUI CLI & Toolchain](#4-ai-studio-desktop-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
+  - [5.1 Invocation Syntax](#51-invocation-syntax)
+  - [5.2 Manifold Compilation (`compile`)](#52-manifold-compilation-compile)
+  - [5.3 Degradation Engine Synthesis (`degrade`)](#53-degradation-engine-synthesis-degrade)
+  - [5.4 Audit, Deduplication & Hardlinks (`audit`)](#54-audit-deduplication--hardlinks-audit)
+  - [5.5 Retroactive Transcoding (`transcode`)](#55-retroactive-transcoding-transcode)
+  - [5.6 Smart Multi-Modal Generation (`label`, `prompt`, `mask`)](#56-smart-multi-modal-generation-label-prompt-mask)
+  - [5.7 Variant Reduction & Modernization (`reduce`, `modernize`)](#57-variant-reduction--modernization-reduce-modernize)
+  - [5.8 Sidecar API Server (`server`)](#58-sidecar-api-server-server)
+  - [5.9 Ecosystem Delegation (`env`)](#59-ecosystem-delegation-env)
+  - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
+  - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
 - [6. Training Suite & Neural Model Registry CLI](#6-training-suite--neural-model-registry-cli)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
@@ -373,6 +384,9 @@ Compiles raw image and market data into production-ready dataset manifolds with 
 # Standard compilation with default WebP q=92
 python cli.py compile --model nima_aesthetic --max-gb 50
 
+# Compile using canonical compiler preset (Phase 8)
+python cli.py compile --model nima_aesthetic --preset quality-vision
+
 # Concurrently emit WebP directory and MosaicML Streaming (MDS) container
 python cli.py compile --model nima_aesthetic --image-format webp --image-quality 92 --also-format mds
 
@@ -389,6 +403,7 @@ python cli.py compile --model nima_technical --no-server
 | Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `--model`, `-m` | String | `None` | Dataset registry key in `unified_data.yaml` |
+| `--preset`, `-p` | String | `None` | Predefined compiler preset profile (`quality-vision`, `restoration-hardlinked`, `detection-variable`, `cloud-archival`) |
 | `--max-gb` | Float | Config | Maximum size allocation threshold in gigabytes |
 | `--workers` | Integer | Auto | Number of parallel worker threads/processes |
 | `--image-format` | String | `webp` | Target format: `webp`, `jpeg`, `png`, `keep` |
@@ -519,6 +534,17 @@ python cli.py docs regen
 # Schema validation
 python cli.py config validate
 ```
+
+### 5.11 Canonical Compiler Presets (`presets`)
+
+Inspects canonical compilation profiles defined in `presets.yaml`:
+
+```bash
+# Display formatted table of available compiler presets
+python cli.py presets list
+```
+
+The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
 
 ---
 
