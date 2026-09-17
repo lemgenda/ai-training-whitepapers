@@ -175,6 +175,14 @@ Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic resto
 * **Frozen OpenAPI 3.1 Contract**: Formally exported `openapi.json` guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.
 * **Multi-Sidecar Top-Bar Observability**: Interoperable with `lemgendary-env-manager` (port 8000) for synchronized cross-project governance.
 
+### 5.8 S.O.L.I.D. Services Layer & Forex Encapsulation (v16.7.0)
+
+* **In-Process Services Layer (`services/`)**: Decomposed monolithic compiler workflows into dedicated single-responsibility services (`CompilerService`, `DegradeService`, `AuditService`, `DocService`, `GenerationService`, `MigrationService`, `SyncService`). All CLI commands invoke typed service layers in-process directly rather than shelling out to external subprocesses.
+* **Unified Audit Engine**: Implemented `AuditService.audit_manifold()` unifying magic-byte resolution checking, aspect ratio validation, DCT perceptual deduplication, and NTFS hardlink fraction audits into a single command (`lemgendary audit`).
+* **Safe Module Ingestion**: Encapsulated argument parsing in `manifold_compile.py` inside `parse_compile_args()` and `process_dataset(parsed_args)`, eliminating top-level module import side-effects.
+* **Domain Encapsulation (`forex/`)**: Encapsulated historical Forex time-series pipelines into a modular subpackage (`forex.schema`, `forex.converter`, `forex.injector`, `forex.bridge`, `forex.pipeline`) with root backward-compatibility shims and dedicated CLI subcommands (`lemgendary forex convert`, `lemgendary forex embed`).
+* **Zero Suppression Policy Enforcement**: Completely eliminated all programmatic warning suppressions (`warnings.filterwarnings`) and diagnostic silencing directives across all codebase modules.
+
 ---
 
 ## 6. Comparative Analysis | 2026 Manifold Compilers Benchmark

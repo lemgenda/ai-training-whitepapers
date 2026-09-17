@@ -871,6 +871,16 @@ python cli.py presets list</code></pre>
                 <p>
                     The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
                 </p>
+
+                <h3>5.12 Forex Universe &amp; Parquet Operations (<code>forex</code>)</h3>
+                <p>
+                    Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays from legacy <code>.npy</code> containers into compressed, partitioned PyArrow Parquet manifolds with embedded schema metadata:
+                </p>
+                <pre><code># Convert NPY market array files into Parquet
+python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --output ../LemGendaryDatasets/LemGendizedForex
+
+# Embed column descriptions and metadata into Parquet tables
+python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet</code></pre>
             </section>
 
             <section id="section-6">

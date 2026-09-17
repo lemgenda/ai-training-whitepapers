@@ -50,6 +50,8 @@
                         <li><a href="#54-smart-multimodal-generation">5.4 Smart Multi-Modal Generation Engine</a></li>
                         <li><a href="#55-physical-degradation-synthesis">5.5 Physical Degradation Synthesis Engine</a></li>
                         <li><a href="#56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
+                        <li><a href="#57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
+                        <li><a href="#58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -515,6 +517,15 @@
                 <li><strong>Aggregated Desktop GUI Endpoints (<code>api/routes/gui.py</code>)</strong>: Unified <code>/api/gui/state</code>, <code>/api/gui/datasets/with-stats</code>, <code>/api/gui/jobs/active</code>, <code>/api/gui/presets</code>, and <code>/api/gui/quick-compile</code> for instant hydration of the <code>lemgendary-ai-studio-gui</code> desktop dashboard.</li>
                 <li><strong>Frozen OpenAPI 3.1 Contract</strong>: Formally exported <code>openapi.json</code> guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.</li>
                 <li><strong>Multi-Sidecar Top-Bar Observability</strong>: Interoperable with <code>lemgendary-env-manager</code> (port 8000) for synchronized cross-project governance.</li>
+            </ul>
+
+            <h3 id="58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</h3>
+            <ul>
+                <li><strong>In-Process Services Layer (<code>services/</code>)</strong>: Decomposed monolithic compiler workflows into dedicated single-responsibility services (<code>CompilerService</code>, <code>DegradeService</code>, <code>AuditService</code>, <code>DocService</code>, <code>GenerationService</code>, <code>MigrationService</code>, <code>SyncService</code>). All CLI commands invoke typed service layers in-process directly rather than shelling out to external subprocesses.</li>
+                <li><strong>Unified Audit Engine</strong>: Implemented <code>AuditService.audit_manifold()</code> unifying magic-byte resolution checking, aspect ratio validation, DCT perceptual deduplication, and NTFS hardlink fraction audits into a single command (<code>lemgendary audit</code>).</li>
+                <li><strong>Safe Module Ingestion</strong>: Encapsulated argument parsing in <code>manifold_compile.py</code> inside <code>parse_compile_args()</code> and <code>process_dataset(parsed_args)</code>, eliminating top-level module import side-effects.</li>
+                <li><strong>Domain Encapsulation (<code>forex/</code>)</strong>: Encapsulated historical Forex time-series pipelines into a modular subpackage (<code>forex.schema</code>, <code>forex.converter</code>, <code>forex.injector</code>, <code>forex.bridge</code>, <code>forex.pipeline</code>) with root backward-compatibility shims and dedicated CLI subcommands (<code>lemgendary forex convert</code>, <code>lemgendary forex embed</code>).</li>
+                <li><strong>Zero Suppression Policy Enforcement</strong>: Completely eliminated all programmatic warning suppressions (<code>warnings.filterwarnings</code>) and diagnostic silencing directives across all codebase modules.</li>
             </ul>
 </section>
 

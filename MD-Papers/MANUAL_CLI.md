@@ -32,6 +32,7 @@
   - [5.9 Ecosystem Delegation (`env`)](#59-ecosystem-delegation-env)
   - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
   - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
+  - [5.12 Forex Universe & Parquet Operations (`forex`)](#512-forex-universe--parquet-operations-forex)
 - [6. Training Suite & Neural Model Registry CLI](#6-training-suite--neural-model-registry-cli)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
@@ -545,6 +546,18 @@ python cli.py presets list
 ```
 
 The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
+
+### 5.12 Forex Universe & Parquet Operations (`forex`)
+
+Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays from legacy `.npy` containers into compressed, partitioned PyArrow Parquet manifolds with embedded schema metadata:
+
+```bash
+# Convert NPY market array files into Parquet
+python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --output ../LemGendaryDatasets/LemGendizedForex
+
+# Embed column descriptions and metadata into Parquet tables
+python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet
+```
 
 ---
 
