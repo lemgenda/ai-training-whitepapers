@@ -548,24 +548,206 @@ governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)</code></pre>
             <section id="section-5">
                 <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
                 <p>
-                    The <code>lemgendary-datasets</code> repository exposes Python APIs for compiling and reading
-                    structured image and market data.
+                    The <code>lemgendary-datasets</code> repository provides a high-throughput sidecar API service running on <code>127.0.0.1:8100</code> (<code>api/</code>). It provides REST endpoints for hardware inspection, configuration validation, dataset and raw-source querying, and background execution of compilation and degradation tasks, with bidirectional WebSocket streaming for live logs and global telemetry.
                 </p>
-                <p>Key API interfaces:</p>
-                <ul>
-                    <li><code>ManifoldCompiler</code>: High-throughput image pairing, bicubic downsampling, and
-                        synthetic noise generation.</li>
-                    <li><code>ForexStreamCompiler</code>: Parquet chunking engine converting tick and candlestick data
-                        into normalized training tensors.</li>
-                    <li><code>CloudSyncManager</code>: Authenticated transfer client interfacing with Google Cloud
-                        Storage and S3 buckets.</li>
-                </ul>
-                <p>Example usage:</p>
-                <pre><code>from datasets.compiler import ManifoldCompiler
-from datasets.forex import ForexStreamCompiler
 
-compiler = ManifoldCompiler(target_dir="LemGendizedNAFNet")
-compiler.compile_pairs(hr_source="data/raw_hr", lr_dest="data/compiled_lr")</code></pre>
+                <h3>5.1 Server Architecture &amp; Discovery</h3>
+                <pre><code># Launch server daemon
+python cli.py server start --background --host 127.0.0.1 --port 8100
+
+# Probe status and hardware sensors
+python cli.py server status
+
+# Terminate server daemon
+python cli.py server stop</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bind Host</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td>Local loopback interface</td>
+                        </tr>
+                        <tr>
+                            <td>Bind Port</td>
+                            <td><code>8100</code></td>
+                            <td>Dedicated compiler service port (distinct from <code>lem-env</code> on 8000)</td>
+                        </tr>
+                        <tr>
+                            <td>Interactive Docs</td>
+                            <td><code>/docs</code></td>
+                            <td>OpenAPI Swagger UI</td>
+                        </tr>
+                        <tr>
+                            <td>Schema Spec</td>
+                            <td><code>/openapi.json</code></td>
+                            <td>OpenAPI 3.1.0 JSON specification</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>5.2 Security &amp; Authentication</h3>
+                <p>
+                    All operational endpoints under <code>/api</code> requiring modification privileges enforce token authentication:
+                </p>
+                <ul>
+                    <li>Provide the token via HTTP header <code>X-API-Key: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+                    <li>Master token resolution: checked from <code>LEMGENDARY_API_TOKEN</code> environment variable, or automatically loaded/generated in <code>.lgd_server/token</code>.</li>
+                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>; invalid tokens return <code>403 Forbidden</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/api/datasets</code>, <code>/api/sources</code>, <code>/api/gates</code>) and WebSocket streams are open.</li>
+                </ul>
+
+                <h3>5.3 Endpoint Reference Matrix</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Auth</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health</code></td>
+                            <td>None</td>
+                            <td>Basic liveness check, uptime, version, and active job count</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health/full</code></td>
+                            <td>None</td>
+                            <td>Detailed telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/config</code></td>
+                            <td>Required</td>
+                            <td>Retrieves parsed <code>unified_data.yaml</code> structure</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/config/validate</code></td>
+                            <td>Required</td>
+                            <td>Validates configuration against Pydantic schema</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>List historical and active jobs with pagination (<code>limit</code>, <code>offset</code>, <code>state</code>, <code>job_type</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}</code></td>
+                            <td>Required</td>
+                            <td>Fetch state, timestamps, exit code, and error details for a single job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}/logs</code></td>
+                            <td>Required</td>
+                            <td>Retrieve buffered execution log text or tail lines</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/compile</code></td>
+                            <td>Required</td>
+                            <td>Queue a manifold compilation task</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/degrade</code></td>
+                            <td>Required</td>
+                            <td>Queue a synthetic degradation derivation task</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/{id}/cancel</code></td>
+                            <td>Required</td>
+                            <td>Terminate an active job subprocess</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets</code></td>
+                            <td>None</td>
+                            <td>Catalog compiled manifolds with size, sample counts, and container formats</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets/{name}</code></td>
+                            <td>None</td>
+                            <td>Retrieve <code>dataset_info.yaml</code> and class lists for a specific manifold</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/sources</code></td>
+                            <td>None</td>
+                            <td>Catalog local <code>raw-sets</code> and configured upstream datasets</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/kaggle/status</code></td>
+                            <td>None</td>
+                            <td>Check Kaggle credentials (<code>.kaggle_token</code>, <code>~/.kaggle/kaggle.json</code>, env)</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/sync</code></td>
+                            <td>Required</td>
+                            <td>Queue a Kaggle push/pull metadata synchronization job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gates/hardlinks</code></td>
+                            <td>None</td>
+                            <td>Audit NTFS/POSIX hardlink fractions and evaluate container safety</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/env/status</code></td>
+                            <td>Required</td>
+                            <td>Passthrough delegating to <code>lem-env audit --fast</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/env/validate</code></td>
+                            <td>Required</td>
+                            <td>Passthrough delegating to <code>lem-env validate --project lemgendary-datasets</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>5.4 WebSocket Real-Time Log Streaming</h3>
+                <p>
+                    Clients connect to real-time log channels to monitor long-running compiler and degradation tasks without polling:
+                </p>
+                <pre><code>ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs</code></pre>
+                <p>
+                    On connection, the server automatically replays any existing backlog text buffered on disk, then streams incremental stdout/stderr chunks in real time as emitted by the subprocess.
+                </p>
+                <p>Message Payload Format:</p>
+                <pre><code>{
+  "job_id": "735bfe51-007d-4405-adf0-53ff34985668",
+  "type": "log",
+  "chunk": "[DEGRADE] Processing sample 1500/50000 (3.0%)...\n"
+}</code></pre>
+                <p>
+                    When execution concludes, a terminal chunk <code>[PROCESS_TERMINATED] Job &lt;id&gt; COMPLETED (Exit Code: 0)</code> is emitted before socket closing.
+                </p>
+
+                <h3>5.5 SQLite Job Persistence &amp; Restart Recovery</h3>
+                <p>
+                    All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in <code>.lgd_server/jobs.db</code> via SQLite.
+                    If the API server or host reboots while jobs are in <code>running</code> or <code>pending</code> state, an automated recovery pass on boot transitions orphaned jobs to <code>interrupted</code>, preventing zombie job tracking and providing clean diagnostic records.
+                </p>
             </section>
 
             <section id="section-6">

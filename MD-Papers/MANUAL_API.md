@@ -494,23 +494,85 @@ governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)
 
 ## 5. Datasets Compilation & Stream Pipeline API
 
-The `lemgendary-datasets` repository exposes Python APIs for compiling and reading structured image and market data.
+The `lemgendary-datasets` repository provides a high-throughput sidecar API service running on `127.0.0.1:8100` (`api/`). It provides REST endpoints for hardware inspection, configuration validation, dataset and raw-source querying, and background execution of compilation and degradation tasks, with bidirectional WebSocket streaming for live logs and global telemetry.
 
-Key API interfaces:
+### 5.1 Server Architecture & Discovery
 
-- `ManifoldCompiler`: High-throughput image pairing, bicubic downsampling, and synthetic noise generation.
-- `ForexStreamCompiler`: Parquet chunking engine converting tick and candlestick data into normalized training tensors.
-- `CloudSyncManager`: Authenticated transfer client interfacing with Google Cloud Storage and S3 buckets.
+```bash
+# Launch server daemon
+python cli.py server start --background --host 127.0.0.1 --port 8100
 
-Example usage:
+# Probe status and hardware sensors
+python cli.py server status
 
-```python
-from datasets.compiler import ManifoldCompiler
-from datasets.forex import ForexStreamCompiler
-
-compiler = ManifoldCompiler(target_dir="LemGendizedNAFNet")
-compiler.compile_pairs(hr_source="data/raw_hr", lr_dest="data/compiled_lr")
+# Terminate server daemon
+python cli.py server stop
 ```
+
+| Parameter | Default | Description |
+| :--- | :--- | :--- |
+| Bind Host | `127.0.0.1` | Local loopback interface |
+| Bind Port | `8100` | Dedicated compiler service port (distinct from `lem-env` on 8000) |
+| Interactive Docs | `/docs` | OpenAPI Swagger UI |
+| Schema Spec | `/openapi.json` | OpenAPI 3.1.0 JSON specification |
+
+### 5.2 Security & Authentication
+
+All operational endpoints under `/api` requiring modification privileges enforce token authentication:
+
+- Provide the token via HTTP header `X-API-Key: <token>` or `Authorization: Bearer <token>`.
+- Master token resolution: checked from `LEMGENDARY_API_TOKEN` environment variable, or automatically loaded/generated in `.lgd_server/token`.
+- Unauthenticated requests to protected endpoints return `401 Unauthorized`; invalid tokens return `403 Forbidden`. Diagnostic endpoints (`/api/health`, `/api/datasets`, `/api/sources`, `/api/gates`) and WebSocket streams are open.
+
+### 5.3 Endpoint Reference Matrix
+
+| Method | Endpoint | Auth | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/health` | None | Basic liveness check, uptime, version, and active job count |
+| `GET` | `/api/health/full` | None | Detailed telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model |
+| `GET` | `/api/config` | Required | Retrieves parsed `unified_data.yaml` structure |
+| `POST` | `/api/config/validate` | Required | Validates configuration against Pydantic schema |
+| `GET` | `/api/jobs` | Required | List historical and active jobs with pagination (`limit`, `offset`, `state`, `job_type`) |
+| `GET` | `/api/jobs/{id}` | Required | Fetch state, timestamps, exit code, and error details for a single job |
+| `GET` | `/api/jobs/{id}/logs` | Required | Retrieve buffered execution log text or tail lines |
+| `POST` | `/api/jobs/compile` | Required | Queue a manifold compilation task |
+| `POST` | `/api/jobs/degrade` | Required | Queue a synthetic degradation derivation task |
+| `POST` | `/api/jobs/{id}/cancel`| Required | Terminate an active job subprocess |
+| `GET` | `/api/datasets` | None | Catalog compiled manifolds with size, sample counts, and container formats |
+| `GET` | `/api/datasets/{name}` | None | Retrieve `dataset_info.yaml` and class lists for a specific manifold |
+| `GET` | `/api/sources` | None | Catalog local `raw-sets` and configured upstream datasets |
+| `GET` | `/api/kaggle/status` | None | Check Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env) |
+| `POST` | `/api/kaggle/sync` | Required | Queue a Kaggle push/pull metadata synchronization job |
+| `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
+| `GET` | `/api/env/status` | Required | Passthrough delegating to `lem-env audit --fast` |
+| `POST` | `/api/env/validate` | Required | Passthrough delegating to `lem-env validate --project lemgendary-datasets` |
+
+### 5.4 WebSocket Real-Time Log Streaming
+
+Clients connect to real-time log channels to monitor long-running compiler and degradation tasks without polling:
+
+```text
+ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs
+```
+
+On connection, the server automatically replays any existing backlog text buffered on disk, then streams incremental stdout/stderr chunks in real time as emitted by the subprocess.
+
+Message Payload Format:
+
+```json
+{
+  "job_id": "735bfe51-007d-4405-adf0-53ff34985668",
+  "type": "log",
+  "chunk": "[DEGRADE] Processing sample 1500/50000 (3.0%)...\n"
+}
+```
+
+When execution concludes, a terminal chunk `[PROCESS_TERMINATED] Job <id> COMPLETED (Exit Code: 0)` is emitted before socket closing.
+
+### 5.5 SQLite Job Persistence & Restart Recovery
+
+All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in `.lgd_server/jobs.db` via SQLite.
+If the API server or host reboots while jobs are in `running` or `pending` state, an automated recovery pass on boot transitions orphaned jobs to `interrupted`, preventing zombie job tracking and providing clean diagnostic records.
 
 ---
 

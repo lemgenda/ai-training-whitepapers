@@ -42,21 +42,31 @@
                 </li>
                 <li><a href="#section-7">4. Multi-Modal &amp; Format Resilience</a>
                 </li>
-                <li><a href="#section-8">5. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
+                <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.5.0)</a>
                     <ul class="sub-item">
-                        <li><a href="#51-technical-comparison-matrix">5.1 Technical Comparison Matrix</a></li>
-                        <li><a href="#52-competitor-deep-dive">5.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</a></li>
+                        <li><a href="#51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding</a></li>
+                        <li><a href="#52-modular-container-format">5.2 Modular Container Format Layer</a></li>
+                        <li><a href="#53-hardlink-dedup-preflight">5.3 Hardlink Dedup Preservation &amp; Pre-Flight Gate</a></li>
+                        <li><a href="#54-smart-multimodal-generation">5.4 Smart Multi-Modal Generation Engine</a></li>
+                        <li><a href="#55-physical-degradation-synthesis">5.5 Physical Degradation Synthesis Engine</a></li>
+                        <li><a href="#56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
                     </ul>
                 </li>
-                <li><a href="#section-9">6. Synthesis Flow &amp; Topology</a>
+                <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
                     <ul class="sub-item">
-                        <li><a href="#the-dataset-hub">6.1. The Dataset Hub (v6.0.0-SOTA)</a></li>
-                        <li><a href="#industrial-output-topology">6.2. Industrial Output Topology (Nuclear Architecture)</a></li>
+                        <li><a href="#61-technical-comparison-matrix">6.1 Technical Comparison Matrix</a></li>
+                        <li><a href="#62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</a></li>
                     </ul>
                 </li>
-                <li><a href="#section-11">7. Unified Models Registry (Manifolds)</a>
+                <li><a href="#section-9">7. Synthesis Flow &amp; Topology</a>
+                    <ul class="sub-item">
+                        <li><a href="#the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</a></li>
+                        <li><a href="#industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</a></li>
+                    </ul>
                 </li>
-                <li><a href="#conclusion">8. Conclusion</a>
+                <li><a href="#section-11">8. Unified Models Registry (Manifolds)</a>
+                </li>
+                <li><a href="#conclusion">9. Conclusion</a>
                 </li>
             </ul>
         </nav>
@@ -91,8 +101,8 @@
 
 <section id="section-1">
 <h2>1. Abstract</h2>
-            <p>The LemGendary Dataset Pipeline (v16.2.8-NUCLEAR-HARDENED) is the industrial standard for Generative & Vision Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion and Vision datasets with industrial-grade CLIP styling, multi-domain balancing, and high-fidelity LANCZOS interpolation.</p>
-            <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-dataset-generator" target="_blank">lemgendary-dataset-generator</a></p>
+            <p>The LemGendary Dataset Compiler Suite (v16.5.0-MODERNIZED) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
+            <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
         
 
         
@@ -445,10 +455,65 @@
 
 </section>
 
+<section id="section-modernization">
+<h2>5. 2026 Modernization Architecture &amp; Innovations (v16.5.0)</h2>
+            <p>The 2026 modernization elevates the compiler from a script collection into an industrial-grade dataset synthesis, audit, and sidecar service engine:</p>
+
+            <h3 id="51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding (Phase 3)</h3>
+            <p>Eliminating bulky intermediate disk writes, the compiler transcodes input streams directly in memory to tuned WebP formats:</p>
+            <ul>
+                <li><strong>Images (<code>images/</code>)</strong>: WebP <i>q=92</i> delivering 40&ndash;65% disk footprint reduction compared to standard JPEG while preserving frequency harmonics.</li>
+                <li><strong>Restoration Ground Truth (<code>targets/</code>)</strong>: WebP <i>q=95</i> guaranteeing high-frequency fidelity for restoration models (NAFNet, MirNet, MPRNet, UPNv2).</li>
+                <li><strong>Segmentation Masks (<code>masks/</code>)</strong>: WebP lossless compression preserving exact discrete class indices and pixel boundaries.</li>
+                <li><strong>Alpha Channel Resilience</strong>: Transparent RGBA inputs are transcoded cleanly to lossless WebP or alpha-composited over calibrated neutral backdrops without quantization halos.</li>
+            </ul>
+
+            <h3 id="52-modular-container-format">5.2 Modular Container Format Layer (Phase 4)</h3>
+            <p>Supports concurrent multi-format emission (<code>--also-format</code>) alongside canonical directory structures:</p>
+            <ul>
+                <li><strong>MosaicML Streaming (MDS)</strong>: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.</li>
+                <li><strong>PyTorch Lightning LitData</strong>: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.</li>
+                <li><strong>WebDataset (WDS)</strong>: Tarball shard emission for legacy deep-learning cluster ingestion.</li>
+                <li><strong>Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
+            </ul>
+
+            <h3 id="53-hardlink-dedup-preflight">5.3 Hardlink Dedup Preservation &amp; Pre-Flight Gate Architecture</h3>
+            <p>Because container formats (tarballs, MDS chunks) pack raw byte streams and unavoidably destroy NTFS/POSIX hardlink deduplication, the compiler enforces an automated pre-flight hardlink audit gate (<code>audit_hardlinks()</code>):</p>
+            <p>Verdict = PROCEED if HardlinkRatio &lt; 5.0%, WARN if 5.0% &le; HardlinkRatio &le; 25.0%, BLOCK if HardlinkRatio &gt; 25.0%</p>
+            <p>Any attempt to emit container formats on restoration manifolds with heavy hardlink dedup (such as <code>LemGendizedUpnV2</code> with 1.06 TB recovered) is safely blocked unless explicitly overridden via <code>--force-duplicate</code>.</p>
+
+            <h3 id="54-smart-multimodal-generation">5.4 Smart Multi-Modal Generation Engine (Phase 5)</h3>
+            <p>Integrated AI backends run directly across compiled manifolds:</p>
+            <ul>
+                <li><strong>BLIP Captioning &amp; NIMA Quality Vetting</strong>: Generates descriptive prompts and perceptual quality distributions.</li>
+                <li><strong>CLIP Zero-Shot &amp; Style Clustering</strong>: Automatically partitions manifolds into latent style clusters via <code>MiniBatchKMeans</code> with deterministic seeding.</li>
+                <li><strong>YOLO Detection &amp; Auto-Labeling</strong>: Derives normalized bounding boxes and object class distributions.</li>
+                <li><strong>ParseNet &amp; SAM Segmentation</strong>: Generates discrete face and instance masks.</li>
+            </ul>
+
+            <h3 id="55-physical-degradation-synthesis">5.5 Physical Degradation Synthesis Engine (Phase 6)</h3>
+            <p>Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic restoration manifolds from clean targets:</p>
+            <ul>
+                <li><strong>Optical Defocus &amp; Motion Blur</strong>: Directional linear trajectories and circular aperture disk diffraction.</li>
+                <li><strong>Heteroscedastic Sensor Noise</strong>: Poisson photon arrival statistics coupled with Gaussian sensor readout noise.</li>
+                <li><strong>Atmospheric Koschmieder Scattering</strong>: <i>I(x) = J(x)t(x) + A(1 - t(x))</i> simulating atmospheric depth and haze.</li>
+                <li><strong>DCT Quantization</strong>: 8x8 block discrete cosine transform simulation modeling JPEG artifacts.</li>
+                <li><strong>Provenance Logging</strong>: Exact quantitative parameter values (blur kernel dimensions, angle, noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
+            </ul>
+
+            <h3 id="56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI Architecture (Phase 7)</h3>
+            <ul>
+                <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> exposing REST endpoints for health telemetry, configuration schema validation, manifold inspection, and background job queuing.</li>
+                <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with automatic restart recovery marking orphaned runs <code>interrupted</code>.</li>
+                <li><strong>WebSocket Streaming</strong>: Live logs stream to subscribers via <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
+                <li><strong>Hybrid Transparent CLI</strong>: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.</li>
+            </ul>
+</section>
+
 <section id="section-8">
-<h2>5. Comparative Analysis | 2026 Manifold Compilers Benchmark</h2>
-            <h3 id="51-technical-comparison-matrix">5.1 Technical Comparison Matrix</h3>
-            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.2.8)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
+<h2>6. Comparative Analysis | 2026 Manifold Compilers Benchmark</h2>
+            <h3 id="61-technical-comparison-matrix">6.1 Technical Comparison Matrix</h3>
+            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.5.0)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
 
             <div class="table-wrapper">
             <table>
@@ -460,7 +525,7 @@
             <th>Ray Data / Anyscale</th>
             <th>Cohere / DeepSpeed Data</th>
             <th>Meta TorchData v2</th>
-            <th>LemGendary Compiler Suite (v16.2.8)</th>
+            <th>LemGendary Compiler Suite (v16.5.0)</th>
             </tr>
             </thead>
             <tbody>
@@ -507,7 +572,7 @@
             <td>Parquet Physical Rewrite</td>
             <td>Tarball Sharding</td>
             <td>In-Memory Filtering</td>
-            <td><strong>NTFS/POSIX Hardlink (64.6% Recovery)</strong></td>
+            <td><strong>WebP 92 + Hardlink (64.6% Recovery)</strong></td>
             </tr>
             <tr>
             <td><strong>Resampling Preserv.</strong></td>
@@ -531,12 +596,12 @@
             </table>
             </div>
 
-            <h3 id="52-competitor-deep-dive">5.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
+            <h3 id="62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
             
             <div class="visual-taxonomy" style="margin-top: 20px;">
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h3>5.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
+                        <h3>6.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
                         <ul>
                             <li><strong>Pros:</strong> Blazing GPU-accelerated MinHash deduplication &amp; VLM semantic filtering; native integration with NeMo training framework.</li>
                             <li><strong>Cons:</strong> Requires multi-GPU DGX/HGX clusters for heavy tasks; significant VRAM overhead during pre-processing; locked to NVIDIA ecosystem.</li>
@@ -546,7 +611,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h3>5.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
+                        <h3>6.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Gold standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); seamless HF Hub integration and dataset sharing.</li>
                             <li><strong>Cons:</strong> High Windows IPC serialization penalty; tarball creation forces physical data duplication; slow random-access seek times.</li>
@@ -556,7 +621,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h3>5.2.3 Ray Data / Anyscale Distributed Compiler</h3>
+                        <h3>6.2.3 Ray Data / Anyscale Distributed Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Highly scalable distributed batch execution across thousands of CPU/GPU worker nodes; resilient task graphs.</li>
                             <li><strong>Cons:</strong> High memory footprint due to Plasma Object Store serialization overhead; complex cluster orchestration and setup.</li>
@@ -566,7 +631,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h3>5.2.4 Cohere / DeepSpeed Data Engine</h3>
+                        <h3>6.2.4 Cohere / DeepSpeed Data Engine</h3>
                         <ul>
                             <li><strong>Pros:</strong> Optimized for massive-scale LLM/VLM text-image tokenization and multi-modal sharding; excellent multi-node streaming.</li>
                             <li><strong>Cons:</strong> Poor support for image restoration/super-resolution paired targets; high multi-node network bandwidth requirements.</li>
@@ -576,7 +641,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px;">
                     <div class="quadrant-info">
-                        <h3>5.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
+                        <h3>6.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
                         <ul>
                             <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem compatibility; zero external framework dependencies.</li>
                             <li><strong>Cons:</strong> Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.</li>
@@ -586,7 +651,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px; border-left: 4px solid var(--accent-color);">
                     <div class="quadrant-info">
-                        <h3>5.2.6 LemGendary Dataset Compiler Suite (v16.2.8)</h3>
+                        <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.2.8)</h3>
                         <ul>
                             <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
                             <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>
@@ -598,12 +663,12 @@
 </section>
 
 <section id="section-9">
-<h2>6. Synthesis Flow &amp; Topology</h2>
+<h2>7. Synthesis Flow &amp; Topology</h2>
             
-            <h3 id="the-dataset-hub">6.1. The Dataset Hub (v6.0.0-SOTA)</h3>
+            <h3 id="the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</h3>
             <p>The modernized interactive dashboard for end-to-end manifold management, backed by a decoupled modular engine (<code>compiler_core.py</code>, <code>manifold_compile.py</code>, <code>manifold_reduce.py</code>, and <code>manifold_sync.py</code>). Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling). The advanced <code>manifold_sync.py</code> orchestrator supports full duplex Kaggle synchronization (Upload via auto-Zipping and Download with disk-space collision safeguards).</p>
             
-            <h3 id="industrial-output-topology">6.2. Industrial Output Topology (Nuclear Architecture)</h3>
+            <h3 id="industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</h3>
             <ul>
                 <li><code>raw-sets/</code> (Source datasets - Protected by Cleanup Guardian)</li>
                 <li><code>../LemGendaryDatasets/&lt;name&gt;/images/</code> (Standard structured folders for Restoration)</li>
@@ -672,7 +737,7 @@
 </section>
 
 <section id="section-11">
-<h2>7. Unified Models Registry (Manifolds)</h2>
+<h2>8. Unified Models Registry (Manifolds)</h2>
             
             <div class="visual-taxonomy">
                 <div class="quadrant">
@@ -885,6 +950,201 @@
                         </ul>
                     </div>
                 </div>
+                            <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
+                            <li><strong>Total Samples:</strong> 22,000</li>
+                            <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFfaNetIndoorLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 196,304</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 217,113</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFilmRestorerLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 67,542</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedForexUniverseLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Financial Time-Series</li>
+                            <li><strong>Total Samples:</strong> 24,850,000</li>
+                            <li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code> .. <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
+                            <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
+                            <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMirNetExposureLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,416,459</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMirNetLowLightLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 15,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMprNetDerainingLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 248,190</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNafNetDebluringLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNafNetDenoisingLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 7,727</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaAestheticLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 321,369</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaAuthenticityLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Authenticity Assessment</li>
+                            <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaTechnicalLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedParseNetLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Segmentation</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
+                            <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 343,911</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
+                            <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedUltraZoomLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Super-Resolution</li>
+                            <li><strong>Total Samples:</strong> 17,724</li>
+                            <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
+                            <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedUpnV2Large</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,378,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
                         <h3>LemGendizedYoloV8nLarge</h3>
@@ -897,65 +1157,13 @@
                     </div>
                 </div>
             </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </section>
+
 <section id="conclusion">
-<h2>8. Conclusion</h2>
+<h2>9. Conclusion</h2>
             <p>The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying previously disparate domains under the MoE routing engine, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.</p>
 </section>
+
 <footer>
     <div class="container">
         <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>

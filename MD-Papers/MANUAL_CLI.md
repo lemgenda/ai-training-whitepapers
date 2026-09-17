@@ -349,25 +349,175 @@ cargo tauri build
 
 ## 5. Datasets Compilation Suite CLI
 
-The `lemgendary-datasets` repository contains data synthesis and manifold compilation pipelines.
+The `lemgendary-datasets` repository provides the unified `lemgendary` CLI (`cli.py`), exposing a full suite of compiler, synthesis, audit, transcoding, and server operations. All commands feature transparent hybrid routing: when the sidecar API daemon is active on `127.0.0.1:8100`, commands submit tasks to the API and render live WebSocket logs to Rich Console; when stopped or when `--no-server` is passed, commands fall back cleanly to direct in-process execution.
 
-CLI Operations:
+### 5.1 Invocation Syntax
 
 ```bash
-# Navigate to datasets directory
+# Navigate to datasets workspace
 cd lemgendary-datasets
 
-# Compile all registered image restoration and vision datasets
-python compile_all_datasets.py
+# General syntax
+python cli.py [COMMAND] [OPTIONS]
 
-# Compile specific dataset manifold
-python compile_dataset.py --target LemGendizedFFANet
+# Help and discovery
+python cli.py --help
+python cli.py [COMMAND] --help
+```
 
-# Compile Forex & Commodities trading manifold
-python compile_forex_dataset.py --timeframe M5 --symbols EURUSD,GBPUSD,USDJPY,XAUUSD
+### 5.2 Manifold Compilation (`compile`)
 
-# Synchronize compiled manifolds with remote cloud storage
-python cloud_sync.py --direction upload --provider gcs
+Compiles raw image and market data into production-ready dataset manifolds with optional multi-container emission and quality gates:
+
+```bash
+# Standard compilation with default WebP q=92
+python cli.py compile --model nima_aesthetic --max-gb 50
+
+# Concurrently emit WebP directory and MosaicML Streaming (MDS) container
+python cli.py compile --model nima_aesthetic --image-format webp --image-quality 92 --also-format mds
+
+# High-throughput compile bypassing aesthetic vetting and labeling
+python cli.py compile --model nafnet_deblurring --workers 16 --no-vetting --no-labeling
+
+# Force container byte duplication across hardlink gates
+python cli.py compile --model upn_v2 --also-format mds --force-duplicate
+
+# Force in-process compilation bypassing active API server
+python cli.py compile --model nima_technical --no-server
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--model`, `-m` | String | `None` | Dataset registry key in `unified_data.yaml` |
+| `--max-gb` | Float | Config | Maximum size allocation threshold in gigabytes |
+| `--workers` | Integer | Auto | Number of parallel worker threads/processes |
+| `--image-format` | String | `webp` | Target format: `webp`, `jpeg`, `png`, `keep` |
+| `--image-quality` | Integer | `92` | Target image compression quality (1-100) |
+| `--target-quality`| Integer | `95` | Restoration target ground-truth quality |
+| `--mask-format` | String | `webp-lossless` | Segmentation mask format |
+| `--also-format` | String | `None` | Comma-separated containers: `mds`, `litdata`, `wds`, `parquet` |
+| `--no-vetting` | Flag | `False` | Bypass NIMA aesthetic score gate |
+| `--no-labeling` | Flag | `False` | Bypass YOLO detection auto-labeling |
+| `--no-hash` | Flag | `False` | Bypass pHash/dHash perceptual deduplication |
+| `--no-server` | Flag | `False` | Force local in-process execution |
+
+### 5.3 Degradation Engine Synthesis (`degrade`)
+
+Derives paired synthetic restoration manifolds from clean ground-truth sources using mathematical physical kernels:
+
+```bash
+# Motion blur and heteroscedastic sensor noise synthesis
+python cli.py degrade --source raw-sets/div2k --output LemGendizedNafNetDebluringSynthetic --profile motion-blur+iso-noise
+
+# Atmospheric haze synthesis on custom manifold directory
+python cli.py degrade --source ../LemGendaryDatasets/LemGendizedNimaAesthetic --output LemGendizedHazySynthetic --profile rainy-haze --intensity high
+
+# Dry-run validation
+python cli.py degrade --source raw-sets/div2k --output LemGendizedTest --profile vintage-film --dry-run
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--source`, `-s` | String | Required | Source dataset folder or registered manifold name |
+| `--output`, `-o` | String | Required | Destination synthetic manifold folder name |
+| `--profile`, `-p` | String | `motion-blur+iso-noise` | Profile token or composite expression |
+| `--intensity` | String | `medium` | Intensity preset: `low`, `medium`, `high` |
+| `--pairs` | Integer | `None` | Maximum sample pair count cap |
+| `--val-split` | Float | `0.12` | Validation set split ratio |
+| `--seed` | Integer | `42` | Deterministic random number seed |
+| `--image-format` | String | `webp` | Target output format for degraded images |
+| `--dry-run` | Flag | `False` | Simulate derivation plan without writing files |
+
+### 5.4 Audit, Deduplication & Hardlinks (`audit`)
+
+Performs image integrity auditing, magic byte sniffing, aspect ratio filtering, perceptual hashing, and NTFS hardlink fraction accounting:
+
+```bash
+# Audit registered manifold
+python cli.py audit --model nima_aesthetic
+
+# Audit arbitrary filesystem directory with sample cap
+python cli.py audit --manifold ../LemGendaryDatasets/LemGendizedUpnV2 --sample 1000
+```
+
+### 5.5 Retroactive Transcoding (`transcode`)
+
+In-place atomic transcoding of existing manifold image sets to WebP with zero intermediate files:
+
+```bash
+python cli.py transcode --model nima_technical --image-format webp --image-quality 92
+```
+
+### 5.6 Smart Multi-Modal Generation (`label`, `prompt`, `mask`)
+
+Runs GPU/CPU inference backends over compiled manifolds to generate labels, diffusion prompts, or segmentation masks:
+
+```bash
+# Multi-strategy label generation
+python cli.py label --model parsenet --strategy parsenet_segmentation
+python cli.py label --model nima_aesthetic --strategy blip_caption --device cuda
+
+# Structured diffusion prompt generation
+python cli.py prompt --model diffusion_master --template diffusers-v1
+
+# Mask generation
+python cli.py mask --model parsenet --strategy sam --device cuda
+```
+
+### 5.7 Variant Reduction & Modernization (`reduce`, `modernize`)
+
+```bash
+# Create downsampled reduced manifold variant
+python cli.py reduce --max-gb 10
+
+# Retire legacy `Large` suffix locally and in registry
+python cli.py modernize --dry-run
+python cli.py modernize --all --yes
+python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
+```
+
+### 5.8 Sidecar API Server (`server`)
+
+Controls the local FastAPI and WebSocket daemon on `127.0.0.1:8100`:
+
+```bash
+# Launch background server daemon
+python cli.py server start --background
+
+# Inspect server status, uptime, and hardware sensors
+python cli.py server status
+
+# Gracefully terminate server daemon
+python cli.py server stop
+```
+
+### 5.9 Ecosystem Delegation (`env`)
+
+Delegates environment lifecycle and code validation directly to `lem-env`:
+
+```bash
+# Execute full multi-gate validation suite
+python cli.py env validate
+
+# Probe ecosystem health (fast mode)
+python cli.py env status
+
+# Provision clean virtual environment
+python cli.py env install
+```
+
+### 5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)
+
+```bash
+# Kaggle dataset push and pull
+python cli.py sync push --model nima_aesthetic
+python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
+
+# Documentation regeneration
+python cli.py docs regen
+
+# Schema validation
+python cli.py config validate
 ```
 
 ---
