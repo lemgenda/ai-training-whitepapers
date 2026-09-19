@@ -50,7 +50,17 @@
                     </ul>
                 </li>
                 <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
-                <li><a href="#section-4">4. Training Suite Python API Engine</a></li>
+                <li><a href="#section-4">4. Training Suite Sidecar Daemon &amp; Python Engine</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-4-1">4.1 Server Architecture &amp; Startup</a></li>
+                        <li><a href="#section-4-2">4.2 Security &amp; Authentication</a></li>
+                        <li><a href="#section-4-3">4.3 Endpoint Reference Matrix</a></li>
+                        <li><a href="#section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</a></li>
+                        <li><a href="#section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</a></li>
+                        <li><a href="#section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</a></li>
+                        <li><a href="#section-4-7">4.7 Python In-Process Engine &amp; Governance API</a></li>
+                    </ul>
+                </li>
                 <li><a href="#section-5">5. Datasets Compilation &amp; Stream Pipeline API</a></li>
                 <li><a href="#section-6">6. Error Handling, Status Codes &amp; Resilience</a></li>
                 <li><a href="#companion-documentation">Companion Documentation</a></li>
@@ -563,31 +573,253 @@ ws://127.0.0.1:8000/ws/logs</code></pre>
             </section>
 
             <section id="section-4">
-                <h2>4. Training Suite Python API Engine</h2>
+                <h2>4. Training Suite Sidecar Daemon &amp; Python Engine</h2>
                 <p>
-                    The <code>lemgendary-training-suite</code> provides specialized Python classes for neural network
-                    training and validation.
+                    The <code>lemgendary-training-suite</code> repository provides both a background FastAPI sidecar service on <code>127.0.0.1:8200</code> and high-performance Python engine classes for in-process training, SOTA validation, and WebGPU optimization.
                 </p>
-                <p>Key API interfaces:</p>
-                <ul>
-                    <li><code>SawtoothGovernor</code>: Dynamic gradient scaling and learning rate scheduling preventing
-                        NaN divergence.</li>
-                    <li><code>MemorySentinel</code>: Continuous VRAM monitoring that adjusts batch dimensions when
-                        nearing hardware limits.</li>
-                    <li><code>SOTAValidationLadder</code>: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics
-                        against historical checkpoints.</li>
-                    <li><code>ModelRegistry</code>: Typed metadata manager for reading and validating
-                        <code>unified_models_v2.yaml</code>.
-                    </li>
-                </ul>
-                <p>Example usage:</p>
-                <pre><code>from training.governor import SawtoothGovernor
-from training.sentinel import MemorySentinel
-from models.registry import ModelRegistry
 
-registry = ModelRegistry.load_unified("unified_models_v2.yaml")
-sentinel = MemorySentinel(target_device="cuda:0", headroom_mb=2048)
-governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)</code></pre>
+                <h3 id="section-4-1">4.1 Server Architecture &amp; Startup</h3>
+                <p>
+                    The sidecar service daemon coordinates background training pipelines, asynchronous job execution, real-time log streaming, and model compilation. It is launched via the <code>lemtrain</code> CLI:
+                </p>
+                <pre><code># Launch server daemon as a background service on port 8200
+python cli.py server start --daemon --host 127.0.0.1 --port 8200
+
+# Inspect server status, port, and PID
+python cli.py server status
+
+# Export OpenAPI 3.1 schema specification
+python cli.py server openapi --output openapi.json
+
+# Gracefully terminate daemon
+python cli.py server stop</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bind Host</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td>Local loopback interface</td>
+                        </tr>
+                        <tr>
+                            <td>Bind Port</td>
+                            <td><code>8200</code></td>
+                            <td>Dedicated training suite sidecar port</td>
+                        </tr>
+                        <tr>
+                            <td>Interactive Docs</td>
+                            <td><code>/docs</code></td>
+                            <td>OpenAPI Swagger UI</td>
+                        </tr>
+                        <tr>
+                            <td>Schema Spec</td>
+                            <td><code>/openapi.json</code></td>
+                            <td>OpenAPI 3.1.0 JSON specification</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="section-4-2">4.2 Security &amp; Authentication</h3>
+                <p>
+                    Operational endpoints under <code>/api</code> requiring modification or system access enforce token authentication:
+                </p>
+                <ul>
+                    <li>Provide the token via HTTP header <code>X-LemTrain-Token: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+                    <li>Token resolution: checked from the <code>LEMTRAIN_API_TOKEN</code> environment variable, or read from <code>.lemtrain_server/token</code>.</li>
+                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/docs</code>, <code>/openapi.json</code>, <code>/redoc</code>) and WebSocket streams (<code>/api/ws/*</code>) are open for non-blocking monitoring.</li>
+                </ul>
+
+                <h3 id="section-4-3">4.3 Endpoint Reference Matrix</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Auth</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health</code></td>
+                            <td>None</td>
+                            <td>Basic liveness, uptime, accelerator device, and version 2026.11.0</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/config</code></td>
+                            <td>Required</td>
+                            <td>Active configuration parameters and loaded training configurations</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/presets</code></td>
+                            <td>Required</td>
+                            <td>Canonical training presets list and hyperparameter definitions</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/presets/{name}</code></td>
+                            <td>Required</td>
+                            <td>Detailed hyperparameter parameters for a specific preset</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>List background jobs with pagination and status filtering</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>Submit asynchronous background job (train, eval, export, audit, sync)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}</code></td>
+                            <td>Required</td>
+                            <td>Query job state, progress metrics, exit code, and timestamps</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}/logs</code></td>
+                            <td>Required</td>
+                            <td>Retrieve execution log text slice or tail lines for a job</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/{id}/cancel</code></td>
+                            <td>Required</td>
+                            <td>Gracefully cancel a running background job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models</code></td>
+                            <td>Required</td>
+                            <td>Enumerate registered neural architectures and target domains</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models/{name}</code></td>
+                            <td>Required</td>
+                            <td>Retrieve model specifications and default hyperparameters</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models/{name}/audit</code></td>
+                            <td>Required</td>
+                            <td>Detailed model audit: parameter counts, layer topology, memory</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/train</code></td>
+                            <td>Required</td>
+                            <td>In-process training initiation with hardware discovery</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/evaluate</code></td>
+                            <td>Required</td>
+                            <td>In-process checkpoint evaluation under torch.no_grad()</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/export</code></td>
+                            <td>Required</td>
+                            <td>In-process multi-format model compilation and export</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets</code></td>
+                            <td>Required</td>
+                            <td>Discover available compiled datasets and dataset manifolds</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/env/telemetry</code></td>
+                            <td>Required</td>
+                            <td>System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/state</code></td>
+                            <td>Required</td>
+                            <td>Consolidated GUI snapshot: daemon, hardware, active jobs, models</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/models/with-stats</code></td>
+                            <td>Required</td>
+                            <td>Model cards hydrated with checkpoint and export disk stats</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/quick-train</code></td>
+                            <td>Required</td>
+                            <td>High-velocity one-click preset training dispatch</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</h3>
+                <p>
+                    Persistent WebSocket streams provide low-latency log and telemetry feeds for connected user interfaces:
+                </p>
+                <ul>
+                    <li><code>ws://127.0.0.1:8200/api/ws/jobs/{id}/logs</code> — Streams real-time line-buffered log output for an active background job.</li>
+                    <li><code>ws://127.0.0.1:8200/api/ws/logs</code> — Global server execution and orchestration log stream.</li>
+                </ul>
+
+                <h3 id="section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</h3>
+                <p>
+                    All asynchronous jobs are persisted in <code>.lemtrain_server/jobs.db</code> using SQLite Write-Ahead Logging (WAL) mode:
+                </p>
+                <ul>
+                    <li>Immediate ACID recording of job metadata, parameters, start time, and state transitions (<code>queued</code>, <code>running</code>, <code>completed</code>, <code>failed</code>, <code>cancelled</code>).</li>
+                    <li>Crash recovery: when the sidecar daemon restarts, any jobs found in <code>running</code> or <code>queued</code> state from an ungraceful host shutdown are automatically transitioned to <code>failed</code> with diagnostic recovery logs.</li>
+                </ul>
+
+                <h3 id="section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</h3>
+                <p>
+                    To eliminate waterfall roundtrips from <code>lemgendary-ai-studio-gui</code>, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
+                </p>
+                <ul>
+                    <li><code>GET /api/gui/state</code>: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.</li>
+                    <li><code>GET /api/gui/models/with-stats</code>: Enriches each registered model with discovered <code>.pth</code> checkpoints, file sizes, timestamps, and compiled ONNX export artifacts.</li>
+                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_name": "mirnet_exposure", "preset": "quick-sota" }</code> and queues a training pipeline instantly with validated defaults.</li>
+                </ul>
+
+                <h3 id="section-4-7">4.7 Python In-Process Engine &amp; Governance API</h3>
+                <p>
+                    The training suite provides foundational Python engine classes for standalone execution and notebook integration:
+                </p>
+                <pre><code>from training.core.orchestrator import TrainingOrchestrator
+from training.governance.sentinel import SentinelGuard
+from training.governance.governor import DynamicGovernor
+from training.models.registry import ModelRegistry
+
+# Discover registered architectures
+registry = ModelRegistry()
+model_meta = registry.get_model("mirnet_exposure")
+
+# Initialize safety sentinel guard
+sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
+
+# Create training orchestrator with dynamic loss governor
+orchestrator = TrainingOrchestrator(
+    model_name="mirnet_exposure",
+    sentinel=sentinel,
+    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+)</code></pre>
             </section>
 
             <section id="section-5">

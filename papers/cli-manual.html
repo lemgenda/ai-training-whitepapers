@@ -57,7 +57,20 @@
                 </li>
                 <li><a href="#section-4">4. AI Studio Desktop GUI CLI &amp; Toolchain</a></li>
                 <li><a href="#section-5">5. Datasets Compilation Suite CLI</a></li>
-                <li><a href="#section-6">6. Training Suite &amp; Neural Model Registry CLI</a></li>
+                <li><a href="#section-6">6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-6-1">6.1 Invocation Syntax &amp; Global Help</a></li>
+                        <li><a href="#section-6-2">6.2 Model Training (<code>train</code>)</a></li>
+                        <li><a href="#section-6-3">6.3 Checkpoint Evaluation (<code>eval</code>)</a></li>
+                        <li><a href="#section-6-4">6.4 Model Compilation &amp; Export (<code>export</code>)</a></li>
+                        <li><a href="#section-6-5">6.5 Notebook Generation (<code>notebooks</code>)</a></li>
+                        <li><a href="#section-6-6">6.6 Checkpoint Management (<code>checkpoints</code>)</a></li>
+                        <li><a href="#section-6-7">6.7 Canonical Presets (<code>presets</code>)</a></li>
+                        <li><a href="#section-6-8">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</a></li>
+                        <li><a href="#section-6-9">6.9 Cloud Synchronization (<code>sync</code>)</a></li>
+                        <li><a href="#section-6-10">6.10 Sidecar Daemon Operations (<code>server</code>)</a></li>
+                    </ul>
+                </li>
                 <li><a href="#section-7">7. Models Hub &amp; Verification Toolchain</a></li>
                 <li><a href="#section-8">8. Documentation Hub &amp; Static Validation</a></li>
                 <li><a href="#section-9">9. Exit Codes, Automation &amp; CI/CD Integration</a></li>
@@ -884,26 +897,160 @@ python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_
             </section>
 
             <section id="section-6">
-                <h2>6. Training Suite &amp; Neural Model Registry CLI</h2>
+                <h2>6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</h2>
                 <p>
-                    The <code>lemgendary-training-suite</code> repository provides training engines, loss functions, and
-                    evaluation scripts.
+                    The <code>lemgendary-training-suite</code> repository provides the canonical <code>lemtrain</code> Typer CLI (accessible via <code>python cli.py</code> or console entrypoint <code>lemtrain</code>). It coordinates in-process model training, deterministic evaluations, multi-target model compilation, notebook generation, checkpoint management, system audits, cloud synchronization, and the background sidecar daemon.
                 </p>
-                <p>CLI Operations:</p>
-                <pre><code># Navigate to training suite
-cd lemgendary-training-suite
 
-# Launch neural training run with Sawtooth Governor and Memory Sentinel
-python train.py --config configs/nafnet_baseline.yaml --backend cuda
+                <h3 id="section-6-1">6.1 Invocation Syntax &amp; Global Help</h3>
+                <pre><code># Display global help and command groups
+python cli.py --help
 
-# Run SOTA validation ladder evaluation
-python evaluate.py --model checkpoints/nafnet_best.pth --dataset LemGendizedNAFNet
+# Display suite version
+python cli.py version</code></pre>
 
-# Export trained PyTorch weights to WebGPU optimized ONNX
-python export_onnx.py --model checkpoints/nafnet_best.pth --opset 17 --output webgpu/nafnet.onnx
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>train</code></td>
+                            <td>Train a neural architecture in-process using presets or custom hyperparameters</td>
+                        </tr>
+                        <tr>
+                            <td><code>eval</code></td>
+                            <td>Evaluate a trained model checkpoint under torch.no_grad()</td>
+                        </tr>
+                        <tr>
+                            <td><code>export</code></td>
+                            <td>Compile models to FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, or MT5</td>
+                        </tr>
+                        <tr>
+                            <td><code>notebooks</code></td>
+                            <td>Generate reproducible Kaggle and Google Colab training notebooks</td>
+                        </tr>
+                        <tr>
+                            <td><code>checkpoints</code></td>
+                            <td>List, inspect metadata, and prune model checkpoints</td>
+                        </tr>
+                        <tr>
+                            <td><code>presets</code></td>
+                            <td>Enumerate and inspect canonical training presets (<code>presets.yaml</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>audit</code></td>
+                            <td>Audit host resources, model topologies, and judicial PLCC/SRCC rank correlations</td>
+                        </tr>
+                        <tr>
+                            <td><code>sync</code></td>
+                            <td>Synchronize model checkpoints and artifacts to remote targets (GDrive, Kaggle, GitHub)</td>
+                        </tr>
+                        <tr>
+                            <td><code>server</code></td>
+                            <td>Control FastAPI sidecar daemon (<code>start</code>, <code>stop</code>, <code>status</code>, <code>openapi</code>)</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-# Run hardware inference benchmark
-python benchmark.py --model webgpu/nafnet.onnx --batch-size 1</code></pre>
+                <h3 id="section-6-2">6.2 Model Training (<code>train</code>)</h3>
+                <p>
+                    Executes in-process model training with automatic hardware discovery, SentinelGuard VRAM protection, and SOTA governance:
+                </p>
+                <pre><code># In-process training run using a canonical preset
+python cli.py train mirnet_exposure --preset quick-sota --epochs 50
+
+# Custom hyperparameter overrides
+python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean</code></pre>
+
+                <h3 id="section-6-3">6.3 Checkpoint Evaluation (<code>eval</code>)</h3>
+                <p>
+                    Runs deterministic validation under <code>torch.no_grad()</code> computing task-specific quality metrics:
+                </p>
+                <pre><code># Deterministic evaluation of a checkpoint
+python cli.py eval mirnet_exposure --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16</code></pre>
+
+                <h3 id="section-6-4">6.4 Model Compilation &amp; Export (<code>export</code>)</h3>
+                <p>
+                    Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:
+                </p>
+                <pre><code># Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
+python cli.py export mirnet_exposure --format all
+
+# Single-target export
+python cli.py export mirnet_exposure --format webgpu</code></pre>
+
+                <h3 id="section-6-5">6.5 Notebook Generation (<code>notebooks</code>)</h3>
+                <p>
+                    Generates reproducible standalone Jupyter notebooks for Kaggle and Google Colab environments:
+                </p>
+                <pre><code># Generate Kaggle and Google Colab notebooks for a model
+python cli.py notebooks mirnet_exposure --platform all --output-dir notebooks/</code></pre>
+
+                <h3 id="section-6-6">6.6 Checkpoint Management (<code>checkpoints</code>)</h3>
+                <p>
+                    Manages checkpoint storage, inspections, and disk pruning:
+                </p>
+                <pre><code># List discovered checkpoints with size and epoch metadata
+python cli.py checkpoints list mirnet_exposure
+
+# Inspect specific checkpoint tensor state dict
+python cli.py checkpoints inspect checkpoints/mirnet_exposure/best.pth
+
+# Prune older checkpoints keeping the top N
+python cli.py checkpoints prune mirnet_exposure --keep 3</code></pre>
+
+                <h3 id="section-6-7">6.7 Canonical Presets (<code>presets</code>)</h3>
+                <p>
+                    Inspects canonical training profiles defined in <code>presets.yaml</code>:
+                </p>
+                <pre><code># List all canonical profiles defined in presets.yaml
+python cli.py presets list
+
+# Inspect specific preset parameters
+python cli.py presets show quick-sota</code></pre>
+
+                <h3 id="section-6-8">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</h3>
+                <p>
+                    Audits system resources, model topologies, and judicial rank correlations:
+                </p>
+                <pre><code># Host hardware and VRAM headroom audit
+python cli.py audit system
+
+# Model parameter, layer topology, and memory audit
+python cli.py audit model mirnet_exposure
+
+# Judicial rank correlation audit (PLCC and SRCC)
+python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset test_data/</code></pre>
+
+                <h3 id="section-6-9">6.9 Cloud Synchronization (<code>sync</code>)</h3>
+                <p>
+                    Transfers checkpoints and artifacts between local storage and remote cloud providers:
+                </p>
+                <pre><code># Sync checkpoint artifacts to Google Drive
+python cli.py sync run mirnet_exposure --target gdrive --epoch 10
+
+# Probe remote cloud storage connection
+python cli.py sync probe --target kaggle</code></pre>
+
+                <h3 id="section-6-10">6.10 Sidecar Daemon Operations (<code>server</code>)</h3>
+                <p>
+                    Controls the background FastAPI sidecar service running on <code>127.0.0.1:8200</code>:
+                </p>
+                <pre><code># Launch background sidecar daemon on port 8200
+python cli.py server start --daemon
+
+# Check daemon health, port, and PID
+python cli.py server status
+
+# Export OpenAPI 3.1 specification schema
+python cli.py server openapi --output openapi.json
+
+# Terminate running daemon process
+python cli.py server stop</code></pre>
             </section>
 
             <section id="section-7">

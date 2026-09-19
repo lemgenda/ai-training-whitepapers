@@ -33,7 +33,17 @@
   - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
   - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
   - [5.12 Forex Universe & Parquet Operations (`forex`)](#512-forex-universe--parquet-operations-forex)
-- [6. Training Suite & Neural Model Registry CLI](#6-training-suite--neural-model-registry-cli)
+- [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
+  - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
+  - [6.2 Model Training (`train`)](#62-model-training-train)
+  - [6.3 Checkpoint Evaluation (`eval`)](#63-checkpoint-evaluation-eval)
+  - [6.4 Model Compilation & Export (`export`)](#64-model-compilation--export-export)
+  - [6.5 Notebook Generation (`notebooks`)](#65-notebook-generation-notebooks)
+  - [6.6 Checkpoint Management (`checkpoints`)](#66-checkpoint-management-checkpoints)
+  - [6.7 Canonical Presets (`presets`)](#67-canonical-presets-presets)
+  - [6.8 Hardware & Architecture Audit (`audit`)](#68-hardware--architecture-audit-audit)
+  - [6.9 Cloud Synchronization (`sync`)](#69-cloud-synchronization-sync)
+  - [6.10 Sidecar Daemon Operations (`server`)](#610-sidecar-daemon-operations-server)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
 - [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
@@ -561,27 +571,144 @@ python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_
 
 ---
 
-## 6. Training Suite & Neural Model Registry CLI
+## 6. Training Suite CLI (`lemtrain` / `python cli.py`)
 
-The `lemgendary-training-suite` repository provides training engines, loss functions, and evaluation scripts.
+The `lemgendary-training-suite` repository provides the canonical `lemtrain` Typer CLI (accessible via `python cli.py` or console entrypoint `lemtrain`). It coordinates in-process model training, deterministic evaluations, multi-target model compilation, notebook generation, checkpoint management, system audits, cloud synchronization, and the background sidecar daemon.
 
-CLI Operations:
+### 6.1 Invocation Syntax & Global Help
 
 ```bash
-# Navigate to training suite
-cd lemgendary-training-suite
+# Display global help and command groups
+python cli.py --help
 
-# Launch neural training run with Sawtooth Governor and Memory Sentinel
-python train.py --config configs/nafnet_baseline.yaml --backend cuda
+# Display suite version
+python cli.py version
+```
 
-# Run SOTA validation ladder evaluation
-python evaluate.py --model checkpoints/nafnet_best.pth --dataset LemGendizedNAFNet
+| Command | Description |
+| :--- | :--- |
+| `train` | Train a neural architecture in-process using presets or custom hyperparameters |
+| `eval` | Evaluate a trained model checkpoint under torch.no_grad() |
+| `export` | Compile models to FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, or MT5 |
+| `notebooks` | Generate reproducible Kaggle and Google Colab training notebooks |
+| `checkpoints` | List, inspect metadata, and prune model checkpoints |
+| `presets` | Enumerate and inspect canonical training presets (`presets.yaml`) |
+| `audit` | Audit host resources, model topologies, and judicial PLCC/SRCC rank correlations |
+| `sync` | Synchronize model checkpoints and artifacts to remote targets (GDrive, Kaggle, GitHub) |
+| `server` | Control FastAPI sidecar daemon (`start`, `stop`, `status`, `openapi`) |
 
-# Export trained PyTorch weights to WebGPU optimized ONNX
-python export_onnx.py --model checkpoints/nafnet_best.pth --opset 17 --output webgpu/nafnet.onnx
+### 6.2 Model Training (`train`)
 
-# Run hardware inference benchmark
-python benchmark.py --model webgpu/nafnet.onnx --batch-size 1
+Executes in-process model training with automatic hardware discovery, SentinelGuard VRAM protection, and SOTA governance:
+
+```bash
+# In-process training run using a canonical preset
+python cli.py train mirnet_exposure --preset quick-sota --epochs 50
+
+# Custom hyperparameter overrides
+python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean
+```
+
+### 6.3 Checkpoint Evaluation (`eval`)
+
+Runs deterministic validation under `torch.no_grad()` computing task-specific quality metrics:
+
+```bash
+# Deterministic evaluation of a checkpoint
+python cli.py eval mirnet_exposure --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
+```
+
+### 6.4 Model Compilation & Export (`export`)
+
+Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:
+
+```bash
+# Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
+python cli.py export mirnet_exposure --format all
+
+# Single-target export
+python cli.py export mirnet_exposure --format webgpu
+```
+
+### 6.5 Notebook Generation (`notebooks`)
+
+Generates reproducible standalone Jupyter notebooks for Kaggle and Google Colab environments:
+
+```bash
+# Generate Kaggle and Google Colab notebooks for a model
+python cli.py notebooks mirnet_exposure --platform all --output-dir notebooks/
+```
+
+### 6.6 Checkpoint Management (`checkpoints`)
+
+Manages checkpoint storage, inspections, and disk pruning:
+
+```bash
+# List discovered checkpoints with size and epoch metadata
+python cli.py checkpoints list mirnet_exposure
+
+# Inspect specific checkpoint tensor state dict
+python cli.py checkpoints inspect checkpoints/mirnet_exposure/best.pth
+
+# Prune older checkpoints keeping the top N
+python cli.py checkpoints prune mirnet_exposure --keep 3
+```
+
+### 6.7 Canonical Presets (`presets`)
+
+Inspects canonical training profiles defined in `presets.yaml`:
+
+```bash
+# List all canonical profiles defined in presets.yaml
+python cli.py presets list
+
+# Inspect specific preset parameters
+python cli.py presets show quick-sota
+```
+
+### 6.8 Hardware & Architecture Audit (`audit`)
+
+Audits system resources, model topologies, and judicial rank correlations:
+
+```bash
+# Host hardware and VRAM headroom audit
+python cli.py audit system
+
+# Model parameter, layer topology, and memory audit
+python cli.py audit model mirnet_exposure
+
+# Judicial rank correlation audit (PLCC and SRCC)
+python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset test_data/
+```
+
+### 6.9 Cloud Synchronization (`sync`)
+
+Transfers checkpoints and artifacts between local storage and remote cloud providers:
+
+```bash
+# Sync checkpoint artifacts to Google Drive
+python cli.py sync run mirnet_exposure --target gdrive --epoch 10
+
+# Probe remote cloud storage connection
+python cli.py sync probe --target kaggle
+```
+
+### 6.10 Sidecar Daemon Operations (`server`)
+
+Controls the background FastAPI sidecar service running on `127.0.0.1:8200`:
+
+```bash
+# Launch background sidecar daemon on port 8200
+python cli.py server start --daemon
+
+# Check daemon health, port, and PID
+python cli.py server status
+
+# Export OpenAPI 3.1 specification schema
+python cli.py server openapi --output openapi.json
+
+# Terminate running daemon process
+python cli.py server stop
 ```
 
 ---

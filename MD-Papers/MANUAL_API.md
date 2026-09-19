@@ -16,7 +16,14 @@
   - [2.6 WebSocket Real-Time Telemetry](#26-websocket-real-time-telemetry)
   - [2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem Endpoints](#27-desktop-gui-aggregation--multi-sidecar-ecosystem-endpoints)
 - [3. Desktop GUI Tauri IPC API Contracts](#3-desktop-gui-tauri-ipc-api-contracts)
-- [4. Training Suite Python API Engine](#4-training-suite-python-api-engine)
+- [4. Training Suite Sidecar Daemon & Python Engine](#4-training-suite-sidecar-daemon--python-engine)
+  - [4.1 Server Architecture & Startup](#41-server-architecture--startup)
+  - [4.2 Security & Authentication](#42-security--authentication)
+  - [4.3 Endpoint Reference Matrix](#43-endpoint-reference-matrix)
+  - [4.4 WebSocket Real-Time Telemetry & Log Streaming](#44-websocket-real-time-telemetry--log-streaming)
+  - [4.5 SQLite WAL Job Persistence & Crash Recovery](#45-sqlite-wal-job-persistence--crash-recovery)
+  - [4.6 Desktop GUI Dashboard Aggregation Endpoints](#46-desktop-gui-dashboard-aggregation-endpoints)
+  - [4.7 Python In-Process Engine & Governance API](#47-python-in-process-engine--governance-api)
 - [5. Datasets Compilation & Stream Pipeline API](#5-datasets-compilation--stream-pipeline-api)
   - [5.1 Server Architecture & Discovery](#51-server-architecture--discovery)
   - [5.2 Security & Authentication](#52-security--authentication)
@@ -532,27 +539,113 @@ The desktop frontend `lemgendary-ai-studio-gui` communicates with the native Rus
 
 ---
 
-## 4. Training Suite Python API Engine
+## 4. Training Suite Sidecar Daemon & Python Engine
 
-The `lemgendary-training-suite` provides specialized Python classes for neural network training and validation.
+The `lemgendary-training-suite` repository provides both a background FastAPI sidecar service on `127.0.0.1:8200` and high-performance Python engine classes for in-process training, SOTA validation, and WebGPU optimization.
 
-Key API interfaces:
+### 4.1 Server Architecture & Startup
 
-- `SawtoothGovernor`: Dynamic gradient scaling and learning rate scheduling preventing NaN divergence.
-- `MemorySentinel`: Continuous VRAM monitoring that adjusts batch dimensions when nearing hardware limits.
-- `SOTAValidationLadder`: Benchmark suite evaluating PSNR, SSIM, and LPIPS metrics against historical checkpoints.
-- `ModelRegistry`: Typed metadata manager for reading and validating `unified_models_v2.yaml`.
+The sidecar service daemon coordinates background training pipelines, asynchronous job execution, real-time log streaming, and model compilation. It is launched via the `lemtrain` CLI:
 
-Example usage:
+```bash
+# Launch server daemon as a background service on port 8200
+python cli.py server start --daemon --host 127.0.0.1 --port 8200
+
+# Inspect server status, port, and PID
+python cli.py server status
+
+# Export OpenAPI 3.1 schema specification
+python cli.py server openapi --output openapi.json
+
+# Gracefully terminate daemon
+python cli.py server stop
+```
+
+| Parameter | Default | Description |
+| :--- | :--- | :--- |
+| Bind Host | `127.0.0.1` | Local loopback interface |
+| Bind Port | `8200` | Dedicated training suite sidecar port |
+| Interactive Docs | `/docs` | OpenAPI Swagger UI |
+| Schema Spec | `/openapi.json` | OpenAPI 3.1.0 JSON specification |
+
+### 4.2 Security & Authentication
+
+Operational endpoints under `/api` requiring modification or system access enforce token authentication:
+
+- Provide the token via HTTP header `X-LemTrain-Token: <token>` or `Authorization: Bearer <token>`.
+- Token resolution: checked from the `LEMTRAIN_API_TOKEN` environment variable, or read from `.lemtrain_server/token`.
+- Unauthenticated requests to protected endpoints return `401 Unauthorized`. Diagnostic endpoints (`/api/health`, `/docs`, `/openapi.json`, `/redoc`) and WebSocket streams (`/api/ws/*`) are open for non-blocking monitoring.
+
+### 4.3 Endpoint Reference Matrix
+
+| Method | Endpoint | Auth | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/health` | None | Basic liveness, uptime, accelerator device, and version 2026.11.0 |
+| `GET` | `/api/config` | Required | Active configuration parameters and loaded training configurations |
+| `GET` | `/api/presets` | Required | Canonical training presets list and hyperparameter definitions |
+| `GET` | `/api/presets/{name}` | Required | Detailed hyperparameter parameters for a specific preset |
+| `GET` | `/api/jobs` | Required | List background jobs with pagination and status filtering |
+| `POST` | `/api/jobs` | Required | Submit asynchronous background job (train, eval, export, audit, sync) |
+| `GET` | `/api/jobs/{id}` | Required | Query job state, progress metrics, exit code, and timestamps |
+| `GET` | `/api/jobs/{id}/logs` | Required | Retrieve execution log text slice or tail lines for a job |
+| `POST` | `/api/jobs/{id}/cancel` | Required | Gracefully cancel a running background job |
+| `GET` | `/api/models` | Required | Enumerate registered neural architectures and target domains |
+| `GET` | `/api/models/{name}` | Required | Retrieve model specifications and default hyperparameters |
+| `GET` | `/api/models/{name}/audit` | Required | Detailed model audit: parameter counts, layer topology, memory |
+| `POST` | `/api/training/train` | Required | In-process training initiation with hardware discovery |
+| `POST` | `/api/training/evaluate` | Required | In-process checkpoint evaluation under torch.no_grad() |
+| `POST` | `/api/training/export` | Required | In-process multi-format model compilation and export |
+| `GET` | `/api/datasets` | Required | Discover available compiled datasets and dataset manifolds |
+| `GET` | `/api/env/telemetry` | Required | System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk |
+| `GET` | `/api/gui/state` | Required | Consolidated GUI snapshot: daemon, hardware, active jobs, models |
+| `GET` | `/api/gui/models/with-stats` | Required | Model cards hydrated with checkpoint and export disk stats |
+| `POST` | `/api/gui/quick-train` | Required | High-velocity one-click preset training dispatch |
+
+### 4.4 WebSocket Real-Time Telemetry & Log Streaming
+
+Persistent WebSocket streams provide low-latency log and telemetry feeds for connected user interfaces:
+
+- `ws://127.0.0.1:8200/api/ws/jobs/{id}/logs` — Streams real-time line-buffered log output for an active background job.
+- `ws://127.0.0.1:8200/api/ws/logs` — Global server execution and orchestration log stream.
+
+### 4.5 SQLite WAL Job Persistence & Crash Recovery
+
+All asynchronous jobs are persisted in `.lemtrain_server/jobs.db` using SQLite Write-Ahead Logging (WAL) mode:
+
+- Immediate ACID recording of job metadata, parameters, start time, and state transitions (`queued`, `running`, `completed`, `failed`, `cancelled`).
+- Crash recovery: when the sidecar daemon restarts, any jobs found in `running` or `queued` state from an ungraceful host shutdown are automatically transitioned to `failed` with diagnostic recovery logs.
+
+### 4.6 Desktop GUI Dashboard Aggregation Endpoints
+
+To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
+
+- `GET /api/gui/state`: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.
+- `GET /api/gui/models/with-stats`: Enriches each registered model with discovered `.pth` checkpoints, file sizes, timestamps, and compiled ONNX export artifacts.
+- `POST /api/gui/quick-train`: Accepts `{ "model_name": "mirnet_exposure", "preset": "quick-sota" }` and queues a training pipeline instantly with validated defaults.
+
+### 4.7 Python In-Process Engine & Governance API
+
+The training suite provides foundational Python engine classes for standalone execution and notebook integration:
 
 ```python
-from training.governor import SawtoothGovernor
-from training.sentinel import MemorySentinel
-from models.registry import ModelRegistry
+from training.core.orchestrator import TrainingOrchestrator
+from training.governance.sentinel import SentinelGuard
+from training.governance.governor import DynamicGovernor
+from training.models.registry import ModelRegistry
 
-registry = ModelRegistry.load_unified("unified_models_v2.yaml")
-sentinel = MemorySentinel(target_device="cuda:0", headroom_mb=2048)
-governor = SawtoothGovernor(initial_lr=1e-4, min_lr=1e-6)
+# Discover registered architectures
+registry = ModelRegistry()
+model_meta = registry.get_model("mirnet_exposure")
+
+# Initialize safety sentinel guard
+sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
+
+# Create training orchestrator with dynamic loss governor
+orchestrator = TrainingOrchestrator(
+    model_name="mirnet_exposure",
+    sentinel=sentinel,
+    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+)
 ```
 
 ---
