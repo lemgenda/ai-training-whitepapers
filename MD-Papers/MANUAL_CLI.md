@@ -419,7 +419,7 @@ python cli.py compile --model nima_technical --no-server
 | `--workers` | Integer | Auto | Number of parallel worker threads/processes |
 | `--image-format` | String | `webp` | Target format: `webp`, `jpeg`, `png`, `keep` |
 | `--image-quality` | Integer | `92` | Target image compression quality (1-100) |
-| `--target-quality`| Integer | `95` | Restoration target ground-truth quality |
+| `--target-quality` | Integer | `95` | Restoration target ground-truth quality |
 | `--mask-format` | String | `webp-lossless` | Segmentation mask format |
 | `--also-format` | String | `None` | Comma-separated containers: `mds`, `litdata`, `wds`, `parquet` |
 | `--no-vetting` | Flag | `False` | Bypass NIMA aesthetic score gate |
@@ -500,7 +500,25 @@ python cli.py reduce --max-gb 10
 python cli.py modernize --dry-run
 python cli.py modernize --all --yes
 python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
+
+# Full modernization: suffix retirement, WebP transcoding, and modern container conversion
+python cli.py modernize --datasets nima_aesthetic --image-format webp --also-format webdataset
 ```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--all` | Flag | `False` | Select all eligible manifolds for modernization |
+| `--yes`, `-y` | Flag | `False` | Skip interactive confirmation gate |
+| `--dry-run` | Flag | `False` | Simulate modernization plan without file modification |
+| `--datasets` | String | `None` | Comma-separated list of folder names, base names, or keys |
+| `--skip-kaggle` | Flag | `False` | Skip Kaggle re-upload (local creation and metadata preserved) |
+| `--image-format` | String | `webp` | Target format for image transcoding (`webp`, `jpeg`, `png`, `keep`) |
+| `--image-quality` | Integer | `92` | Compression quality for image transcoding (1-100) |
+| `--target-quality` | Integer | `95` | Quality floor for ground-truth restoration target transcoding |
+| `--mask-format` | String | `webp-lossless` | Format for mask transcoding (`webp-lossless`, `png`) |
+| `--also-format` | String | `webdataset` | Target container format (`webdataset`, `mds`, `litdata`, `parquet`) |
+| `--skip-transcode` | Flag | `False` | Skip WebP image transcoding phase |
+| `--skip-container` | Flag | `False` | Skip container format conversion phase |
 
 ### 5.8 Sidecar API Server (`server`)
 

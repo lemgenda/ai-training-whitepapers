@@ -836,7 +836,95 @@ python cli.py reduce --max-gb 10
 # Retire legacy `Large` suffix locally and in registry
 python cli.py modernize --dry-run
 python cli.py modernize --all --yes
-python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle</code></pre>
+python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
+
+# Full modernization: suffix retirement, WebP transcoding, and modern container conversion
+python cli.py modernize --datasets nima_aesthetic --image-format webp --also-format webdataset</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>--all</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Select all eligible manifolds for modernization</td>
+                        </tr>
+                        <tr>
+                            <td><code>--yes</code>, <code>-y</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Skip interactive confirmation gate</td>
+                        </tr>
+                        <tr>
+                            <td><code>--dry-run</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Simulate modernization plan without file modification</td>
+                        </tr>
+                        <tr>
+                            <td><code>--datasets</code></td>
+                            <td>String</td>
+                            <td><code>None</code></td>
+                            <td>Comma-separated list of folder names, base names, or keys</td>
+                        </tr>
+                        <tr>
+                            <td><code>--skip-kaggle</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Skip Kaggle re-upload (local creation and metadata preserved)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--image-format</code></td>
+                            <td>String</td>
+                            <td><code>webp</code></td>
+                            <td>Target format for image transcoding (<code>webp</code>, <code>jpeg</code>, <code>png</code>, <code>keep</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--image-quality</code></td>
+                            <td>Integer</td>
+                            <td><code>92</code></td>
+                            <td>Compression quality for image transcoding (1-100)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--target-quality</code></td>
+                            <td>Integer</td>
+                            <td><code>95</code></td>
+                            <td>Quality floor for ground-truth restoration target transcoding</td>
+                        </tr>
+                        <tr>
+                            <td><code>--mask-format</code></td>
+                            <td>String</td>
+                            <td><code>webp-lossless</code></td>
+                            <td>Format for mask transcoding (<code>webp-lossless</code>, <code>png</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--also-format</code></td>
+                            <td>String</td>
+                            <td><code>webdataset</code></td>
+                            <td>Target container format (<code>webdataset</code>, <code>mds</code>, <code>litdata</code>, <code>parquet</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>--skip-transcode</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Skip WebP image transcoding phase</td>
+                        </tr>
+                        <tr>
+                            <td><code>--skip-container</code></td>
+                            <td>Flag</td>
+                            <td><code>False</code></td>
+                            <td>Skip container format conversion phase</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <h3>5.8 Sidecar API Server (<code>server</code>)</h3>
                 <p>
