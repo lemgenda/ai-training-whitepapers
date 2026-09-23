@@ -183,6 +183,13 @@ Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic resto
 * **Domain Encapsulation (`forex/`)**: Encapsulated historical Forex time-series pipelines into a modular subpackage (`forex.schema`, `forex.converter`, `forex.injector`, `forex.bridge`, `forex.pipeline`) with root backward-compatibility shims and dedicated CLI subcommands (`lemgendary forex convert`, `lemgendary forex embed`).
 * **Zero Suppression Policy Enforcement**: Completely eliminated all programmatic warning suppressions (`warnings.filterwarnings`) and diagnostic silencing directives across all codebase modules.
 
+### 5.9 Two-Tier Manifold Modernization & WebP Resumption Engine (v16.7.3)
+
+* **Suffix-Removal Modernization**: Retires legacy `Large` naming conventions across manifolds into streamlined, production-standard suffixes while preserving legacy folders intact during migration.
+* **Two-Tier State Verification**: Solves false-positive completion bugs by checking terminal manifest generation (`dataset_info.yaml` and `index.json`). Partially transcoded sets are accurately classified as `[RESUMABLE]`.
+* **File-Level Delta Scanning**: Replaces blind file queues with size-aware delta inspection. Any existing valid `.webp` image or metadata file is bypassed in milliseconds, eliminating redundant CPU/GPU compute upon interrupted runs.
+* **Real-Time Visual Telemetry**: Integrates single-line `tqdm` progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.
+
 ---
 
 ## 6. Comparative Analysis | 2026 Manifold Compilers Benchmark

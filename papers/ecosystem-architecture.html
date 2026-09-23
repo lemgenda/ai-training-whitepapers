@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecosystem Architecture &amp; Multi-Sidecar Topology - LemGendary AI</title>
+    <meta name="description" content="Master architecture map, multi-sidecar service topology, physical storage hierarchies, and subsystem boundaries across the LemGendary AI Ecosystem.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme: 'dark'});</script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>Ecosystem Architecture &amp; Multi-Sidecar Topology</h1>
+            <p class="subtitle">Master System Architecture, Microservice Communication Channels, and Subsystem Invariants</p>
+            <div class="meta">
+                <span>Category 12 ARCH</span>
+                <span>Version 16.7.3</span>
+                <span>Component: System Architecture</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-abstract">1. Abstract &amp; System Topology</a></li>
+                <li><a href="#section-diagram">2. Master Topology Diagram</a></li>
+                <li><a href="#section-sidecars">3. The Multi-Sidecar Daemon Topology</a></li>
+                <li><a href="#section-boundaries">4. Repository Boundaries &amp; Responsibilities</a></li>
+                <li><a href="#section-storage">5. Physical Storage Hierarchy</a></li>
+                <li><a href="#section-resumption">6. Fault Tolerance &amp; Resumption</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="section-abstract">
+                <h2>1. Abstract &amp; System Topology</h2>
+                <p>The LemGendary AI Ecosystem is engineered as a decoupled, multi-tier distributed machine learning platform. It seamlessly binds local desktop operators, background sidecar services, high-velocity data synthesis engines, and nuclear-hardened training loops into a unified operational continuum.</p>
+            </section>
+
+            <section id="section-diagram">
+                <h2>2. Master Topology Diagram</h2>
+                <div class="mermaid">
+graph TD
+    subgraph UI ["Desktop Presentation Tier"]
+        GUI["LemGendary AI Studio Desktop GUI<br/>(Tauri / Rust / TypeScript)"]
+        CLI["Hybrid CLI Dispatch<br/>(lem-env / cli.py / lemtrain)"]
+    end
+
+    subgraph Sidecars ["Asynchronous Sidecar Tier"]
+        ENV_API["Environment Manager Sidecar<br/>(FastAPI / Uvicorn :8000)"]
+        COMP_API["Dataset Compiler Sidecar<br/>(FastAPI / Uvicorn :8100)"]
+        TRAIN_API["Training Suite Sidecar<br/>(FastAPI / Uvicorn :8200)"]
+    end
+
+    subgraph Engines ["Core Execution Engines"]
+        ENV_ENG["Env Manager Core<br/>(Hardware Probe / Virtualenvs / Validation)"]
+        COMP_ENG["Dataset Compiler Core<br/>(Skip-Index / WebP Transcode / Hardlink Dedup)"]
+        TRAIN_ENG["Master Training Suite<br/>(Spatial Ladder / Loss Balancer / MoE Routing)"]
+    end
+
+    subgraph Storage ["Physical Storage & Registry Tier"]
+        RAW["Raw Sets Repository<br/>(raw-sets/)"]
+        MANIFOLDS["Compiled Manifolds<br/>(../LemGendaryDatasets/LemGendized*)"]
+        DB["Manifold Registries & Job DB<br/>(manifold_registry.db / jobs.db)"]
+        WEIGHTS["Model Checkpoints<br/>(checkpoints/ / best_weights.pt)"]
+    end
+
+    GUI -->|HTTP REST / WebSocket| ENV_API
+    GUI -->|HTTP REST / WebSocket| COMP_API
+    GUI -->|HTTP REST / WebSocket| TRAIN_API
+    CLI -->|In-Process / HTTP Fallback| ENV_ENG
+    CLI -->|In-Process / HTTP Fallback| COMP_ENG
+    CLI -->|In-Process / HTTP Fallback| TRAIN_ENG
+
+    ENV_API --> ENV_ENG
+    COMP_API --> COMP_ENG
+    TRAIN_API --> TRAIN_ENG
+
+    COMP_ENG -->|Ingest Raw Sources| RAW
+    COMP_ENG -->|Emit WebP / Shards| MANIFOLDS
+    COMP_ENG -->|Track Provenance| DB
+
+    TRAIN_ENG -->|Zero-IPC Ingestion| MANIFOLDS
+    TRAIN_ENG -->|Commit Weights| WEIGHTS
+                </div>
+            </section>
+
+            <section id="section-sidecars">
+                <h2>3. The Multi-Sidecar Daemon Topology</h2>
+                <p>To allow desktop applications, external CLI scripts, and cloud orchestrators to control the ecosystem without blocking execution or encountering Python GIL contentions, the ecosystem deploys three specialized asynchronous sidecar daemons across standardized local ports (<code>8000</code>, <code>8100</code>, and <code>8200</code>):</p>
+                <ul>
+                    <li><strong>Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</strong>: Real-time hardware discovery, virtual environment provisioning, package reconciliation, and ecosystem-wide pre-commit compliance gating. WebSocket stream at <code>ws://127.0.0.1:8000/ws/log</code>.</li>
+                    <li><strong>Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</strong>: Manifold compilation, degradation synthesis, and container export dispatching. WebSocket stream at <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
+                    <li><strong>Master Training Suite Sidecar (<code>127.0.0.1:8200</code>)</strong>: Headless model training dispatching, hyperparameter validation, spatial ladder scaling, and checkpoint commit orchestration. WebSocket stream at <code>ws://127.0.0.1:8200/api/ws/jobs/{job_id}/logs</code>.</li>
+                </ul>
+            </section>
+
+            <section id="section-boundaries">
+                <h2>4. Repository Boundaries &amp; Responsibilities</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subsystem</th>
+                                <th>Primary Repository</th>
+                                <th>Architecture Role</th>
+                                <th>Key Invariants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Presentation</strong></td>
+                                <td><code>lemgendary-ai-studio-gui</code></td>
+                                <td>Desktop operator cockpit (Tauri / TS).</td>
+                                <td>Bound to frozen <code>openapi.json</code> contracts. Zero business logic in frontend.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Toolchain &amp; Env</strong></td>
+                                <td><code>lemgendary-env-manager</code></td>
+                                <td>Foundation manager (<code>v16.2.0</code>).</td>
+                                <td>Strict isolation: Python 3.12+ required. Enforces zero-emoji &amp; zero-suppression rules.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Compiler</strong></td>
+                                <td><code>lemgendary-datasets</code></td>
+                                <td>Synthesis &amp; ingestion engine (<code>v16.7.3</code>).</td>
+                                <td><i>O(1)</i> skip-indexing, WebP <i>q</i>=92/95, hardlink dedup, 2-tier resumption.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Training Suite</strong></td>
+                                <td><code>lemgendary-training-suite</code></td>
+                                <td>Model training engine (<code>v16.2.9</code>).</td>
+                                <td>Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentation</strong></td>
+                                <td><code>lemgendary-docs</code></td>
+                                <td>Documentation hub &amp; whitepapers (<code>v16.7.3</code>).</td>
+                                <td>WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-storage">
+                <h2>5. Physical Storage Hierarchy</h2>
+                <ul>
+                    <li><code>raw-sets/</code>: Mutable upstream source archives (TAR, ZIP, Kaggle drops).</li>
+                    <li><code>../LemGendaryDatasets/</code>: Deterministic training manifolds. Contains only suffix-free modernized datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and preserved legacy folders.</li>
+                    <li><code>checkpoints/</code>: Epoch-specific model weight tensors (<code>.pt</code>, <code>.safetensors</code>) and optimizer states.</li>
+                    <li><code>.lgd_server/</code>: Ephemeral daemon state (<code>server.pid</code>, <code>token</code>, <code>jobs.db</code>, job logs).</li>
+                </ul>
+            </section>
+
+            <section id="section-resumption">
+                <h2>6. Fault Tolerance &amp; Resumption</h2>
+                <ol>
+                    <li><strong>Compilation Interruption</strong>: If a compilation job halts midway, the SQLite transaction register and <i>O(1)</i> skip-indexer allow immediate resumption without re-processing existing files.</li>
+                    <li><strong>Modernization Interruption</strong>: <code>tools/modernize_manifold.py</code> validates terminal manifests and skips already-transcoded <code>.webp</code> images in seconds.</li>
+                    <li><strong>Training Crash Recovery</strong>: <code>lemgendary-training-suite</code> saves emergency state dumps upon unhandled exceptions and rewinds learning rate schedules on gradient collapse.</li>
+                </ol>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

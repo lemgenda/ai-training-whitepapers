@@ -52,6 +52,7 @@
                         <li><a href="#56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
                         <li><a href="#57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
                         <li><a href="#58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
+                        <li><a href="#59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -526,6 +527,14 @@
                 <li><strong>Safe Module Ingestion</strong>: Encapsulated argument parsing in <code>manifold_compile.py</code> inside <code>parse_compile_args()</code> and <code>process_dataset(parsed_args)</code>, eliminating top-level module import side-effects.</li>
                 <li><strong>Domain Encapsulation (<code>forex/</code>)</strong>: Encapsulated historical Forex time-series pipelines into a modular subpackage (<code>forex.schema</code>, <code>forex.converter</code>, <code>forex.injector</code>, <code>forex.bridge</code>, <code>forex.pipeline</code>) with root backward-compatibility shims and dedicated CLI subcommands (<code>lemgendary forex convert</code>, <code>lemgendary forex embed</code>).</li>
                 <li><strong>Zero Suppression Policy Enforcement</strong>: Completely eliminated all programmatic warning suppressions (<code>warnings.filterwarnings</code>) and diagnostic silencing directives across all codebase modules.</li>
+            </ul>
+
+            <h3 id="59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</h3>
+            <ul>
+                <li><strong>Suffix-Removal Modernization</strong>: Retires legacy <code>Large</code> naming conventions across manifolds into streamlined, production-standard suffixes while preserving legacy folders intact during migration.</li>
+                <li><strong>Two-Tier State Verification</strong>: Solves false-positive completion bugs by checking terminal manifest generation (<code>dataset_info.yaml</code> and <code>index.json</code>). Partially transcoded sets are accurately classified as <code>[RESUMABLE]</code>.</li>
+                <li><strong>File-Level Delta Scanning</strong>: Replaces blind file queues with size-aware delta inspection. Any existing valid <code>.webp</code> image or metadata file is bypassed in milliseconds, eliminating redundant CPU/GPU compute upon interrupted runs.</li>
+                <li><strong>Real-Time Visual Telemetry</strong>: Integrates single-line <code>tqdm</code> progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.</li>
             </ul>
 </section>
 

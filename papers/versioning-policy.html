@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canonical Versioning Policy &amp; Contract Freezing - LemGendary AI</title>
+    <meta name="description" content="Authoritative versioning framework, contract freezing governance, and ecosystem-wide v16.x.x synchronization policy for the LemGendary AI Ecosystem.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>Canonical Versioning Policy &amp; Contract Freezing</h1>
+            <p class="subtitle">Authoritative Synchronization Standard, Semantic Iterations, and Frozen OpenAPI 3.1 Governance</p>
+            <div class="meta">
+                <span>Category 00 POLICY</span>
+                <span>Version 16.7.3</span>
+                <span>Component: Ecosystem Governance</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-abstract">1. Abstract &amp; Rationale</a></li>
+                <li><a href="#section-framework">2. The Canonical v16.x.x Architectural Framework</a></li>
+                <li><a href="#section-registry">3. Component Version Registry</a></li>
+                <li><a href="#section-pathology">4. Standalone Diagnostic Specifications</a></li>
+                <li><a href="#section-freezing">5. Frozen Contract Guarantees (OpenAPI 3.1)</a></li>
+                <li><a href="#section-enforcement">6. Ecosystem Enforcement &amp; Audit Gating</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="section-abstract">
+                <h2>1. Abstract &amp; Rationale</h2>
+                <p>Prior to the 2026 unification, repositories across the LemGendary AI ecosystem operated under fragmented versioning conventions: some components utilized calendar versioning (e.g. <code>v2026.11.1</code>), while others utilized uncalibrated Semantic Versioning (<code>v2.3.0</code> vs <code>v16.7.3</code>). This created cognitive friction, complicated cross-project dependency tracking, and triggered false-positive drift warnings in automated CI/CD audits.</p>
+                <p>This policy establishes the authoritative <strong>Canonical v16.x.x Ecosystem Versioning Scheme</strong>, defining how builds, APIs, contracts, and documentation are versioned, frozen, and verified.</p>
+            </section>
+
+            <section id="section-framework">
+                <h2>2. The Canonical v16.x.x Architectural Framework</h2>
+                <p>All primary repositories in the LemGendary AI Ecosystem adhere to the unified <code>v16.&lt;minor&gt;.&lt;patch&gt;</code> iteration standard:</p>
+                $$\text{Version} = \mathbf{v16}.\langle\text{Minor}\rangle.\langle\text{Patch}\rangle$$
+                <ul>
+                    <li><strong>Major Version 16 (Epoch Baseline)</strong>: Signifies the complete, post-modernization S.O.L.I.D. architectural era. All packages sharing <code>v16</code> guarantee strict zero-suppression error telemetry (0 <code># type: ignore</code>, 0 <code># noqa</code>), in-process single-responsibility service layers (<code>services/</code>), dual-interface sidecar API daemon readiness (FastAPI + WebSocket), and direct root streaming with bidirectional resumption protocol.</li>
+                    <li><strong>Minor Version (&lt;minor&gt;)</strong>: Represents major functional phase completions (e.g., Phase 0 Modernization, Phase 3 Transcoding, Phase 7 Sidecar API, Phase 8 CPA Integration).</li>
+                    <li><strong>Patch Version (&lt;patch&gt;)</strong>: Represents incremental optimizations, bug fixes, benchmark enhancements, and documentation synchronizations.</li>
+                </ul>
+            </section>
+
+            <section id="section-registry">
+                <h2>3. Component Version Registry</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Repository / Component</th>
+                                <th>Runtime Version</th>
+                                <th>Config Manifests</th>
+                                <th>Primary Interface</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>lemgendary-datasets</strong></td>
+                                <td><code>v16.7.3</code></td>
+                                <td><code>unified_data.yaml</code></td>
+                                <td><code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>lemgendary-training-suite</strong></td>
+                                <td><code>v16.2.9</code></td>
+                                <td><code>pyproject.toml</code></td>
+                                <td><code>python -m training.cli.lemtrain</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>lemgendary-env-manager</strong></td>
+                                <td><code>v16.2.0</code></td>
+                                <td><code>pyproject.toml</code>, <code>package.json</code></td>
+                                <td><code>lem-env</code> / <code>lemgendary_env_manager.ps1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>lemgendary-docs</strong></td>
+                                <td><code>v16.7.3</code></td>
+                                <td><code>MD-Papers/</code>, <code>papers/</code></td>
+                                <td>Documentation Hub (<code>index.html</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-pathology">
+                <h2>4. Standalone Diagnostic Specifications</h2>
+                <p>Specialized clinical or analytical diagnostic frameworks maintain independent specification versions to reflect domain-specific diagnostic taxonomies:</p>
+                <ul>
+                    <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>: Maintained at <strong>v1.4.0 (Clinical Diagnostic Standard)</strong>. While the training suite that executes these diagnostics operates at <code>v16.2.9</code>, the diagnostic taxonomy itself evolves according to independent diagnostic taxonomies.</li>
+                </ul>
+            </section>
+
+            <section id="section-freezing">
+                <h2>5. Frozen Contract Guarantees (OpenAPI 3.1 &amp; Zero Drift)</h2>
+                <p>To ensure zero breaking changes for desktop operators, Tauri Rust backends, and TypeScript frontend clients (<code>lemgendary-ai-studio-gui</code>), all sidecar API endpoints adhere to <strong>Frozen Contract Governance</strong>:</p>
+                <ol>
+                    <li><strong>Explicit Schema Export</strong>: All REST endpoints are serialized to frozen <code>openapi.json</code> files residing in repository roots.</li>
+                    <li><strong>Schema Drift Prohibition</strong>: Modifying route parameters, payload schemas, or response shapes without a minor version increment and regenerated TypeScript client bindings is strictly prohibited.</li>
+                    <li><strong>Automated Assertion Testing</strong>: Unit tests actively assert that running FastAPI server route definitions match the frozen <code>openapi.json</code> version string.</li>
+                </ol>
+            </section>
+
+            <section id="section-enforcement">
+                <h2>6. Ecosystem Enforcement &amp; Audit Gating</h2>
+                <p>Version compliance is enforced at git commit time via the pre-commit compliance validator:</p>
+                <pre><code>lem-env validate --project lemgendary-training-suite,lemgendary-datasets,lemgendary-env-manager,lemgendary-docs</code></pre>
+                <p>Any attempt to introduce calendar versioning (<code>2026.*</code>), uncoordinated major version tags (<code>2.x</code>), or mismatched package manifest strings is rejected by the pre-commit gate before touching version control.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

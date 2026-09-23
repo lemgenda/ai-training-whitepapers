@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUI Control ID Registry &amp; Operational Boundaries - LemGendary AI</title>
+    <meta name="description" content="Authoritative machine-readable control ID dictionary, interactive operator manual mappings, and platform execution boundaries for LemGendary AI Studio Desktop GUI.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>GUI Control ID Registry &amp; Operational Boundaries</h1>
+            <p class="subtitle">Authoritative Machine-Readable Taxonomy, Automation Control Dictionary, and Platform Feature Gates</p>
+            <div class="meta">
+                <span>Category 04 CONTROLS</span>
+                <span>Version 16.7.3</span>
+                <span>Component: AI Studio GUI</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-abstract">1. Abstract &amp; Scope</a></li>
+                <li><a href="#section-taxonomy">2. Control ID Taxonomy &amp; Schema</a></li>
+                <li><a href="#section-dictionary">3. Master Interactive Controls Dictionary</a></li>
+                <li><a href="#section-workflows">4. End-to-End Operational Workflows</a></li>
+                <li><a href="#section-boundaries">5. Operational Boundaries &amp; Platform Availability</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="section-abstract">
+                <h2>1. Abstract &amp; Scope</h2>
+                <p>This authoritative specification establishes the formal machine-readable Control ID Registry and operational boundary matrix for the LemGendary AI Studio Desktop GUI (<code>lemgendary-ai-studio-gui</code>). To enable automated end-to-end testing, accessibility compliance (WCAG 2.1 AA), and strict contract binding between the Tauri/TypeScript frontend and backend FastAPI sidecars (<code>port 8000</code> &amp; <code>port 8100</code>), every interactive widget, input control, action button, telemetry stream, and visual card is assigned a unique, immutable control identifier.</p>
+            </section>
+
+            <section id="section-taxonomy">
+                <h2>2. Control ID Taxonomy &amp; Schema</h2>
+                <p>All GUI elements follow a structured hyphenated taxonomy:</p>
+                <pre><code>[view]-[component]-[element]-[action]</code></pre>
+                <ul>
+                    <li><strong>[view]</strong>: Top-level route context (<code>dash</code>, <code>pipe</code>, <code>proj</code>, <code>health</code>, <code>telem</code>, <code>comp</code>, <code>train</code>).</li>
+                    <li><strong>[component]</strong>: Sub-container or card (<code>header</code>, <code>sidebar</code>, <code>card</code>, <code>table</code>, <code>modal</code>).</li>
+                    <li><strong>[element]</strong>: Structural HTML element type (<code>btn</code>, <code>input</code>, <code>select</code>, <code>toggle</code>, <code>badge</code>, <code>log</code>).</li>
+                    <li><strong>[action]</strong>: Operational intent (<code>refresh</code>, <code>execute</code>, <code>reconcile</code>, <code>compile</code>, <code>filter</code>).</li>
+                </ul>
+            </section>
+
+            <section id="section-dictionary">
+                <h2>3. Master Interactive Controls Dictionary</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Control ID</th>
+                                <th>UI Component / Label</th>
+                                <th>Element Type</th>
+                                <th>Bound Sidecar Endpoint</th>
+                                <th>Expected Behavior</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>dash-nav-sidebar</code></td>
+                                <td>Sidebar Navigation Container</td>
+                                <td><code>&lt;nav&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Houses top-level route switches.</td>
+                            </tr>
+                            <tr>
+                                <td><code>dash-btn-refresh-audit</code></td>
+                                <td>Refresh Audit</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/audit/system</code> (8000)</td>
+                                <td>Triggers asynchronous system probe and updates all status cards.</td>
+                            </tr>
+                            <tr>
+                                <td><code>dash-badge-sidecar-status</code></td>
+                                <td>Connection Status Indicator</td>
+                                <td><code>&lt;span&gt;</code></td>
+                                <td><code>WS /ws/telemetry</code> (8000)</td>
+                                <td>Displays emerald glow for online or rose alert for offline.</td>
+                            </tr>
+                            <tr>
+                                <td><code>dash-card-hardware</code></td>
+                                <td>System &amp; Hardware Architecture</td>
+                                <td><code>&lt;div&gt;</code></td>
+                                <td><code>GET /api/hardware</code> (8000)</td>
+                                <td>Renders CPU core counts, total RAM, and detected GPU adapters.</td>
+                            </tr>
+                            <tr>
+                                <td><code>dash-btn-clean-install</code></td>
+                                <td>Execute Full Clean Install Pipeline</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/clean-install</code></td>
+                                <td>Initiates the 7-stage deterministic provisioning sequence.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-stage-1-hardware</code></td>
+                                <td>Stage 1: Hardware Discovery</td>
+                                <td><code>&lt;li&gt;</code></td>
+                                <td><code>GET /api/probe/gpu</code> (8000)</td>
+                                <td>Queries DXGI and NVML interfaces for compute acceleration.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-stage-4-reqs</code></td>
+                                <td>Stage 4: Requirements Sync</td>
+                                <td><code>&lt;li&gt;</code></td>
+                                <td><code>POST /api/env/sync</code> (8000)</td>
+                                <td>Copies requirements manifests and executes pip install.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-stage-6-verify</code></td>
+                                <td>Stage 6: Codebase Verification</td>
+                                <td><code>&lt;li&gt;</code></td>
+                                <td><code>POST /api/validate/bytecode</code> (8000)</td>
+                                <td>Compiles scripts via py_compile and audits zero-emoji rules.</td>
+                            </tr>
+                            <tr>
+                                <td><code>proj-card-training</code></td>
+                                <td>lemgendary-training-suite Card</td>
+                                <td><code>&lt;div&gt;</code></td>
+                                <td><code>GET /api/env/training-suite</code></td>
+                                <td>Details virtual environment path, packages, and health status.</td>
+                            </tr>
+                            <tr>
+                                <td><code>proj-btn-reconcile-datasets</code></td>
+                                <td>Reconcile lemgendary-datasets</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/env/reconcile</code> (8000)</td>
+                                <td>Reconciles dataset compiler dependencies against manifest.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-table-drift</code></td>
+                                <td>Cross-Project Version Drift Table</td>
+                                <td><code>&lt;table&gt;</code></td>
+                                <td><code>GET /api/health/drift</code> (8000)</td>
+                                <td>Renders comparative grid of shared dependencies.</td>
+                            </tr>
+                            <tr>
+                                <td><code>drift-badge-sync</code></td>
+                                <td>[SYNC] Status Badge</td>
+                                <td><code>&lt;span&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Indicates identical package versions across all active repositories.</td>
+                            </tr>
+                            <tr>
+                                <td><code>drift-badge-alert</code></td>
+                                <td>[DRIFT] Alert Badge</td>
+                                <td><code>&lt;span&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Highlights version discrepancies across projects.</td>
+                            </tr>
+                            <tr>
+                                <td><code>telem-log-stream</code></td>
+                                <td>Monospace Telemetry Terminal</td>
+                                <td><code>&lt;pre&gt;</code></td>
+                                <td><code>WS /ws/log</code> (8000)</td>
+                                <td>Renders high-velocity log stream from active sub-processes.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-manifold</code></td>
+                                <td>Manifold Target Selector</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td><code>GET /api/datasets</code> (8100)</td>
+                                <td>Populates list of 20 canonical training manifolds.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-toggle-transcode</code></td>
+                                <td>Enable WebP Transcoding</td>
+                                <td><code>&lt;input type=checkbox&gt;</code></td>
+                                <td><code>POST /api/jobs/compile</code> (8100)</td>
+                                <td>Activates <i>q</i>=92 WebP image and lossless mask encoding.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-compile</code></td>
+                                <td>Compile Manifold</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/jobs/compile</code> (8100)</td>
+                                <td>Dispatches dataset compilation job to the dataset sidecar.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-select-model</code></td>
+                                <td>Model Architecture Dropdown</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td><code>GET /api/models</code></td>
+                                <td>Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.).</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-btn-launch</code></td>
+                                <td>Launch Master Training</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/launch</code></td>
+                                <td>Dispatches training worker with spatial resolution ladder.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-workflows">
+                <h2>4. End-to-End Operational Workflows</h2>
+                <h3>4.1 Workflow 1: Environment Provisioning &amp; Health Audit</h3>
+                <ol>
+                    <li>Operator launches LemGendary AI Studio Desktop GUI.</li>
+                    <li>Operator observes <code>dash-badge-sidecar-status</code> confirming emerald connection state.</li>
+                    <li>Operator clicks <code>dash-btn-clean-install</code>.</li>
+                    <li>The GUI displays progressive completion across badges <code>pipe-stage-1-hardware</code> through <code>pipe-stage-7-health</code>.</li>
+                    <li>Upon completion, <code>health-table-drift</code> updates, confirming 100% synchronized <code>[SYNC]</code> badges.</li>
+                </ol>
+
+                <h3>4.2 Workflow 2: Manifold Compilation with WebP Transcoding</h3>
+                <ol>
+                    <li>Operator navigates to Dataset Compiler View (<code>comp-nav-tab</code>).</li>
+                    <li>Operator selects <code>comp-select-manifold</code> (e.g. <code>nima_aesthetic</code>).</li>
+                    <li>Operator verifies <code>comp-toggle-transcode</code> is enabled (WebP <i>q</i>=92).</li>
+                    <li>Operator clicks <code>comp-btn-compile</code>.</li>
+                    <li>The GUI establishes a live WebSocket connection to <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>, rendering real-time image conversion velocity (img/sec) and ETA countdowns directly in <code>telem-log-stream</code>.</li>
+                </ol>
+            </section>
+
+            <section id="section-boundaries">
+                <h2>5. Operational Boundaries &amp; Platform Availability</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Capability</th>
+                                <th>Windows 10/11 (CUDA 12+)</th>
+                                <th>Linux (CUDA 12+)</th>
+                                <th>Windows (DirectML)</th>
+                                <th>macOS / CPU Fallback</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sidecar REST Daemon</strong></td>
+                                <td>Supported</td>
+                                <td>Supported</td>
+                                <td>Supported</td>
+                                <td>Supported</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Clean Install Pipeline</strong></td>
+                                <td>Full Support</td>
+                                <td>Full Support</td>
+                                <td>Restricted (DirectX)</td>
+                                <td>Restricted</td>
+                            </tr>
+                            <tr>
+                                <td><strong>WebP Transcoding</strong></td>
+                                <td><i>O(1)</i> Multi-Threaded</td>
+                                <td><i>O(1)</i> Multi-Threaded</td>
+                                <td>Multi-Threaded</td>
+                                <td>Single-Threaded</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hardlink Deduplication</strong></td>
+                                <td>Supported (NTFS <code>os.link</code>)</td>
+                                <td>Supported (POSIX <code>os.link</code>)</td>
+                                <td>Supported (NTFS)</td>
+                                <td>Unsupported (FAT/ExFAT)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Model Training (FP16/BF16)</strong></td>
+                                <td>Full GPU Acceleration</td>
+                                <td>Full GPU Acceleration</td>
+                                <td>Unsupported</td>
+                                <td>Unsupported (CPU Only)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Spatial Ladder Scaling</strong></td>
+                                <td>Full GPU Tensor Core</td>
+                                <td>Full GPU Tensor Core</td>
+                                <td>Degraded Throughput</td>
+                                <td>Blocked (Excessive Latency)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

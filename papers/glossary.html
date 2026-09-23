@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canonical Glossary &amp; Terminology Specification - LemGendary AI</title>
+    <meta name="description" content="Official single source of truth for terminology, mathematical primitives, architectural definitions, and system invariants across the LemGendary AI Ecosystem.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>Canonical Glossary &amp; Terminology Specification</h1>
+            <p class="subtitle">Single Source of Truth (SSOT) for System Primitives, Architectural Boundaries, and Operational Invariants</p>
+            <div class="meta">
+                <span>Category 00 GLOSSARY</span>
+                <span>Version 16.7.3</span>
+                <span>Component: System Invariants</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#section-abstract">1. Abstract &amp; Scope</a></li>
+                <li><a href="#section-taxonomy">2. Core Taxonomy: Dataset vs. Manifold</a>
+                    <ul class="sub-item">
+                        <li><a href="#tax-dataset">2.1 Dataset (Raw Set)</a></li>
+                        <li><a href="#tax-manifold">2.2 Manifold (Compiled Training Manifold)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-compiler">3. Compiler &amp; Storage Primitives</a></li>
+                <li><a href="#section-training">4. Master Training Suite &amp; Optimization</a></li>
+                <li><a href="#section-pathology">5. Training Pathology &amp; Diagnostics</a></li>
+                <li><a href="#section-env">6. Environment &amp; Infrastructure</a></li>
+                <li><a href="#section-matrix">7. Authoritative "Do Not Confuse With" Matrix</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="section-abstract">
+                <h2>1. Abstract &amp; Scope</h2>
+                <p>This authoritative specification establishes the single source of truth (SSOT) for all terminology, mathematical primitives, architectural definitions, and system invariants utilized across the LemGendary AI Ecosystem. Designed to eliminate semantic ambiguity across machine learning pipelines, desktop operators, agentic reasoning models, and technical documentation, every entry in this glossary carries strict operational definitions and cross-reference boundaries.</p>
+            </section>
+
+            <section id="section-taxonomy">
+                <h2>2. Core Taxonomy: Dataset vs. Manifold</h2>
+                <p>The distinction between a raw dataset and a compiled manifold is an inviolable architectural invariant across the ecosystem:</p>
+
+                <h3 id="tax-dataset">2.1 Dataset (Raw Set)</h3>
+                <ul>
+                    <li><strong>Definition</strong>: A collection of uncurated, heterogeneous source data originating from external repositories (e.g. HuggingFace, Kaggle, GitHub, Google Drive, or local filesystem drops).</li>
+                    <li><strong>Location</strong>: Stored strictly under <code>raw-sets/&lt;source-name&gt;/</code> or fetched ephemeral caches.</li>
+                    <li><strong>Characteristics</strong>: Unstandardized file formats (loose JPEGs, PNGs, BMPs, TARs, ZIPs); arbitrary spatial resolutions, varying aspect ratios, and uncalibrated colour spaces; incomplete or malformed label structures. Mutable: raw files may be updated, pruned, or re-downloaded from upstream remotes.</li>
+                    <li><strong>Usage</strong>: Raw datasets are <strong>never</strong> ingested directly by the Master Training Suite.</li>
+                </ul>
+
+                <h3 id="tax-manifold">2.2 Manifold (Compiled Training Manifold)</h3>
+                <ul>
+                    <li><strong>Definition</strong>: A deterministic, mathematically vetted, hardware-aligned topological data representation compiled specifically for machine learning ingestion.</li>
+                    <li><strong>Location</strong>: Stored in <code>../LemGendaryDatasets/LemGendized&lt;Name&gt;/</code>.</li>
+                    <li><strong>Unified Invariants</strong>: Strict resolution floors (&ge; 224px restoration, &ge; 512px diffusion), standardized WebP encoding (<i>q</i>=92 images, <i>q</i>=95 targets, lossless masks), and deterministic split assignments (<code>train</code>, <code>val</code>, <code>test</code>).</li>
+                    <li><strong>Immutable Provenance</strong>: Every manifold contains terminal self-documenting manifests: <code>dataset_info.yaml</code>, <code>index.json</code>, <code>classes.txt</code>, and <code>manifold_registry.db</code>.</li>
+                    <li><strong>Zero Redundancy</strong>: Identity image targets leverage physical NTFS/POSIX hardlink deduplication (<code>os.link</code>), guaranteeing zero cluster waste.</li>
+                </ul>
+            </section>
+
+            <section id="section-compiler">
+                <h2>3. Compiler &amp; Storage Primitives</h2>
+                <ul>
+                    <li><strong><i>O(1)</i> Physical Skip-Indexing</strong>: A high-velocity filesystem technique where a single flat <code>os.scandir</code> traversal during pipeline initialization populates an in-memory string hash set of existing files. Verifying whether a sample has already been compiled executes in <i>O(1)</i> average-case dictionary lookup time, bypassing recursive disk seek overhead.</li>
+                    <li><strong>Zero-IPC ThreadPool</strong>: An execution model utilizing Python's <code>ThreadPoolExecutor</code> within a single virtual memory space for pure I/O operations (image decoding, transcoding, and disk writing). By avoiding multiprocessing serialization (IPC pipes/pickling), it eliminates Windows IPC latency completely (0.0 seconds serialization overhead).</li>
+                    <li><strong>NTFS Cluster Slack Space Recovery</strong>: Standard NTFS filesystems allocate physical disk space in 4,096-byte clusters. Loose sliding-window arrays waste up to 4 KB per file in cluster slack. The compiler's columnar Parquet + Zstandard architecture aggregates temporal records into contiguous row groups, reclaiming physical disk space with up to 99.3% compression ratios.</li>
+                    <li><strong>Hardlink Deduplication (Identity Mapping)</strong>: An optimization for image restoration where the clean ground-truth target matches the degraded input. Instead of duplicating multi-megabyte image bytes across directories, the compiler issues NTFS hardlinks referencing identical physical disk clusters, saving hundreds of gigabytes per manifold.</li>
+                    <li><strong>Lossless Mask Transcoding</strong>: A format constraint requiring all segmentation masks (<code>masks/</code>) to be encoded strictly via WebP lossless compression. Lossy compression introduces subtle edge-quantization artifacts that corrupt discrete integer class labels.</li>
+                    <li><strong>Two-Tier Modernization Resumption</strong>: An architectural design in <code>tools/modernize_manifold.py</code> combining high-level manifest validation (<code>dataset_info.yaml</code> + <code>index.json</code>) with file-level delta verification. Interrupted modernization runs bypass already-transcoded <code>.webp</code> images and metadata in seconds, resuming only uncompleted files.</li>
+                </ul>
+            </section>
+
+            <section id="section-training">
+                <h2>4. Master Training Suite &amp; Optimization</h2>
+                <ul>
+                    <li><strong>Spatial Resolution Ladder</strong>: A multi-stage curriculum learning schedule where image resolution progressively scales during training (e.g. 128px &rarr; 256px &rarr; 512px). It allows early epochs to capture global structural features at high batch velocities before fine-tuning high-frequency details.</li>
+                    <li><strong>Nuclear-Hardened Architecture</strong>: A resilience design pattern in <code>lemgendary-training-suite</code> enforcing comprehensive validation across hardware backends, dynamic gradient scaling, automated checkpoint verification, and zero-suppression error telemetry.</li>
+                    <li><strong>Directional Accuracy (DA)</strong>: The primary evaluation metric for financial time-series forecasting, defined as the percentage of temporal steps where the predicted sign of price delta matches the actual market trajectory:
+                        $$\text{DA} = \frac{1}{N} \sum_{t=1}^{N} \mathbb{I}\left( \text{sgn}(\hat{y}_t - y_{t-1}) = \text{sgn}(y_t - y_{t-1}) \right) \times 100\%$$
+                    </li>
+                    <li><strong>Earth Mover's Distance (EMD) Loss</strong>: The objective function utilized for probabilistic aesthetic quality distributions (NIMA), penalizing misclassifications proportionally to the distance between ordinal rating bins (1 to 10):
+                        $$\text{EMD}(p, \hat{p}) = \left( \frac{1}{K} \sum_{k=1}^{K} |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r \right)^{1/r}$$
+                    </li>
+                </ul>
+            </section>
+
+            <section id="section-pathology">
+                <h2>5. Training Pathology &amp; Diagnostics</h2>
+                <ul>
+                    <li><strong>Pathology Reasoning Trace</strong>: A structured, synthetic diagnostic narrative generated from empirical training failure modes. It models the causal chain: Observational Symptom &rarr; Diagnostic Telemetry &rarr; Root Cause Analysis &rarr; Automated Mitigation Strategy.</li>
+                    <li><strong>Latent Disconnect</strong>: A training pathology where the restoration backbone converges to a trivial spatial average (e.g., solid grey or blur) while loss curves report apparent convergence, indicating loss-term imbalance or improper normalizations.</li>
+                    <li><strong>Catastrophic Gradient Collapse</strong>: An unrecoverable parameter destabilization typically caused by exploding gradient spikes or unhandled NaN inputs, requiring automated checkpoint rewind and learning rate penalization.</li>
+                </ul>
+            </section>
+
+            <section id="section-env">
+                <h2>6. Environment &amp; Infrastructure</h2>
+                <ul>
+                    <li><strong>Deterministic Environment Reconciliation</strong>: The automated synchronization of local <code>.venv</code> packages against central manifests (<code>requirements-*.txt</code>), identifying version drifts and resolving transitive dependencies without global Python pollution.</li>
+                    <li><strong>Sidecar REST Daemon</strong>: An asynchronous FastAPI service operating on dedicated local ports (<code>8000</code> for Environment Manager, <code>8100</code> for Dataset Compiler, and <code>8200</code> for Master Training Suite) that provides headless API access, hardware health telemetry, and WebSocket log broadcasting.</li>
+                </ul>
+            </section>
+
+            <section id="section-matrix">
+                <h2>7. Authoritative "Do Not Confuse With" Matrix</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Term A</th>
+                                <th>Term B</th>
+                                <th>Key Architectural Difference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dataset</strong></td>
+                                <td><strong>Manifold</strong></td>
+                                <td>Datasets are raw, mutable, heterogeneous source drops; Manifolds are compiled, deterministic, immutable, hardware-aligned training topologies.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Reconciliation</strong></td>
+                                <td><strong>Clean Install</strong></td>
+                                <td>Reconciliation inspects and patches delta package drifts in-place; Clean Install nukes <code>.venv</code> and rebuilds the toolchain from stage 1 hardware probing.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container Format</strong></td>
+                                <td><strong>Directory Layout</strong></td>
+                                <td>Container formats (MDS, LitData, WebDataset) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hardlink Deduplication</strong></td>
+                                <td><strong>Perceptual Deduplication</strong></td>
+                                <td>Hardlink dedup maps identical target files to the exact same physical NTFS cluster; Perceptual dedup flags visually similar images via pHash/dHash hamming distances.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Image Transcoding</strong></td>
+                                <td><strong>Synthetic Degradation</strong></td>
+                                <td>Transcoding converts image file encodings (e.g. PNG &rarr; WebP <i>q</i>=92) preserving visual fidelity; Degradation mathematically corrupts images with blur/noise/haze kernels to generate paired training pairs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sidecar API</strong></td>
+                                <td><strong>CLI Tool</strong></td>
+                                <td>Sidecar is an active background daemon streaming WebSocket events to GUI/remote clients; CLI is a direct local command executing in-process or delegating to the sidecar.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
