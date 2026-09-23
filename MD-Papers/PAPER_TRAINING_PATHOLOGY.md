@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD033 MD024 -->
 
-# Nuclear Stability: AI Training Pathology Master Guide (v1.3)
+# Nuclear Stability: AI Training Pathology Master Guide (v1.4.0)
 
 **Author**: Lem Treursić  
 **Version**: 1.4.0 - Governor v17 Hardened (2026-09-11)  

@@ -6,7 +6,7 @@
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (v16.5.0-MODERNIZED) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration.
+The LemGendary Dataset Compiler Suite (v16.7.3) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration.
 
 * **Project Repository**: [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 
@@ -112,7 +112,7 @@ To empirically validate these system-level optimizations, execution profiles wer
 
 ---
 
-## 5. 2026 Modernization Architecture & Innovations (v16.5.0)
+## 5. 2026 Modernization Architecture & Innovations (v16.7.3)
 
 The 2026 modernization elevates the compiler from a script collection into an industrial-grade dataset synthesis, audit, and sidecar service engine:
 
@@ -189,9 +189,9 @@ Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic resto
 
 ### 6.1 Technical Comparison Matrix
 
-The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the **LemGendary Dataset Compiler Suite (v16.5.0)** against the top 5 industry manifold compilers: **NVIDIA NeMo Curator (v2026)**, **HuggingFace WebDataset / Datasets v3**, **Ray Data / Anyscale Compiler**, **Cohere / DeepSpeed Data Engine**, and **Meta / PyTorch TorchData v2**.
+The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the **LemGendary Dataset Compiler Suite (v16.7.3)** against the top 5 industry manifold compilers: **NVIDIA NeMo Curator (v2026)**, **HuggingFace WebDataset / Datasets v3**, **Ray Data / Anyscale Compiler**, **Cohere / DeepSpeed Data Engine**, and **Meta / PyTorch TorchData v2**.
 
-| Benchmark Parameter | NVIDIA NeMo Curator (v2026) | HuggingFace WebDataset v3 | Ray Data / Anyscale | Cohere / DeepSpeed Data | Meta TorchData v2 | LemGendary Compiler Suite (v16.5.0) |
+| Benchmark Parameter | NVIDIA NeMo Curator (v2026) | HuggingFace WebDataset v3 | Ray Data / Anyscale | Cohere / DeepSpeed Data | Meta TorchData v2 | LemGendary Compiler Suite (v16.7.3) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Filesystem Indexing** | $\mathcal{O}(N \log N)$ Metadata Scan | $\mathcal{O}(N)$ Manifest Traversal | $\mathcal{O}(N)$ Graph Build | $\mathcal{O}(N \cdot d)$ Dir Walk | $\mathcal{O}(N)$ MapDataPipe | **$\mathcal{O}(1)$ Flat `scandir` Hash Scan** |
 | **Indexing Latency (1.4M items)** | $112.5 \text{ seconds}$ | $145.0 \text{ seconds}$ | $88.2 \text{ seconds}$ | $210.4 \text{ seconds}$ | $165.8 \text{ seconds}$ | **$0.4 \text{ seconds}$ ($460\times$ faster)** |
@@ -235,7 +235,7 @@ The dataset compilation landscape in 2026 is defined by the struggle between dis
 * **Cons:** Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.
 * **Pricing & Cost Model:** Open-source (BSD License); **\$0 software cost**, but incurs standard unoptimized cloud compute & storage overheads due to lack of hardlinking.
 
-#### 6.2.6 LemGendary Dataset Compiler Suite (v16.2.8)
+#### 6.2.6 LemGendary Dataset Compiler Suite (v16.7.3)
 
 * **Pros:** $\mathcal{O}(1)$ physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.
 * **Cons:** Optimized primarily for local/hybrid single-node & edge hardware; non-distributed (single-node multi-threaded/GPU execution).

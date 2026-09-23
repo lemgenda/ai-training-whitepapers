@@ -1,4 +1,4 @@
-# LemGendary Environment Manager: Technical Whitepaper
+# LemGendary Environment Manager (v16.2.0): Technical Whitepaper
 
 ## Category 00 | LemGendary AI Documentation Hub
 
@@ -114,7 +114,7 @@ Unparseable artifacts or invalid directives trigger atomic fallback modes, preve
 
 To quantify the operational efficiency gains delivered by the unified architecture, benchmark evaluations were conducted comparing the legacy PowerShell scripts against the Python-native `lem-env` engine:
 
-| Operational Metric | Legacy PowerShell Engine | LemGendary Environment Manager v2.3 | Improvement Factor |
+| Operational Metric | Legacy PowerShell Engine | LemGendary Environment Manager v16.2.0 | Improvement Factor |
 | :--- | :--- | :--- | :--- |
 | System Hardware Probe Latency | 4,250 ms | 310 ms | $13.7\times$ |
 | Cross-Project Dependency Audit | 18,900 ms | 1,420 ms | $13.3\times$ |
