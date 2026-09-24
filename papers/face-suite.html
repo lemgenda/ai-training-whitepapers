@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High-Fidelity Facial Restoration, Parsing & Detection Suite - LemGendary AI</title>
+    <meta name="description" content="Architectural Specification for CodeFormer VQ-Codebook Blind Restoration, ParseNet Bilateral Face Parsing, and RetinaFace Landmark Localization">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>High-Fidelity Facial Restoration, Parsing & Detection Suite</h1>
+            <p class="subtitle">Architectural Specification for CodeFormer VQ-Codebook Blind Restoration, ParseNet Bilateral Face Parsing, and RetinaFace Landmark Localization</p>
+            <div class="meta">
+                <span>Category 13 FACE</span><span>Version 1.0.0</span><span>Domain: Facial Perception</span>
+            </div>
+                    <div class="tabs-nav">
+                <a href="face-suite.html" class="tab-link active">Face Suite Hub</a>
+                <a href="face-codeformer.html" class="tab-link">CodeFormer</a>
+                <a href="face-parsenet.html" class="tab-link">ParseNet</a>
+                <a href="face-retinaface.html" class="tab-link">RetinaFace</a>
+            </div></header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2>Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color);">Back to Index</a></li>
+            <li><a href="#abstract">1. Abstract</a></li>
+            <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
+            <li><a href="#foundations">3. Shared Foundations</a></li>
+            <li><a href="#codeformer">4.1 CodeFormer</a></li>
+            <li><a href="#parsenet">4.2 ParseNet</a></li>
+            <li><a href="#retinaface">4.3 RetinaFace</a></li>
+            <li><a href="#challenges">5. Challenges & Resilience</a></li>
+            <li><a href="#deployment">6. Deployment Strategy</a></li>
+            <li><a href="#benchmarks">7. Performance Matrix</a></li>
+            <li><a href="#conclusion">8. Conclusion</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>This technical whitepaper details the architectural design, manifold engineering, loss formulations, and deployment specifications for the LemGendary Facial Vision Suite (Category 13). It coordinates CodeFormer (VQ-codebook blind face restoration), ParseNet (19-class anatomical face segmentation), and RetinaFace (MobileNetV1-0.25 multi-scale localization).</p>
+            </section>
+
+            <section id="taxonomy">
+                <h2>2. Visual Taxonomy: Facial Manifolds</h2>
+                <p>Facial analysis models operate across three distinct data manifolds:</p>
+                <ul>
+                    <li><strong>Blind Degradation Manifold (<code>LemGendizedCodeFormerLarge</code>):</strong> High-entropy synthetic blur, sensor noise, downsampling, and JPEG compression.</li>
+                    <li><strong>Anatomical Segmentation Manifold (<code>LemGendizedParseNetLarge</code>):</strong> Dense 19-class semantic masks resolving discrete facial regions.</li>
+                    <li><strong>Multi-Scale Localization Manifold (<code>LemGendizedRetinaFaceMobileNetLarge</code>):</strong> Bounding boxes and 5-point landmark coordinates across scales from 16px to 1024px.</li>
+                </ul>
+            </section>
+
+            <section id="foundations">
+                <h2>3. Shared Foundations & Universal Acceleration</h2>
+                <p>Memory bounds during training strictly satisfy:</p>
+                <div class="math-block">$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C) \quad \text{vs} \quad \text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$</div>
+                <p>Restoration quality is audited via the unified Scalar Restoration Quality Score:</p>
+                <div class="math-block">$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
+            </section>
+
+            <section id="codeformer">
+                <h2>4.1 LemGendary CodeFormer (Face Restoration)</h2>
+                <p><strong>Architecture:</strong> Transformer-Based VQ Codebook Lookup Network.</p>
+                <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryCodeFormer-FaceRestoration.pt</code>).</p>
+                <p><strong>Target Manifold:</strong> <code>LemGendizedCodeFormerLarge</code> (40,000 high-resolution pairs, 512x512 resolution).</p>
+                <p><strong>SOTA Targets:</strong> PSNR &ge; 30.5 dB, SSIM &ge; 0.930, LPIPS &le; 0.080, FID &le; 5.20.</p>
+            </section>
+
+            <section id="parsenet">
+                <h2>4.2 LemGendary ParseNet (Face Parsing &amp; Segmentation)</h2>
+                <p><strong>Architecture:</strong> Bilateral Semantic Segmentation Network (19 classes).</p>
+                <p><strong>Status:</strong> Training In-Progress / Pre-Training Architectural Specification.</p>
+                <p><strong>Target Manifold:</strong> <code>LemGendizedParseNetLarge</code> (512x512 resolution).</p>
+                <p><strong>SOTA Targets:</strong> mIoU &ge; 0.860, Pixel Accuracy &ge; 0.965.</p>
+                <div class="math-block">$$\mathcal{L}_{\text{ParseNet}} = \mathcal{L}_{\text{CE}} + \lambda_{\text{lovasz}} \mathcal{L}_{\text{Lovasz}} + \lambda_{\text{edge}} \mathcal{L}_{\text{Boundary}}$$</div>
+            </section>
+
+            <section id="retinaface">
+                <h2>4.3 LemGendary RetinaFace (Multi-Scale Face Detection)</h2>
+                <p><strong>Architecture:</strong> MobileNetV1-0.25 Feature Pyramid Network (FPN).</p>
+                <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
+                <p><strong>Target Manifold:</strong> <code>LemGendizedRetinaFaceMobileNetLarge</code> (640x640 resolution).</p>
+                <p><strong>SOTA Targets:</strong> mAP Easy &ge; 0.915, Medium &ge; 0.890, Hard &ge; 0.750.</p>
+            </section>
+
+            <section id="challenges">
+                <h2>5. Challenges &amp; Resilience Architecture</h2>
+                <p>Pose variation, severe occlusions, and discrete codebook commitment losses are stabilized using random erasing augmentations, straight-through gradient estimators, and dense micro-anchor grids down to 4px.</p>
+            </section>
+
+            <section id="deployment">
+                <h2>6. Deployment Strategy</h2>
+                <p>Models export to ONNX Opset 18 and WebGPU for deployment inside the LemGendary AI Studio GUI with &lt; 350 MB total memory footprint.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>7. SOTA Architectural Performance Matrix</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model Key</th>
+                            <th>Architecture</th>
+                            <th>Target Manifold</th>
+                            <th>Input Res</th>
+                            <th>Primary Metric Target</th>
+                            <th>Current Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>codeformer</code></td><td>Transformer VQ-Codebook</td><td><code>LemGendizedCodeFormerLarge</code></td><td>512x512</td><td>PSNR 30.5 dB, FID 5.2</td><td>Checkpoint Trained</td></tr>
+                        <tr><td><code>parsenet</code></td><td>Bilateral Segmentation</td><td><code>LemGendizedParseNetLarge</code></td><td>512x512</td><td>mIoU 0.860</td><td>In-Progress / Pre-Training</td></tr>
+                        <tr><td><code>retinaface</code></td><td>MobileNetV1-0.25 FPN</td><td><code>LemGendizedRetinaFaceMobileNetLarge</code></td><td>640x640</td><td>mAP Easy 0.915</td><td>Pre-Training Spec</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="conclusion">
+                <h2>8. Conclusion</h2>
+                <p>The Facial Vision Suite establishes a unified perception continuum across face detection, landmark alignment, anatomical parsing, and codebook reconstruction, ready for telemetry synchronization upon training completion.</p>
+            </section>
+    
+        </main>
+
+        <footer>
+            <p>LemGendary AI Ecosystem &copy; 2026. All rights reserved. Master Technical Specification v16.7.3.</p>
+        </footer>
+    </div>
+</body>
+</html>

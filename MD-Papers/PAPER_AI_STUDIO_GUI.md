@@ -1,6 +1,8 @@
 # LemGendary AI Studio GUI: Architectural Whitepaper
 
-## Category 04 | LemGendary AI Documentation Hub
+## Category 01.4 | Subpage of Master Ecosystem Architecture
+
+**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

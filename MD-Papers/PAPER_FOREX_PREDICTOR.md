@@ -3,6 +3,7 @@
 
 **Author**: Lem Treursić  
 **Version**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
+**Category**: Category 11 FINANCIAL  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
 ---

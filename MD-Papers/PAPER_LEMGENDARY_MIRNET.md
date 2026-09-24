@@ -3,6 +3,7 @@
 
 **Author**: Lem Treursić  
 **Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
+**Category**: Category 04 RESTORATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---

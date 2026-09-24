@@ -1,6 +1,8 @@
 # LemGendary Environment Manager (v16.2.0): Technical Whitepaper
 
-## Category 00 | LemGendary AI Documentation Hub
+## Category 01.1 | Subpage of Master Ecosystem Architecture
+
+**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image-to-Text Multimodal Vision-Language Models - LemGendary AI</title>
+    <meta name="description" content="Vision Encoder, Perceiver Resampler Cross-Attention & Causal Autoregressive Decoders">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="foundation-models-master.html" class="tab-link">Foundation Hub</a>
+                <a href="foundation-diffusion.html" class="tab-link">Latent Diffusion</a>
+                <a href="foundation-image-to-text.html" class="tab-link active">Image-to-Text VLM</a>
+                <a href="foundation-llm.html" class="tab-link">LLM & MoE Decoders</a>
+            </div>
+            <h1>Image-to-Text Multimodal Vision-Language Models</h1>
+            <p class="subtitle">Vision Encoder, Perceiver Resampler Cross-Attention & Causal Autoregressive Decoders</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 10 FOUNDATION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#vision-encoder">2. Visual Feature Encoding</a></li>
+                <li><a href="#resampler">3. Perceiver Resampler & Token Condensation</a></li>
+                <li><a href="#causal-decoder">4. Autoregressive Language Decoder</a></li>
+                <li><a href="#loss">5. Cross-Entropy Generation Objective</a></li>
+                <li><a href="#benchmarks">6. Multimodal Benchmarks & Targets</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>LemGendary Vision-Language Model (VLM)</strong> bridges visual perception and natural language comprehension. By connecting a high-resolution visual encoder (CLIP ViT-L/14 or SigLIP) to an autoregressive causal language decoder via a <strong>Perceiver Resampler</strong> cross-attention projector, the model enables detailed image captioning, visual question answering (VQA), and automated defect diagnostic descriptions. Condensing 256 visual patch tokens into 64 uniform query tokens ensures high-throughput text generation without quadratic context explosion.</p>
+            </section>
+
+            <section id="vision-encoder">
+                <h2>2. Visual Feature Encoding</h2>
+                <p>Input images are split into \(14 \times 14\) patches, projected through a Transformer encoder to produce visual tokens \(V \in \mathbb{R}^{N \times D_v}\) capturing structural geometry and semantic composition.</p>
+            </section>
+
+            <section id="resampler">
+                <h2>3. Perceiver Resampler & Token Condensation</h2>
+                <p>To eliminate excessive token overhead in the causal language decoder, a Perceiver Resampler projects \(K = 64\) learned query tokens \(Q\) across visual features \(V\) via cross-attention:</p>
+                <p>$$Z = \text{CrossAttention}(Q, V, V) = \text{Softmax}\left( \frac{Q (V W_K)^T}{\sqrt{d_k}} \right) (V W_V)$$</p>
+                <p>This compresses arbitrary resolution inputs into a fixed-length multimodal embedding sequence.</p>
+            </section>
+
+            <section id="causal-decoder">
+                <h2>4. Autoregressive Language Decoder</h2>
+                <p>The language decoder processes interleaved text tokens and visual prompt tokens via causal self-attention, generating response tokens step-by-step.</p>
+            </section>
+
+            <section id="loss">
+                <h2>5. Cross-Entropy Generation Objective</h2>
+                <p>$$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{<t}, Z)$$</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>6. Multimodal Benchmarks & Targets</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Benchmark Task</th>
+                                <th>Target Score</th>
+                                <th>Evaluation Corpus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Visual Question Answering</td>
+                                <td>&ge; 76.5%</td>
+                                <td>VQAv2</td>
+                            </tr>
+                            <tr>
+                                <td>Detailed Image Captioning</td>
+                                <td>&ge; 124.0 CIDEr</td>
+                                <td>COCO Captions</td>
+                            </tr>
+                            <tr>
+                                <td>Defect Diagnostic Precision</td>
+                                <td>&ge; 88.2%</td>
+                                <td>LemGendary Restoration Audit</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>The Vision-Language Architecture powers automated image metadata curation and intelligent diagnostic reporting.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

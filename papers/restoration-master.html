@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dedicated Image Restoration Suite - LemGendary AI</title>
+    <meta name="description" content="Authoritative Architecture, Loss Formulations, and Comparative SOTA Benchmarks for Single-Task Restoration Engines">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="restoration-master.html" class="tab-link active">Restoration Hub</a>
+                <a href="nafnet.html" class="tab-link">NAFNet</a>
+                <a href="mprnet.html" class="tab-link">MPRNet</a>
+                <a href="mirnet.html" class="tab-link">MIRNet</a>
+                <a href="ffanet.html" class="tab-link">FFANet</a>
+            </div>
+            <h1>Dedicated Image Restoration Suite</h1>
+            <p class="subtitle">Authoritative Architecture, Loss Formulations, and Comparative SOTA Benchmarks for Single-Task Restoration Engines</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 04 RESTORATION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#taxonomy">2. Physical Optical Degradation Taxonomy</a></li>
+                <li><a href="#architectures">3. Architectural Taxonomy</a></li>
+                <li><a href="#loss-formulations">4. Mathematical Loss Formulations</a></li>
+                <li><a href="#benchmarks">5. SOTA Architectural Performance Matrix</a></li>
+                <li><a href="#deployment">6. Universal Hardware Deployment</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>Dedicated Image Restoration Suite</strong> establishes an authoritative, single-task deep learning framework engineered for physical image restoration across four classical degradation domains: <strong>Deblurring and Denoising</strong> (NAFNet), <strong>Multi-Stage Progressive Deraining</strong> (MPRNet), <strong>Dual-Residual Exposure and Low-Light Enhancement</strong> (MIRNet v2), and <strong>Feature Fusion Atmospheric Dehazing</strong> (FFANet). Each architecture in Category 04 operates without multi-task cross-talk, maximizing domain-specific reconstruction fidelity, peak signal-to-noise ratio (PSNR), and structural similarity (SSIM).</p>
+            </section>
+
+            <section id="taxonomy">
+                <h2>2. Physical Optical Degradation Taxonomy</h2>
+                <p>Each dedicated restoration architecture targets a distinct mathematical formulation of optical corruption:</p>
+                <ul>
+                    <li><strong>Motion &amp; Defocus Blur ($\mathbf{I}_B$)</strong>: Modeled as a spatially variant blur kernel $\mathbf{K}$ acting on clean latent image $\mathbf{I}$:
+                        $$\mathbf{I}_B = \mathbf{I} \otimes \mathbf{K} + \mathbf{N}$$</li>
+                    <li><strong>Sensor Noise ($\mathbf{I}_N$)</strong>: Heteroscedastic additive white Gaussian and Poisson sensor noise:
+                        $$\mathbf{I}_N \sim \mathcal{P}(lpha \mathbf{I}) + \mathcal{N}(0, \sigma^2)$$</li>
+                    <li><strong>Rain Streaks &amp; Veiling Effect ($\mathbf{I}_R$)</strong>: Additive physical rain layer $\mathbf{R}$ with transmission modulation $\mathbf{T}$:
+                        $$\mathbf{I}_R = \mathbf{I} \odot \mathbf{T} + \mathbf{R}$$</li>
+                    <li><strong>Atmospheric Haze ($\mathbf{I}_H$)</strong>: Koschmieder atmospheric scattering model governed by scene depth $d(x)$ and extinction coefficient $eta$:
+                        $$\mathbf{I}_H(x) = \mathbf{I}(x) t(x) + A(1 - t(x)), \quad t(x) = e^{-eta d(x)}$$</li>
+                    <li><strong>Low-Light &amp; Extreme Exposure ($\mathbf{I}_E$)</strong>: Non-linear photometric sensor under-illumination with dynamic range clipping.</li>
+                </ul>
+            </section>
+
+            <section id="architectures">
+                <h2>3. Architectural Taxonomy</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Architecture</th>
+                                <th>Target Degradation</th>
+                                <th>Core Innovation</th>
+                                <th>Detailed Subpage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>NAFNet</strong></td>
+                                <td>Deblurring &amp; Denoising</td>
+                                <td>SimpleGate &amp; Simple Channel Attention (SCA) without non-linear activations</td>
+                                <td><a href="nafnet.html">NAFNet Whitepaper</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>MPRNet</strong></td>
+                                <td>Deraining</td>
+                                <td>Cross-Stage Feature Fusion (CSFF) and Supervised Attention Modules (SAM)</td>
+                                <td><a href="mprnet.html">MPRNet Whitepaper</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>MIRNet v2</strong></td>
+                                <td>Low-Light &amp; Exposure</td>
+                                <td>Selective Kernel Feature Fusion (SKFF) across multi-resolution parallel branches</td>
+                                <td><a href="mirnet.html">MIRNet Whitepaper</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>FFANet</strong></td>
+                                <td>Atmospheric Dehazing</td>
+                                <td>Feature Attention (FA) blocks combining pixel attention and channel attention</td>
+                                <td><a href="ffanet.html">FFANet Whitepaper</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="loss-formulations">
+                <h2>4. Mathematical Loss Formulations</h2>
+                <p>Reconstruction loss is anchored in edge-aware Charbonnier and Perceptual guidance:</p>
+                $$\mathcal{L}_{	ext{Restoration}} = \sqrt{\|\mathbf{I}_{	ext{pred}} - \mathbf{I}_{	ext{gt}}\|^2 + \epsilon^2} + \lambda_{	ext{edge}} \sqrt{\|
+abla \mathbf{I}_{	ext{pred}} - 
+abla \mathbf{I}_{	ext{gt}}\|^2 + \epsilon^2} + \lambda_{	ext{perc}} \mathcal{L}_{	ext{LPIPS}}(\mathbf{I}_{	ext{pred}}, \mathbf{I}_{	ext{gt}})$$
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. SOTA Architectural Performance Matrix</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model Key</th>
+                                <th>Target Dataset Manifold</th>
+                                <th>Resolution Ladder</th>
+                                <th>Target PSNR</th>
+                                <th>Target SSIM</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>nafnet_debluring</code></td>
+                                <td><code>LemGendizedNafNetDebluringLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 33.90 dB</td>
+                                <td>&ge; 0.970</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>nafnet_denoising</code></td>
+                                <td><code>LemGendizedNafNetDenoisingLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 40.20 dB</td>
+                                <td>&ge; 0.965</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>mprnet_deraining</code></td>
+                                <td><code>LemGendizedMprNetDerainingLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 32.50 dB</td>
+                                <td>&ge; 0.940</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>mirnet_exposure</code></td>
+                                <td><code>LemGendizedMirNetExposureLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 23.50 dB</td>
+                                <td>&ge; 0.880</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>mirnet_lowlight</code></td>
+                                <td><code>LemGendizedMirNetLowlightLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 24.80 dB</td>
+                                <td>&ge; 0.890</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>ffanet_indoor</code></td>
+                                <td><code>LemGendizedFfaNetIndoorLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 36.50 dB</td>
+                                <td>&ge; 0.985</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                            <tr>
+                                <td><code>ffanet_outdoor</code></td>
+                                <td><code>LemGendizedFfaNetOutdoorLarge</code></td>
+                                <td>256 &rarr; 384 &rarr; 512</td>
+                                <td>&ge; 34.00 dB</td>
+                                <td>&ge; 0.975</td>
+                                <td>Trained / Active</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="deployment">
+                <h2>6. Universal Hardware Deployment</h2>
+                <p>All four restoration architectures are fully compiled for high-speed edge inference using ONNX Opset 17 and WebGPU shader backends, enabling zero-copy tensor execution on consumer-grade desktop hardware and in-browser runtimes.</p>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>The Dedicated Image Restoration Suite provides high-fidelity, single-task image recovery across classical optical distortions, establishing the benchmark standards for the entire LemGendary ecosystem.</p>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

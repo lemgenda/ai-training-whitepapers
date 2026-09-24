@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Quality Assessment & Authenticity Suite - LemGendary AI</title>
+    <meta name="description" content="Deep Neural Assessment of Aesthetic Composition, Technical Integrity, and Generative Authenticity via Resonance Loss">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="nima-master.html" class="tab-link active">NIMA Master</a>
+                <a href="nima-quality.html" class="tab-link">Unified Architecture</a>
+                <a href="nima-mobile.html" class="tab-link">Aesthetic Mobile</a>
+                <a href="nima-efficientnet.html" class="tab-link">Aesthetic EfficientNetV2</a>
+                <a href="nima-pro.html" class="tab-link">Aesthetic Pro Swin-v2</a>
+                <a href="nima-technical.html" class="tab-link">Technical Quality</a>
+                <a href="nima-authenticity.html" class="tab-link">Authenticity & DeepFake</a>
+            </div>
+            <h1>Image Quality Assessment & Authenticity Suite</h1>
+            <p class="subtitle">Deep Neural Assessment of Aesthetic Composition, Technical Integrity, and Generative Authenticity via Resonance Loss</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 07 QUALITY</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#taxonomy">2. Four-Quadrant Quality Taxonomy</a></li>
+                <li><a href="#resonance-loss">3. Resonance Loss & Rank Optimization</a></li>
+                <li><a href="#models">4. Model Family Architecture</a></li>
+                <li><a href="#benchmarks">5. SOTA Architectural Performance Matrix</a></li>
+                <li><a href="#conclusion">6. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>LemGendary NIMA Suite (Category 07)</strong> provides a multi-dimensional perceptual assessment system spanning three fundamental axes of vision evaluation: <strong>Aesthetic Appeal</strong>, <strong>Technical Quality</strong>, and <strong>Generative Media Authenticity (Real vs. AI)</strong>. Leveraging Earth Mover's Distance (EMD) and Soft-Spearman rank correlation loss, the suite maps continuous visual manifolds to human perceptual ratings without score saturation.</p>
+            </section>
+
+            <section id="taxonomy">
+                <h2>2. Four-Quadrant Quality Taxonomy</h2>
+                <p>Quality assessment decouples visual aesthetics from technical integrity across four distinct quadrants:</p>
+                <ul>
+                    <li><strong>Quadrant 1 (High Aesthetic / High Technical)</strong>: Masterpiece compositions with sharp focus, flawless lighting, and rich artistic impact.</li>
+                    <li><strong>Quadrant 2 (High Aesthetic / Low Technical)</strong>: Poetic compositions marred by optical aberrations, sensor noise, or motion blur.</li>
+                    <li><strong>Quadrant 3 (Low Aesthetic / Low Technical)</strong>: Corrupted images with heavy compression artifacts and deficient composition.</li>
+                    <li><strong>Quadrant 4 (Low Aesthetic / High Technical)</strong>: Razor-sharp, clinically clean images devoid of artistic balance or emotional resonance.</li>
+                </ul>
+            </section>
+
+            <section id="resonance-loss">
+                <h2>3. Resonance Loss &amp; Rank Optimization</h2>
+                <p>The core loss formulation combines Earth Mover's Distance over probability mass functions (PMF) with differentiable temperature-anchored rank correlation:</p>
+                $$\mathcal{L}_{	ext{EMD}}(p, \hat{p}) = \left( rac{1}{N} \sum_{k=1}^N |	ext{CDF}_p(k) - 	ext{CDF}_{\hat{p}}(k)|^r 
+ight)^{1/r}$$
+                $$\mathcal{L}_{	ext{Resonance}} = \mathcal{L}_{	ext{EMD}} + \lambda_{	ext{rank}} \mathcal{L}_{	ext{SoftSpearman}}$$
+            </section>
+
+            <section id="models">
+                <h2>4. Model Family Architecture</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model Key</th>
+                                <th>Target Objective</th>
+                                <th>Backbone</th>
+                                <th>Resolution</th>
+                                <th>Target Metric</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>nima_aesthetic_mobile</code></td>
+                                <td>Mobile Aesthetic Scoring</td>
+                                <td>MobileNetV3-Small</td>
+                                <td>224x224</td>
+                                <td>SRCC &ge; 0.650</td>
+                            </tr>
+                            <tr>
+                                <td><code>nima_aesthetic_efficientnet</code></td>
+                                <td>Global Composition Scorer</td>
+                                <td>EfficientNetV2-S</td>
+                                <td>384x384</td>
+                                <td>SRCC &ge; 0.700</td>
+                            </tr>
+                            <tr>
+                                <td><code>nima_aesthetic_pro</code></td>
+                                <td>Professional Artistic Scorer</td>
+                                <td>Swin-v2-T Transformer</td>
+                                <td>384x384</td>
+                                <td>SRCC &ge; 0.720</td>
+                            </tr>
+                            <tr>
+                                <td><code>nima_technical</code></td>
+                                <td>Optical Artifact Detection</td>
+                                <td>EfficientNetV2-S</td>
+                                <td>384x384</td>
+                                <td>SRCC &ge; 0.750</td>
+                            </tr>
+                            <tr>
+                                <td><code>nima_authenticity</code></td>
+                                <td>AI vs. Real Classification</td>
+                                <td>EfficientNetV2-S</td>
+                                <td>384x384</td>
+                                <td>Accuracy &ge; 0.940</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. SOTA Architectural Performance Matrix</h2>
+                <p>Comprehensive training curves, ablation studies, and architectural deep-dives are documented in the <a href="nima-quality.html">Unified NIMA Technical Whitepaper</a>.</p>
+            </section>
+
+            <section id="conclusion">
+                <h2>6. Conclusion</h2>
+                <p>Category 07 provides complete visual quality perception, delivering quantitative scoring for automated quality gates and dataset synthesis pipelines.</p>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Film Restoration & Super-Resolution Master Suite - LemGendary AI</title>
+    <meta name="description" content="Architectural Specification for Universal Film Restorer, UltraZoom Master Model, UPN v2 Parameter Regressor, and Professional Multi-Task Restoration MoE">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <h1>Advanced Film Restoration & Super-Resolution Master Suite</h1>
+            <p class="subtitle">Architectural Specification for Universal Film Restorer, UltraZoom Master Model, UPN v2 Parameter Regressor, and Professional Multi-Task Restoration MoE</p>
+            <div class="meta">
+                <span>Category 14 RESTORATION</span><span>Version 1.0.0</span><span>Domain: Advanced Restoration</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2>Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color);">Back to Index</a></li>
+            <li><a href="#abstract">1. Abstract</a></li>
+            <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
+            <li><a href="#foundations">3. Shared Foundations</a></li>
+            <li><a href="#film">4.1 Film Restorer</a></li>
+            <li><a href="#ultrazoom">4.2 UltraZoom</a></li>
+            <li><a href="#upn">4.3 UPN v2</a></li>
+            <li><a href="#multitask">4.4 Multi-Task MoE</a></li>
+            <li><a href="#challenges">5. Challenges & Resilience</a></li>
+            <li><a href="#deployment">6. Deployment Strategy</a></li>
+            <li><a href="#benchmarks">7. Performance Matrix</a></li>
+            <li><a href="#conclusion">8. Conclusion</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The Advanced Restoration and Super-Resolution Master Suite (Category 14) unifies four specialized models: Universal Film Restorer, UltraZoom Super-Resolution, UPN v2 Parameter Predictor, and the Professional Multi-Task Restoration MoE network.</p>
+            </section>
+
+            <section id="taxonomy">
+                <h2>2. Visual Taxonomy: Restoration Manifolds</h2>
+                <p>Processes archival physical film damage, sub-pixel optical downsampling, degradation parameter regression, and compound degradations across four dedicated manifolds.</p>
+            </section>
+
+            <section id="foundations">
+                <h2>3. Shared Foundations & Universal Acceleration</h2>
+                <p>Loss optimization combines Charbonnier reconstruction with VGG perceptual supervision:</p>
+                <div class="math-block">$$\mathcal{L}_{\text{total}} = \sqrt{\|I_{\text{restored}} - I_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perceptual}} \|\phi(I_{\text{restored}}) - \phi(I_{\text{gt}})\|_2^2$$</div>
+            </section>
+
+            <section id="film">
+                <h2>4.1 LemGendary Universal Film Restorer</h2>
+                <p><strong>Architecture:</strong> Deep Residual Dense Autoencoder.</p>
+                <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUniversalFilmRestorer.pt</code>).</p>
+                <p><strong>Manifold:</strong> <code>LemGendizedFilmRestorerLarge</code> (Ladder: [256, 384, 512]).</p>
+                <p><strong>SOTA Targets:</strong> PSNR &ge; 24.0 dB, SSIM &ge; 0.800, LPIPS &le; 0.250.</p>
+            </section>
+
+            <section id="ultrazoom">
+                <h2>4.2 LemGendary UltraZoom Master Model</h2>
+                <p><strong>Architecture:</strong> Sub-Pixel ESPCN Super-Resolution Network.</p>
+                <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUltraZoom(Master).pt</code>).</p>
+                <p><strong>Manifold:</strong> <code>LemGendizedUltraZoomLarge</code> (Ladder: [256, 384, 512]).</p>
+                <p><strong>SOTA Targets:</strong> PSNR &ge; 34.0 dB, SSIM &ge; 0.950, LPIPS &le; 0.040.</p>
+            </section>
+
+            <section id="upn">
+                <h2>4.3 LemGendary UPN v2 Parameter Predictor</h2>
+                <p><strong>Architecture:</strong> MobileNet-Lite Parameter Regressor.</p>
+                <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUPN(v2)Modular.pt</code>).</p>
+                <p><strong>Manifold:</strong> <code>LemGendizedUpnV2Large</code> (Ladder: [128, 192, 256]).</p>
+                <p><strong>SOTA Targets:</strong> MAE &le; 0.050.</p>
+            </section>
+
+            <section id="multitask">
+                <h2>4.4 LemGendary Professional Multi-Task Restoration MoE</h2>
+                <p><strong>Architecture:</strong> Shared Encoder Multi-Task Mixture-of-Experts (MoE).</p>
+                <p><strong>Status:</strong> Training In-Progress / Pre-Training Architectural Specification.</p>
+                <p><strong>Manifold:</strong> <code>LemGendizedProfessionalMultitaskRestorationLarge</code> (Ladder: [256, 384, 512]).</p>
+                <p><strong>SOTA Targets:</strong> PSNR &ge; 32.0 dB, SSIM &ge; 0.930, LPIPS &le; 0.070.</p>
+            </section>
+
+            <section id="challenges">
+                <h2>5. Challenges &amp; Resilience Architecture</h2>
+                <p>Task interference across multi-task heads is neutralized using gradient projection and normalized loss scaling, while sub-pixel shuffle layers are initialized to avoid checkerboard artifacts.</p>
+            </section>
+
+            <section id="deployment">
+                <h2>6. Deployment Strategy</h2>
+                <p>Engines deploy via TensorRT and ONNX Runtime with FP16 mixed-precision and dynamic batch sizing.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>7. SOTA Architectural Performance Matrix</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model Key</th>
+                            <th>Architecture</th>
+                            <th>Target Manifold</th>
+                            <th>Resolution Ladder</th>
+                            <th>Target Metric</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>film_restorer</code></td><td>Residual Dense Autoencoder</td><td><code>LemGendizedFilmRestorerLarge</code></td><td>[256, 384, 512]</td><td>PSNR 24.0 dB, SSIM 0.80</td><td>Checkpoint Trained</td></tr>
+                        <tr><td><code>ultrazoom</code></td><td>Sub-Pixel ESPCN</td><td><code>LemGendizedUltraZoomLarge</code></td><td>[256, 384, 512]</td><td>PSNR 34.0 dB, SSIM 0.95</td><td>Checkpoint Trained</td></tr>
+                        <tr><td><code>upn_v2</code></td><td>MobileNet-Lite Regressor</td><td><code>LemGendizedUpnV2Large</code></td><td>[128, 192, 256]</td><td>MAE 0.050</td><td>Checkpoint Trained</td></tr>
+                        <tr><td><code>professional_multitask_restoration</code></td><td>Shared Encoder MoE</td><td><code>LemGendizedProfessionalMultitaskRestorationLarge</code></td><td>[256, 384, 512]</td><td>PSNR 32.0 dB, SSIM 0.93</td><td>In-Progress / Pre-Training</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="conclusion">
+                <h2>8. Conclusion</h2>
+                <p>The Advanced Restoration Suite delivers an industrial framework for diverse restorative tasks, structured for automated telemetry and weights synchronization as training progresses.</p>
+            </section>
+    
+        </main>
+
+        <footer>
+            <p>LemGendary AI Ecosystem &copy; 2026. All rights reserved. Master Technical Specification v16.7.3.</p>
+        </footer>
+    </div>
+</body>
+</html>

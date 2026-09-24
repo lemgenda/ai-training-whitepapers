@@ -3,6 +3,7 @@
 
 **Author**: Lem Treursić
 **Version**: 3.2.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14)
+**Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---

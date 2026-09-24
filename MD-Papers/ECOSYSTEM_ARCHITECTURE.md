@@ -1,6 +1,15 @@
 # LemGendary Ecosystem: Master Architecture Map & Multi-Sidecar Topology
 
-## Category 12 ARCH | LemGendary AI Documentation Hub
+## Category 01 ARCH | LemGendary AI Documentation Hub
+
+**Integrated Subpages**:
+
+* [Environment Manager](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_ENV_MANAGER.md)
+* [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md)
+* [Physical Degradation Engine](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DEGRADATION_ENGINE.md)
+* [Master Training Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md)
+* [AI Studio Desktop GUI Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_AI_STUDIO_GUI.md)
+* [Unified Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
 
 ---
 

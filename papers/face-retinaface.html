@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetinaFace: Multi-Scale Facial Landmark Localization - LemGendary AI</title>
+    <meta name="description" content="Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="face-suite.html" class="tab-link">Face Suite Hub</a>
+                <a href="face-codeformer.html" class="tab-link">CodeFormer</a>
+                <a href="face-parsenet.html" class="tab-link">ParseNet</a>
+                <a href="face-retinaface.html" class="tab-link active">RetinaFace</a>
+            </div>
+            <h1>RetinaFace: Multi-Scale Facial Landmark Localization</h1>
+            <p class="subtitle">Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 08 FACE</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#architecture">2. Feature Pyramid & Deformable Convolutions</a></li>
+                <li><a href="#multitask">3. Tri-Head Multi-Task Detection</a></li>
+                <li><a href="#loss">4. Multi-Task Objective & OHEM</a></li>
+                <li><a href="#benchmarks">5. WIDER Face & Landmark Benchmarks</a></li>
+                <li><a href="#conclusion">6. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). Utilizing a lightweight MobileNet-0.25 backbone paired with Deformable Convolutions and a Feature Pyramid Network (FPN), RetinaFace achieves robust detection under extreme angles, harsh lighting, and microscopic face scales (&lt; 16px).</p>
+            </section>
+
+            <section id="architecture">
+                <h2>2. Feature Pyramid & Deformable Convolutions</h2>
+                <p>Standard convolutions apply rigid sampling grids. RetinaFace applies Deformable Convolutions (DCN v2) across FPN levels \(P_2, P_3, P_4, P_5\) to adaptively deform receptive fields to match natural facial contours regardless of pitch, yaw, or roll.</p>
+            </section>
+
+            <section id="multitask">
+                <h2>3. Tri-Head Multi-Task Detection</h2>
+                <p>Each anchor predicts three joint outputs: (1) Face classification probability \(p_i\), (2) Bounding box coordinate offsets \(t_i\), and (3) Five 2D facial landmark coordinates \(l_i\).</p>
+            </section>
+
+            <section id="loss">
+                <h2>4. Multi-Task Objective & OHEM</h2>
+                <p>$$\mathcal{L} = \mathcal{L}_{\text{cls}}(p_i, p_i^*) + \lambda_1 p_i^* \text{SmoothL1}(t_i, t_i^*) + \lambda_2 p_i^* \text{SmoothL1}(l_i, l_i^*)$$</p>
+                <p>Online Hard Example Mining (OHEM) balances gradients during anchor classification.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. WIDER Face & Landmark Benchmarks</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Backbone Variant</th>
+                                <th>WIDER Hard AP</th>
+                                <th>NME (5-Point)</th>
+                                <th>Inference (CPU / GTX 1650)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MobileNet-0.25 (Edge)</td>
+                                <td>82.4%</td>
+                                <td>0.061</td>
+                                <td>14 ms / 3 ms</td>
+                            </tr>
+                            <tr>
+                                <td>ResNet-50 (Accuracy)</td>
+                                <td>91.8%</td>
+                                <td>0.048</td>
+                                <td>45 ms / 9 ms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>6. Conclusion</h2>
+                <p>RetinaFace anchors the spatial alignment pipeline for all downstream face analysis and restoration tasks.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # LemGendary Ecosystem: Canonical Glossary & Terminology Specification
 
-## Category 00 | LemGendary AI Documentation Hub
+## Category 12 GLOSSARY | LemGendary AI Documentation Hub
 
 ---
 

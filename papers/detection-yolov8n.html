@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLOv8n Multi-Task Perception Architecture - LemGendary AI</title>
+    <meta name="description" content="Anchor-Free CSPDarknet Object Detection, Categorical Classification & 17-Point Pose Estimation">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="detection-master.html" class="tab-link">Detection Hub</a>
+                <a href="detection-yolov8n.html" class="tab-link active">YOLOv8n Multi-Task</a>
+                <a href="classification-nsfw.html" class="tab-link">NSFW Safety Classifier</a>
+            </div>
+            <h1>YOLOv8n Multi-Task Perception Architecture</h1>
+            <p class="subtitle">Anchor-Free CSPDarknet Object Detection, Categorical Classification & 17-Point Pose Estimation</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 09 VISION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#architecture">2. Anchor-Free CSPDarknet & PANet</a></li>
+                <li><a href="#decoupled-head">3. Decoupled Head & TAL Assignment</a></li>
+                <li><a href="#loss">4. CIoU & Distribution Focal Loss (DFL)</a></li>
+                <li><a href="#pose">5. 17-Point Human Keypoint Estimation</a></li>
+                <li><a href="#benchmarks">6. Performance Targets & WebGPU</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>LemGendary YOLOv8n Multi-Task Model</strong> provides a lightweight, anchor-free visual perception engine capable of simultaneous object detection, categorical classification, and 17-point human keypoint pose estimation. Operating on the compiled manifold <code>LemGendizedYoloV8n</code>, the network replaces heuristic anchor boxes with continuous bounding box distribution modeling. Decoupled detection heads eliminate task conflicts between classification and spatial regression, achieving high-throughput inference (&lt; 8ms on consumer GPUs) suitable for real-time edge processing.</p>
+            </section>
+
+            <section id="architecture">
+                <h2>2. Anchor-Free CSPDarknet & PANet</h2>
+                <p>The backbone utilizes modified CSPDarknet53 with C2f modules that split feature channels across residual bottleneck branches, maximizing gradient flow while minimizing memory bandwidth. The neck employs a Path Aggregation Network (PANet) fusing multi-scale feature hierarchies \(P_3, P_4, P_5\) via top-down and bottom-up pathways.</p>
+            </section>
+
+            <section id="decoupled-head">
+                <h2>3. Decoupled Head & TAL Assignment</h2>
+                <p>Unlike anchor-based YOLO models that share classification and localization convolutional layers, YOLOv8n features a decoupled head where classification and regression branches branch independently. Target assignment is governed by Task-Aligned Assigner (TAL):</p>
+                <p>$$t = s^\alpha \times \text{IoU}^\beta$$</p>
+                <p>where \(s\) is the classification score and \(\text{IoU}\) is the spatial bounding overlap.</p>
+            </section>
+
+            <section id="loss">
+                <h2>4. CIoU & Distribution Focal Loss (DFL)</h2>
+                <p>Bounding box regression optimizes Complete IoU (CIoU) and Distribution Focal Loss (DFL) to model boundary uncertainty:</p>
+                <p>$$\mathcal{L}_{\text{box}} = \text{CIoU}(b, b^{\text{gt}}) + \lambda_{\text{dfl}} \mathcal{L}_{\text{DFL}}(b, b^{\text{gt}})$$</p>
+                <p>$$\mathcal{L}_{\text{DFL}}(S_i, S_{i+1}) = -((q_{i+1} - q)\log(S_i) + (q - q_i)\log(S_{i+1}))$$</p>
+            </section>
+
+            <section id="pose">
+                <h2>5. 17-Point Human Keypoint Estimation</h2>
+                <p>The pose head predicts 17 standard COCO anatomical keypoints with visibility scores \(v_i \in [0, 1]\), optimized via Object Keypoint Similarity (OKS) loss:</p>
+                <p>$$\text{OKS} = \frac{\sum_i \exp(-d_i^2 / 2s^2 k_i^2) \delta(v_i > 0)}{\sum_i \delta(v_i > 0)}$$</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>6. Performance Targets & WebGPU</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Target Task</th>
+                                <th>Primary Metric</th>
+                                <th>Target Goal</th>
+                                <th>Inference Latency (GTX 1650)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Object Detection</td>
+                                <td>mAP50-95</td>
+                                <td>&ge; 0.390</td>
+                                <td>7.2 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Classification</td>
+                                <td>Top-1 Accuracy</td>
+                                <td>&ge; 78.4%</td>
+                                <td>3.1 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Pose Estimation</td>
+                                <td>mAP50 (Pose)</td>
+                                <td>&ge; 0.540</td>
+                                <td>8.4 ms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>YOLOv8n Multi-Task unifies spatial detection, categorization, and human pose estimation within a resilient, anchor-free framework optimized for universal hardware.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

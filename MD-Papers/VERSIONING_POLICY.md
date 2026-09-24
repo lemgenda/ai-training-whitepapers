@@ -1,6 +1,8 @@
 # LemGendary Ecosystem: Canonical Versioning Policy & Contract Freezing
 
-## Category 00 POLICY | LemGendary AI Documentation Hub
+## Category 01.5 | Subpage of Master Ecosystem Architecture
+
+**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

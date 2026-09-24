@@ -2,6 +2,7 @@
 
 **Author**: Lem Treursić  
 **Version**: 1.0.0 - Unified Multi-Modal Release (2026 Specialization)  
+**Category**: Category 05 HYBRID  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---

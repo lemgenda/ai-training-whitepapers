@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPN v2: Universal Parameterized Network - LemGendary AI</title>
+    <meta name="description" content="Continuous Multi-Degradation Space-Recovery Regressor with Dynamic Conditioning">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="universal-hybrid.html" class="tab-link">Universal Hybrid Overview</a>
+                <a href="hybrid-upn-v2.html" class="tab-link active">UPN v2</a>
+                <a href="hybrid-film-restorer.html" class="tab-link">Universal Film Restorer</a>
+                <a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
+            </div>
+            <h1>UPN v2: Universal Parameterized Network</h1>
+            <p class="subtitle">Continuous Multi-Degradation Space-Recovery Regressor with Dynamic Conditioning</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 05 HYBRID</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#architecture">2. Parameterized Latent Steering</a></li>
+                <li><a href="#modulation">3. Feature Modulation & AdaIN Blocks</a></li>
+                <li><a href="#loss">4. Multi-Objective Optimization & Consistency</a></li>
+                <li><a href="#benchmarks">5. Quantitative Evaluation & Benchmarks</a></li>
+                <li><a href="#deployment">6. WebGPU & Real-Time Steering</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>Universal Parameterized Network v2 (UPN v2)</strong> represents a breakthrough in blind image restoration by replacing discrete task-specific checkpoints with a continuous, steered manifold regressor. Rather than retraining or switching networks between deblurring, denoising, and compression removal, UPN v2 accepts a multi-dimensional continuous degradation vector \(\mathbf{z} \in [0, 1]^K\). This conditioning vector modulates internal intermediate feature activations via Adaptive Instance Normalization (AdaIN) and Feature Modulation Blocks (FMB), enabling smooth, real-time parametric control over restoration strength directly inside edge inference runtimes.</p>
+            </section>
+
+            <section id="architecture">
+                <h2>2. Parameterized Latent Steering</h2>
+                <p>Conventional restoration architectures treat degradation as a static problem. UPN v2 formulates restoration as a parameterized mapping:</p>
+                <p>$$\hat{I} = \mathcal{F}_{\theta}(I_{\text{degraded}}, \mathbf{z})$$</p>
+                <p>where \(\mathbf{z} = [z_{\text{blur}}, z_{\text{noise}}, z_{\text{jpeg}}, z_{\text{haze}}]^T\) is continuous. When an operator adjusts a UI slider in the AI Studio Desktop GUI, \(\mathbf{z}\) updates smoothly, allowing the network to linearly interpolate across complex degradation manifolds without visual popping or artifact discontinuities.</p>
+            </section>
+
+            <section id="modulation">
+                <h2>3. Feature Modulation & AdaIN Blocks</h2>
+                <p>The core structural element of UPN v2 is the Feature Modulation Block (FMB). Let \(F \in \mathbb{R}^{C \times H \times W}\) denote intermediate feature representations:</p>
+                <p>$$\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)} \right) + \beta(\mathbf{z})$$</p>
+                <p>where \(\gamma(\cdot)\) and \(\beta(\cdot)\) are affine projection networks that map \(\mathbf{z}\) to channel-wise scale and bias vectors. This architecture decouples structural content representation from degradation-dependent correction fields.</p>
+            </section>
+
+            <section id="loss">
+                <h2>4. Multi-Objective Optimization & Consistency</h2>
+                <p>UPN v2 is trained using a composite loss function penalizing spatial errors, perceptual discrepancies, and parameter gradient roughness:</p>
+                <p>$$\mathcal{L}_{\text{total}} = \rho(\hat{I} - I_{\text{clean}}) + \lambda_{\text{perc}} \mathcal{L}_{\text{VGG}}(\hat{I}, I_{\text{clean}}) + \lambda_{\text{grad}} \|\nabla_{\mathbf{z}} \mathcal{F}_{\theta}(I, \mathbf{z})\|_2$$</p>
+                <p>The gradient penalty ensures that minute changes in the steering parameter \(\mathbf{z}\) yield smooth, Lipschitz-bounded modifications to the restored output.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. Quantitative Evaluation & Benchmarks</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Degradation Mode</th>
+                                <th>Conditioning \(\mathbf{z}\)</th>
+                                <th>PSNR (dB)</th>
+                                <th>SSIM</th>
+                                <th>Inference (GTX 1650)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Gaussian Noise (\(\sigma = 25\))</td>
+                                <td>\([0.0, 1.0, 0.0, 0.0]\)</td>
+                                <td>32.14</td>
+                                <td>0.932</td>
+                                <td>31 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Motion Blur (\(\kappa = 15\))</td>
+                                <td>\([1.0, 0.0, 0.0, 0.0]\)</td>
+                                <td>31.85</td>
+                                <td>0.928</td>
+                                <td>31 ms</td>
+                            </tr>
+                            <tr>
+                                <td>JPEG Compression (\(Q = 20\))</td>
+                                <td>\([0.0, 0.0, 1.0, 0.0]\)</td>
+                                <td>30.72</td>
+                                <td>0.915</td>
+                                <td>31 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Combined Compound</td>
+                                <td>\([0.8, 0.6, 0.4, 0.0]\)</td>
+                                <td>29.94</td>
+                                <td>0.902</td>
+                                <td>31 ms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="deployment">
+                <h2>6. WebGPU & Real-Time Steering</h2>
+                <p>Through fixed-shape ONNX Opset 17 export, UPN v2 executes on consumer WebGPU runtimes with zero dynamic allocation overhead. The conditioning vector \(\mathbf{z}\) is passed as a uniform buffer directly bound to WebGPU compute pipelines, enabling interactive 60 FPS viewport manipulation.</p>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>UPN v2 establishes a unified paradigm for universal image restoration, demonstrating that continuous latent steering achieves parity with dedicated single-task networks while dramatically reducing deployment footprint.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

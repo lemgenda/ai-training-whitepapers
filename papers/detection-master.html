@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Detection & Moderation Suite - LemGendary AI</title>
+    <meta name="description" content="Object Localization, Spatial Classification, Pose Estimation, and Multi-Class Content Moderation">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="detection-master.html" class="tab-link active">Detection Hub</a>
+                <a href="detection-yolov8n.html" class="tab-link">YOLOv8n Multi-Task</a>
+                <a href="classification-nsfw.html" class="tab-link">NSFW Safety Classifier</a>
+            </div>
+            <h1>Real-Time Detection & Moderation Suite</h1>
+            <p class="subtitle">Object Localization, Spatial Classification, Pose Estimation, and Multi-Class Content Moderation</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 09 VISION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#taxonomy">2. Visual Manifolds</a></li>
+                <li><a href="#yolo">3. YOLOv8n Multi-Task Architecture</a></li>
+                <li><a href="#nsfw">4. Universal NSFW Classifier</a></li>
+                <li><a href="#benchmarks">5. SOTA Architectural Performance Matrix</a></li>
+                <li><a href="#conclusion">6. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>Real-Time Detection &amp; Moderation Suite (Category 09)</strong> decouples real-time geometric scene perception from deep generative moderation. It integrates two specialized vision networks: <strong>YOLOv8n</strong> (an anchor-free multi-task detection, classification, and 17-point pose localization engine) and the <strong>Universal NSFW Classifier</strong> (an EfficientNetV2-S categorical safety filter separating clean photographic art from inappropriate media).</p>
+            </section>
+
+            <section id="taxonomy">
+                <h2>2. Visual Manifolds</h2>
+                <ul>
+                    <li><strong>Detection Manifold (<code>LemGendizedYoloV8n</code>)</strong>: Spatially dense annotations across varied aspect ratios, object scales, and occlusions.</li>
+                    <li><strong>Safety Manifold (<code>LemGendizedClassificationMasterManifoldLarge</code>)</strong>: High-entropy categorical distribution spanning neutral, artistic drawings, suggestive content, explicit pornography, and violence.</li>
+                </ul>
+            </section>
+
+            <section id="yolo">
+                <h2>3. YOLOv8n Multi-Task Architecture</h2>
+                <p>Operating on the CSPDarknet53 backbone with PANet feature fusion, YOLOv8n eliminates anchor box generation, predicting spatial bounding boxes via Distributed Focal Loss (DFL) and Complete IoU (CIoU) regression.</p>
+                <p>Dedicated documentation: <a href="detection-yolov8n.html">YOLOv8n Multi-Task Whitepaper</a>.</p>
+            </section>
+
+            <section id="nsfw">
+                <h2>4. Universal NSFW Classifier</h2>
+                <p>Built upon the EfficientNetV2-S backbone, the Universal NSFW Classifier uses categorical focal cross-entropy loss to achieve ultra-low false negative rates (&lt; 0.5%) for sensitive content filtering.</p>
+                <p>Dedicated documentation: <a href="classification-nsfw.html">Universal NSFW Classifier Whitepaper</a>.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. SOTA Architectural Performance Matrix</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model Key</th>
+                                <th>Task Domain</th>
+                                <th>Architecture</th>
+                                <th>Target Metric</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>yolov8n</code></td>
+                                <td>Detection, Class, Pose</td>
+                                <td>CSPDarknet53 + PANet</td>
+                                <td>mAP50 &ge; 0.540, mAP50-95 &ge; 0.390</td>
+                                <td>In-Progress / Pre-Training</td>
+                            </tr>
+                            <tr>
+                                <td><code>universal_nsfw_classification</code></td>
+                                <td>Content Moderation</td>
+                                <td>EfficientNetV2-S Categorical</td>
+                                <td>Accuracy &ge; 0.980</td>
+                                <td>In-Progress / Pre-Training</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>6. Conclusion</h2>
+                <p>Category 09 delivers edge-capable spatial localization and content safety enforcement for universal ML workflows.</p>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

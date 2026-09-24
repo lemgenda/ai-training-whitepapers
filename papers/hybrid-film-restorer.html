@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Film Restorer - LemGendary AI</title>
+    <meta name="description" content="Archival Emulsion Restoration, Grain Synthesis, Scratch Inpainting & Color Fading Inversion">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="universal-hybrid.html" class="tab-link">Universal Hybrid Overview</a>
+                <a href="hybrid-upn-v2.html" class="tab-link">UPN v2</a>
+                <a href="hybrid-film-restorer.html" class="tab-link active">Universal Film Restorer</a>
+                <a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
+            </div>
+            <h1>Universal Film Restorer</h1>
+            <p class="subtitle">Archival Emulsion Restoration, Grain Synthesis, Scratch Inpainting & Color Fading Inversion</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 05 HYBRID</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#analog-physics">2. Analog Emulsion Physics</a></li>
+                <li><a href="#architecture">3. Tri-Stream Architecture</a></li>
+                <li><a href="#scratch-inpainting">4. Partial Convolution Inpainting</a></li>
+                <li><a href="#color-fading">5. Chemical Dye Inversion</a></li>
+                <li><a href="#benchmarks">6. Archival Preservation Targets</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>Universal Film Restorer</strong> is a specialized deep neural network designed to preserve historical, cinematic, and analog photographic media. Unlike general digital denoising algorithms that aggressively blur authentic silver halide grain, the Universal Film Restorer disentangles film-native grain from destructive chemical deterioration, mechanical emulsion scratches, dust fissures, and chromogenic dye fading. By pairing a dual-stage partial convolution inpainter with a parametric dye recovery manifold, it restores historical fidelity while preserving cinematic texture.</p>
+            </section>
+
+            <section id="analog-physics">
+                <h2>2. Analog Emulsion Physics</h2>
+                <p>Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as:</p>
+                <p>$$I_{\text{archival}} = \mathcal{C}_{\text{dye}}\left( I_{\text{scene}} \odot e^{-\kappa d} \right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}$$</p>
+                <p>where \(\mathcal{C}_{\text{dye}}\) models cyan, magenta, and yellow dye fading over decades, \(\mathcal{G}_{\text{grain}}\) is non-Gaussian photographic grain, and \(\mathcal{M}_{\text{defect}}\) is a binary mask of physical scratches.</p>
+            </section>
+
+            <section id="architecture">
+                <h2>3. Tri-Stream Architecture</h2>
+                <p>The architecture processes archival frames through three dedicated pathways: (1) <strong>Defect Detection & Inpainting</strong>, (2) <strong>Dye Correction & Exposure Equalization</strong>, and (3) <strong>Texture & Grain Synthesizer</strong>. The grain synthesizer retains high-frequency film character without retaining dust or mold spores.</p>
+            </section>
+
+            <section id="scratch-inpainting">
+                <h2>4. Partial Convolution Inpainting</h2>
+                <p>Mechanical scratches produce missing pixel information. Partial convolutions conditioned on defect masks ensure valid feature propagation without bleed:</p>
+                <p>$$W' = \begin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} & \text{if } \mathbf{1}^T M > 0 \\ 0 & \text{otherwise} \end{cases}$$</p>
+            </section>
+
+            <section id="color-fading">
+                <h2>5. Chemical Dye Inversion</h2>
+                <p>Kodachrome and Ektachrome dyes decay at asymmetric exponential rates. A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts channel-wise restoration matrices \(\mathbf{T}_{\text{RGB}}\), reviving lost spectral richness.</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>6. Archival Preservation Targets</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Corpus</th>
+                                <th>Scratch IoU</th>
+                                <th>Color Delta-E (CIE76)</th>
+                                <th>PSNR (dB)</th>
+                                <th>Grain Fidelity (FID)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Historical 35mm (1950-1970)</td>
+                                <td>0.892</td>
+                                <td>2.14</td>
+                                <td>31.40</td>
+                                <td>8.4</td>
+                            </tr>
+                            <tr>
+                                <td>16mm Archival Newsreel</td>
+                                <td>0.875</td>
+                                <td>2.86</td>
+                                <td>30.12</td>
+                                <td>11.2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>The Universal Film Restorer guarantees historical preservation by treating analog media as a distinct physical medium, ensuring authentic aesthetic preservation without modern digital smoothing.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

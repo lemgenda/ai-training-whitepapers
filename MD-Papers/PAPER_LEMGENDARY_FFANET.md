@@ -3,6 +3,7 @@
 
 **Author**: Lem Treursić  
 **Version**: 2.6.0 - Dynamic VRAM Sync  
+**Category**: Category 04 RESTORATION  
 **Hardware**: NVIDIA / MPS / XPU
 
 ---

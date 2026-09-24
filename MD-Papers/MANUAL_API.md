@@ -695,7 +695,7 @@ All operational endpoints under `/api` requiring modification privileges enforce
 | `GET` | `/api/jobs/{id}/logs` | Required | Retrieve buffered execution log text or tail lines |
 | `POST` | `/api/jobs/compile` | Required | Queue a manifold compilation task |
 | `POST` | `/api/jobs/degrade` | Required | Queue a synthetic degradation derivation task |
-| `POST` | `/api/jobs/{id}/cancel`| Required | Terminate an active job subprocess |
+| `POST` | `/api/jobs/{id}/cancel` | Required | Terminate an active job subprocess |
 | `GET` | `/api/datasets` | None | Catalog compiled manifolds with size, sample counts, and container formats |
 | `GET` | `/api/datasets/{name}` | None | Retrieve `dataset_info.yaml` and class lists for a specific manifold |
 | `GET` | `/api/sources` | None | Catalog local `raw-sets` and configured upstream datasets |

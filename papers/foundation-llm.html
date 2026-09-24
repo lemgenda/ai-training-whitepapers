@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Large Language Models & Mixture-of-Experts (MoE) - LemGendary AI</title>
+    <meta name="description" content="Causal Decoder Transformers, Rotary Embeddings, SwiGLU & Sparse Expert Routing">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="foundation-models-master.html" class="tab-link">Foundation Hub</a>
+                <a href="foundation-diffusion.html" class="tab-link">Latent Diffusion</a>
+                <a href="foundation-image-to-text.html" class="tab-link">Image-to-Text VLM</a>
+                <a href="foundation-llm.html" class="tab-link active">LLM & MoE Decoders</a>
+            </div>
+            <h1>Large Language Models & Mixture-of-Experts (MoE)</h1>
+            <p class="subtitle">Causal Decoder Transformers, Rotary Embeddings, SwiGLU & Sparse Expert Routing</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 10 FOUNDATION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#decoder-architecture">2. Causal Decoder Architecture</a></li>
+                <li><a href="#rope-swiglu">3. RoPE & SwiGLU Formulations</a></li>
+                <li><a href="#moe-routing">4. Sparse Mixture-of-Experts Routing</a></li>
+                <li><a href="#kv-cache">5. KV Cache & Inference Throughput</a></li>
+                <li><a href="#specifications">6. Parameter Specifications & Scaling</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>LemGendary Large Language Model (LLM) Suite</strong> implements next-generation causal autoregressive Transformers incorporating <strong>Rotary Position Embeddings (RoPE)</strong>, <strong>SwiGLU activation functions</strong>, RMSNorm pre-normalization, and <strong>Top-2 Sparse Mixture-of-Experts (MoE)</strong> routing. Engineered to drive system-level automation, natural language dataset queries, and mathematical reasoning across the ecosystem, these models decouple active parameter compute from total parameter capacity, executing high-throughput token generation on consumer and enterprise hardware alike.</p>
+            </section>
+
+            <section id="decoder-architecture">
+                <h2>2. Causal Decoder Architecture</h2>
+                <p>The network employs a decoder-only architecture where each token attends strictly to preceding tokens via causal attention masking, preventing future information leakage during training.</p>
+            </section>
+
+            <section id="rope-swiglu">
+                <h2>3. RoPE & SwiGLU Formulations</h2>
+                <p>Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and key vectors in complex 2D planes to naturally capture relative distance:</p>
+                <p>$$R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots, R_{\theta_{d/2}, m})$$</p>
+                <p>Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear Units):</p>
+                <p>$$\text{SwiGLU}(x) = (x W_1 \odot \sigma(x W_1)) W_2$$</p>
+            </section>
+
+            <section id="moe-routing">
+                <h2>4. Sparse Mixture-of-Experts Routing</h2>
+                <p>In MoE layers, token representations are routed to the top 2 out of 8 expert FFNs via softmax gating with auxiliary load-balancing loss:</p>
+                <p>$$y = \sum_{i \in \text{Top2}} G(x)_i \cdot \text{Expert}_i(x)$$</p>
+                <p>$$\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i$$</p>
+            </section>
+
+            <section id="kv-cache">
+                <h2>5. KV Cache & Inference Throughput</h2>
+                <p>Grouped-Query Attention (GQA) combined with PagedAttention KV-caching maximizes continuous batching throughput, eliminating VRAM fragmentation.</p>
+            </section>
+
+            <section id="specifications">
+                <h2>6. Parameter Specifications & Scaling</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model Configuration</th>
+                                <th>Total Parameters</th>
+                                <th>Active Parameters</th>
+                                <th>Context Window</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LemGendary-LLM-1B (Dense)</td>
+                                <td>1.1 Billion</td>
+                                <td>1.1 Billion</td>
+                                <td>8,192 tokens</td>
+                            </tr>
+                            <tr>
+                                <td>LemGendary-MoE-8x1B</td>
+                                <td>7.2 Billion</td>
+                                <td>1.8 Billion</td>
+                                <td>32,768 tokens</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>Sparse MoE decoders deliver unprecedented reasoning and language generation capabilities while adhering strictly to hardware memory bounds.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

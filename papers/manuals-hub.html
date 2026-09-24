@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Operations Manuals Hub - LemGendary AI</title>
+    <meta name="description" content="Unified Operational Cockpit and Standard Operating Procedures across AI Studio GUI, CLI, and REST/WebSocket API">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="manuals-hub.html" class="tab-link active">Manuals Hub</a>
+                <a href="ai-studio-manual.html" class="tab-link">AI Studio GUI Manual</a>
+                <a href="cli-manual.html" class="tab-link">Master CLI Manual</a>
+                <a href="api-manual.html" class="tab-link">Master API Manual</a>
+            </div>
+            <h1>Master Operations Manuals Hub</h1>
+            <p class="subtitle">Unified Operational Cockpit and Standard Operating Procedures across AI Studio GUI, CLI, and REST/WebSocket API</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 03 MANUALS</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#topology">2. Interface Control Boundaries</a></li>
+                <li><a href="#gui-ops">3. Desktop GUI Operational Protocol</a></li>
+                <li><a href="#cli-ops">4. Unified CLI Dispatch Matrix</a></li>
+                <li><a href="#api-ops">5. Sidecar Telemetry & IPC Protocols</a></li>
+                <li><a href="#cross-automation">6. Cross-Project Automation (CPA)</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The LemGendary AI Ecosystem is governed by three interoperable control planes: the <strong>AI Studio Desktop GUI</strong> (presentation tier), the <strong>Master CLI Suite</strong> (scripted pipeline dispatch), and the <strong>Master Sidecar API</strong> (asynchronous REST, WebSocket, and IPC services). This manual hub establishes the authoritative operating procedures, communication contracts, and error remediation pathways for operators running data synthesis, hyperparameter tuning, model training, and checkpoint validation across universal hardware.</p>
+            </section>
+
+            <section id="topology">
+                <h2>2. Interface Control Boundaries</h2>
+                <p>To eliminate developer friction and ensure system stability, every operator interface connects directly to dedicated, single-responsibility services:</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Interface Plane</th>
+                                <th>Primary Role</th>
+                                <th>Target Protocol</th>
+                                <th>Authoritative Manual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Desktop GUI</strong></td>
+                                <td>Visual orchestration, reactive monitoring, hardware state visualization</td>
+                                <td>Tauri v2 IPC / WebSocket</td>
+                                <td><a href="ai-studio-manual.html">AI Studio GUI Operator Manual</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Master CLI</strong></td>
+                                <td>Automated environment probing, headless training runs, batch dataset synthesis</td>
+                                <td>Direct Python execution / Subprocess</td>
+                                <td><a href="cli-manual.html">Master CLI Operations Manual</a></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Master API</strong></td>
+                                <td>Multi-sidecar background daemons, continuous telemetry streaming, remote jobs</td>
+                                <td>HTTP REST / WebSocket (Ports 8000, 8100, 8200)</td>
+                                <td><a href="api-manual.html">Master API Manual</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="gui-ops">
+                <h2>3. Desktop GUI Operational Protocol</h2>
+                <p>The AI Studio Desktop GUI serves as the primary visual cockpit for machine learning engineers. Built on Tauri v2 and React 18, it offers millisecond-latency UI updates without the memory penalty of traditional web containers.</p>
+                <ul>
+                    <li><strong>Hardware Probing</strong>: Real-time detection of CUDA compute capability, MPS active allocation, and CPU thread headroom.</li>
+                    <li><strong>Dataset Synthesis</strong>: One-click visual trigger for manifold compaction, WebP zero-intermediate transcoding, and hardlink deduplication.</li>
+                    <li><strong>Training Orchestration</strong>: Real-time spatial ladder observation, loss curve plotting, and nuclear-hardened emergency checkpoint halts.</li>
+                </ul>
+                <p>Detailed screen layouts and control dictionary mappings are provided in the <a href="ai-studio-manual.html">AI Studio GUI Operator Manual</a> and <a href="gui-control-registry.html">GUI Control Registry</a>.</p>
+            </section>
+
+            <section id="cli-ops">
+                <h2>4. Unified CLI Dispatch Matrix</h2>
+                <p>For headless, cloud, or scripting environments, the ecosystem exposes deterministic command-line utilities. These include <code>lem-env</code> for infrastructure management, <code>lemtrain</code> for model training, and <code>python compiler.py</code> for data compilation:</p>
+                <pre><code># Complete environment health verification
+lem-env audit --strict
+
+# Automated hardware discovery and CUDA probe
+lem-env probe
+
+# Launch training run for dedicated NAFNet deblurring model
+lemtrain --model nafnet_debluring --precision fp16 --batch-size auto</code></pre>
+                <p>Consult the <a href="cli-manual.html">Master CLI Operations Manual</a> for exhaustive flag references and parameter specifications.</p>
+            </section>
+
+            <section id="api-ops">
+                <h2>5. Sidecar Telemetry &amp; IPC Protocols</h2>
+                <p>The asynchronous daemon tier coordinates background execution across dedicated ports:</p>
+                <ul>
+                    <li><strong>Environment Daemon (:8000)</strong>: Health endpoints, package installation pipelines, and environment inspection.</li>
+                    <li><strong>Compiler Daemon (:8100)</strong>: Dataset job dispatch, progress streaming, and manifold validation.</li>
+                    <li><strong>Training Daemon (:8200)</strong>: Persistent ACID SQLite job queue, real-time WebSocket loss streaming (<code>/api/ws/jobs/{id}/logs</code>), and checkpoint commit notifications.</li>
+                </ul>
+                <p>Complete route schemas, payload models, and WebSocket event structures are available in the <a href="api-manual.html">Master API Manual</a>.</p>
+            </section>
+
+            <section id="cross-automation">
+                <h2>6. Cross-Project Automation (CPA)</h2>
+                <p>Cross-Project Automation guarantees that actions triggered in one repository (such as updating dependency manifests or finalizing a trained weight artifact) cleanly propagate throughout the entire ecosystem without manual re-linking or state desynchronization.</p>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>The Master Operations Manuals Hub establishes clear operational guidelines across all user-facing and programmatic entrypoints, ensuring deterministic execution from local developer workstations to cloud cluster deployments.</p>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

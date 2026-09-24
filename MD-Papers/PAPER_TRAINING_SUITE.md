@@ -1,6 +1,8 @@
 # Master Training Suite Guide: LemGendary AI
 
-## Category 02 | LemGendary AI Documentation Hub
+## Category 01.3 | Subpage of Master Ecosystem Architecture
+
+**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

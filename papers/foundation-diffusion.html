@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latent Diffusion & Score-Based Generative Architectures - LemGendary AI</title>
+    <meta name="description" content="Continuous Score Matching, Latent Autoencoding, Classifier-Free Guidance & Euler Schedulers">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="foundation-models-master.html" class="tab-link">Foundation Hub</a>
+                <a href="foundation-diffusion.html" class="tab-link active">Latent Diffusion</a>
+                <a href="foundation-image-to-text.html" class="tab-link">Image-to-Text VLM</a>
+                <a href="foundation-llm.html" class="tab-link">LLM & MoE Decoders</a>
+            </div>
+            <h1>Latent Diffusion & Score-Based Generative Architectures</h1>
+            <p class="subtitle">Continuous Score Matching, Latent Autoencoding, Classifier-Free Guidance & Euler Schedulers</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 10 FOUNDATION</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#latent-space">2. Latent Space Compression</a></li>
+                <li><a href="#score-matching">3. Stochastic Differential Equations & Score Matching</a></li>
+                <li><a href="#cfg">4. Classifier-Free Guidance (CFG)</a></li>
+                <li><a href="#sampling">5. Fast Schedulers (DDIM & Euler-A)</a></li>
+                <li><a href="#specifications">6. Architecture & Training Parameters</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p>The <strong>LemGendary Latent Diffusion Engine</strong> implements score-based generative modeling over continuous latent representations. Rather than executing stochastic reverse-diffusion in high-dimensional pixel space \(\mathbb{R}^{H \times W \times 3}\), the model operates within the spatial latent manifold of a pre-trained Vector-Quantized Variational Autoencoder (VQ-VAE). Paired with cross-attention text conditioners, classifier-free guidance, and second-order Euler Ancestral sampling schedulers, the system synthesizes high-fidelity photographic content in as few as 20 sampling steps.</p>
+            </section>
+
+            <section id="latent-space">
+                <h2>2. Latent Space Compression</h2>
+                <p>A convolutional autoencoder encodes pixel inputs \(x \in \mathbb{R}^{H \times W \times 3}\) into latent tensors \(z = \mathcal{E}(x) \in \mathbb{R}^{h \times w \times c}\) with downsampling factor \(f = H/h = 8\). The reverse diffusion process operates strictly in this compressed manifold, reducing memory footprint by \(64\times\).</p>
+            </section>
+
+            <section id="score-matching">
+                <h2>3. Stochastic Differential Equations & Score Matching</h2>
+                <p>Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential equation:</p>
+                <p>$$dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw$$</p>
+                <p>The U-Net / DiT backbone is trained to predict the added noise via reweighted mean squared error:</p>
+                <p>$$\mathcal{L}_{\text{simple}} = \mathbb{E}_{z_0, \epsilon, t} \left[ \|\epsilon - \epsilon_\theta(z_t, t, c)\|^2 \right]$$</p>
+            </section>
+
+            <section id="cfg">
+                <h2>4. Classifier-Free Guidance (CFG)</h2>
+                <p>Conditioned generation balances prompt alignment against sample diversity via Classifier-Free Guidance:</p>
+                <p>$$\tilde{\epsilon}_\theta(z_t, c) = \epsilon_\theta(z_t, \emptyset) + s \cdot \left( \epsilon_\theta(z_t, c) - \epsilon_\theta(z_t, \emptyset) \right)$$</p>
+                <p>where \(s \in [5.0, 9.0]\) is the guidance scale.</p>
+            </section>
+
+            <section id="sampling">
+                <h2>5. Fast Schedulers (DDIM & Euler-A)</h2>
+                <p>Deterministic DDIM and stochastic Euler Ancestral schedulers invert the probability flow ODE, reducing generation from 1000 DDPM steps to 20-30 discrete evaluation steps.</p>
+            </section>
+
+            <section id="specifications">
+                <h2>6. Architecture & Training Parameters</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hyperparameter</th>
+                                <th>Specification Value</th>
+                                <th>Design Rationale</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Latent Channels (\(c\))</td>
+                                <td>4</td>
+                                <td>Optimal perceptual compression ratio</td>
+                            </tr>
+                            <tr>
+                                <td>U-Net Base Channels</td>
+                                <td>320</td>
+                                <td>Channel multiplier [1, 2, 4, 4]</td>
+                            </tr>
+                            <tr>
+                                <td>Conditioning Dimension</td>
+                                <td>768 / 1024</td>
+                                <td>Frozen CLIP ViT-L/14 or OpenCLIP text encoder</td>
+                            </tr>
+                            <tr>
+                                <td>Precision</td>
+                                <td>FP16 / BF16 mixed</td>
+                                <td>Accelerated Tensor Core throughput</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>Latent Diffusion serves as the generative foundation for generative synthesis and guided inpainting across the ecosystem.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeFormer: VQ-Codebook Face Restoration - LemGendary AI</title>
+    <meta name="description" content="Transformer-Based Feature Lookup with Adjustable Fidelity-Naturalness Trade-Off">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="face-suite.html" class="tab-link">Face Suite Hub</a>
+                <a href="face-codeformer.html" class="tab-link active">CodeFormer</a>
+                <a href="face-parsenet.html" class="tab-link">ParseNet</a>
+                <a href="face-retinaface.html" class="tab-link">RetinaFace</a>
+            </div>
+            <h1>CodeFormer: VQ-Codebook Face Restoration</h1>
+            <p class="subtitle">Transformer-Based Feature Lookup with Adjustable Fidelity-Naturalness Trade-Off</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 08 FACE</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#vq-codebook">2. Discrete Codebook Prior</a></li>
+                <li><a href="#transformer">3. Transformer Feature Matching</a></li>
+                <li><a href="#tradeoff">4. Controllable Fidelity Scalar (Alpha)</a></li>
+                <li><a href="#loss">5. Loss Formulations & Multi-Objective</a></li>
+                <li><a href="#benchmarks">6. Benchmark Comparisons</a></li>
+                <li><a href="#conclusion">7. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p><strong>CodeFormer</strong> is a robust blind face restoration algorithm that models high-quality facial representations through a discrete <strong>Vector-Quantized (VQ) codebook</strong> prior and a Transformer-based prediction network. Rather than synthesizing faces from unconstrained continuous latents that hallucinate unnatural artifacts, CodeFormer confines restored features to a pre-trained discrete manifold of clean facial textures. A continuous trade-off parameter \(\alpha \in [0, 1]\) allows operators to dynamically balance identity fidelity against perceptual photo-realism.</p>
+            </section>
+
+            <section id="vq-codebook">
+                <h2>2. Discrete Codebook Prior</h2>
+                <p>The codebook \(\mathcal{C} = \{c_k\}_{k=1}^K \subset \mathbb{R}^d\) consists of \(K = 1024\) learned discrete code vectors capturing high-frequency eye, skin, and facial geometry primitives. Features \(z\) from severely degraded inputs are mapped to their nearest codebook entries:</p>
+                <p>$$z_q = \arg\min_{c_k \in \mathcal{C}} \|z - c_k\|_2$$</p>
+            </section>
+
+            <section id="transformer">
+                <h2>3. Transformer Feature Matching</h2>
+                <p>To overcome severe degradation where nearest-neighbor Euclidean lookup fails, a 9-layer Transformer predicts global contextual codebook indices, ensuring anatomically consistent restoration even under severe occlusion or heavy sensor blur.</p>
+            </section>
+
+            <section id="tradeoff">
+                <h2>4. Controllable Fidelity Scalar (Alpha)</h2>
+                <p>CodeFormer introduces an adjustable modulation scalar \(\alpha\) governing intermediate feature fusion:</p>
+                <p>$$\tilde{F} = \alpha \cdot F_{\text{input}} + (1 - \alpha) \cdot F_{\text{codebook}}$$</p>
+                <p>When \(\alpha = 1.0\), maximum identity preservation is enforced (ideal for biometric matching); when \(\alpha = 0.0\), maximum perceptual enhancement and de-noising are applied.</p>
+            </section>
+
+            <section id="loss">
+                <h2>5. Loss Formulations & Multi-Objective</h2>
+                <p>$$\mathcal{L} = \|I - \hat{I}\|_1 + \lambda_{\text{perc}} \mathcal{L}_{\text{VGG}} + \lambda_{\text{code}} \|\text{sg}[z] - z_q\|_2^2 + \lambda_{\text{adv}} \mathcal{L}_{\text{WGAN}}$$</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>6. Benchmark Comparisons</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Model Benchmark</th>
+                                <th>LPIPS (Lower is better)</th>
+                                <th>Degradation Resistance</th>
+                                <th>Identity Sim (CSIM)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>GFPGAN v1.4</td>
+                                <td>0.362</td>
+                                <td>Medium</td>
+                                <td>0.742</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CodeFormer (\(\alpha=0.5\))</strong></td>
+                                <td><strong>0.315</strong></td>
+                                <td><strong>Extreme</strong></td>
+                                <td><strong>0.785</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>7. Conclusion</h2>
+                <p>CodeFormer provides unparalleled face restoration by grounding hallucination in discrete geometric priors.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>

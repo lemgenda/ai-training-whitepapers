@@ -1,6 +1,8 @@
 # Dataset Compiler Suite Whitepaper
 
-## Category 01 | LemGendary AI Documentation Hub
+## Category 01.2 | Subpage of Master Ecosystem Architecture
+
+**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

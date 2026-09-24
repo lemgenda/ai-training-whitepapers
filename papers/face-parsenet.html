@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParseNet: 19-Class Face Parsing - LemGendary AI</title>
+    <meta name="description" content="Bilateral Semantic Boundary Refinement for Anatomical Component Segmentation">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../assets/sticky-tabs.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="face-suite.html" class="tab-link">Face Suite Hub</a>
+                <a href="face-codeformer.html" class="tab-link">CodeFormer</a>
+                <a href="face-parsenet.html" class="tab-link active">ParseNet</a>
+                <a href="face-retinaface.html" class="tab-link">RetinaFace</a>
+            </div>
+            <h1>ParseNet: 19-Class Face Parsing</h1>
+            <p class="subtitle">Bilateral Semantic Boundary Refinement for Anatomical Component Segmentation</p>
+            <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 08 FACE</span>
+                <span>Version 16.7.3</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#classes">2. The 19 Anatomical Classes</a></li>
+                <li><a href="#architecture">3. Bilateral Boundary Architecture</a></li>
+                <li><a href="#loss">4. Boundary-Aware Cross-Entropy Loss</a></li>
+                <li><a href="#benchmarks">5. Mean IoU Targets & Benchmarks</a></li>
+                <li><a href="#conclusion">6. Conclusion</a></li>
+            </ul>
+        </nav>
+        <main class="content">
+            <section id="abstract">
+                <h2>1. Abstract</h2>
+                <p><strong>ParseNet</strong> is a specialized semantic segmentation network engineered to partition facial imagery into <strong>19 distinct anatomical and accessory classes</strong> with pixel-level precision. Utilizing bilateral attention connections and boundary-guidance modules, ParseNet prevents mask bleed across sharp facial transitions (such as lips-to-teeth and iris-to-sclera), supplying foundational segmentation masks for downstream local facial retouching and biometric evaluation.</p>
+            </section>
+
+            <section id="classes">
+                <h2>2. The 19 Anatomical Classes</h2>
+                <p>ParseNet segments: Background, Skin, Left Eyebrow, Right Eyebrow, Left Eye, Right Eye, Nose, Upper Lip, Inner Mouth / Teeth, Lower Lip, Hair, Left Ear, Right Ear, Eyeglasses, Earring, Necklace, Neck, Clothing, and Hat.</p>
+            </section>
+
+            <section id="architecture">
+                <h2>3. Bilateral Boundary Architecture</h2>
+                <p>The network splits high-level semantic feature extraction from fine edge localization using a two-stream backbone. A boundary attention branch computes edge probability maps \(E_{\text{edge}}\), which directly gate semantic decoding stages.</p>
+            </section>
+
+            <section id="loss">
+                <h2>4. Boundary-Aware Cross-Entropy Loss</h2>
+                <p>$$\mathcal{L} = \mathcal{L}_{\text{CE}}(Y, \hat{Y}) + \lambda_{\text{Dice}} \mathcal{L}_{\text{Dice}}(Y, \hat{Y}) + \lambda_{\text{edge}} \|E_{\text{gt}} - E_{\text{pred}}\|_2$$</p>
+            </section>
+
+            <section id="benchmarks">
+                <h2>5. Mean IoU Targets & Benchmarks</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tissue Region</th>
+                                <th>CelebAMask-HQ mIoU</th>
+                                <th>Edge Boundary F1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Eyes & Eyebrows</td>
+                                <td>0.894</td>
+                                <td>0.921</td>
+                            </tr>
+                            <tr>
+                                <td>Lips & Mouth</td>
+                                <td>0.912</td>
+                                <td>0.938</td>
+                            </tr>
+                            <tr>
+                                <td>Global Face Skin</td>
+                                <td>0.958</td>
+                                <td>0.965</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="conclusion">
+                <h2>6. Conclusion</h2>
+                <p>ParseNet delivers the surgical spatial boundaries required for component-aware facial processing in the LemGendary AI Ecosystem.</p>
+            </section>        </main>
+        <footer>
+            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
+        </footer>
+    </div>
+</body>
+</html>
