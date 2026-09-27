@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: UPN v2: Universal Parameterized Network
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 05 HYBRID  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 05 HYBRID
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -30,14 +30,16 @@ The **Universal Parameterized Network v2 (UPN v2)** represents a breakthrough in
 
 Imagine having a single universal digital darkroom knob. Traditionally, if an image has both motion blur, sensor grain, and low lighting, you have to run three separate AI models that slow down your computer and make the photo look artificial. **UPN v2 (Universal Parameterized Network) is an all-in-one restoration engine**:
 
-- **Continuous Slider Control:** You can steer the restoration using continuous parameters—adjusting noise removal, deblurring intensity, and illumination enhancement simultaneously in a single pass.
-- **Space-Recovery Architecture:** It preserves original camera colors and fine background details while surgically eliminating unwanted defects.
-- **Lightning Fast Execution:** Because it handles multiple degradation types in a single neural network, it processes high-resolution images up to 5x faster than chaining separate tools.
+* **Continuous Slider Control:** You can steer the restoration using continuous parameters—adjusting noise removal, deblurring intensity, and illumination enhancement simultaneously in a single pass.
+* **Space-Recovery Architecture:** It preserves original camera colors and fine background details while surgically eliminating unwanted defects.
+* **Lightning Fast Execution:** Because it handles multiple degradation types in a single neural network, it processes high-resolution images up to 5x faster than chaining separate tools.
 
 ### Multi-Degradation Recovery & Metrics
-- **Input:** Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.
-- **Output:** Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18ms.
-- **Convergence:** PSNR reached 35.18 dB and SSIM reached 0.967 across 285 WebDataset streaming shards.
+
+* **Input:** Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.
+
+* **Output:** Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18ms.
+* **Convergence:** PSNR reached 35.18 dB and SSIM reached 0.967 across 285 WebDataset streaming shards.
 
 ## 2. Parameterized Latent Steering
 

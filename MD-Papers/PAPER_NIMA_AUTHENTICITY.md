@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: NIMA Generative Authenticity & DeepFake Detector
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 07 QUALITY  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -29,8 +29,10 @@ The **NIMA Generative Authenticity & DeepFake Detector** is a dedicated neural e
 Like a forensic digital investigator. It examines subtle pixel distributions and frequency patterns to determine whether an image is a genuine camera photograph or an AI-generated DeepFake.
 
 ### Visual Assessment & Training Distribution
-- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
-- **Training Metrics:** Tracked via `nima_authenticity_fake.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+
+* **Training Metrics:** Tracked via `nima_authenticity_fake.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
 
 ![NIMA Authenticity & DeepFake Sentinel Training Curve](../assets/nima_authenticity_fake.png)
 

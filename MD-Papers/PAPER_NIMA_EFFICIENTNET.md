@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: NIMA Aesthetic EfficientNetV2-S
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 07 QUALITY  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -29,8 +29,10 @@ The **NIMA Aesthetic EfficientNetV2-S** is a dedicated neural evaluation engine 
 Like an advanced camera sensor critic. It evaluates fine textures, tonal balance, and dynamic range with high accuracy across desktop workstations and cloud servers.
 
 ### Visual Assessment & Training Distribution
-- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
-- **Training Metrics:** Tracked via `nima_aesthetic_efficientnet_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+
+* **Training Metrics:** Tracked via `nima_aesthetic_efficientnet_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
 
 ![NIMA EfficientNetV2-S Training Curve](../assets/nima_aesthetic_efficientnet_training.png)
 

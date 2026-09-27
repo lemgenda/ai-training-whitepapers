@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: NIMA Aesthetic Mobile Architecture
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 07 QUALITY  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -29,8 +29,10 @@ The **NIMA Aesthetic Mobile Architecture** is a dedicated neural evaluation engi
 Like an ultra-fast photography judge running on your smartphone. It scores the artistic appeal, lighting, and composition of photos instantly in less than 5 milliseconds without draining battery.
 
 ### Visual Assessment & Training Distribution
-- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
-- **Training Metrics:** Tracked via `nima_aesthetic_mobile_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+
+* **Training Metrics:** Tracked via `nima_aesthetic_mobile_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
 
 ![NIMA Mobile (MobileNetV3) Training Curve](../assets/nima_aesthetic_mobile_training.png)
 

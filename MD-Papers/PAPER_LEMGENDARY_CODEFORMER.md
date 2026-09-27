@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: CodeFormer: VQ-Codebook Face Restoration
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 08 FACE  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 08 FACE
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -30,14 +30,16 @@
 
 Imagine taking an old, scratched, blurry photograph of a loved one from decades ago. Traditional photo programs either blur the face even more or create creepy, plastic-looking skin. **CodeFormer acts like a master portrait artist**:
 
-- **The Memory Library:** CodeFormer has memorized over a thousand discrete, natural facial features (sharp pupils, delicate eyelashes, realistic skin pores, and natural lip contours) in an internal codebook.
-- **Intelligent Detail Matching:** When given a blurry or low-resolution face, instead of guessing blindly, it finds the matching clean features in its library and blends them naturally into the original photo.
-- **The Naturalness Dial (Alpha):** Operators have a simple slider dial from 0% to 100%. Set it to 100% to keep the exact original face shape, or set it to 0% to maximize sharpness and photo-clarity.
+* **The Memory Library:** CodeFormer has memorized over a thousand discrete, natural facial features (sharp pupils, delicate eyelashes, realistic skin pores, and natural lip contours) in an internal codebook.
+* **Intelligent Detail Matching:** When given a blurry or low-resolution face, instead of guessing blindly, it finds the matching clean features in its library and blends them naturally into the original photo.
+* **The Naturalness Dial (Alpha):** Operators have a simple slider dial from 0% to 100%. Set it to 100% to keep the exact original face shape, or set it to 0% to maximize sharpness and photo-clarity.
 
 ### Visual Demonstration & Training Convergence
-- **Input:** Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.
-- **Output:** Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity at Alpha = 0.75.
-- **Training Convergence Curve:** Tracked via `codeformer_training.png` illustrating perceptual LPIPS minimization and codebook commitment loss stabilization.
+
+* **Input:** Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.
+
+* **Output:** Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity at Alpha = 0.75.
+* **Training Convergence Curve:** Tracked via `codeformer_training.png` illustrating perceptual LPIPS minimization and codebook commitment loss stabilization.
 
 ![CodeFormer Training Metrics Curve](../assets/codeformer_training.png)
 

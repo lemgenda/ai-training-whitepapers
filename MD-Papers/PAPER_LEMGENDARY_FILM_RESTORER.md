@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: Universal Film Restorer
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 05 HYBRID  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 05 HYBRID
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -30,9 +30,9 @@ The **Universal Film Restorer** is a specialized deep neural network designed to
 
 Historic movie reels, 8mm home videos, and vintage family photograph prints degrade over decades: chemical dyes fade, celluloid suffers vertical scratches from mechanical projectors, and dust specks scatter across every frame. **Universal Film Restorer acts like a digital film archivist**:
 
-- **Scratches & Dust Inpainting:** It scans the image for physical damage streaks and fills them in with clean, coherent image details.
-- **Analog Grain Balancing:** Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.
-- **Chemical Color Recovery:** It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.
+* **Scratches & Dust Inpainting:** It scans the image for physical damage streaks and fills them in with clean, coherent image details.
+* **Analog Grain Balancing:** Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.
+* **Chemical Color Recovery:** It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.
 
 ![Film Restorer Training Curve](../assets/film_restorer_training.png)
 

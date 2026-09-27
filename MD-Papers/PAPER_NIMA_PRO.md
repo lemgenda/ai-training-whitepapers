@@ -1,9 +1,9 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: NIMA Aesthetic Pro Swin-v2-T
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 07 QUALITY  
+**Author**: Lem Treursic
+**Version**: 16.7.3
+**Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -29,8 +29,10 @@ The **NIMA Aesthetic Pro Swin-v2-T** is a dedicated neural evaluation engine eng
 Like an elite gallery curator. Utilizing vision transformer self-attention, it analyzes full high-resolution compositions and artistic nuances with professional-grade perceptual precision.
 
 ### Visual Assessment & Training Distribution
-- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
-- **Training Metrics:** Tracked via `nima_aesthetic_pro_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+
+* **Training Metrics:** Tracked via `nima_aesthetic_pro_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
 
 ![NIMA Pro (Swin-v2-T) Training Curve](../assets/nima_aesthetic_pro_training.png)
 
