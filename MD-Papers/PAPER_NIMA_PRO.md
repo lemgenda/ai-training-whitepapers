@@ -24,6 +24,16 @@ The **NIMA Aesthetic Pro Swin-v2-T** is a dedicated neural evaluation engine eng
 
 ---
 
+## 1.1 What NIMA Pro (Swin-v2-T) Does (In Plain English)
+
+Like an elite gallery curator. Utilizing vision transformer self-attention, it analyzes full high-resolution compositions and artistic nuances with professional-grade perceptual precision.
+
+### Visual Assessment & Training Distribution
+- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+- **Training Metrics:** Tracked via `nima_aesthetic_pro_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+![NIMA Pro (Swin-v2-T) Training Curve](../assets/nima_aesthetic_pro_training.png)
+
 ## 2. Backbone & Feature Extraction
 
 The model employs **Swin Transformer v2-Tiny (Window Size 8x8)** with custom dropout layers (rate = 0.25) and a 10-dimensional Softmax output projection. Intermediate feature maps capture hierarchical compositions ranging from low-level edge sharpness to global photographic balance.

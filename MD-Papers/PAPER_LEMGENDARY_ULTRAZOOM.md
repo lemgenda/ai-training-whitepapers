@@ -31,6 +31,17 @@ The **LemGendary UltraZoom Super-Resolution Suite** establishes an authoritative
 
 ---
 
+## 1.1 What UltraZoom Does (In Plain English)
+
+When you pinch-to-zoom on a smartphone photo or crop into a distant object (like a bird in a tree or a flower in your garden), the image quickly becomes a blurry, pixelated checkerboard. **UltraZoom is like a high-powered digital microscope powered by AI**:
+
+- **Intelligent Texture Synthesis:** Instead of simply stretching existing pixels, UltraZoom analyzes image patterns and reconstructs realistic fine textures (individual leaf veins, flower petals, and sharp text edges).
+- **Four Specialized Scale Variants:**
+  - `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and real-time feeds (38.45 dB PSNR).
+  - `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR).
+  - `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K displays (32.15 dB PSNR).
+  - `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial surveillance (28.90 dB PSNR).
+
 ## 2. Multi-Scale Super-Resolution Manifolds
 
 * **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration with minimal perceptual hallucination.

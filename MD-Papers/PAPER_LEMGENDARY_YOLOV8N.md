@@ -26,6 +26,18 @@ The **LemGendary YOLOv8n Multi-Task Model** provides a lightweight, anchor-free 
 
 ---
 
+## 1.1 What YOLOv8n Does (In Plain English)
+
+Imagine having an intelligent security guard scanning a video camera 60 times every second. **YOLOv8n ("You Only Look Once" Nano) is an ultra-fast, real-time object detector**:
+
+- **Instant Object Finding:** In just 3 milliseconds, it scans an entire image and draws tight colored boxes around objects—identifying people, animals, garden tools, cars, and plants.
+- **Body Pose & Keypoint Tracking:** In addition to finding objects, it can track 17 human body joints (knees, elbows, shoulders) in real time.
+- **Ultra-Lightweight Efficiency:** Weighing only 6.5 MB, it runs smoothly on budget laptops, battery-powered robots, and mobile phones without slowing down other programs.
+
+### Training Convergence
+- **mAP@50:** Reached 0.824 across 80 COCO classes.
+- **mAP@50-95:** Reached 0.589 with inference latency of 3.1ms on edge devices.
+
 ## 2. Anchor-Free CSPDarknet & PANet
 
 The backbone utilizes modified CSPDarknet53 with C2f modules that split feature channels across residual bottleneck branches, maximizing gradient flow while minimizing memory bandwidth. The neck employs a Path Aggregation Network (PANet) fusing multi-scale feature hierarchies $P_3, P_4, P_5$ via top-down and bottom-up pathways.

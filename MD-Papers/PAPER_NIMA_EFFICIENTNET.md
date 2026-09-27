@@ -24,6 +24,16 @@ The **NIMA Aesthetic EfficientNetV2-S** is a dedicated neural evaluation engine 
 
 ---
 
+## 1.1 What NIMA EfficientNetV2-S Does (In Plain English)
+
+Like an advanced camera sensor critic. It evaluates fine textures, tonal balance, and dynamic range with high accuracy across desktop workstations and cloud servers.
+
+### Visual Assessment & Training Distribution
+- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+- **Training Metrics:** Tracked via `nima_aesthetic_efficientnet_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+![NIMA EfficientNetV2-S Training Curve](../assets/nima_aesthetic_efficientnet_training.png)
+
 ## 2. Backbone & Feature Extraction
 
 The model employs **EfficientNetV2-S with Fused-MBConv** with custom dropout layers (rate = 0.25) and a 10-dimensional Softmax output projection. Intermediate feature maps capture hierarchical compositions ranging from low-level edge sharpness to global photographic balance.

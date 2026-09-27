@@ -55,6 +55,42 @@
                 <p>The <strong>Universal Film Restorer</strong> is a specialized deep neural network designed to preserve historical, cinematic, and analog photographic media. Unlike general digital denoising algorithms that aggressively blur authentic silver halide grain, the Universal Film Restorer disentangles film-native grain from destructive chemical deterioration, mechanical emulsion scratches, dust fissures, and chromogenic dye fading. By pairing a dual-stage partial convolution inpainter with a parametric dye recovery manifold, it restores historical fidelity while preserving cinematic texture.</p>
             </section>
 
+            <section id="plain-english">
+                <h2>1.1 What Universal Film Restorer Does (In Plain English)</h2>
+                <p>Historic movie reels, 8mm home videos, and vintage family photograph prints degrade over decades: chemical dyes fade, celluloid suffers vertical scratches from mechanical projectors, and dust specks scatter across every frame. <strong>Universal Film Restorer acts like a digital film archivist</strong>:</p>
+                <ul>
+                    <li><strong>Scratches &amp; Dust Inpainting:</strong> It scans the image for physical damage streaks and fills them in with clean, coherent image details.</li>
+                    <li><strong>Analog Grain Balancing:</strong> Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.</li>
+                    <li><strong>Chemical Color Recovery:</strong> It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.</li>
+                </ul>
+
+                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
+                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration: Vintage Film Restoration</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
+                            <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">DEGRADED VINTAGE FILM (Input)</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Vertical projector scratches, heavy emulsion dust specks, and chemical dye fading.</p>
+                            <div style="height: 140px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #a0a0a0;">
+                                Celluloid Scratch &amp; Dye Fading Artifacts
+                            </div>
+                        </div>
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
+                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">RESTORED FILM OUTPUT</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Inpainted scratch tracks, cleansed dust, balanced analog grain, and calibrated colors.</p>
+                            <div style="height: 140px; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #79c0ff; font-weight: 600;">
+                                Archival-Grade Color &amp; Scratch Restoration
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0; text-align: center;">
+                    <h3 style="color: #ffffff; text-align: left;">Film Restorer Training Metrics &amp; Loss Convergence</h3>
+                    <img src="../assets/film_restorer_training.png" alt="Film Restorer Training Curve" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Figure 1: Training convergence across 50 epochs on analog degradation synthesis manifolds.</p>
+                </div>
+            </section>
+
             <section id="analog-physics">
                 <h2>2. Analog Emulsion Physics</h2>
                 <p>Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as:</p>

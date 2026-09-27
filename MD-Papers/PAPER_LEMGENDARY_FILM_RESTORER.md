@@ -26,6 +26,16 @@ The **Universal Film Restorer** is a specialized deep neural network designed to
 
 ---
 
+## 1.1 What Universal Film Restorer Does (In Plain English)
+
+Historic movie reels, 8mm home videos, and vintage family photograph prints degrade over decades: chemical dyes fade, celluloid suffers vertical scratches from mechanical projectors, and dust specks scatter across every frame. **Universal Film Restorer acts like a digital film archivist**:
+
+- **Scratches & Dust Inpainting:** It scans the image for physical damage streaks and fills them in with clean, coherent image details.
+- **Analog Grain Balancing:** Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.
+- **Chemical Color Recovery:** It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.
+
+![Film Restorer Training Curve](../assets/film_restorer_training.png)
+
 ## 2. Analog Emulsion Physics
 
 Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as:

@@ -613,7 +613,7 @@
             <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code> (<code>smart_extract</code>) is upgraded with native subsystem delegation:</p>
             <ul>
                 <li><strong>Binary Auto-Discovery</strong>: Probes system paths for native 64-bit <code>7z.exe</code> (<code>C:\Program Files\7-Zip\7z.exe</code>) and native POSIX <code>tar.exe</code> (<code>C:\Windows\System32\tar.exe</code>), falling back gracefully to Python standard library engines.</li>
-                <li><strong>Multi-Threaded Hardware Saturation</strong>: Dispatches extraction via native 7-Zip with parameters <code>-mmt=on -bsp1 -aos -y</code>, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude.</li>
+                <li><strong>Multi-Threaded Hardware Saturation</strong>: Dispatches extraction via native 7-Zip with parameters <code>-mmt=on -bsp0 -aos -y</code>, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude while suppressing per-file stdout progress flooding.</li>
                 <li><strong>Automated Root Flattening</strong>: Detects single root manifold directory envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.</li>
             </ul>
 
@@ -659,6 +659,14 @@
                         <li><em>Registry Synchronization</em>: Updates <code>dataset_info.yaml</code> with <code>canonical_format: webdataset</code>, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.</li>
                     </ol>
                 </li>
+            </ul>
+
+            <h3 id="514-direct-streaming-ingestion-telemetry-hardening">5.14 Direct In-Memory Streaming Ingestion &amp; Terminal Progress Telemetry Hardening (v16.9.1)</h3>
+            <p>To eliminate severe terminal line wrapping and eradicate intermediate disk consumption during remote manifold acquisition, v16.9.1 hardens terminal progress telemetry and couples cloud synchronization directly with the streaming modernization engine:</p>
+            <ul>
+                <li><strong>Direct In-Memory Streaming on Cloud Download (<code>[GET]</code>)</strong>: In <code>core/common_sync.py</code> (<code>perform_dataset_download</code>), downloaded legacy <code>.zip</code> archives are inspected prior to extraction. If an archive contains legacy loose image structures (<code>images/</code>, <code>targets/</code>) without pre-existing <code>.tar</code> shards, the compiler completely bypasses disk extraction via 7-Zip and routes the archive directly through <code>stream_zip_to_webdataset</code> (<code>tools/stream_zip_to_container.py</code>). Input and target images are decoded and transcoded to lossless WebP in memory directly into POSIX <code>.tar</code> shards across parallel worker threads. Upon verified completion, the source <code>.zip</code> archive is automatically deleted, saving 60 GB to 130+ GB of intermediate disk headroom and eliminating millions of loose filesystem writes.</li>
+                <li><strong>Terminal Telemetry &amp; Column Width Hardening</strong>: Fixes a critical PowerShell and Windows conhost line wrapping defect in Kaggle API downloads where multi-byte block characters (<code>&#x2588;</code>, <code>&#x258F;</code>) and unbounded column widths caused terminal buffer overflow, cascading carriage returns (<code>\r</code>) onto new lines for every download tick. The download engine encapsulates <code>tqdm.tqdm</code> to enforce strict ASCII rendering (<code>ascii=True</code>) and fixed column width boundaries (<code>ncols=80</code>), guaranteeing single-line in-place telemetry updates across all Windows host environments.</li>
+                <li><strong>Silent Subsystem Extraction Delegation</strong>: Updated native 7-Zip execution parameters in <code>utils/archive.py</code> (<code>smart_extract</code>) from <code>-bsp1</code> to <code>-bsp0</code>, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.</li>
             </ul>
 </section>
 

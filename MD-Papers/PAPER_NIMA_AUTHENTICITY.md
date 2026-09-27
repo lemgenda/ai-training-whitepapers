@@ -24,6 +24,16 @@ The **NIMA Generative Authenticity & DeepFake Detector** is a dedicated neural e
 
 ---
 
+## 1.1 What NIMA Authenticity & DeepFake Sentinel Does (In Plain English)
+
+Like a forensic digital investigator. It examines subtle pixel distributions and frequency patterns to determine whether an image is a genuine camera photograph or an AI-generated DeepFake.
+
+### Visual Assessment & Training Distribution
+- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+- **Training Metrics:** Tracked via `nima_authenticity_fake.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+![NIMA Authenticity & DeepFake Sentinel Training Curve](../assets/nima_authenticity_fake.png)
+
 ## 2. Backbone & Feature Extraction
 
 The model employs **EfficientNetV2-S with 2D-FFT Spectral Analysis Head** with custom dropout layers (rate = 0.25) and a 10-dimensional Softmax output projection. Intermediate feature maps capture hierarchical compositions ranging from low-level edge sharpness to global photographic balance.

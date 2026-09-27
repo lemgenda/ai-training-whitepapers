@@ -146,6 +146,40 @@
                 <p>State updates follow unidirectional dispatch flows:</p>
                 <p>$$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$</p>
                 <p>preventing UI race conditions and ensuring deterministic views during high-throughput training epochs.</p>
+
+                <h3>6.1 Multi-Sidecar Telemetry Routing</h3>
+                <p>The desktop frontend decouples communication through a dedicated tripartite client router:</p>
+                <ul>
+                    <li><code>client.env</code>: Routes hardware sensors, venv statuses, and drift matrices to <code>http://127.0.0.1:8000</code>.</li>
+                    <li><code>client.datasets</code>: Routes manifold catalogs, compiler presets, and format statistics to <code>http://127.0.0.1:8100</code>.</li>
+                    <li><code>client.training</code>: Routes active training runs, GPU profiles, and checkpoint exports to <code>http://127.0.0.1:8200</code>.</li>
+                </ul>
+
+                <h3>6.2 Universal Dynamic Configuration &amp; Registry Editor</h3>
+                <p>The desktop interface embeds an in-process, non-blocking configuration and registry management modal. Operators can dynamically inspect and edit core ecosystem configuration files:</p>
+                <ul>
+                    <li><code>unified_data.yaml</code>: Source definitions, upstream repositories (Kaggle, HuggingFace, GitHub, Google Drive), and annotation schemas.</li>
+                    <li><code>unified_models_v2.yaml</code>: Model definitions, spatial ladder progressions, loss weightings, and manifold references.</li>
+                    <li><code>config.yaml</code> / <code>presets.yaml</code>: Compiler presets, degradation configurations, and training defaults.</li>
+                    <li><code>runtime_env.yaml</code>: Multi-environment overrides for local, Kaggle, Saturn Cloud, and Google Colab runtimes.</li>
+                    <li><code>requirements.txt</code> / <code>package.json</code>: Dependency manifests with automatic syntax validation prior to saving.</li>
+                </ul>
+                <p>The editor guarantees schema safety through real-time YAML and JSON syntax parsing, displaying visual syntax validation badges and diff confirmations before writing changes to disk.</p>
+
+                <h3>6.3 Contextual UX Help &amp; Micro-Documentation Layer</h3>
+                <p>To eliminate operator ambiguity across complex machine learning and compilation controls, every interactive element across the interface integrates an inline contextual help tooltip badge (<code>HelpTooltip</code>):</p>
+                <ul>
+                    <li><strong>Visual Affordance</strong>: Rendered as a subtle, unobtrusive circular help glyph adjacent to form controls, buttons, toggles, and status badges.</li>
+                    <li><strong>Hover Micro-Documentation</strong>: Displays a high-contrast glassmorphic tooltip providing immediate, plain-language guidance explaining the exact behavior, CLI equivalent flag, and architectural consequence of the action.</li>
+                    <li><strong>Accessibility &amp; Zero-Distraction</strong>: Tooltips adhere to WCAG 2.2 non-interference guidelines, disappearing automatically when the cursor moves away without obstructing the underlying operational dashboard.</li>
+                </ul>
+
+                <h3>6.4 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
+                <p>The GUI codebase is verified by an exhaustive automated testing battery:</p>
+                <ul>
+                    <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
+                    <li><strong>Ecosystem Compliance</strong>: Enforced via <code>lem-env validate --project lemgendary-ai-studio-gui</code>, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.</li>
+                </ul>
             </section>
 
             <section id="section-7">
@@ -158,7 +192,7 @@
 
             <section id="section-8">
                 <h2>8. Conclusion</h2>
-                <p>The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, and real-time WebSocket telemetry pipeline, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.</p>
+                <p>The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, tripartite multi-sidecar mesh, universal configuration editor, and contextual hover micro-documentation, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.</p>
             </section>
         </main>
 

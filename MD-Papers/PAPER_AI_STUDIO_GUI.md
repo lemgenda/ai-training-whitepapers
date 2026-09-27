@@ -79,17 +79,55 @@ To quantify the architectural superiority of the Tauri v2 and React desktop stac
 
 ## 6. Synthesis Flow & Topology
 
-The LemGendary AI Studio operates as a three-tier reactive synthesis topology:
+The LemGendary AI Studio operates as an advanced reactive synthesis topology spanning three coordinated headless sidecars:
 
-1. **Native Host Layer (Rust & Tauri v2)**: Manages window lifecycle, platform security policies, and background process spawning.
-2. **Local Sidecar Service (FastAPI & WebSockets)**: Runs asynchronously on localhost port 8000, querying Python virtual environments, inspecting system hardware, and orchestrating pip manifest reconciliation.
-3. **Reactive Presentation Layer (React 18 & Vanilla CSS)**: Subscribes to the WebSocket event loop, maintaining decoupled state trees for hardware telemetry, project health matrices, pipeline progress, and monospace log streaming.
+1. **Native Host Layer (Rust & Tauri v2)**: Manages window lifecycle, platform security policies, and background process execution.
+2. **Tripartite Sidecar Mesh Boundary**:
+   - **Environment Manager Sidecar (Port 8000)**: Probes host hardware, virtual environments, pip packages, npm workspaces, and orchestrates clean environment installations.
+   - **Dataset Compiler Sidecar (Port 8100)**: Serves dataset manifold catalog telemetry, format statistics, compiler presets, and compilation/migration job pipelines.
+   - **Master Training Suite Sidecar (Port 8200)**: Streams active training runs, GPU utilization, Charbonnier loss convergence, and automated ONNX export triggers.
+3. **Reactive Presentation Layer (React 18 & Vanilla CSS)**: Subscribes to the multi-sidecar mesh over WebSockets and REST channels, maintaining decoupled state trees for telemetry, compilation jobs, training cards, and log streams.
 
 State updates follow unidirectional dispatch flows:
 
 $$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$
 
 preventing UI race conditions and ensuring deterministic views during high-throughput training epochs.
+
+### 6.1 Multi-Sidecar Telemetry Routing
+
+The desktop frontend decouples communication through a dedicated tripartite client router:
+
+- `client.env`: Routes hardware sensors, venv statuses, and drift matrices to `http://127.0.0.1:8000`.
+- `client.datasets`: Routes manifold catalogs, compiler presets, and format statistics to `http://127.0.0.1:8100`.
+- `client.training`: Routes active training runs, GPU profiles, and checkpoint exports to `http://127.0.0.1:8200`.
+
+### 6.2 Universal Dynamic Configuration & Registry Editor
+
+The desktop interface embeds an in-process, non-blocking configuration and registry management modal. Operators can dynamically inspect and edit core ecosystem configuration files:
+
+- `unified_data.yaml`: Source definitions, upstream repositories (Kaggle, HuggingFace, GitHub, Google Drive), and annotation schemas.
+- `unified_models_v2.yaml`: Model definitions, spatial ladder progressions, loss weightings, and manifold references.
+- `config.yaml` / `presets.yaml`: Compiler presets, degradation configurations, and training defaults.
+- `runtime_env.yaml`: Multi-environment overrides for local, Kaggle, Saturn Cloud, and Google Colab runtimes.
+- `requirements.txt` / `package.json`: Dependency manifests with automatic syntax validation prior to saving.
+
+The editor guarantees schema safety through real-time YAML and JSON syntax parsing, displaying visual syntax validation badges and diff confirmations before writing changes to disk.
+
+### 6.3 Contextual UX Help & Micro-Documentation Layer
+
+To eliminate operator ambiguity across complex machine learning and compilation controls, every interactive element across the interface integrates an inline contextual help tooltip badge (`HelpTooltip`):
+
+- **Visual Affordance**: Rendered as a subtle, unobtrusive circular help glyph adjacent to form controls, buttons, toggles, and status badges.
+- **Hover Micro-Documentation**: Displays a high-contrast glassmorphic tooltip providing immediate, plain-language guidance explaining the exact behavior, CLI equivalent flag, and architectural consequence of the action.
+- **Accessibility & Zero-Distraction**: Tooltips adhere to WCAG 2.2 non-interference guidelines, disappearing automatically when the cursor moves away without obstructing the underlying operational dashboard.
+
+### 6.4 Comprehensive Testing & Ecosystem Verification Battery
+
+The GUI codebase is verified by an exhaustive automated testing battery:
+
+- **Component & Integration Testing**: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.
+- **Ecosystem Compliance**: Enforced via `lem-env validate --project lemgendary-ai-studio-gui`, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.
 
 ## 7. Unified Models Registry
 
@@ -103,4 +141,4 @@ This provides operators with instant visual verification of checkpoint integrity
 
 ## 8. Conclusion
 
-The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, and real-time WebSocket telemetry pipeline, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.
+The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, tripartite multi-sidecar mesh, universal configuration editor, and contextual hover micro-documentation, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.

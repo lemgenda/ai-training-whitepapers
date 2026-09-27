@@ -56,6 +56,37 @@
                 <p>The <strong>NIMA Aesthetic Pro Swin-v2-T</strong> is a dedicated neural evaluation engine engineered for precise image quality assessment. Operating on the compiled manifold, it leverages <strong>Swin Transformer v2-Tiny (Window Size 8x8)</strong> to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle human aesthetic judgments with verified mathematical resilience.</p>
             </section>
 
+            <section id="plain-english">
+                <h2>1.1 What NIMA Pro (Swin-v2-T) Does (In Plain English)</h2>
+                <p><strong>Like an elite gallery curator. Utilizing vision transformer self-attention, it analyzes full high-resolution compositions and artistic nuances with professional-grade perceptual precision.</strong></p>
+
+                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
+                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration &amp; Perceptual Assessment</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
+                            <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">POOR QUALITY / UNFAVORABLE</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Overexposed highlights, muddy shadows, improper framing, or generative artifacts.</p>
+                            <div style="height: 120px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #ff5f56; font-weight: 700;">
+                                Score: 2.1 / 10.0
+                            </div>
+                        </div>
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
+                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">AESTHETIC MASTERPIECE / AUTHENTIC</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Balanced golden-ratio composition, rich dynamic range, and authentic textures.</p>
+                            <div style="height: 120px; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #34c759; font-weight: 700;">
+                                Score: 8.9 / 10.0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0; text-align: center;">
+                    <h3 style="color: #ffffff; text-align: left;">NIMA Pro (Swin-v2-T) Training Metrics &amp; Score Distribution</h3>
+                    <img src="../assets/nima_aesthetic_pro_training.png" alt="NIMA Pro (Swin-v2-T) Training Curve" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Figure 1: Earth Mover's Distance (EMD) and Spearman rank correlation convergence during training.</p>
+                </div>
+            </section>
+
             <section id="architecture">
                 <h2>2. Backbone & Feature Extraction</h2>
                 <p>The model employs <strong>Swin Transformer v2-Tiny (Window Size 8x8)</strong> with custom dropout layers (rate = 0.25) and a 10-dimensional Softmax output projection. Intermediate feature maps capture hierarchical compositions ranging from low-level edge sharpness to global photographic balance.</p>

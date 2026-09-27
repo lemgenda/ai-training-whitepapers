@@ -55,6 +55,42 @@
                 <p><strong>CodeFormer</strong> is a robust blind face restoration algorithm that models high-quality facial representations through a discrete <strong>Vector-Quantized (VQ) codebook</strong> prior and a Transformer-based prediction network. Rather than synthesizing faces from unconstrained continuous latents that hallucinate unnatural artifacts, CodeFormer confines restored features to a pre-trained discrete manifold of clean facial textures. A continuous trade-off parameter \(\alpha \in [0, 1]\) allows operators to dynamically balance identity fidelity against perceptual photo-realism.</p>
             </section>
 
+            <section id="plain-english">
+                <h2>1.1 What CodeFormer Does (In Plain English)</h2>
+                <p>Imagine taking an old, scratched, blurry photograph of a loved one from decades ago. Traditional photo programs either blur the face even more or create creepy, plastic-looking skin. <strong>CodeFormer acts like a master portrait artist</strong>:</p>
+                <ul>
+                    <li><strong>The Memory Library:</strong> CodeFormer has memorized over a thousand discrete, natural facial features (sharp pupils, delicate eyelashes, realistic skin pores, and natural lip contours) in an internal "codebook".</li>
+                    <li><strong>Intelligent Detail Matching:</strong> When given a blurry or low-resolution face, instead of guessing blindly, it finds the matching clean features in its library and blends them naturally into the original photo.</li>
+                    <li><strong>The Naturalness Dial (Alpha):</strong> Operators have a simple slider dial from 0% to 100%. Set it to 100% to keep the exact original face shape, or set it to 0% to maximize sharpness and photo-clarity.</li>
+                </ul>
+
+                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
+                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration: Before &amp; After Face Restoration</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
+                            <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">BEFORE RESTORATION (Input)</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.</p>
+                            <div style="height: 140px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #a0a0a0;">
+                                Low-Resolution / Scratched Vintage Portrait
+                            </div>
+                        </div>
+                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
+                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">AFTER RESTORATION (CodeFormer Output)</div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity.</p>
+                            <div style="height: 140px; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #79c0ff; font-weight: 600;">
+                                High-Fidelity Restored Portrait (Alpha = 0.75)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0; text-align: center;">
+                    <h3 style="color: #ffffff; text-align: left;">CodeFormer Training Convergence Metrics (LPIPS &amp; Loss)</h3>
+                    <img src="../assets/codeformer_training.png" alt="CodeFormer Training Metrics Curve" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Figure 1: Training convergence across 100,000 iterations illustrating LPIPS perceptual loss minimization and codebook commitment stability.</p>
+                </div>
+            </section>
+
             <section id="vq-codebook">
                 <h2>2. Discrete Codebook Prior</h2>
                 <p>The codebook \(\mathcal{C} = \{c_k\}_{k=1}^K \subset \mathbb{R}^d\) consists of \(K = 1024\) learned discrete code vectors capturing high-frequency eye, skin, and facial geometry primitives. Features \(z\) from severely degraded inputs are mapped to their nearest codebook entries:</p>

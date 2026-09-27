@@ -249,7 +249,7 @@ To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 shor
 For workflows requiring physical archive extraction, `utils/archive.py` (`smart_extract`) is upgraded with native subsystem delegation:
 
 1. **Binary Auto-Discovery**: Probes system paths for native 64-bit `7z.exe` (`C:\Program Files\7-Zip\7z.exe`) and native POSIX `tar.exe` (`C:\Windows\System32\tar.exe`), falling back gracefully to Python standard library engines.
-2. **Multi-Threaded Hardware Saturation**: Dispatches extraction via native 7-Zip with parameters `-mmt=on -bsp1 -aos -y`, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude.
+2. **Multi-Threaded Hardware Saturation**: Dispatches extraction via native 7-Zip with parameters `-mmt=on -bsp0 -aos -y`, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude while suppressing per-file stdout progress flooding.
 3. **Automated Root Flattening**: Detects single root manifold directory envelopes (`LemGendized{Name}Large/`) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.
 
 ### 5.13 Unified Three-Pipeline Ingestion, Modernization & Conversion Architecture
@@ -285,6 +285,14 @@ The v16.8.0 ecosystem establishes three distinct, standardized operational pipel
   2. *Container Chunk Serializer*: Streams samples into contiguous, fixed-size container chunks (~500 MB `.tar` shards or `.bin` / `.index` MosaicML Streaming files).
   3. *Cluster Slack Elimination & Source Purge*: When invoked with `--purge-source`, automatically unlinks loose intermediate image files upon successful shard verification, eliminating filesystem cluster allocation overhead and consolidating tens of thousands of fragmented files into a handful of sequential shards.
   4. *Registry Synchronization*: Updates `dataset_info.yaml` with `canonical_format: webdataset`, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.
+
+### 5.14 Direct In-Memory Streaming Ingestion & Terminal Progress Telemetry Hardening (v16.9.1)
+
+To eliminate severe terminal line wrapping and eradicate intermediate disk consumption during remote manifold acquisition, v16.9.1 hardens terminal progress telemetry and couples cloud synchronization directly with the streaming modernization engine:
+
+1. **Direct In-Memory Streaming on Cloud Download (`[GET]`)**: In `core/common_sync.py` (`perform_dataset_download`), downloaded legacy `.zip` archives are inspected prior to extraction. If an archive contains legacy loose image structures (`images/`, `targets/`) without pre-existing `.tar` shards, the compiler completely bypasses disk extraction via 7-Zip and routes the archive directly through `stream_zip_to_webdataset` (`tools/stream_zip_to_container.py`). Input and target images are decoded and transcoded to lossless WebP in memory directly into POSIX `.tar` shards across parallel worker threads. Upon verified completion, the source `.zip` archive is automatically deleted, saving 60 GB to 130+ GB of intermediate disk headroom and eliminating millions of loose filesystem writes.
+2. **Terminal Telemetry & Column Width Hardening**: Fixes a critical PowerShell and Windows conhost line wrapping defect in Kaggle API downloads where multi-byte block characters (`█`, `▋`) and unbounded column widths caused terminal buffer overflow, cascading carriage returns (`\r`) onto new lines for every download tick. The download engine encapsulates `tqdm.tqdm` to enforce strict ASCII rendering (`ascii=True`) and fixed column width boundaries (`ncols=80`), guaranteeing single-line in-place telemetry updates across all Windows host environments.
+3. **Silent Subsystem Extraction Delegation**: Updated native 7-Zip execution parameters in `utils/archive.py` (`smart_extract`) from `-bsp1` to `-bsp0`, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.
 
 ---
 

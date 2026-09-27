@@ -24,6 +24,16 @@ The **NIMA Aesthetic Mobile Architecture** is a dedicated neural evaluation engi
 
 ---
 
+## 1.1 What NIMA Mobile (MobileNetV3) Does (In Plain English)
+
+Like an ultra-fast photography judge running on your smartphone. It scores the artistic appeal, lighting, and composition of photos instantly in less than 5 milliseconds without draining battery.
+
+### Visual Assessment & Training Distribution
+- **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+- **Training Metrics:** Tracked via `nima_aesthetic_mobile_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+![NIMA Mobile (MobileNetV3) Training Curve](../assets/nima_aesthetic_mobile_training.png)
+
 ## 2. Backbone & Feature Extraction
 
 The model employs **MobileNetV3-Small (2.8M Parameters)** with custom dropout layers (rate = 0.25) and a 10-dimensional Softmax output projection. Intermediate feature maps capture hierarchical compositions ranging from low-level edge sharpness to global photographic balance.
