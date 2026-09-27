@@ -891,3 +891,11 @@ Ultimately, the LemGendary project proves that with the right mathematical guard
 - **Metric Focus Burst**: Executes 5-epoch hyper-aggressive optimization bursts targeted at heavily lagging metrics (e.g., locking backbone LR while boosting `srcc` rank weight).
 - **Metric-Specific SWA (MS-SWA)**: Maintains independent physical checkpoint vaults for every tracked SOTA metric. Upon Governor trigger, computationally merges the active weights of all individual SOTA peaks into a unified manifold via Stochastic Weight Averaging.
 - **Differentiable Soft-Spearman Loss**: Replaces discrete sort operations with a continuous sigmoid-based ranking formulation, incorporating a historical FIFO queue ($N=32$) to maintain ranking context across micro-batches ($b=2$).
+
+### 8.4 WebDataset Sharding & 10-Bin Distribution Streaming (v16.8.0)
+
+Under the v16.8.0 SSOT container architecture, NIMA manifolds (`LemGendizedNimaAesthetic`, `LemGendizedNimaTechnical`, `LemGendizedNimaAuthenticity`) are sharded into contiguous WebDataset tarballs:
+
+- **Shard Organization**: Packaged into $\sim 500\text{ MB}$ tar shards containing paired `sample.webp` inputs and `sample.json` metadata records.
+- **10-Bin Human Perceptual Distributions**: Serializes the full 10-element floating-point score probability distributions (`[p_1, p_2, ..., p_{10}]`) into compact JSON, directly ingested by `WebDatasetReader` without intermediate file extraction.
+- **Multi-Architecture Streaming**: Powers zero-copy streaming across all NIMA variants (Swin-v2-T, EfficientNetV2-S, MobileNetV2) with deterministic cross-worker shuffling and zero NTFS metadata lookup overhead.

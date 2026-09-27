@@ -36,10 +36,10 @@ The active canonical versions across all workspace components are synchronized a
 
 | Repository / Component | Runtime Version | Config Manifests | Primary Interface |
 | :--- | :--- | :--- | :--- |
-| **`lemgendary-datasets`** | `v16.7.3` | `unified_data.yaml` | `python cli.py` / `lemgendary_datasets_hub.ps1` |
-| **`lemgendary-training-suite`** | `v16.2.9` | `pyproject.toml` | `python -m training.cli.lemtrain` |
-| **`lemgendary-env-manager`** | `v16.2.0` | `pyproject.toml`, `package.json` | `lem-env` / `lemgendary_env_manager.ps1` |
-| **`lemgendary-docs`** | `v16.7.3` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
+| **`lemgendary-datasets`** | `v16.8.0-STABLE` | `unified_data.yaml` | `python cli.py` / `lemgendary_datasets_hub.ps1` |
+| **`lemgendary-training-suite`** | `v16.8.0-STABLE` | `unified_models_v2.yaml` | `python -m training.cli.lemtrain` |
+| **`lemgendary-env-manager`** | `v16.8.0-STABLE` | `pyproject.toml`, `package.json` | `lem-env` / `lemgendary_env_manager.ps1` |
+| **`lemgendary-docs`** | `v16.8.0-STABLE` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
 
 ---
 

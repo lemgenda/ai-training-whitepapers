@@ -24,7 +24,7 @@
             <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
             <div class="meta">
                 <span>Category 01.2 DATASET</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.8.0</span>
             </div>
         </header>
 
@@ -48,7 +48,7 @@
                 </li>
                 <li><a href="#section-7">4. Multi-Modal &amp; Format Resilience</a>
                 </li>
-                <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.7.3)</a>
+                <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</a>
                     <ul class="sub-item">
                         <li><a href="#51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding</a></li>
                         <li><a href="#52-modular-container-format">5.2 Modular Container Format Layer</a></li>
@@ -59,6 +59,7 @@
                         <li><a href="#57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
                         <li><a href="#58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
                         <li><a href="#59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
+                        <li><a href="#510-canonical-storage-format">5.10 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -110,7 +111,7 @@
 
 <section id="section-1">
 <h2>1. Abstract</h2>
-            <p>The LemGendary Dataset Compiler Suite (v16.7.3) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
+            <p>The LemGendary Dataset Compiler Suite (v16.8.0) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
             <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
         
 
@@ -465,7 +466,7 @@
 </section>
 
 <section id="section-modernization">
-<h2>5. 2026 Modernization Architecture &amp; Innovations (v16.7.3)</h2>
+<h2>5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</h2>
             <p>The 2026 modernization elevates the compiler from a script collection into an industrial-grade dataset synthesis, audit, and sidecar service engine:</p>
 
             <h3 id="51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding (Phase 3)</h3>
@@ -542,12 +543,27 @@
                 <li><strong>File-Level Delta Scanning</strong>: Replaces blind file queues with size-aware delta inspection. Any existing valid <code>.webp</code> image or metadata file is bypassed in milliseconds, eliminating redundant CPU/GPU compute upon interrupted runs.</li>
                 <li><strong>Real-Time Visual Telemetry</strong>: Integrates single-line <code>tqdm</code> progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.</li>
             </ul>
+
+            <h3 id="510-canonical-storage-format">5.10 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</h3>
+            <p>To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 establishes an authoritative Single Source of Truth (SSOT) container governance matrix across all 20 production manifolds:</p>
+            <ul>
+                <li><strong>Zero-Duplication Format Assignment</strong>: Eliminates duplicate coexistence of loose directory trees and streaming tar archives by enforcing a single canonical storage format per manifold:
+                    <ul>
+                        <li><strong>Apache Parquet (<code>parquet</code>)</strong>: Zstandard-compressed annual columnar shards for high-frequency financial time-series (<code>LemGendizedForexUniverse</code>).</li>
+                        <li><strong>Lightning AI LitData (<code>litdata</code>)</strong>: High-throughput binary tensor chunks (<code>.bin</code>) for parameter prediction (<code>LemGendizedUpnV2</code>).</li>
+                        <li><strong>MosaicML Streaming (<code>mds</code>)</strong>: Deterministic multi-task chunk streaming with elastic mixing and Zstd compression for multi-task restoration (<code>LemGendizedProfessionalMultitaskRestoration</code>) and safety classification (<code>LemGendizedClassificationMasterManifold</code>).</li>
+                        <li><strong>WebDataset (<code>webdataset</code>)</strong>: Contiguous ~500 MB tar shards for 10-bin quality distributions (<code>NimaAesthetic</code>, <code>NimaTechnical</code>, <code>NimaAuthenticity</code>) and paired restoration targets (<code>FilmRestorer</code>, <code>CodeFormer</code>, <code>ParseNet</code>, <code>RetinaFace</code>, <code>FFANet</code>, <code>MIRNet</code>, <code>MPRNet</code>, <code>NAFNet</code>, <code>UltraZoom</code>).</li>
+                        <li><strong>Directory (<code>directory</code>)</strong>: Optimized WebP <code>images/</code> with YOLO <code>.cache</code> label arrays for native Ultralytics training (<code>LemGendizedYoloV8n</code>), remediated via NTFS LZX transparent compaction.</li>
+                    </ul>
+                </li>
+                <li><strong>Automated Kaggle Metadata Governance</strong>: Upgraded <code>unified_data.yaml</code> (v4.3.0) and <code>core/config_schema.py</code> to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.</li>
+            </ul>
 </section>
 
 <section id="section-8">
 <h2>6. Comparative Analysis | 2026 Manifold Compilers Benchmark</h2>
             <h3 id="61-technical-comparison-matrix">6.1 Technical Comparison Matrix</h3>
-            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.7.3)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
+            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.8.0)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
 
             <div class="table-wrapper">
             <table>
@@ -559,7 +575,7 @@
             <th>Ray Data / Anyscale</th>
             <th>Cohere / DeepSpeed Data</th>
             <th>Meta TorchData v2</th>
-            <th>LemGendary Compiler Suite (v16.7.3)</th>
+            <th>LemGendary Compiler Suite (v16.8.0)</th>
             </tr>
             </thead>
             <tbody>
@@ -685,7 +701,7 @@
                 </div>
                 <div class="quadrant" style="margin-bottom: 20px; border-left: 4px solid var(--accent-color);">
                     <div class="quadrant-info">
-                        <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.7.3)</h3>
+                        <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.8.0)</h3>
                         <ul>
                             <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
                             <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>

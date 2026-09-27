@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.2.9 "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
+The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.8.0-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
 
 ---
 
@@ -121,6 +121,14 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 
 - **Benchmark Gap Audit**: Automatically tabulates achieved metrics against mathematical `sota_targets` upon reaching the maximum epoch ceiling.
 - **Interactive Action Matrix**: Presents operators with immediate in-process options to extend training, launch cloud GPU escalation, fine-tune from the best checkpoint, or export ONNX matrices.
+
+### 2.13. Native Multi-Container Ingestion Architecture (v16.8.0)
+
+- **Pluggable Container Format Engines (`training/data/containers/`)**: Decoupled reader ecosystem providing zero-IPC streaming ingestion across all modernized storage formats: `WebDatasetReader` (`.tar`), `MdsReader` (`.mds`), `LitDataReader` (`chunk*.bin`), and `ParquetReader` (`.parquet`).
+- **Paired Restoration Multi-Modal WebDataset Sharding**: Native extraction of ground truth targets (`target.webp`), semantic segmentation masks (`mask.webp`), text captions, and full 10-bin human perceptual quality distributions directly from compressed tar archives without unpacking loose files to disk.
+- **MosaicML Streaming (MDS) Elastic Determinism**: Cloud-native multi-task streaming with Zstandard block compression, deterministic pseudo-random shuffling across workers, and zero-latency state resumption.
+- **Lightning AI LitData Tensor Streaming**: High-throughput memory-mapped binary chunk reading for regression and parameter prediction (`upn_v2`), supporting variable-shape tensors and robust fallback error handling.
+- **Universal Container Resolver Ecosystem**: Upgraded `resolve_container_reader` dynamically reads `canonical_format` and `format` fields from `dataset_info.yaml`, falling back to candidate directory heuristics (`shards/`, `mds/`, `litdata/`, `parquet/`) for transparent zero-configuration ingestion.
 
 ---
 

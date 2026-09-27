@@ -145,6 +145,14 @@ As active training runs conclude on dual T4 nodes, checkpoint metrics will recor
 * **Multi-Task Task Interference**: Balanced gradient normalization prevents gradients from one degradation mode from dominating shared encoder parameters.
 * **Sub-Pixel Artifact Prevention**: Periodic shuffle layers utilize blurred kernel initializations to eliminate checkerboard artifacts.
 
+### 5.3 Modernized Storage & Streaming Ingestion (v16.8.0)
+
+Under the v16.8.0 storage format standardization, restoration datasets are transitioned to specialized streaming container formats:
+
+* **WebDataset Paired Restoration Sharding**: Contiguous $\sim 500\text{ MB}$ tar shards packaging degraded inputs and corresponding ground truth targets (`sample.webp` + `sample.target.webp`) for single-task networks (FFANet, MIRNet, MPRNet, NAFNet, FilmRestorer, CodeFormer, UltraZoom).
+* **MosaicML Streaming (MDS)**: Multi-task restoration (`LemGendizedProfessionalMultitaskRestoration`) utilizes Zstandard-compressed MDS shards supporting elastic multi-head task mixing and zero-latency checkpoint resumption.
+* **LitData Binary Tensor Streaming**: Parameter prediction (`LemGendizedUpnV2`) ingests 1.42M samples directly from binary `.bin` tensor chunks with zero IPC overhead.
+
 ---
 
 ## 6. Deployment Strategy

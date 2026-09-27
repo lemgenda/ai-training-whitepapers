@@ -101,10 +101,10 @@ To allow desktop applications, external CLI scripts, and cloud orchestrators to 
 | Subsystem | Primary Repository | Architecture Role | Key Invariants |
 | :--- | :--- | :--- | :--- |
 | **Presentation** | `lemgendary-ai-studio-gui` | Desktop operator cockpit (Tauri / TS). | Bound to frozen `openapi.json` contracts. Zero business logic in frontend. |
-| **Toolchain & Env** | `lemgendary-env-manager` | Foundation manager (`v16.2.0`). | Strict isolation: Python 3.12+ required. Enforces zero-emoji & zero-suppression rules. |
-| **Data Compiler** | `lemgendary-datasets` | Synthesis & ingestion engine (`v16.7.3`). | $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, hardlink dedup, 2-tier resumption. |
-| **Training Suite** | `lemgendary-training-suite` | Model training engine (`v16.2.9`). | Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. |
-| **Documentation** | `lemgendary-docs` | Documentation hub & whitepapers (`v16.7.3`). | WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning. |
+| **Toolchain & Env** | `lemgendary-env-manager` | Foundation manager (`v16.8.0-STABLE`). | Strict isolation: Python 3.12+ required. Enforces zero-emoji & zero-suppression rules. |
+| **Data Compiler** | `lemgendary-datasets` | Synthesis & ingestion engine (`v16.8.0-STABLE`). | $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, SSOT canonical formats (MDS, LitData, WebDataset, Parquet, Directory). |
+| **Training Suite** | `lemgendary-training-suite` | Model training engine (`v16.8.0-STABLE`). | Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. |
+| **Documentation** | `lemgendary-docs` | Documentation hub & whitepapers (`v16.8.0-STABLE`). | WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning. |
 
 ---
 
