@@ -31,6 +31,8 @@
   - [5.4 WebSocket Real-Time Log Streaming](#54-websocket-real-time-log-streaming)
   - [5.5 SQLite Job Persistence & Restart Recovery](#55-sqlite-job-persistence--restart-recovery)
   - [5.6 Desktop GUI Aggregated Endpoints & Presets (Phase 8)](#56-desktop-gui-aggregated-endpoints--presets-phase-8)
+  - [5.7 Three Architectural Ingestion & Modernization Pipelines](#57-three-architectural-ingestion--modernization-pipelines)
+  - [5.8 Python In-Process Engine & Streaming Pipeline APIs](#58-python-in-process-engine--streaming-pipeline-apis)
 - [6. Error Handling, Status Codes & Resilience](#6-error-handling-status-codes--resilience)
 
 ---
@@ -760,6 +762,76 @@ Catalogs canonical compiler preset profiles (`quality-vision`, `restoration-hard
 #### `POST /api/gui/quick-compile`
 
 Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
+
+### 5.7 Three Architectural Ingestion & Modernization Pipelines
+
+The dataset compilation engine supports three canonical processing pathways:
+
+1. **Regular Ingestion & Manifold Compilation Pipeline**:
+   - Ingests raw source folders from `raw-sets/`.
+   - Executes image integrity verification, aspect ratio checks, NIMA perceptual quality gating, YOLO auto-labeling, and Lanczos-3 spatial downsampling.
+   - Emits standardized directories with zero-intermediate WebP transcoding (`quality=92` images, `quality=95` targets), or simultaneous streaming containers via `--also-format` (`webdataset`, `mds`, `litdata`).
+   - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
+
+2. **Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)**:
+   - Directly indexes and reads legacy multi-gigabyte `.zip` archives containing millions of small images.
+   - Streams raw byte streams in memory through a 12-thread worker pool for parallel WebP transcoding, eliminating NTFS MFT locking, 8.3 short-name collision overhead, and antivirus filter driver lag.
+   - Dual-pass sequential tar streaming writes input images sequentially, then appends paired targets in POSIX append mode (`"a"`).
+   - Validates shard byte counts and unlinks source `.zip` archives (`--delete-zip`) and purges legacy uncompressed directories (`--delete-legacy-dir`), reclaiming hundreds of gigabytes of disk space.
+
+3. **Retroactive Manifold Migration Pipeline (`format migrate` / `migrate_manifold_format.py`)**:
+   - Discovers existing modernized dataset folders containing loose `.webp` files and an `index.json` catalog.
+   - Serializes loose samples into continuous ~500 MB WebDataset `.tar` shards or MosaicML `.mds` chunks.
+   - When invoked with `--purge-source`, unlinks the loose directory trees upon verified shard writing, eliminating filesystem cluster allocation overhead while keeping sample contents bit-exact.
+
+### 5.8 Python In-Process Engine & Streaming Pipeline APIs
+
+The dataset compiler exposes programmatic Python service classes and streaming utilities for automated workflows and sidecar runners:
+
+```python
+from pathlib import Path
+from services.compiler_service import CompilerService
+from services.migration_service import MigrationService
+from tools.stream_zip_to_container import ZipToContainerStreamer
+
+# 1. Direct streaming of multi-gigabyte zip archive to WebDataset shards
+streamer = ZipToContainerStreamer(
+    zip_path=Path("LemGendaryDatasets/lemgendizedmirnetexposurelarge.zip"),
+    target_dir=Path("LemGendaryDatasets/LemGendizedMirNetExposure"),
+    shard_size=5000,
+    transcode_webp=True,
+    workers=12,
+    delete_zip_on_success=True,
+    legacy_dir_to_delete=Path("LemGendaryDatasets/LemGendizedMirNetExposureLarge"),
+)
+success = streamer.stream()
+
+# 2. Retroactive directory-to-container migration
+migrator = MigrationService()
+exit_code = migrator.migrate_containers(
+    manifold_dir="LemGendaryDatasets/LemGendizedFilmRestorer",
+    target_format="webdataset",
+    accept_space_loss=True,
+    purge_source=True,
+)
+
+# 3. Regular manifold compilation pipeline
+compiler = CompilerService()
+exit_code = compiler.compile(
+    model_name="mirnet_exposure",
+    preset="quality-vision",
+    also_format="webdataset",
+    workers=8,
+)
+
+# 4. Ingest and parse custom annotation formats (including MATLAB)
+from converters.dispatch import detect_annotations
+from converters.matlab import parse_matlab
+
+fmt, ann_path = detect_annotations("raw-sets/custom_dataset")
+if fmt == "matlab" and ann_path:
+    mat_data, primary_key = parse_matlab(ann_path)
+```
 
 ---
 

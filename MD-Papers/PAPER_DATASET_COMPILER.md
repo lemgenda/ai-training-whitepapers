@@ -104,6 +104,38 @@ To empirically validate these system-level optimizations, execution profiles wer
 
 ## 4. Multi-Modal & Format Resilience
 
+### 4.1 Upstream Multi-Source Expansion Architecture (`sources/`)
+
+The compiler supports declarative multi-source dataset expansion directly through `unified_data.yaml` under each manifold's `refs:` array. Operators can add heterogeneous source repositories without altering compilation code:
+
+* **Kaggle Datasets (`kaggle://<owner>/<dataset-slug>`)**: Handled by `sources/kaggle.py`, executing authenticated API or KaggleHub retrieval with automatic fallback across environment variables, `~/.kaggle/kaggle.json`, and `.kaggle_token`.
+* **Hugging Face Hub (`hf://<org>/<repo-id>[:<archive-file>]`)**: Handled by `sources/hf.py`, supporting direct snapshot downloads, compressed tarball streaming (`.tgz`, `.tar.gz`), and individual file synchronization with `.huggingface_token` authentication.
+* **Google Drive (`gd://<file_or_folder_id>`)**: Handled by `sources/gd.py`, providing multi-threaded chunked downloads for large hosted research datasets.
+* **GitHub Repositories (`gh://<owner>/<repo>`)**: Handled by `sources/gh.py`, enabling automated release asset extraction and source tree synchronization.
+* **Inter-Manifold Recirculation (`manifold://<ManifoldName>`)**: Seamlessly mounts and slices already-compiled sibling manifolds (e.g., using `LemGendizedNAFNetDebluring` inside `ProfessionalMultitaskRestoration`) without duplicating image files on disk.
+
+### 4.2 Multi-Format Input Ingestion & Annotation Converter Subsystem (`converters/`)
+
+Regardless of the upstream source dataset's original structure or format, the compiler automatically detects and transforms annotations and image tensors through the unified `converters/` subsystem:
+
+* **MATLAB Input Format (`converters/matlab.py`)**: Full native support for MATLAB `.mat` files via `scipy.io.loadmat(mat_path, spmatrix=False)`. Hardened for forward-compatibility with SciPy 1.14+ sparse matrix deprecations, the parser extracts annotation keys, matrix coordinates, and ground-truth bounding arrays seamlessly.
+* **COCO JSON Format (`converters/coco.py`)**: Parses standard MS-COCO bounding boxes, instance categories, and polygon segmentation boundaries into unified internal sample dictionaries.
+* **Pascal VOC XML Format (`converters/xml.py`)**: Traverses XML node trees to extract object classes and pixel-coordinate bounding boxes (`[xmin, ymin, xmax, ymax]`).
+* **YOLO Format (`converters/yolo.py`)**: Normalizes space-delimited text annotations (`class x_center y_center width height`) into standardized bounding box targets.
+* **Apache Parquet & Safetensors (`converters/parquet.py`)**: Native ingestion of highly compressed PyArrow columnar tables, embedded byte buffers, and model tensors.
+* **Multi-Format Image Support**: Fast single-pass scanner (`_fast_scan`) dynamically ingests `.jpg`, `.jpeg`, `.png`, `.webp`, `.safetensors`, `.tiff`, `.tif`, `.bmp`, and `.npy` arrays.
+
+### 4.3 Pre-flight Validation, Integrity Vetting & Automated Pruning
+
+Every discovered sample from any source undergoes rigorous pre-flight gating before entering the manifold:
+
+* **Magic-Byte Header Sniffing**: `VisionAuditor.verify_header()` inspects raw file signatures, automatically purging zero-byte stubs, corrupt bitstreams, or truncated downloads.
+* **Spatial Dimension Floors & Aspect Ratios**: Samples violating task-specific resolution boundaries ($\min(W, H) < 224\text{px}$ for restoration, $< 512\text{px}$ for diffusion) or exhibiting extreme aspect ratio distortion are automatically filtered out.
+* **NIMA Perceptual Quality Gating**: Evaluates aesthetic and technical quality score distributions, discarding heavily degraded or out-of-distribution frames.
+* **Perceptual Deduplication (`pHash`)**: Computes DCT perceptual hashes to eliminate duplicate or near-identical images across overlapping upstream sources.
+
+### 4.4 Domain Specializations
+
 * **Parquet & Safetensors Support (v16.6.0)**: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (`ForexUniverse{year}.parquet`) utilizing Zstandard compression (level 3) with in-memory row-group caching.
 * **DPED Mirroring v2.1**: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.
 * **VRAM De-fragmentation**: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.
@@ -198,11 +230,61 @@ To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 esta
 
 * **Zero-Duplication Format Assignment**: Eliminates duplicate coexistence of loose directory trees and streaming tar archives by enforcing a single canonical storage format per manifold:
   * **Apache Parquet (`parquet`)**: Zstandard-compressed annual columnar shards for high-frequency financial time-series (`LemGendizedForexUniverse`).
-  * **Lightning AI LitData (`litdata`)**: High-throughput binary tensor chunks (`.bin`) for parameter prediction (`LemGendizedUpnV2`).
+  * **WebDataset (`webdataset`)**: Contiguous $\sim 500\text{ MB}$ tar shards for 10-bin quality distributions (`NimaAesthetic`, `NimaTechnical`, `NimaAuthenticity`), ultra-scale parameter prediction (`LemGendizedUpnV2`), and paired restoration targets (`FilmRestorer`, `CodeFormer`, `ParseNet`, `RetinaFace`, `FFANet`, `MIRNet`, `MPRNet`, `NAFNet`, `UltraZoom`).
   * **MosaicML Streaming (`mds`)**: Deterministic multi-task chunk streaming with elastic mixing and Zstd compression for multi-task restoration (`LemGendizedProfessionalMultitaskRestoration`) and safety classification (`LemGendizedClassificationMasterManifold`).
-  * **WebDataset (`webdataset`)**: Contiguous $\sim 500\text{ MB}$ tar shards for 10-bin quality distributions (`NimaAesthetic`, `NimaTechnical`, `NimaAuthenticity`) and paired restoration targets (`FilmRestorer`, `CodeFormer`, `ParseNet`, `RetinaFace`, `FFANet`, `MIRNet`, `MPRNet`, `NAFNet`, `UltraZoom`).
   * **Directory (`directory`)**: Optimized WebP `images/` with YOLO `.cache` label arrays for native Ultralytics training (`LemGendizedYoloV8n`), remediated via NTFS LZX transparent compaction.
 * **Automated Kaggle Metadata Governance**: Upgraded `unified_data.yaml` (v4.3.0) and `core/config_schema.py` to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.
+
+### 5.11 Direct Streaming Zip-to-Container & In-Flight WebP Transcoding Engine (v16.8.0)
+
+To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (`WdFilter.sys`) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., `LemGendizedMirNetExposureLarge` with 2.82M loose files and `LemGendizedUpnV2Large` with 1.42M files), v16.8.0 introduces the **Direct Streaming Zip-to-Container Engine** (`tools/stream_zip_to_container.py`):
+
+1. **Zero-Unpack Architecture**: Directly mounts legacy `.zip` archives and streams raw byte streams into canonical WebDataset POSIX `.tar` shards in memory, eliminating loose file generation on physical disk.
+2. **In-Flight Multi-Threaded WebP Transcoding**: Deploys an asynchronous worker pool (`ThreadPoolExecutor`, 12 CPU cores) executing Pillow WebP encoding (`method=2`, `quality=92` for input images, `quality=95` for ground-truth targets). Delivers consistent $\sim 1,800\text{--}2,000\text{ img/sec}$ throughput, accelerating processing time from days to minutes.
+3. **Dual-Pass Sequential Tar Streaming**: For paired restoration manifolds (`images/` and `targets/`), Pass 1 streams input images sequentially by zip central directory header offset into `shard-*.tar`, and Pass 2 appends paired ground truth (`sample.target.webp`) in standard POSIX append mode (`"a"`), preserving pure sequential NVMe read velocity without random seek degradation.
+4. **Automated Disk Reclamation**: Automatically extracts root metadata (`dataset_info.yaml`, `dataset-metadata.json`, `README.md`, `index.json`, notebooks), validates shard byte integrity, updates canonical format to `webdataset`, unlinks multi-gigabyte source `.zip` archives (`--delete-zip`), and purges legacy uncompressed directories (`--delete-legacy-dir`), recovering over $120\text{ GB}$ of local storage space.
+
+### 5.12 Native 7-Zip & Tar Multi-Threaded Archive Acceleration (`utils/archive.py`)
+
+For workflows requiring physical archive extraction, `utils/archive.py` (`smart_extract`) is upgraded with native subsystem delegation:
+
+1. **Binary Auto-Discovery**: Probes system paths for native 64-bit `7z.exe` (`C:\Program Files\7-Zip\7z.exe`) and native POSIX `tar.exe` (`C:\Windows\System32\tar.exe`), falling back gracefully to Python standard library engines.
+2. **Multi-Threaded Hardware Saturation**: Dispatches extraction via native 7-Zip with parameters `-mmt=on -bsp1 -aos -y`, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude.
+3. **Automated Root Flattening**: Detects single root manifold directory envelopes (`LemGendized{Name}Large/`) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.
+
+### 5.13 Unified Three-Pipeline Ingestion, Modernization & Conversion Architecture
+
+The v16.8.0 ecosystem establishes three distinct, standardized operational pipelines governing all lifecycle phases of training datasets:
+
+#### 1. Regular Ingestion & Manifold Compilation Pipeline (`compile` / `compile_all`)
+
+* **Primary Scope**: Ingesting raw external datasets (`raw-sets/`), applying quality gating, and compiling fresh standardized production manifolds (`LemGendized*`).
+* **Workflow Stages**:
+  1. *Discovery & Pre-flight*: Scans raw sources, verifies directory layout and file structures against `unified_data.yaml`.
+  2. *Quality & Integrity Filters*: Inspects magic headers, validates image aspect ratios, filters corrupted samples, and executes NIMA aesthetic/technical quality score gating.
+  3. *Auto-Labeling & Resampling*: Derives normalized YOLO bounding boxes, SAM/ParseNet segmentation masks, or BLIP captions where applicable, applying high-fidelity Lanczos-3 anti-aliasing interpolation for spatial rescales.
+  4. *Zero-Intermediate WebP Transcoding*: Transcodes input images directly in memory (`quality=92` for inputs, `quality=95` for restoration targets) avoiding redundant uncompressed intermediate disk writes.
+  5. *Emission & Container Sharding*: Emits canonical directory layouts with NTFS hardlink deduplication preserved, or simultaneously exports modern streaming container shards (`--also-format webdataset`, `--also-format mds`, `--also-format litdata`).
+  6. *Manifest Generation*: Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
+
+#### 2. Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)
+
+* **Primary Scope**: Modernizing legacy multi-gigabyte `.zip` archives containing millions of small files directly into canonical POSIX WebDataset `.tar` shards without ever writing uncompressed loose files to disk.
+* **Workflow Stages**:
+  1. *Zero-Unpack Streaming Ingestion*: Directly opens the `.zip` archive via low-level central directory indexing, completely bypassing NTFS Master File Table (MFT) lock contention, short filename generation, and real-time antivirus filter driver serialization.
+  2. *In-Flight Multi-Threaded Transcoding*: Decompresses raw image streams in memory and dispatches them across a 12-thread worker pool executing Pillow WebP encoding (`method=2`, `quality=92` for inputs, `quality=95` for targets).
+  3. *Dual-Pass Sequential Tar Streaming*: For paired restoration sets (`images/` and `targets/`), Pass 1 writes sequential input images into `shard-*.tar`, while Pass 2 appends paired targets in standard POSIX append mode (`"a"`), maintaining high-velocity sequential write throughput on NVMe SSDs.
+  4. *Root Metadata Extraction*: Extracts essential documentation, notebooks, and index manifests (`index.json`, `dataset_info.yaml`, `README.md`) to the modernized manifold root.
+  5. *Automated Storage Reclamation*: Validates shard byte counts and sample completeness, then automatically deletes both the source `.zip` archive (`--delete-zip`) and any legacy unpacked directory trees (`--delete-legacy-dir`), recovering 50 GB to 100+ GB per dataset of local disk space.
+
+#### 3. Retroactive Manifold Migration Pipeline (`format migrate` / `migrate_manifold_format.py`)
+
+* **Primary Scope**: Converting already modernized local dataset directories (consisting of loose WebP images, targets, and `index.json`) into canonical streaming container shards (`webdataset` or `mds`).
+* **Workflow Stages**:
+  1. *Manifest & Index Traversal*: Reads existing `index.json` or scans the structured manifold directory tree to build deterministic sample item queues.
+  2. *Container Chunk Serializer*: Streams samples into contiguous, fixed-size container chunks (~500 MB `.tar` shards or `.bin` / `.index` MosaicML Streaming files).
+  3. *Cluster Slack Elimination & Source Purge*: When invoked with `--purge-source`, automatically unlinks loose intermediate image files upon successful shard verification, eliminating filesystem cluster allocation overhead and consolidating tens of thousands of fragmented files into a handful of sequential shards.
+  4. *Registry Synchronization*: Updates `dataset_info.yaml` with `canonical_format: webdataset`, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.
 
 ---
 

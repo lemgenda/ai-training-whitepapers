@@ -47,6 +47,12 @@
                 <li><a href="#section-5">3. Hybrid Cloud &amp; Registry Integration</a>
                 </li>
                 <li><a href="#section-7">4. Multi-Modal &amp; Format Resilience</a>
+                    <ul class="sub-item">
+                        <li><a href="#41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture</a></li>
+                        <li><a href="#42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converters</a></li>
+                        <li><a href="#43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Pruning</a></li>
+                        <li><a href="#44-domain-specializations">4.4 Domain Specializations</a></li>
+                    </ul>
                 </li>
                 <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</a>
                     <ul class="sub-item">
@@ -60,6 +66,9 @@
                         <li><a href="#58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
                         <li><a href="#59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
                         <li><a href="#510-canonical-storage-format">5.10 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
+                        <li><a href="#511-streaming-zip-container">5.11 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
+                        <li><a href="#512-native-archive-acceleration">5.12 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
+                        <li><a href="#513-three-pipelines">5.13 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -397,7 +406,39 @@
 </section>
 
 <section id="section-7">
-<h2>4. Multi-Modal & Format Resilience</h2>
+<h2>4. Multi-Modal &amp; Format Resilience</h2>
+
+            <h3 id="41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture (<code>sources/</code>)</h3>
+            <p>The compiler supports declarative multi-source dataset expansion directly through <code>unified_data.yaml</code> under each manifold's <code>refs:</code> array. Operators can add heterogeneous source repositories without altering compilation code:</p>
+            <ul>
+                <li><strong>Kaggle Datasets (<code>kaggle://&lt;owner&gt;/&lt;dataset-slug&gt;</code>)</strong>: Handled by <code>sources/kaggle.py</code>, executing authenticated API or KaggleHub retrieval with automatic fallback across environment variables, <code>~/.kaggle/kaggle.json</code>, and <code>.kaggle_token</code>.</li>
+                <li><strong>Hugging Face Hub (<code>hf://&lt;org&gt;/&lt;repo-id&gt;[:&lt;archive-file&gt;]</code>)</strong>: Handled by <code>sources/hf.py</code>, supporting direct snapshot downloads, compressed tarball streaming (<code>.tgz</code>, <code>.tar.gz</code>), and individual file synchronization with <code>.huggingface_token</code> authentication.</li>
+                <li><strong>Google Drive (<code>gd://&lt;file_or_folder_id&gt;</code>)</strong>: Handled by <code>sources/gd.py</code>, providing multi-threaded chunked downloads for large hosted research datasets.</li>
+                <li><strong>GitHub Repositories (<code>gh://&lt;owner&gt;/&lt;repo&gt;</code>)</strong>: Handled by <code>sources/gh.py</code>, enabling automated release asset extraction and source tree synchronization.</li>
+                <li><strong>Inter-Manifold Recirculation (<code>manifold://&lt;ManifoldName&gt;</code>)</strong>: Seamlessly mounts and slices already-compiled sibling manifolds (e.g., using <code>LemGendizedNAFNetDebluring</code> inside <code>ProfessionalMultitaskRestoration</code>) without duplicating image files on disk.</li>
+            </ul>
+
+            <h3 id="42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converter Subsystem (<code>converters/</code>)</h3>
+            <p>Regardless of the upstream source dataset's original structure or format, the compiler automatically detects and transforms annotations and image tensors through the unified <code>converters/</code> subsystem:</p>
+            <ul>
+                <li><strong>MATLAB Input Format (<code>converters/matlab.py</code>)</strong>: Full native support for MATLAB <code>.mat</code> files via <code>scipy.io.loadmat(mat_path, spmatrix=False)</code>. Hardened for forward-compatibility with SciPy 1.14+ sparse matrix deprecations, the parser extracts annotation keys, matrix coordinates, and ground-truth bounding arrays seamlessly.</li>
+                <li><strong>COCO JSON Format (<code>converters/coco.py</code>)</strong>: Parses standard MS-COCO bounding boxes, instance categories, and polygon segmentation boundaries into unified internal sample dictionaries.</li>
+                <li><strong>Pascal VOC XML Format (<code>converters/xml.py</code>)</strong>: Traverses XML node trees to extract object classes and pixel-coordinate bounding boxes (<code>[xmin, ymin, xmax, ymax]</code>).</li>
+                <li><strong>YOLO Format (<code>converters/yolo.py</code>)</strong>: Normalizes space-delimited text annotations (<code>class x_center y_center width height</code>) into standardized bounding box targets.</li>
+                <li><strong>Apache Parquet &amp; Safetensors (<code>converters/parquet.py</code>)</strong>: Native ingestion of highly compressed PyArrow columnar tables, embedded byte buffers, and model tensors.</li>
+                <li><strong>Multi-Format Image Support</strong>: Fast single-pass scanner (<code>_fast_scan</code>) dynamically ingests <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, and <code>.npy</code> arrays.</li>
+            </ul>
+
+            <h3 id="43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Automated Pruning</h3>
+            <p>Every discovered sample from any source undergoes rigorous pre-flight gating before entering the manifold:</p>
+            <ul>
+                <li><strong>Magic-Byte Header Sniffing</strong>: <code>VisionAuditor.verify_header()</code> inspects raw file signatures, automatically purging zero-byte stubs, corrupt bitstreams, or truncated downloads.</li>
+                <li><strong>Spatial Dimension Floors &amp; Aspect Ratios</strong>: Samples violating task-specific resolution boundaries (&ge; 224px for restoration, &ge; 512px for diffusion) or exhibiting extreme aspect ratio distortion are automatically filtered out.</li>
+                <li><strong>NIMA Perceptual Quality Gating</strong>: Evaluates aesthetic and technical quality score distributions, discarding heavily degraded or out-of-distribution frames.</li>
+                <li><strong>Perceptual Deduplication (<code>pHash</code>)</strong>: Computes DCT perceptual hashes to eliminate duplicate or near-identical images across overlapping upstream sources.</li>
+            </ul>
+
+            <h3 id="44-domain-specializations">4.4 Domain Specializations</h3>
             <ul>
                 <li><strong>Parquet &amp; Safetensors Support (v16.6.0)</strong>: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (<code>ForexUniverse{year}.parquet</code>) utilizing Zstandard compression (level 3) with in-memory row-group caching.</li>
                 <li><strong>DPED Mirroring v2.1</strong>: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.</li>
@@ -552,11 +593,72 @@
                         <li><strong>Apache Parquet (<code>parquet</code>)</strong>: Zstandard-compressed annual columnar shards for high-frequency financial time-series (<code>LemGendizedForexUniverse</code>).</li>
                         <li><strong>Lightning AI LitData (<code>litdata</code>)</strong>: High-throughput binary tensor chunks (<code>.bin</code>) for parameter prediction (<code>LemGendizedUpnV2</code>).</li>
                         <li><strong>MosaicML Streaming (<code>mds</code>)</strong>: Deterministic multi-task chunk streaming with elastic mixing and Zstd compression for multi-task restoration (<code>LemGendizedProfessionalMultitaskRestoration</code>) and safety classification (<code>LemGendizedClassificationMasterManifold</code>).</li>
-                        <li><strong>WebDataset (<code>webdataset</code>)</strong>: Contiguous ~500 MB tar shards for 10-bin quality distributions (<code>NimaAesthetic</code>, <code>NimaTechnical</code>, <code>NimaAuthenticity</code>) and paired restoration targets (<code>FilmRestorer</code>, <code>CodeFormer</code>, <code>ParseNet</code>, <code>RetinaFace</code>, <code>FFANet</code>, <code>MIRNet</code>, <code>MPRNet</code>, <code>NAFNet</code>, <code>UltraZoom</code>).</li>
+                        <li><strong>WebDataset (<code>webdataset</code>)</strong>: Contiguous ~500 MB tar shards for 10-bin quality distributions (<code>NimaAesthetic</code>, <code>NimaTechnical</code>, <code>NimaAuthenticity</code>), ultra-scale parameter prediction (<code>LemGendizedUpnV2</code>), and paired restoration targets (<code>FilmRestorer</code>, <code>CodeFormer</code>, <code>ParseNet</code>, <code>RetinaFace</code>, <code>FFANet</code>, <code>MIRNet</code>, <code>MPRNet</code>, <code>NAFNet</code>, <code>UltraZoom</code>).</li>
                         <li><strong>Directory (<code>directory</code>)</strong>: Optimized WebP <code>images/</code> with YOLO <code>.cache</code> label arrays for native Ultralytics training (<code>LemGendizedYoloV8n</code>), remediated via NTFS LZX transparent compaction.</li>
                     </ul>
                 </li>
                 <li><strong>Automated Kaggle Metadata Governance</strong>: Upgraded <code>unified_data.yaml</code> (v4.3.0) and <code>core/config_schema.py</code> to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.</li>
+            </ul>
+
+            <h3 id="511-streaming-zip-container">5.11 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
+            <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposureLarge</code> with 2.82M loose files and <code>LemGendizedUpnV2Large</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
+            <ul>
+                <li><strong>Zero-Unpack Architecture</strong>: Directly mounts legacy <code>.zip</code> archives and streams raw byte streams into canonical WebDataset POSIX <code>.tar</code> shards in memory, eliminating loose file generation on physical disk.</li>
+                <li><strong>In-Flight Multi-Threaded WebP Transcoding</strong>: Deploys an asynchronous worker pool (<code>ThreadPoolExecutor</code>, 12 CPU cores) executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for input images, <code>quality=95</code> for ground-truth targets). Delivers consistent ~1,800&ndash;2,000 img/sec throughput, accelerating processing time from days to minutes.</li>
+                <li><strong>Dual-Pass Sequential Tar Streaming</strong>: For paired restoration manifolds (<code>images/</code> and <code>targets/</code>), Pass 1 streams input images sequentially by zip central directory header offset into <code>shard-*.tar</code>, and Pass 2 appends paired ground truth (<code>sample.target.webp</code>) in standard POSIX append mode (<code>"a"</code>), preserving pure sequential NVMe read velocity without random seek degradation.</li>
+                <li><strong>Automated Disk Reclamation</strong>: Automatically extracts root metadata (<code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, <code>README.md</code>, <code>index.json</code>, notebooks), validates shard byte integrity, updates canonical format to <code>webdataset</code>, unlinks multi-gigabyte source <code>.zip</code> archives (<code>--delete-zip</code>), and purges legacy uncompressed directories (<code>--delete-legacy-dir</code>), recovering over 120 GB of local storage space.</li>
+            </ul>
+
+            <h3 id="512-native-archive-acceleration">5.12 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration (<code>utils/archive.py</code>)</h3>
+            <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code> (<code>smart_extract</code>) is upgraded with native subsystem delegation:</p>
+            <ul>
+                <li><strong>Binary Auto-Discovery</strong>: Probes system paths for native 64-bit <code>7z.exe</code> (<code>C:\Program Files\7-Zip\7z.exe</code>) and native POSIX <code>tar.exe</code> (<code>C:\Windows\System32\tar.exe</code>), falling back gracefully to Python standard library engines.</li>
+                <li><strong>Multi-Threaded Hardware Saturation</strong>: Dispatches extraction via native 7-Zip with parameters <code>-mmt=on -bsp1 -aos -y</code>, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude.</li>
+                <li><strong>Automated Root Flattening</strong>: Detects single root manifold directory envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.</li>
+            </ul>
+
+            <h3 id="513-three-pipelines">5.13 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</h3>
+            <p>The v16.8.0 ecosystem establishes three distinct, standardized operational pipelines governing all lifecycle phases of training datasets:</p>
+            <h4>1. Regular Ingestion &amp; Manifold Compilation Pipeline (<code>compile</code> / <code>compile_all</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Ingesting raw external datasets (<code>raw-sets/</code>), applying quality gating, and compiling fresh standardized production manifolds (<code>LemGendized*</code>).</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Discovery &amp; Pre-flight</em>: Scans raw sources, verifies directory layout and file structures against <code>unified_data.yaml</code>.</li>
+                        <li><em>Quality &amp; Integrity Filters</em>: Inspects magic headers, validates image aspect ratios, filters corrupted samples, and executes NIMA aesthetic/technical quality score gating.</li>
+                        <li><em>Auto-Labeling &amp; Resampling</em>: Derives normalized YOLO bounding boxes, SAM/ParseNet segmentation masks, or BLIP captions where applicable, applying high-fidelity Lanczos-3 anti-aliasing interpolation for spatial rescales.</li>
+                        <li><em>Zero-Intermediate WebP Transcoding</em>: Transcodes input images directly in memory (<code>quality=92</code> for inputs, <code>quality=95</code> for restoration targets) avoiding redundant uncompressed intermediate disk writes.</li>
+                        <li><em>Emission &amp; Container Sharding</em>: Emits canonical directory layouts with NTFS hardlink deduplication preserved, or simultaneously exports modern streaming container shards (<code>--also-format webdataset</code>, <code>--also-format mds</code>, <code>--also-format litdata</code>).</li>
+                        <li><em>Manifest Generation</em>: Generates authoritative <code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, and <code>index.json</code>.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h4>2. Legacy Archive Modernization Pipeline (<code>tools/stream_zip_to_container.py</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Modernizing legacy multi-gigabyte <code>.zip</code> archives containing millions of small files directly into canonical POSIX WebDataset <code>.tar</code> shards without ever writing uncompressed loose files to disk.</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Zero-Unpack Streaming Ingestion</em>: Directly opens the <code>.zip</code> archive via low-level central directory indexing, completely bypassing NTFS Master File Table (MFT) lock contention, short filename generation, and real-time antivirus filter driver serialization.</li>
+                        <li><em>In-Flight Multi-Threaded Transcoding</em>: Decompresses raw image streams in memory and dispatches them across a 12-thread worker pool executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for inputs, <code>quality=95</code> for targets).</li>
+                        <li><em>Dual-Pass Sequential Tar Streaming</em>: For paired restoration sets (<code>images/</code> and <code>targets/</code>), Pass 1 writes sequential input images into <code>shard-*.tar</code>, while Pass 2 appends paired targets in standard POSIX append mode (<code>"a"</code>), maintaining high-velocity sequential write throughput on NVMe SSDs.</li>
+                        <li><em>Root Metadata Extraction</em>: Extracts essential documentation, notebooks, and index manifests (<code>index.json</code>, <code>dataset_info.yaml</code>, <code>README.md</code>) to the modernized manifold root.</li>
+                        <li><em>Automated Storage Reclamation</em>: Validates shard byte counts and sample completeness, then automatically deletes both the source <code>.zip</code> archive (<code>--delete-zip</code>) and any legacy unpacked directory trees (<code>--delete-legacy-dir</code>), recovering 50 GB to 100+ GB per dataset of local disk space.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h4>3. Retroactive Manifold Migration Pipeline (<code>format migrate</code> / <code>migrate_manifold_format.py</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Converting already modernized local dataset directories (consisting of loose WebP images, targets, and <code>index.json</code>) into canonical streaming container shards (<code>webdataset</code> or <code>mds</code>).</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Manifest &amp; Index Traversal</em>: Reads existing <code>index.json</code> or scans the structured manifold directory tree to build deterministic sample item queues.</li>
+                        <li><em>Container Chunk Serializer</em>: Streams samples into contiguous, fixed-size container chunks (~500 MB <code>.tar</code> shards or <code>.bin</code> / <code>.index</code> MosaicML Streaming files).</li>
+                        <li><em>Cluster Slack Elimination &amp; Source Purge</em>: When invoked with <code>--purge-source</code>, automatically unlinks loose intermediate image files upon successful shard verification, eliminating filesystem cluster allocation overhead and consolidating tens of thousands of fragmented files into a handful of sequential shards.</li>
+                        <li><em>Registry Synchronization</em>: Updates <code>dataset_info.yaml</code> with <code>canonical_format: webdataset</code>, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.</li>
+                    </ol>
+                </li>
             </ul>
 </section>
 

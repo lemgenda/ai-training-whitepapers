@@ -33,6 +33,9 @@
   - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
   - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
   - [5.12 Forex Universe & Parquet Operations (`forex`)](#512-forex-universe--parquet-operations-forex)
+  - [5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
+  - [5.14 Retroactive Container Migration (`format migrate` / `format write`)](#514-retroactive-container-migration-format-migrate--format-write)
+  - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
 - [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
   - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
   - [6.2 Model Training (`train`)](#62-model-training-train)
@@ -585,6 +588,107 @@ python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --out
 
 # Embed column descriptions and metadata into Parquet tables
 python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet
+```
+
+### 5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)
+
+Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX WebDataset `.tar` shards with on-the-fly 12-thread WebP transcoding, eliminating NTFS MFT file allocation overhead and real-time antivirus filter driver slowdowns:
+
+```bash
+# Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
+python tools/stream_zip_to_container.py \
+    --zip ../LemGendaryDatasets/lemgendizedmirnetexposurelarge.zip \
+    --target ../LemGendaryDatasets/LemGendizedMirNetExposure \
+    --shard-size 5000 \
+    --delete-zip \
+    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedMirNetExposureLarge
+
+# Stream split target dataset (UpnV2) with automatic metadata and index.json extraction
+python tools/stream_zip_to_container.py \
+    --zip ../LemGendaryDatasets/lemgendizedupnv2large.zip \
+    --target ../LemGendaryDatasets/LemGendizedUpnV2 \
+    --shard-size 5000 \
+    --delete-zip \
+    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedUpnV2Large
+```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--zip` | Path | Required | Path to the source multi-gigabyte `.zip` archive |
+| `--target` | Path | Required | Destination modernized manifold directory |
+| `--format` | Choice | `webdataset` | Target container format (`webdataset`) |
+| `--shard-size` | Integer | `5000` | Number of samples per tar shard (~500 MB) |
+| `--no-webp` | Flag | `False` | Disable WebP transcoding (preserves original bytes) |
+| `--workers` | Integer | `None` (auto: 12) | Number of worker threads for parallel transcoding |
+| `--delete-zip` | Flag | `False` | Unlink source `.zip` archive upon verified completion |
+| `--delete-legacy-dir` | Path | `None` | Path to legacy uncompressed folder to purge |
+
+### 5.14 Retroactive Container Migration (`format migrate` / `format write`)
+
+Converts already modernized datasets with loose WebP images and `index.json` into streaming container shards, with optional purging of loose files to eliminate cluster slack:
+
+```bash
+# Convert existing directory to WebDataset shards and purge loose directory layout
+python cli.py format migrate \
+    --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
+    --to webdataset \
+    --accept-space-loss \
+    --purge-source
+
+# Equivalent direct script invocation:
+python tools/migrate_manifold_format.py \
+    --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
+    --to webdataset \
+    --accept-space-loss \
+    --purge-source
+```
+
+### 5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference
+
+The dataset compiler allows expanding any manifold simply by appending new source references to `unified_data.yaml` under the target dataset's `refs:` array:
+
+```yaml
+datasets:
+  nima_aesthetic:
+    name: NimaAesthetic
+    canonical_format: webdataset
+    val_split: 0.12
+    refs:
+      - ref: kaggle://nicolacarrassi/ava-aesthetic-visual-assessment
+      - ref: hf://chaofengc/IQA-PyTorch-Datasets:spaq.tgz
+      - ref: gd://1A2B3C4D5E6F7G8H9I0J
+      - ref: gh://owner/research-dataset
+      - ref: manifold://NafNetDebluring
+```
+
+#### Supported Upstream Source Protocols
+
+| Protocol Prefix | Handler Submodule | Description |
+| :--- | :--- | :--- |
+| `kaggle://<owner>/<slug>` | `sources/kaggle.py` | Authenticated KaggleHub and Kaggle API dataset download with auto-unpack |
+| `hf://<org>/<repo>[:<file>]` | `sources/hf.py` | Hugging Face Hub snapshot or archive (`.tgz`, `.tar.gz`) download |
+| `gd://<id>` | `sources/gd.py` | Google Drive multi-threaded chunked download |
+| `gh://<owner>/<repo>` | `sources/gh.py` | GitHub repository archive or release asset synchronization |
+| `manifold://<Name>` | `core/manifold_compile.py` | Zero-copy sibling manifold recirculation without duplicating files |
+
+#### Supported Input Annotation & Image Formats
+
+| Input Format | Converter Submodule | Parsing Engine & Capabilities |
+| :--- | :--- | :--- |
+| **MATLAB (`.mat`)** | `converters/matlab.py` | `scipy.io.loadmat(mat_path, spmatrix=False)` extracting structs, keys, and coordinate arrays |
+| **COCO JSON (`.json`)** | `converters/coco.py` | MS-COCO bounding boxes, categories, and polygon masks |
+| **Pascal VOC (`.xml`)** | `converters/xml.py` | XML node traversal extracting class names and bounding coordinates |
+| **YOLO TXT (`.txt`)** | `converters/yolo.py` | Space-delimited bounding boxes (`class xc yc w h`) |
+| **Apache Parquet (`.parquet`)** | `converters/parquet.py` | Columnar table schemas with embedded image bytes or URLs |
+| **Images** | `_fast_scan` | `.jpg`, `.jpeg`, `.png`, `.webp`, `.safetensors`, `.tiff`, `.tif`, `.bmp`, `.npy` |
+
+#### Compilation Trigger
+
+Once sources are added, run compilation to automatically download missing sets, prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly into modern WebP containers:
+
+```bash
+# Ingest all configured sources, vet, and emit canonical modern container shards
+python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12
 ```
 
 ---
