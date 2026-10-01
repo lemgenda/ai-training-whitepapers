@@ -502,7 +502,7 @@ Example response:
 
 #### `GET /api/gui/ecosystem`
 
-Monitors health and connectivity across local ecosystem sidecars by actively probing `http://127.0.0.1:8100/api/health` with a non-blocking timeout. Powers the desktop GUI top-bar status indicator:
+Monitors health and connectivity across local ecosystem sidecars by actively probing `http://127.0.0.1:8100/api/health` and `http://127.0.0.1:8200/api/health` with a non-blocking timeout. Powers the desktop GUI top-bar status indicator and service mesh dashboard tiles:
 
 ```json
 {
@@ -520,6 +520,73 @@ Monitors health and connectivity across local ecosystem sidecars by actively pro
     "data": {
       "status": "ok",
       "service": "LemGendary Dataset Compiler API"
+    }
+  },
+  "training_suite": {
+    "service": "lemgendary-training-suite",
+    "port": 8200,
+    "status": "online",
+    "reachable": true,
+    "data": {
+      "status": "ok",
+      "service": "lemgendary-training-suite"
+    }
+  }
+}
+```
+
+#### `POST /api/services/{service_id}/start`
+
+Spawns the background daemon process for the designated sidecar service (`dataset-compiler`, `training-suite`, or `env-manager`). Automatically resolves the target virtual environment Python executable, opens diagnostic log files in the respective project daemon directories, and polls the service health endpoint to verify reachability.
+
+Path Parameters:
+
+- `service_id` (string, required): Canonical identifier or recognized alias (`dataset-compiler`, `training-suite`, `env-manager`).
+
+Example response:
+
+```json
+{
+  "status": "started",
+  "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",
+  "port": 8100,
+  "pid": 26024
+}
+```
+
+#### `POST /api/services/{service_id}/stop`
+
+Gracefully terminates the specified sidecar daemon process by reading its recorded PID file or querying the active socket connection on the assigned port.
+
+Example response:
+
+```json
+{
+  "status": "stopped",
+  "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
+  "port": 8100
+}
+```
+
+#### `POST /api/services/start-all`
+
+Orchestrates sequential startup across all offline ecosystem sidecars (`dataset-compiler` and `training-suite`).
+
+Example response:
+
+```json
+{
+  "results": {
+    "dataset-compiler": {
+      "status": "already_running",
+      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
+      "port": 8100
+    },
+    "training-suite": {
+      "status": "started",
+      "message": "LemGendary Model Training Suite started successfully on port 8200.",
+      "port": 8200,
+      "pid": 18612
     }
   }
 }
