@@ -32,6 +32,10 @@ Like an advanced camera sensor critic. It evaluates fine textures, tonal balance
 
 * **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
 
+| Poor Quality / Technical Compression (Score: 2.1/10.0) | Authentic Photographic Masterpiece (Score: 8.9/10.0) |
+| :---: | :---: |
+| ![Technical Compression](../assets/technical_compression.png) | ![Aesthetic Masterpiece](../assets/aesthetic_masterpiece.png) |
+
 * **Training Metrics:** Tracked via `nima_aesthetic_efficientnet_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
 
 ![NIMA EfficientNetV2-S Training Curve](../assets/nima_aesthetic_efficientnet_training.png)

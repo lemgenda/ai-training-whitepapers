@@ -68,17 +68,12 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
                         <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
                             <div style="color: #e0e0e0; font-weight: 700; margin-bottom: 8px;">INPUT VIDEO FRAME</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Raw camera stream of backyard, garden plants, and approaching pets.</p>
-                            <div style="height: 130px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #a0a0a0;">
-                                Unannotated Video Frame (640x640)
-                            </div>
+                            <img src="../assets/yolov8n_before.png" alt="Raw unannotated urban city street intersection frame" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
                         </div>
                         <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
                             <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">REAL-TIME DETECTION BOXES</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Bounding boxes: 'potted plant (96%)', 'dog (94%)', 'person (98%)' in 3.1ms.</p>
-                            <div style="height: 130px; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #79c0ff; font-weight: 600;">
-                                Real-Time 300+ FPS Spatial Bounding Boxes
-                            </div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Bounding boxes: 'bus (95%)', 'car (89%)', 'person (94%)', 'bicycle (91%)' in 3.1ms.</p>
+                            <img src="../assets/yolov8n_after.png" alt="Real-time YOLOv8n object detection overlays with labeled bounding boxes and confidence scores" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
                         </div>
                     </div>
                 </div>

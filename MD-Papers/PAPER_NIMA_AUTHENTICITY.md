@@ -32,9 +32,13 @@ Like a forensic digital investigator. It examines subtle pixel distributions and
 
 * **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
 
-* **Training Metrics:** Tracked via `nima_authenticity_fake.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+| Poor Quality / Synthesized Artifacts (Score: 2.1/10.0) | Authentic Photographic Masterpiece (Score: 8.9/10.0) |
+| :---: | :---: |
+| ![Synthesized Artifacts](../assets/nima_authenticity_fake.png) | ![Authentic Masterpiece](../assets/nima_authenticity_real.png) |
 
-![NIMA Authenticity & DeepFake Sentinel Training Curve](../assets/nima_authenticity_fake.png)
+* **Training Metrics:** Tracked via `nima_authenticity_training.png` displaying Earth Mover's Distance (EMD) loss minimization and Spearman rank correlation convergence.
+
+![NIMA Authenticity & DeepFake Sentinel Training Curve](../assets/nima_authenticity_training.png)
 
 ## 2. Backbone & Feature Extraction
 

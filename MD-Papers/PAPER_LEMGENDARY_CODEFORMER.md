@@ -37,8 +37,12 @@ Imagine taking an old, scratched, blurry photograph of a loved one from decades 
 ### Visual Demonstration & Training Convergence
 
 * **Input:** Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.
-
 * **Output:** Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity at Alpha = 0.75.
+
+| Before Restoration (Degraded Input) | After Restoration (CodeFormer Output) |
+| :---: | :---: |
+| ![Degraded Vintage Portrait](../assets/codeformer_before.png) | ![Restored Portrait](../assets/codeformer_after.png) |
+
 * **Training Convergence Curve:** Tracked via `codeformer_training.png` illustrating perceptual LPIPS minimization and codebook commitment loss stabilization.
 
 ![CodeFormer Training Metrics Curve](../assets/codeformer_training.png)

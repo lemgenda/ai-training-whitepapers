@@ -34,10 +34,15 @@ Imagine having an intelligent security guard scanning a video camera 60 times ev
 * **Body Pose & Keypoint Tracking:** In addition to finding objects, it can track 17 human body joints (knees, elbows, shoulders) in real time.
 * **Ultra-Lightweight Efficiency:** Weighing only 6.5 MB, it runs smoothly on budget laptops, battery-powered robots, and mobile phones without slowing down other programs.
 
+### Visual Demonstration: Real-Time Detection Matrix
+
+| Input Video Frame | Real-Time Detection Boxes |
+| :---: | :---: |
+| ![Input Video Frame](../assets/yolov8n_before.png) | ![Real-Time Detection Boxes](../assets/yolov8n_after.png) |
+
 ### Training Convergence
 
 * **mAP@50:** Reached 0.824 across 80 COCO classes.
-
 * **mAP@50-95:** Reached 0.589 with inference latency of 3.1ms on edge devices.
 
 ## 2. Anchor-Free CSPDarknet & PANet

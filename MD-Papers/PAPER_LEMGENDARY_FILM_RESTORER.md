@@ -34,6 +34,12 @@ Historic movie reels, 8mm home videos, and vintage family photograph prints degr
 * **Analog Grain Balancing:** Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.
 * **Chemical Color Recovery:** It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.
 
+### Visual Demonstration & Training Convergence
+
+| Degraded Vintage Film (Input) | Restored Archival Output |
+| :---: | :---: |
+| ![Degraded Vintage Film](../assets/film_restorer_before.png) | ![Restored Archival Film](../assets/film_restorer_after.png) |
+
 ![Film Restorer Training Curve](../assets/film_restorer_training.png)
 
 ## 2. Analog Emulsion Physics

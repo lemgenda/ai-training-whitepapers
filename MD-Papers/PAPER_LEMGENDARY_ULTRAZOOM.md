@@ -42,6 +42,14 @@ When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
   * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K displays (32.15 dB PSNR).
   * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial surveillance (28.90 dB PSNR).
 
+### Visual Demonstration: 4x Detail Super-Resolution
+
+| Standard Bicubic Zoom (4x) | UltraZoom-x4 Output |
+| :---: | :---: |
+| ![Standard Bicubic Zoom](../assets/ultrazoom_before.png) | ![UltraZoom-x4 Output](../assets/ultrazoom_after.png) |
+
+![UltraZoom Scale Convergence & Benchmarks](../assets/ultrazoom_training.png)
+
 ## 2. Multi-Scale Super-Resolution Manifolds
 
 * **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration with minimal perceptual hallucination.

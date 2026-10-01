@@ -81,22 +81,19 @@
                         <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
                             <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">STANDARD BICUBIC ZOOM (4x)</div>
                             <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Blurry edges, jagged pixel blocks, and lost textural details.</p>
-                            <div style="height: 130px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #a0a0a0;">
-                                Pixelated &amp; Blurry Flower Petals
-                            </div>
+                            <img src="../assets/ultrazoom_before.png" alt="Standard bicubic 4x zoom showing blurry pixel blocks and aliasing" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
                         </div>
                         <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
                             <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">ULTRAZOOM-x4 OUTPUT</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Sharp microscopic leaf veins, clear petal gradients, and crisp contours.</p>
-                            <div style="height: 130px; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #79c0ff; font-weight: 600;">
-                                Crystal-Clear 4x Micro-Detail
-                            </div>
+                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Sharp microscopic architectural lines, clear window grids, and crisp contours.</p>
+                            <img src="../assets/ultrazoom_after.png" alt="UltraZoom-x4 super-resolved output with sharp architectural lines and crisp glass detail" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
                         </div>
                     </div>
                 </div>
 
                 <div style="margin: 25px 0; text-align: center;">
                     <h3 style="color: #ffffff; text-align: left;">UltraZoom Scale Convergence &amp; Benchmarks (PSNR / SSIM)</h3>
+                    <img src="../assets/ultrazoom_training.png" alt="UltraZoom Scale Convergence &amp; Benchmarks" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 12px;" onerror="this.style.display='none'">
                     <div style="background: #14141c; border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; text-align: left; font-family: Fira Code, monospace; font-size: 0.85rem; color: #79c0ff;">
                         <div>UltraZoom-x2: PSNR 38.45 dB | SSIM 0.978 | Latency:  8.2 ms | VRAM: 1.8 GB</div>
                         <div>UltraZoom-x3: PSNR 34.20 dB | SSIM 0.941 | Latency: 14.5 ms | VRAM: 2.6 GB</div>

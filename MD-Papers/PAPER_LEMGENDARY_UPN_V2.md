@@ -37,9 +37,15 @@ Imagine having a single universal digital darkroom knob. Traditionally, if an im
 ### Multi-Degradation Recovery & Metrics
 
 * **Input:** Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.
-
 * **Output:** Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18ms.
+
+| Multi-Degraded Input | UPN v2 Single-Pass Output |
+| :---: | :---: |
+| ![Multi-Degraded Input](../assets/upn_v2_before.png) | ![UPN v2 Restored Output](../assets/upn_v2_after.png) |
+
 * **Convergence:** PSNR reached 35.18 dB and SSIM reached 0.967 across 285 WebDataset streaming shards.
+
+![UPN v2 Training Convergence Curve](../assets/upn_v2_training.png)
 
 ## 2. Parameterized Latent Steering
 
