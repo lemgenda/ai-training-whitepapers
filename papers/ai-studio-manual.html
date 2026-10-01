@@ -118,6 +118,20 @@
                     <li><strong>Managed Projects Count</strong>: Total registered repositories actively governed by the studio (typically 4: GUI, Training Suite, Datasets, Env Manager).</li>
                     <li><strong>Last Audit Timestamp</strong>: The exact second the last background health telemetry pass completed.</li>
                 </ul>
+
+                <h3>2.4 Tripartite Sidecar Process Control &amp; Auto-Start</h3>
+                <p>The Ecosystem Sidecar Services grid permanently monitors and coordinates the three local microservices:</p>
+                <ul>
+                    <li><strong>LemGendary Environment Manager (<code>Port 8000</code>)</strong>: Core orchestrator and validation authority.</li>
+                    <li><strong>LemGendary Dataset Compiler Suite (<code>Port 8100</code>)</strong>: Manifold compiler and streaming storage server.</li>
+                    <li><strong>LemGendary Model Training Suite (<code>Port 8200</code>)</strong>: Neural architecture training and evaluation engine.</li>
+                </ul>
+                <p>Key operational capabilities:</p>
+                <ul>
+                    <li><strong>Automated Startup on GUI Mount</strong>: When the GUI opens, it automatically inspects mesh reachability and spawns any offline sidecars in the background without operator intervention.</li>
+                    <li><strong>Headless Windowless Execution</strong>: Sidecars run entirely in the background without opening command prompt or terminal windows (<code>pythonw.exe</code> and <code>CREATE_NO_WINDOW</code> on Windows; <code>start_new_session=True</code> on Linux/macOS).</li>
+                    <li><strong>Rapid Decoupled Probing</strong>: Health status updates within 90ms independently of deep audits, kept live by a 4-second reactive background heartbeat loop.</li>
+                </ul>
             </section>
 
             <!-- SECTION 3 -->

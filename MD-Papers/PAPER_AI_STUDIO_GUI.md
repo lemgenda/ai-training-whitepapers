@@ -137,7 +137,15 @@ The desktop interface integrates a dedicated visual control plane for the Datase
 - **Production Manifolds Catalog & Format Breakdown**:
   - Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified `COMPILED` badges backed by in-memory filesystem caching.
 
-### 6.5 Comprehensive Testing & Ecosystem Verification Battery
+### 6.5 Headless Windowless Service Lifecycle & Auto-Start on Launch
+
+The desktop runtime enforces a strictly non-intrusive service lifecycle across Windows, Linux, and macOS:
+
+- **Zero-Window Background Execution**: Eliminates intrusive terminal windows or console prompts when launching sidecars. On Windows, execution utilizes `.venv/Scripts/pythonw.exe` (`IMAGE_SUBSYSTEM_WINDOWS_GUI`) combined with `CREATE_NO_WINDOW` (`0x08000000`) and standard stream redirection (`stdin=DEVNULL`, stdout/stderr to logs). On POSIX environments, `start_new_session=True` detaches processes into headless background daemon sessions.
+- **Automated Mesh Bootstrapping**: On GUI initialization, the runtime probes the tripartite mesh and autonomously bootstraps any offline sidecars in the background, continuously polling until the entire mesh reports healthy.
+- **Rapid Decoupled Probing**: Health status is queried within 90ms independently of heavy dependency audits, with a 4-second reactive background heartbeat loop.
+
+### 6.6 Comprehensive Testing & Ecosystem Verification Battery
 
 The GUI codebase is verified by an exhaustive automated testing battery:
 

@@ -538,7 +538,7 @@ ws://127.0.0.1:8000/ws/logs</code></pre>
   }
 }</code></pre>
                 <h4><code>POST /api/services/{service_id}/start</code></h4>
-                <p>Spawns the background daemon process for the designated sidecar service (<code>dataset-compiler</code>, <code>training-suite</code>, or <code>env-manager</code>). Automatically resolves the target virtual environment Python executable, opens diagnostic log files in the respective project daemon directories, and polls the service health endpoint to verify reachability.</p>
+                <p>Spawns the background daemon process for the designated sidecar service (<code>dataset-compiler</code>, <code>training-suite</code>, or <code>env-manager</code>). Automatically resolves the target virtual environment Python executable, executing completely headless without creating console or terminal windows (<code>pythonw.exe</code> and <code>CREATE_NO_WINDOW</code> on Windows; <code>start_new_session=True</code> on Linux/macOS). Redirects standard streams (<code>stdin=subprocess.DEVNULL</code>, <code>stdout</code>/<code>stderr</code> to diagnostic log files) and polls the service health endpoint with an extended 20-second timeout to accommodate PyTorch and CUDA runtime initialization. Includes <code>is_port_in_use()</code> collision protection to prevent duplicate process spawning.</p>
                 <pre><code>{
   "status": "started",
   "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",

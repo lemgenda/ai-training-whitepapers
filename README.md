@@ -16,6 +16,11 @@
 
 ## Changelog
 
+### v16.9.7 — Headless Windowless Service Execution & Automated GUI Mesh Bootstrapping
+
+* **`PAPER_AI_STUDIO_GUI.md` & `MANUAL_AI_STUDIO_GUI.md` Synchronization** — Documented the cross-platform windowless background daemon execution architecture (`pythonw.exe`, `CREATE_NO_WINDOW`, `stdin=DEVNULL` on Windows; `start_new_session=True` on POSIX), eliminating intrusive console and Windows Terminal popups. Documented the GUI's automated startup effect on launch (`autoStartOffline`) and decoupled sub-100ms mesh heartbeats.
+* **`MANUAL_API.md` Specification Updates** — Documented extended 20-second startup verification windows and `is_port_in_use()` collision guards for `POST /api/services/{service_id}/start`, plus dual `GET` and `HEAD` handler compliance across all sidecar `/api/health` endpoints.
+
 ### v16.9.6 — Desktop GUI Kaggle Cloud Synchronization Hub & Multi-Source Custom Compilation
 
 * **`PAPER_DATASET_COMPILER.md` & `PAPER_AI_STUDIO_GUI.md` Synchronization** — Documented the Kaggle Cloud Synchronization & Storage Hub (bidirectional dataset downloads from `unified_data.yaml` registry, custom Kaggle link/slug downloads, and local manifold uploads), multi-source custom dataset synthesis pipeline (`kaggle://`, `hf://`, `gd://`, `gh://`), and fast split-shard discovery caching across 22 compiled manifolds.

@@ -537,7 +537,7 @@ Monitors health and connectivity across local ecosystem sidecars by actively pro
 
 #### `POST /api/services/{service_id}/start`
 
-Spawns the background daemon process for the designated sidecar service (`dataset-compiler`, `training-suite`, or `env-manager`). Automatically resolves the target virtual environment Python executable, opens diagnostic log files in the respective project daemon directories, and polls the service health endpoint to verify reachability.
+Spawns the background daemon process for the designated sidecar service (`dataset-compiler`, `training-suite`, or `env-manager`). Automatically resolves the target virtual environment Python executable, executing completely headless without creating console or terminal windows (`pythonw.exe` and `CREATE_NO_WINDOW` on Windows; `start_new_session=True` on Linux/macOS). Redirects standard streams (`stdin=subprocess.DEVNULL`, `stdout`/`stderr` to diagnostic log files) and polls the service health endpoint with an extended 20-second timeout to accommodate PyTorch and CUDA runtime initialization. Includes `is_port_in_use()` collision protection to prevent duplicate process spawning.
 
 Path Parameters:
 

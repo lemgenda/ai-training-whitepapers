@@ -194,7 +194,15 @@
                     <li><strong>Production Manifolds Catalog &amp; Format Breakdown</strong>: Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified <code>COMPILED</code> badges backed by in-memory filesystem caching.</li>
                 </ul>
 
-                <h3>6.5 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
+                <h3>6.5 Headless Windowless Service Lifecycle &amp; Auto-Start on Launch</h3>
+                <p>The desktop runtime enforces a strictly non-intrusive service lifecycle across Windows, Linux, and macOS:</p>
+                <ul>
+                    <li><strong>Zero-Window Background Execution</strong>: Eliminates intrusive terminal windows or console prompts when launching sidecars. On Windows, execution utilizes <code>.venv/Scripts/pythonw.exe</code> (<code>IMAGE_SUBSYSTEM_WINDOWS_GUI</code>) combined with <code>CREATE_NO_WINDOW</code> (<code>0x08000000</code>) and standard stream redirection (<code>stdin=DEVNULL</code>, stdout/stderr to logs). On POSIX environments, <code>start_new_session=True</code> detaches processes into headless background daemon sessions.</li>
+                    <li><strong>Automated Mesh Bootstrapping</strong>: On GUI initialization, the runtime probes the tripartite mesh and autonomously bootstraps any offline sidecars in the background, continuously polling until the entire mesh reports healthy.</li>
+                    <li><strong>Rapid Decoupled Probing</strong>: Health status is queried within 90ms independently of heavy dependency audits, with a 4-second reactive background heartbeat loop.</li>
+                </ul>
+
+                <h3>6.6 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
                 <p>The GUI codebase is verified by an exhaustive automated testing battery:</p>
                 <ul>
                     <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
