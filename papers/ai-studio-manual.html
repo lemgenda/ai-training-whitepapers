@@ -44,7 +44,7 @@
                 <li><a href="#section-2">2. Interface Topology &amp; Visual Navigation Matrix</a></li>
                 <li><a href="#section-3">3. Universal Configuration &amp; Secrets Vault</a></li>
                 <li><a href="#section-4">4. One-Click Environment Setup: Clean Install</a></li>
-                <li><a href="#section-5">5. Dataset Compilation: Raw Photos to Shards</a></li>
+                <li><a href="#section-5">5. Dataset Compilation: Modernization, Custom Multi-Source &amp; Kaggle Sync</a></li>
                 <li><a href="#section-6">6. Model Training: Ladders &amp; Sawtooth Governor</a></li>
                 <li><a href="#section-7">7. Evaluation, Export &amp; Cloud Publishing</a></li>
                 <li><a href="#section-8">8. Health Matrix &amp; Version Drift Analytics</a></li>
@@ -219,26 +219,73 @@
 
             <!-- SECTION 5 -->
             <section id="section-5">
-                <h2>5. Dataset Compilation Pipeline: From Raw Photos to WebDataset Shards</h2>
-                <p>High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images.</p>
+                <h2>5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion &amp; Kaggle Sync</h2>
+                <p>High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images. The LemGendary Dataset Compiler tab provides a complete visual control center for dataset synthesis and cloud storage synchronization.</p>
 
-                <h3>5.1 The Gardening Tutorial Walkthrough</h3>
-                <p>Let us walk through compiling a dataset of 5,000 garden photos:</p>
+                <h3>5.1 Compilation Modes: Standard vs. Custom Multi-Source Compilation</h3>
+                <p>The compiler interface features a Segmented Control switch at the top allowing operators to toggle between two operational compilation workflows:</p>
+
+                <h4>Mode 1: Standard Manifold Compilation</h4>
+                <p>Used for re-compiling, sharding, or transcoding existing official ecosystem manifolds:</p>
                 <ol>
-                    <li><strong>Gather Source Photos</strong>: Place your garden photos into a folder inside <code>raw-sets/gardening_plants/</code> (or specify an external folder or Kaggle dataset slug).</li>
-                    <li><strong>Open Dataset Compiler</strong>: Select <code>Dataset Compiler</code> from the project cards or navigation menu.</li>
-                    <li><strong>Select Format</strong>:
+                    <li><strong>Select Target Manifold</strong>: Choose from the dropdown of registered manifolds in <code>unified_data.yaml</code> (e.g. <code>Unified Perceptual Net V2</code>, <code>MIRNet Low-Light &amp; Exposure</code>, <code>NIMA Perceptual Aesthetics</code>, <code>YOLOv8n</code>).</li>
+                    <li><strong>Select Storage Format Preset</strong>:
                         <ul>
-                            <li>For high-speed streaming training: Select <strong>WebDataset (<code>.tar</code>) Shards</strong>.</li>
-                            <li>For tabular or metadata analysis: Select <strong>Apache Parquet (<code>.parquet</code>)</strong>.</li>
+                            <li><code>Streaming WebDataset Shards (.tar)</code>: Sequential chunking with lossless WebP encoding and zero NTFS lock contention.</li>
+                            <li><code>Columnar HuggingFace Parquet (.parquet)</code>: Memory-mapped columnar binary format with snappy/zstd compression.</li>
+                            <li><code>MosaicML Streaming Shards (.mds)</code>: High-throughput streaming with fast random access.</li>
+                            <li><code>PyTorch Lightning LitData (.bin)</code>: Direct tensor serialization for distributed cloud training.</li>
                         </ul>
                     </li>
-                    <li><strong>Enable Lossless WebP Transcoding</strong>: Toggle <code>Auto WebP Transcode</code> to ON. This automatically compresses JPEG and PNG images into modern WebP format without losing quality, reducing disk space consumption by up to 60%.</li>
-                    <li><strong>Aspect-Ratio Bucketing</strong>: Enable <code>Bucket Quantization</code> (e.g. 512x512 or rectangular bins). This ensures your garden flowers and leaves are never awkwardly stretched or distorted during training.</li>
-                    <li><strong>Click <code>Compile Dataset</code></strong>: The sidecar launches high-speed parallel workers that convert images, build metadata indices, and pack data into clean 100MB-500MB <code>.tar</code> shards.</li>
-                    <li><strong>Automated Janitor Purging</strong>: Once compilation is verified, the built-in Janitor automatically deletes temporary unpacked archives, instantly reclaiming tens of gigabytes of disk space.</li>
-                    <li><strong>Push to Kaggle</strong>: Click <code>Sync to Kaggle Cloud</code> to upload your newly compiled WebDataset shards directly to your Kaggle repository as a versioned manifold.</li>
+                    <li><strong>Samples Per Shard</strong>: Configure chunk sizes (default: <code>5,000</code> samples per shard, yielding optimal 300MB–400MB streaming archives).</li>
+                    <li><strong>Purge Loose Images</strong>: When checked, deletes redundant uncompressed source images post-sharding to prevent disk bloat.</li>
+                    <li><strong>Click <code>Compile Manifold</code></strong>: Dispatches high-speed parallel workers with in-flight 12-thread WebP transcoding.</li>
                 </ol>
+
+                <h4>Mode 2: Custom Multi-Source Dataset Compilation</h4>
+                <p>Used for creating entirely new custom dataset manifolds by aggregating data across multiple platforms:</p>
+                <ol>
+                    <li><strong>Custom Manifold Name</strong>: Specify a descriptive PascalCase identifier (e.g. <code>SuperResMaster</code>, <code>AnimeFaceRestoration</code>).</li>
+                    <li><strong>Domain Task</strong>: Select target machine learning domain (<code>Restoration</code>, <code>Object Detection</code>, <code>Segmentation</code>, <code>Aesthetic Quality</code>, or <code>General Vision</code>).</li>
+                    <li><strong>Container Architecture &amp; Preset</strong>: Choose target streaming format and compression quality profile.</li>
+                    <li><strong>Source Repositories &amp; Dataset URLs</strong>: Enter source URLs or repository identifiers into the multi-line input box (one per line). Supported URI schemes:
+                        <ul>
+                            <li><strong>Kaggle</strong>: <code>kaggle://username/dataset-slug</code> or direct URL <code>https://www.kaggle.com/datasets/username/dataset-slug</code></li>
+                            <li><strong>Hugging Face</strong>: <code>hf://org/dataset-name</code> or direct URL <code>https://huggingface.co/datasets/org/dataset-name</code></li>
+                            <li><strong>Google Drive</strong>: <code>gd://folder_or_file_id</code> or direct Google Drive share link <code>https://drive.google.com/...</code></li>
+                            <li><strong>GitHub</strong>: <code>gh://owner/repository</code> or git clone link <code>https://github.com/owner/repository</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Click <code>Compile Custom Dataset</code></strong>: The engine automatically normalizes all references, persists the new manifold into <code>unified_data.yaml</code>, downloads sources, and executes parallel container sharding.</li>
+                </ol>
+
+                <h3>5.2 Kaggle Cloud Synchronization &amp; Storage Hub</h3>
+                <p>The dedicated <strong>Kaggle Cloud Synchronization &amp; Storage Hub</strong> card provides bidirectional integration with Kaggle Cloud Storage:</p>
+                <ul>
+                    <li><strong>Credential Status Sentinel</strong>: Automatically detects whether your Kaggle API key is configured (via environment variables, <code>.kaggle_token</code>, or <code>~/.kaggle/kaggle.json</code>), rendering a green <code>Kaggle Authenticated</code> or amber <code>Kaggle Credentials Required</code> badge.</li>
+                    <li><strong>Download from Kaggle</strong>:
+                        <ul>
+                            <li><strong>Registry Datasets Mode</strong>: Select from all 20 canonical Kaggle-linked manifolds from <code>unified_data.yaml</code>. Each dropdown entry indicates whether the manifold already exists locally (<code>Present Locally</code>) or needs to be downloaded (<code>Not Downloaded</code>).</li>
+                            <li><strong>Custom Kaggle Link / Slug Mode</strong>: Paste any direct Kaggle dataset URL or repository slug (<code>owner/dataset</code>) to pull external research datasets directly into the local storage root.</li>
+                            <li><strong>Target Folder &amp; Force Overwrite</strong>: Optionally specify custom destination directories and toggle force re-downloading.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Upload to Kaggle</strong>:
+                        <ul>
+                            <li>Select any locally compiled manifold from the dropdown.</li>
+                            <li>Specify the target Kaggle repository slug (or leave blank to auto-resolve from <code>unified_data.yaml</code>).</li>
+                            <li>Click <code>Upload to Kaggle</code> to package, validate, and upload your dataset directly.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>5.3 Production Manifolds Catalog &amp; Format Breakdown</h3>
+                <p>The bottom section of the tab renders real-time metric cards for all <strong>22 verified production manifolds</strong>:</p>
+                <ul>
+                    <li><strong>Compiled Status Badges</strong>: Displays green <code>COMPILED</code> badges across all manifolds, reflecting on-disk shard and container verification.</li>
+                    <li><strong>Metrics Breakdown</strong>: Displays total sample counts (e.g. 1.41M samples for MIRNet, 1.37M for UPNv2), physical disk footprint in gigabytes, total container shards, and exact counts across formats (<code>WebP</code>, <code>JPG</code>, <code>PNG</code>).</li>
+                    <li><strong>One-Click Refresh</strong>: Clicking <code>Refresh Catalog</code> queries the sidecar on Port 8100 with fast filesystem mtime caching, updating metrics in under 50ms.</li>
+                </ul>
             </section>
 
             <!-- SECTION 6 -->

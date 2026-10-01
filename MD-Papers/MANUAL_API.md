@@ -473,7 +473,7 @@ Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`, whi
 
 The Environment Manager provides specialized endpoints for high-velocity hydration in `lemgendary-ai-studio-gui`:
 
-#### `GET /api/gui/state`
+#### `GET /api/gui/state` (Environment Manager)
 
 Returns a consolidated snapshot containing service identity, hardware profile (`probe_hardware()`), discovered projects summary (`discover_projects()`), and pipeline execution status (`orchestrator.is_running`) in a single non-blocking payload.
 
@@ -769,13 +769,17 @@ All operational endpoints under `/api` requiring modification privileges enforce
 | `GET` | `/api/datasets/{name}` | None | Retrieve `dataset_info.yaml` and class lists for a specific manifold |
 | `GET` | `/api/sources` | None | Catalog local `raw-sets` and configured upstream datasets |
 | `GET` | `/api/kaggle/status` | None | Check Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env) |
+| `GET` | `/api/kaggle/registry-datasets` | None | Enumerate 20 canonical Kaggle-bound production manifolds with local status |
+| `POST` | `/api/kaggle/download` | None | Ingest dataset from Kaggle via URL or repo slug with auto-extraction |
+| `POST` | `/api/kaggle/upload` | None | Package and upload local compiled manifold to Kaggle repository |
 | `POST` | `/api/kaggle/sync` | Required | Queue a Kaggle push/pull metadata synchronization job |
 | `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
 | `GET` | `/api/gui/state` | None | Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets |
 | `GET` | `/api/gui/datasets/with-stats` | None | Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics |
 | `GET` | `/api/gui/jobs/active` | None | Real-time execution telemetry for active compiler background tasks |
 | `GET` | `/api/gui/presets` | None | Canonical compiler preset parameter definitions and descriptions |
-| `POST` | `/api/gui/quick-compile` | Required | Fast-dispatch compilation using a predefined compiler preset profile |
+| `POST` | `/api/gui/quick-compile` | None | Fast-dispatch compilation using a predefined compiler preset profile |
+| `POST` | `/api/gui/custom-compile` | None | Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH) |
 | `GET` | `/api/env/status` | Required | Passthrough delegating to `lem-env audit --fast` |
 | `POST` | `/api/env/validate` | Required | Passthrough delegating to `lem-env validate --project lemgendary-datasets` |
 
@@ -810,7 +814,7 @@ If the API server or host reboots while jobs are in `running` or `pending` state
 
 The Dataset Compiler API exposes specialized endpoints tailored for `lemgendary-ai-studio-gui` desktop integration and Cross-Project Automation (CPA):
 
-#### `GET /api/gui/state`
+#### `GET /api/gui/state` (Dataset Compiler)
 
 Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
 
@@ -828,7 +832,30 @@ Catalogs canonical compiler preset profiles (`quality-vision`, `restoration-hard
 
 #### `POST /api/gui/quick-compile`
 
-Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
+Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Executed without blocking for local desktop GUI integration.
+
+#### `POST /api/gui/custom-compile`
+
+Custom multi-source compilation endpoint accepting a user-defined manifold name, target domain task (`restoration`, `detection`, `segmentation`, `quality`, `vision`), storage preset, container architecture (`webdataset`, `parquet`, `mds`, `litdata`), shard size, loose file cleanup toggle, and an array of heterogeneous source repository links:
+
+- Kaggle (`kaggle://` or URL)
+- Hugging Face (`hf://` or URL)
+- Google Drive (`gd://` or URL)
+- GitHub (`gh://` or URL)
+
+Normalizes all links to standard URI schemes, updates `unified_data.yaml` dynamically, and launches background compilation.
+
+#### `GET /api/kaggle/registry-datasets`
+
+Returns an array of all 20 canonical Kaggle-bound production manifolds from `unified_data.yaml`. Each entry includes manifold key, human-readable title, repository slug, container format, sample count, and a boolean flag `is_local_present` indicating local on-disk existence.
+
+#### `POST /api/kaggle/download`
+
+Initiates an asynchronous download job from Kaggle for a registry manifold or custom repository reference. Accepts `{ "kaggle_ref": "owner/dataset", "target_folder": "LemGendizedDataset", "force": false }`. Unpacks and organizes shards directly into the dataset root.
+
+#### `POST /api/kaggle/upload`
+
+Packages and uploads a local compiled manifold to Kaggle. Accepts `{ "manifold": "LemGendizedUpnV2", "kaggle_ref": "owner/slug" }`. Automatically discovers dataset directory, generates manifests, and streams to Kaggle via the API manager.
 
 ### 5.7 Three Architectural Ingestion & Modernization Pipelines
 

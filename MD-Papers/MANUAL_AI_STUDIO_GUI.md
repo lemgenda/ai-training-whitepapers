@@ -10,7 +10,7 @@
 - [2. Interface Topology & Visual Navigation Matrix](#2-interface-topology--visual-navigation-matrix)
 - [3. Universal Configuration & Secrets Vault](#3-universal-configuration--secrets-vault)
 - [4. One-Click Environment Setup: The 7-Stage Clean Install Pipeline](#4-one-click-environment-setup-the-7-stage-clean-install-pipeline)
-- [5. Dataset Compilation Pipeline: From Raw Photos to WebDataset Shards](#5-dataset-compilation-pipeline-from-raw-photos-to-webdataset-shards)
+- [5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync](#5-dataset-compilation-pipeline-modernization-custom-multi-source-ingestion--kaggle-sync)
 - [6. Model Training Pipeline: Architectures, Ladders & Sawtooth Governor](#6-model-training-pipeline-architectures-ladders--sawtooth-governor)
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
 - [8. Health Matrix & Cross-Project Version Drift Analytics](#8-health-matrix--cross-project-version-drift-analytics)
@@ -142,24 +142,67 @@ If a prerequisite is missing (e.g. Python is not installed), the pipeline displa
 
 ---
 
-## 5. Dataset Compilation Pipeline: From Raw Photos to WebDataset Shards
+## 5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync
 
-High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images.
+High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images. The LemGendary Dataset Compiler tab provides a complete visual control center for dataset synthesis and cloud storage synchronization.
 
-### 5.1 The Gardening Tutorial Walkthrough
+### 5.1 Compilation Modes: Standard vs. Custom Multi-Source Compilation
 
-Let us walk through compiling a dataset of 5,000 garden photos:
+The compiler interface features a Segmented Control switch at the top allowing operators to toggle between two operational compilation workflows:
 
-1. **Gather Source Photos**: Place your garden photos into a folder inside `raw-sets/gardening_plants/` (or specify an external folder or Kaggle dataset slug).
-2. **Open Dataset Compiler**: Select `Dataset Compiler` from the project cards or navigation menu.
-3. **Select Format**:
-   - For high-speed streaming training: Select **WebDataset (`.tar`) Shards**.
-   - For tabular or metadata analysis: Select **Apache Parquet (`.parquet`)**.
-4. **Enable Lossless WebP Transcoding**: Toggle `Auto WebP Transcode` to ON. This automatically compresses JPEG and PNG images into modern WebP format without losing quality, reducing disk space consumption by up to 60%.
-5. **Aspect-Ratio Bucketing**: Enable `Bucket Quantization` (e.g. $512\times 512$ or rectangular bins). This ensures your garden flowers and leaves are never awkwardly stretched or distorted during training.
-6. **Click `Compile Dataset`**: The sidecar launches high-speed parallel workers that convert images, build metadata indices, and pack data into clean 100MB-500MB `.tar` shards.
-7. **Automated Janitor Purging**: Once compilation is verified, the built-in Janitor automatically deletes temporary unpacked archives, instantly reclaiming tens of gigabytes of disk space.
-8. **Push to Kaggle**: Click `Sync to Kaggle Cloud` to upload your newly compiled WebDataset shards directly to your Kaggle repository as a versioned manifold.
+#### Mode 1: Standard Manifold Compilation
+
+Used for re-compiling, sharding, or transcoding existing official ecosystem manifolds:
+
+1. **Select Target Manifold**: Choose from the dropdown of registered manifolds in `unified_data.yaml` (e.g. `Unified Perceptual Net V2`, `MIRNet Low-Light & Exposure`, `NIMA Perceptual Aesthetics`, `YOLOv8n`).
+2. **Select Storage Format Preset**:
+   - `Streaming WebDataset Shards (.tar)`: Sequential chunking with lossless WebP encoding and zero NTFS lock contention.
+   - `Columnar HuggingFace Parquet (.parquet)`: Memory-mapped columnar binary format with snappy/zstd compression.
+   - `MosaicML Streaming Shards (.mds)`: High-throughput streaming with fast random access.
+   - `PyTorch Lightning LitData (.bin)`: Direct tensor serialization for distributed cloud training.
+3. **Samples Per Shard**: Configure chunk sizes (default: `5,000` samples per shard, yielding optimal 300MB–400MB streaming archives).
+4. **Purge Loose Images**: When checked, deletes redundant uncompressed source images post-sharding to prevent disk bloat.
+5. **Click `Compile Manifold`**: Dispatches high-speed parallel workers with in-flight 12-thread WebP transcoding.
+
+#### Mode 2: Custom Multi-Source Dataset Compilation
+
+Used for creating entirely new custom dataset manifolds by aggregating data across multiple platforms:
+
+1. **Custom Manifold Name**: Specify a descriptive PascalCase identifier (e.g. `SuperResMaster`, `AnimeFaceRestoration`).
+2. **Domain Task**: Select target machine learning domain (`Restoration`, `Object Detection`, `Segmentation`, `Aesthetic Quality`, or `General Vision`).
+3. **Container Architecture & Preset**: Choose target streaming format and compression quality profile.
+4. **Source Repositories & Dataset URLs**: Enter source URLs or repository identifiers into the multi-line input box (one per line). Supported URI schemes:
+   - **Kaggle**: `kaggle://username/dataset-slug` or direct URL `https://www.kaggle.com/datasets/username/dataset-slug`
+   - **Hugging Face**: `hf://org/dataset-name` or direct URL `https://huggingface.co/datasets/org/dataset-name`
+   - **Google Drive**: `gd://folder_or_file_id` or direct Google Drive share link `https://drive.google.com/...`
+   - **GitHub**: `gh://owner/repository` or git clone link `https://github.com/owner/repository`
+5. **Click `Compile Custom Dataset`**: The engine automatically normalizes all references, persists the new manifold into `unified_data.yaml`, downloads sources, and executes parallel container sharding.
+
+---
+
+### 5.2 Kaggle Cloud Synchronization & Storage Hub
+
+The dedicated **Kaggle Cloud Synchronization & Storage Hub** card provides bidirectional integration with Kaggle Cloud Storage:
+
+- **Credential Status Sentinel**: Automatically detects whether your Kaggle API key is configured (via environment variables, `.kaggle_token`, or `~/.kaggle/kaggle.json`), rendering a green `Kaggle Authenticated` or amber `Kaggle Credentials Required` badge.
+- **Download from Kaggle**:
+  - **Registry Datasets Mode**: Select from all 20 canonical Kaggle-linked manifolds from `unified_data.yaml`. Each dropdown entry indicates whether the manifold already exists locally (`Present Locally`) or needs to be downloaded (`Not Downloaded`).
+  - **Custom Kaggle Link / Slug Mode**: Paste any direct Kaggle dataset URL or repository slug (`owner/dataset`) to pull external research datasets directly into the local storage root.
+  - **Target Folder & Force Overwrite**: Optionally specify custom destination directories and toggle force re-downloading.
+- **Upload to Kaggle**:
+  - Select any locally compiled manifold from the dropdown.
+  - Specify the target Kaggle repository slug (or leave blank to auto-resolve from `unified_data.yaml`).
+  - Click `Upload to Kaggle` to package, validate, and upload your dataset directly.
+
+---
+
+### 5.3 Production Manifolds Catalog & Format Breakdown
+
+The bottom section of the tab renders real-time metric cards for all **22 verified production manifolds**:
+
+- **Compiled Status Badges**: Displays green `COMPILED` badges across all manifolds, reflecting on-disk shard and container verification.
+- **Metrics Breakdown**: Displays total sample counts (e.g. 1.41M samples for MIRNet, 1.37M for UPNv2), physical disk footprint in gigabytes, total container shards, and exact counts across formats (`WebP`, `JPG`, `PNG`).
+- **One-Click Refresh**: Clicking `Refresh Catalog` queries the sidecar on Port 8100 with fast filesystem mtime caching, updating metrics in under 50ms.
 
 ---
 

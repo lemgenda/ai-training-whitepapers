@@ -347,6 +347,27 @@
 
             <p><strong>MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)</strong>:<br>
             For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (<code>LemGendizedForexUniverseLarge</code>) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
+
+            <p><strong>Kaggle Cloud Synchronization &amp; Storage Hub (v16.9.6)</strong>:<br>
+            Exposes high-speed bidirectional synchronization between the local dataset root (<code>LemGendaryDatasets\</code>) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (<code>GET /api/kaggle/registry-datasets</code>, <code>POST /api/kaggle/download</code>, <code>POST /api/kaggle/upload</code>, <code>GET /api/kaggle/status</code>).</p>
+            <ul>
+                <li><strong>Registry Datasets</strong>: Exposes all 20 canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code> directly in the UI with live local existence indicators and sample counts.</li>
+                <li><strong>Direct Custom Link / Slug Ingestion</strong>: Operators can provide arbitrary Kaggle web URLs (e.g., <code>https://www.kaggle.com/datasets/owner/dataset</code>) or slugs (<code>owner/dataset</code>) to pull and unpack custom research datasets directly into the manifold storage hierarchy with automatic unzipping and force overwrite capabilities.</li>
+                <li><strong>Zero-Recompression Upload</strong>: Packages compiled streaming manifolds with valid metadata manifests and streams them to Kaggle Model and Dataset registries.</li>
+            </ul>
+
+            <p><strong>Multi-Source Custom Dataset Synthesis Engine (v16.9.6)</strong>:<br>
+            Facilitates arbitrary dataset compilation via <code>POST /api/gui/custom-compile</code>. Operators supply heterogeneous lists of source datasets and URLs spanning:</p>
+            <ul>
+                <li><strong>Kaggle</strong>: <code>kaggle://owner/dataset</code> or direct Kaggle web URLs.</li>
+                <li><strong>Hugging Face</strong>: <code>hf://org/dataset</code> or direct HuggingFace dataset URLs.</li>
+                <li><strong>Google Drive</strong>: <code>gd://folder_id</code> or Google Drive sharing links.</li>
+                <li><strong>GitHub</strong>: <code>gh://owner/repo</code> or repository URLs.</li>
+            </ul>
+            <p>The engine normalizes all inputs into canonical URI schemes, updates <code>unified_data.yaml</code> dynamically, and dispatches background compilation with user-selected domain tasks (<code>restoration</code>, <code>detection</code>, <code>segmentation</code>, <code>quality</code>, <code>vision</code>), storage presets, and optional source image purging.</p>
+
+            <p><strong>Fast Split Shard Discovery &amp; In-Memory mtime Caching (v16.9.6)</strong>:<br>
+            Eliminates deep recursive walking across hundreds of thousands of loose files when evaluating manifold compiled status. The optimized scanner inspects container roots (<code>shards/</code>, <code>mds/</code>, <code>wds/</code>, <code>litdata/</code>) and immediate split folders (<code>train/</code>, <code>val/</code>, <code>test/</code>) with <code>os.scandir</code>. Results are cached against the directory's filesystem <code>st_mtime</code>, dropping API response latency from &gt; 20 seconds to &lt; 50 ms while accurately recognizing all 22 manifolds as compiled.</p>
         
 
         

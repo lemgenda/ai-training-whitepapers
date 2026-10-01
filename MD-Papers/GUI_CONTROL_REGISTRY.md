@@ -41,9 +41,23 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | `drift-badge-sync` | "[SYNC]" Status Badge | `<span>` | — | Indicates identical package versions across all active repositories. |
 | `drift-badge-alert` | "[DRIFT]" Alert Badge | `<span>` | — | Highlights version discrepancies across projects. |
 | `telem-log-stream` | Monospace Telemetry Terminal | `<pre>` | `WS /ws/log` (8000) | Renders high-velocity log stream from active sub-processes. |
-| `comp-select-manifold` | Manifold Target Selector | `<select>` | `GET /api/datasets` (8100) | Populates list of 20 canonical training manifolds. |
-| `comp-toggle-transcode` | "Enable WebP Transcoding" | `<input type=checkbox>` | `POST /api/jobs/compile` (8100) | Activates $q=92$ WebP image and lossless mask encoding. |
-| `comp-btn-compile` | "Compile Manifold" | `<button>` | `POST /api/jobs/compile` (8100) | Dispatches dataset compilation job to the dataset sidecar. |
+| `comp-select-manifold` | Manifold Target Selector | `<select>` | `GET /api/gui/datasets/with-stats` (8100) | Populates list of 22 canonical training manifolds. |
+| `comp-toggle-transcode` | "Enable WebP Transcoding" | `<input type=checkbox>` | `POST /api/gui/quick-compile` (8100) | Activates $q=92$ WebP image and lossless mask encoding. |
+| `comp-btn-compile` | "Compile Manifold" | `<button>` | `POST /api/gui/quick-compile` (8100) | Dispatches dataset compilation job to the dataset sidecar. |
+| `comp-mode-standard` | "Standard Manifold Compilation" | `<button>` | — | Switches compilation interface to standard preset mode. |
+| `comp-mode-custom` | "Custom Multi-Source Compilation" | `<button>` | — | Switches compilation interface to custom multi-source mode. |
+| `comp-input-custom-name` | "Custom Manifold Name" | `<input type=text>` | — | Specifies unique identifier for custom dataset synthesis. |
+| `comp-select-custom-task` | "Domain Task" | `<select>` | — | Selects target ML domain (restoration, detection, segmentation). |
+| `comp-select-custom-format` | "Container Architecture" | `<select>` | — | Selects target format (WebDataset, Parquet, MDS, LitData). |
+| `comp-textarea-sources` | "Source Repositories & Dataset URLs" | `<textarea>` | — | Multi-line input for Kaggle, HF, GD, GH repositories. |
+| `comp-btn-custom-compile` | "Compile Custom Dataset" | `<button>` | `POST /api/gui/custom-compile` (8100) | Dispatches multi-source aggregation and sharding job. |
+| `comp-tab-kaggle-download` | "Download from Kaggle" Subtab | `<button>` | — | Activates Kaggle cloud download controls. |
+| `comp-tab-kaggle-upload` | "Upload to Kaggle" Subtab | `<button>` | — | Activates Kaggle manifold upload controls. |
+| `comp-select-kaggle-registry` | "Select Registry Dataset" | `<select>` | `GET /api/kaggle/registry-datasets` (8100) | Lists 20 canonical Kaggle-bound production manifolds. |
+| `comp-input-kaggle-custom-ref` | "Kaggle Dataset Link or Slug" | `<input type=text>` | — | Input for direct Kaggle URLs or owner/dataset references. |
+| `comp-btn-kaggle-download` | "Download from Kaggle" | `<button>` | `POST /api/kaggle/download` (8100) | Queues download and extraction of Kaggle datasets. |
+| `comp-select-kaggle-upload` | "Local Compiled Manifold" | `<select>` | — | Selects compiled local manifold for packaging. |
+| `comp-btn-kaggle-upload` | "Upload to Kaggle" | `<button>` | `POST /api/kaggle/upload` (8100) | Packages and streams local manifold to Kaggle. |
 | `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/models` | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
 | `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/training/launch` | Dispatches training worker with spatial resolution ladder. |
 

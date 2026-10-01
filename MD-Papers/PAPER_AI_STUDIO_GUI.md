@@ -122,7 +122,22 @@ To eliminate operator ambiguity across complex machine learning and compilation 
 - **Hover Micro-Documentation**: Displays a high-contrast glassmorphic tooltip providing immediate, plain-language guidance explaining the exact behavior, CLI equivalent flag, and architectural consequence of the action.
 - **Accessibility & Zero-Distraction**: Tooltips adhere to WCAG 2.2 non-interference guidelines, disappearing automatically when the cursor moves away without obstructing the underlying operational dashboard.
 
-### 6.4 Comprehensive Testing & Ecosystem Verification Battery
+### 6.4 Dataset Compiler & Kaggle Cloud Synchronization Hub
+
+The desktop interface integrates a dedicated visual control plane for the Dataset Compiler sidecar (`Port 8100`):
+
+- **Segmented Compilation Mode Switcher**:
+  - **Standard Manifold Compilation**: Rapid synthesis of registered production manifolds using predefined storage presets (`streaming-webdataset`, `columnar-parquet`, `mosaicml-mds`, `lightning-litdata`), customizable shard sample bounds, and automatic loose image reclamation.
+  - **Custom Multi-Source Dataset Compilation**: Autonomous pipeline synthesizing novel custom datasets from arbitrary collections of source repositories spanning Kaggle (`kaggle://`), Hugging Face (`hf://`), Google Drive (`gd://`), and GitHub (`gh://`). Automatically registers new manifold metadata in `unified_data.yaml` and launches background compilation.
+- **Kaggle Cloud Synchronization & Storage Hub**:
+  - **Live Authentication Telemetry**: Probes local credential files (`~/.kaggle/kaggle.json`, `.kaggle_token`) and environment variables to display immediate connection readiness.
+  - **Registry Datasets Ingestion**: Dropdown interface bound to all 20 Kaggle-linked manifolds in `unified_data.yaml`, indicating local presence or missing status with one-click download.
+  - **Custom Kaggle Link / Slug Ingestion**: Input field accepting direct Kaggle URLs or `owner/dataset` slugs for downloading and unzipping external research datasets directly into the local storage root.
+  - **Local Manifold Publishing**: Selects compiled local manifolds to package and upload directly to Kaggle.
+- **Production Manifolds Catalog & Format Breakdown**:
+  - Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified `COMPILED` badges backed by in-memory filesystem caching.
+
+### 6.5 Comprehensive Testing & Ecosystem Verification Battery
 
 The GUI codebase is verified by an exhaustive automated testing battery:
 

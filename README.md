@@ -16,6 +16,11 @@
 
 ## Changelog
 
+### v16.9.6 — Desktop GUI Kaggle Cloud Synchronization Hub & Multi-Source Custom Compilation
+
+* **`PAPER_DATASET_COMPILER.md` & `PAPER_AI_STUDIO_GUI.md` Synchronization** — Documented the Kaggle Cloud Synchronization & Storage Hub (bidirectional dataset downloads from `unified_data.yaml` registry, custom Kaggle link/slug downloads, and local manifold uploads), multi-source custom dataset synthesis pipeline (`kaggle://`, `hf://`, `gd://`, `gh://`), and fast split-shard discovery caching across 22 compiled manifolds.
+* **`MANUAL_AI_STUDIO_GUI.md` & `MANUAL_API.md` Expansion** — Updated Section 5 of the GUI manual with detailed walkthroughs for Standard and Custom Multi-Source compilation modes, documented new REST endpoints (`GET /api/kaggle/registry-datasets`, `POST /api/kaggle/download`, `POST /api/kaggle/upload`, `POST /api/gui/custom-compile`), and synchronized the interactive control dictionary in `GUI_CONTROL_REGISTRY.md`.
+
 ### v16.9.1 — Visual Demonstration Remediation (Track B Execution)
 
 * **`assets/` Asset Generation & Conversion** — Generated and optimized 10 high-fidelity perceptual demonstration assets into `assets/`:

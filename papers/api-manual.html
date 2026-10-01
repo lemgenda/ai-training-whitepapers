@@ -486,7 +486,7 @@ ws://127.0.0.1:8000/ws/logs</code></pre>
 
                 <h3 id="section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</h3>
                 <p>The Environment Manager provides specialized endpoints for high-velocity hydration in <code>lemgendary-ai-studio-gui</code>:</p>
-                <h4><code>GET /api/gui/state</code></h4>
+                <h4><code>GET /api/gui/state</code> (Environment Manager)</h4>
                 <p>Returns a consolidated snapshot containing service identity, hardware profile (<code>probe_hardware()</code>), discovered projects summary (<code>discover_projects()</code>), and pipeline execution status (<code>orchestrator.is_running</code>) in a single non-blocking payload.</p>
                 <p>Example response:</p>
                 <pre><code>{
@@ -1109,7 +1109,7 @@ python cli.py server stop</code></pre>
                 <p>
                     The Dataset Compiler API exposes specialized endpoints tailored for <code>lemgendary-ai-studio-gui</code> desktop integration and Cross-Project Automation (CPA):
                 </p>
-                <h4><code>GET /api/gui/state</code></h4>
+                <h4><code>GET /api/gui/state</code> (Dataset Compiler)</h4>
                 <p>
                     Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
                 </p>

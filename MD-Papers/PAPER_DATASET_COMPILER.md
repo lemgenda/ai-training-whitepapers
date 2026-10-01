@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (v16.8.0) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration.
+The LemGendary Dataset Compiler Suite (v16.9.6) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
 
 * **Project Repository**: [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 
@@ -99,6 +99,23 @@ To empirically validate these system-level optimizations, execution profiles wer
 
 * **MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)**:
   For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (`LemGendizedForexUniverseLarge`) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.
+
+* **Kaggle Cloud Synchronization & Storage Hub (v16.9.6)**:
+  Exposes high-speed bidirectional synchronization between the local dataset root (`LemGendaryDatasets\`) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (`GET /api/kaggle/registry-datasets`, `POST /api/kaggle/download`, `POST /api/kaggle/upload`, `GET /api/kaggle/status`).
+  * **Registry Datasets**: Exposes all 20 canonical Kaggle-bound production manifolds from `unified_data.yaml` directly in the UI with live local existence indicators and sample counts.
+  * **Direct Custom Link / Slug Ingestion**: Operators can provide arbitrary Kaggle web URLs (e.g., `https://www.kaggle.com/datasets/owner/dataset`) or slugs (`owner/dataset`) to pull and unpack custom research datasets directly into the manifold storage hierarchy with automatic unzipping and force overwrite capabilities.
+  * **Zero-Recompression Upload**: Packages compiled streaming manifolds with valid metadata manifests and streams them to Kaggle Model and Dataset registries.
+
+* **Multi-Source Custom Dataset Synthesis Engine (v16.9.6)**:
+  Facilitates arbitrary dataset compilation via `POST /api/gui/custom-compile`. Operators supply heterogeneous lists of source datasets and URLs spanning:
+  * **Kaggle**: `kaggle://owner/dataset` or direct Kaggle web URLs.
+  * **Hugging Face**: `hf://org/dataset` or direct HuggingFace dataset URLs.
+  * **Google Drive**: `gd://folder_id` or Google Drive sharing links.
+  * **GitHub**: `gh://owner/repo` or repository URLs.
+  The engine normalizes all inputs into canonical URI schemes, updates `unified_data.yaml` dynamically, and dispatches background compilation with user-selected domain tasks (`restoration`, `detection`, `segmentation`, `quality`, `vision`), storage presets, and optional source image purging.
+
+* **Fast Split Shard Discovery & In-Memory mtime Caching (v16.9.6)**:
+  Eliminates deep recursive walking across hundreds of thousands of loose files when evaluating manifold compiled status. The optimized scanner inspects container roots (`shards/`, `mds/`, `wds/`, `litdata/`) and immediate split folders (`train/`, `val/`, `test/`) with `os.scandir`. Results are cached against the directory's filesystem `st_mtime`, dropping API response latency from $> 20\text{ seconds}$ to $< 50\text{ ms}$ while accurately recognizing all 22 manifolds as compiled.
 
 ---
 

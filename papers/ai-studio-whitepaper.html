@@ -174,7 +174,27 @@
                     <li><strong>Accessibility &amp; Zero-Distraction</strong>: Tooltips adhere to WCAG 2.2 non-interference guidelines, disappearing automatically when the cursor moves away without obstructing the underlying operational dashboard.</li>
                 </ul>
 
-                <h3>6.4 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
+                <h3>6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization Hub</h3>
+                <p>The desktop interface integrates a dedicated visual control plane for the Dataset Compiler sidecar (<code>Port 8100</code>):</p>
+                <ul>
+                    <li><strong>Segmented Compilation Mode Switcher</strong>:
+                        <ul>
+                            <li><strong>Standard Manifold Compilation</strong>: Rapid synthesis of registered production manifolds using predefined storage presets (<code>streaming-webdataset</code>, <code>columnar-parquet</code>, <code>mosaicml-mds</code>, <code>lightning-litdata</code>), customizable shard sample bounds, and automatic loose image reclamation.</li>
+                            <li><strong>Custom Multi-Source Dataset Compilation</strong>: Autonomous pipeline synthesizing novel custom datasets from arbitrary collections of source repositories spanning Kaggle (<code>kaggle://</code>), Hugging Face (<code>hf://</code>), Google Drive (<code>gd://</code>), and GitHub (<code>gh://</code>). Automatically registers new manifold metadata in <code>unified_data.yaml</code> and launches background compilation.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Kaggle Cloud Synchronization &amp; Storage Hub</strong>:
+                        <ul>
+                            <li><strong>Live Authentication Telemetry</strong>: Probes local credential files (<code>~/.kaggle/kaggle.json</code>, <code>.kaggle_token</code>) and environment variables to display immediate connection readiness.</li>
+                            <li><strong>Registry Datasets Ingestion</strong>: Dropdown interface bound to all 20 Kaggle-linked manifolds in <code>unified_data.yaml</code>, indicating local presence or missing status with one-click download.</li>
+                            <li><strong>Custom Kaggle Link / Slug Ingestion</strong>: Input field accepting direct Kaggle URLs or <code>owner/dataset</code> slugs for downloading and unzipping external research datasets directly into the local storage root.</li>
+                            <li><strong>Local Manifold Publishing</strong>: Selects compiled local manifolds to package and upload directly to Kaggle.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Production Manifolds Catalog &amp; Format Breakdown</strong>: Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified <code>COMPILED</code> badges backed by in-memory filesystem caching.</li>
+                </ul>
+
+                <h3>6.5 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
                 <p>The GUI codebase is verified by an exhaustive automated testing battery:</p>
                 <ul>
                     <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
