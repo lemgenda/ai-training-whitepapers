@@ -16,6 +16,11 @@
 
 ## Changelog
 
+### v16.9.8 — Authoritative 3-Pillar SOTA Convergence & Forex Multi-Timeframe Confluence Synchronization
+
+* **`PAPER_TRAINING_SUITE.md` Synchronization** — Documented the mathematical 3-Pillar Fully-Trained Verification Invariant ($\bigwedge_{m} \text{Passed}(m, T_m) \land \text{LadderPassed} \land \text{DataFraction} \ge 1.0$), multi-metric evaluation across all defined `sota_targets`, Timeframe Confluence Ladder (`res_ladder: [1, 5, 15, 60, 240, 1440]`), and the 8-metric financial scorecard (`DirAcc`, `WinRate`, `ProfitFactor`, `Sharpe`, `Sortino`, `MaxDD`, `TP_MAE`, `SL_MAE`).
+* **`MANUAL_AI_STUDIO_GUI.md` & `MANUAL_API.md` Specification Updates** — Documented Section 6.4 Model Architecture Cards and Status Badges (`FULLY TRAINED`, `PARTIALLY TRAINED`, `WEIGHTS READY`, `INITIALIZING`), card telemetry rows (`SOTA Targets`, `Confluence Ladder / Resolution Ladder`, `Data Fraction`), adaptive timeframe controls, and the enriched `GET /api/gui/models/with-stats` schema.
+
 ### v16.9.7 — Headless Windowless Service Execution & Automated GUI Mesh Bootstrapping
 
 * **`PAPER_AI_STUDIO_GUI.md` & `MANUAL_AI_STUDIO_GUI.md` Synchronization** — Documented the cross-platform windowless background daemon execution architecture (`pythonw.exe`, `CREATE_NO_WINDOW`, `stdin=DEVNULL` on Windows; `start_new_session=True` on POSIX), eliminating intrusive console and Windows Terminal popups. Documented the GUI's automated startup effect on launch (`autoStartOffline`) and decoupled sub-100ms mesh heartbeats.

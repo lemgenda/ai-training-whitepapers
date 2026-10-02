@@ -843,8 +843,51 @@ python cli.py server stop</code></pre>
                 </p>
                 <ul>
                     <li><code>GET /api/gui/state</code>: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.</li>
-                    <li><code>GET /api/gui/models/with-stats</code>: Enriches each registered model with discovered <code>.pth</code> checkpoints, file sizes, timestamps, and compiled ONNX export artifacts.</li>
-                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_name": "mirnet_exposure", "preset": "quick-sota" }</code> and queues a training pipeline instantly with validated defaults.</li>
+                    <li><code>GET /api/gui/models/with-stats</code>: Enriches each registered model with discovered <code>.pth</code> checkpoints, file sizes, timestamps, resolution ladder status, 100% data fraction completion, and multi-metric SOTA target evaluation.</li>
+                </ul>
+
+                <h4>Schema: <code>GET /api/gui/models/with-stats</code> Response Model</h4>
+                <pre><code>[
+  {
+    "model_key": "nafnet_debluring",
+    "display_name": "NAFNet Deblurring (GoPro)",
+    "architecture": "NAFNet (Nonlinear Activation Free)",
+    "task_type": "restoration",
+    "parameters_m": 16.9,
+    "spatial_ladder": [256, 384, 512],
+    "ladder_type": "spatial",
+    "is_forex": false,
+    "ladder_passed": true,
+    "max_res_completed": 512,
+    "target_res": 512,
+    "data_fraction_completed": 1.0,
+    "data_fraction_passed": true,
+    "epochs_completed": 79,
+    "best_metric": 33.91,
+    "metric_name": "PSNR (dB)",
+    "sota_target": 33.9,
+    "sota_targets_total": 4,
+    "sota_targets_met": 4,
+    "sota_all_met": true,
+    "sota_details": [
+      { "key": "psnr", "label": "PSNR (dB)", "target": 33.9, "achieved": 33.9157, "lower_is_better": false, "passed": true },
+      { "key": "ssim", "label": "SSIM", "target": 0.97, "achieved": 0.9753, "lower_is_better": false, "passed": true },
+      { "key": "lpips", "label": "LPIPS", "target": 0.04, "achieved": 0.0381, "lower_is_better": true, "passed": true },
+      { "key": "fid", "label": "FID", "target": 6.0, "achieved": 1.0532, "lower_is_better": true, "passed": true }
+    ],
+    "sota_reached": true,
+    "training_status": "fully_trained"
+  }
+]</code></pre>
+
+                <h5>Field Definitions</h5>
+                <ul>
+                    <li><code>training_status</code> (<code>"fully_trained" | "partially_trained" | "weights_ready" | "initializing"</code>): Strictly evaluates to <code>"fully_trained"</code> if and only if <code>sota_all_met === true &amp;&amp; ladder_passed === true &amp;&amp; data_fraction_passed === true</code>. Evaluates to <code>"partially_trained"</code> if <code>epochs_completed &gt; 0</code> but any pillar remains incomplete.</li>
+                    <li><code>ladder_type</code> (<code>"spatial" | "timeframe"</code>): Declares whether the ladder represents spatial pixel dimensions or temporal MetaTrader 5 candle resolutions (<code>[1, 5, 15, 60, 240, 1440]</code>).</li>
+                    <li><code>sota_details</code>: Exhaustive list of target metrics evaluated against their directional thresholds.</li>
+                    <li><code>data_fraction_completed</code>: Floating-point fraction of training data manifold completed (0.0 to 1.0).</li>
+                    <li><code>data_fraction_passed</code>: True if &ge; 0.99 (100% dataset variety).</li>
+                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_name": "mirnet_exposure", "preset": "quick-sota" }</code> and queues a training pipeline instantly with validated defaults. Automatic fallback resolves <code>task_type: forex</code> for financial models.</li>
                 </ul>
 
                 <h3 id="section-4-7">4.7 Python In-Process Engine &amp; Governance API</h3>

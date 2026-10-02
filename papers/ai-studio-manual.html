@@ -331,6 +331,31 @@
                     <li>If memory usage exceeds 90% of your GPU's capacity, the governor instantly cuts the mini-batch size in half and doubles gradient accumulation steps.</li>
                     <li>The training run continues smoothly without interruption, allowing low-end or single-GPU machines to train state-of-the-art models safely.</li>
                 </ul>
+
+                <h3>6.4 Model Architecture Cards &amp; Authoritative Status Telemetry</h3>
+                <p>The <strong>Model Architectures &amp; Topology Catalog</strong> renders real-time interactive cards for all registered models, providing clear telemetry and strict convergence certification:</p>
+
+                <h4>1. The Four Status Badges</h4>
+                <ul>
+                    <li><strong><code>FULLY TRAINED</code> (Emerald Badge)</strong>: Authoritatively certified. Displayed <strong>only</strong> when a model satisfies all three mandatory pillars:
+                        <ol>
+                            <li><strong>100% SOTA Metrics Met</strong>: Every single target metric defined in <code>sota_targets</code> meets or exceeds academic benchmarks.</li>
+                            <li><strong>Resolution / Confluence Ladder Passed</strong>: Model completed training through the highest rung (512px / 640px for vision, or all 6 folds / Daily horizon for forex).</li>
+                            <li><strong>100% Data Fraction Passed</strong>: Model trained on the complete dataset (1.00 sample fraction).</li>
+                        </ol>
+                    </li>
+                    <li><strong><code>PARTIALLY TRAINED</code> (Cyan Badge)</strong>: Model has verified checkpoints and completed training epochs, but has not completed all 3 pillars (e.g., SOTA reached at lower resolution or on an initial 15% or 75% data variety split).</li>
+                    <li><strong><code>WEIGHTS READY</code> (Green Badge)</strong>: Physical weights (<code>.pth</code> or <code>.onnx</code>) exist in <code>LemGendaryModels/</code>, ready for fine-tuning or zero-shot inference.</li>
+                    <li><strong><code>INITIALIZING</code> (Amber Badge)</strong>: Registered architecture awaiting initial training dispatch.</li>
+                </ul>
+
+                <h4>2. Card Telemetry Rows</h4>
+                <ul>
+                    <li><strong>SOTA Targets</strong>: Shows exact multi-metric progress fraction (e.g. <code>4 / 4 Met (All Passed)</code>, <code>3 / 4 Met</code>, or <code>1 / 4 Met</code>).</li>
+                    <li><strong>Confluence Ladder / Resolution Ladder</strong>: Shows ladder progress (e.g. <code>Full (512px)</code> for completed vision models, <code>256px / 512px</code> for intermediate models, or <code>Full Confluence (D1)</code> for Forex).</li>
+                    <li><strong>Data Fraction</strong>: Tracks dataset variety expansion (e.g. <code>100% (100% Passed)</code>, <code>75%</code>, <code>15%</code>).</li>
+                    <li><strong>Domain Adaptive Controls</strong>: When selecting <code>forex_predictor</code>, the training launch panel dynamically adapts from "Spatial Ladder Stage" to <strong>"Timeframe Confluence Stage"</strong> with dedicated MetaTrader 5 options (<code>M1 Scalping</code>, <code>M5 Order Flow</code>, <code>M15 Trigger</code>, <code>H1 Trend</code>, <code>H4 Momentum</code>, <code>D1 Macro Confluence</code>).</li>
+                </ul>
             </section>
 
             <!-- SECTION 7 -->

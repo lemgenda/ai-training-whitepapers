@@ -689,8 +689,56 @@ All asynchronous jobs are persisted in `.lemtrain_server/jobs.db` using SQLite W
 To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
 
 - `GET /api/gui/state`: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.
-- `GET /api/gui/models/with-stats`: Enriches each registered model with discovered `.pth` checkpoints, file sizes, timestamps, and compiled ONNX export artifacts.
-- `POST /api/gui/quick-train`: Accepts `{ "model_name": "mirnet_exposure", "preset": "quick-sota" }` and queues a training pipeline instantly with validated defaults.
+- `GET /api/gui/models/with-stats`: Enriches each registered model with discovered `.pth` checkpoints, file sizes, timestamps, resolution ladder status, 100% data fraction completion, and multi-metric SOTA target evaluation.
+
+#### Schema: `GET /api/gui/models/with-stats` Response Model
+
+```json
+[
+  {
+    "model_key": "nafnet_debluring",
+    "display_name": "NAFNet Deblurring (GoPro)",
+    "architecture": "NAFNet (Nonlinear Activation Free)",
+    "task_type": "restoration",
+    "parameters_m": 16.9,
+    "spatial_ladder": [256, 384, 512],
+    "ladder_type": "spatial",
+    "is_forex": false,
+    "ladder_passed": true,
+    "max_res_completed": 512,
+    "target_res": 512,
+    "data_fraction_completed": 1.0,
+    "data_fraction_passed": true,
+    "epochs_completed": 79,
+    "best_metric": 33.91,
+    "metric_name": "PSNR (dB)",
+    "sota_target": 33.9,
+    "sota_targets_total": 4,
+    "sota_targets_met": 4,
+    "sota_all_met": true,
+    "sota_details": [
+      { "key": "psnr", "label": "PSNR (dB)", "target": 33.9, "achieved": 33.9157, "lower_is_better": false, "passed": true },
+      { "key": "ssim", "label": "SSIM", "target": 0.97, "achieved": 0.9753, "lower_is_better": false, "passed": true },
+      { "key": "lpips", "label": "LPIPS", "target": 0.04, "achieved": 0.0381, "lower_is_better": true, "passed": true },
+      { "key": "fid", "label": "FID", "target": 6.0, "achieved": 1.0532, "lower_is_better": true, "passed": true }
+    ],
+    "sota_reached": true,
+    "training_status": "fully_trained"
+  }
+]
+```
+
+##### Field Definitions
+
+- `training_status` (`"fully_trained" | "partially_trained" | "weights_ready" | "initializing"`):
+  - Strictly evaluates to `"fully_trained"` if and only if `sota_all_met === true && ladder_passed === true && data_fraction_passed === true`.
+  - Evaluates to `"partially_trained"` if `epochs_completed > 0` but any of the 3 pillars is unfulfilled.
+- `ladder_type` (`"spatial" | "timeframe"`): Declares whether the ladder represents spatial pixel dimensions or temporal MetaTrader 5 candle resolutions (`[1, 5, 15, 60, 240, 1440]`).
+- `sota_details`: Exhaustive list of target metrics evaluated against their directional thresholds.
+- `data_fraction_completed`: Floating-point fraction of training data manifold completed ($0.0$ to $1.0$).
+- `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
+
+- `POST /api/gui/quick-train`: Accepts `{ "model_name": "mirnet_exposure", "preset": "quick-sota" }` and queues a training pipeline instantly with validated defaults. Automatic fallback resolves `task_type: forex` for financial models.
 
 ### 4.7 Python In-Process Engine & Governance API
 

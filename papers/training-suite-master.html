@@ -192,7 +192,7 @@
                 <li><strong>Professional Multi-Task Restoration</strong>: Fully integrated multi-headed Mixture-of-Experts (MoE) routing engine with 11 specialized restoration heads dynamically trained under Dynamic Filename Task Ingestion.</li>
             </ul>
 
-            <h3 id="resolution-ladders">2.3. Hardened Resolution Ladders & SOTA Guards</h3>
+            <h3 id="resolution-ladders">2.3. Hardened Resolution Ladders &amp; SOTA Guards</h3>
             <ul>
                 <li><strong>Ladder-Aware Progression</strong>: Reaching SOTA targets at sub-maximal resolutions triggers a <strong>Forced Spatial Jump</strong> to the next rung (e.g., 256px &rarr; 384px).</li>
                 <li><strong>SOTA Hardening Guard</strong>: Enforces a mandatory <strong>2-epoch "Hardening Period"</strong> for every resolution rung to solidify weights.</li>
@@ -200,13 +200,24 @@
                 <li><strong>SOTA Verification</strong>: Verifies SOTA targets on 100% of training data at final resolution before permitting export.</li>
             </ul>
 
-            <h3 id="checkpoint-resumption">2.4. Checkpoint Resumption & Singularity Hardening</h3>
+            <h4>2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant</h4>
+            <p>The training engine and GUI telemetry enforce an absolute, non-negotiable invariant before designating any model as <strong><code>FULLY TRAINED</code></strong>:</p>
+            <p style="text-align: center; font-weight: bold; padding: 12px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--accent-color); font-family: 'Fira Code', monospace;">
+                FullyTrained = (&and;<sub>m &isin; Targets</sub> Passed(m, T<sub>m</sub>)) &and; (LadderPassed) &and; (DataFraction &ge; 1.0)
+            </p>
+            <ol>
+                <li><strong>Pillar 1: Multi-Metric SOTA Target Satisfaction (100%)</strong>: The engine validates every single metric defined in the model's <code>sota_targets</code> dictionary within <code>unified_models_v2.yaml</code>. Directionality is strictly enforced: higher-is-better metrics (PSNR, SSIM, SRCC, PLCC, Accuracy, mAP50, DirAcc, WinRate, Sharpe, Sortino) must satisfy Achieved &ge; Target; lower-is-better metrics (LPIPS, FID, MAE, MaxDD, TP_MAE, SL_MAE, Rank_Margin) must satisfy Achieved &le; Target. If even one defined metric fails, SOTA is not achieved.</li>
+                <li><strong>Pillar 2: Complete Resolution / Confluence Ladder Traversal</strong>: Vision models must complete training through the highest rung (max_res &ge; target_res, e.g. 512px / 640px). Forex models must complete all 6 curriculum folds or train through the macro Daily confluence horizon (Fold &ge; 6 or Horizon &ge; 1440m).</li>
+                <li><strong>Pillar 3: 100% Dataset Variety (1.00 Data Fraction)</strong>: The model must have completed its epoch on 100% of the training dataset manifold (Data &ge; 0.99). Models trained on sub-unitary fractions (15%, 35%, 75%) are strictly designated as <code>PARTIALLY TRAINED</code>.</li>
+            </ol>
+
+            <h3 id="checkpoint-resumption">2.4. Checkpoint Resumption &amp; Singularity Hardening</h3>
             <ul>
                 <li><strong>Unified Hub Checkpoints</strong>: Completely obsoletes volatile local checkpoint directories. All models, whether training locally or on Kaggle, directly sync <code>_latest</code>, <code>_best</code>, <code>_progress</code>, and <code>_vault_</code> checkpoints exclusively to their respective <code>LemGendaryModels/&lt;model_name&gt;/checkpoints</code> vault.</li>
                 <li><strong>Safe Non-Destructive Export Instantiation</strong>: Replaced legacy <code>shutil.rmtree</code> overarching folder wipes with precise, non-destructive <code>os.makedirs(exist_ok=True)</code> logic, structurally preventing catastrophic deletion of trained physical model checkpoints across projects.</li>
                 <li><strong>The Scheduler Shield</strong>: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.</li>
                 <li><strong>Velocity Bomb Prevention (Rollback Isolation)</strong>: During a SOTA Rollback, the Governor surgically decouples the model weights from the learning rate chronometer. It reverts the weights to the safe baseline but intentionally bypasses chronological scheduler rewinding. This prevents the learning rate from violently spiking back to early-stage <code>max_lr</code> values, ensuring the model gently seats into a cold, stable manifold.</li>
-                <li><strong>Metric Singularity & Live Polarity Shield</strong>: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN. <strong>New in v1.2.2</strong>: The Live Polarity Shield monitors the manifold directly during training; if <code>SRCC &lt; 0.0</code> or <code>PLCC &lt; 0.0</code> is detected mid-epoch, it immediately flags a "Polarity Collapse", rejecting the epoch and triggering an instant SOTA rollback to purge inverted weights.</li>
+                <li><strong>Metric Singularity &amp; Live Polarity Shield</strong>: The Metric Singularity Shield triggers a tactical recoil and rollback to SOTA weights immediately if PLCC/SRCC hit NaN. <strong>New in v1.2.2</strong>: The Live Polarity Shield monitors the manifold directly during training; if <code>SRCC &lt; 0.0</code> or <code>PLCC &lt; 0.0</code> is detected mid-epoch, it immediately flags a "Polarity Collapse", rejecting the epoch and triggering an instant SOTA rollback to purge inverted weights.</li>
                 <li><strong>Absolute Anti-Loop Guard (Dead Man's Switch)</strong>: To prevent models from manipulating localized 5% drift gates via marginal "lucky" spikes, the Governor tracks an <code>absolute_patience</code> limit (default 15 epochs). If a model fails to beat the Absolute SOTA for 15 epochs, the Governor forcefully severs the training loop and executes a hard SOTA rollback.</li>
                 <li><strong>Model-Aware Adaptive Loop-Breaker &amp; Loop Guards (v16.3.2)</strong>: Tracks checkpoint rollback history to detect resolution-regression locks. It automatically triggers spatial resolution promotion (Strategy A) or dynamic drift-gate relaxation (Strategy B), protected by an anti-self-fighting <code>breakout_lock</code> retreat shield, to resolve infinite training loops autonomously. Configurable on a per-model basis in the master registry.</li>
                 <li><strong>Autonomous Resolution Escalation &amp; Dynamic Limits (v16.3.3)</strong>: <code>SmartTrainingGovernor</code> dynamically detects resolution-regression locks when rollback thresholds are met and automatically promotes the training resolution to the next rung in <code>res_ladder</code> (<code>256px -&gt; 384px</code>), resetting sample fraction to 15% for a fresh warmup. <code>get_active_regression_limit()</code> dynamically relaxes <code>regression_limit</code> during loop recovery so static YAML limits never block resolution escalation.</li>
@@ -228,6 +239,29 @@
             <ul>
                 <li><strong>Causal Conv1D Timeframe Branches</strong>: Processes multi-timeframe OHLCV data (M1, M5, M15, H1, H4, D1) through strict causal Conv1D stacks with left-only padding, guaranteeing zero temporal data leakage.</li>
                 <li><strong>Cross-Timeframe Attention Fusion</strong>: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.</li>
+                <li><strong>Timeframe Confluence Ladder (<code>res_ladder: [1, 5, 15, 60, 240, 1440]</code>)</strong>: Replaces spatial pixel dimensions with MetaTrader 5 candle resolutions:
+                    <ul>
+                        <li><code>M1 (1-min)</code>: Execution scalping and slippage minimization (Lookback: 512 bars).</li>
+                        <li><code>M5 (5-min)</code>: Microstructure order-flow refinement (Lookback: 288 bars).</li>
+                        <li><code>M15 (15-min)</code>: Intraday trigger timing and tight stop placement (Lookback: 192 bars).</li>
+                        <li><code>H1 (60-min)</code>: Intraday trend direction and volume delta confirmation (Lookback: 168 bars).</li>
+                        <li><code>H4 (240-min)</code>: Intermediate trend momentum and swing regimes (Lookback: 90 bars).</li>
+                        <li><code>D1 (1440-min)</code>: Macro trend, regime classification, and structural levels (Lookback: 252 bars).</li>
+                    </ul>
+                </li>
+                <li><strong>8-Metric Financial Scorecard &amp; Domain Isolation</strong>: Enforces quantitative convergence across all 8 specialized financial indicators:
+                    <ul>
+                        <li>Directional Accuracy (&ge; 58.5%, higher is better)</li>
+                        <li>Win Rate (&ge; 56.0%, higher is better)</li>
+                        <li>Profit Factor (&ge; 1.65, higher is better)</li>
+                        <li>Sharpe Ratio (&ge; 1.85, higher is better)</li>
+                        <li>Sortino Ratio (&ge; 2.10, higher is better)</li>
+                        <li>Maximum Drawdown (&le; 12.0%, lower is better)</li>
+                        <li>Take-Profit MAE (&le; 12.5 pips, lower is better)</li>
+                        <li>Stop-Loss MAE (&le; 12.5 pips, lower is better)</li>
+                    </ul>
+                    Strict domain isolation guarantees financial metrics never pollute vision model evaluation and vision metrics never distort quantitative time-series validation.
+                </li>
                 <li><strong>Confidence-Gated Dual Head &amp; Loss</strong>: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (<code>ForexDualLoss</code>) to prevent fitting noise on low-confidence bars.</li>
                 <li><strong>Normalized Pip Scaling (<code>PAIR_PIP_SCALE</code>)</strong>: Standardizes multi-asset volatility swings into Normalized Pip Units ($[0, 100]$ NPUs) via symbol-specific scaling factors ($1.0\times$ FX Majors, $5.0\times$ Commodities, $10.0\times$ Gold, $20.0\text{--}40.0\times$ Indices), eliminating magnitude head saturation and stabilizing validation losses.</li>
                 <li><strong>Calibrated Dual Loss Formulation</strong>: Balances directional Focal/Cross-Entropy supervision ($0.50$) with normalized Huber regression ($0.02$, $\delta=2.0$), maintaining loss values in the clean $0.05\text{--}1.0$ numerical range matching vision restoration models.</li>

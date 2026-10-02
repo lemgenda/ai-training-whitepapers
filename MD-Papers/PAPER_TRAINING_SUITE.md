@@ -42,6 +42,22 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Overfitting Rescue Protocol**: Overrides tactical recoils and cooldown locks when trend-based overfitting is diagnosed, force-expanding the dataset fraction (+15% data) to break the overfitting attractor.
 - **SOTA Verification**: Verifies SOTA targets on 100% of training data at final resolution before permitting export.
 
+#### 2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant
+
+The training engine and GUI telemetry enforce an absolute, non-negotiable invariant before designating any model as **`FULLY TRAINED`**:
+
+$$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \text{Passed}(m, T_m)\right) \land (\text{LadderPassed}) \land (\text{DataFraction} \ge 1.0)$$
+
+1. **Pillar 1: Multi-Metric SOTA Target Satisfaction ($100\%$)**:
+   - The engine validates **every single metric** defined in the model's `sota_targets` dictionary within `unified_models_v2.yaml`.
+   - Directionality is strictly enforced: higher-is-better metrics ($\text{PSNR}$, $\text{SSIM}$, $\text{SRCC}$, $\text{PLCC}$, $\text{Accuracy}$, $\text{mAP50}$, $\text{DirAcc}$, $\text{WinRate}$, $\text{Sharpe}$, $\text{Sortino}$) must satisfy $\text{Achieved} \ge \text{Target}$; lower-is-better metrics ($\text{LPIPS}$, $\text{FID}$, $\text{MAE}$, $\text{MaxDD}$, $\text{TP\_MAE}$, $\text{SL\_MAE}$, $\text{Rank\_Margin}$) must satisfy $\text{Achieved} \le \text{Target}$.
+   - If even one defined metric fails to meet its target, SOTA is not achieved ($\text{sota\_targets\_met} < \text{sota\_targets\_total}$).
+2. **Pillar 2: Complete Resolution / Confluence Ladder Traversal**:
+   - **Vision Models**: Model must have completed training at or above the highest rung in `res_ladder` ($\text{max\_res} \ge \text{target\_res}$, typically $512\text{px}$ or $640\text{px}$). Reaching SOTA at $256\text{px}$ does not qualify as fully trained.
+   - **Forex Models**: Model must have completed all 6 walk-forward curriculum folds or trained through the macro daily confluence horizon ($\text{Fold} \ge 6 \lor \text{Horizon} \ge 1440\text{m}$).
+3. **Pillar 3: 100% Dataset Variety ($1.00$ Data Fraction)**:
+   - The model must have completed its epoch on $100\%$ of the training dataset manifold ($\text{Data} \ge 0.99$). Models trained on sub-unitary fractions ($15\%$, $35\%$, $75\%$) are strictly designated as `PARTIALLY TRAINED`.
+
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
 - **Unified Hub Checkpoints**: Completely obsoletes volatile local checkpoint directories. All models, whether training locally or on Kaggle, directly sync `_latest`, `_best`, `_progress`, and `_vault_` checkpoints exclusively to their respective `LemGendaryModels/<model_name>/checkpoints` vault.
@@ -68,12 +84,28 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 
 - **Causal Conv1D Timeframe Branches**: Processes multi-timeframe OHLCV data (M1, M5, M15, H1, H4, D1) through strict causal Conv1D stacks with left-only padding, guaranteeing zero temporal data leakage.
 - **Cross-Timeframe Attention Fusion**: Fuses multi-scale feature maps with multi-head self-attention and currency pair embeddings into a unified feature manifold.
+- **Timeframe Confluence Ladder (`res_ladder: [1, 5, 15, 60, 240, 1440]`)**: Replaces spatial pixel dimensions with MetaTrader 5 candle resolutions:
+  - `M1 (1-min)`: Execution scalping and slippage minimization (Lookback: 512 bars).
+  - `M5 (5-min)`: Microstructure order-flow refinement (Lookback: 288 bars).
+  - `M15 (15-min)`: Intraday trigger timing and tight stop placement (Lookback: 192 bars).
+  - `H1 (60-min)`: Intraday trend direction and volume delta confirmation (Lookback: 168 bars).
+  - `H4 (240-min)`: Intermediate trend momentum and swing regimes (Lookback: 90 bars).
+  - `D1 (1440-min)`: Macro trend, regime classification, and structural levels (Lookback: 252 bars).
+- **8-Metric Financial Scorecard & Domain Isolation**: Enforces quantitative convergence across all 8 specialized financial indicators:
+  - Directional Accuracy ($\text{DirAcc} \ge 58.5\%$, higher is better)
+  - Win Rate ($\text{WinRate} \ge 56.0\%$, higher is better)
+  - Profit Factor ($\text{ProfitFactor} \ge 1.65$, higher is better)
+  - Sharpe Ratio ($\text{Sharpe} \ge 1.85$, higher is better)
+  - Sortino Ratio ($\text{Sortino} \ge 2.10$, higher is better)
+  - Maximum Drawdown ($\text{MaxDD} \le 12.0\%$, lower is better)
+  - Take-Profit MAE ($\text{TP\_MAE} \le 12.5\text{ pips}$, lower is better)
+  - Stop-Loss MAE ($\text{SL\_MAE} \le 12.5\text{ pips}$, lower is better)
+  - Strict domain isolation guarantees financial metrics never pollute vision model evaluation and vision metrics never distort quantitative time-series validation.
 - **Confidence-Gated Dual Head & Loss**: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (`ForexDualLoss`) to prevent fitting noise on low-confidence bars.
 - **Normalized Pip Scaling (`PAIR_PIP_SCALE`)**: Standardizes multi-asset volatility swings into Normalized Pip Units ($[0, 100]$ NPUs) via symbol-specific scaling factors ($1.0\times$ FX Majors, $5.0\times$ Commodities, $10.0\times$ Gold, $20.0\text{--}40.0\times$ Indices), eliminating magnitude head saturation and stabilizing validation losses.
 - **Calibrated Dual Loss Formulation**: Balances directional Focal/Cross-Entropy supervision ($0.50$) with normalized Huber regression ($0.02$, $\delta=2.0$), maintaining loss values in the clean $0.05\text{--}1.0$ numerical range matching vision restoration models.
 - **Vectorized Cross-Timeframe Alignment Caching & Dynamic Hardware Scaling (v17.7)**: Precomputes cross-timeframe temporal alignment matrices in vector space ($O(1)$ integer array lookup replacing $35\text{M}$ individual $O(\log N)$ binary searches per epoch). Dynamically scales physical sequence batch size by GPU VRAM tier (256 on 4GB GTX 1650 to maximize memory-sentinel headroom).
 - **Unified Apache Parquet Streaming & LRU Row-Group Caching (v20.1)**: Operates directly on unified annual Parquet data stores (`ForexUniverse{year}.parquet`). Employs `ParquetRowGroupCache` for zero-seek random access and sub-microsecond batch tensor recovery ($<1\mu\text{s}$), eliminating NTFS cluster slack space and reducing dataset initialization time across 24M+ multi-timeframe bars to under $0.1\text{s}$.
-
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
 ### 2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)

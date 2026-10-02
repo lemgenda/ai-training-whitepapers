@@ -250,6 +250,27 @@ The LemGendary AI Studio includes the **Sawtooth Governor**:
 - If memory usage exceeds 90% of your GPU's capacity, the governor instantly cuts the mini-batch size in half and doubles gradient accumulation steps.
 - The training run continues smoothly without interruption, allowing low-end or single-GPU machines to train state-of-the-art models safely.
 
+### 6.4 Model Architecture Cards & Authoritative Status Telemetry
+
+The **Model Architectures & Topology Catalog** renders real-time interactive cards for all registered models, providing clear telemetry and strict convergence certification:
+
+#### 1. The Four Status Badges
+
+- **`FULLY TRAINED` (Emerald Badge)**: Authoritatively certified. Displayed **only** when a model satisfies all three mandatory pillars:
+  1. **$100\%$ SOTA Metrics Met**: Every single target metric defined in `sota_targets` meets or exceeds academic benchmarks.
+  2. **Resolution / Confluence Ladder Passed**: Model completed training through the highest rung ($512\text{px}$ / $640\text{px}$ for vision, or all 6 folds / Daily horizon for forex).
+  3. **$100\%$ Data Fraction Passed**: Model trained on the complete dataset ($1.00$ sample fraction).
+- **`PARTIALLY TRAINED` (Cyan Badge)**: Model has verified checkpoints and completed training epochs, but has not completed all 3 pillars (e.g., SOTA reached at lower resolution or on an initial $15\%$ or $75\%$ data variety split).
+- **`WEIGHTS READY` (Green Badge)**: Physical weights (`.pth` or `.onnx`) exist in `LemGendaryModels/`, ready for fine-tuning or zero-shot inference.
+- **`INITIALIZING` (Amber Badge)**: Registered architecture awaiting initial training dispatch.
+
+#### 2. Card Telemetry Rows
+
+- **SOTA Targets**: Shows exact multi-metric progress fraction (e.g. `4 / 4 Met (All Passed)`, `3 / 4 Met`, or `1 / 4 Met`).
+- **Confluence Ladder / Resolution Ladder**: Shows ladder progress (e.g. `Full (512px)` for completed vision models, `256px / 512px` for intermediate models, or `Full Confluence (D1)` for Forex).
+- **Data Fraction**: Tracks dataset variety expansion (e.g. `100% (100% Passed)`, `75%`, `15%`).
+- **Domain Adaptive Controls**: When selecting `forex_predictor`, the training launch panel dynamically adapts from "Spatial Ladder Stage" to **"Timeframe Confluence Stage"** with dedicated MetaTrader 5 options (`M1 Scalping`, `M5 Order Flow`, `M15 Trigger`, `H1 Trend`, `H4 Momentum`, `D1 Macro Confluence`).
+
 ---
 
 ## 7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive
