@@ -240,6 +240,7 @@ Operators configure training using visual inputs with safe default values:
 - **Number of Epochs**: How many full passes over your dataset the model performs (e.g. 50 epochs).
 - **Base Learning Rate**: How fast the model learns (recommended default: `0.0002` with Cosine Annealing).
 - **Spatial Ladder Sequence**: Train progressively at $256\times 256 \rightarrow 384\times 384 \rightarrow 512\times 512$. This allows the model to learn coarse shapes rapidly before refining microscopic textures, speeding up training by up to 40%.
+- **Dynamic Model Defaults**: Selecting an architecture automatically synchronizes recommended hyperparameters (e.g. YOLOv8n defaults to 300 epochs, 0.01 learning rate, 640px stage; Forex Predictor defaults to 0.0001 learning rate, D1 macro stage).
 
 ### 6.3 The Sawtooth Governor: Zero OOM Guarantee
 

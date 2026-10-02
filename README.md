@@ -16,6 +16,11 @@
 
 ## Changelog
 
+### v16.9.9 — Training Orchestration Form Stabilization & Dynamic Model Defaults Synchronization
+
+* **`MANUAL_AI_STUDIO_GUI.md` & `ai-studio-manual.html` Synchronization** — Documented Section 6.2 dynamic model hyperparameter synchronization upon architecture selection (YOLOv8n default 300 epochs, 0.01 learning rate, 640px stage; Forex Predictor default 0.0001 learning rate, D1 macro horizon), dedicated architecture selector row with architectural metadata badges, and glassmorphic Sawtooth Governor card.
+* **`MANUAL_API.md` & `api-manual.html` Synchronization** — Documented `POST /api/gui/quick-train` payload support for `ladder_stage` and `enable_sawtooth` with in-process Ultralytics native trainer delegation for YOLOv8n, and enriched `GET /api/gui/models/with-stats` returning `learning_rate`, `batch_size`, and `default_epochs`.
+
 ### v16.9.8 — Authoritative 3-Pillar SOTA Convergence & Forex Multi-Timeframe Confluence Synchronization
 
 * **`PAPER_TRAINING_SUITE.md` Synchronization** — Documented the mathematical 3-Pillar Fully-Trained Verification Invariant ($\bigwedge_{m} \text{Passed}(m, T_m) \land \text{LadderPassed} \land \text{DataFraction} \ge 1.0$), multi-metric evaluation across all defined `sota_targets`, Timeframe Confluence Ladder (`res_ladder: [1, 5, 15, 60, 240, 1440]`), and the 8-metric financial scorecard (`DirAcc`, `WinRate`, `ProfitFactor`, `Sharpe`, `Sortino`, `MaxDD`, `TP_MAE`, `SL_MAE`).

@@ -738,7 +738,7 @@ To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized a
 - `data_fraction_completed`: Floating-point fraction of training data manifold completed ($0.0$ to $1.0$).
 - `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
 
-- `POST /api/gui/quick-train`: Accepts `{ "model_name": "mirnet_exposure", "preset": "quick-sota" }` and queues a training pipeline instantly with validated defaults. Automatic fallback resolves `task_type: forex` for financial models.
+- `POST /api/gui/quick-train`: Accepts `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300, "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640, "enable_sawtooth": true }` and queues a training pipeline instantly with validated parameters. Supports Ultralytics native trainer delegation for YOLOv8n and automatic fallback resolving `task_type: forex` for financial models.
 
 ### 4.7 Python In-Process Engine & Governance API
 

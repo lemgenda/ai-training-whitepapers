@@ -887,7 +887,7 @@ python cli.py server stop</code></pre>
                     <li><code>sota_details</code>: Exhaustive list of target metrics evaluated against their directional thresholds.</li>
                     <li><code>data_fraction_completed</code>: Floating-point fraction of training data manifold completed (0.0 to 1.0).</li>
                     <li><code>data_fraction_passed</code>: True if &ge; 0.99 (100% dataset variety).</li>
-                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_name": "mirnet_exposure", "preset": "quick-sota" }</code> and queues a training pipeline instantly with validated defaults. Automatic fallback resolves <code>task_type: forex</code> for financial models.</li>
+                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300, "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640, "enable_sawtooth": true }</code> and queues a training pipeline instantly with validated parameters. Supports Ultralytics native trainer delegation for YOLOv8n and automatic fallback resolving <code>task_type: forex</code> for financial models.</li>
                 </ul>
 
                 <h3 id="section-4-7">4.7 Python In-Process Engine &amp; Governance API</h3>
