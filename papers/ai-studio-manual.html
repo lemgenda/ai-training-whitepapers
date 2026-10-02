@@ -26,7 +26,7 @@
             <p class="subtitle">Complete Operator Guide for Visual Orchestration, Secrets Management, Dataset Synthesis, and Production Model Training</p>
             <div class="meta">
                 <span>Category 03 MANUALS</span>
-                <span>Version 16.7.3</span>
+                <span>Version 2.8.5</span>
                 <span>Author: LemGendary AI Core Team</span>
                 <span>Hardware: Universal Accelerator Topology</span>
             </div>
@@ -1073,6 +1073,14 @@
                         </tbody>
                     </table>
                 </div>
+                <p>---</p>
+                <h3>6.2 Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+                <p>To ensure optimal situational awareness, the <strong>Real-time Telemetry &amp; Pipeline Stream</strong> console is embedded directly below the Training Orchestration controls and immediately above the Registered Architectures catalog:</p>
+                <ol>
+                    <li><strong>Top-of-Fold Workflow Alignment</strong>: Operators can initiate training and immediately inspect live gradient streaming, validation progress bars, and resolution ladder rungs without scrolling past 20 architecture cards.</li>
+                    <li><strong>Sub-Second Minibatch Cancellation</strong>: Clicking the red <code>Stop Training</code> button sends an immediate abort signal to the sidecar daemon (<code>POST /api/jobs/{id}/cancel</code>). The training engine hooks into inner minibatch iterations (via <code>on_train_batch_end</code>), setting <code>trainer.stop = True</code> within milliseconds, freeing GPU VRAM instantly without runaway execution.</li>
+                    <li><strong>Dual-Path Checkpoint Synchronization</strong>: On every completed epoch and ladder transition, the governor mirrors intermediate weights (<code>best.pt</code>, <code>last.pt</code>, <code>progress.pth</code>) to <code>checkpoints/</code> and <code>LemGendaryModels/&lt;model&gt;/checkpoints/</code>, ensuring live checkpoint telemetry cards reflect up-to-the-minute weights.</li>
+                </ol>
                 <p>---</p>
                 <h3>6.4 Registered Architectures & Checkpoint Telemetry Grid</h3>
                 <div style="margin: 25px 0; text-align: center;">

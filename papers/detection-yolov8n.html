@@ -27,7 +27,7 @@
             <div class="meta">
                 <span>By Lem Treursic</span>
                 <span>Category 09 VISION</span>
-                <span>Version 16.9.10</span>
+                <span>Version 16.9.11</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -125,6 +125,8 @@
                     <li><strong>Sawtooth VRAM Sentinel &amp; OOM Protection</strong>: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.</li>
                     <li><strong>Turing FP32 Numerical Stability</strong>: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (<code>check_amp()</code>) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (<code>amp=False</code>).</li>
                     <li><strong>Continuous Telemetry Bridge</strong>: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to <code>checkpoints/yolov8n/metrics.csv</code> and sidecar WebSockets, feeding live convergence dashboards.</li>
+                    <li><strong>Real-Time Checkpoint Parity</strong>: Synchronizes intermediate weights (<code>best.pt</code>, <code>best.pth</code>, <code>last.pt</code>, <code>progress.pth</code>) to <code>checkpoints/yolov8n/</code> and <code>LemGendaryModels/yolov8n/checkpoints/</code> on every epoch (<code>on_fit_epoch_end</code>) and stage transition, ensuring instant discovery by the Studio GUI checkpoint inspector.</li>
+                    <li><strong>Minibatch-Level Cancellation Protocol</strong>: Registers an <code>on_train_batch_end</code> hook instructing the Ultralytics trainer to halt immediately (<code>trainer.stop = True</code>) upon operator cancellation signals, preventing runaway GPU iterations mid-epoch.</li>
                 </ul>
             </section>
 

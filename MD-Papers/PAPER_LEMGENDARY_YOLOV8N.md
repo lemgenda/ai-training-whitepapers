@@ -89,6 +89,8 @@ Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurricul
 3. **Sawtooth VRAM Sentinel & OOM Protection**: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.
 4. **Turing FP32 Numerical Stability**: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (`check_amp()`) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (`amp=False`).
 5. **Continuous Telemetry Bridge**: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to `checkpoints/yolov8n/metrics.csv` and sidecar WebSockets, feeding live convergence dashboards.
+6. **Real-Time Checkpoint Parity**: Synchronizes intermediate weights (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) to `checkpoints/yolov8n/` and `LemGendaryModels/yolov8n/checkpoints/` on every epoch (`on_fit_epoch_end`) and stage transition, ensuring instant discovery by the Studio GUI checkpoint inspector.
+7. **Minibatch-Level Cancellation Protocol**: Registers an `on_train_batch_end` hook instructing the Ultralytics trainer to halt immediately (`trainer.stop = True`) upon operator cancellation signals, preventing runaway GPU iterations mid-epoch.
 
 ---
 

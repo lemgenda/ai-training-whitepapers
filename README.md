@@ -16,6 +16,12 @@
 
 ## Changelog
 
+### v16.9.11 — Real-Time Checkpoint Parity, Sub-Second Cancellation & Telemetry Stream Repositioning
+
+* **`PAPER_LEMGENDARY_YOLOV8N.md` Synchronization** — Documented Section 5.1 dual-path intermediate checkpoint synchronization (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) to `checkpoints/` and `LemGendaryModels/`, and inner-loop minibatch cancellation via `on_train_batch_end` setting `trainer.stop = True`.
+* **`PAPER_TRAINING_SUITE.md` Synchronization** — Documented Section 2.4 Real-Time Cross-Model Checkpoint Parity and Sub-Second Minibatch Cancellation Protocol across all 20 architectures.
+* **`MANUAL_AI_STUDIO_GUI.md` Synchronization** — Documented Section 6.2 Top-of-Fold Real-Time Telemetry Stream placement directly above the Registered Architectures catalog and the sub-second cancellation response handshake.
+
 ### v16.9.10 — SSOT Config-Governed Readonly Parameters, Dynamic Job Control & YOLO Curriculum Governor
 
 * **`MANUAL_AI_STUDIO_GUI.md` & `ai-studio-manual.html` Synchronization** — Documented Section 6.1 Single Source of Truth (SSOT) parameter locking across all neural models (`Training Epochs`, `Minibatch Size`, `Initial Learning Rate`, and `Spatial Ladder Stage` / `Timeframe Confluence Stage`) to read-only mode (`.editor-input-readonly`) tied directly to `unified_models_v2.yaml` / `presets.yaml`. Documented the `.config-governed-banner`, inline `Adjust via Config Editor` workflow, and the dynamic run-state action button transforming from `Start Training` (`.btn-primary`) to `Stop Training` (`.btn-danger`) with job cancellation signal dispatch (`POST /api/jobs/{job_id}/cancel`).
