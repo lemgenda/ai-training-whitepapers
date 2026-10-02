@@ -162,6 +162,20 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Lightning AI LitData Tensor Streaming**: High-throughput memory-mapped binary chunk reading for regression and parameter prediction (`upn_v2`), supporting variable-shape tensors and robust fallback error handling.
 - **Universal Container Resolver Ecosystem**: Upgraded `resolve_container_reader` dynamically reads `canonical_format` and `format` fields from `dataset_info.yaml`, falling back to candidate directory heuristics (`shards/`, `mds/`, `litdata/`, `parquet/`) for transparent zero-configuration ingestion.
 
+### 2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target Convergence (v16.9.10)
+
+- **Curriculum Stage Progression**: Governed by `YOLOCurriculumGovernor` (`training/governance/yolo_governor.py`), YOLO models progress through a multi-stage spatial resolution ladder (`320px -> 480px -> 640px`) paired with progressive dataset fraction scaling (`0.3 -> 0.6 -> 1.0`).
+- **Autonomous Checkpoint Handoff**: Each stage trains with warm-start weight handoff (`best.pt` of stage $k$ becomes the initialization weights for stage $k+1$), accelerating convergence while preserving learned multi-scale spatial representations.
+- **Hardware-Aware Turing FP32 Overrides**: On NVIDIA GTX 16xx (Turing TU117/TU116) GPUs lacking Tensor Cores, automatic mixed precision (`AMP`) fails and produces degenerate NaN loss values or 0.0 mAP. The governor automatically detects this architecture and enforces full FP32 numerical safety (`amp=False`).
+- **Sawtooth VRAM Sentinel Integration**: Continuously monitors GPU memory pressure during YOLO execution, dynamically adjusting batch allocations and preventing out-of-memory crashes on 4GB edge hardware.
+- **Unified Telemetry Stream**: All metrics across all curriculum stages are streamed in real time to `checkpoints/yolov8n/metrics.csv` and broadcast over the sidecar WebSocket feed, enabling live GUI progress tracking.
+
+### 2.15. Single Source of Truth (SSOT) Config-Governed GUI Training Controls & Dynamic Run-State Lifecycle
+
+- **Read-Only Parameter Locking**: To eliminate operational configuration drift, the training interface locks primary hyperparameters (`Training Epochs`, `Minibatch Size`, `Initial Learning Rate`, and `Spatial Ladder Stage` / `Timeframe Confluence Stage`) to read-only mode for all neural models. Values are strictly sourced from authoritative manifests (`unified_models_v2.yaml` / `presets.yaml`).
+- **In-App Manifest Adjustments**: Parameter modifications are routed through the Config Editor Modal (`onOpenConfigEditor`), ensuring all changes undergo schema validation and syntax checks before being committed.
+- **Dynamic Start/Stop Action Toggle**: The training launch button automatically transforms into `Stop Training` (`.btn-danger`) while a background training job is active. Operators can gracefully cancel running jobs (`POST /api/jobs/{job_id}/cancel`), releasing GPU memory and updating state cleanly.
+
 ---
 
 ## 3. Judicial Audit Engine

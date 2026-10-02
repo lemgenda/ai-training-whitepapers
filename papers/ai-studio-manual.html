@@ -980,13 +980,14 @@
                 <h4>Training Orchestrator Numbered Reference</h4>
                 <ol>
                     <li><strong>Target Architecture Selector (Hero Row)</strong>: Prominent full-width dropdown to select neural models from <code>unified_models_v2.yaml</code>.</li>
-                    <li><strong>Training Duration Epochs Input</strong>: Numerical input specifying total full passes across the training dataset (e.g. <code>30</code> or <code>300</code>).</li>
-                    <li><strong>In-Memory Minibatch Size Input</strong>: Numerical input setting batch size per optimization step (e.g. <code>8</code>, <code>16</code>, or <code>128</code>).</li>
-                    <li><strong>Initial Learning Rate Input</strong>: Precision floating-point field setting initial optimizer step magnitude (e.g. <code>0.0002</code> or <code>0.01</code>).</li>
-                    <li><strong>Spatial Ladder Stage Selector</strong>: Progressive multi-resolution training dropdown (e.g. <code>Stage 1: 512 x 512 (Base)</code>).</li>
+                    <li><strong>Training Duration Epochs (Config Governed)</strong>: Read-only display of total training epochs configured in <code>unified_models_v2.yaml</code> (e.g. <code>300</code> for YOLOv8n, <code>50</code> for Forex). Adjustable via the Config Editor.</li>
+                    <li><strong>In-Memory Minibatch Size (Config Governed)</strong>: Read-only display of configured sample batch size per optimization step. Dynamically adjusted at runtime by the Sawtooth Governor.</li>
+                    <li><strong>Initial Learning Rate (Config Governed)</strong>: Read-only display of base optimizer learning rate from canonical model specifications (e.g. <code>0.01</code> or <code>0.0002</code>). Adjustable via the Config Editor.</li>
+                    <li><strong>Spatial Ladder Stage Selector (Config Governed)</strong>: Read-only display of progressive multi-resolution training stage or timeframe confluence horizon.</li>
+                    <li><strong>Config Governed Parameter Banner &amp; Adjust Button</strong>: Informational header confirming parameter locking with direct shortcut button (<code>Adjust via Config Editor</code>) to edit underlying YAML manifests.</li>
                     <li><strong>Enable Sawtooth VRAM Governor Checkbox</strong>: Toggle enabling automatic dynamic batch reduction and gradient accumulation upon VRAM spikes.</li>
                     <li><strong>Sawtooth Sentinel Status Badge</strong>: Real-time indicator displaying green <code>ACTIVE (92% VRAM Sentinel)</code>.</li>
-                    <li><strong>Start Training Master Action Button</strong>: Dispatches accelerated background model training loop via port 8200 sidecar.</li>
+                    <li><strong>Dynamic Training Action Button (Start / Stop Training)</strong>: Context-aware dispatch button. Displays cyan <code>Start Training</code> when idle; dynamically transforms into red <code>Stop Training</code> while a training job is actively executing. Clicking <code>Stop Training</code> dispatches cancellation signal <code>POST /api/jobs/{job_id}/cancel</code>.</li>
                     <li><strong>Refresh Models Registry Button</strong>: Re-reads <code>unified_models_v2.yaml</code> and updates checkpoint availability in under 50ms.</li>
                 </ol>
                 <div style="overflow-x: auto; margin: 20px 0;">
@@ -996,67 +997,74 @@
                             <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
                             <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
                             <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide &amp; Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Target Architecture</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedModel(e.target.value)</code></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Hero row selector. Automatically synchronizes recommended default parameters.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Training Epochs</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Number Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setEpochs(Number(e.target.value))</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sets total training cycles. Range: 1 to 10,000 epochs.</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Minibatch Size</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Number Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setBatchSize(Number(e.target.value))</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Number of samples processed simultaneously per gradient computation.</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Dynamically scaled by Sawtooth Governor.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Initial Learning Rate</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Float Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setLearningRate(Number(e.target.value))</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Optimizer learning rate. Safe default: 0.0002 with cosine decay.</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Spatial Ladder Stage</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedLadderStage(Number(e.target.value))</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Configures multi-stage training resolution (256px -> 384px -> 512px).</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Select</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Progressive curriculum stage indicator.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6</strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Config Governed Banner</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Banner &amp; Action</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>onOpenConfigEditor()</code></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Informs operators of SSOT governance and opens in-app Config Editor modal.</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Sawtooth Checkbox</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Checkbox Toggle</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSawtoothGovernorActive(e.target.checked)</code></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Arms nuclear Out-of-Memory protection.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Sentinel Badge</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Hardware monitor</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms that 92% VRAM ceiling protection is actively monitoring memory.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Start Training</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST http://127.0.0.1:8200/api/train</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Launches PyTorch training execution in isolated background daemon.</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9</strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Start / Stop Training</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dynamic Action Button</td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/gui/quick-train</code> or <code>POST /api/jobs/{id}/cancel</code></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);">Launches training when idle; gracefully cancels running job when active.</td>
                         </tr>
                         <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9<strong></td>
+                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>10</strong></td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Refresh Models</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
                             <td style="padding: 10px; border: 1px solid var(--border-color);"><code>fetchModels()</code></td>

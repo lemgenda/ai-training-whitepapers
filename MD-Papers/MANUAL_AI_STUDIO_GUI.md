@@ -357,26 +357,28 @@ Once your dataset is compiled, you are ready to train a production-grade neural 
 #### Training Orchestrator Numbered Reference
 
 1. **Target Architecture Selector (Hero Row)**: Prominent full-width dropdown to select neural models from `unified_models_v2.yaml`.
-2. **Training Duration Epochs Input**: Numerical input specifying total full passes across the training dataset (e.g. `30` or `300`).
-3. **In-Memory Minibatch Size Input**: Numerical input setting batch size per optimization step (e.g. `8`, `16`, or `128`).
-4. **Initial Learning Rate Input**: Precision floating-point field setting initial optimizer step magnitude (e.g. `0.0002` or `0.01`).
-5. **Spatial Ladder Stage Selector**: Progressive multi-resolution training dropdown (e.g. `Stage 1: 512 x 512 (Base)`).
-6. **Enable Sawtooth VRAM Governor Checkbox**: Toggle enabling automatic dynamic batch reduction and gradient accumulation upon VRAM spikes.
-7. **Sawtooth Sentinel Status Badge**: Real-time indicator displaying green `ACTIVE (92% VRAM Sentinel)`.
-8. **Start Training Master Action Button**: Dispatches accelerated background model training loop via port 8200 sidecar.
-9. **Refresh Models Registry Button**: Re-reads `unified_models_v2.yaml` and updates checkpoint availability in under 50ms.
+2. **Training Duration Epochs (Config Governed)**: Read-only display of total training epochs configured in `unified_models_v2.yaml` (e.g. `300` for YOLOv8n, `50` for Forex). Adjustable via the Config Editor.
+3. **In-Memory Minibatch Size (Config Governed)**: Read-only display of configured sample batch size per optimization step. Dynamically adjusted at runtime by the Sawtooth Governor.
+4. **Initial Learning Rate (Config Governed)**: Read-only display of base optimizer learning rate from canonical model specifications (e.g. `0.01` or `0.0002`). Adjustable via the Config Editor.
+5. **Spatial Ladder Stage Selector (Config Governed)**: Read-only display of progressive multi-resolution training stage or timeframe confluence horizon.
+6. **Config Governed Parameter Banner & Adjust Button**: Informational header confirming parameter locking with direct shortcut button (`Adjust via Config Editor`) to edit underlying YAML manifests.
+7. **Enable Sawtooth VRAM Governor Checkbox**: Toggle enabling automatic dynamic batch reduction and gradient accumulation upon VRAM spikes.
+8. **Sawtooth Sentinel Status Badge**: Real-time indicator displaying green `ACTIVE (92% VRAM Sentinel)`.
+9. **Dynamic Training Action Button (Start / Stop Training)**: Context-aware dispatch button. Displays cyan `Start Training` when idle; dynamically transforms into red `Stop Training` (`.btn-danger`) while a training job is actively executing. Clicking `Stop Training` dispatches cancellation signal `POST /api/jobs/{job_id}/cancel`.
+10. **Refresh Models Registry Button**: Re-reads `unified_models_v2.yaml` and updates checkpoint availability in under 50ms.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Target Architecture | Select Dropdown | `setSelectedModel(e.target.value)` | Hero row selector. Automatically synchronizes recommended default parameters. |
-| **2** | Training Epochs | Number Input | `setEpochs(Number(e.target.value))` | Sets total training cycles. Range: 1 to 10,000 epochs. |
-| **3** | Minibatch Size | Number Input | `setBatchSize(Number(e.target.value))` | Number of samples processed simultaneously per gradient computation. |
-| **4** | Initial Learning Rate | Float Input | `setLearningRate(Number(e.target.value))` | Optimizer learning rate. Safe default: 0.0002 with cosine decay. |
-| **5** | Spatial Ladder Stage | Select Dropdown | `setSelectedLadderStage(Number(e.target.value))` | Configures multi-stage training resolution (256px -> 384px -> 512px). |
-| **6** | Sawtooth Checkbox | Checkbox Toggle | `setSawtoothGovernorActive(e.target.checked)` | Arms nuclear Out-of-Memory protection. |
-| **7** | Sentinel Badge | Status Badge | Hardware monitor | Confirms that 92% VRAM ceiling protection is actively monitoring memory. |
-| **8** | Start Training | Primary Button | `POST http://127.0.0.1:8200/api/train` | Launches PyTorch training execution in isolated background daemon. |
-| **9** | Refresh Models | Action Button | `fetchModels()` | Reloads weights status and latest SOTA metrics from disk. |
+| **2** | Training Epochs | Read-Only Input | None (Locked to Manifest) | Governed by `unified_models_v2.yaml`. Adjustable via Config Editor modal. |
+| **3** | Minibatch Size | Read-Only Input | None (Locked to Manifest) | Governed by `unified_models_v2.yaml`. Dynamically scaled by Sawtooth Governor. |
+| **4** | Initial Learning Rate | Read-Only Input | None (Locked to Manifest) | Governed by `unified_models_v2.yaml`. Adjustable via Config Editor modal. |
+| **5** | Spatial Ladder Stage | Read-Only Select | None (Locked to Manifest) | Governed by `unified_models_v2.yaml`. Progressive curriculum stage indicator. |
+| **6** | Config Governed Banner | Banner & Action | `onOpenConfigEditor()` | Informs operators of SSOT governance and opens in-app Config Editor modal. |
+| **7** | Sawtooth Checkbox | Checkbox Toggle | `setSawtoothGovernorActive(e.target.checked)` | Arms nuclear Out-of-Memory protection. |
+| **8** | Sentinel Badge | Status Badge | Hardware monitor | Confirms that 92% VRAM ceiling protection is actively monitoring memory. |
+| **9** | Start / Stop Training | Dynamic Action Button | `POST /api/gui/quick-train` or `POST /api/jobs/{id}/cancel` | Launches training when idle; gracefully cancels running job when active. |
+| **10** | Refresh Models | Action Button | `fetchModels()` | Reloads weights status and latest SOTA metrics from disk. |
 
 ---
 

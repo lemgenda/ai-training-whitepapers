@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: YOLOv8n Multi-Task Perception Architecture
 
 **Author**: Lem Treursic
-**Version**: 16.7.3
+**Version**: 16.9.10
 **Category**: Category 09 VISION
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -15,6 +15,7 @@
 * [3. Decoupled Head & TAL Assignment](#3-decoupled-head--tal-assignment)
 * [4. CIoU & Distribution Focal Loss (DFL)](#4-ciou--distribution-focal-loss-dfl)
 * [5. 17-Point Human Keypoint Estimation](#5-17-point-human-keypoint-estimation)
+* [5.1. Autonomous Curriculum Governor & Hardware-Aware Optimizations](#51-autonomous-curriculum-governor--hardware-aware-optimizations)
 * [6. Performance Targets & WebGPU](#6-performance-targets--webgpu)
 * [7. Conclusion](#7-conclusion)
 
@@ -76,6 +77,18 @@ $$\mathcal{L}_{\text{DFL}}(S_i, S_{i+1}) = -((q_{i+1} - q)\log(S_i) + (q - q_i)\
 The pose head predicts 17 standard COCO anatomical keypoints with visibility scores $v_i \in [0, 1]$, optimized via Object Keypoint Similarity (OKS) loss:
 
 $$\text{OKS} = \frac{\sum_i \exp(-d_i^2 / 2s^2 k_i^2) \delta(v_i > 0)}{\sum_i \delta(v_i > 0)}$$
+
+---
+
+## 5.1. Autonomous Curriculum Governor & Hardware-Aware Optimizations
+
+Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurriculumGovernor` (`training/governance/yolo_governor.py`), ensuring that Ultralytics inner-loop optimizations are preserved while outer-loop governance drives systematic curriculum learning:
+
+1. **Multi-Stage Spatial Resolution Ladder**: Progression across progressive stages ($320\text{px} \to 480\text{px} \to 640\text{px}$). Stage $k$ warm-starts directly from the `best.pt` weights of stage $k-1$, ensuring early coarse spatial feature learning at $320\text{px}$ before fine-grained multi-scale localization at $640\text{px}$.
+2. **Dynamic Dataset Fraction Scaling**: Scales training manifold sampling ($0.3 \to 0.6 \to 1.0$), ensuring rapid initial gradient alignment on representative subsets before full-manifold refinement.
+3. **Sawtooth VRAM Sentinel & OOM Protection**: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.
+4. **Turing FP32 Numerical Stability**: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (`check_amp()`) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (`amp=False`).
+5. **Continuous Telemetry Bridge**: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to `checkpoints/yolov8n/metrics.csv` and sidecar WebSockets, feeding live convergence dashboards.
 
 ---
 

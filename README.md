@@ -16,6 +16,12 @@
 
 ## Changelog
 
+### v16.9.10 — SSOT Config-Governed Readonly Parameters, Dynamic Job Control & YOLO Curriculum Governor
+
+* **`MANUAL_AI_STUDIO_GUI.md` & `ai-studio-manual.html` Synchronization** — Documented Section 6.1 Single Source of Truth (SSOT) parameter locking across all neural models (`Training Epochs`, `Minibatch Size`, `Initial Learning Rate`, and `Spatial Ladder Stage` / `Timeframe Confluence Stage`) to read-only mode (`.editor-input-readonly`) tied directly to `unified_models_v2.yaml` / `presets.yaml`. Documented the `.config-governed-banner`, inline `Adjust via Config Editor` workflow, and the dynamic run-state action button transforming from `Start Training` (`.btn-primary`) to `Stop Training` (`.btn-danger`) with job cancellation signal dispatch (`POST /api/jobs/{job_id}/cancel`).
+* **`PAPER_TRAINING_SUITE.md` & `training-suite-master.html` Synchronization** — Documented Section 2.14 Autonomous YOLO Multi-Stage Curriculum Governor (`YOLOCurriculumGovernor`, `320px -> 480px -> 640px` resolution ladder, `0.3 -> 0.6 -> 1.0` dataset fraction scaling, Turing FP32 numerical stability overrides, Sawtooth VRAM sentinel, and telemetry writeback to `checkpoints/yolov8n/metrics.csv`), as well as Section 2.15 SSOT Config-Governed GUI Training Controls and dynamic run-state lifecycle.
+* **`PAPER_LEMGENDARY_YOLOV8N.md` & `detection-yolov8n.html` Synchronization** — Documented Section 5.1 detailing the autonomous curriculum governor, progressive spatial ladder handoff (`best.pt` warm-starts), dataset scaling, Sawtooth memory sentinel, Turing non-Tensor core AMP overrides (`amp=False`), and live telemetry streaming.
+
 ### v16.9.9 — Training Orchestration Form Stabilization & Dynamic Model Defaults Synchronization
 
 * **`MANUAL_AI_STUDIO_GUI.md` & `ai-studio-manual.html` Synchronization** — Documented Section 6.2 dynamic model hyperparameter synchronization upon architecture selection (YOLOv8n default 300 epochs, 0.01 learning rate, 640px stage; Forex Predictor default 0.0001 learning rate, D1 macro horizon), dedicated architecture selector row with architectural metadata badges, and glassmorphic Sawtooth Governor card.

@@ -27,7 +27,7 @@
             <div class="meta">
                 <span>By Lem Treursic</span>
                 <span>Category 09 VISION</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.10</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -40,11 +40,12 @@
             <ul>
                 <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#architecture">2. Anchor-Free CSPDarknet & PANet</a></li>
-                <li><a href="#decoupled-head">3. Decoupled Head & TAL Assignment</a></li>
-                <li><a href="#loss">4. CIoU & Distribution Focal Loss (DFL)</a></li>
+                <li><a href="#architecture">2. Anchor-Free CSPDarknet &amp; PANet</a></li>
+                <li><a href="#decoupled-head">3. Decoupled Head &amp; TAL Assignment</a></li>
+                <li><a href="#loss">4. CIoU &amp; Distribution Focal Loss (DFL)</a></li>
                 <li><a href="#pose">5. 17-Point Human Keypoint Estimation</a></li>
-                <li><a href="#benchmarks">6. Performance Targets & WebGPU</a></li>
+                <li><a href="#curriculum-governor">5.1. Autonomous Curriculum Governor &amp; Hardware Optimizations</a></li>
+                <li><a href="#benchmarks">6. Performance Targets &amp; WebGPU</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
         </nav>
@@ -115,8 +116,20 @@
                 <p>$$\text{OKS} = \frac{\sum_i \exp(-d_i^2 / 2s^2 k_i^2) \delta(v_i > 0)}{\sum_i \delta(v_i > 0)}$$</p>
             </section>
 
+            <section id="curriculum-governor">
+                <h2>5.1. Autonomous Curriculum Governor &amp; Hardware-Aware Optimizations</h2>
+                <p>Training YOLOv8n within the LemGendary ecosystem is managed by the <code>YOLOCurriculumGovernor</code> (<code>training/governance/yolo_governor.py</code>), ensuring that Ultralytics inner-loop optimizations are preserved while outer-loop governance drives systematic curriculum learning:</p>
+                <ul>
+                    <li><strong>Multi-Stage Spatial Resolution Ladder</strong>: Progression across progressive stages (\(320\text{px} \to 480\text{px} \to 640\text{px}\)). Stage \(k\) warm-starts directly from the <code>best.pt</code> weights of stage \(k-1\), ensuring early coarse spatial feature learning at \(320\text{px}\) before fine-grained multi-scale localization at \(640\text{px}\).</li>
+                    <li><strong>Dynamic Dataset Fraction Scaling</strong>: Scales training manifold sampling (\(0.3 \to 0.6 \to 1.0\)), ensuring rapid initial gradient alignment on representative subsets before full-manifold refinement.</li>
+                    <li><strong>Sawtooth VRAM Sentinel &amp; OOM Protection</strong>: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.</li>
+                    <li><strong>Turing FP32 Numerical Stability</strong>: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (<code>check_amp()</code>) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (<code>amp=False</code>).</li>
+                    <li><strong>Continuous Telemetry Bridge</strong>: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to <code>checkpoints/yolov8n/metrics.csv</code> and sidecar WebSockets, feeding live convergence dashboards.</li>
+                </ul>
+            </section>
+
             <section id="benchmarks">
-                <h2>6. Performance Targets & WebGPU</h2>
+                <h2>6. Performance Targets &amp; WebGPU</h2>
                 <div class="table-container">
                     <table>
                         <thead>

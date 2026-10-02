@@ -373,10 +373,26 @@
                 <li><strong>Multi-Account Live Cloud Telemetry (<code>kaggle_monitor.py</code>)</strong>: Supports multi-user credential switching across registered <code>.kaggle_users</code> profiles with on-demand custom account entry. Concurrently resolves active and recent kernel execution states via multi-threaded workers, streaming live runtime logs and status transitions incrementally via Kaggle API endpoints directly into the local terminal.</li>
             </ul>
 
-            <h3 id="target-audit-guidance">2.12. Universal Post-Training Target Audit & Interactive Guidance</h3>
+            <h3 id="target-audit-guidance">2.12. Universal Post-Training Target Audit &amp; Interactive Guidance</h3>
             <ul>
                 <li><strong>Benchmark Gap Audit</strong>: Automatically tabulates achieved metrics against mathematical <code>sota_targets</code> upon reaching the maximum epoch ceiling.</li>
                 <li><strong>Interactive Action Matrix</strong>: Presents operators with immediate in-process options to extend training, launch cloud GPU escalation, fine-tune from the best checkpoint, or export ONNX matrices.</li>
+            </ul>
+
+            <h3 id="yolo-curriculum-governor">2.14. Autonomous YOLO Multi-Stage Curriculum Governor &amp; SOTA Target Convergence (v16.9.10)</h3>
+            <ul>
+                <li><strong>Curriculum Stage Progression</strong>: Governed by <code>YOLOCurriculumGovernor</code> (<code>training/governance/yolo_governor.py</code>), YOLO models progress through a multi-stage spatial resolution ladder (<code>320px -&gt; 480px -&gt; 640px</code>) paired with progressive dataset fraction scaling (<code>0.3 -&gt; 0.6 -&gt; 1.0</code>).</li>
+                <li><strong>Autonomous Checkpoint Handoff</strong>: Each stage trains with warm-start weight handoff (<code>best.pt</code> of stage $k$ becomes the initialization weights for stage $k+1$), accelerating convergence while preserving learned multi-scale spatial representations.</li>
+                <li><strong>Hardware-Aware Turing FP32 Overrides</strong>: On NVIDIA GTX 16xx (Turing TU117/TU116) GPUs lacking Tensor Cores, automatic mixed precision (<code>AMP</code>) fails and produces degenerate NaN loss values or 0.0 mAP. The governor automatically detects this architecture and enforces full FP32 numerical safety (<code>amp=False</code>).</li>
+                <li><strong>Sawtooth VRAM Sentinel Integration</strong>: Continuously monitors GPU memory pressure during YOLO execution, dynamically adjusting batch allocations and preventing out-of-memory crashes on 4GB edge hardware.</li>
+                <li><strong>Unified Telemetry Stream</strong>: All metrics across all curriculum stages are streamed in real time to <code>checkpoints/yolov8n/metrics.csv</code> and broadcast over the sidecar WebSocket feed, enabling live GUI progress tracking.</li>
+            </ul>
+
+            <h3 id="ssot-config-governed-gui">2.15. Single Source of Truth (SSOT) Config-Governed GUI Training Controls &amp; Dynamic Run-State Lifecycle</h3>
+            <ul>
+                <li><strong>Read-Only Parameter Locking</strong>: To eliminate operational configuration drift, the training interface locks primary hyperparameters (<code>Training Epochs</code>, <code>Minibatch Size</code>, <code>Initial Learning Rate</code>, and <code>Spatial Ladder Stage</code> / <code>Timeframe Confluence Stage</code>) to read-only mode for all neural models. Values are strictly sourced from authoritative manifests (<code>unified_models_v2.yaml</code> / <code>presets.yaml</code>).</li>
+                <li><strong>In-App Manifest Adjustments</strong>: Parameter modifications are routed through the Config Editor Modal (<code>onOpenConfigEditor</code>), ensuring all changes undergo schema validation and syntax checks before being committed.</li>
+                <li><strong>Dynamic Start/Stop Action Toggle</strong>: The training launch button automatically transforms into <code>Stop Training</code> (<code>.btn-danger</code>) while a background training job is active. Operators can gracefully cancel running jobs (<code>POST /api/jobs/{job_id}/cancel</code>), releasing GPU memory and updating state cleanly.</li>
             </ul>
 
         </section>
