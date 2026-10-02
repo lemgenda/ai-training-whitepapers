@@ -16,6 +16,12 @@
 
 ## Changelog
 
+### v16.9.12 — Checkpoint Resumption Protocol, Authoritative Persistence & Literature Citations
+
+* **`PAPER_LEMGENDARY_YOLOV8N.md` & `detection-yolov8n.html` Synchronization** — Documented Section 5.2 deep checkpoint metadata interrogation, completed stage skipping, and mid-rung resumption (`resume=True`) from `last.pt`, Section 5.3 Authoritative Persistence in `LemGendaryModels/`, and Section 7 Scientific Literature & Reference Citations.
+* **`PAPER_TRAINING_SUITE.md` & `training-suite-master.html` Synchronization** — Documented Section 2.4 Mid-Rung Checkpoint Resumption & Stage Skip Protocol across all models, Authoritative Single Source of Truth Persistence in `LemGendaryModels/<model_key>/`, and literature references integration.
+* **`LemGendaryModels/` Model Documentation Matrix Synchronization** — Embedded landmark academic citations (authors, venue, year, canonical link, and BibTeX) across all 22 model READMEs in `LemGendaryModels/<model_key>/README.md` and refreshed the master hub dashboard.
+
 ### v16.9.11 — Real-Time Checkpoint Parity, Sub-Second Cancellation & Telemetry Stream Repositioning
 
 * **`PAPER_LEMGENDARY_YOLOV8N.md` Synchronization** — Documented Section 5.1 dual-path intermediate checkpoint synchronization (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) to `checkpoints/` and `LemGendaryModels/`, and inner-loop minibatch cancellation via `on_train_batch_end` setting `trainer.stop = True`.

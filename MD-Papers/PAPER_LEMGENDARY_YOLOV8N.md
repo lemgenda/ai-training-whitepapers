@@ -94,6 +94,27 @@ Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurricul
 
 ---
 
+## 5.2. Checkpoint Resumption & Mid-Rung Progress Recovery (v16.9.12)
+
+Prior to v16.9.12, initiating training with pre-existing weights initialized `YOLO(weights)` with `resume=False`, causing Ultralytics to treat checkpoints as transfer-learning baselines and resetting the epoch counter to 1 for a redundant 75 epochs. The v16.9.12 Resumption Protocol provides rigorous checkpoint inspection and mid-rung resumption:
+
+1. **Deep Checkpoint Inspection**: Loads candidate checkpoints (`torch.load(..., map_location="cpu")`) to interrogate training metadata, including `epoch` (last completed epoch), `train_args.imgsz` (resolution rung), and `train_args.epochs` (target epochs).
+2. **Completed Stage Skipping**: If a checkpoint or `metrics.csv` indicates that stage $k$ (e.g. 320px) has already satisfied its target quota ($75$ epochs) or that training has progressed to a higher resolution rung, the governor logs completion and skips directly to the next ladder rung without redundant iterations.
+3. **Mid-Rung Seamless Resumption**: If an interrupted run is detected on the active stage ($0 \le \text{ckpt\_epoch} < \text{target\_epochs} - 1$), the governor stages `last.pt` into the local weights manifold and sets `resume = True`. Ultralytics resumes from $\text{ckpt\_epoch} + 2$ directly, preserving optimizer momentum buffers and learning rate schedules.
+
+---
+
+## 5.3. Authoritative Models Hub Persistence (`LemGendaryModels/`)
+
+The ecosystem designates `LemGendaryModels/yolov8n/` as the single authoritative persistence root:
+
+* **Checkpoints**: Synchronized in real time to `LemGendaryModels/yolov8n/checkpoints/` (`best.pt`, `best.pth`, `last.pt`, `progress.pth`).
+* **Telemetry**: Primary epoch metrics are streamed directly into `LemGendaryModels/yolov8n/metrics.csv`.
+* **Curriculum State**: State metadata is saved to `LemGendaryModels/yolov8n/curriculum_state.json`.
+* **Production Artifacts**: Final 640px ONNX deployment matrices are compiled to `LemGendaryModels/yolov8n/yolov8n.onnx`.
+
+---
+
 ## 6. Performance Targets & WebGPU
 
 | Target Task | Primary Metric | Target Goal | Inference Latency (GTX 1650) |
@@ -104,6 +125,15 @@ Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurricul
 
 ---
 
-## 7. Conclusion
+## 7. Scientific References & Literature Citations
 
-YOLOv8n Multi-Task unifies spatial detection, categorization, and human pose estimation within a resilient, anchor-free framework optimized for universal hardware.
+* **YOLOv8 Core Architecture**: G. Jocher, A. Chaurasia, and J. Qiu, *"Ultralytics YOLOv8: Real-Time Object Detection, Instance Segmentation, and Pose Estimation"*, Ultralytics Research, 2023. [https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics).
+* **Cross-Stage Partial Network (CSPDarknet)**: C.-Y. Wang, H.-Y. M. Liao, Y.-H. Wu, P.-Y. Chen, J.-W. Hsieh, and I.-H. Yeh, *"CSPNet: A New Backbone that can Enhance Learning Capability of CNN"*, IEEE/CVF CVPR Workshops, 2020. [arXiv:1911.11929](https://arxiv.org/abs/1911.11929).
+* **Path Aggregation Network (PANet)**: S. Liu, L. Qi, H. Qin, J. Shi, and J. Jia, *"Path Aggregation Network for Instance Segmentation"*, IEEE/CVF CVPR, 2018. [arXiv:1803.01534](https://arxiv.org/abs/1803.01534).
+* **Distribution Focal Loss & Bounding Box Uncertainty**: X. Li, C. Deng, W. Zheng, Y. Shen, Y. Zhang, and X. Gu, *"Generalized Focal Loss: Learning Qualified and Distributed Bounding Boxes for Dense Object Detection"*, NeurIPS, 2020. [arXiv:2006.04388](https://arxiv.org/abs/2006.04388).
+
+---
+
+## 8. Conclusion
+
+YOLOv8n Multi-Task unifies spatial detection, categorization, and human pose estimation within a resilient, anchor-free framework optimized for universal hardware, governed curriculum progression, and authoritative persistence across the LemGendary ecosystem.
