@@ -84,8 +84,8 @@ $$\text{OKS} = \frac{\sum_i \exp(-d_i^2 / 2s^2 k_i^2) \delta(v_i > 0)}{\sum_i \d
 
 Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurriculumGovernor` (`training/governance/yolo_governor.py`), ensuring that Ultralytics inner-loop optimizations are preserved while outer-loop governance drives systematic curriculum learning:
 
-1. **Multi-Stage Spatial Resolution Ladder**: Progression across progressive stages ($320\text{px} \to 480\text{px} \to 640\text{px}$). Stage $k$ warm-starts directly from the `best.pt` weights of stage $k-1$, ensuring early coarse spatial feature learning at $320\text{px}$ before fine-grained multi-scale localization at $640\text{px}$.
-2. **Dynamic Dataset Fraction Scaling**: Scales training manifold sampling ($0.3 \to 0.6 \to 1.0$), ensuring rapid initial gradient alignment on representative subsets before full-manifold refinement.
+1. **Intra-Resolution Fraction Ladder Progression**: On the base resolution rung ($320\text{px}$), training systematically traverses dataset manifold fractions from initial ($30\%$) through mid-fidelity ($70\%$) to full data ($100\%$) before any spatial resolution escalation occurs ($480\text{px} \to 640\text{px}$). This anchors basic feature extraction on the complete dataset distribution at minimal compute cost.
+2. **Governor Overfitting Rescue Protocol**: When operating on partial dataset fractions ($\text{fraction} < 1.0$), the governor continuously monitors for overfitting signatures (e.g. decreasing training loss alongside rising validation loss over a 3-epoch window, or validation mAP stagnation). Upon detection, the governor halts the partial stage early (`trainer.stop = True`) and immediately triggers dataset expansion to introduce sample variety and rescue model generalization.
 3. **Sawtooth VRAM Sentinel & OOM Protection**: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.
 4. **Turing FP32 Numerical Stability**: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (`check_amp()`) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (`amp=False`).
 5. **Continuous Telemetry Bridge**: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to `checkpoints/yolov8n/metrics.csv` and sidecar WebSockets, feeding live convergence dashboards.
@@ -94,13 +94,13 @@ Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurricul
 
 ---
 
-## 5.2. Checkpoint Resumption & Mid-Rung Progress Recovery (v16.9.12)
+## 5.2. Checkpoint Resumption & Multi-Fraction Progress Recovery (v16.9.13)
 
-Prior to v16.9.12, initiating training with pre-existing weights initialized `YOLO(weights)` with `resume=False`, causing Ultralytics to treat checkpoints as transfer-learning baselines and resetting the epoch counter to 1 for a redundant 75 epochs. The v16.9.12 Resumption Protocol provides rigorous checkpoint inspection and mid-rung resumption:
+Prior to v16.9.13, initiating training with pre-existing weights could risk restarting the epoch counter or jumping across resolutions prematurely. The v16.9.13 Resumption Protocol provides rigorous multi-fraction checkpoint inspection and mid-stage resumption:
 
-1. **Deep Checkpoint Inspection**: Loads candidate checkpoints (`torch.load(..., map_location="cpu")`) to interrogate training metadata, including `epoch` (last completed epoch), `train_args.imgsz` (resolution rung), and `train_args.epochs` (target epochs).
-2. **Completed Stage Skipping**: If a checkpoint or `metrics.csv` indicates that stage $k$ (e.g. 320px) has already satisfied its target quota ($75$ epochs) or that training has progressed to a higher resolution rung, the governor logs completion and skips directly to the next ladder rung without redundant iterations.
-3. **Mid-Rung Seamless Resumption**: If an interrupted run is detected on the active stage ($0 \le \text{ckpt\_epoch} < \text{target\_epochs} - 1$), the governor stages `last.pt` into the local weights manifold and sets `resume = True`. Ultralytics resumes from $\text{ckpt\_epoch} + 2$ directly, preserving optimizer momentum buffers and learning rate schedules.
+1. **Deep Checkpoint & State Inspection**: Loads candidate checkpoints (`torch.load(..., map_location="cpu")`) to interrogate training metadata, including `epoch` (last completed epoch), `train_args.imgsz` (resolution rung), `train_args.fraction` (dataset fraction), and `train_args.epochs` (target epochs).
+2. **Completed Stage Skipping**: If a checkpoint or `metrics.csv` indicates that stage $k$ (e.g. $320\text{px}$ at $30\%$ fraction) has already completed its target quota or that training has progressed to a higher fraction or higher resolution rung, the governor logs completion and skips directly to the active ladder stage without redundant iterations.
+3. **Mid-Stage Seamless Resumption**: If an interrupted run is detected on the active stage ($0 \le \text{ckpt\_epoch} < \text{target\_epochs} - 1$), the governor stages `last.pt` into the local weights manifold and sets `resume = True`. Ultralytics resumes from $\text{ckpt\_epoch} + 2$ directly, preserving optimizer momentum buffers and learning rate schedules.
 
 ---
 

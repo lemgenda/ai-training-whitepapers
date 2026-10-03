@@ -14,7 +14,10 @@
 
 ---
 
-## Changelog
+### v16.9.13 — Intra-Resolution Fraction Progression & Governor Overfitting Rescue Protocol
+
+* **`PAPER_LEMGENDARY_YOLOV8N.md` & `detection-yolov8n.html` Synchronization** — Documented Section 5.1 Intra-Resolution Fraction Progression on the lowest resolution rung ($320\text{px} @ 30\% \to 70\% \to 100\%$) prior to spatial resolution escalation, Governor Overfitting Rescue Protocol monitoring loss divergence and mAP stagnation during partial fraction stages to force immediate dataset expansion, and Section 5.2 Multi-Fraction Checkpoint Discovery and Resumption.
+* **`lemgendary-training-suite/` Protocol Synchronization** — Documented deterministic fraction progression on base rungs, adaptive epoch allocations across 5 stages, and checkpoint state encoding (`stage{idx}_{res}px_f{pct}`).
 
 ### v16.9.12 — Checkpoint Resumption Protocol, Authoritative Persistence & Literature Citations
 
