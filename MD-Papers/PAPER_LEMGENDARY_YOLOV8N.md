@@ -84,13 +84,14 @@ $$\text{OKS} = \frac{\sum_i \exp(-d_i^2 / 2s^2 k_i^2) \delta(v_i > 0)}{\sum_i \d
 
 Training YOLOv8n within the LemGendary ecosystem is managed by the `YOLOCurriculumGovernor` (`training/governance/yolo_governor.py`), ensuring that Ultralytics inner-loop optimizations are preserved while outer-loop governance drives systematic curriculum learning:
 
-1. **Intra-Resolution Fraction Ladder Progression**: On the base resolution rung ($320\text{px}$), training systematically traverses dataset manifold fractions from initial ($30\%$) through mid-fidelity ($70\%$) to full data ($100\%$) before any spatial resolution escalation occurs ($480\text{px} \to 640\text{px}$). This anchors basic feature extraction on the complete dataset distribution at minimal compute cost.
-2. **Governor Overfitting Rescue Protocol**: When operating on partial dataset fractions ($\text{fraction} < 1.0$), the governor continuously monitors for overfitting signatures (e.g. decreasing training loss alongside rising validation loss over a 3-epoch window, or validation mAP stagnation). Upon detection, the governor halts the partial stage early (`trainer.stop = True`) and immediately triggers dataset expansion to introduce sample variety and rescue model generalization.
-3. **Sawtooth VRAM Sentinel & OOM Protection**: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.
-4. **Turing FP32 Numerical Stability**: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (`check_amp()`) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (`amp=False`).
-5. **Continuous Telemetry Bridge**: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to `checkpoints/yolov8n/metrics.csv` and sidecar WebSockets, feeding live convergence dashboards.
-6. **Real-Time Checkpoint Parity**: Synchronizes intermediate weights (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) to `checkpoints/yolov8n/` and `LemGendaryModels/yolov8n/checkpoints/` on every epoch (`on_fit_epoch_end`) and stage transition, ensuring instant discovery by the Studio GUI checkpoint inspector.
-7. **Minibatch-Level Cancellation Protocol**: Registers an `on_train_batch_end` hook instructing the Ultralytics trainer to halt immediately (`trainer.stop = True`) upon operator cancellation signals, preventing runaway GPU iterations mid-epoch.
+1. **Gradual Intra-Resolution Fraction Ladder Progression**: On the base resolution rung ($320\text{px}$), training starts at $30\%$ data and systematically increases by $15\%$--$20\%$ increments ($30\% \to 50\% \to 70\% \to 85\% \to 100\%$). When escalating to higher spatial rungs ($480\text{px}, 640\text{px}$), training initiates at $50\%$ data and gradually scales in $15\%$--$20\%$ steps ($50\% \to 65\% \to 80\% \to 100\%$) to prevent overfitting and break representation plateaus.
+2. **Open-Ended SOTA Convergence Protocol**: Training does not terminate at a fixed epoch count. Instead, training on the final resolution rung ($640\text{px}$) at $100\%$ data continues dynamically until SOTA metric targets ($\text{mAP50} \ge 0.54$, $\text{mAP50-95} \ge 0.39$) are attained, triggering immediate ONNX and PyTorch artifact packaging.
+3. **Governor Overfitting Rescue Protocol**: When operating on partial dataset fractions ($\text{fraction} < 1.0$), the governor continuously monitors for overfitting signatures (e.g. decreasing training loss alongside rising validation loss over a 3-epoch window, or validation mAP stagnation). Upon detection, the governor halts the partial stage early (`trainer.stop = True`) and immediately triggers dataset expansion to introduce sample variety and rescue model generalization.
+4. **Sawtooth VRAM Sentinel & OOM Protection**: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.
+5. **Turing FP32 Numerical Stability**: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (`check_amp()`) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (`amp=False`).
+6. **Continuous Telemetry Bridge**: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to `checkpoints/yolov8n/metrics.csv` and sidecar WebSockets, feeding live convergence dashboards.
+7. **Real-Time Checkpoint Parity**: Synchronizes intermediate weights (`best.pt`, `best.pth`, `last.pt`, `progress.pth`, and `curriculum_state.json`) strictly to `checkpoints/yolov8n/` and `LemGendaryModels/yolov8n/checkpoints/` on every epoch (`on_fit_epoch_end`) and stage transition, ensuring instant discovery by the Studio GUI checkpoint inspector.
+8. **Minibatch-Level Cancellation Protocol**: Registers an `on_train_batch_end` hook instructing the Ultralytics trainer to halt immediately (`trainer.stop = True`) upon operator cancellation signals, preventing runaway GPU iterations mid-epoch.
 
 ---
 
@@ -108,10 +109,9 @@ Prior to v16.9.13, initiating training with pre-existing weights could risk rest
 
 The ecosystem designates `LemGendaryModels/yolov8n/` as the single authoritative persistence root:
 
-* **Checkpoints**: Synchronized in real time to `LemGendaryModels/yolov8n/checkpoints/` (`best.pt`, `best.pth`, `last.pt`, `progress.pth`).
+* **Checkpoints**: Synchronized in real time strictly to `LemGendaryModels/yolov8n/checkpoints/` (`best.pt`, `best.pth`, `last.pt`, `progress.pth`, and `curriculum_state.json`). Checkpoint files are excluded from the root directory to maintain isolation.
 * **Telemetry**: Primary epoch metrics are streamed directly into `LemGendaryModels/yolov8n/metrics.csv`.
-* **Curriculum State**: State metadata is saved to `LemGendaryModels/yolov8n/curriculum_state.json`.
-* **Production Artifacts**: Final 640px ONNX deployment matrices are compiled to `LemGendaryModels/yolov8n/yolov8n.onnx`.
+* **SOTA Exports & Production Artifacts**: Every time SOTA metric targets are reached (`mAP50 >= 0.54`, `mAP50-95 >= 0.39`), the model is exported as both native PyTorch (`yolov8n.pt`) and optimized ONNX (`yolov8n.onnx`) directly to `LemGendaryModels/yolov8n/`.
 
 ---
 
