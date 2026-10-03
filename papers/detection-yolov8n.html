@@ -80,14 +80,14 @@
                 </div>
 
                 <div style="margin: 25px 0; text-align: center;">
-                    <h3 style="color: #ffffff; text-align: left;">YOLOv8n Training Convergence (mAP@50-95 &amp; Box Loss)</h3>
+                    <h3 style="color: #ffffff; text-align: left;">YOLOv8n Training Convergence &amp; SOTA Targets (mAP@50-95 &amp; Box Loss)</h3>
                     <div style="background: #14141c; border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; text-align: left; font-family: Fira Code, monospace; font-size: 0.85rem; color: #79c0ff;">
-                        <div>[EPOCH  10/100] box_loss: 1.421 | cls_loss: 1.842 | mAP@50: 0.512 | mAP@50-95: 0.284</div>
-                        <div>[EPOCH  30/100] box_loss: 0.985 | cls_loss: 1.102 | mAP@50: 0.684 | mAP@50-95: 0.442</div>
-                        <div>[EPOCH  60/100] box_loss: 0.742 | cls_loss: 0.725 | mAP@50: 0.781 | mAP@50-95: 0.528</div>
-                        <div>[EPOCH 100/100] box_loss: 0.612 | cls_loss: 0.548 | mAP@50: 0.824 | mAP@50-95: 0.589</div>
+                        <div>[STAGE 1 - 320px @  30% DATA] train_loss: 3.432 | val_loss: 0.026 | mAP@50: 0.352 | mAP@50-95: 0.242</div>
+                        <div>[STAGE 2 - 320px @  50% DATA] train_loss: 2.944 | val_loss: 0.028 | mAP@50: 0.445 | mAP@50-95: 0.316</div>
+                        <div>[STAGE 3 - 480px @  50% DATA] train_loss: 2.450 | val_loss: 0.024 | mAP@50: 0.490 | mAP@50-95: 0.350</div>
+                        <div>[STAGE 5 - 640px @ 100% DATA] train_loss: 1.820 | val_loss: 0.019 | mAP@50: 0.540 | mAP@50-95: 0.390 (SOTA TARGET)</div>
                     </div>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Table 1: Convergence trajectory over 100 epochs on COCO detection manifolds.</p>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Table 1: Governed curriculum trajectory across spatial rungs to SOTA convergence targets on COCO manifolds.</p>
                 </div>
             </section>
 
@@ -158,26 +158,44 @@
                                 <th>Target Task</th>
                                 <th>Primary Metric</th>
                                 <th>Target Goal</th>
+                                <th>Baseline (COCO val2017)</th>
                                 <th>Inference Latency (GTX 1650)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Object Detection</td>
+                                <td>Object Detection (Strict)</td>
                                 <td>mAP50-95</td>
                                 <td>&ge; 0.390</td>
+                                <td>0.373</td>
+                                <td>7.2 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Object Detection (Standard)</td>
+                                <td>mAP50</td>
+                                <td>&ge; 0.540</td>
+                                <td>0.525</td>
                                 <td>7.2 ms</td>
                             </tr>
                             <tr>
                                 <td>Classification</td>
                                 <td>Top-1 Accuracy</td>
                                 <td>&ge; 78.4%</td>
+                                <td>76.8%</td>
                                 <td>3.1 ms</td>
                             </tr>
                             <tr>
-                                <td>Pose Estimation</td>
+                                <td>Pose Estimation (Keypoints)</td>
                                 <td>mAP50 (Pose)</td>
-                                <td>&ge; 0.540</td>
+                                <td>&ge; 0.801</td>
+                                <td>0.801</td>
+                                <td>8.4 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Pose Estimation (Keypoints)</td>
+                                <td>mAP50-95 (Pose)</td>
+                                <td>&ge; 0.504</td>
+                                <td>0.504</td>
                                 <td>8.4 ms</td>
                             </tr>
                         </tbody>

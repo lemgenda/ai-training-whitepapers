@@ -41,10 +41,10 @@ Imagine having an intelligent security guard scanning a video camera 60 times ev
 | :---: | :---: |
 | ![Input Video Frame](../assets/yolov8n_before.png) | ![Real-Time Detection Boxes](../assets/yolov8n_after.png) |
 
-### Training Convergence
+### Training Convergence & SOTA Targets
 
-* **mAP@50:** Reached 0.824 across 80 COCO classes.
-* **mAP@50-95:** Reached 0.589 with inference latency of 3.1ms on edge devices.
+* **mAP@50:** SOTA Target $\ge 0.540$ across 80 COCO classes at 640px (exceeding canonical $0.525$ baseline).
+* **mAP@50-95:** SOTA Target $\ge 0.390$ with inference latency of 3.1ms on edge devices (exceeding canonical $0.373$ baseline).
 
 ## 2. Anchor-Free CSPDarknet & PANet
 
@@ -119,11 +119,13 @@ The ecosystem designates `LemGendaryModels/yolov8n/` as the single authoritative
 
 ## 6. Performance Targets & WebGPU
 
-| Target Task | Primary Metric | Target Goal | Inference Latency (GTX 1650) |
-| :--- | :--- | :--- | :--- |
-| Object Detection | mAP50-95 | $\ge 0.390$ | 7.2 ms |
-| Classification | Top-1 Accuracy | $\ge 78.4\%$ | 3.1 ms |
-| Pose Estimation | mAP50 (Pose) | $\ge 0.540$ | 8.4 ms |
+| Target Task | Primary Metric | Target Goal | Baseline (COCO val2017) | Inference Latency (GTX 1650) |
+| :--- | :--- | :--- | :--- | :--- |
+| Object Detection (Strict) | mAP50-95 | $\ge 0.390$ | 0.373 | 7.2 ms |
+| Object Detection (Standard) | mAP50 | $\ge 0.540$ | 0.525 | 7.2 ms |
+| Classification | Top-1 Accuracy | $\ge 78.4\%$ | 76.8% | 3.1 ms |
+| Pose Estimation (Keypoints) | mAP50 (Pose) | $\ge 0.801$ | 0.801 | 8.4 ms |
+| Pose Estimation (Keypoints) | mAP50-95 (Pose) | $\ge 0.504$ | 0.504 | 8.4 ms |
 
 ---
 
