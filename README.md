@@ -14,6 +14,12 @@
 
 ---
 
+### v16.9.16 — Real-Time Batch/Epoch Progress Telemetry & First-Principles VRAM Sizing
+
+* **`PAPER_LEMGENDARY_YOLOV8N.md` Synchronization** — Documented Section 5.1 first-principles dynamic Sawtooth VRAM sizing formula, configuration externalization in `unified_models_v2.yaml`, and real-time validation plot mirroring (`confusion_matrix.png`, `confusion_matrix_normalized.png`, PR/F1 curves) directly to `LemGendaryModels/yolov8n/`.
+* **`PAPER_TRAINING_SUITE.md` Synchronization** — Documented real-time batch and epoch progress logging in terminal execution, non-blocking remote checkpoint probing with 5-second timeouts, and strict code-only training suite filesystem isolation.
+* **`LemGendaryModels/` Dashboard Synchronization** — Synchronized live metrics matrix dashboard and per-model READMEs across all 22 active architectures via `doc_generator.py`.
+
 ### v16.9.13 — Intra-Resolution Fraction Progression & Governor Overfitting Rescue Protocol
 
 * **`PAPER_LEMGENDARY_YOLOV8N.md` & `detection-yolov8n.html` Synchronization** — Documented Section 5.1 Intra-Resolution Fraction Progression on the lowest resolution rung ($320\text{px} @ 30\% \to 70\% \to 100\%$) prior to spatial resolution escalation, Governor Overfitting Rescue Protocol monitoring loss divergence and mAP stagnation during partial fraction stages to force immediate dataset expansion, and Section 5.2 Multi-Fraction Checkpoint Discovery and Resumption.

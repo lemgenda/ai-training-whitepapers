@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canonical Versioning Policy &amp; Contract Freezing - LemGendary AI</title>
-    <meta name="description" content="Authoritative versioning framework, contract freezing governance, and ecosystem-wide v16.x.x synchronization policy for the LemGendary AI Ecosystem.">
+    <meta name="description" content="Authoritative versioning framework, contract freezing governance, document authority hierarchy, and multi-track synchronization policy for the LemGendary AI Ecosystem.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -14,24 +14,25 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="env_manager.html" class="tab-link">Env Manager</a>
-                <a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
-                <a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
-                <a href="training-suite-master.html" class="tab-link">Training Suite</a>
-                <a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
-                <a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
-                <a href="versioning-policy.html" class="tab-link active">Versioning Policy</a>
+                <a href="ecosystem-architecture.html" class="tab-link${isArch ? " active" : ""}">Architecture Hub</a>
+                <a href="current-state.html" class="tab-link${isState ? " active" : ""}">Current State</a>
+                <a href="env_manager.html" class="tab-link${isEnv ? " active" : ""}">Env Manager</a>
+                <a href="dataset-compiler.html" class="tab-link${isData ? " active" : ""}">Dataset Compiler</a>
+                <a href="degradation-engine.html" class="tab-link${isDeg ? " active" : ""}">Degradation Engine</a>
+                <a href="training-suite-master.html" class="tab-link${isTrain ? " active" : ""}">Training Suite</a>
+                <a href="ai-studio-whitepaper.html" class="tab-link${isGui ? " active" : ""}">Desktop GUI</a>
+                <a href="gui-control-registry.html" class="tab-link${isReg ? " active" : ""}">GUI Registry</a>
+                <a href="versioning-policy.html" class="tab-link${isVer ? " active" : ""}">Versioning Policy</a>
             </div>
             <h1>Canonical Versioning Policy &amp; Contract Freezing</h1>
-            <p class="subtitle">Authoritative Synchronization Standard, Semantic Iterations, and Frozen OpenAPI 3.1 Governance</p>
+            <p class="subtitle">Authoritative Synchronization Standard, Multi-Track Taxonomy, and Document Authority Hierarchy</p>
             <div class="meta">
                 <span>Category 00 POLICY</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.16-STABLE</span>
                 <span>Component: Ecosystem Governance</span>
             </div>
         </header>
@@ -40,28 +41,30 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#section-abstract">1. Abstract &amp; Rationale</a></li>
-                <li><a href="#section-framework">2. The Canonical v16.x.x Architectural Framework</a></li>
-                <li><a href="#section-registry">3. Component Version Registry</a></li>
-                <li><a href="#section-pathology">4. Standalone Diagnostic Specifications</a></li>
-                <li><a href="#section-freezing">5. Frozen Contract Guarantees (OpenAPI 3.1)</a></li>
-                <li><a href="#section-enforcement">6. Ecosystem Enforcement &amp; Audit Gating</a></li>
+                <li><a href="#section-framework">2. The Canonical Ecosystem Framework</a></li>
+                <li><a href="#section-multitrack">3. Multi-Track Versioning Taxonomy</a></li>
+                <li><a href="#section-registry">4. Component Version Registry</a></li>
+                <li><a href="#section-hierarchy">5. Document Authority Hierarchy</a></li>
+                <li><a href="#section-pathology">6. Standalone Diagnostic Specifications</a></li>
+                <li><a href="#section-freezing">7. Frozen Contract Guarantees (OpenAPI 3.1)</a></li>
+                <li><a href="#section-enforcement">8. Ecosystem Enforcement &amp; Audit Gating</a></li>
             </ul>
         </nav>
 
         <main class="content">
             <section id="section-abstract">
                 <h2>1. Abstract &amp; Rationale</h2>
-                <p>Prior to the 2026 unification, repositories across the LemGendary AI ecosystem operated under fragmented versioning conventions: some components utilized calendar versioning (e.g. <code>v2026.11.1</code>), while others utilized uncalibrated Semantic Versioning (<code>v2.3.0</code> vs <code>v16.7.3</code>). This created cognitive friction, complicated cross-project dependency tracking, and triggered false-positive drift warnings in automated CI/CD audits.</p>
-                <p>This policy establishes the authoritative <strong>Canonical v16.x.x Ecosystem Versioning Scheme</strong>, defining how builds, APIs, contracts, and documentation are versioned, frozen, and verified.</p>
+                <p>Prior to the 2026 unification, repositories across the LemGendary AI ecosystem operated under fragmented versioning conventions: some components utilized calendar versioning, while others utilized uncalibrated Semantic Versioning (<code>v2.3.0</code> vs <code>v16.7.3</code>). This created cognitive friction, complicated cross-project dependency tracking, and triggered false-positive drift warnings in automated audits.</p>
+                <p>This policy establishes the authoritative <strong>Canonical Ecosystem Versioning Scheme</strong> and <strong>Document Authority Hierarchy</strong>, explicitly standardizing multi-track versioning regimes, resolving cross-document authority ambiguities, and defining how builds, APIs, contracts, and documentation are versioned, frozen, and verified.</p>
             </section>
 
             <section id="section-framework">
-                <h2>2. The Canonical v16.x.x Architectural Framework</h2>
-                <p>All primary repositories in the LemGendary AI Ecosystem adhere to the unified <code>v16.&lt;minor&gt;.&lt;patch&gt;</code> iteration standard:</p>
+                <h2>2. The Canonical Ecosystem Framework</h2>
+                <p>All core backend execution engines and orchestrators in the LemGendary AI Ecosystem adhere to the unified <code>v16.&lt;minor&gt;.&lt;patch&gt;</code> iteration standard:</p>
                 $$\text{Version} = \mathbf{v16}.\langle\text{Minor}\rangle.\langle\text{Patch}\rangle$$
                 <ul>
                     <li><strong>Major Version 16 (Epoch Baseline)</strong>: Signifies the complete, post-modernization S.O.L.I.D. architectural era. All packages sharing <code>v16</code> guarantee strict zero-suppression error telemetry (0 <code># type: ignore</code>, 0 <code># noqa</code>), in-process single-responsibility service layers (<code>services/</code>), dual-interface sidecar API daemon readiness (FastAPI + WebSocket), and direct root streaming with bidirectional resumption protocol.</li>
@@ -70,12 +73,24 @@
                 </ul>
             </section>
 
+            <section id="section-multitrack">
+                <h2>3. Multi-Track Versioning Taxonomy &amp; Rationale</h2>
+                <p>Different subsystems within the LemGendary AI ecosystem serve different operational domains and therefore adhere to distinct, intentional versioning tracks:</p>
+                <ol>
+                    <li><strong>Core Backend Engines &amp; Services (<code>v16.x.y</code>)</strong>: Covers <code>lemgendary-training-suite</code> (<code>v16.9.16-STABLE</code>), <code>lemgendary-datasets</code> (<code>v16.9.6</code>), and <code>lemgendary-env-manager</code> (<code>v16.9.3</code>), governing Python microservice sidecars (Ports 8000, 8100, 8200), training loops, and dataset compilers.</li>
+                    <li><strong>Desktop Operator GUI Client (<code>v2.x.y</code> / <code>v2.0.0</code>)</strong>: Covers <code>lemgendary-ai-studio-gui</code> (Tauri v2 + React 18 + Vite desktop cockpit) and the Operator Manual (<code>MANUAL_AI_STUDIO_GUI.md</code>). Version <code>2.0.0</code> represents the second-generation Tauri v2 native desktop release (superseding legacy web/Electron prototypes). The GUI acts as a consumer of <code>v16.x.y</code> sidecar APIs via frozen OpenAPI 3.1 contracts.</li>
+                    <li><strong>Master Ecosystem Whitepapers &amp; Specification Baseline (<code>v16.9.16</code>)</strong>: Covers <code>lemgendary-docs</code>, master architectural maps, and foundational whitepapers, synchronized directly to the highest active backend engine milestone.</li>
+                    <li><strong>Specialized Diagnostic &amp; Clinical Specifications (<code>v1.x.y</code> / <code>v2.x.y</code>)</strong>: Covers clinical diagnostic standards such as <code>PAPER_TRAINING_PATHOLOGY.md</code> (<code>v1.4.0</code>) and algorithmic specifications (<code>ForexPredictor v2.7.1</code>). These versions reflect domain-specific taxonomy releases rather than software runtime build numbers.</li>
+                </ol>
+            </section>
+
             <section id="section-registry">
-                <h2>3. Component Version Registry</h2>
+                <h2>4. Component Version Registry</h2>
                 <div class="table-wrapper">
                     <table>
                         <thead>
                             <tr>
+                                <th>Subsystem / Track</th>
                                 <th>Repository / Component</th>
                                 <th>Runtime Version</th>
                                 <th>Config Manifests</th>
@@ -84,44 +99,75 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>lemgendary-datasets</strong></td>
-                                <td><code>v16.8.0-STABLE</code></td>
-                                <td><code>unified_data.yaml</code></td>
-                                <td><code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></td>
-                            </tr>
-                            <tr>
-                                <td><strong>lemgendary-training-suite</strong></td>
-                                <td><code>v16.8.0-STABLE</code></td>
+                                <td><strong>Training Engine</strong></td>
+                                <td><code>lemgendary-training-suite</code></td>
+                                <td><code>v16.9.16-STABLE</code></td>
                                 <td><code>unified_models_v2.yaml</code></td>
                                 <td><code>python -m training.cli.lemtrain</code></td>
                             </tr>
                             <tr>
-                                <td><strong>lemgendary-env-manager</strong></td>
-                                <td><code>v16.8.0-STABLE</code></td>
+                                <td><strong>Dataset Compiler</strong></td>
+                                <td><code>lemgendary-datasets</code></td>
+                                <td><code>v16.9.6</code></td>
+                                <td><code>unified_data.yaml</code></td>
+                                <td><code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Env Manager</strong></td>
+                                <td><code>lemgendary-env-manager</code></td>
+                                <td><code>v16.9.3</code></td>
                                 <td><code>pyproject.toml</code>, <code>package.json</code></td>
                                 <td><code>lem-env</code> / <code>lemgendary_env_manager.ps1</code></td>
                             </tr>
                             <tr>
-                                <td><strong>lemgendary-docs</strong></td>
-                                <td><code>v16.8.0-STABLE</code></td>
+                                <td><strong>Desktop Operator GUI</strong></td>
+                                <td><code>lemgendary-ai-studio-gui</code></td>
+                                <td><code>v2.0.0</code> (Client)</td>
+                                <td><code>package.json</code>, <code>src-tauri/tauri.conf.json</code></td>
+                                <td>Tauri v2 Desktop App / Ports 8000/8100/8200</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentation Hub</strong></td>
+                                <td><code>lemgendary-docs</code></td>
+                                <td><code>v16.9.16-STABLE</code></td>
                                 <td><code>MD-Papers/</code>, <code>papers/</code></td>
                                 <td>Documentation Hub (<code>index.html</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Model Registry</strong></td>
+                                <td><code>LemGendaryModels</code></td>
+                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>LemGendaryModels/*/README.md</code></td>
+                                <td>Authoritative Model Weights &amp; SOTA Exports</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
+            <section id="section-hierarchy">
+                <h2>5. Document Authority Hierarchy</h2>
+                <p>To eliminate conflicting statements across documentation and code, the ecosystem enforces a strict <strong>Document Authority Hierarchy</strong>:</p>
+                $$\text{Code Manifests (SSOT)} \succ \text{Master Manuals} \succ \text{Architectural Whitepapers} \succ \text{Educational Guides}$$
+                <ul>
+                    <li><strong>Level 1 — Single Source of Truth Configuration Manifests</strong>: <code>unified_models_v2.yaml</code>, <code>unified_data.yaml</code>, <code>presets.yaml</code>, <code>openapi.json</code>. Absolute physical authority for hyperparameters, architectures, dataset paths, and API schemas.</li>
+                    <li><strong>Level 2 — Master Operational &amp; Technical Manuals</strong>: <code>MANUAL_AI_STUDIO_GUI.md</code>, <code>MANUAL_CLI.md</code>, <code>MANUAL_API.md</code>, <code>GUI_CONTROL_REGISTRY.md</code>. Authoritative for runtime operation, control IDs, CLI flags, REST payloads, and operational guarantees.</li>
+                    <li><strong>Level 3 — Architectural &amp; Technical Whitepapers</strong>: <code>ECOSYSTEM_ARCHITECTURE.md</code>, <code>PAPER_TRAINING_SUITE.md</code>, <code>PAPER_DATASET_COMPILER.md</code>, <code>PAPER_AI_STUDIO_GUI.md</code>, <code>PAPER_DEGRADATION_ENGINE.md</code>, <code>PAPER_TRAINING_PATHOLOGY.md</code>. Authoritative for mathematical formulations, asymptotic complexity, hardware memory sentinels, and scientific citations. Must remain concise, project-specific engineering specifications rather than generic introductory AI textbooks.</li>
+                    <li><strong>Level 4 — Educational &amp; Ecosystem Guides</strong>: <code>GENERAL_AI_TRAINING_KNOWLEDGE.md</code>, <code>GLOSSARY.md</code>, <code>LEMGENDARY_CURRENT_STATE.md</code>. Comprehensive educational and onboarding context, cross-referenced against Levels 1–3 and subservient to them in any conflict.</li>
+                </ul>
+            </section>
+
             <section id="section-pathology">
-                <h2>4. Standalone Diagnostic Specifications</h2>
+                <h2>6. Standalone Diagnostic Specifications</h2>
                 <p>Specialized clinical or analytical diagnostic frameworks maintain independent specification versions to reflect domain-specific diagnostic taxonomies:</p>
                 <ul>
-                    <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>: Maintained at <strong>v1.4.0 (Clinical Diagnostic Standard)</strong>. While the training suite that executes these diagnostics operates at <code>v16.2.9</code>, the diagnostic taxonomy itself evolves according to independent diagnostic taxonomies.</li>
+                    <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>: Maintained at <strong>v1.4.0 (Clinical Diagnostic Standard)</strong>. While the training suite executing these diagnostics operates at <code>v16.9.16</code>, the diagnostic taxonomy itself evolves according to independent clinical diagnostic revisions.</li>
+                    <li><strong>Forex Predictive Architecture (<code>PAPER_FOREX_PREDICTOR.md</code>)</strong>: Maintained at <strong>v2.7.1 (Quantitative Model Specification)</strong>, executing under the <code>v16.9.16</code> engine.</li>
                 </ul>
             </section>
 
             <section id="section-freezing">
-                <h2>5. Frozen Contract Guarantees (OpenAPI 3.1 &amp; Zero Drift)</h2>
+                <h2>7. Frozen Contract Guarantees (OpenAPI 3.1 &amp; Zero Drift)</h2>
                 <p>To ensure zero breaking changes for desktop operators, Tauri Rust backends, and TypeScript frontend clients (<code>lemgendary-ai-studio-gui</code>), all sidecar API endpoints adhere to <strong>Frozen Contract Governance</strong>:</p>
                 <ol>
                     <li><strong>Explicit Schema Export</strong>: All REST endpoints are serialized to frozen <code>openapi.json</code> files residing in repository roots.</li>
@@ -131,10 +177,10 @@
             </section>
 
             <section id="section-enforcement">
-                <h2>6. Ecosystem Enforcement &amp; Audit Gating</h2>
+                <h2>8. Ecosystem Enforcement &amp; Audit Gating</h2>
                 <p>Version compliance is enforced at git commit time via the pre-commit compliance validator:</p>
                 <pre><code>lem-env validate --project lemgendary-training-suite,lemgendary-datasets,lemgendary-env-manager,lemgendary-docs</code></pre>
-                <p>Any attempt to introduce calendar versioning (<code>2026.*</code>), uncoordinated major version tags (<code>2.x</code>), or mismatched package manifest strings is rejected by the pre-commit gate before touching version control.</p>
+                <p>Any attempt to introduce calendar versioning (<code>2026.*</code>), uncoordinated major version tags outside defined tracks, or mismatched package manifest strings is rejected by the pre-commit gate before touching version control.</p>
             </section>
         </main>
     </div>

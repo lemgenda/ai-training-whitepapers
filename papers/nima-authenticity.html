@@ -13,8 +13,8 @@
 <body class="paper-page">
     <div class="container">
         <header>
-            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+            <a href="https://lemgenda.hr" target="_blank">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
@@ -31,7 +31,7 @@
             <div class="meta">
                 <span>By Lem Treursic</span>
                 <span>Category 07 QUALITY</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.16-STABLE</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -40,9 +40,9 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#architecture">2. Backbone & Feature Extraction</a></li>
                 <li><a href="#loss">3. Loss Formulation & Probability Distribution</a></li>
@@ -60,28 +60,28 @@
                 <h2>1.1 What NIMA Authenticity & DeepFake Sentinel Does (In Plain English)</h2>
                 <p><strong>Like a forensic digital investigator. It examines subtle pixel distributions and frequency patterns to determine whether an image is a genuine camera photograph or an AI-generated DeepFake.</strong></p>
 
-                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
-                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration &amp; Perceptual Assessment</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
-                            <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">POOR QUALITY / UNFAVORABLE</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Overexposed highlights, muddy shadows, improper framing, or generative artifacts.</p>
-                            <img src="../assets/nima_authenticity_fake.png" alt="Example of a synthesized or artifacted image receiving a low authenticity score (2.1/10)" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
-                            <div style="margin-top: 8px; font-size: 1rem; color: #ff5f56; font-weight: 700;">Score: 2.1 / 10.0</div>
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration &amp; Perceptual Assessment</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-reject">
+                            <div class="score-badge-red">POOR QUALITY / UNFAVORABLE</div>
+                            <p class="sample-label-neutral">Overexposed highlights, muddy shadows, improper framing, or generative artifacts.</p>
+                            <img src="../assets/nima_authenticity_fake.png" alt="Example of a synthesized or artifacted image receiving a low authenticity score (2.1/10)" class="sample-img-card">
+                            <div class="score-sub-red">Score: 2.1 / 10.0</div>
                         </div>
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
-                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">AESTHETIC MASTERPIECE / AUTHENTIC</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Balanced golden-ratio composition, rich dynamic range, and authentic textures.</p>
-                            <img src="../assets/nima_authenticity_real.png" alt="Example of a genuine high-quality photograph receiving a high authenticity score (8.9/10)" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
-                            <div style="margin-top: 8px; font-size: 1rem; color: #34c759; font-weight: 700;">Score: 8.9 / 10.0</div>
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">AESTHETIC MASTERPIECE / AUTHENTIC</div>
+                            <p class="sample-label-neutral">Balanced golden-ratio composition, rich dynamic range, and authentic textures.</p>
+                            <img src="../assets/nima_authenticity_real.png" alt="Example of a genuine high-quality photograph receiving a high authenticity score (8.9/10)" class="sample-img-card">
+                            <div class="score-sub-green">Score: 8.9 / 10.0</div>
                         </div>
                     </div>
                 </div>
 
-                <div style="margin: 25px 0; text-align: center;">
-                    <h3 style="color: #ffffff; text-align: left;">NIMA Authenticity & DeepFake Sentinel Training Metrics &amp; Score Distribution</h3>
-                    <img src="../assets/nima_authenticity_training.png" alt="NIMA Authenticity & DeepFake Sentinel Training Curve" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Figure 1: Earth Mover's Distance (EMD) and Spearman rank correlation convergence during training.</p>
+                <div class="figure-center">
+                    <h3 class="th-left-white">NIMA Authenticity & DeepFake Sentinel Training Metrics &amp; Score Distribution</h3>
+                    <img src="../assets/nima_authenticity_training.png" alt="NIMA Authenticity & DeepFake Sentinel Training Curve" class="sample-img-wide" onerror="this.style.display='none'">
+                    <p class="sample-caption">Figure 1: Earth Mover's Distance (EMD) and Spearman rank correlation convergence during training.</p>
                 </div>
             </section>
 

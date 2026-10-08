@@ -12,8 +12,8 @@
 <body class="paper-page">
     <div class="container">
         <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo" style="display: inline-block;">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
@@ -26,7 +26,7 @@
             <p class="subtitle">Complete Operator Guide for Visual Orchestration, Secrets Management, Dataset Synthesis, and Production Model Training</p>
             <div class="meta">
                 <span>Category 03 MANUALS</span>
-                <span>Version 2.8.5</span>
+                <span>Version 2.0.0</span>
                 <span>Author: LemGendary AI Core Team</span>
                 <span>Hardware: Universal Accelerator Topology</span>
             </div>
@@ -36,10 +36,10 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
-                <li><a href="ai-studio-whitepaper.html" style="color: var(--accent-secondary); border-left: none; padding-left: 0;">Architectural Whitepaper</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+                <li><a href="ai-studio-whitepaper.html" class="toc-link-secondary">Architectural Whitepaper</a></li>
                 <li><a href="#section-1">1. Abstract &amp; The Gardening Model Philosophy</a></li>
                 <li><a href="#section-2">2. Interface Topology &amp; Visual Navigation Matrix</a></li>
                 <li><a href="#section-3">3. Universal Configuration &amp; Secrets Vault</a></li>
@@ -63,7 +63,7 @@
                 <p>The <strong>LemGendary AI Studio Desktop GUI<strong> is a hardware-aware, nuclear-hardened command center engineered to make deep learning dataset synthesis, neural network training, and cloud deployment accessible to everyone from senior machine learning researchers to high school students and non-technical hobbyists.</p>
                 <h3>The Gardening Model Rule</h3>
                 <p>To ensure absolute operational clarity, every control, workflow, and safeguard in this manual is designed according to the <strong>Gardening Model Rule<strong>:</p>
-                <blockquote style="border-left: 3px solid var(--accent-color); padding-left: 16px; margin: 20px 0; color: #a0cfff; font-style: italic;">
+                <blockquote>
                     "If a 75-year-old grandmother wants to train an AI model using photos of her garden roses, tomato plants, and soil to automatically detect plant diseases and enhance low-light garden photographs, she should be able to complete the entire pipeline from environment setup to Kaggle cloud publishing purely by clicking intuitive buttons in the GUI, with zero command-line commands, zero code editing, and zero risk of freezing her computer."
                 </blockquote>
                 <p>The system achieves this through three foundational engineering principles:</p>
@@ -72,8 +72,8 @@
                     <li><strong>Nuclear Memory Protection (The Sawtooth Governor)</strong>: When training complex vision models, the GUI continuously probes hardware VRAM. If memory approaches capacity, the system automatically downscales batch sizes and applies dynamic gradient accumulation, guaranteeing that your machine never suffers an Out-of-Memory (OOM) crash or system freeze.</li>
                     <li><strong>Comprehensive Contextual Guidance</strong>: Every single interactive button, switch, input field, and status indicator is accompanied by a contextual hover icon (<code>?</code>) delivering instant, plain-English explanations of what the control does, what files are affected, and what safeguards are active.</li>
                 </ol>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui_dataset_training_flow.svg" alt="End-to-End Production Pipeline Flowchart" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui_dataset_training_flow.svg" alt="End-to-End Production Pipeline Flowchart" class="img-paper">
                 </div>
                 <p>---</p>
             </section>
@@ -82,8 +82,8 @@
             <section id="section-2">
                 <h2>2. Interface Topology & Visual Navigation Matrix</h2>
                 <p>The AI Studio interface is organized into persistent visual regions designed for ergonomic operation. Every element, card, and control in the live interface is indexed below with corresponding operational workflows and safety boundaries.</p>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_shell_header_sidebar.png" alt="LemGendary AI Studio Desktop GUI Global Shell" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_shell_header_sidebar.png" alt="LemGendary AI Studio Desktop GUI Global Shell" class="img-paper">
                 </div>
                 <h3>2.1 Workspace Global Shell Elements & Numbered Navigation Guide</h3>
                 <p>The live screen capture above displays the complete primary application frame including header, persistent sidebar navigation, active dashboard viewport, and status footer:</p>
@@ -100,92 +100,92 @@
                     <li><strong>Real-time Telemetry Tab Selector</strong>: Switches primary viewport to the high-throughput monospace console streaming real-time status packets over local WebSockets.</li>
                     <li><strong>Config & Secrets Vault Button</strong>: Opens the Universal Configuration, Registry Editor & Secrets Vault Modal for editing YAML manifests and managing Kaggle, Google Drive, GitHub, and MT5 API tokens.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Brand Title & Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Static Display</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms GUI client version and application branding.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Brand Title & Badge</td>
+                            <td>Static Display</td>
+                            <td>None</td>
+                            <td>Confirms GUI client version and application branding.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Docs Hub (Offline)</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>window.open('/documentation-hub/')</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Opens browser window to local offline documentation server on port 8000.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Docs Hub (Offline)</td>
+                            <td>Action Button</td>
+                            <td><code>window.open('/documentation-hub/')</code></td>
+                            <td>Opens browser window to local offline documentation server on port 8000.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Refresh Audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/audit</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Queries all three sidecars to refresh hardware metrics and venv health.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Refresh Audit</td>
+                            <td>Action Button</td>
+                            <td><code>POST /api/audit</code></td>
+                            <td>Queries all three sidecars to refresh hardware metrics and venv health.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dashboard Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("dashboard")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to central system overview and launcher tiles.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Dashboard Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("dashboard")</code></td>
+                            <td>Navigates to central system overview and launcher tiles.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dataset Compiler Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("datasets")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to manifold compiler and Kaggle synchronization tools.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Dataset Compiler Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("datasets")</code></td>
+                            <td>Navigates to manifold compiler and Kaggle synchronization tools.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Suite Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("training")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to neural architecture registry and training dispatch.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Training Suite Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("training")</code></td>
+                            <td>Navigates to neural architecture registry and training dispatch.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Clean Install Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("pipeline")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to the automated 7-step clean install pipeline.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Clean Install Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("pipeline")</code></td>
+                            <td>Navigates to the automated 7-step clean install pipeline.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Projects Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("projects")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to repository cards and individual venv status.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>Projects Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("projects")</code></td>
+                            <td>Navigates to repository cards and individual venv status.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Health & Drift Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("health")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to package version divergence matrix.</td>
+                        <tr>
+                            <td><strong>9<strong></td>
+                            <td>Health & Drift Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("health")</code></td>
+                            <td>Navigates to package version divergence matrix.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>10<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Telemetry Logs Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigation Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("logs")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates to monospace WebSocket log terminal.</td>
+                        <tr>
+                            <td><strong>10<strong></td>
+                            <td>Telemetry Logs Tab</td>
+                            <td>Navigation Button</td>
+                            <td><code>setCurrentTab("logs")</code></td>
+                            <td>Navigates to monospace WebSocket log terminal.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>11<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Config & Secrets</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Modal Trigger</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setIsConfigEditorOpen(true)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Launches modal dialog for manifest editing and secret management.</td>
+                        <tr>
+                            <td><strong>11<strong></td>
+                            <td>Config & Secrets</td>
+                            <td>Modal Trigger</td>
+                            <td><code>setIsConfigEditorOpen(true)</code></td>
+                            <td>Launches modal dialog for manifest editing and secret management.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -198,8 +198,8 @@
                     <li><strong>LemGendary Dataset Compiler Suite (<code>Port 8100</code>)</strong>: Manifold compiler and streaming storage server.</li>
                     <li><strong>LemGendary Model Training Suite (<code>Port 8200</code>)</strong>: Neural architecture training and evaluation engine.</li>
                 </ul>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_service_tiles.png" alt="Ecosystem Sidecar Services Grid" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_service_tiles.png" alt="Ecosystem Sidecar Services Grid" class="img-paper">
                 </div>
                 <h4>Ecosystem Sidecar Cards Numbered Reference</h4>
                 <ol>
@@ -214,85 +214,85 @@
                     <li><strong>Model Training Suite Status Badge</strong>: Real-time indicator displaying green <code>ONLINE</code> or red <code>OFFLINE</code>.</li>
                     <li><strong>Open Training Suite Button</strong>: Navigation shortcut directly switching the active viewport to the Training Suite tab.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sidecars Header</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Section Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Explains process lifecycle across local background daemons.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Sidecars Header</td>
+                            <td>Section Heading</td>
+                            <td>None</td>
+                            <td>Explains process lifecycle across local background daemons.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Env Manager Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels port 8000 primary governance daemon.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Env Manager Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels port 8000 primary governance daemon.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Env Manager Status</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET http://127.0.0.1:8000/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows connection readiness. Probed automatically every 4 seconds.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Env Manager Status</td>
+                            <td>Status Badge</td>
+                            <td><code>GET http://127.0.0.1:8000/health</code></td>
+                            <td>Shows connection readiness. Probed automatically every 4 seconds.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Run Full System Audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST http://127.0.0.1:8000/api/audit</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dispatches non-blocking complete audit of all four repositories.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Run Full System Audit</td>
+                            <td>Action Button</td>
+                            <td><code>POST http://127.0.0.1:8000/api/audit</code></td>
+                            <td>Dispatches non-blocking complete audit of all four repositories.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Compiler Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels port 8100 streaming dataset compilation daemon.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Compiler Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels port 8100 streaming dataset compilation daemon.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Compiler Status</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET http://127.0.0.1:8100/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows compiler daemon readiness.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Compiler Status</td>
+                            <td>Status Badge</td>
+                            <td><code>GET http://127.0.0.1:8100/health</code></td>
+                            <td>Shows compiler daemon readiness.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Open Dataset Compiler</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("datasets")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Switches operator viewport to manifold synthesis controls.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Open Dataset Compiler</td>
+                            <td>Action Button</td>
+                            <td><code>setCurrentTab("datasets")</code></td>
+                            <td>Switches operator viewport to manifold synthesis controls.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Suite Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels port 8200 PyTorch neural training daemon.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>Training Suite Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels port 8200 PyTorch neural training daemon.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Status</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET http://127.0.0.1:8200/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows training suite readiness.</td>
+                        <tr>
+                            <td><strong>9<strong></td>
+                            <td>Training Status</td>
+                            <td>Status Badge</td>
+                            <td><code>GET http://127.0.0.1:8200/health</code></td>
+                            <td>Shows training suite readiness.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>10<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Open Training Suite</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentTab("training")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Switches operator viewport to model orchestration matrix.</td>
+                        <tr>
+                            <td><strong>10<strong></td>
+                            <td>Open Training Suite</td>
+                            <td>Action Button</td>
+                            <td><code>setCurrentTab("training")</code></td>
+                            <td>Switches operator viewport to model orchestration matrix.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -305,8 +305,8 @@
                 <h2>3. Universal Configuration & Secrets Vault</h2>
                 <p>Deep learning workflows require interacting with external registries, storage backends, and cloud repositories. The AI Studio GUI integrates an in-app Universal Configuration & Secrets Vault modal accessible via the <code>Config & Secrets</code> header and sidebar buttons.</p>
                 <h3>3.1 Central Manifest Registry Editor</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_config_secrets_modal.png" alt="Universal Dynamic Config & Manifest Editor" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_config_secrets_modal.png" alt="Universal Dynamic Config & Manifest Editor" class="img-paper">
                 </div>
                 <h4>Manifest Registry Editor Numbered Reference</h4>
                 <ol>
@@ -318,72 +318,72 @@
                     <li><strong>Monospace Manifest Code Editor</strong>: Full-height in-browser text editor providing direct inspection and modification of central configuration files.</li>
                     <li><strong>Modal Close Button</strong>: Safely dismisses configuration modal and returns to previous workspace view.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifests Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Subtab Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setActiveTab("manifests")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Activates central YAML code editor and schema linter.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Manifests Tab</td>
+                            <td>Subtab Button</td>
+                            <td><code>setActiveTab("manifests")</code></td>
+                            <td>Activates central YAML code editor and schema linter.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Secrets Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Subtab Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setActiveTab("secrets")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Activates credentials and token management profiles.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Secrets Tab</td>
+                            <td>Subtab Button</td>
+                            <td><code>setActiveTab("secrets")</code></td>
+                            <td>Activates credentials and token management profiles.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifest Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>fetchManifest(selected)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Loads selected file into memory and populates editor view.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Manifest Dropdown</td>
+                            <td>Select Dropdown</td>
+                            <td><code>fetchManifest(selected)</code></td>
+                            <td>Loads selected file into memory and populates editor view.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Validate Syntax</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/manifests/validate</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Validates YAML syntax and schema without altering files on disk.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Validate Syntax</td>
+                            <td>Action Button</td>
+                            <td><code>POST /api/manifests/validate</code></td>
+                            <td>Validates YAML syntax and schema without altering files on disk.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Save Manifest</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/manifests/save</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Writes changes atomically and triggers hot-reload across active sidecars.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Save Manifest</td>
+                            <td>Primary Button</td>
+                            <td><code>POST /api/manifests/save</code></td>
+                            <td>Writes changes atomically and triggers hot-reload across active sidecars.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Monospace Editor</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Textarea Editor</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setCurrentContent(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays raw configuration text with monospaced indentation.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Monospace Editor</td>
+                            <td>Textarea Editor</td>
+                            <td><code>setCurrentContent(e.target.value)</code></td>
+                            <td>Displays raw configuration text with monospaced indentation.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Modal Close</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setIsConfigEditorOpen(false)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Closes dialog without persisting uncommitted text.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Modal Close</td>
+                            <td>Action Button</td>
+                            <td><code>setIsConfigEditorOpen(false)</code></td>
+                            <td>Closes dialog without persisting uncommitted text.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <p>---</p>
                 <h3>3.2 Secrets & Cloud Tokens Vault</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_secrets_vault_modal.png" alt="Universal Secrets & Tokens Vault Modal" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_secrets_vault_modal.png" alt="Universal Secrets & Tokens Vault Modal" class="img-paper">
                 </div>
                 <h4>Secrets & Tokens Vault Numbered Reference</h4>
                 <ol>
@@ -398,85 +398,85 @@
                     <li><strong>Google Drive Service Card</strong>: Optional profile for cold storage and multi-GPU checkpoint synchronization.</li>
                     <li><strong>Modal Close Button</strong>: Safely closes dialog.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifests Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Subtab Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setActiveTab("manifests")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Navigates back to manifest configuration editor.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Manifests Tab</td>
+                            <td>Subtab Button</td>
+                            <td><code>setActiveTab("manifests")</code></td>
+                            <td>Navigates back to manifest configuration editor.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Secrets Tab</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Subtab Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setActiveTab("secrets")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms active secrets vault workspace.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Secrets Tab</td>
+                            <td>Subtab Button</td>
+                            <td><code>setActiveTab("secrets")</code></td>
+                            <td>Confirms active secrets vault workspace.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Kaggle Auth Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Pill</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET /api/secrets/status</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Flags ecosystem requirement for official Kaggle API access.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Kaggle Auth Badge</td>
+                            <td>Status Pill</td>
+                            <td><code>GET /api/secrets/status</code></td>
+                            <td>Flags ecosystem requirement for official Kaggle API access.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">+ Add New Secret</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setIsAddingSecret(!isAddingSecret)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Toggles new credential registration form with service dropdown.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>+ Add New Secret</td>
+                            <td>Action Button</td>
+                            <td><code>setIsAddingSecret(!isAddingSecret)</code></td>
+                            <td>Toggles new credential registration form with service dropdown.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Save Secrets</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/secrets/save</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Encrypts vault to disk, writes backup, and syncs legacy credential files.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Save Secrets</td>
+                            <td>Primary Button</td>
+                            <td><code>POST /api/secrets/save</code></td>
+                            <td>Encrypts vault to disk, writes backup, and syncs legacy credential files.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Kaggle Service Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Profile Header</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Groups all registered personal and institutional Kaggle accounts.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Kaggle Service Card</td>
+                            <td>Profile Header</td>
+                            <td>None</td>
+                            <td>Groups all registered personal and institutional Kaggle accounts.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Requirement Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Badge Indicator</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Differentiates mandatory core services from optional cloud mirrors.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Requirement Badge</td>
+                            <td>Badge Indicator</td>
+                            <td>None</td>
+                            <td>Differentiates mandatory core services from optional cloud mirrors.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">+ Add Kaggle Secret</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>openAddForService("kaggle")</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Opens account entry pre-configured for Kaggle username and token.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>+ Add Kaggle Secret</td>
+                            <td>Action Button</td>
+                            <td><code>openAddForService("kaggle")</code></td>
+                            <td>Opens account entry pre-configured for Kaggle username and token.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Google Drive Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Profile Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manages Client ID, Client Secret, and Refresh Token for Google Drive.</td>
+                        <tr>
+                            <td><strong>9<strong></td>
+                            <td>Google Drive Card</td>
+                            <td>Profile Card</td>
+                            <td>None</td>
+                            <td>Manages Client ID, Client Secret, and Refresh Token for Google Drive.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>10<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Close Modal</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setIsConfigEditorOpen(false)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dismisses secrets view.</td>
+                        <tr>
+                            <td><strong>10<strong></td>
+                            <td>Close Modal</td>
+                            <td>Action Button</td>
+                            <td><code>setIsConfigEditorOpen(false)</code></td>
+                            <td>Dismisses secrets view.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -489,8 +489,8 @@
                 <h2>4. One-Click Environment Setup: The 7-Stage Clean Install Pipeline</h2>
                 <p>Before training an AI model, your computer must have the correct software libraries installed. Traditionally, this required typing dozens of cryptic terminal commands. The AI Studio eliminates this completely through the automated 7-Stage Clean Install Pipeline.</p>
                 <h3>4.1 Pipeline Orchestrator Control Card</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_pipeline_card.png" alt="Smart Clean Install Pipeline Orchestrator Card" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_pipeline_card.png" alt="Smart Clean Install Pipeline Orchestrator Card" class="img-paper">
                 </div>
                 <h4>Clean Install Pipeline Numbered Reference</h4>
                 <ol>
@@ -502,72 +502,72 @@
                     <li><strong>Stage 4 Metric Card (Requirements Sync & Install)</strong>: Propagates centralized dependencies and installs wheels deterministically.</li>
                     <li><strong>Stage 7 Metric Card (Health Matrix)</strong>: Generates final multi-project verification report and arms dashboard badges.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Pipeline Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Section Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Contextual heading explaining zero-command environment setup.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Pipeline Title</td>
+                            <td>Section Heading</td>
+                            <td>None</td>
+                            <td>Contextual heading explaining zero-command environment setup.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">State Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET /api/pipeline/status</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms whether pipeline workers are idle or running.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>State Badge</td>
+                            <td>Status Badge</td>
+                            <td><code>GET /api/pipeline/status</code></td>
+                            <td>Confirms whether pipeline workers are idle or running.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Execute Full Pipeline</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/pipeline/trigger</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Starts autonomous 7-step provisioning sequence without terminal commands.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Execute Full Pipeline</td>
+                            <td>Primary Button</td>
+                            <td><code>POST /api/pipeline/trigger</code></td>
+                            <td>Starts autonomous 7-step provisioning sequence without terminal commands.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Progress Bar</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Visual Meter</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Real-time WebSocket updates</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays active completion percentage across all steps.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Progress Bar</td>
+                            <td>Visual Meter</td>
+                            <td>Real-time WebSocket updates</td>
+                            <td>Displays active completion percentage across all steps.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Stage 1 Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step Indicator</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step 1 Execution</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Validates GPU, VRAM, and operating system topology.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Stage 1 Card</td>
+                            <td>Step Indicator</td>
+                            <td>Step 1 Execution</td>
+                            <td>Validates GPU, VRAM, and operating system topology.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Stage 4 Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step Indicator</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step 4 Execution</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Installs PyTorch wheels and package dependencies safely.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Stage 4 Card</td>
+                            <td>Step Indicator</td>
+                            <td>Step 4 Execution</td>
+                            <td>Installs PyTorch wheels and package dependencies safely.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Stage 7 Card</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step Indicator</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Step 7 Execution</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Publishes system state and validates zero-drift matrix.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Stage 7 Card</td>
+                            <td>Step Indicator</td>
+                            <td>Step 7 Execution</td>
+                            <td>Publishes system state and validates zero-drift matrix.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <p>---</p>
                 <h3>4.2 Hardware Acceleration Sentinel Card</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_hardware_card.png" alt="System & Hardware Architecture Sentinel Card" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_hardware_card.png" alt="System & Hardware Architecture Sentinel Card" class="img-paper">
                 </div>
                 <h4>Hardware Architecture Card Numbered Reference</h4>
                 <ol>
@@ -580,79 +580,79 @@
                     <li><strong>Recommended PyTorch Wheel Index</strong>: Authoritative binary index link for CUDA hardware acceleration.</li>
                     <li><strong>Detected Accelerators & VRAM Readout</strong>: Displays GPU device model, driver revision, and total video memory capacity.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Architecture Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Section Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Live probe executed by <code>env_manager.system_probe</code>.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Architecture Title</td>
+                            <td>Section Heading</td>
+                            <td>None</td>
+                            <td>Live probe executed by <code>env_manager.system_probe</code>.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Accelerator Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Pill</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows hardware compute provider utilized by neural runtimes.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Accelerator Badge</td>
+                            <td>Status Pill</td>
+                            <td>None</td>
+                            <td>Shows hardware compute provider utilized by neural runtimes.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Operating System</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Value</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>os.uname()</code> / <code>platform.platform()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms OS compatibility for binary wheels.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Operating System</td>
+                            <td>Metric Value</td>
+                            <td><code>os.uname()</code> / <code>platform.platform()</code></td>
+                            <td>Confirms OS compatibility for binary wheels.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Python Runtime</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Value</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>sys.version</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Verifies Python 3.10+ requirement compliance.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Python Runtime</td>
+                            <td>Metric Value</td>
+                            <td><code>sys.version</code></td>
+                            <td>Verifies Python 3.10+ requirement compliance.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">CPU Cores</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Value</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>psutil.cpu_count()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Guides dataloader multi-threading worker allocation.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>CPU Cores</td>
+                            <td>Metric Value</td>
+                            <td><code>psutil.cpu_count()</code></td>
+                            <td>Guides dataloader multi-threading worker allocation.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">System RAM</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Value</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>psutil.virtual_memory()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Ensures adequate host memory for in-memory image batching.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>System RAM</td>
+                            <td>Metric Value</td>
+                            <td><code>psutil.virtual_memory()</code></td>
+                            <td>Ensures adequate host memory for in-memory image batching.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Recommended Torch</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Value</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Pre-flight probe</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays official PyTorch wheel repository URL.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Recommended Torch</td>
+                            <td>Metric Value</td>
+                            <td>Pre-flight probe</td>
+                            <td>Displays official PyTorch wheel repository URL.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">GPU & VRAM</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Device Metric</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">CUDA / DirectML probe</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Details physical GPU model, driver level, and dedicated memory.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>GPU & VRAM</td>
+                            <td>Device Metric</td>
+                            <td>CUDA / DirectML probe</td>
+                            <td>Details physical GPU model, driver level, and dedicated memory.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <p>---</p>
                 <h3>4.3 Managed Workspace Projects Health Cards</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_managed_projects.png" alt="Managed Workspace Projects Health Grid" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_managed_projects.png" alt="Managed Workspace Projects Health Grid" class="img-paper">
                 </div>
                 <h4>Managed Projects Grid Numbered Reference</h4>
                 <ol>
@@ -665,71 +665,71 @@
                     <li><strong>Model Training Suite Health Badge</strong>: Confirms virtual environment status for port 8200 daemon.</li>
                     <li><strong>Reconcile Virtual Environment Button (Training Suite)</strong>: Triggers single-project dependency alignment for training suite.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Env Manager Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels environment governance sub-repository.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Env Manager Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels environment governance sub-repository.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Env Manager Health</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET /api/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows isolated <code>.venv</code> validity and package counts.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Env Manager Health</td>
+                            <td>Status Badge</td>
+                            <td><code>GET /api/health</code></td>
+                            <td>Shows isolated <code>.venv</code> validity and package counts.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Reconcile Env Manager</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/pipeline/reconcile?project=env-manager</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Recreates <code>.venv</code> and reconciles missing wheels.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Reconcile Env Manager</td>
+                            <td>Action Button</td>
+                            <td><code>POST /api/pipeline/reconcile?project=env-manager</code></td>
+                            <td>Recreates <code>.venv</code> and reconciles missing wheels.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Datasets Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels dataset compiler sub-repository.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Datasets Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels dataset compiler sub-repository.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Datasets Health</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET /api/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows dataset compiler <code>.venv</code> validity.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Datasets Health</td>
+                            <td>Status Badge</td>
+                            <td><code>GET /api/health</code></td>
+                            <td>Shows dataset compiler <code>.venv</code> validity.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Suite Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels neural training sub-repository.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Training Suite Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Labels neural training sub-repository.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Suite Health</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>GET /api/health</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows training suite <code>.venv</code> validity.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Training Suite Health</td>
+                            <td>Status Badge</td>
+                            <td><code>GET /api/health</code></td>
+                            <td>Shows training suite <code>.venv</code> validity.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Reconcile Training</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/pipeline/reconcile?project=training-suite</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Reinstalls PyTorch dependencies for training suite.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>Reconcile Training</td>
+                            <td>Action Button</td>
+                            <td><code>POST /api/pipeline/reconcile?project=training-suite</code></td>
+                            <td>Reinstalls PyTorch dependencies for training suite.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -742,8 +742,8 @@
                 <h2>5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync</h2>
                 <p>High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images. The LemGendary Dataset Compiler tab provides a complete visual control center for dataset synthesis and cloud storage synchronization.</p>
                 <h3>5.1 Dataset Compiler & Storage Modernization Control Card</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_dataset_compiler.png" alt="Dataset Compiler & Storage Modernization Card" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_dataset_compiler.png" alt="Dataset Compiler & Storage Modernization Card" class="img-paper">
                 </div>
                 <h4>Dataset Compiler Card Numbered Reference</h4>
                 <ol>
@@ -755,73 +755,73 @@
                     <li><strong>Compile Manifold Primary Button</strong>: Dispatches multi-threaded parallel workers with in-flight 12-thread WebP transcoding.</li>
                     <li><strong>Refresh Catalog Button</strong>: Queries port 8100 sidecar to update manifold disk footprint and verification status.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Mode Switcher</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Segmented Control</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">`setCompileMode("standard" \</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">"custom")`</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Toggles between existing manifold sharding and multi-source URL ingestion.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Mode Switcher</td>
+                            <td>Segmented Control</td>
+                            <td>`setCompileMode("standard" \</td>
+                            <td>"custom")`</td>
+                            <td>Toggles between existing manifold sharding and multi-source URL ingestion.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Target Manifold</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedManifold(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Chooses dataset registered in <code>unified_data.yaml</code>.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Target Manifold</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setSelectedManifold(e.target.value)</code></td>
+                            <td>Chooses dataset registered in <code>unified_data.yaml</code>.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Storage Preset</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedPreset(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Selects container format: WebDataset (.tar), Parquet, MDS, or LitData.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Storage Preset</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setSelectedPreset(e.target.value)</code></td>
+                            <td>Selects container format: WebDataset (.tar), Parquet, MDS, or LitData.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Samples Per Shard</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Number Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setShardSize(Number(e.target.value))</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sets chunk capacity. Range: 100 to 50,000 samples per archive.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Samples Per Shard</td>
+                            <td>Number Input</td>
+                            <td><code>setShardSize(Number(e.target.value))</code></td>
+                            <td>Sets chunk capacity. Range: 100 to 50,000 samples per archive.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Purge Loose Images</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Checkbox Toggle</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setPurgeLooseImages(e.target.checked)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Deletes loose raw images after verified container compilation.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Purge Loose Images</td>
+                            <td>Checkbox Toggle</td>
+                            <td><code>setPurgeLooseImages(e.target.checked)</code></td>
+                            <td>Deletes loose raw images after verified container compilation.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Compile Manifold</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST http://127.0.0.1:8100/api/compile</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Initiates parallel container compilation and WebP transcoding.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Compile Manifold</td>
+                            <td>Primary Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/compile</code></td>
+                            <td>Initiates parallel container compilation and WebP transcoding.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Refresh Catalog</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>fetchDatasets()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Re-scans disk storage and updates sample metrics in under 50ms.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Refresh Catalog</td>
+                            <td>Action Button</td>
+                            <td><code>fetchDatasets()</code></td>
+                            <td>Re-scans disk storage and updates sample metrics in under 50ms.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <p>---</p>
                 <h3>5.2 Kaggle Cloud Synchronization & Storage Hub</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_kaggle_cloud_hub.png" alt="Kaggle Cloud Synchronization & Storage Hub" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_kaggle_cloud_hub.png" alt="Kaggle Cloud Synchronization & Storage Hub" class="img-paper">
                 </div>
                 <h4>Kaggle Cloud Hub Numbered Reference</h4>
                 <ol>
@@ -832,67 +832,67 @@
                     <li><strong>Force Overwrite Checkbox</strong>: When enabled, redownloads all shards even if files exist locally.</li>
                     <li><strong>Download from Kaggle Primary Button</strong>: Initiates authenticated multi-threaded download via the official Kaggle API.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Subtabs</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Subtab Navigation</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">`setKaggleActiveTab("download" \</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">"upload")`</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Switches between cloud pulling and manifold publishing.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Action Subtabs</td>
+                            <td>Subtab Navigation</td>
+                            <td>`setKaggleActiveTab("download" \</td>
+                            <td>"upload")`</td>
+                            <td>Switches between cloud pulling and manifold publishing.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Source Mode</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Segmented Control</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">`setKaggleDownloadMode("registry" \</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">"custom")`</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Switches between curated registry manifolds and ad-hoc repository links.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Source Mode</td>
+                            <td>Segmented Control</td>
+                            <td>`setKaggleDownloadMode("registry" \</td>
+                            <td>"custom")`</td>
+                            <td>Switches between curated registry manifolds and ad-hoc repository links.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Registry Dataset</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedRegistryKey(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Picks verified dataset manifold linked in <code>unified_data.yaml</code>.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Registry Dataset</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setSelectedRegistryKey(e.target.value)</code></td>
+                            <td>Picks verified dataset manifold linked in <code>unified_data.yaml</code>.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Target Folder</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Text Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setDownloadTargetFolder(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Customizes local destination path inside dataset directory.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Target Folder</td>
+                            <td>Text Input</td>
+                            <td><code>setDownloadTargetFolder(e.target.value)</code></td>
+                            <td>Customizes local destination path inside dataset directory.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Force Redownload</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Checkbox Toggle</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setDownloadForce(e.target.checked)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Bypasses local caching to perform bit-for-bit cloud refresh.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Force Redownload</td>
+                            <td>Checkbox Toggle</td>
+                            <td><code>setDownloadForce(e.target.checked)</code></td>
+                            <td>Bypasses local caching to perform bit-for-bit cloud refresh.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Download from Kaggle</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST http://127.0.0.1:8100/api/kaggle/download</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dispatches background downloader streaming from Kaggle API.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Download from Kaggle</td>
+                            <td>Primary Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/download</code></td>
+                            <td>Dispatches background downloader streaming from Kaggle API.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <p>---</p>
                 <h3>5.3 Production Manifolds Catalog & Format Breakdown</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_production_manifolds.png" alt="Production Manifolds Catalog Grid" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_production_manifolds.png" alt="Production Manifolds Catalog Grid" class="img-paper">
                 </div>
                 <h4>Production Manifolds Catalog Numbered Reference</h4>
                 <ol>
@@ -904,64 +904,64 @@
                     <li><strong>Container Shards Counter</strong>: Number of container shards partitioned across disk (e.g. <code>0 shards</code> or <code>14 shards</code>).</li>
                     <li><strong>Image Encoding Distribution Bar</strong>: Real-time counter of samples formatted as WebP, JPG, or PNG (<code>WebP: 0 JPG: 0 PNG: 0</code>).</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifold Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Identifies dataset name and task domain.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Manifold Heading</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Identifies dataset name and task domain.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Compiled Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Pill</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">On-disk validation</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Green badge indicates streaming archive is fully built and ready for training.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Compiled Badge</td>
+                            <td>Status Pill</td>
+                            <td>On-disk validation</td>
+                            <td>Green badge indicates streaming archive is fully built and ready for training.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Format Architecture</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sourced from <code>unified_data.yaml</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays container protocol: WebDataset, Parquet, or MDS.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Format Architecture</td>
+                            <td>Metric Readout</td>
+                            <td>Sourced from <code>unified_data.yaml</code></td>
+                            <td>Displays container protocol: WebDataset, Parquet, or MDS.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Total Samples</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shard header inspection</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shows exact quantity of training sample pairs available.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Total Samples</td>
+                            <td>Metric Readout</td>
+                            <td>Shard header inspection</td>
+                            <td>Shows exact quantity of training sample pairs available.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Disk Footprint</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>os.stat</code> recursive sum</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays disk volume occupied by compressed shards.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Disk Footprint</td>
+                            <td>Metric Readout</td>
+                            <td><code>os.stat</code> recursive sum</td>
+                            <td>Displays disk volume occupied by compressed shards.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Container Shards</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Shard count verification</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms number of container files written to local storage.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Container Shards</td>
+                            <td>Metric Readout</td>
+                            <td>Shard count verification</td>
+                            <td>Confirms number of container files written to local storage.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Format Breakdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Encoding Stats</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metadata inspection</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Quantifies WebP, JPEG, and PNG image components.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Format Breakdown</td>
+                            <td>Encoding Stats</td>
+                            <td>Metadata inspection</td>
+                            <td>Quantifies WebP, JPEG, and PNG image components.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -974,8 +974,8 @@
                 <h2>6. Model Training Pipeline: Architectures, Ladders & Sawtooth Governor</h2>
                 <p>Once your dataset is compiled, you are ready to train a production-grade neural network. The LemGendary AI Studio provides dynamic hyperparameter management and nuclear memory safeguards.</p>
                 <h3>6.1 Master Training Suite & Model Orchestration Card</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_training_orchestrator.png" alt="Master Training Suite & Model Orchestration Card" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_training_orchestrator.png" alt="Master Training Suite & Model Orchestration Card" class="img-paper">
                 </div>
                 <h4>Training Orchestrator Numbered Reference</h4>
                 <ol>
@@ -990,85 +990,85 @@
                     <li><strong>Dynamic Training Action Button (Start / Stop Training)</strong>: Context-aware dispatch button. Displays cyan <code>Start Training</code> when idle; dynamically transforms into red <code>Stop Training</code> while a training job is actively executing. Clicking <code>Stop Training</code> dispatches cancellation signal <code>POST /api/jobs/{job_id}/cancel</code>.</li>
                     <li><strong>Refresh Models Registry Button</strong>: Re-reads <code>unified_models_v2.yaml</code> and updates checkpoint availability in under 50ms.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide &amp; Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide &amp; Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Target Architecture</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Select Dropdown</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSelectedModel(e.target.value)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Hero row selector. Automatically synchronizes recommended default parameters.</td>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td>Target Architecture</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setSelectedModel(e.target.value)</code></td>
+                            <td>Hero row selector. Automatically synchronizes recommended default parameters.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Training Epochs</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td>Training Epochs</td>
+                            <td>Read-Only Input</td>
+                            <td>None (Locked to Manifest)</td>
+                            <td>Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Minibatch Size</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Dynamically scaled by Sawtooth Governor.</td>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td>Minibatch Size</td>
+                            <td>Read-Only Input</td>
+                            <td>None (Locked to Manifest)</td>
+                            <td>Governed by <code>unified_models_v2.yaml</code>. Dynamically scaled by Sawtooth Governor.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Initial Learning Rate</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Input</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td>Initial Learning Rate</td>
+                            <td>Read-Only Input</td>
+                            <td>None (Locked to Manifest)</td>
+                            <td>Governed by <code>unified_models_v2.yaml</code>. Adjustable via Config Editor modal.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Spatial Ladder Stage</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Read-Only Select</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None (Locked to Manifest)</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Governed by <code>unified_models_v2.yaml</code>. Progressive curriculum stage indicator.</td>
+                        <tr>
+                            <td><strong>5</strong></td>
+                            <td>Spatial Ladder Stage</td>
+                            <td>Read-Only Select</td>
+                            <td>None (Locked to Manifest)</td>
+                            <td>Governed by <code>unified_models_v2.yaml</code>. Progressive curriculum stage indicator.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Config Governed Banner</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Banner &amp; Action</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>onOpenConfigEditor()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Informs operators of SSOT governance and opens in-app Config Editor modal.</td>
+                        <tr>
+                            <td><strong>6</strong></td>
+                            <td>Config Governed Banner</td>
+                            <td>Banner &amp; Action</td>
+                            <td><code>onOpenConfigEditor()</code></td>
+                            <td>Informs operators of SSOT governance and opens in-app Config Editor modal.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sawtooth Checkbox</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Checkbox Toggle</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>setSawtoothGovernorActive(e.target.checked)</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Arms nuclear Out-of-Memory protection.</td>
+                        <tr>
+                            <td><strong>7</strong></td>
+                            <td>Sawtooth Checkbox</td>
+                            <td>Checkbox Toggle</td>
+                            <td><code>setSawtoothGovernorActive(e.target.checked)</code></td>
+                            <td>Arms nuclear Out-of-Memory protection.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sentinel Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Hardware monitor</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Confirms that 92% VRAM ceiling protection is actively monitoring memory.</td>
+                        <tr>
+                            <td><strong>8</strong></td>
+                            <td>Sentinel Badge</td>
+                            <td>Status Badge</td>
+                            <td>Hardware monitor</td>
+                            <td>Confirms that 92% VRAM ceiling protection is actively monitoring memory.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Start / Stop Training</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Dynamic Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>POST /api/gui/quick-train</code> or <code>POST /api/jobs/{id}/cancel</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Launches training when idle; gracefully cancels running job when active.</td>
+                        <tr>
+                            <td><strong>9</strong></td>
+                            <td>Start / Stop Training</td>
+                            <td>Dynamic Action Button</td>
+                            <td><code>POST /api/gui/quick-train</code> or <code>POST /api/jobs/{id}/cancel</code></td>
+                            <td>Launches training when idle; gracefully cancels running job when active.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>10</strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Refresh Models</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>fetchModels()</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Reloads weights status and latest SOTA metrics from disk.</td>
+                        <tr>
+                            <td><strong>10</strong></td>
+                            <td>Refresh Models</td>
+                            <td>Action Button</td>
+                            <td><code>fetchModels()</code></td>
+                            <td>Reloads weights status and latest SOTA metrics from disk.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -1083,8 +1083,8 @@
                 </ol>
                 <p>---</p>
                 <h3>6.4 Registered Architectures & Checkpoint Telemetry Grid</h3>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_architecture_telemetry.png" alt="Registered Neural Architectures Catalog Grid" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_architecture_telemetry.png" alt="Registered Neural Architectures Catalog Grid" class="img-paper">
                 </div>
                 <h4>Architecture Telemetry Grid Numbered Reference</h4>
                 <ol>
@@ -1097,71 +1097,71 @@
                     <li><strong>Primary Target Metric</strong>: Target numerical convergence threshold (e.g. <code>30.5</code>).</li>
                     <li><strong>Resolution / Confluence Ladder Metric</strong>: Progressive training resolution or timeframe stage (e.g. <code>0px / 512px</code> or <code>Full (512px)</code>).</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Model Card Header</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels neural architecture name and specialization.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Model Card Header</td>
+                            <td>Card Title</td>
+                            <td>None</td>
+                            <td>Labels neural architecture name and specialization.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">3-Pillar Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Multi-pillar verification</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Certified status reflecting training completion and checkpoint readiness.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>3-Pillar Status Badge</td>
+                            <td>Status Badge</td>
+                            <td>Multi-pillar verification</td>
+                            <td>Certified status reflecting training completion and checkpoint readiness.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Neural Architecture</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Sourced from <code>unified_models_v2.yaml</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Specifies network layer topology and block design.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Neural Architecture</td>
+                            <td>Metric Readout</td>
+                            <td>Sourced from <code>unified_models_v2.yaml</code></td>
+                            <td>Specifies network layer topology and block design.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Parameter Counter</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Weight tensor count</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Quantifies parameter count to guide hardware VRAM requirements.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Parameter Counter</td>
+                            <td>Metric Readout</td>
+                            <td>Weight tensor count</td>
+                            <td>Quantifies parameter count to guide hardware VRAM requirements.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Best Metric</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Validation pass output</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Records benchmark evaluation score against academic baselines.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Best Metric</td>
+                            <td>Metric Readout</td>
+                            <td>Validation pass output</td>
+                            <td>Records benchmark evaluation score against academic baselines.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">SOTA Targets Met</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Progress Ratio</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Evaluation benchmark</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Tracks progress toward target convergence criteria.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>SOTA Targets Met</td>
+                            <td>Progress Ratio</td>
+                            <td>Evaluation benchmark</td>
+                            <td>Tracks progress toward target convergence criteria.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Primary Target</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Convergence threshold</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Indicates targeted benchmark score for full training certification.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Primary Target</td>
+                            <td>Metric Readout</td>
+                            <td>Convergence threshold</td>
+                            <td>Indicates targeted benchmark score for full training certification.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Resolution Ladder</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Progressive curriculum</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays active multi-scale spatial ladder stage.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>Resolution Ladder</td>
+                            <td>Metric Readout</td>
+                            <td>Progressive curriculum</td>
+                            <td>Displays active multi-scale spatial ladder stage.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -1199,8 +1199,8 @@
             <section id="section-8">
                 <h2>8. Health Matrix & Cross-Project Version Drift Analytics</h2>
                 <p>In modern multi-project software suites, one project updating a shared library (like <code>torch</code> or <code>numpy</code>) while another stays on an older version causes insidious bugs. The LemGendary AI Studio provides continuous real-time cross-project dependency audits.</p>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_health_drift_matrix.png" alt="Toolchain Prerequisites & Version Drift Matrix" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_health_drift_matrix.png" alt="Toolchain Prerequisites & Version Drift Matrix" class="img-paper">
                 </div>
                 <h3>8.1 Toolchain Prerequisites & Version Drift Matrix Numbered Reference</h3>
                 <ol>
@@ -1214,78 +1214,78 @@
                     <li><strong>Target Workspace Environments Column Headers</strong>: Identifies virtual environments across <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>, and <code>lemgendary-training-suite</code>.</li>
                     <li><strong>Synchronize Package Version Action</strong>: Action button to reconcile package version drift across environments.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Toolchains Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Section Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Details host prerequisite validation.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Toolchains Heading</td>
+                            <td>Section Heading</td>
+                            <td>None</td>
+                            <td>Details host prerequisite validation.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Prerequisite Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Status Pill</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Platform audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Flags whether all developer toolchains meet minimum versions.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>Prerequisite Badge</td>
+                            <td>Status Pill</td>
+                            <td>Platform audit</td>
+                            <td>Flags whether all developer toolchains meet minimum versions.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Python Audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>python --version</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Ensures host runs Python 3.10 or higher.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Python Audit</td>
+                            <td>Metric Readout</td>
+                            <td><code>python --version</code></td>
+                            <td>Ensures host runs Python 3.10 or higher.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Git SCM Audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>git --version</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Ensures Git is present in system PATH.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Git SCM Audit</td>
+                            <td>Metric Readout</td>
+                            <td><code>git --version</code></td>
+                            <td>Ensures Git is present in system PATH.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Node / NPM Audit</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Metric Readout</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>node --version</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Validates Node engine for GUI frontend development.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Node / NPM Audit</td>
+                            <td>Metric Readout</td>
+                            <td><code>node --version</code></td>
+                            <td>Validates Node engine for GUI frontend development.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>6<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Drift Matrix Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Table Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Labels cross-project dependency comparison matrix.</td>
+                        <tr>
+                            <td><strong>6<strong></td>
+                            <td>Drift Matrix Title</td>
+                            <td>Table Heading</td>
+                            <td>None</td>
+                            <td>Labels cross-project dependency comparison matrix.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>7<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Package Name</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Table Column</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifest inspection</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Lists library identifier across ecosystem projects.</td>
+                        <tr>
+                            <td><strong>7<strong></td>
+                            <td>Package Name</td>
+                            <td>Table Column</td>
+                            <td>Manifest inspection</td>
+                            <td>Lists library identifier across ecosystem projects.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>8<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Target Environments</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Table Column</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Manifest inspection</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Compares installed releases across active project virtual environments.</td>
+                        <tr>
+                            <td><strong>8<strong></td>
+                            <td>Target Environments</td>
+                            <td>Table Column</td>
+                            <td>Manifest inspection</td>
+                            <td>Compares installed releases across active project virtual environments.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>9<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Synchronize Action</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Environment reconciliation</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Reconciles version drift for the target package.</td>
+                        <tr>
+                            <td><strong>9<strong></td>
+                            <td>Synchronize Action</td>
+                            <td>Action Button</td>
+                            <td>Environment reconciliation</td>
+                            <td>Reconciles version drift for the target package.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -1297,8 +1297,8 @@
             <section id="section-9">
                 <h2>9. Real-Time Telemetry & Monospace Event Diagnostics</h2>
                 <p>For power operators who want to monitor raw execution logs, the Real-Time Telemetry console provides a live, non-blocking log stream.</p>
-                <div style="margin: 25px 0; text-align: center;">
-                    <img src="../assets/gui/gui_log_panel.png" alt="Real-Time Telemetry Stream Monospace Terminal Card" style="width: 100%; max-width: 1050px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_log_panel.png" alt="Real-Time Telemetry Stream Monospace Terminal Card" class="img-paper">
                 </div>
                 <h3>9.1 Telemetry Terminal Numbered Reference</h3>
                 <ol>
@@ -1308,50 +1308,50 @@
                     <li><strong>Clear Stream Action Button</strong>: Flushes terminal buffer memory to isolate a fresh training run or audit pass.</li>
                     <li><strong>Monospace Terminal Console Viewport</strong>: High-performance scrolling container streaming live JSON-RPC packets and process stdout.</li>
                 </ol>
-                <div style="overflow-x: auto; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
-                        <thead><tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Callout #</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">UI Element</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Control Type</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Triggered Endpoint / Action</th>
-                            <th style="padding: 10px; border: 1px solid var(--border-color);">Operator Guide & Behavioral Safeguards</th>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
                         </tr></thead>
                         <tbody>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>1<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Telemetry Title</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Card Heading</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">None</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Explains live background telemetry capture.</td>
+                        <tr>
+                            <td><strong>1<strong></td>
+                            <td>Telemetry Title</td>
+                            <td>Card Heading</td>
+                            <td>None</td>
+                            <td>Explains live background telemetry capture.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>2<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">WebSocket Badge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Connection Pill</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><code>ws://127.0.0.1:8000/ws/log</code></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Displays socket connection state. Reconnects automatically if interrupted.</td>
+                        <tr>
+                            <td><strong>2<strong></td>
+                            <td>WebSocket Badge</td>
+                            <td>Connection Pill</td>
+                            <td><code>ws://127.0.0.1:8000/ws/log</code></td>
+                            <td>Displays socket connection state. Reconnects automatically if interrupted.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>3<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Copy Stream</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Clipboard copy</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Formats buffer text with timestamps and step tags for debugging.</td>
+                        <tr>
+                            <td><strong>3<strong></td>
+                            <td>Copy Stream</td>
+                            <td>Action Button</td>
+                            <td>Clipboard copy</td>
+                            <td>Formats buffer text with timestamps and step tags for debugging.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>4<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Clear Stream</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Action Button</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Buffer purge</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Clears visible terminal lines without affecting background processes.</td>
+                        <tr>
+                            <td><strong>4<strong></td>
+                            <td>Clear Stream</td>
+                            <td>Action Button</td>
+                            <td>Buffer purge</td>
+                            <td>Clears visible terminal lines without affecting background processes.</td>
                         </tr>
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 10px; border: 1px solid var(--border-color);"><strong>5<strong></td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Console Viewport</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Monospace Terminal</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Real-time DOM stream</td>
-                            <td style="padding: 10px; border: 1px solid var(--border-color);">Monospace log stream auto-scrolling to newest events.</td>
+                        <tr>
+                            <td><strong>5<strong></td>
+                            <td>Console Viewport</td>
+                            <td>Monospace Terminal</td>
+                            <td>Real-time DOM stream</td>
+                            <td>Monospace log stream auto-scrolling to newest events.</td>
                         </tr>
                         </tbody>
                     </table>

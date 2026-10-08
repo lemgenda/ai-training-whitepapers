@@ -17,7 +17,7 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
@@ -30,7 +30,7 @@
             <p class="subtitle">Authoritative REST, WebSocket, and IPC Interface Reference for Machine Integration</p>
             <div class="meta">
                 <span>Category 03 MANUALS</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.16-STABLE</span>
                 <span>Component: Ecosystem API Surface</span>
             </div>
         </header>
@@ -39,10 +39,10 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back
                         to Index</a></li>
                 <li><a href="#section-1">1. Executive Overview</a></li>
                 <li><a href="#section-2">2. Environment Manager REST API</a>
@@ -437,6 +437,123 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
       "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
     }
   }
+}</code></pre>
+
+                <h4><code>GET /api/manifests/registry</code></h4>
+                <p>Enumerates all manageable ecosystem manifests across all repositories, including file existence, size in bytes, and resolved disk paths.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "manifests": [
+    {
+      "name": "unified_data.yaml",
+      "project": "lemgendary-datasets",
+      "format": "yaml",
+      "description": "Authoritative dataset and source repository registry.",
+      "exists": true,
+      "size_bytes": 10240,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
+    },
+    {
+      "name": "unified_models_v2.yaml",
+      "project": "lemgendary-training-suite",
+      "format": "yaml",
+      "description": "Neural architecture registry and training hyperparameters.",
+      "exists": true,
+      "size_bytes": 16384,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
+    }
+  ]
+}</code></pre>
+
+                <h4><code>GET /api/manifests/read</code></h4>
+                <p>Retrieves the raw text content, format, and resolved path of a designated registered manifest.</p>
+                <p>Query Parameters:</p>
+                <ul>
+                    <li><code>name</code> (string, required): Registered manifest name (e.g., <code>unified_models_v2.yaml</code>, <code>runtime_env.yaml</code>, <code>config.yaml</code>).</li>
+                </ul>
+                <p>Response:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "format": "yaml",
+  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
+  "content": "version: '2.0.0'\nmodels:\n  ..."
+}</code></pre>
+
+                <h4><code>POST /api/manifests/validate</code></h4>
+                <p>Performs strict syntax and structure validation on arbitrary manifest content prior to disk persistence. Supports YAML, JSON, and text formats.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "valid": true,
+  "error": null
+}</code></pre>
+
+                <h4><code>POST /api/manifests/save</code></h4>
+                <p>Safely writes updated manifest content to disk with automatic pre-validation and generation of a <code>.bak</code> backup file before atomic replacement.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "name": "unified_models_v2.yaml",
+  "bytes_written": 16420
+}</code></pre>
+
+                <h4><code>GET /api/secrets</code></h4>
+                <p>Retrieves all stored ecosystem secrets from <code>.secrets.yaml</code>. Automatically seeds defaults from existing credential files (<code>.kaggle_users</code>, <code>.GOOGLE_DRIVE</code>, <code>.GITHUB_PAT</code>, <code>.huggingface_token</code>, <code>.mt5_credentials</code>, <code>.SATURN_PAT</code>) if <code>.secrets.yaml</code> does not yet exist.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}</code></pre>
+
+                <h4><code>POST /api/secrets</code></h4>
+                <p>Atomically writes the ecosystem secrets registry to <code>.secrets.yaml</code> and propagates mandatory authentication credentials (such as Kaggle tokens) across dependent projects (<code>lemgendary-datasets</code>, <code>lemgendary-training-suite</code>, and <code>lemgendary-env-manager</code>).</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "count": 1,
+  "message": "Secrets securely persisted and propagated across repositories."
+}</code></pre>
+
+                <h4><code>GET /api/docs/status</code></h4>
+                <p>Reports availability of the local offline documentation hub mounted at <code>/documentation-hub</code> and provides the canonical GitHub Pages URL.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "offline_available": true,
+  "local_url": "http://127.0.0.1:8000/documentation-hub/index.html",
+  "online_url": "https://lemgenda.github.io/ai-training-whitepapers/index.html"
 }</code></pre>
 
                 <h4><code>POST /api/clean</code></h4>

@@ -12,19 +12,25 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="dataset-compiler.html" class="tab-link active">Dataset Compiler</a>
-                <a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
+                <a href="ecosystem-architecture.html" class="tab-link${isArch ? " active" : ""}">Architecture Hub</a>
+                <a href="current-state.html" class="tab-link${isState ? " active" : ""}">Current State</a>
+                <a href="env_manager.html" class="tab-link${isEnv ? " active" : ""}">Env Manager</a>
+                <a href="dataset-compiler.html" class="tab-link${isData ? " active" : ""}">Dataset Compiler</a>
+                <a href="degradation-engine.html" class="tab-link${isDeg ? " active" : ""}">Degradation Engine</a>
+                <a href="training-suite-master.html" class="tab-link${isTrain ? " active" : ""}">Training Suite</a>
+                <a href="ai-studio-whitepaper.html" class="tab-link${isGui ? " active" : ""}">Desktop GUI</a>
+                <a href="gui-control-registry.html" class="tab-link${isReg ? " active" : ""}">GUI Registry</a>
+                <a href="versioning-policy.html" class="tab-link${isVer ? " active" : ""}">Versioning Policy</a>
             </div>
             <h1>Dataset Compiler Suite Whitepaper</h1>
             <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
             <div class="meta">
                 <span>Category 01.2 DATASET</span>
-                <span>Version 16.8.0</span>
+                <span>Version 16.9.6</span>
             </div>
         </header>
 
@@ -32,9 +38,9 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
                 <li><a href="#section-1">1. Abstract</a>
                 </li>
                 <li><a href="#section-3">2. High-Velocity Optimizations &amp; Complexity Mappings</a>
@@ -779,8 +785,8 @@
 
             <h3 id="62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
             
-            <div class="visual-taxonomy" style="margin-top: 20px;">
-                <div class="quadrant" style="margin-bottom: 20px;">
+            <div class="visual-taxonomy" class="mt-20">
+                <div class="quadrant" class="mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
                         <ul>
@@ -790,7 +796,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" style="margin-bottom: 20px;">
+                <div class="quadrant" class="mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
                         <ul>
@@ -800,7 +806,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" style="margin-bottom: 20px;">
+                <div class="quadrant" class="mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.3 Ray Data / Anyscale Distributed Compiler</h3>
                         <ul>
@@ -810,7 +816,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" style="margin-bottom: 20px;">
+                <div class="quadrant" class="mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.4 Cohere / DeepSpeed Data Engine</h3>
                         <ul>
@@ -820,7 +826,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" style="margin-bottom: 20px;">
+                <div class="quadrant" class="mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
                         <ul>
@@ -830,7 +836,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" style="margin-bottom: 20px; border-left: 4px solid var(--accent-color);">
+                <div class="quadrant" class="callout-accent">
                     <div class="quadrant-info">
                         <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.8.0)</h3>
                         <ul>

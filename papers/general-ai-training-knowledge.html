@@ -1,404 +1,2954 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>General AI Training Knowledge &amp; Systems Engineering Specification - LemGendary AI</title>
-    <meta name="description" content="Authoritative reference manual for deep learning training, datasets, model weights, architectures, optimization dynamics, evaluation metrics, and dataset engineering.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
-    
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>General AI Training Knowledge &amp; Systems Engineering Reference</title>
+<link rel="stylesheet" href="../style.css" />
 </head>
-<body class="paper-page">
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="glossary.html">Canonical Glossary</a>
+  <a href="ecosystem-architecture.html">Architecture Hub</a>
+  <a href="manuals-hub.html">Manuals Hub</a>
+  <a href="general-ai-training-knowledge.html" class="active">General AI Knowledge</a>
+</div>
+<nav id="toc" class="toc-fixed-bar"><h2>Contents</h2><ul>
+<li><a href="#general-ai-training-knowledge-systems-engineering-reference">General AI Training Knowledge & Systems Engineering Reference</a>
+<ul>
+<li><a href="#category-00-general-ai-knowledge-reference-specification">Category 00 --- General AI Knowledge Reference Specification</a>
+</ul></li>
+<li><a href="#1-knowledge-architecture">1. Knowledge Architecture</a>
+<li><a href="#2-core-concepts">2. Core Concepts</a>
+<ul>
+<li><a href="#21-dataset">2.1 Dataset</a>
+<li><a href="#22-dataset-split">2.2 Dataset split</a>
+<li><a href="#23-sample-independence">2.3 Sample independence</a>
+<li><a href="#24-data-leakage">2.4 Data leakage</a>
+</ul></li>
+<li><a href="#3-general-dataset-formats">3. General Dataset Formats</a>
+<ul>
+<li><a href="#31-format-decision-framework">3.1 Format decision framework</a>
+<li><a href="#32-csv-tsv">3.2 CSV / TSV</a>
+<ul>
+<li><a href="#strengths">Strengths</a>
+<li><a href="#weaknesses">Weaknesses</a>
+<li><a href="#best-use">Best use</a>
+<li><a href="#poor-use">Poor use</a>
+</ul></li>
+<li><a href="#33-json-lines-jsonl-ndjson">3.3 JSON Lines / JSONL / NDJSON</a>
+<ul>
+<li><a href="#strengths-1">Strengths</a>
+<li><a href="#weaknesses-1">Weaknesses</a>
+<li><a href="#best-use-1">Best use</a>
+<li><a href="#important-distinction">Important distinction</a>
+</ul></li>
+<li><a href="#34-apache-parquet">3.4 Apache Parquet</a>
+<ul>
+<li><a href="#important-properties">Important properties</a>
+<li><a href="#strengths-2">Strengths</a>
+<li><a href="#weaknesses-2">Weaknesses</a>
+<li><a href="#best-use-2">Best use</a>
+</ul></li>
+<li><a href="#35-apache-arrow-arrow-ipc-feather">3.5 Apache Arrow / Arrow IPC / Feather</a>
+<ul>
+<li><a href="#strengths-3">Strengths</a>
+<li><a href="#weaknesses-3">Weaknesses</a>
+<li><a href="#best-use-3">Best use</a>
+</ul></li>
+<li><a href="#36-zarr">3.6 Zarr</a>
+<ul>
+<li><a href="#strengths-4">Strengths</a>
+<li><a href="#weaknesses-4">Weaknesses</a>
+<li><a href="#chunk-design-principle">Chunk design principle</a>
+</ul></li>
+<li><a href="#37-tfrecord">3.7 TFRecord</a>
+<ul>
+<li><a href="#strengths-5">Strengths</a>
+<li><a href="#weaknesses-5">Weaknesses</a>
+<li><a href="#best-use-4">Best use</a>
+</ul></li>
+<li><a href="#38-webdataset">3.8 WebDataset</a>
+<ul>
+<li><a href="#strengths-6">Strengths</a>
+<li><a href="#weaknesses-6">Weaknesses</a>
+<li><a href="#best-use-5">Best use</a>
+</ul></li>
+<li><a href="#39-hdf5">3.9 HDF5</a>
+<ul>
+<li><a href="#strengths-7">Strengths</a>
+<li><a href="#weaknesses-7">Weaknesses</a>
+<li><a href="#best-use-6">Best use</a>
+</ul></li>
+<li><a href="#310-netcdf">3.10 NetCDF</a>
+<ul>
+<li><a href="#strengths-8">Strengths</a>
+<li><a href="#weaknesses-8">Weaknesses</a>
+<li><a href="#best-use-7">Best use</a>
+</ul></li>
+<li><a href="#311-lmdb">3.11 LMDB</a>
+<ul>
+<li><a href="#strengths-9">Strengths</a>
+<li><a href="#weaknesses-9">Weaknesses</a>
+<li><a href="#best-use-8">Best use</a>
+</ul></li>
+<li><a href="#312-mosaicml-mds-streaming-formats">3.12 MosaicML MDS / streaming formats</a>
+<li><a href="#313-format-comparison">3.13 Format comparison</a>
+<li><a href="#lmdb-key-application-defined-good-excellent-local-random-access">LMDB         Key                Application-defined   Good        Excellent   Local random access</a>
+<ul>
+<li><a href="#important-rule">Important rule</a>
+</ul></li></ul></li>
+<li><a href="#4-dataset-structure-and-engineering">4. Dataset Structure and Engineering</a>
+<ul>
+<li><a href="#41-canonical-dataset-layers">4.1 Canonical dataset layers</a>
+<li><a href="#42-dataset-manifest">4.2 Dataset manifest</a>
+<li><a href="#43-dataset-invariants">4.3 Dataset invariants</a>
+</ul></li>
+<li><a href="#5-model-weights-checkpoints-serialization-and-runtime-artifacts">5. Model Weights, Checkpoints, Serialization and Runtime Artifacts</a>
+<ul>
+<li><a href="#51-safetensors">5.1 Safetensors</a>
+<ul>
+<li><a href="#strengths-10">Strengths</a>
+<li><a href="#limitations">Limitations</a>
+<li><a href="#best-use-9">Best use</a>
+</ul></li>
+<li><a href="#52-pytorchptpth">5.2 PyTorch.pt/.pth</a>
+<ul>
+<li><a href="#security-rule">Security rule</a>
+<li><a href="#best-use-10">Best use</a>
+</ul></li>
+<li><a href="#53-onnx">5.3 ONNX</a>
+<ul>
+<li><a href="#strengths-11">Strengths</a>
+<li><a href="#limitations-1">Limitations</a>
+</ul></li>
+<li><a href="#54-gguf">5.4 GGUF</a>
+<ul>
+<li><a href="#best-use-11">Best use</a>
+<li><a href="#important-limitation">Important limitation</a>
+</ul></li>
+<li><a href="#55-ggml">5.5 GGML</a>
+<li><a href="#56-tensorrt-engines">5.6 TensorRT engines</a>
+<ul>
+<li><a href="#critical-portability-rule">Critical portability rule</a>
+</ul></li>
+<li><a href="#57-openvino">5.7 OpenVINO</a>
+<li><a href="#58-core-ml">5.8 Core ML</a>
+<li><a href="#59-tflite-litert-ecosystem">5.9 TFLite / LiteRT ecosystem</a>
+<li><a href="#510-jax-orbax-checkpoints">5.10 JAX / Orbax checkpoints</a>
+<li><a href="#511-weight-format-comparison">5.11 Weight-format comparison</a>
+<li><a href="#tflitelitert-no-general-excellent-yes-edge-oriented-tensorflowgoogle-training-state">TFLite/LiteRT     No general    Excellent                   Yes        Edge-oriented TensorFlow/Google
+training
+state</a>
+</ul></li>
+<li><a href="#6-deep-learning-architecture-knowledge">6. Deep Learning Architecture Knowledge</a>
+<ul>
+<li><a href="#61-multilayer-perceptron-mlp">6.1 Multilayer Perceptron / MLP</a>
+<ul>
+<li><a href="#strengths-12">Strengths</a>
+<li><a href="#weaknesses-10">Weaknesses</a>
+</ul></li>
+<li><a href="#62-cnn">6.2 CNN</a>
+<ul>
+<li><a href="#strengths-13">Strengths</a>
+<li><a href="#weaknesses-11">Weaknesses</a>
+</ul></li>
+<li><a href="#63-resnet">6.3 ResNet</a>
+<li><a href="#64-efficientnet">6.4 EfficientNet</a>
+<li><a href="#65-convnext">6.5 ConvNeXt</a>
+<li><a href="#66-vision-transformer-vit">6.6 Vision Transformer (ViT)</a>
+<ul>
+<li><a href="#strengths-14">Strengths</a>
+<li><a href="#weaknesses-12">Weaknesses</a>
+</ul></li>
+<li><a href="#67-swin-transformer">6.7 Swin Transformer</a>
+<li><a href="#68-transformer">6.8 Transformer</a>
+<ul>
+<li><a href="#core-strengths">Core strengths</a>
+<li><a href="#core-costs">Core costs</a>
+</ul></li>
+<li><a href="#69-u-net">6.9 U-Net</a>
+<li><a href="#610-gan">6.10 GAN</a>
+<ul>
+<li><a href="#strengths-15">Strengths</a>
+<li><a href="#weaknesses-13">Weaknesses</a>
+</ul></li>
+<li><a href="#611-vae">6.11 VAE</a>
+<li><a href="#612-diffusion-models">6.12 Diffusion models</a>
+<li><a href="#613-mixture-of-experts">6.13 Mixture of Experts</a>
+<ul>
+<li><a href="#advantages">Advantages</a>
+<li><a href="#problems">Problems</a>
+</ul></li>
+<li><a href="#614-state-space-models-mamba-style-architectures">6.14 State Space Models / Mamba-style architectures</a>
+<ul>
+<li><a href="#strengths-16">Strengths</a>
+<li><a href="#trade-offs">Trade-offs</a>
+</ul></li>
+<li><a href="#615-architecture-selection-matrix">6.15 Architecture selection matrix</a>
+<li><a href="#multimodal-transformer-based-fusion-modality-specific-encoders-shared-heads">Multimodal                          Transformer-based fusion,
+modality-specific encoders + shared
+heads</a>
+</ul></li>
+<li><a href="#7-training-theory">7. Training Theory</a>
+<ul>
+<li><a href="#71-forward-pass">7.1 Forward pass</a>
+<li><a href="#72-loss">7.2 Loss</a>
+<li><a href="#73-backpropagation">7.3 Backpropagation</a>
+<li><a href="#74-gradient-descent">7.4 Gradient descent</a>
+</ul></li>
+<li><a href="#8-optimizers">8. Optimizers</a>
+<ul>
+<li><a href="#81-sgd">8.1 SGD</a>
+<ul>
+<li><a href="#strengths-17">Strengths</a>
+<li><a href="#weaknesses-14">Weaknesses</a>
+</ul></li>
+<li><a href="#82-momentum">8.2 Momentum</a>
+<li><a href="#83-adam">8.3 Adam</a>
+<li><a href="#84-adamw">8.4 AdamW</a>
+<li><a href="#85-rmsprop">8.5 RMSProp</a>
+<li><a href="#86-lamb-lars">8.6 LAMB / LARS</a>
+<li><a href="#87-lion">8.7 Lion</a>
+<li><a href="#88-sophia">8.8 Sophia</a>
+<li><a href="#89-muon">8.9 Muon</a>
+</ul></li>
+<li><a href="#9-learning-rate-and-schedulers">9. Learning Rate and Schedulers</a>
+<ul>
+<li><a href="#91-warmup">9.1 Warmup</a>
+<li><a href="#92-cosine-decay">9.2 Cosine decay</a>
+<li><a href="#93-onecycle">9.3 OneCycle</a>
+<li><a href="#94-exponential-decay">9.4 Exponential decay</a>
+<li><a href="#95-warmup-stable-decay">9.5 Warmup-Stable-Decay</a>
+</ul></li>
+<li><a href="#10-batch-size-and-gradient-accumulation">10. Batch Size and Gradient Accumulation</a>
+<ul>
+<li><a href="#101-batch-size">10.1 Batch size</a>
+<li><a href="#102-micro-batch">10.2 Micro-batch</a>
+<li><a href="#103-gradient-accumulation">10.3 Gradient accumulation</a>
+</ul></li>
+<li><a href="#11-regularization">11. Regularization</a>
+<ul>
+<li><a href="#111-weight-decay">11.1 Weight decay</a>
+<li><a href="#112-dropout">11.2 Dropout</a>
+<li><a href="#113-droppath-stochastic-depth">11.3 DropPath / stochastic depth</a>
+<li><a href="#114-label-smoothing">11.4 Label smoothing</a>
+<li><a href="#115-mixup">11.5 Mixup</a>
+<li><a href="#116-cutmix">11.6 CutMix</a>
+</ul></li>
+<li><a href="#12-normalization">12. Normalization</a>
+<ul>
+<li><a href="#batchnorm">BatchNorm</a>
+<li><a href="#layernorm">LayerNorm</a>
+<li><a href="#rmsnorm">RMSNorm</a>
+<li><a href="#groupnorm">GroupNorm</a>
+</ul></li>
+<li><a href="#13-mixed-precision">13. Mixed Precision</a>
+<ul>
+<li><a href="#fp16">FP16</a>
+<li><a href="#bf16">BF16</a>
+<li><a href="#fp8">FP8</a>
+<li><a href="#loss-scaling">Loss scaling</a>
+</ul></li>
+<li><a href="#14-distributed-training">14. Distributed Training</a>
+<ul>
+<li><a href="#141-data-parallelism">14.1 Data Parallelism</a>
+<li><a href="#142-ddp">14.2 DDP</a>
+<li><a href="#143-fsdp">14.3 FSDP</a>
+<li><a href="#144-zero">14.4 ZeRO</a>
+<li><a href="#145-tensor-parallelism">14.5 Tensor Parallelism</a>
+<li><a href="#146-pipeline-parallelism">14.6 Pipeline Parallelism</a>
+<li><a href="#147-3d-parallelism">14.7 3D parallelism</a>
+</ul></li>
+<li><a href="#15-parameter-efficient-fine-tuning">15. Parameter-Efficient Fine-Tuning</a>
+<ul>
+<li><a href="#151-lora">15.1 LoRA</a>
+<li><a href="#152-qlora">15.2 QLoRA</a>
+</ul></li>
+<li><a href="#16-llm-post-training">16. LLM Post-Training</a>
+<ul>
+<li><a href="#supervised-fine-tuning-sft">Supervised Fine-Tuning (SFT)</a>
+<li><a href="#preference-optimization">Preference optimization</a>
+<li><a href="#ppo-rlhf">PPO / RLHF</a>
+</ul></li>
+<li><a href="#17-loss-functions">17. Loss Functions</a>
+<ul>
+<li><a href="#classification">Classification</a>
+<li><a href="#regression">Regression</a>
+<li><a href="#vision-restoration">Vision restoration</a>
+<li><a href="#metric-learning">Metric learning</a>
+<li><a href="#ranking">Ranking</a>
+<ul>
+<li><a href="#important-principle">Important principle</a>
+</ul></li></ul></li>
+<li><a href="#18-evaluation-metrics">18. Evaluation Metrics</a>
+<ul>
+<li><a href="#181-classification">18.1 Classification</a>
+<ul>
+<li><a href="#accuracy">Accuracy</a>
+<li><a href="#precision">Precision</a>
+<li><a href="#recall">Recall</a>
+<li><a href="#f1">F1</a>
+<li><a href="#roc-auc">ROC-AUC</a>
+<li><a href="#pr-auc">PR-AUC</a>
+</ul></li>
+<li><a href="#182-detection">18.2 Detection</a>
+<ul>
+<li><a href="#iou">IoU</a>
+<li><a href="#giou-diou-ciou">GIoU / DIoU / CIoU</a>
+<li><a href="#map">mAP</a>
+</ul></li>
+<li><a href="#183-segmentation">18.3 Segmentation</a>
+<ul>
+<li><a href="#iou-jaccard">IoU / Jaccard</a>
+<li><a href="#dice">Dice</a>
+<li><a href="#pixel-accuracy">Pixel accuracy</a>
+<li><a href="#boundary-metrics">Boundary metrics</a>
+</ul></li>
+<li><a href="#184-image-restoration">18.4 Image restoration</a>
+<ul>
+<li><a href="#mse">MSE</a>
+<li><a href="#psnr">PSNR</a>
+<li><a href="#ssim">SSIM</a>
+<li><a href="#ms-ssim">MS-SSIM</a>
+<li><a href="#lpips">LPIPS</a>
+<li><a href="#nima">NIMA</a>
+<li><a href="#niqe-brisque">NIQE / BRISQUE</a>
+</ul></li>
+<li><a href="#185-generative-models">18.5 Generative models</a>
+<ul>
+<li><a href="#fid">FID</a>
+<li><a href="#kid">KID</a>
+<li><a href="#clip-based-metrics">CLIP-based metrics</a>
+<li><a href="#precision-recall-for-generative-distributions">Precision / Recall for generative distributions</a>
+</ul></li>
+<li><a href="#186-language-models">18.6 Language models</a>
+<ul>
+<li><a href="#perplexity">Perplexity</a>
+<li><a href="#exact-match">Exact Match</a>
+<li><a href="#bleu-rouge">BLEU / ROUGE</a>
+<li><a href="#human-evaluation">Human evaluation</a>
+</ul></li>
+<li><a href="#187-time-series-and-forecasting">18.7 Time-series and forecasting</a>
+<ul>
+<li><a href="#mae">MAE</a>
+<li><a href="#mse-1">MSE</a>
+<li><a href="#rmse">RMSE</a>
+<li><a href="#mape">MAPE</a>
+<li><a href="#smape">sMAPE</a>
+<li><a href="#directional-accuracy">Directional accuracy</a>
+<li><a href="#sharpe-ratio">Sharpe ratio</a>
+</ul></li></ul></li>
+<li><a href="#19-dataset-engineering">19. Dataset Engineering</a>
+<ul>
+<li><a href="#191-deduplication">19.1 Deduplication</a>
+<ul>
+<li><a href="#exact-deduplication">Exact deduplication</a>
+<li><a href="#near-duplicate-text">Near-duplicate text</a>
+<li><a href="#perceptual-image-deduplication">Perceptual image deduplication</a>
+<li><a href="#semantic-deduplication">Semantic deduplication</a>
+</ul></li></ul></li>
+<li><a href="#20-class-imbalance">20. Class Imbalance</a>
+<ul><ul>
+<li><a href="#important-warning">Important warning</a>
+</ul></li></ul></li>
+<li><a href="#21-augmentation">21. Augmentation</a>
+<ul><ul>
+<li><a href="#vision">Vision</a>
+<li><a href="#audio">Audio</a>
+<li><a href="#text">Text</a>
+<li><a href="#critical-rule">Critical rule</a>
+</ul></li></ul></li>
+<li><a href="#22-sampling-and-curriculum">22. Sampling and Curriculum</a>
+<ul>
+<li><a href="#temperature-sampling">Temperature sampling</a>
+<li><a href="#curriculum-learning">Curriculum learning</a>
+</ul></li>
+<li><a href="#23-sharding-and-streaming">23. Sharding and Streaming</a>
+<ul><ul>
+<li><a href="#gpu-starvation">GPU starvation</a>
+</ul></li></ul></li>
+<li><a href="#24-data-splitting-best-practices">24. Data Splitting Best Practices</a>
+<ul>
+<li><a href="#random-split">Random split</a>
+<li><a href="#stratified-split">Stratified split</a>
+<li><a href="#group-split">Group split</a>
+<li><a href="#temporal-split">Temporal split</a>
+<li><a href="#spatial-split">Spatial split</a>
+<li><a href="#cross-validation">Cross-validation</a>
+</ul></li>
+<li><a href="#25-training-pathology">25. Training Pathology</a>
+<ul>
+<li><a href="#overfitting">Overfitting</a>
+<li><a href="#underfitting">Underfitting</a>
+<li><a href="#vanishing-gradients">Vanishing gradients</a>
+<li><a href="#exploding-gradients">Exploding gradients</a>
+<li><a href="#nan-divergence">NaN divergence</a>
+<li><a href="#cuda-oom">CUDA OOM</a>
+</ul></li>
+<li><a href="#26-reproducibility">26. Reproducibility</a>
+<li><a href="#27-checkpointing">27. Checkpointing</a>
+<li><a href="#28-hyperparameter-search">28. Hyperparameter Search</a>
+<li><a href="#29-model-selection">29. Model Selection</a>
+<li><a href="#30-quantization">30. Quantization</a>
+<li><a href="#31-knowledge-for-an-ai-training-helper">31. Knowledge for an AI Training Helper</a>
+<li><a href="#32-ai-helper-decision-rules">32. AI Helper Decision Rules</a>
+<li><a href="#33-common-ai-training-misconceptions">33. Common AI Training Misconceptions</a>
+<ul><ul>
+<li><a href="#more-data-always-improves-the-model">"More data always improves the model."</a>
+<li><a href="#higher-training-accuracy-means-a-better-model">"Higher training accuracy means a better model."</a>
+<li><a href="#lower-loss-always-means-better-output">"Lower loss always means better output."</a>
+<li><a href="#bigger-batch-size-is-always-faster">"Bigger batch size is always faster."</a>
+<li><a href="#more-epochs-are-always-better">"More epochs are always better."</a>
+<li><a href="#a-newer-architecture-is-automatically-superior">"A newer architecture is automatically superior."</a>
+<li><a href="#fp16-and-bf16-are-equivalent">"FP16 and BF16 are equivalent."</a>
+<li><a href="#onnx-is-a-model-weight-format-like-safetensors">"ONNX is a model weight format like Safetensors."</a>
+<li><a href="#gguf-is-a-universal-ai-model-format">"GGUF is a universal AI model format."</a>
+<li><a href="#a-checkpoint-and-a-model-file-are-the-same">"A checkpoint and a model file are the same."</a>
+</ul></li></ul></li>
+<li><a href="#34-comparison-knowledge-the-ai-helper-should-master">34. Comparison Knowledge the AI Helper Should Master</a>
+<li><a href="#35-general-recommendations-by-scenario">35. General Recommendations by Scenario</a>
+<ul>
+<li><a href="#large-image-restoration-dataset">Large image restoration dataset</a>
+<li><a href="#large-tabular-dataset">Large tabular dataset</a>
+<li><a href="#llm-instructionsft-dataset">LLM instruction/SFT dataset</a>
+<li><a href="#scientific-n-dimensional-data">Scientific N-dimensional data</a>
+<li><a href="#local-llm-inference">Local LLM inference</a>
+<li><a href="#cross-platform-inference">Cross-platform inference</a>
+<li><a href="#nvidia-production-inference">NVIDIA production inference</a>
+</ul></li>
+<li><a href="#36-general-ai-knowledge-safety-and-reliability-rules">36. General AI Knowledge Safety and Reliability Rules</a>
+<li><a href="#37-recommended-knowledge-base-metadata">37. Recommended Knowledge-Base Metadata</a>
+<li><a href="#38-final-general-ai-training-continuum">38. Final General AI Training Continuum</a>
+<li><a href="#39-summary">39. Summary</a>
+<li><a href="#appendix-a-training-corpus-coverage-checklist">Appendix A: Training-Corpus Coverage Checklist</a>
+<li><a href="#appendix-b-important-terminology-distinctions">Appendix B: Important Terminology Distinctions</a>
+<ul>
+<li><a href="#fid-human-quality-fid-is-a-distributional-statistic-not-a-complete-human-evaluation-substitute">FID                     Human quality           FID is a distributional
+statistic, not a
+complete
+human-evaluation
+substitute</a>
+</ul></li>
+<li><a href="#appendix-c-required-behavior-for-derived-ai-helper-training-examples">Appendix C: Required Behavior for Derived AI-Helper Training Examples</a>
+<li><a href="#appendix-d-source-authority-boundary">Appendix D: Source Authority Boundary</a>
+<li><a href="#document-end">Document End</a>
 
-    
+</ul></nav>
+<main id="content" class="toc-fixed-content">
+<h1 id="general-ai-training-knowledge-systems-engineering-reference">General AI Training Knowledge &amp; Systems Engineering Reference</h1>
+<h2 id="category-00-general-ai-knowledge-reference-specification">Category 00 --- General AI Knowledge Reference Specification</h2>
+<p><strong>Document status:</strong> Canonical general-knowledge reference<br/>
+<strong>Scope:</strong> Universal AI/ML systems engineering, training dynamics, architecture taxonomy, and dataset engineering independent of specific software implementations.<br/>
+<strong>Primary purpose:</strong> Provide an exhaustive, mathematically rigorous, and technically authoritative reference manual for deep learning training, dataset container architectures, model selection, loss formulation, optimization, evaluation, and production deployment decisions.</p>
+<blockquote>
+<p><strong>Boundary:</strong> This specification describes foundational AI/ML scientific principles, algorithmic formalisms, and industry-standard engineering practices. It remains completely decoupled from proprietary software implementations, vendor-specific GUI wrappers, and localized workflow paths. Implementation-specific configurations and project runtime defaults belong exclusively in dedicated application manuals.</p>
+</blockquote>
+<hr/>
+<hr/>
+<h1 id="1-knowledge-architecture">1. Knowledge Architecture</h1>
+<p>The AI training lifecycle can be represented as:</p>
+<pre><code class="language-text">DATA
+  |
+  +--&gt; acquisition
+  +--&gt; validation
+  +--&gt; cleaning / deduplication
+  +--&gt; labeling / annotation
+  +--&gt; splitting
+  +--&gt; transformation / augmentation
+  +--&gt; serialization / sharding
+  |
+  v
+MODEL
+  |
+  +--&gt; architecture
+  +--&gt; parameters / weights
+  +--&gt; tokenizer / preprocessing
+  +--&gt; objective / loss
+  |
+  v
+TRAINING
+  |
+  +--&gt; optimizer
+  +--&gt; learning-rate schedule
+  +--&gt; regularization
+  +--&gt; precision
+  +--&gt; batching
+  +--&gt; distributed execution
+  |
+  v
+EVALUATION
+  |
+  +--&gt; task metrics
+  +--&gt; robustness
+  +--&gt; calibration
+  +--&gt; OOD testing
+  +--&gt; human evaluation where applicable
+  |
+  v
+ARTIFACT
+  |
+  +--&gt; checkpoint
+  +--&gt; weights
+  +--&gt; exported graph
+  +--&gt; optimized / quantized runtime
+  |
+  v
+DEPLOYMENT
+</code></pre>
+<p>A strong AI system is not produced by choosing an architecture in
+isolation. Dataset quality, task definition, objective, optimization,
+evaluation methodology, hardware, and deployment constraints interact.</p>
+<hr/>
+<h1 id="2-core-concepts">2. Core Concepts</h1>
+<h2 id="21-dataset">2.1 Dataset</h2>
+<p>A dataset is a collection of samples and associated metadata intended
+for a defined analytical or machine-learning purpose.</p>
+<p>A sample may contain:</p>
+<ul>
+<li>input features;</li>
+<li>target labels;</li>
+<li>annotations;</li>
+<li>metadata;</li>
+<li>provenance;</li>
+<li>identifiers;</li>
+<li>quality flags;</li>
+<li>timestamps;</li>
+<li>masks;</li>
+<li>bounding boxes;</li>
+<li>captions;</li>
+<li>embeddings;</li>
+<li>auxiliary targets.</li>
+</ul>
+<p>A dataset should have an explicit <strong>task contract</strong>:</p>
+<pre><code class="language-yaml">task:
+  modality: image | text | audio | video | tabular | multimodal | time_series
+  objective: classification | detection | segmentation | restoration | generation | regression | ...
+  input_schema: ...
+  target_schema: ...
+  preprocessing: ...
+  split_policy: ...
+  evaluation_protocol: ...
+</code></pre>
+<h2 id="22-dataset-split">2.2 Dataset split</h2>
+<p>Common splits are:</p>
+<ul>
+<li>training;</li>
+<li>validation;</li>
+<li>test.</li>
+</ul>
+<p>The validation set supports model selection and hyperparameter
+decisions. The test set should remain isolated until final evaluation. A
+third-party benchmark may serve as an external test set.</p>
+<p>For grouped, temporal, medical, geospatial, or otherwise correlated
+data, random row-level splitting may be invalid.</p>
+<h2 id="23-sample-independence">2.3 Sample independence</h2>
+<p>Many ML assumptions concern independent and identically distributed
+observations, but real datasets often contain dependencies.</p>
+<p>Examples:</p>
+<ul>
+<li>multiple images from one patient;</li>
+<li>frames from one video;</li>
+<li>multiple measurements from one machine;</li>
+<li>several crops from one source image;</li>
+<li>documents from the same author;</li>
+<li>repeated financial observations from the same instrument.</li>
+</ul>
+<p>When correlated samples cross train/validation boundaries, evaluation
+can become optimistically biased.</p>
+<h2 id="24-data-leakage">2.4 Data leakage</h2>
+<p>Data leakage occurs when information unavailable at inference time
+influences training or model selection.</p>
+<p>Major forms include:</p>
+<ol>
+<li><strong>Target leakage</strong> --- a feature directly or indirectly contains the
+target.</li>
+<li><strong>Temporal leakage</strong> --- future information is used to predict the
+past.</li>
+<li><strong>Group leakage</strong> --- related entities occur in multiple splits.</li>
+<li><strong>Preprocessing leakage</strong> --- statistics are computed using
+validation/test data.</li>
+<li><strong>Benchmark contamination</strong> --- evaluation examples or close
+derivatives appear in training.</li>
+<li><strong>Augmentation leakage</strong> --- augmented variants of the same source
+cross splits.</li>
+</ol>
+<hr/>
+<h1 id="3-general-dataset-formats">3. General Dataset Formats</h1>
+<p>Dataset formats are not interchangeable. Format selection depends on
+access pattern, modality, schema, scale, storage backend, framework,
+concurrency, compression, and whether training requires random access or
+sequential streaming.</p>
+<h2 id="31-format-decision-framework">3.1 Format decision framework</h2>
+<p>Use these questions:</p>
+<pre><code class="language-text">1. Is the data tabular, tensor-like, document-oriented, or multimodal?
+2. Is access predominantly random or sequential?
+3. Is the dataset local or object-storage based?
+4. Does training require streaming?
+5. Do samples have variable structure?
+6. Are strong schema and type guarantees required?
+7. Is column projection important?
+8. Is chunk-level parallelism important?
+9. Does the framework have native support?
+10. Is the format an interchange format, training format, or both?
+</code></pre>
+<hr/>
+<h2 id="32-csv-tsv">3.2 CSV / TSV</h2>
+<p>CSV and TSV are simple delimited text formats.</p>
+<h3 id="strengths">Strengths</h3>
+<ul>
+<li>human-readable;</li>
+<li>ubiquitous;</li>
+<li>easy to inspect;</li>
+<li>simple interchange;</li>
+<li>supported by nearly every data tool.</li>
+</ul>
+<h3 id="weaknesses">Weaknesses</h3>
+<ul>
+<li>textual parsing overhead;</li>
+<li>weak schema/type enforcement;</li>
+<li>escaping and quoting edge cases;</li>
+<li>larger storage footprint than typed binary formats;</li>
+<li>poor random access without an index;</li>
+<li>expensive repeated parsing during training.</li>
+</ul>
+<h3 id="best-use">Best use</h3>
+<ul>
+<li>small to medium tabular datasets;</li>
+<li>interchange;</li>
+<li>inspection;</li>
+<li>source ingestion.</li>
+</ul>
+<h3 id="poor-use">Poor use</h3>
+<p>Large-scale high-throughput GPU training where the same text must be
+reparsed repeatedly.</p>
+<hr/>
+<h2 id="33-json-lines-jsonl-ndjson">3.3 JSON Lines / JSONL / NDJSON</h2>
+<p>JSON Lines stores one JSON object per line.</p>
+<p>Example:</p>
+<pre><code class="language-json">{"id":1,"text":"hello","label":"positive"}
+{"id":2,"text":"world","label":"negative"}
+</code></pre>
+<h3 id="strengths-1">Strengths</h3>
+<ul>
+<li>one record per line;</li>
+<li>easy append and streaming;</li>
+<li>human-readable;</li>
+<li>flexible nested records;</li>
+<li>excellent for language-model instruction/SFT source data;</li>
+<li>easy to process incrementally.</li>
+</ul>
+<h3 id="weaknesses-1">Weaknesses</h3>
+<ul>
+<li>parsing cost;</li>
+<li>larger than binary formats;</li>
+<li>schema is convention rather than physical enforcement;</li>
+<li>random access requires indexing;</li>
+<li>malformed records must be handled explicitly.</li>
+</ul>
+<h3 id="best-use-1">Best use</h3>
+<ul>
+<li>instruction tuning;</li>
+<li>chat/SFT corpora;</li>
+<li>document metadata;</li>
+<li>preprocessing pipelines;</li>
+<li>streaming ingestion.</li>
+</ul>
+<h3 id="important-distinction">Important distinction</h3>
+<p>JSONL is an excellent <strong>source/interchange format</strong> for LLM training
+examples, but it is not automatically the optimal final representation
+for very large high-throughput training.</p>
+<hr/>
+<h2 id="34-apache-parquet">3.4 Apache Parquet</h2>
+<p>Parquet is a column-oriented binary storage format.</p>
+<p>A Parquet file contains:</p>
+<pre><code class="language-text">File
+ |
+ +-- Row Groups
+      |
+      +-- Column Chunks
+           |
+           +-- Pages
+</code></pre>
+<h3 id="important-properties">Important properties</h3>
+<ul>
+<li>typed schema;</li>
+<li>columnar storage;</li>
+<li>compression;</li>
+<li>dictionary encoding;</li>
+<li>statistics;</li>
+<li>predicate pushdown;</li>
+<li>projection pushdown;</li>
+<li>efficient analytical scans.</li>
+</ul>
+<h3 id="strengths-2">Strengths</h3>
+<ul>
+<li>excellent tabular analytics;</li>
+<li>strong compression;</li>
+<li>efficient column selection;</li>
+<li>rich ecosystem;</li>
+<li>excellent integration with Apache Arrow and query engines.</li>
+</ul>
+<h3 id="weaknesses-2">Weaknesses</h3>
+<ul>
+<li>not inherently a tensor-training format;</li>
+<li>row-oriented random sample access can be less natural than key-value
+or sharded sample stores;</li>
+<li>decoding overhead may matter for extremely latency-sensitive
+training;</li>
+<li>many small files can become an operational problem.</li>
+</ul>
+<h3 id="best-use-2">Best use</h3>
+<ul>
+<li>tabular datasets;</li>
+<li>metadata;</li>
+<li>labels and annotations;</li>
+<li>embeddings;</li>
+<li>analytical preprocessing;</li>
+<li>feature stores;</li>
+<li>large structured datasets.</li>
+</ul>
+<hr/>
+<h2 id="35-apache-arrow-arrow-ipc-feather">3.5 Apache Arrow / Arrow IPC / Feather</h2>
+<p>Apache Arrow defines a language-independent in-memory columnar
+representation and interoperability ecosystem.</p>
+<h3 id="strengths-3">Strengths</h3>
+<ul>
+<li>efficient columnar memory layout;</li>
+<li>zero-copy interoperability in appropriate situations;</li>
+<li>excellent Python/C++/Rust ecosystem;</li>
+<li>vectorized processing;</li>
+<li>efficient interchange between analytical systems.</li>
+</ul>
+<h3 id="weaknesses-3">Weaknesses</h3>
+<ul>
+<li>Arrow is primarily a memory/interchange model rather than a
+universal training-dataset format;</li>
+<li>large analytical tables may still require an appropriate on-disk
+layout;</li>
+<li>tensor-heavy workloads may be better represented by chunked array
+formats.</li>
+</ul>
+<h3 id="best-use-3">Best use</h3>
+<ul>
+<li>preprocessing;</li>
+<li>analytical pipelines;</li>
+<li>interchange;</li>
+<li>tabular data;</li>
+<li>integration between languages and systems.</li>
+</ul>
+<hr/>
+<h2 id="36-zarr">3.6 Zarr</h2>
+<p>Zarr stores N-dimensional arrays in independently addressable chunks.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">Array
+ |
+ +-- Chunk (0,0,0)
+ +-- Chunk (0,0,1)
+ +-- Chunk (0,1,0)
+ +-- ...
+</code></pre>
+<h3 id="strengths-4">Strengths</h3>
+<ul>
+<li>N-dimensional arrays;</li>
+<li>chunk-level access;</li>
+<li>cloud/object-storage friendly designs;</li>
+<li>independent chunk compression;</li>
+<li>parallel reads/writes;</li>
+<li>excellent for scientific and imaging workloads.</li>
+</ul>
+<h3 id="weaknesses-4">Weaknesses</h3>
+<ul>
+<li>poor chunk design can cause severe I/O amplification;</li>
+<li>many small objects can stress object stores;</li>
+<li>metadata and storage layout require engineering;</li>
+<li>not automatically optimal for every deep-learning sample format.</li>
+</ul>
+<h3 id="chunk-design-principle">Chunk design principle</h3>
+<p>Choose chunks according to the expected access pattern.</p>
+<p>If training usually reads:</p>
+<pre><code class="language-text">sample -&gt; complete image
+</code></pre>
+<p>then chunking individual samples can be appropriate.</p>
+<p>If analysis usually reads:</p>
+<pre><code class="language-text">all time points -&gt; one spatial location
+</code></pre>
+<p>a different chunk orientation is preferable.</p>
+<hr/>
+<h2 id="37-tfrecord">3.7 TFRecord</h2>
+<p>TFRecord is a sequential binary record format strongly associated with
+TensorFlow.</p>
+<p>A record contains length information, integrity fields, and serialized
+payload data.</p>
+<h3 id="strengths-5">Strengths</h3>
+<ul>
+<li>efficient sequential streaming;</li>
+<li>mature TensorFlow integration;</li>
+<li>good distributed ingestion;</li>
+<li>suitable for large training pipelines.</li>
+</ul>
+<h3 id="weaknesses-5">Weaknesses</h3>
+<ul>
+<li>less convenient outside TensorFlow ecosystems;</li>
+<li>sequential access is natural;</li>
+<li>random access requires auxiliary indexing;</li>
+<li>serialized feature schemas must be managed.</li>
+</ul>
+<h3 id="best-use-4">Best use</h3>
+<ul>
+<li>TensorFlow pipelines;</li>
+<li>TPU-oriented input pipelines;</li>
+<li>sequential large-scale training.</li>
+</ul>
+<hr/>
+<h2 id="38-webdataset">3.8 WebDataset</h2>
+<p>WebDataset commonly represents samples inside TAR shards.</p>
+<p>Example:</p>
+<pre><code class="language-text">000001.jpg
+000001.json
+000001.txt
 
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo" style="display: inline-block;">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="general-ai-training-knowledge.html" class="tab-link active">General AI Knowledge</a>
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="training-pathology.html" class="tab-link">Training Pathology</a>
-                <a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
-                <a href="glossary.html" class="tab-link">Canonical Glossary</a>
-            </div>
-            <h1>General AI Training Knowledge &amp; Systems Engineering Specification</h1>
-            <p class="subtitle">Authoritative Systems Reference for Multi-Modal Data Containers, Weight Serialization, Neural Architectures, Optimization Dynamics, Evaluation Formulations, and Dataset Engineering</p>
-            <div class="meta">
-                <span>Category 00 MASTER REFERENCE</span>
-                <span>Specification v16.7.3</span>
-                <span>Domain: Deep Learning Systems Engineering</span>
-            </div>
-        </header>
+000002.jpg
+000002.json
+000002.txt
+</code></pre>
+<p>Files sharing a sample key form one logical sample.</p>
+<h3 id="strengths-6">Strengths</h3>
+<ul>
+<li>sequential I/O;</li>
+<li>simple sharding;</li>
+<li>object-storage friendly;</li>
+<li>multimodal samples;</li>
+<li>distributed training;</li>
+<li>easy shard-level partitioning;</li>
+<li>efficient streaming.</li>
+</ul>
+<h3 id="weaknesses-6">Weaknesses</h3>
+<ul>
+<li>not naturally random-access oriented;</li>
+<li>shard management matters;</li>
+<li>sample-to-shard assignment affects distributed efficiency;</li>
+<li>TAR itself does not provide rich typed schema semantics.</li>
+</ul>
+<h3 id="best-use-5">Best use</h3>
+<ul>
+<li>computer vision;</li>
+<li>multimodal training;</li>
+<li>image/text pairs;</li>
+<li>video;</li>
+<li>large-scale streaming training.</li>
+</ul>
+<hr/>
+<h2 id="39-hdf5">3.9 HDF5</h2>
+<p>HDF5 provides hierarchical groups and multidimensional datasets inside a
+single container.</p>
+<pre><code class="language-text">/
++-- images
++-- labels
++-- metadata
++-- calibration
+</code></pre>
+<h3 id="strengths-7">Strengths</h3>
+<ul>
+<li>scientific computing;</li>
+<li>multidimensional arrays;</li>
+<li>chunking;</li>
+<li>compression;</li>
+<li>rich metadata;</li>
+<li>mature ecosystem.</li>
+</ul>
+<h3 id="weaknesses-7">Weaknesses</h3>
+<ul>
+<li>multiprocessing/concurrency requires care;</li>
+<li>single-file access can create operational bottlenecks;</li>
+<li>file locking and driver behavior depend on environment;</li>
+<li>object-storage workflows can be less natural than chunk/object
+formats.</li>
+</ul>
+<h3 id="best-use-6">Best use</h3>
+<ul>
+<li>scientific datasets;</li>
+<li>microscopy;</li>
+<li>physics;</li>
+<li>dense multidimensional arrays;</li>
+<li>legacy scientific pipelines.</li>
+</ul>
+<hr/>
+<h2 id="310-netcdf">3.10 NetCDF</h2>
+<p>NetCDF is designed for scientific multidimensional data, especially
+geospatial and climate data.</p>
+<p>Typical dimensions:</p>
+<pre><code class="language-text">time
+latitude
+longitude
+level
+</code></pre>
+<h3 id="strengths-8">Strengths</h3>
+<ul>
+<li>scientific metadata;</li>
+<li>coordinate systems;</li>
+<li>gridded environmental data;</li>
+<li>integration with xarray and scientific Python.</li>
+</ul>
+<h3 id="weaknesses-8">Weaknesses</h3>
+<ul>
+<li>specialized rather than general-purpose ML storage;</li>
+<li>access pattern and chunking must be designed carefully;</li>
+<li>may require transformation before high-throughput model training.</li>
+</ul>
+<h3 id="best-use-7">Best use</h3>
+<ul>
+<li>climate;</li>
+<li>weather;</li>
+<li>oceanography;</li>
+<li>geospatial scientific datasets.</li>
+</ul>
+<hr/>
+<h2 id="311-lmdb">3.11 LMDB</h2>
+<p>LMDB is an embedded transactional key-value database using memory
+mapping.</p>
+<h3 id="strengths-9">Strengths</h3>
+<ul>
+<li>fast key-based lookup;</li>
+<li>mature transactional semantics;</li>
+<li>efficient local random access;</li>
+<li>useful for datasets with sample IDs as keys.</li>
+</ul>
+<h3 id="weaknesses-9">Weaknesses</h3>
+<ul>
+<li>storage is less transparent than loose files;</li>
+<li>environment configuration matters;</li>
+<li>object-store-native workflows are not its primary strength.</li>
+</ul>
+<h3 id="best-use-8">Best use</h3>
+<ul>
+<li>local key-value datasets;</li>
+<li>image patches;</li>
+<li>embeddings;</li>
+<li>random-access sample stores.</li>
+</ul>
+<hr/>
+<h2 id="312-mosaicml-mds-streaming-formats">3.12 MosaicML MDS / streaming formats</h2>
+<p>Streaming dataset systems commonly divide datasets into binary shards
+plus metadata/index information.</p>
+<p>Typical goals:</p>
+<ul>
+<li>deterministic shuffling;</li>
+<li>streaming;</li>
+<li>local caching;</li>
+<li>worker resumption;</li>
+<li>distributed ingestion.</li>
+</ul>
+<p>They can be excellent when the training framework and infrastructure are
+designed around streaming.</p>
+<hr/>
+<h2 id="313-format-comparison">3.13 Format comparison</h2>
+<hr/>
+<p>Format       Best access        Schema                Streaming   Random      Best domain
+access</p>
+<hr/>
+<p>CSV/TSV      Row scan           Weak                  Yes         Poor        Simple tabular</p>
+<p>JSONL        Record stream      Flexible              Excellent   Poor        LLM/SFT/source data
+without
+index</p>
+<p>Parquet      Column/row-group   Strong                Good        Moderate    Tabular/analytics</p>
+<p>Arrow IPC    Columnar           Strong                Good        Good        Interchange/analytics</p>
+<p>Zarr         Chunk              Strong                Good        Excellent   N-D arrays
+by chunk</p>
+<p>TFRecord     Sequential         Serialized features   Excellent   Poor        TensorFlow
+without
+index</p>
+<p>WebDataset   Shard/sample       Convention-based      Excellent   Poor        Vision/multimodal
+stream</p>
+<p>HDF5         Dataset/chunk      Strong                Possible    Good        Scientific arrays</p>
+<p>NetCDF       Dimension/chunk    Strong                Possible    Good        Geoscience</p>
+<h2 id="lmdb-key-application-defined-good-excellent-local-random-access">LMDB         Key                Application-defined   Good        Excellent   Local random access</h2>
+<h3 id="important-rule">Important rule</h3>
+<p><strong>There is no universally best dataset format.</strong></p>
+<p>The correct choice follows the training access pattern.</p>
+<hr/>
+<h1 id="4-dataset-structure-and-engineering">4. Dataset Structure and Engineering</h1>
+<h2 id="41-canonical-dataset-layers">4.1 Canonical dataset layers</h2>
+<p>A robust pipeline separates:</p>
+<pre><code class="language-text">RAW
+ |
+ +-- immutable source data
+ |
+ v
+NORMALIZED
+ |
+ +-- decoded/validated representation
+ |
+ v
+CURATED
+ |
+ +-- deduplicated
+ +-- labeled
+ +-- filtered
+ |
+ v
+TRAINING
+ |
+ +-- split
+ +-- transformed
+ +-- serialized
+ +-- sharded
+ |
+ v
+DEPLOYMENT / ARCHIVE
+</code></pre>
+<h2 id="42-dataset-manifest">4.2 Dataset manifest</h2>
+<p>A production dataset should have a manifest containing at least:</p>
+<pre><code class="language-yaml">dataset_id:
+dataset_version:
+task:
+modality:
+sample_count:
+schema:
+source:
+provenance:
+license:
+split_policy:
+train_count:
+validation_count:
+test_count:
+format:
+shard_count:
+compression:
+checksum:
+preprocessing:
+label_schema:
+quality_checks:
+</code></pre>
+<h2 id="43-dataset-invariants">4.3 Dataset invariants</h2>
+<p>Before training, validate:</p>
+<ul>
+<li>schema;</li>
+<li>missing values;</li>
+<li>corrupted samples;</li>
+<li>duplicate IDs;</li>
+<li>duplicate content;</li>
+<li>label validity;</li>
+<li>class distribution;</li>
+<li>split isolation;</li>
+<li>dimensions;</li>
+<li>channel ordering;</li>
+<li>dtype;</li>
+<li>value ranges;</li>
+<li>normalization;</li>
+<li>color space where relevant;</li>
+<li>annotation bounds;</li>
+<li>timestamp ordering where relevant;</li>
+<li>license/provenance;</li>
+<li>checksum/integrity.</li>
+</ul>
+<hr/>
+<h1 id="5-model-weights-checkpoints-serialization-and-runtime-artifacts">5. Model Weights, Checkpoints, Serialization and Runtime Artifacts</h1>
+<p>A critical distinction:</p>
+<pre><code class="language-text">TRAINING CHECKPOINT
+       |
+       +-- model parameters
+       +-- optimizer state
+       +-- scheduler state
+       +-- scaler state
+       +-- epoch/step
+       +-- RNG state
+       +-- configuration
+       |
+       v
+MODEL WEIGHTS
+       |
+       v
+EXPORTED MODEL
+       |
+       +-- ONNX
+       +-- TensorFlow SavedModel
+       +-- TorchScript where applicable
+       +-- Core ML
+       +-- TensorRT engine
+       +-- other runtime artifacts
+</code></pre>
+<p>A deployment artifact is not necessarily a training checkpoint.</p>
+<hr/>
+<h2 id="51-safetensors">5.1 Safetensors</h2>
+<p>Safetensors is a tensor serialization format designed around a simple
+header plus raw tensor storage.</p>
+<h3 id="strengths-10">Strengths</h3>
+<ul>
+<li>avoids Python pickle execution semantics;</li>
+<li>explicit tensor metadata;</li>
+<li>efficient loading;</li>
+<li>memory mapping can be used by compatible implementations;</li>
+<li>strong ecosystem support in modern model repositories.</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li>stores tensors, not arbitrary Python training state;</li>
+<li>optimizer state must be stored separately or as additional tensors;</li>
+<li>a Safetensors file does not by itself describe the entire executable
+model architecture.</li>
+</ul>
+<h3 id="best-use-9">Best use</h3>
+<ul>
+<li>model weights;</li>
+<li>safe interchange;</li>
+<li>Hugging Face ecosystem;</li>
+<li>inference and fine-tuning checkpoints.</li>
+</ul>
+<hr/>
+<h2 id="52-pytorchptpth">5.2 PyTorch <code>.pt</code> / <code>.pth</code></h2>
+<p>PyTorch commonly uses <code>torch.save</code> / <code>torch.load</code> for checkpoints.</p>
+<p>Depending on how the file was produced, it can contain:</p>
+<ul>
+<li>a state dictionary;</li>
+<li>optimizer state;</li>
+<li>scheduler state;</li>
+<li>arbitrary Python objects;</li>
+<li>complete serialized objects.</li>
+</ul>
+<h3 id="security-rule">Security rule</h3>
+<p>Do not blindly deserialize untrusted PyTorch pickle-based artifacts.</p>
+<p>Prefer safer state-dict workflows and formats such as Safetensors where
+supported.</p>
+<h3 id="best-use-10">Best use</h3>
+<ul>
+<li>native PyTorch training;</li>
+<li>research checkpoints;</li>
+<li>complete training-state snapshots when trust is established.</li>
+</ul>
+<hr/>
+<h2 id="53-onnx">5.3 ONNX</h2>
+<p>ONNX is an open model interchange representation.</p>
+<p>It describes:</p>
+<ul>
+<li>computational graphs;</li>
+<li>operators;</li>
+<li>tensors;</li>
+<li>shapes;</li>
+<li>metadata.</li>
+</ul>
+<p>An ONNX model is intended to be executed by an ONNX-compatible runtime
+rather than directly being a PyTorch training checkpoint.</p>
+<h3 id="strengths-11">Strengths</h3>
+<ul>
+<li>cross-framework interchange;</li>
+<li>broad inference-runtime ecosystem;</li>
+<li>graph-level optimization;</li>
+<li>CPU/GPU/accelerator deployment.</li>
+</ul>
+<h3 id="limitations-1">Limitations</h3>
+<ul>
+<li>operator compatibility matters;</li>
+<li>dynamic shapes can complicate optimization;</li>
+<li>training support is not equivalent to native framework training;</li>
+<li>export can expose unsupported or numerically different operations.</li>
+</ul>
+<hr/>
+<h2 id="54-gguf">5.4 GGUF</h2>
+<p>GGUF is a model-file format strongly associated with llama.cpp and
+related LLM inference ecosystems.</p>
+<p>It supports:</p>
+<ul>
+<li>tensor storage;</li>
+<li>metadata;</li>
+<li>quantized tensors;</li>
+<li>memory-mapped inference;</li>
+<li>CPU/GPU-oriented LLM execution.</li>
+</ul>
+<h3 id="best-use-11">Best use</h3>
+<ul>
+<li>local LLM inference;</li>
+<li>quantized transformer deployment;</li>
+<li>llama.cpp-compatible ecosystems.</li>
+</ul>
+<h3 id="important-limitation">Important limitation</h3>
+<p>GGUF should not be treated as a universal model format for arbitrary
+vision or scientific models.</p>
+<hr/>
+<h2 id="55-ggml">5.5 GGML</h2>
+<p>GGML is an older ecosystem and tensor/model representation associated
+with early llama.cpp implementations.</p>
+<p>GGUF largely replaced it for modern llama.cpp model packaging.</p>
+<hr/>
+<h2 id="56-tensorrt-engines">5.6 TensorRT engines</h2>
+<p>TensorRT builds optimized inference engines for NVIDIA hardware.</p>
+<p>Optimizations can include:</p>
+<ul>
+<li>kernel selection;</li>
+<li>layer fusion;</li>
+<li>precision conversion;</li>
+<li>memory planning;</li>
+<li>hardware-specific execution.</li>
+</ul>
+<h3 id="critical-portability-rule">Critical portability rule</h3>
+<p>A serialized TensorRT engine may depend on:</p>
+<ul>
+<li>GPU architecture;</li>
+<li>TensorRT version;</li>
+<li>CUDA/runtime compatibility;</li>
+<li>build settings.</li>
+</ul>
+<p>Therefore it is not equivalent to a portable model-weight file.</p>
+<hr/>
+<h2 id="57-openvino">5.7 OpenVINO</h2>
+<p>OpenVINO provides an intermediate representation and optimized runtime
+ecosystem primarily associated with Intel hardware.</p>
+<p>It supports optimized inference on:</p>
+<ul>
+<li>CPUs;</li>
+<li>integrated GPUs;</li>
+<li>discrete GPUs;</li>
+<li>supported accelerators.</li>
+</ul>
+<hr/>
+<h2 id="58-core-ml">5.8 Core ML</h2>
+<p>Core ML is Apple's model deployment ecosystem.</p>
+<p>It targets Apple devices and can integrate with:</p>
+<ul>
+<li>CPU;</li>
+<li>GPU;</li>
+<li>Neural Engine where supported.</li>
+</ul>
+<p>Model conversion and supported operations depend on the specific model
+and Core ML version.</p>
+<hr/>
+<h2 id="59-tflite-litert-ecosystem">5.9 TFLite / LiteRT ecosystem</h2>
+<p>TensorFlow Lite, now evolving toward LiteRT terminology in Google's
+ecosystem, targets efficient deployment on constrained and mobile
+hardware.</p>
+<p>Typical goals include:</p>
+<ul>
+<li>low memory;</li>
+<li>low latency;</li>
+<li>mobile/edge inference;</li>
+<li>quantization.</li>
+</ul>
+<hr/>
+<h2 id="510-jax-orbax-checkpoints">5.10 JAX / Orbax checkpoints</h2>
+<p>JAX ecosystems often separate model state from executable architecture
+and use checkpoint systems such as Orbax.</p>
+<p>Checkpointing can preserve:</p>
+<ul>
+<li>arrays;</li>
+<li>optimizer state;</li>
+<li>training state;</li>
+<li>metadata.</li>
+</ul>
+<p>This is conceptually closer to a training-state system than a universal
+deployment format.</p>
+<hr/>
+<h2 id="511-weight-format-comparison">5.11 Weight-format comparison</h2>
+<hr/>
+<p>Format              Training    Inference          Quantization          Portability Primary ecosystem
+state</p>
+<hr/>
+<p>Safetensors          Limited          Yes                   Yes                 High PyTorch/HF
+unless state
+encoded</p>
+<p>PyTorch            Excellent          Yes   Framework-dependent          Medium/High PyTorch
+checkpoint</p>
+<p>ONNX            Not a normal    Excellent                   Yes                 High Cross-runtime
+training
+checkpoint</p>
+<p>GGUF              No general    Excellent             Excellent          High within llama.cpp
+training          for                                  ecosystem
+state    supported
+LLMs</p>
+<p>TensorRT engine           No    Excellent             Excellent   Hardware-dependent NVIDIA</p>
+<p>OpenVINO IR       No general    Excellent                   Yes       Intel-oriented OpenVINO
+training
+state</p>
+<p>Core ML           No general    Excellent                   Yes       Apple-oriented Apple
+training
+state</p>
+<h2 id="tflitelitert-no-general-excellent-yes-edge-oriented-tensorflowgoogle-training-state">TFLite/LiteRT     No general    Excellent                   Yes        Edge-oriented TensorFlow/Google
+training
+state</h2>
+<hr/>
+<h1 id="6-deep-learning-architecture-knowledge">6. Deep Learning Architecture Knowledge</h1>
+<p>Architecture determines how information is represented and transformed.
+There is no universally best architecture.</p>
+<p>Selection should consider:</p>
+<pre><code class="language-text">task
+modality
+input resolution
+context length
+latency
+memory
+dataset size
+inductive bias
+deployment hardware
+training budget
+</code></pre>
+<hr/>
+<h2 id="61-multilayer-perceptron-mlp">6.1 Multilayer Perceptron / MLP</h2>
+<p>An MLP applies learned affine transformations and nonlinearities:</p>
+<pre><code class="language-text">x -&gt; Linear -&gt; Activation -&gt; Linear -&gt; ...
+</code></pre>
+<h3 id="strengths-12">Strengths</h3>
+<ul>
+<li>simple;</li>
+<li>strong baseline for tabular data;</li>
+<li>inexpensive;</li>
+<li>useful inside larger architectures.</li>
+</ul>
+<h3 id="weaknesses-10">Weaknesses</h3>
+<ul>
+<li>poor spatial inductive bias;</li>
+<li>parameter-heavy for high-dimensional images;</li>
+<li>limited sequence structure without additional mechanisms.</li>
+</ul>
+<hr/>
+<h2 id="62-cnn">6.2 CNN</h2>
+<p>Convolutional neural networks use local receptive fields and shared
+kernels.</p>
+<p>A 2D convolution can be expressed as:</p>
+<pre><code class="language-text">Y[i,j] = sum_{u,v,c} W[u,v,c] X[i+u,j+v,c]
+</code></pre>
+<h3 id="strengths-13">Strengths</h3>
+<ul>
+<li>locality;</li>
+<li>translation-related inductive bias;</li>
+<li>efficient spatial feature extraction;</li>
+<li>excellent for vision and restoration.</li>
+</ul>
+<h3 id="weaknesses-11">Weaknesses</h3>
+<ul>
+<li>receptive field grows through depth or architectural mechanisms;</li>
+<li>long-range dependencies can require additional structures.</li>
+</ul>
+<hr/>
+<h2 id="63-resnet">6.3 ResNet</h2>
+<p>ResNet introduces residual connections:</p>
+<pre><code class="language-text">y = F(x) + x
+</code></pre>
+<p>Residual pathways improve optimization of deep networks and became
+foundational to modern vision architectures.</p>
+<hr/>
+<h2 id="64-efficientnet">6.4 EfficientNet</h2>
+<p>EfficientNet uses compound scaling to jointly scale:</p>
+<ul>
+<li>depth;</li>
+<li>width;</li>
+<li>input resolution.</li>
+</ul>
+<p>The key idea is that scaling only one dimension is often inefficient.</p>
+<hr/>
+<h2 id="65-convnext">6.5 ConvNeXt</h2>
+<p>ConvNeXt modernizes convolutional networks using design choices inspired
+by transformer-era architectures while retaining convolutional inductive
+bias.</p>
+<p>Useful when:</p>
+<ul>
+<li>spatial locality is valuable;</li>
+<li>convolutional efficiency is desirable;</li>
+<li>transformer-style design patterns are attractive without full
+attention everywhere.</li>
+</ul>
+<hr/>
+<h2 id="66-vision-transformer-vit">6.6 Vision Transformer (ViT)</h2>
+<p>ViT divides an image into patches, embeds the patches, and processes
+them with transformer blocks.</p>
+<p>Typical pipeline:</p>
+<pre><code class="language-text">image
+ -&gt; patches
+ -&gt; linear embedding
+ -&gt; positional information
+ -&gt; transformer encoder
+ -&gt; task head
+</code></pre>
+<h3 id="strengths-14">Strengths</h3>
+<ul>
+<li>global interactions;</li>
+<li>scalable architecture;</li>
+<li>strong transfer learning;</li>
+<li>unified transformer ecosystem.</li>
+</ul>
+<h3 id="weaknesses-12">Weaknesses</h3>
+<ul>
+<li>computational cost;</li>
+<li>data requirements;</li>
+<li>attention memory scaling;</li>
+<li>less local inductive bias than CNNs unless introduced
+architecturally.</li>
+</ul>
+<hr/>
+<h2 id="67-swin-transformer">6.7 Swin Transformer</h2>
+<p>Swin uses windowed self-attention and shifted windows.</p>
+<p>This reduces the cost of full global attention while maintaining
+hierarchical spatial representations.</p>
+<p>Useful for:</p>
+<ul>
+<li>detection;</li>
+<li>segmentation;</li>
+<li>dense vision tasks;</li>
+<li>high-resolution imagery.</li>
+</ul>
+<hr/>
+<h2 id="68-transformer">6.8 Transformer</h2>
+<p>The transformer is based primarily on attention and feed-forward blocks.</p>
+<p>Scaled dot-product attention:</p>
+<pre><code class="language-text">Attention(Q,K,V) =
+softmax(Q K^T / sqrt(d_k)) V
+</code></pre>
+<h3 id="core-strengths">Core strengths</h3>
+<ul>
+<li>flexible sequence modeling;</li>
+<li>global token interactions;</li>
+<li>strong scaling behavior;</li>
+<li>multimodal adaptability.</li>
+</ul>
+<h3 id="core-costs">Core costs</h3>
+<p>Naive full attention has approximately quadratic complexity in sequence
+length:</p>
+<pre><code class="language-text">O(n² d)
+</code></pre>
+<p>where <code>n</code> is sequence length and <code>d</code> is feature dimension.</p>
+<p>Modern systems reduce practical cost using:</p>
+<ul>
+<li>FlashAttention;</li>
+<li>grouped-query attention;</li>
+<li>multi-query attention;</li>
+<li>sparse attention;</li>
+<li>sliding windows;</li>
+<li>local/global hybrids;</li>
+<li>linear/state-space alternatives.</li>
+</ul>
+<hr/>
+<h2 id="69-u-net">6.9 U-Net</h2>
+<p>U-Net uses an encoder-decoder structure with skip connections.</p>
+<pre><code class="language-text">Input
+  |
+Encoder
+  |
+Bottleneck
+  |
+Decoder
+  |
+Output
+</code></pre>
+<p>Skip connections transfer high-resolution information from encoder
+layers to decoder layers.</p>
+<p>Excellent for:</p>
+<ul>
+<li>segmentation;</li>
+<li>image restoration;</li>
+<li>denoising;</li>
+<li>diffusion-model components.</li>
+</ul>
+<hr/>
+<h2 id="610-gan">6.10 GAN</h2>
+<p>A Generative Adversarial Network contains:</p>
+<pre><code class="language-text">Generator
+     |
+     v
+Synthetic sample
+     |
+     v
+Discriminator &lt;--- real sample
+</code></pre>
+<p>The generator attempts to produce realistic samples while the
+discriminator distinguishes real and generated data.</p>
+<h3 id="strengths-15">Strengths</h3>
+<ul>
+<li>sharp generated outputs;</li>
+<li>adversarial learning;</li>
+<li>image synthesis and translation.</li>
+</ul>
+<h3 id="weaknesses-13">Weaknesses</h3>
+<ul>
+<li>training instability;</li>
+<li>mode collapse;</li>
+<li>sensitive objective dynamics;</li>
+<li>evaluation complexity.</li>
+</ul>
+<hr/>
+<h2 id="611-vae">6.11 VAE</h2>
+<p>A Variational Autoencoder learns a probabilistic latent representation.</p>
+<p>The objective typically contains:</p>
+<pre><code class="language-text">reconstruction loss + KL divergence
+</code></pre>
+<p>The KL term regularizes the latent distribution toward a prior.</p>
+<p>Useful for:</p>
+<ul>
+<li>representation learning;</li>
+<li>latent-variable modeling;</li>
+<li>generative systems;</li>
+<li>compression.</li>
+</ul>
+<hr/>
+<h2 id="612-diffusion-models">6.12 Diffusion models</h2>
+<p>Diffusion systems learn to reverse a progressive corruption process.</p>
+<p>A simplified forward process adds noise:</p>
+<pre><code class="language-text">x_0 -&gt; x_1 -&gt; ... -&gt; x_T
+</code></pre>
+<p>The learned reverse process reconstructs or generates samples.</p>
+<p>Common components include:</p>
+<ul>
+<li>noise scheduler;</li>
+<li>denoising network;</li>
+<li>text/image conditioning;</li>
+<li>latent representation;</li>
+<li>classifier-free guidance;</li>
+<li>sampling solver.</li>
+</ul>
+<p>Diffusion is not limited to images; related formulations exist for
+audio, video, 3D, molecules, and other modalities.</p>
+<hr/>
+<h2 id="613-mixture-of-experts">6.13 Mixture of Experts</h2>
+<p>MoE architectures contain multiple expert subnetworks and a router.</p>
+<pre><code class="language-text">tokens
+   |
+router
+ / | \
+E1 E2 E3 ... EN
+ \ | /
+selected expert outputs
+   |
+combine
+</code></pre>
+<p>Only a subset of experts may process each token.</p>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li>high parameter capacity;</li>
+<li>lower active compute than a dense model of equivalent total
+parameter count;</li>
+<li>specialization.</li>
+</ul>
+<h3 id="problems">Problems</h3>
+<ul>
+<li>routing imbalance;</li>
+<li>communication overhead;</li>
+<li>expert collapse;</li>
+<li>capacity overflow;</li>
+<li>distributed-training complexity.</li>
+</ul>
+<hr/>
+<h2 id="614-state-space-models-mamba-style-architectures">6.14 State Space Models / Mamba-style architectures</h2>
+<p>State-space models represent sequences through recurrent state dynamics.</p>
+<p>A continuous-time formulation can be expressed as:</p>
+<pre><code class="language-text">h'(t) = A h(t) + B x(t)
+y(t)  = C h(t)
+</code></pre>
+<p>Modern selective state-space architectures make parts of the state
+dynamics input-dependent and use hardware-aware scan algorithms.</p>
+<h3 id="strengths-16">Strengths</h3>
+<ul>
+<li>efficient long-sequence processing;</li>
+<li>alternatives to quadratic attention;</li>
+<li>strong sequence modeling.</li>
+</ul>
+<h3 id="trade-offs">Trade-offs</h3>
+<ul>
+<li>different inductive bias from attention;</li>
+<li>ecosystem/tooling differences;</li>
+<li>architecture-specific optimization requirements.</li>
+</ul>
+<hr/>
+<h2 id="615-architecture-selection-matrix">6.15 Architecture selection matrix</h2>
+<hr/>
+<p>Task                                Strong candidates</p>
+<hr/>
+<p>Tabular classification              MLP, tree models, transformer
+variants</p>
+<p>Image classification                CNN, ConvNeXt, ViT</p>
+<p>Object detection                    CNN detectors, DETR-family,
+Swin-based systems</p>
+<p>Segmentation                        U-Net, U-Net variants, transformer
+hybrids</p>
+<p>Restoration                         CNN/U-Net, NAFNet-like,
+transformer/restoration hybrids</p>
+<p>Language modeling                   Transformer, MoE, SSM/hybrid</p>
+<p>Image generation                    Diffusion, GAN, flow-based systems</p>
+<p>Representation learning             CNN, ViT, autoencoder, contrastive
+architectures</p>
+<p>Long sequences                      Transformer variants, SSMs, hybrid
+models</p>
+<h2 id="multimodal-transformer-based-fusion-modality-specific-encoders-shared-heads">Multimodal                          Transformer-based fusion,
+modality-specific encoders + shared
+heads</h2>
+<hr/>
+<h1 id="7-training-theory">7. Training Theory</h1>
+<p>Training is numerical optimization over a parameterized function.</p>
+<p>Given parameters <code>theta</code>, training minimizes an objective:</p>
+<pre><code class="language-text">theta* = argmin_theta E[L(f_theta(x), y)]
+</code></pre>
+<p>In practice the expectation is approximated using minibatches.</p>
+<hr/>
+<h2 id="71-forward-pass">7.1 Forward pass</h2>
+<p>The model computes:</p>
+<pre><code class="language-text">prediction = f_theta(x)
+</code></pre>
+<hr/>
+<h2 id="72-loss">7.2 Loss</h2>
+<p>The loss quantifies disagreement between prediction and target.</p>
+<p>Examples:</p>
+<ul>
+<li>cross entropy;</li>
+<li>binary cross entropy;</li>
+<li>mean squared error;</li>
+<li>L1;</li>
+<li>Huber;</li>
+<li>focal loss;</li>
+<li>contrastive loss;</li>
+<li>triplet loss;</li>
+<li>perceptual loss;</li>
+<li>ranking losses.</li>
+</ul>
+<p>The loss being optimized is not necessarily the metric users ultimately
+care about.</p>
+<hr/>
+<h2 id="73-backpropagation">7.3 Backpropagation</h2>
+<p>Backpropagation applies the chain rule to compute gradients:</p>
+<pre><code class="language-text">dL/dtheta
+</code></pre>
+<p>Automatic differentiation systems construct or track computational
+graphs and propagate derivatives backward.</p>
+<hr/>
+<h2 id="74-gradient-descent">7.4 Gradient descent</h2>
+<p>Basic gradient descent:</p>
+<pre><code class="language-text">theta_(t+1) = theta_t - eta * grad_theta L
+</code></pre>
+<p>where <code>eta</code> is the learning rate.</p>
+<hr/>
+<h1 id="8-optimizers">8. Optimizers</h1>
+<h2 id="81-sgd">8.1 SGD</h2>
+<pre><code class="language-text">theta &lt;- theta - eta * g
+</code></pre>
+<h3 id="strengths-17">Strengths</h3>
+<ul>
+<li>simple;</li>
+<li>predictable;</li>
+<li>strong generalization behavior in many vision settings.</li>
+</ul>
+<h3 id="weaknesses-14">Weaknesses</h3>
+<ul>
+<li>learning-rate tuning;</li>
+<li>potentially slower convergence.</li>
+</ul>
+<hr/>
+<h2 id="82-momentum">8.2 Momentum</h2>
+<p>Momentum maintains a running update direction.</p>
+<pre><code class="language-text">v_t = beta * v_(t-1) + g_t
+theta_t = theta_(t-1) - eta * v_t
+</code></pre>
+<p>It reduces oscillation and can accelerate movement along persistent
+gradient directions.</p>
+<hr/>
+<h2 id="83-adam">8.3 Adam</h2>
+<p>Adam maintains first and second moments of gradients.</p>
+<pre><code class="language-text">m_t = beta1*m_(t-1) + (1-beta1)*g_t
+v_t = beta2*v_(t-1) + (1-beta2)*g_t²
+</code></pre>
+<p>Bias correction is applied before updating parameters.</p>
+<hr/>
+<h2 id="84-adamw">8.4 AdamW</h2>
+<p>AdamW decouples weight decay from the adaptive gradient update.</p>
+<p>This is generally preferred over treating weight decay as an ordinary
+gradient term when using Adam-style optimizers.</p>
+<hr/>
+<h2 id="85-rmsprop">8.5 RMSProp</h2>
+<p>RMSProp adapts updates using an exponential moving average of squared
+gradients.</p>
+<p>It can be useful for some recurrent and nonstationary optimization
+problems.</p>
+<hr/>
+<h2 id="86-lamb-lars">8.6 LAMB / LARS</h2>
+<p>Layer-wise adaptive methods can be useful for very large batch training.</p>
+<p>They scale updates using layer-wise norms and can help stabilize
+large-batch optimization.</p>
+<hr/>
+<h2 id="87-lion">8.7 Lion</h2>
+<p>Lion is a sign-based optimizer with low optimizer-state memory relative
+to Adam-style methods.</p>
+<p>Its practical suitability depends on model family and training regime;
+it should not be assumed universally superior.</p>
+<hr/>
+<h2 id="88-sophia">8.8 Sophia</h2>
+<p>Sophia uses curvature information to adapt updates more efficiently than
+purely first-order methods in some language-model training settings.</p>
+<p>It is more specialized than AdamW.</p>
+<hr/>
+<h2 id="89-muon">8.9 Muon</h2>
+<p>Muon is an optimizer family designed around structured updates to weight
+matrices and has attracted interest in modern neural-network training.</p>
+<p>It should be treated as an alternative requiring architecture- and
+implementation-specific validation rather than a drop-in universal
+replacement.</p>
+<hr/>
+<h1 id="9-learning-rate-and-schedulers">9. Learning Rate and Schedulers</h1>
+<p>Learning rate is one of the most influential hyperparameters.</p>
+<p>A useful conceptual decomposition is:</p>
+<pre><code class="language-text">initial learning rate
++ warmup
++ stable phase
++ decay
+</code></pre>
+<h2 id="91-warmup">9.1 Warmup</h2>
+<p>Warmup gradually increases the learning rate at the beginning of
+training.</p>
+<p>Useful when:</p>
+<ul>
+<li>optimization is unstable at initialization;</li>
+<li>batch sizes are large;</li>
+<li>transformer training is sensitive to early updates;</li>
+<li>mixed precision requires stabilization.</li>
+</ul>
+<h2 id="92-cosine-decay">9.2 Cosine decay</h2>
+<p>A cosine schedule smoothly decreases the learning rate.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">eta(t) = eta_min + 0.5*(eta_max-eta_min)*(1 + cos(pi*t/T))
+</code></pre>
+<h2 id="93-onecycle">9.3 OneCycle</h2>
+<p>OneCycle increases and then decreases the learning rate, often with an
+inverse momentum relationship.</p>
+<p>It can be effective for some supervised training workloads.</p>
+<h2 id="94-exponential-decay">9.4 Exponential decay</h2>
+<pre><code class="language-text">eta_t = eta_0 * gamma^t
+</code></pre>
+<p>Simple but can decay too aggressively if not tuned.</p>
+<h2 id="95-warmup-stable-decay">9.5 Warmup-Stable-Decay</h2>
+<p>A three-stage schedule:</p>
+<pre><code class="language-text">warmup -&gt; stable high/medium LR -&gt; decay
+</code></pre>
+<p>is useful when a long stable optimization phase is desirable.</p>
+<hr/>
+<h1 id="10-batch-size-and-gradient-accumulation">10. Batch Size and Gradient Accumulation</h1>
+<h2 id="101-batch-size">10.1 Batch size</h2>
+<p>A batch is the set of samples used for one gradient estimate.</p>
+<p>Larger batches:</p>
+<ul>
+<li>improve hardware utilization;</li>
+<li>reduce gradient-estimator variance;</li>
+<li>increase memory use;</li>
+<li>may require learning-rate changes;</li>
+<li>can alter optimization/generalization behavior.</li>
+</ul>
+<h2 id="102-micro-batch">10.2 Micro-batch</h2>
+<p>The micro-batch is the portion processed in one forward/backward pass.</p>
+<h2 id="103-gradient-accumulation">10.3 Gradient accumulation</h2>
+<p>If gradients are accumulated for <code>k</code> micro-batches before an optimizer
+step:</p>
+<pre><code class="language-text">effective batch ≈ micro_batch * accumulation_steps * data_parallel_world_size
+</code></pre>
+<p>provided the implementation scales loss and gradients consistently.</p>
+<p>Gradient accumulation reduces activation-memory pressure but does not
+make each forward/backward pass cheaper.</p>
+<hr/>
+<h1 id="11-regularization">11. Regularization</h1>
+<p>Regularization reduces overfitting or constrains model behavior.</p>
+<h2 id="111-weight-decay">11.1 Weight decay</h2>
+<p>Penalizes large parameter values or, under AdamW-style decoupling,
+directly shrinks parameters.</p>
+<h2 id="112-dropout">11.2 Dropout</h2>
+<p>Randomly removes activation elements during training.</p>
+<h2 id="113-droppath-stochastic-depth">11.3 DropPath / stochastic depth</h2>
+<p>Randomly skips complete residual paths or blocks during training.</p>
+<h2 id="114-label-smoothing">11.4 Label smoothing</h2>
+<p>Replaces hard one-hot targets with softened distributions.</p>
+<p>Useful for reducing overconfidence in some classification tasks.</p>
+<h2 id="115-mixup">11.5 Mixup</h2>
+<p>Creates interpolated training examples:</p>
+<pre><code class="language-text">x' = lambda*x_i + (1-lambda)*x_j
+y' = lambda*y_i + (1-lambda)*y_j
+</code></pre>
+<h2 id="116-cutmix">11.6 CutMix</h2>
+<p>Combines spatial regions from two images and adjusts labels according to
+region proportions.</p>
+<hr/>
+<h1 id="12-normalization">12. Normalization</h1>
+<h2 id="batchnorm">BatchNorm</h2>
+<p>Normalizes using batch statistics.</p>
+<p>Strengths:</p>
+<ul>
+<li>effective in many CNNs;</li>
+<li>well-established.</li>
+</ul>
+<p>Limitations:</p>
+<ul>
+<li>sensitive to small batch sizes;</li>
+<li>distributed synchronization can add overhead.</li>
+</ul>
+<h2 id="layernorm">LayerNorm</h2>
+<p>Normalizes features within each sample.</p>
+<p>Common in transformers.</p>
+<h2 id="rmsnorm">RMSNorm</h2>
+<p>Normalizes based on root-mean-square magnitude without explicit mean
+subtraction.</p>
+<p>Common in modern transformer architectures.</p>
+<h2 id="groupnorm">GroupNorm</h2>
+<p>Normalizes channels in groups and is often useful when batch sizes are
+small.</p>
+<hr/>
+<h1 id="13-mixed-precision">13. Mixed Precision</h1>
+<p>Common numeric formats include:</p>
+<pre><code class="language-text">FP32
+FP16
+BF16
+FP8
+INT8
+INT4
+</code></pre>
+<p>Training commonly uses higher precision for selected operations and
+lower precision for throughput.</p>
+<h2 id="fp16">FP16</h2>
+<p>Advantages:</p>
+<ul>
+<li>low memory;</li>
+<li>high accelerator throughput.</li>
+</ul>
+<p>Risk:</p>
+<ul>
+<li>narrower exponent range can cause underflow/overflow.</li>
+</ul>
+<h2 id="bf16">BF16</h2>
+<p>Advantages:</p>
+<ul>
+<li>exponent range similar to FP32;</li>
+<li>generally easier numerical stability than FP16.</li>
+</ul>
+<p>Cost:</p>
+<ul>
+<li>lower mantissa precision than FP32.</li>
+</ul>
+<h2 id="fp8">FP8</h2>
+<p>FP8 formats can substantially improve throughput and memory efficiency
+on compatible hardware, but training requires careful scaling and
+hardware/software support.</p>
+<h2 id="loss-scaling">Loss scaling</h2>
+<p>Dynamic loss scaling can protect FP16 gradients from underflow.</p>
+<hr/>
+<h1 id="14-distributed-training">14. Distributed Training</h1>
+<h2 id="141-data-parallelism">14.1 Data Parallelism</h2>
+<p>Each worker receives different samples and maintains model replicas.</p>
+<p>Gradients are synchronized.</p>
+<h2 id="142-ddp">14.2 DDP</h2>
+<p>DistributedDataParallel is a common PyTorch implementation.</p>
+<p>The effective batch size generally scales with worker count.</p>
+<h2 id="143-fsdp">14.3 FSDP</h2>
+<p>Fully Sharded Data Parallel shards parameters, gradients, and optimizer
+state across workers.</p>
+<p>Primary benefit:</p>
+<pre><code class="language-text">lower per-GPU memory footprint
+</code></pre>
+<p>at the cost of communication and implementation complexity.</p>
+<h2 id="144-zero">14.4 ZeRO</h2>
+<p>ZeRO reduces redundant optimizer/gradient/parameter memory.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">ZeRO-1 -&gt; shard optimizer states
+ZeRO-2 -&gt; shard optimizer + gradients
+ZeRO-3 -&gt; shard optimizer + gradients + parameters
+</code></pre>
+<h2 id="145-tensor-parallelism">14.5 Tensor Parallelism</h2>
+<p>Splits individual layers/tensors across devices.</p>
+<p>Useful for models too large for one device.</p>
+<h2 id="146-pipeline-parallelism">14.6 Pipeline Parallelism</h2>
+<p>Splits model layers into stages across devices.</p>
+<p>Micro-batches flow through stages to improve device utilization.</p>
+<h2 id="147-3d-parallelism">14.7 3D parallelism</h2>
+<p>Large models can combine:</p>
+<pre><code class="language-text">Data Parallelism
++
+Tensor Parallelism
++
+Pipeline Parallelism
+</code></pre>
+<p>The correct strategy depends on:</p>
+<ul>
+<li>model size;</li>
+<li>batch size;</li>
+<li>network bandwidth;</li>
+<li>latency;</li>
+<li>accelerator memory;</li>
+<li>communication topology.</li>
+</ul>
+<hr/>
+<h1 id="15-parameter-efficient-fine-tuning">15. Parameter-Efficient Fine-Tuning</h1>
+<h2 id="151-lora">15.1 LoRA</h2>
+<p>Low-Rank Adaptation freezes the base weights and trains low-rank update
+matrices.</p>
+<p>Conceptually:</p>
+<pre><code class="language-text">W' = W + B A
+</code></pre>
+<p>where <code>A</code> and <code>B</code> have much lower rank than <code>W</code>.</p>
+<p>Advantages:</p>
+<ul>
+<li>fewer trainable parameters;</li>
+<li>lower optimizer memory;</li>
+<li>smaller adapters;</li>
+<li>efficient specialization.</li>
+</ul>
+<h2 id="152-qlora">15.2 QLoRA</h2>
+<p>QLoRA combines quantized base-model weights with LoRA adapters.</p>
+<p>The base model is kept in a low-bit representation while adapters are
+trained.</p>
+<p>Important distinction:</p>
+<p><strong>QLoRA is a fine-tuning strategy, not merely a file format.</strong></p>
+<hr/>
+<h1 id="16-llm-post-training">16. LLM Post-Training</h1>
+<h2 id="supervised-fine-tuning-sft">Supervised Fine-Tuning (SFT)</h2>
+<p>The model learns from prompt/response or instruction/response examples.</p>
+<p>Typical data:</p>
+<pre><code class="language-json">{"messages":[
+  {"role":"user","content":"..."},
+  {"role":"assistant","content":"..."}
+]}
+</code></pre>
+<p>High-quality SFT data should emphasize:</p>
+<ul>
+<li>factual correctness;</li>
+<li>useful explanations;</li>
+<li>consistent terminology;</li>
+<li>refusal/uncertainty behavior;</li>
+<li>task diversity;</li>
+<li>difficult edge cases.</li>
+</ul>
+<h2 id="preference-optimization">Preference optimization</h2>
+<p>Methods such as DPO learn from preferred versus rejected responses.</p>
+<p>The purpose is to optimize behavior relative to preference data without
+requiring the same reinforcement-learning pipeline as PPO.</p>
+<h2 id="ppo-rlhf">PPO / RLHF</h2>
+<p>PPO-based RLHF uses reward modeling and reinforcement learning.</p>
+<p>It is powerful but substantially more complex than SFT and preference
+optimization.</p>
+<hr/>
+<h1 id="17-loss-functions">17. Loss Functions</h1>
+<h2 id="classification">Classification</h2>
+<ul>
+<li>Cross Entropy;</li>
+<li>Binary Cross Entropy;</li>
+<li>Focal Loss;</li>
+<li>Label-smoothed Cross Entropy.</li>
+</ul>
+<h2 id="regression">Regression</h2>
+<ul>
+<li>MSE;</li>
+<li>MAE;</li>
+<li>Huber;</li>
+<li>Log-Cosh.</li>
+</ul>
+<h2 id="vision-restoration">Vision restoration</h2>
+<ul>
+<li>L1;</li>
+<li>L2;</li>
+<li>Charbonnier;</li>
+<li>SSIM-based losses;</li>
+<li>perceptual losses;</li>
+<li>frequency-domain losses;</li>
+<li>adversarial losses.</li>
+</ul>
+<h2 id="metric-learning">Metric learning</h2>
+<ul>
+<li>contrastive loss;</li>
+<li>triplet loss;</li>
+<li>InfoNCE.</li>
+</ul>
+<h2 id="ranking">Ranking</h2>
+<ul>
+<li>pairwise hinge;</li>
+<li>RankNet;</li>
+<li>ListNet;</li>
+<li>differentiable ranking objectives.</li>
+</ul>
+<h3 id="important-principle">Important principle</h3>
+<p>A training loss is an optimization objective, not necessarily the final
+evaluation metric.</p>
+<hr/>
+<h1 id="18-evaluation-metrics">18. Evaluation Metrics</h1>
+<h2 id="181-classification">18.1 Classification</h2>
+<h3 id="accuracy">Accuracy</h3>
+<pre><code class="language-text">(TP + TN) / (TP + TN + FP + FN)
+</code></pre>
+<p>Useful when classes and error costs are reasonably balanced.</p>
+<h3 id="precision">Precision</h3>
+<pre><code class="language-text">TP / (TP + FP)
+</code></pre>
+<h3 id="recall">Recall</h3>
+<pre><code class="language-text">TP / (TP + FN)
+</code></pre>
+<h3 id="f1">F1</h3>
+<pre><code class="language-text">2 * Precision * Recall / (Precision + Recall)
+</code></pre>
+<h3 id="roc-auc">ROC-AUC</h3>
+<p>Measures ranking quality across classification thresholds.</p>
+<h3 id="pr-auc">PR-AUC</h3>
+<p>Often more informative under strong class imbalance.</p>
+<hr/>
+<h2 id="182-detection">18.2 Detection</h2>
+<h3 id="iou">IoU</h3>
+<pre><code class="language-text">intersection / union
+</code></pre>
+<h3 id="giou-diou-ciou">GIoU / DIoU / CIoU</h3>
+<p>Extensions that incorporate geometric relationships beyond simple
+overlap.</p>
+<h3 id="map">mAP</h3>
+<p>Mean Average Precision aggregates precision-recall performance across
+classes and specified IoU thresholds.</p>
+<p>Always state the evaluation convention, e.g.:</p>
+<pre><code class="language-text">mAP@0.5
+mAP@0.5:0.95
+</code></pre>
+<p>These are not equivalent metrics.</p>
+<hr/>
+<h2 id="183-segmentation">18.3 Segmentation</h2>
+<h3 id="iou-jaccard">IoU / Jaccard</h3>
+<pre><code class="language-text">TP / (TP + FP + FN)
+</code></pre>
+<h3 id="dice">Dice</h3>
+<pre><code class="language-text">2TP / (2TP + FP + FN)
+</code></pre>
+<h3 id="pixel-accuracy">Pixel accuracy</h3>
+<p>Can be misleading for heavily imbalanced backgrounds.</p>
+<h3 id="boundary-metrics">Boundary metrics</h3>
+<p>Useful when boundary precision is more important than area overlap.</p>
+<hr/>
+<h2 id="184-image-restoration">18.4 Image restoration</h2>
+<h3 id="mse">MSE</h3>
+<p>Penalizes squared reconstruction error.</p>
+<h3 id="psnr">PSNR</h3>
+<pre><code class="language-text">10 log10(MAX² / MSE)
+</code></pre>
+<p>Higher is generally better.</p>
+<h3 id="ssim">SSIM</h3>
+<p>Measures structural similarity using luminance, contrast, and structural
+terms.</p>
+<h3 id="ms-ssim">MS-SSIM</h3>
+<p>Extends SSIM across scales.</p>
+<h3 id="lpips">LPIPS</h3>
+<p>Uses deep feature representations to estimate perceptual distance.</p>
+<p>Lower is generally better.</p>
+<h3 id="nima">NIMA</h3>
+<p>Predicts aesthetic/technical quality distributions rather than direct
+pixel fidelity.</p>
+<h3 id="niqe-brisque">NIQE / BRISQUE</h3>
+<p>No-reference image-quality metrics. They measure statistical quality
+characteristics and should not be interpreted as perfect proxies for
+human preference.</p>
+<hr/>
+<h2 id="185-generative-models">18.5 Generative models</h2>
+<h3 id="fid">FID</h3>
+<p>Compares distributions of feature embeddings from real and generated
+samples.</p>
+<p>Lower is generally better, but FID is sensitive to:</p>
+<ul>
+<li>feature extractor;</li>
+<li>sample count;</li>
+<li>preprocessing;</li>
+<li>implementation;</li>
+<li>domain mismatch.</li>
+</ul>
+<h3 id="kid">KID</h3>
+<p>Kernel-based distribution distance with an unbiased estimator.</p>
+<h3 id="clip-based-metrics">CLIP-based metrics</h3>
+<p>Can estimate image-text semantic alignment but should not be treated as
+complete measures of image quality.</p>
+<h3 id="precision-recall-for-generative-distributions">Precision / Recall for generative distributions</h3>
+<p>Can separately characterize fidelity and diversity.</p>
+<hr/>
+<h2 id="186-language-models">18.6 Language models</h2>
+<h3 id="perplexity">Perplexity</h3>
+<p>Measures average predictive uncertainty:</p>
+<pre><code class="language-text">PPL = exp(-mean(log p(token | previous tokens)))
+</code></pre>
+<p>Lower is generally better on a fixed evaluation distribution.</p>
+<p>Perplexity alone does not measure instruction following, factuality,
+reasoning, safety, or user usefulness.</p>
+<h3 id="exact-match">Exact Match</h3>
+<p>Useful for structured answer tasks.</p>
+<h3 id="bleu-rouge">BLEU / ROUGE</h3>
+<p>Useful for some text-generation comparisons but imperfect proxies for
+semantic quality.</p>
+<h3 id="human-evaluation">Human evaluation</h3>
+<p>Still important for:</p>
+<ul>
+<li>helpfulness;</li>
+<li>correctness;</li>
+<li>instruction following;</li>
+<li>style;</li>
+<li>factuality;</li>
+<li>safety.</li>
+</ul>
+<hr/>
+<h2 id="187-time-series-and-forecasting">18.7 Time-series and forecasting</h2>
+<h3 id="mae">MAE</h3>
+<pre><code class="language-text">mean(|y-y_hat|)
+</code></pre>
+<h3 id="mse-1">MSE</h3>
+<pre><code class="language-text">mean((y-y_hat)^2)
+</code></pre>
+<h3 id="rmse">RMSE</h3>
+<p>Square root of MSE.</p>
+<h3 id="mape">MAPE</h3>
+<p>Can behave poorly when actual values are near zero.</p>
+<h3 id="smape">sMAPE</h3>
+<p>Provides a more symmetric percentage-style error but still has
+interpretation limitations.</p>
+<h3 id="directional-accuracy">Directional accuracy</h3>
+<p>Measures whether predicted direction matches actual direction.</p>
+<h3 id="sharpe-ratio">Sharpe ratio</h3>
+<p>A portfolio-level risk-adjusted performance measure, not a generic
+model-accuracy metric.</p>
+<hr/>
+<h1 id="19-dataset-engineering">19. Dataset Engineering</h1>
+<h2 id="191-deduplication">19.1 Deduplication</h2>
+<h3 id="exact-deduplication">Exact deduplication</h3>
+<p>Cryptographic hashes identify byte-identical files.</p>
+<p>Examples:</p>
+<ul>
+<li>SHA-256;</li>
+<li>SHA-512.</li>
+</ul>
+<h3 id="near-duplicate-text">Near-duplicate text</h3>
+<p>MinHash and LSH can efficiently identify candidate similar documents.</p>
+<h3 id="perceptual-image-deduplication">Perceptual image deduplication</h3>
+<p>pHash and related methods identify visually similar images.</p>
+<h3 id="semantic-deduplication">Semantic deduplication</h3>
+<p>Embedding similarity can identify semantically similar content.</p>
+<p>No single threshold is universally correct. Thresholds must be validated
+for the dataset and task.</p>
+<hr/>
+<h1 id="20-class-imbalance">20. Class Imbalance</h1>
+<p>Approaches include:</p>
+<ul>
+<li>class-weighted losses;</li>
+<li>focal loss;</li>
+<li>oversampling;</li>
+<li>undersampling;</li>
+<li>balanced batch construction;</li>
+<li>synthetic sampling;</li>
+<li>threshold optimization;</li>
+<li>hard-negative mining.</li>
+</ul>
+<h3 id="important-warning">Important warning</h3>
+<p>Oversampling does not create genuinely new information unless the
+transformation adds useful variation.</p>
+<hr/>
+<h1 id="21-augmentation">21. Augmentation</h1>
+<p>Augmentation should preserve task-relevant semantics.</p>
+<p>Examples:</p>
+<h3 id="vision">Vision</h3>
+<ul>
+<li>crop;</li>
+<li>resize;</li>
+<li>flip;</li>
+<li>rotation;</li>
+<li>color perturbation;</li>
+<li>blur;</li>
+<li>noise;</li>
+<li>perspective;</li>
+<li>Mixup;</li>
+<li>CutMix.</li>
+</ul>
+<h3 id="audio">Audio</h3>
+<ul>
+<li>time masking;</li>
+<li>frequency masking;</li>
+<li>noise;</li>
+<li>time stretch;</li>
+<li>pitch changes where valid.</li>
+</ul>
+<h3 id="text">Text</h3>
+<ul>
+<li>paraphrasing;</li>
+<li>back translation;</li>
+<li>controlled substitution.</li>
+</ul>
+<h3 id="critical-rule">Critical rule</h3>
+<p>Never apply an augmentation that changes the target semantics unless the
+label/target is transformed consistently.</p>
+<hr/>
+<h1 id="22-sampling-and-curriculum">22. Sampling and Curriculum</h1>
+<h2 id="temperature-sampling">Temperature sampling</h2>
+<p>For multiple datasets:</p>
+<pre><code class="language-text">p_i = n_i^(1/T) / sum_j n_j^(1/T)
+</code></pre>
+<p>Interpretation depends on the exact convention used by the
+implementation.</p>
+<p>Sampling can be used to:</p>
+<ul>
+<li>prevent small datasets from being ignored;</li>
+<li>control domain mixture;</li>
+<li>rebalance tasks;</li>
+<li>implement curriculum strategies.</li>
+</ul>
+<h2 id="curriculum-learning">Curriculum learning</h2>
+<p>Training examples can be ordered from:</p>
+<pre><code class="language-text">easy -&gt; difficult
+</code></pre>
+<p>or from broad foundational data toward specialized examples.</p>
+<p>Curriculum is not universally beneficial; it should be validated
+experimentally.</p>
+<hr/>
+<h1 id="23-sharding-and-streaming">23. Sharding and Streaming</h1>
+<p>Large datasets should be designed around the training access pattern.</p>
+<p>Consider:</p>
+<ul>
+<li>shard size;</li>
+<li>sample size;</li>
+<li>worker count;</li>
+<li>network bandwidth;</li>
+<li>storage latency;</li>
+<li>cache capacity;</li>
+<li>object-store request cost;</li>
+<li>deterministic resumption;</li>
+<li>distributed shuffling.</li>
+</ul>
+<h3 id="gpu-starvation">GPU starvation</h3>
+<p>If the GPU spends significant time waiting for data, increasing model
+compute efficiency may not improve end-to-end throughput.</p>
+<p>Monitor:</p>
+<pre><code class="language-text">GPU utilization
+data-loader wait time
+CPU utilization
+storage throughput
+network throughput
+batch latency
+prefetch depth
+</code></pre>
+<hr/>
+<h1 id="24-data-splitting-best-practices">24. Data Splitting Best Practices</h1>
+<h2 id="random-split">Random split</h2>
+<p>Appropriate only when samples are sufficiently independent.</p>
+<h2 id="stratified-split">Stratified split</h2>
+<p>Preserves approximate class proportions.</p>
+<h2 id="group-split">Group split</h2>
+<p>Keeps correlated entities in one partition.</p>
+<h2 id="temporal-split">Temporal split</h2>
+<p>Training occurs on past data and validation/test occurs on future data.</p>
+<h2 id="spatial-split">Spatial split</h2>
+<p>Useful when neighboring spatial regions are correlated.</p>
+<h2 id="cross-validation">Cross-validation</h2>
+<p>Useful when data is limited, but must respect grouping and temporal
+constraints.</p>
+<hr/>
+<h1 id="25-training-pathology">25. Training Pathology</h1>
+<h2 id="overfitting">Overfitting</h2>
+<p>Typical pattern:</p>
+<pre><code class="language-text">training loss ↓
+validation loss ↓ then ↑
+</code></pre>
+<p>Possible responses:</p>
+<ul>
+<li>more data;</li>
+<li>stronger regularization;</li>
+<li>augmentation;</li>
+<li>smaller model;</li>
+<li>early stopping;</li>
+<li>better split;</li>
+<li>remove leakage.</li>
+</ul>
+<h2 id="underfitting">Underfitting</h2>
+<p>Typical pattern:</p>
+<pre><code class="language-text">training performance poor
+validation performance also poor
+</code></pre>
+<p>Possible responses:</p>
+<ul>
+<li>larger model;</li>
+<li>longer training;</li>
+<li>better optimization;</li>
+<li>improved features;</li>
+<li>less restrictive regularization.</li>
+</ul>
+<h2 id="vanishing-gradients">Vanishing gradients</h2>
+<p>Gradients become too small for effective learning.</p>
+<p>Possible mitigations:</p>
+<ul>
+<li>residual connections;</li>
+<li>normalization;</li>
+<li>activation changes;</li>
+<li>architecture changes;</li>
+<li>initialization improvements.</li>
+</ul>
+<h2 id="exploding-gradients">Exploding gradients</h2>
+<p>Gradients become excessively large.</p>
+<p>Possible mitigations:</p>
+<ul>
+<li>lower learning rate;</li>
+<li>gradient clipping;</li>
+<li>normalization;</li>
+<li>architecture changes;</li>
+<li>numerical stabilization.</li>
+</ul>
+<h2 id="nan-divergence">NaN divergence</h2>
+<p>Potential causes:</p>
+<ul>
+<li>invalid inputs;</li>
+<li>excessive learning rate;</li>
+<li>overflow;</li>
+<li>invalid operations;</li>
+<li>unstable mixed precision;</li>
+<li>corrupted loss;</li>
+<li>bad labels.</li>
+</ul>
+<p>Debug systematically rather than changing many parameters
+simultaneously.</p>
+<h2 id="cuda-oom">CUDA OOM</h2>
+<p>Potential causes:</p>
+<ul>
+<li>batch size;</li>
+<li>resolution;</li>
+<li>sequence length;</li>
+<li>model size;</li>
+<li>optimizer state;</li>
+<li>activations;</li>
+<li>fragmentation;</li>
+<li>worker duplication;</li>
+<li>validation memory;</li>
+<li>distributed replication.</li>
+</ul>
+<p>Possible mitigations:</p>
+<ul>
+<li>smaller micro-batch;</li>
+<li>gradient accumulation;</li>
+<li>activation checkpointing;</li>
+<li>mixed precision;</li>
+<li>sharding;</li>
+<li>lower resolution;</li>
+<li>fewer workers;</li>
+<li>memory-aware validation.</li>
+</ul>
+<hr/>
+<h1 id="26-reproducibility">26. Reproducibility</h1>
+<p>Record:</p>
+<pre><code class="language-text">random seeds
+dataset version
+dataset manifest/checksum
+model version
+code revision
+dependency versions
+CUDA/runtime version
+hardware
+training configuration
+optimizer
+scheduler
+precision
+batch size
+gradient accumulation
+checkpoint
+</code></pre>
+<p>A training result without provenance is difficult to reproduce or audit.</p>
+<hr/>
+<h1 id="27-checkpointing">27. Checkpointing</h1>
+<p>A robust checkpoint should preserve enough state to resume training
+consistently.</p>
+<p>Possible contents:</p>
+<pre><code class="language-text">model state
+optimizer state
+scheduler state
+AMP scaler
+epoch
+step
+global sample position
+RNG state
+configuration
+dataset version
+code revision
+</code></pre>
+<p>A deployment weight file is generally much smaller in scope than a full
+resumable checkpoint.</p>
+<hr/>
+<h1 id="28-hyperparameter-search">28. Hyperparameter Search</h1>
+<p>Common strategies:</p>
+<ul>
+<li>grid search;</li>
+<li>random search;</li>
+<li>Bayesian optimization;</li>
+<li>population-based methods;</li>
+<li>successive halving;</li>
+<li>Hyperband.</li>
+</ul>
+<p>Random search can outperform grid search when only a small subset of
+hyperparameters strongly affects performance.</p>
+<p>Do not compare runs fairly unless:</p>
+<ul>
+<li>datasets are equivalent;</li>
+<li>evaluation protocol is equivalent;</li>
+<li>compute budget is understood;</li>
+<li>preprocessing is equivalent.</li>
+</ul>
+<hr/>
+<h1 id="29-model-selection">29. Model Selection</h1>
+<p>Choose models based on the complete constraint set:</p>
+<pre><code class="language-text">task
+dataset
+accuracy target
+latency target
+memory limit
+training budget
+deployment hardware
+interpretability
+maintenance requirements
+</code></pre>
+<p>A larger or newer model is not automatically better.</p>
+<hr/>
+<h1 id="30-quantization">30. Quantization</h1>
+<p>Quantization reduces numerical precision.</p>
+<p>Common levels:</p>
+<pre><code class="language-text">FP32
+FP16
+BF16
+FP8
+INT8
+INT4
+</code></pre>
+<p>Benefits:</p>
+<ul>
+<li>smaller models;</li>
+<li>lower memory;</li>
+<li>potentially higher inference throughput.</li>
+</ul>
+<p>Costs:</p>
+<ul>
+<li>accuracy degradation;</li>
+<li>calibration complexity;</li>
+<li>hardware/runtime dependence.</li>
+</ul>
+<p>Quantization-aware training can train the model while simulating
+quantization effects.</p>
+<p>Post-training quantization applies quantization after training.</p>
+<hr/>
+<h1 id="31-knowledge-for-an-ai-training-helper">31. Knowledge for an AI Training Helper</h1>
+<p>A high-quality AI Helper should reason across four layers:</p>
+<pre><code class="language-text">GENERAL AI KNOWLEDGE
+        +
+PLATFORM / DOMAIN IMPLEMENTATION KNOWLEDGE
+        +
+CURRENT RUNTIME STATE
+        +
+USER'S CURRENT TASK
+</code></pre>
+<p>The LLM should not hallucinate runtime facts.</p>
+<p>For example:</p>
+<pre><code class="language-text">Question:
+"Why is my training slow?"
 
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
-            <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
-                <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#datasets">2. Datasets &amp; Containers</a></li>
-                <li><a href="#weights">3. Model Weights &amp; Runtimes</a></li>
-                <li><a href="#architectures">4. Neural Architectures</a></li>
-                <li><a href="#training">5. Training Dynamics</a></li>
-                <li><a href="#metrics">6. Evaluation Metrics</a></li>
-                <li><a href="#engineering">7. Dataset Engineering</a></li>
-                <li><a href="#synthesis">8. Synthesis &amp; Conclusion</a></li>
-            </ul>
-        </nav>
+Static knowledge can explain:
+- I/O bottlenecks
+- CPU bottlenecks
+- GPU utilization
+- network latency
+- data-loader configuration
 
-        <main class="content">
+Runtime tools should provide:
+- GPU utilization
+- CPU usage
+- batch latency
+- storage throughput
+- current model
+- dataset
+- workers
+- memory
+</code></pre>
+<p>The final answer combines both.</p>
+<hr/>
+<h1 id="32-ai-helper-decision-rules">32. AI Helper Decision Rules</h1>
+<p>When answering a technical question:</p>
+<ol>
+<li>Identify the user's task.</li>
+<li>Identify modality and dataset type.</li>
+<li>Identify constraints.</li>
+<li>Distinguish general AI knowledge from Studio-specific behavior.</li>
+<li>Check whether the answer depends on current runtime state.</li>
+<li>State assumptions.</li>
+<li>Recommend the smallest set of relevant changes.</li>
+<li>Explain trade-offs.</li>
+<li>Warn about dangerous or irreversible changes.</li>
+<li>Never invent unsupported Studio functionality.</li>
+<li>Distinguish documented fact from heuristic recommendation.</li>
+<li>If evidence is insufficient, say so.</li>
+</ol>
+<hr/>
+<h1 id="33-common-ai-training-misconceptions">33. Common AI Training Misconceptions</h1>
+<h3 id="more-data-always-improves-the-model">"More data always improves the model."</h3>
+<p>False. Additional low-quality, duplicated, contaminated, or
+distribution-mismatched data can reduce quality.</p>
+<h3 id="higher-training-accuracy-means-a-better-model">"Higher training accuracy means a better model."</h3>
+<p>False. Generalization and task-specific evaluation matter.</p>
+<h3 id="lower-loss-always-means-better-output">"Lower loss always means better output."</h3>
+<p>False. The training loss may not correlate perfectly with the desired
+metric.</p>
+<h3 id="bigger-batch-size-is-always-faster">"Bigger batch size is always faster."</h3>
+<p>False. Hardware utilization can improve, but communication, memory,
+optimization dynamics, and scaling efficiency matter.</p>
+<h3 id="more-epochs-are-always-better">"More epochs are always better."</h3>
+<p>False. More training can overfit or waste compute.</p>
+<h3 id="a-newer-architecture-is-automatically-superior">"A newer architecture is automatically superior."</h3>
+<p>False. Architecture quality is task- and constraint-dependent.</p>
+<h3 id="fp16-and-bf16-are-equivalent">"FP16 and BF16 are equivalent."</h3>
+<p>False. Their exponent and mantissa properties differ.</p>
+<h3 id="onnx-is-a-model-weight-format-like-safetensors">"ONNX is a model weight format like Safetensors."</h3>
+<p>Incomplete. ONNX represents a computational graph and associated tensors
+for interoperability/execution.</p>
+<h3 id="gguf-is-a-universal-ai-model-format">"GGUF is a universal AI model format."</h3>
+<p>False. It is strongly optimized for a particular LLM inference
+ecosystem.</p>
+<h3 id="a-checkpoint-and-a-model-file-are-the-same">"A checkpoint and a model file are the same."</h3>
+<p>False. A resumable checkpoint may contain optimizer, scheduler, scaler,
+RNG, and training metadata.</p>
+<hr/>
+<h1 id="34-comparison-knowledge-the-ai-helper-should-master">34. Comparison Knowledge the AI Helper Should Master</h1>
+<p>The training corpus should explicitly teach comparisons such as:</p>
+<pre><code class="language-text">Parquet vs WebDataset
+Parquet vs Zarr
+Zarr vs HDF5
+JSONL vs Parquet
+TFRecord vs WebDataset
+LMDB vs loose files
 
-            <!-- SECTION 1 -->
-            <section id="abstract">
-                <h2>1. Abstract</h2>
-                <p>This specification establishes an authoritative reference manual for modern artificial intelligence training, deep learning systems engineering, dataset architecture, and model deployment runtimes. As deep neural networks scale from billions to trillions of parameters and multi-modal training sets expand across petabyte-scale storage tiers, engineering decisions across the training stack dictate convergence stability, memory footprint, compute throughput, and downstream generalization.</p>
-                <p>This document systematically formalizes the mathematical, architectural, and algorithmic foundations across six foundational domains:</p>
-                <ul>
-                    <li><strong>Dataset Storage &amp; Serialization Formats:</strong> Columnar, chunked, binary, and streaming container architectures (Parquet, Arrow, Zarr, JSONL, TFRecord, WebDataset, HDF5, NetCDF, LMDB, MDS).</li>
-                    <li><strong>Model Weights, Serialization &amp; Execution Runtimes:</strong> Zero-copy safe tensors, legacy execution graphs, compiled hardware engines, and quantized edge representations (Safetensors, PyTorch, ONNX, GGUF, GGML, TensorRT, OpenVINO, CoreML).</li>
-                    <li><strong>Deep Learning Model Architectures:</strong> Inductive biases, spatial manifolds, attention mechanisms, latent projections, generative formulations, and sparse routing (CNN, ResNet, EfficientNet, ConvNeXt, ViT, Swin, Transformers, U-Net, GAN, VAE, Diffusion, MoE, Mamba/SSM).</li>
-                    <li><strong>Training Dynamics &amp; Optimization Systems:</strong> First and second-order optimizers, decay and warmup schedules, structural regularization, normalization topologies, mixed-precision arithmetic, 3D distributed parallelism (DDP, FSDP, ZeRO-1/2/3, Megatron-LM TP/PP/SP), parameter-efficient fine-tuning (LoRA, QLoRA), and post-training alignment (SFT, DPO, PPO).</li>
-                    <li><strong>Comprehensive Evaluation Metrics:</strong> Statistical, perceptual, bounding-box, semantic, generative, and financial time-series metrics.</li>
-                    <li><strong>Dataset Engineering &amp; Manifold Sanitization:</strong> Leakage vectors, class imbalance algorithms, cryptographic and semantic deduplication, multi-modal augmentations, sharding topologies, sampling paradigms, scaling transforms, and validation gating.</li>
-                </ul>
-            </section>
+Safetensors vs PyTorch checkpoint
+Safetensors vs ONNX
+ONNX vs TensorRT
+GGUF vs Safetensors
+TensorRT vs OpenVINO
 
-            <!-- SECTION 2 -->
-            <section id="datasets">
-                <h2>2. Dataset Storage &amp; Serialization Formats</h2>
-                <p>High-throughput distributed deep learning requires feeding multi-GPU clusters at rates exceeding dozens of gigabytes per second per node. Traditional single-file or loose-image storage paradigms collapse under OS filesystem metadata locks and random I/O latency. Modern dataset engineering relies on specialized columnar, chunked, and linear stream containers.</p>
+CNN vs ViT
+ResNet vs ConvNeXt
+ViT vs Swin
+U-Net vs transformer encoder-decoder
+GAN vs diffusion
+Transformer vs SSM
+Dense model vs MoE
 
-                <h3>2.1 Format Topology &amp; Complexity Analysis</h3>
-                <pre><code>DATASETS
-|-- Parquet (Columnar, Row Groups, Snappy/Zstd, Dictionary Encoding)
-|-- Arrow (In-Memory Columnar IPC, Zero-Copy, C Data Interface, Feather)
-|-- Zarr (N-Dimensional Chunked Arrays, Key-Value Cloud Storage, Blosc)
-|-- JSONL (Line-Delimited UTF-8 Text, Simdjson, Tokenizer Ingestion)
-|-- TFRecord (Sequential Length-Delimited Protobuf, CRC32C Verification)
-|-- WebDataset (Sequential POSIX Tar Shards, High-Bandwidth Cloud Streaming)
-|-- CSV/TSV (Flat Tabular Delimited, Row-Oriented, High Deserialization Overhead)
-|-- HDF5 (Hierarchical Scientific Storage, B-Trees, Multi-Thread Locking Constraints)
-|-- NetCDF (Common Data Form, Gridded Climate/Ocean Metocean Arrays)
-|-- LMDB (Memory-Mapped B+ Tree, ACID, Zero-Copy Virtual Memory Paging)
-+-- Specialized Containers (MosaicML MDS, LitData, Petastorm, DuckDB/SQLite)</code></pre>
+SGD vs AdamW
+Adam vs AdamW
+FP16 vs BF16
+Batch size vs gradient accumulation
+DDP vs FSDP
+FSDP vs ZeRO
+LoRA vs full fine-tuning
+LoRA vs QLoRA
 
-                <h4>2.1.1 Apache Parquet</h4>
-                <p>Apache Parquet is an open-source, columnar storage file format optimized for fast analytic queries and high data compression efficiency.</p>
-                <ul>
-                    <li><strong>Physical Architecture:</strong> A Parquet file consists of a header (<code>PAR1</code>), one or more <strong>Row Groups</strong> (typically sizing between 128 MB and 1 GB to match I/O chunking), followed by a File Footer containing structural metadata, schema definitions, and block offset dictionaries. Each Row Group is partitioned into <strong>Column Chunks</strong> containing contiguous data for a single field. Column chunks are further subdivided into <strong>Pages</strong> (Data Pages and Dictionary Pages, typically 1 MB), which serve as the atomic unit of decompression and decoding.</li>
-                    <li><strong>Encoding and Compression Schemes:</strong> Parquet implements run-length encoding (RLE), bit-packing, and dictionary encoding. For categorical or repetitive string/integer arrays, dictionary encoding replaces literal values with compact integer bit-widths:
-                        <div class="math-block">$$\text{Bit Width} = \lceil \log_2(U) \rceil$$</div>
-                        where \(U\) is the number of unique elements. Column pages are subsequently compressed using block algorithms such as Snappy, Zstandard (zstd), or Gzip.
-                    </li>
-                    <li><strong>Query Acceleration &amp; Filtering:</strong> Parquet enables <strong>Predicate Pushdown</strong> and <strong>Projection Pushdown</strong>:
-                        <ul>
-                            <li><em>Projection Pushdown:</em> Only physical byte ranges corresponding to requested columns are read into memory, achieving \(\mathcal{O}(C_{\text{active}} \cdot N)\) I/O complexity rather than \(\mathcal{O}(C_{\text{total}} \cdot N)\).</li>
-                            <li><em>Predicate Pushdown:</em> File metadata stores minimum and maximum values (\(\min_k, \max_k\)) for every page and row group. Queries with filter conditions \(\text{col} &gt; \tau\) skip entire row groups in \(\mathcal{O}(1)\) time if \(\max_k \le \tau\).</li>
-                        </ul>
-                    </li>
-                </ul>
+PSNR vs SSIM
+SSIM vs LPIPS
+FID vs KID
+ROC-AUC vs PR-AUC
+MAE vs RMSE
+</code></pre>
+<p>The correct answer must always be conditional on the task and
+constraints.</p>
+<hr/>
+<h1 id="35-general-recommendations-by-scenario">35. General Recommendations by Scenario</h1>
+<h2 id="large-image-restoration-dataset">Large image restoration dataset</h2>
+<p>Consider:</p>
+<pre><code class="language-text">WebDataset / Zarr / suitable sharded binary representation
++
+streaming
++
+deterministic shuffling
++
+group-aware splitting
++
+perceptual + pixel metrics
+</code></pre>
+<h2 id="large-tabular-dataset">Large tabular dataset</h2>
+<p>Consider:</p>
+<pre><code class="language-text">Parquet
++
+Arrow
++
+column projection
++
+predicate filtering
++
+partitioning
+</code></pre>
+<h2 id="llm-instructionsft-dataset">LLM instruction/SFT dataset</h2>
+<p>A practical source representation is:</p>
+<pre><code class="language-text">JSONL
+</code></pre>
+<p>with explicit:</p>
+<pre><code class="language-text">messages
+system/developer instructions where applicable
+user input
+assistant response
+metadata
+source/provenance
+quality flags
+</code></pre>
+<p>The final training framework may transform this into tokenized
+binary/sharded representations.</p>
+<h2 id="scientific-n-dimensional-data">Scientific N-dimensional data</h2>
+<p>Consider:</p>
+<pre><code class="language-text">Zarr
+or
+HDF5 / NetCDF
+</code></pre>
+<p>depending on ecosystem and access pattern.</p>
+<h2 id="local-llm-inference">Local LLM inference</h2>
+<p>Consider:</p>
+<pre><code class="language-text">GGUF
+</code></pre>
+<p>when the target runtime supports it.</p>
+<h2 id="cross-platform-inference">Cross-platform inference</h2>
+<p>Consider:</p>
+<pre><code class="language-text">ONNX
+</code></pre>
+<p>when the model operators and target runtime are compatible.</p>
+<h2 id="nvidia-production-inference">NVIDIA production inference</h2>
+<p>Consider:</p>
+<pre><code class="language-text">TensorRT
+</code></pre>
+<p>when hardware-specific optimization justifies compilation and
+portability constraints are acceptable.</p>
+<hr/>
+<h1 id="36-general-ai-knowledge-safety-and-reliability-rules">36. General AI Knowledge Safety and Reliability Rules</h1>
+<p>A training assistant should:</p>
+<ul>
+<li>distinguish facts from estimates;</li>
+<li>distinguish benchmark results from theoretical expectations;</li>
+<li>identify version-dependent behavior;</li>
+<li>avoid fabricating unsupported APIs;</li>
+<li>avoid claiming a metric proves overall model quality;</li>
+<li>warn when evaluation is invalid due to leakage;</li>
+<li>avoid treating a single benchmark as universal;</li>
+<li>identify when a recommendation requires empirical validation;</li>
+<li>preserve dataset provenance;</li>
+<li>treat untrusted serialized model files as potentially dangerous;</li>
+<li>never recommend executing untrusted pickle-based checkpoints
+blindly.</li>
+</ul>
+<hr/>
+<h1 id="37-recommended-knowledge-base-metadata">37. Recommended Knowledge-Base Metadata</h1>
+<p>Every extracted concept should be representable using metadata such as:</p>
+<pre><code class="language-yaml">concept_id:
+title:
+domain:
+subdomain:
+definition:
+aliases:
+related_concepts:
+common_confusions:
+best_use_cases:
+poor_use_cases:
+advantages:
+limitations:
+failure_modes:
+selection_criteria:
+metrics:
+frameworks:
+hardware:
+source_type: general_ai
+confidence:
+</code></pre>
+<p>For training examples:</p>
+<pre><code class="language-yaml">example_id:
+task_type: explanation | comparison | diagnosis | procedure | recommendation
+domain:
+difficulty:
+question:
+context:
+answer:
+reasoning_summary:
+constraints:
+common_wrong_answer:
+correction:
+</code></pre>
+<hr/>
+<h1 id="38-final-general-ai-training-continuum">38. Final General AI Training Continuum</h1>
+<pre><code class="language-text">                    RAW DATA
+                       |
+                       v
+             +-------------------+
+             | DATA ENGINEERING   |
+             | clean / split /   |
+             | deduplicate /     |
+             | validate          |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | SERIALIZATION     |
+             | Parquet / Zarr /  |
+             | WebDataset / ...  |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | MODEL             |
+             | CNN / Transformer |
+             | U-Net / Diffusion |
+             | MoE / SSM / ...   |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | OPTIMIZATION      |
+             | loss / optimizer  |
+             | LR / precision    |
+             | regularization    |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | DISTRIBUTED       |
+             | DDP / FSDP / ZeRO |
+             | TP / PP           |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | EVALUATION        |
+             | task metrics      |
+             | robustness / OOD  |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | CHECKPOINT /      |
+             | EXPORT            |
+             | Safetensors /    |
+             | ONNX / GGUF / ... |
+             +-------------------+
+                       |
+                       v
+             +-------------------+
+             | DEPLOYMENT        |
+             | cloud / server /  |
+             | desktop / edge    |
+             +-------------------+
+</code></pre>
+<hr/>
+<h1 id="39-summary">39. Summary</h1>
+<p>The central principle of modern AI engineering is <strong>constraint-aware
+system design</strong>.</p>
+<p>There is no universally best:</p>
+<ul>
+<li>dataset format;</li>
+<li>model architecture;</li>
+<li>optimizer;</li>
+<li>precision;</li>
+<li>batch size;</li>
+<li>distributed strategy;</li>
+<li>metric;</li>
+<li>serialization format.</li>
+</ul>
+<p>The correct decision depends on:</p>
+<pre><code class="language-text">task
++
+data
++
+scale
++
+access pattern
++
+model
++
+hardware
++
+training budget
++
+evaluation requirements
++
+deployment target
+</code></pre>
+<p>A high-quality AI Training Helper must therefore learn not only
+definitions but <strong>relationships, trade-offs, failure modes, selection
+criteria, and uncertainty</strong>.</p>
+<p>The General AI Knowledge layer provides the universal technical
+foundation.</p>
+<p>Domain-specific or application documentation provides the implementation
+and tool-integration layer.</p>
+<p>Runtime telemetry and APIs provide active environment state.</p>
+<p>Together these form a reliable, context-aware AI training assistant rather than a
+static chatbot.</p>
+<hr/>
+<h1 id="appendix-a-training-corpus-coverage-checklist">Appendix A: Training-Corpus Coverage Checklist</h1>
+<p>This document is intended to provide excellent general coverage of:</p>
+<ul>
+<li>[x] CSV / TSV</li>
+<li>[x] JSONL / NDJSON</li>
+<li>[x] Parquet</li>
+<li>[x] Apache Arrow / IPC</li>
+<li>[x] Zarr</li>
+<li>[x] TFRecord</li>
+<li>[x] WebDataset</li>
+<li>[x] HDF5</li>
+<li>[x] NetCDF</li>
+<li>[x] LMDB</li>
+<li>[x] streaming/sharded dataset concepts</li>
+<li>[x] dataset manifests</li>
+<li>[x] dataset validation</li>
+<li>[x] leakage</li>
+<li>[x] deduplication</li>
+<li>[x] class imbalance</li>
+<li>[x] augmentation</li>
+<li>[x] sampling</li>
+<li>[x] sharding</li>
+<li>[x] train/validation/test splitting</li>
+<li>[x] Safetensors</li>
+<li>[x] PyTorch checkpoints</li>
+<li>[x] ONNX</li>
+<li>[x] GGUF</li>
+<li>[x] GGML</li>
+<li>[x] TensorRT</li>
+<li>[x] OpenVINO</li>
+<li>[x] Core ML</li>
+<li>[x] TFLite/LiteRT</li>
+<li>[x] JAX/Orbax checkpoint concepts</li>
+<li>[x] CNN</li>
+<li>[x] ResNet</li>
+<li>[x] EfficientNet</li>
+<li>[x] ConvNeXt</li>
+<li>[x] ViT</li>
+<li>[x] Swin</li>
+<li>[x] Transformer</li>
+<li>[x] U-Net</li>
+<li>[x] GAN</li>
+<li>[x] VAE</li>
+<li>[x] Diffusion</li>
+<li>[x] MoE</li>
+<li>[x] State Space Models</li>
+<li>[x] SGD</li>
+<li>[x] Momentum</li>
+<li>[x] Adam</li>
+<li>[x] AdamW</li>
+<li>[x] RMSProp</li>
+<li>[x] LARS / LAMB</li>
+<li>[x] Lion</li>
+<li>[x] Sophia</li>
+<li>[x] Muon</li>
+<li>[x] learning-rate schedules</li>
+<li>[x] warmup</li>
+<li>[x] cosine decay</li>
+<li>[x] OneCycle</li>
+<li>[x] WSD</li>
+<li>[x] regularization</li>
+<li>[x] normalization</li>
+<li>[x] mixed precision</li>
+<li>[x] FP16 / BF16 / FP8</li>
+<li>[x] gradient accumulation</li>
+<li>[x] DDP</li>
+<li>[x] FSDP</li>
+<li>[x] ZeRO</li>
+<li>[x] tensor parallelism</li>
+<li>[x] pipeline parallelism</li>
+<li>[x] LoRA</li>
+<li>[x] QLoRA</li>
+<li>[x] SFT</li>
+<li>[x] DPO</li>
+<li>[x] PPO/RLHF concepts</li>
+<li>[x] classification metrics</li>
+<li>[x] detection metrics</li>
+<li>[x] segmentation metrics</li>
+<li>[x] restoration metrics</li>
+<li>[x] generative metrics</li>
+<li>[x] language-model metrics</li>
+<li>[x] forecasting metrics</li>
+<li>[x] quantization</li>
+<li>[x] reproducibility</li>
+<li>[x] checkpointing</li>
+<li>[x] hyperparameter search</li>
+<li>[x] pathology</li>
+<li>[x] model selection</li>
+<li>[x] deployment trade-offs</li>
+<li>[x] AI Helper reasoning principles</li>
+</ul>
+<hr/>
+<h1 id="appendix-b-important-terminology-distinctions">Appendix B: Important Terminology Distinctions</h1>
+<p>The training corpus should preserve these distinctions:</p>
+<hr/>
+<p>Term A                  Must not be treated as  Key distinction
+identical to</p>
+<hr/>
+<p>Dataset                 Dataset format          Dataset is the data;
+format is its
+representation</p>
+<p>Dataset                 Training split          Dataset may contain
+multiple splits</p>
+<p>Checkpoint              Model weights           Checkpoint can contain
+full training state</p>
+<p>Weights                 Architecture            Weights are parameters;
+architecture defines
+computation</p>
+<p>ONNX                    Safetensors             ONNX represents a
+computational graph;
+Safetensors stores
+tensors</p>
+<p>GGUF                    Universal model format  GGUF is primarily an LLM
+inference ecosystem
+format</p>
+<p>Loss                    Metric                  Loss is optimized;
+metric evaluates</p>
+<p>Validation              Test                    Validation influences
+development; test should
+remain isolated</p>
+<p>Batch size              Micro-batch             A micro-batch may be
+accumulated before
+optimizer update</p>
+<p>Epoch                   Optimizer step          One epoch traverses a
+dataset; one optimizer
+step updates parameters</p>
+<p>Precision               Quantization            Precision describes
+numerical
+representation;
+quantization is a
+broader
+conversion/compression
+process</p>
+<p>Data parallelism        Model parallelism       Data parallelism
+replicates model
+computation across data;
+model parallelism
+partitions the model</p>
+<p>LoRA                    Quantization            LoRA changes trainable
+parameterization;
+quantization changes
+numerical representation</p>
+<p>SFT                     RLHF                    SFT is supervised
+learning; RLHF uses
+preference/reward
+optimization</p>
+<p>PSNR                    Perceptual quality      PSNR measures pixel
+error, not human
+preference</p>
+<h2 id="fid-human-quality-fid-is-a-distributional-statistic-not-a-complete-human-evaluation-substitute">FID                     Human quality           FID is a distributional
+statistic, not a
+complete
+human-evaluation
+substitute</h2>
+<hr/>
+<h1 id="appendix-c-required-behavior-for-derived-ai-helper-training-examples">Appendix C: Required Behavior for Derived AI-Helper Training Examples</h1>
+<p>Derived SFT examples should teach the model to:</p>
+<ol>
+<li>answer definitions precisely;</li>
+<li>compare alternatives conditionally;</li>
+<li>explain pros and cons;</li>
+<li>identify hidden constraints;</li>
+<li>diagnose symptoms systematically;</li>
+<li>distinguish root cause from symptom;</li>
+<li>recommend measurements before speculative fixes;</li>
+<li>state when an answer is framework-specific;</li>
+<li>state when empirical validation is required;</li>
+<li>avoid absolute claims where evidence is conditional;</li>
+<li>preserve the distinction between general AI knowledge and
+Studio-specific knowledge;</li>
+<li>never invent a Studio feature merely because the general technology
+exists.</li>
+</ol>
+<hr/>
+<h1 id="appendix-d-source-authority-boundary">Appendix D: Source Authority Boundary</h1>
+<p>For an intelligent AI training assistant:</p>
+<pre><code class="language-text">GENERAL_AI_TRAINING_KNOWLEDGE.md
+    = general AI/ML scientific principles &amp; training dynamics
 
-                <h4>2.1.2 Apache Arrow</h4>
-                <p>Apache Arrow defines a standardized, language-independent, in-memory columnar format designed for zero-copy data interchange and high-performance vectorized execution (SIMD).</p>
-                <ul>
-                    <li><strong>Memory Layout &amp; Zero-Copy Semantics:</strong> Arrow structures arrays into contiguous memory buffers:
-                        <ol>
-                            <li><em>Validity Bitmap:</em> Bit array tracking <code>NULL</code> states with 1 bit per element.</li>
-                            <li><em>Offsets Buffer:</em> Contiguous 32-bit or 64-bit integer array defining slice start/end indices for variable-length items (strings, lists, binary).</li>
-                            <li><em>Values Buffer:</em> Contiguous array of raw physical primitives (float32, int64, UTF-8 bytes).</li>
-                        </ol>
-                    </li>
-                    <li><strong>Inter-Process Communication (IPC) &amp; Feather:</strong> Arrow's on-disk encapsulation (Feather / Arrow IPC format) matches its exact memory layout byte-for-byte. Reading an Arrow IPC file via memory mapping (<code>mmap</code>) incurs zero deserialization or copying overhead:
-                        <div class="math-block">$$T_{\text{read}} = \mathcal{O}(1) \quad \text{virtual address allocation time}$$</div>
-                    </li>
-                </ul>
+PLATFORM / APPLICATION MANUALS
+    = platform architecture, workflows, models, GUI and tool implementations
 
-                <h4>2.1.3 Zarr</h4>
-                <p>Zarr provides an open-source format for chunked, compressed, N-dimensional arrays designed for cloud-native tensor manipulation, geophysical models, biomedical imaging, and multi-dimensional machine learning arrays.</p>
-                <ul>
-                    <li><strong>Chunking &amp; Hierarchical Storage:</strong> An \(N\)-dimensional array \(\mathcal{A} \in \mathbb{R}^{D_1 \times D_2 \times \dots \times D_k}\) is partitioned into regular, non-overlapping hyper-rectangles (chunks) of shape \((c_1, c_2, \dots, c_k)\). Each chunk is compressed independently and stored as an isolated key-value object in a storage store (such as a POSIX path <code>data/0.1.4</code> or S3/GCS bucket key <code>s3://bucket/data/0/1/4</code>).</li>
-                    <li><strong>Metadata &amp; Concurrency:</strong> Array shape, data type, chunk dimensions, fill values, and compression codecs are recorded in a lightweight JSON document (<code>.zarray</code>). Chunks are independently addressable, allowing distributed workers to write and read disjoint regions concurrently without lock contention:
-                        <div class="math-block">$$\text{Chunk Key} = \text{prefix} + \left( \lfloor i_1 / c_1 \rfloor, \lfloor i_2 / c_2 \rfloor, \dots, \lfloor i_k / c_k \rfloor \right)$$</div>
-                    </li>
-                </ul>
+CURRENT STATE / REGISTRY
+    = active framework configurations, installed packages and models
 
-                <h4>2.1.4 JSONL (JSON Lines)</h4>
-                <p>JSONL consists of line-delimited UTF-8 plain text records where each line represents a valid JSON object terminated by a newline (<code>\n</code>). Canonical for LLM pretraining and instruction fine-tuning datasets. High CPU overhead in Python is mitigated by SIMD-vectorized parsers (<code>simdjson</code>) achieving &gt; 2.5 GB/s.</p>
+RUNTIME TOOLS &amp; TELEMETRY
+    = current hardware, active jobs, metrics, files, environment, and GPU telemetry
 
-                <h4>2.1.5 TFRecord</h4>
-                <p>Binary container developed by Google for TensorFlow/JAX ecosystems, storing sequential length-prefixed Protocol Buffer records with masked CRC32C verification:</p>
-                <div class="math-block">$$\text{MaskedCRC}(x) = \left( (x \gg 15) \mid (x \ll 17) \right) + 0xa282ead8ab \pmod{2^{32}}$$</div>
+USER CONTEXT
+    = current task, objectives, constraints and intent
+</code></pre>
+<p>The assistant should prefer the most authoritative and current source
+available for the specific question.</p>
+<hr/>
+<h1 id="document-end">Document End</h1>
 
-                <h4>2.1.6 WebDataset</h4>
-                <p>POSIX TAR-based format designed specifically for petabyte-scale deep learning on clusters. Groups multi-modal sample components by common base filename (e.g. <code>sample001.jpg</code>, <code>sample001.json</code>). Replaces random IOPS with continuous sequential HTTP/S3 stream reading at line-rate bandwidth.</p>
-
-                <h4>2.1.7 Other Essential Data Formats (LMDB, HDF5, NetCDF, MDS)</h4>
-                <ul>
-                    <li><strong>LMDB:</strong> Memory-mapped B+ tree database providing lock-free zero-copy reads directly from the OS page cache via <code>mmap</code>.</li>
-                    <li><strong>HDF5:</strong> Hierarchical scientific format simulating POSIX filesystem within one file; requires careful handling in multi-process Python due to library-level mutex locks.</li>
-                    <li><strong>NetCDF:</strong> Specialized climate/ocean format built on HDF5 with CF metadata conventions.</li>
-                    <li><strong>MosaicML Streaming (MDS):</strong> Cloud-native streaming format with index manifests, instant worker resumption, and dynamic prefetching.</li>
-                </ul>
-
-                <h3>2.2 Dataset Storage Format Comparative Matrix</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Format</th>
-                            <th>Storage Paradigm</th>
-                            <th>Random Read Seek Complexity</th>
-                            <th>Space Compression Factor</th>
-                            <th>Zero-Copy Memory Access</th>
-                            <th>Multi-Worker GIL Safety</th>
-                            <th>Optimal Target Domain</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Parquet</strong></td><td>Columnar Hybrid</td><td>\(\mathcal{O}(1)\) via Row Groups</td><td>Very High (\(5\times - 20\times\))</td><td>Yes (via Arrow)</td><td>Excellent (C++ engine)</td><td>Tabular, Metadata, Time-Series</td></tr>
-                        <tr><td><strong>Arrow (IPC)</strong></td><td>In-Memory Columnar</td><td>\(\mathcal{O}(1)\) direct offset</td><td>Moderate (\(1\times - 3\times\))</td><td>Complete (\(\mathcal{O}(1)\) mmap)</td><td>Complete (Native C++)</td><td>Vectorized Data, Pipelines</td></tr>
-                        <tr><td><strong>Zarr</strong></td><td>N-D Chunked Array</td><td>\(\mathcal{O}(1)\) per chunk key</td><td>High (\(3\times - 10\times\))</td><td>Buffer-dependent</td><td>Complete (Independent)</td><td>Climate, Bio-imaging, Tensors</td></tr>
-                        <tr><td><strong>JSONL</strong></td><td>Linear Text</td><td>\(\mathcal{O}(N)\) (Requires index)</td><td>Low (\(1\times\), uncompressed)</td><td>None (String parse)</td><td>Safe (Independent lines)</td><td>LLM Pretraining, Chat SFT</td></tr>
-                        <tr><td><strong>TFRecord</strong></td><td>Sequential Binary</td><td>\(\mathcal{O}(N)\) without index</td><td>High (\(2\times - 5\times\))</td><td>None (Protobuf decode)</td><td>High (TensorFlow runtime)</td><td>TPU/TensorFlow Vision</td></tr>
-                        <tr><td><strong>WebDataset</strong></td><td>Sequential TAR Shards</td><td>\(\mathcal{O}(1)\) per shard stream</td><td>High (\(2\times - 8\times\))</td><td>None (Stream extraction)</td><td>Complete (Shard assignment)</td><td>Multi-Modal, ImageNet, Video</td></tr>
-                        <tr><td><strong>HDF5</strong></td><td>Hierarchical Tree</td><td>\(\mathcal{O}(\log B)\) B-Tree</td><td>High (\(2\times - 8\times\))</td><td>Partial (Driver locked)</td><td>Poor (Global Mutex Lock)</td><td>Dense Physics, Cryo-EM</td></tr>
-                        <tr><td><strong>LMDB</strong></td><td>B+ Tree mmap</td><td>\(\mathcal{O}(\log_{B} N)\)</td><td>Low (\(1\times - 1.5\times\))</td><td>Complete (\(\mathcal{O}(1)\) mmap)</td><td>Complete (Lock-free Read)</td><td>Vision Patches, Embeddings</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- SECTION 3 -->
-            <section id="weights">
-                <h2>3. Model Weights, Serialization &amp; Execution Runtimes</h2>
-                <p>Model weight serialization requires safe, memory-mapped data structures capable of hosting hundreds of billions of parameters across training and inference clusters.</p>
-
-                <h3>3.1 Weight Formats Topology</h3>
-                <pre><code>MODEL WEIGHTS
-|-- Safetensors (Zero-Copy, Security Hardened, Rust Engine, Direct Memory Mapping)
-|-- PyTorch .pt/.pth (Python Pickle Engine, ZipArchive, Arbitrary Code Execution Risk)
-|-- ONNX (Open Neural Network Exchange, Protobuf Schema, Cross-Platform Engine)
-|-- GGUF (GPT-Generated Unified Format, Quantized KV Metadata, Native MMap, llama.cpp)
-|-- GGML (Legacy Quantized Container, Obsoleted by GGUF)
-|-- TensorRT (Hardware-Compiled Execution Plans, Tensor Cores, Layer Fusion Engines)
-|-- OpenVINO (Intel Intermediate Representation, XML Topology + Binary Buffers)
-+-- Specialized Runtimes (Apple CoreML, TFLite, JAX Orbax Checkpoints, MLX)</code></pre>
-
-                <h3>3.2 Deep-Dive Specification</h3>
-                <ul>
-                    <li><strong>Safetensors:</strong> Lightweight, secure format developed by Hugging Face. Contains an 8-byte length prefix, an aligned UTF-8 JSON header metadata mapping tensors to byte offsets, and contiguous raw binary buffers. Guarantees zero arbitrary code execution and provides microsecond zero-copy mapping via <code>mmap</code>.</li>
-                    <li><strong>PyTorch (.pt / .pth):</strong> Uncompressed ZIP archive wrapping Python <code>pickle</code> objects (<code>data.pkl</code>) and raw tensor storage files. Unpickling is Turing-complete and vulnerable to arbitrary code execution exploits unless <code>weights_only=True</code> is enforced.</li>
-                    <li><strong>ONNX:</strong> Standardized Protocol Buffers graph schema. Supports external data buffers for models exceeding 2 GB. Enables graph-level cross-platform acceleration through execution providers (CUDA, TensorRT, DirectML, CoreML).</li>
-                    <li><strong>GGUF:</strong> Successor to GGML by Georgi Gerganov and the <code>llama.cpp</code> community. Single-file binary encoding comprehensive model architecture metadata, vocabulary merges, and block-quantized tensors (k-quants: <code>Q4_K_M</code>, <code>Q5_K_M</code>, <code>IQ3_XXS</code>).</li>
-                    <li><strong>TensorRT (.engine):</strong> NVIDIA hardware-compiled binary engine featuring layer fusion (Conv+BN+ReLU), kernel autotuning, and INT8 symmetric KL calibration:
-                        <div class="math-block">$$\text{Scale} = \frac{127}{\max_{T} |X|}$$</div>
-                    </li>
-                    <li><strong>OpenVINO:</strong> Intel Intermediate Representation decoupling graph structure (<code>.xml</code>) from binary weight buffers (<code>.bin</code>).</li>
-                </ul>
-
-                <h3>3.3 Model Weight Formats Comparison Matrix</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Format</th>
-                            <th>Security (Arbitrary Execution)</th>
-                            <th>Zero-Copy mmap</th>
-                            <th>Hardware Portability</th>
-                            <th>Quantization Integration</th>
-                            <th>Dominant Ecosystem / Runtime</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Safetensors</strong></td><td>Complete (Pure Data)</td><td>Yes (Native)</td><td>Universal</td><td>FP8, FP16, BF16, Int8</td><td>PyTorch, Hugging Face, Diffusers</td></tr>
-                        <tr><td><strong>PyTorch (.pt)</strong></td><td>Critical Vulnerability</td><td>Limited (Zip overhead)</td><td>Universal</td><td>PyTorch native quant</td><td>PyTorch Research &amp; Training</td></tr>
-                        <tr><td><strong>ONNX</strong></td><td>High (Protobuf)</td><td>Yes (External Data)</td><td>Universal</td><td>INT8 (NNCF, ORT Quant)</td><td>Cross-platform, Enterprise, Cloud</td></tr>
-                        <tr><td><strong>GGUF</strong></td><td>Complete (Pure Data)</td><td>Yes (Native)</td><td>Universal (CPU/GPU)</td><td>Extensive (Q2_K to Q8_0)</td><td>llama.cpp, Ollama, Edge LLMs</td></tr>
-                        <tr><td><strong>TensorRT</strong></td><td>High (Binary Code)</td><td>Direct Device Alloc</td><td>Locked to exact GPU</td><td>FP8, INT8, INT4 Calibrated</td><td>NVIDIA Enterprise Inference</td></tr>
-                        <tr><td><strong>OpenVINO</strong></td><td>Complete (XML + BIN)</td><td>Yes</td><td>Intel Hardware</td><td>INT8, INT4 (via NNCF)</td><td>Intel OpenVINO Runtime</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- SECTION 4 -->
-            <section id="architectures">
-                <h2>4. Deep Learning Model Architectures</h2>
-                <p>Neural network architectures encode inductive biases to model representations across spatial, temporal, semantic, and generative manifolds.</p>
-
-                <h3>4.1 Architecture Hierarchy</h3>
-                <pre><code>ARCHITECTURES
-|-- CNN &amp; Spatial Convolutions
-|   |-- Classic CNN (LeNet, AlexNet, VGG)
-|   |-- ResNet (Residual Highways, Skip Additions, Bottleneck Blocks)
-|   |-- EfficientNet (Compound Scaling, MBConv, Fused-MBConv)
-|   +-- ConvNeXt (Modernized Depthwise 7x7 Convolutions, Inverted Bottlenecks)
-|-- Transformers &amp; Vision Transformers
-|   |-- Transformer (Self-Attention, MHA, GQA, RoPE, Positional Embeddings)
-|   |-- ViT (Patch Projection, [CLS] Token, Quadratic Global Attention)
-|   +-- Swin Transformer (Shifted Windows, Local Attention, Hierarchical Merging)
-|-- Dense Prediction &amp; Reconstruction
-|   +-- U-Net (Encoder-Decoder, Spatial Skip Concatenations)
-|-- Generative Manifolds
-|   |-- GAN (Minimax Game, Discriminator, Generator, WGAN-GP Lipschitz)
-|   |-- VAE (Reparameterization Trick, Latent ELBO, KL Regularization, VQ-VAE)
-|   +-- Diffusion Models (DDPM, DDIM, Score SDE, Latent Diffusion, Flow Matching)
-+-- Dynamic &amp; Sequence Topologies
-    |-- MoE (Mixture of Experts, Top-k Routing, Gating Load Balancing)
-    +-- Alternative Sequence Models (Mamba/SSM, LSTM/GRU, DenseNet)</code></pre>
-
-                <h3>4.2 Key Architectural Formulations</h3>
-                <ul>
-                    <li><strong>ResNet Gradient Highway:</strong>
-                        <div class="math-block">$$\frac{\partial \mathcal{E}}{\partial \mathbf{x}_l} = \frac{\partial \mathcal{E}}{\partial \mathbf{x}_L} \left( \mathbf{I} + \frac{\partial}{\partial \mathbf{x}_l} \sum_{i=l}^{L-1} \mathcal{F}(\mathbf{x}_i, \mathcal{W}_i) \right)$$</div>
-                        The identity term \(\mathbf{I}\) ensures unobstructed gradient backpropagation across arbitrary network depth.
-                    </li>
-                    <li><strong>EfficientNet Compound Scaling:</strong>
-                        <div class="math-block">$$d = \alpha^\phi, \quad w = \beta^\phi, \quad r = \gamma^\phi \quad \text{subject to} \quad \alpha \cdot \beta^2 \cdot \gamma^2 \approx 2$$</div>
-                    </li>
-                    <li><strong>Transformer Scaled Dot-Product Attention:</strong>
-                        <div class="math-block">$$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left( \frac{\mathbf{Q} \mathbf{K}^T}{\sqrt{d_k}} \right) \mathbf{V}$$</div>
-                    </li>
-                    <li><strong>Swin Shifted Window Complexity:</strong>
-                        <div class="math-block">$$\text{FLOPs}_{\text{W-MSA}} = \mathcal{O}(M^2 \cdot HW \cdot D)$$</div>
-                        Reduces global quadratic self-attention \(\mathcal{O}(H^2 W^2)\) to linear scaling with image resolution.
-                    </li>
-                    <li><strong>WGAN-GP 1-Lipschitz Objective:</strong>
-                        <div class="math-block">$$\mathcal{L}_{\text{WGAN-GP}} = \mathbb{E}[D(\tilde{\mathbf{x}})] - \mathbb{E}[D(\mathbf{x})] + \lambda \mathbb{E}_{\hat{\mathbf{x}}}\left[ \left( \|\nabla_{\hat{\mathbf{x}}} D(\hat{\mathbf{x}})\|_2 - 1 \right)^2 \right]$$</div>
-                    </li>
-                    <li><strong>Variational Autoencoder ELBO:</strong>
-                        <div class="math-block">$$\log p_\theta(\mathbf{x}) \ge \mathbb{E}_{q_\phi(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{\text{KL}}(q_\phi(\mathbf{z}|\mathbf{x}) \,\|\, p(\mathbf{z}))$$</div>
-                    </li>
-                    <li><strong>Diffusion Closed-Form Forward Marginal:</strong>
-                        <div class="math-block">$$\mathbf{x}_t = \sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha}_t}\boldsymbol{\epsilon}, \quad \boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$</div>
-                    </li>
-                    <li><strong>Sparse Mixture of Experts (MoE):</strong>
-                        <div class="math-block">$$\mathbf{y} = \sum_{i=1}^E G(\mathbf{x})_i \cdot \mathbf{E}_i(\mathbf{x}), \quad G(\mathbf{x}) = \text{Softmax}\left( \text{TopK}(H(\mathbf{x}), k) \right)$$</div>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- SECTION 5 -->
-            <section id="training">
-                <h2>5. Training Dynamics &amp; Optimization Systems</h2>
-                <p>Convergence in high-dimensional non-convex parameter spaces requires coordinated optimization, learning rate schedules, precision management, and distributed communication fabrics.</p>
-
-                <h3>5.1 Core Optimization Formulations</h3>
-                <ul>
-                    <li><strong>AdamW Decoupled Weight Decay:</strong>
-                        <div class="math-block">$$\theta_t = \theta_{t-1} - \eta_t \left( \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} + \lambda \theta_{t-1} \right)$$</div>
-                    </li>
-                    <li><strong>Cosine Annealing Schedule:</strong>
-                        <div class="math-block">$$\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min})\left( 1 + \cos\left( \frac{t}{T_{\max}} \pi \right) \right)$$</div>
-                    </li>
-                    <li><strong>RMSNorm Normalization:</strong>
-                        <div class="math-block">$$\bar{a}_i = \frac{a_i}{\text{RMS}(\mathbf{a})} g_i, \quad \text{where} \quad \text{RMS}(\mathbf{a}) = \sqrt{\frac{1}{d}\sum_{i=1}^d a_i^2 + \epsilon}$$</div>
-                    </li>
-                    <li><strong>Distributed ZeRO-3 Memory Partitioning:</strong>
-                        <div class="math-block">$$\text{VRAM}_{\text{per-GPU}} \approx \frac{\text{Model Weights} + \text{Gradients} + \text{Optimizer States}}{K}$$</div>
-                    </li>
-                    <li><strong>Low-Rank Adaptation (LoRA):</strong>
-                        <div class="math-block">$$\mathbf{W} = \mathbf{W}_0 + \frac{\alpha}{r} (\mathbf{B} \cdot \mathbf{A}), \quad \mathbf{B} \in \mathbb{R}^{d \times r}, \; \mathbf{A} \in \mathbb{R}^{r \times k}$$</div>
-                    </li>
-                    <li><strong>Direct Preference Optimization (DPO):</strong>
-                        <div class="math-block">$$\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l)}\left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w | x)}{\pi_{\text{ref}}(y_w | x)} - \beta \log \frac{\pi_\theta(y_l | x)}{\pi_{\text{ref}}(y_l | x)} \right) \right]$$</div>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- SECTION 6 -->
-            <section id="metrics">
-                <h2>6. Comprehensive Evaluation &amp; Loss Metrics</h2>
-                <p>Model validation requires metrics tailored to classification, localization, surface boundary overlap, perceptual fidelity, generative distribution divergence, and temporal forecasting.</p>
-
-                <h3>6.1 Metrics Mathematical Reference</h3>
-                <ul>
-                    <li><strong>Focal Loss for Imbalance:</strong>
-                        <div class="math-block">$$\text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</div>
-                    </li>
-                    <li><strong>Complete IoU (CIoU) for Detection:</strong>
-                        <div class="math-block">$$\text{CIoU} = \text{IoU} - \left( \frac{\rho^2(b, b^{\text{gt}})}{c^2} + \alpha v \right), \quad v = \frac{4}{\pi^2}\left( \arctan\frac{w^{\text{gt}}}{h^{\text{gt}}} - \arctan\frac{w}{h} \right)^2$$</div>
-                    </li>
-                    <li><strong>Dice Coefficient for Segmentation:</strong>
-                        <div class="math-block">$$\text{Dice} = \frac{2 |X \cap Y|}{|X| + |Y|} = \frac{2 TP}{2 TP + FP + FN}$$</div>
-                    </li>
-                    <li><strong>Peak Signal-to-Noise Ratio (PSNR):</strong>
-                        <div class="math-block">$$\text{PSNR} = 10 \cdot \log_{10}\left( \frac{\text{MAX}_I^2}{\text{MSE}} \right)$$</div>
-                    </li>
-                    <li><strong>Fréchet Inception Distance (FID):</strong>
-                        <div class="math-block">$$\text{FID} = \|\boldsymbol{\mu}_r - \boldsymbol{\mu}_g\|_2^2 + \text{Tr}\left( \boldsymbol{\Sigma}_r + \boldsymbol{\Sigma}_g - 2(\boldsymbol{\Sigma}_r \boldsymbol{\Sigma}_g)^{1/2} \right)$$</div>
-                    </li>
-                    <li><strong>Language Model Perplexity:</strong>
-                        <div class="math-block">$$\text{PPL}(X) = \exp\left( -\frac{1}{N}\sum_{i=1}^N \log P_\theta(x_i | x_{<i}) \right) = 2^{\mathcal{H}(P)}$$</div>
-                    </li>
-                    <li><strong>Financial Sharpe Ratio:</strong>
-                        <div class="math-block">$$\text{Sharpe Ratio} = \frac{\mathbb{E}[R_p - R_f]}{\sigma_p}$$</div>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- SECTION 7 -->
-            <section id="engineering">
-                <h2>7. Dataset Engineering &amp; Manifold Sanitization</h2>
-                <p>Data curation is a foundational engineering discipline bounding model generalization and preventing downstream failure modes.</p>
-
-                <h3>7.1 Leakage Vectors &amp; Mitigations</h3>
-                <ul>
-                    <li><strong>Temporal / Lookahead Leakage:</strong> Enforce strict causal masking: \(x_t = f(x_t, \dots, x_{t-k})\) with zero future window references.</li>
-                    <li><strong>Spatial Overlap Leakage:</strong> Prevent overlapping image patches from the same patient or aerial tile from spanning across train and validation splits.</li>
-                    <li><strong>Benchmark Contamination:</strong> Execute \(n\)-gram decontamination (\(n \ge 13\)) against pretraining corpora.</li>
-                    <li><strong>Preprocessing Leakage:</strong> Compute scalers strictly on training folds before applying to validation data.</li>
-                </ul>
-
-                <h3>7.2 Imbalance &amp; Deduplication</h3>
-                <ul>
-                    <li><strong>Class-Balanced Loss:</strong> Scales loss by effective number of samples:
-                        <div class="math-block">$$E_n = \frac{1 - \beta^n}{1 - \beta}, \quad \mathcal{L}_{\text{CB}} = \frac{1 - \beta}{1 - \beta^{n_y}} \mathcal{L}$$</div>
-                    </li>
-                    <li><strong>MinHash &amp; LSH:</strong> Evaluates Jaccard similarity in sub-quadratic \(\mathcal{O}(N \log N)\) time to eliminate near-duplicate documents.</li>
-                    <li><strong>Perceptual &amp; Semantic Deduplication:</strong> Prunes duplicate imagery using pHash Hamming distances and SSCD / DINOv2 cosine embeddings (\(\cos &gt; 0.95\)).</li>
-                </ul>
-            </section>
-
-            <!-- SECTION 8 -->
-            <section id="synthesis">
-                <h2>8. Synthesis Flow, Comparative Topology &amp; Conclusion</h2>
-                <p>Industrial AI deployment requires orchestrating data engineering, numerical optimization, distributed computing, and mathematical evaluation into a unified lifecycle.</p>
-
-                <h3>8.1 Multi-Domain Lifecycle Summary</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Lifecycle Domain</th>
-                            <th>Dominant Standards</th>
-                            <th>Critical System Trade-Off</th>
-                            <th>Primary Hardware Bottleneck</th>
-                            <th>Failure Mode</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>Datasets</strong></td><td>Parquet, Arrow, WebDataset</td><td>Read latency vs compression ratio</td><td>Storage IOPS &amp; Network NIC</td><td>Filesystem lockups, GPU starvation</td></tr>
-                        <tr><td><strong>Weights</strong></td><td>Safetensors, GGUF, TensorRT</td><td>Portability vs compilation performance</td><td>Memory bandwidth (HBM / DRAM)</td><td>Deserialization exploits, OOM crashes</td></tr>
-                        <tr><td><strong>Architectures</strong></td><td>Transformers, Diffusion, MoE</td><td>Expressive capacity vs FLOP scaling</td><td>Compute TFLOPs &amp; KV memory</td><td>Gradient vanishing, training collapse</td></tr>
-                        <tr><td><strong>Training</strong></td><td>AdamW, BF16, FSDP, LoRA</td><td>Memory footprint vs convergence speed</td><td>Inter-node fabric (InfiniBand/RoCE)</td><td>Numerical divergence, underflow, skew</td></tr>
-                        <tr><td><strong>Metrics</strong></td><td>LPIPS, mAP, FID, Sharpe</td><td>Human alignment vs evaluation speed</td><td>GPU evaluation latency</td><td>Reward hacking, metric gaming</td></tr>
-                        <tr><td><strong>Engineering</strong></td><td>Deduplication, Leakage Gates</td><td>Data volume vs manifold purity</td><td>Host CPU memory &amp; core counts</td><td>Silent data leakage, distribution drift</td></tr>
-                    </tbody>
-                </table>
-
-                <h3>8.2 Conclusion</h3>
-                <p>The scalability and reliability of modern artificial intelligence systems depend on the disciplined integration of data engineering, numerical optimization, distributed computing, and mathematical evaluation. By selecting data containers with zero-copy deserialization, adopting secure and memory-mapped weight formats, utilizing architectures matched to target inductive biases, and maintaining rigorous validation gates, engineering teams build machine learning pipelines that converge reliably and execute efficiently across cloud and edge hardware platforms.</p>
-            </section>
-
-        </main>
-
-        <footer>
-            <p>LemGendary AI Ecosystem &copy; 2026. All rights reserved. Master AI Systems Specification v16.7.3.</p>
-        </footer>
-    </div>
+</main>
 </body>
 </html>

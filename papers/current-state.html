@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LemGendary Ecosystem: Current State &amp; Architectural Manifest - LemGendary AI</title>
+    <meta name="description" content="Authoritative workspace state manifest, multi-track versioning matrix, tripartite microservice topology, and zero-suppression policy compliance.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="paper-page">
+    <div class="container">
+        <header>
+            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
+                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+            </a>
+            <div class="tabs-nav">
+                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+                <a href="current-state.html" class="tab-link active">Current State</a>
+                <a href="env_manager.html" class="tab-link">Env Manager</a>
+                <a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
+                <a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
+                <a href="training-suite-master.html" class="tab-link">Training Suite</a>
+                <a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
+                <a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
+                <a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
+            </div>
+            <h1>LemGendary Ecosystem: Current State &amp; Architectural Manifest</h1>
+            <p class="subtitle">Authoritative Workspace State Manifest, Port Mappings, and Convergence Invariants</p>
+            <div class="meta">
+                <span>Category 00 STATUS</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Component: Authoritative Workspace State</span>
+                <span>Timestamp: 2026-10-08</span>
+            </div>
+        </header>
+
+        <nav class="toc-sidebar" aria-label="Table of Contents">
+            <a href="../index.html" class="toc-brand">
+                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
+            </a>
+            <h2 class="toc-heading">Navigation Matrix</h2>
+            <ul>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+                <li><a href="#section-executive">1. Executive Summary &amp; Operational State</a></li>
+                <li><a href="#section-versioning">2. Multi-Track Versioning Matrix</a></li>
+                <li><a href="#section-hierarchy">3. Document Authority Hierarchy</a></li>
+                <li><a href="#section-topology">4. Tripartite Microservice Topology</a></li>
+                <li><a href="#section-models">5. Registered Model Architectures</a></li>
+                <li><a href="#section-ingestion">6. Manifold Ingestion &amp; Modernization</a></li>
+                <li><a href="#section-cloud">7. Cloud Training &amp; Remote Sync</a></li>
+                <li><a href="#section-hardware">8. Hardware Sentinels &amp; Constraints</a></li>
+                <li><a href="#section-compliance">9. Zero-Suppression Policy Compliance</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="section-executive">
+                <h2>1. Executive Summary &amp; Current Operational State</h2>
+                <p>The <strong>LemGendary AI Ecosystem</strong> is an end-to-end, hardware-aware distributed deep learning platform designed for vision restoration, perceptual quality assessment, object detection, and high-frequency multi-timeframe quantitative finance.</p>
+                <p>The ecosystem has achieved full <strong>Post-Modernization S.O.L.I.D. Architectural Maturity</strong> across all subsystems:</p>
+                <ul>
+                    <li><strong>Zero-Suppression</strong>: 100% zero-suppression code hygiene (<code>0</code> <code># type: ignore</code>, <code>0</code> <code># noqa</code>, <code>0</code> <code># pylint: disable</code>).</li>
+                    <li><strong>Tripartite Services</strong>: Completely decoupled sidecar daemons running over HTTP REST and live WebSocket channels (Ports 8000, 8100, 8200).</li>
+                    <li><strong>Presentation Layer</strong>: Native cross-platform desktop cockpit built with Tauri v2, React 18, and Vite (<code>v2.0.0</code>).</li>
+                    <li><strong>Nuclear Stability</strong>: Automated Sawtooth VRAM Governor, continuous first-principles memory batch sizing, non-blocking sub-second minibatch cancellation, and multi-rung checkpoint resumption across 22 production neural architectures.</li>
+                    <li><strong>Bi-Directional Cloud Sync</strong>: Real-time Kaggle and Google Drive synchronization with automatic 403 Forbidden prevention (auto-creation of repository placeholders before metadata updates).</li>
+                </ul>
+            </section>
+
+            <section id="section-versioning">
+                <h2>2. Multi-Track Versioning Matrix</h2>
+                <p>The ecosystem operates on intentional, well-defined versioning tracks:</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subsystem / Track</th>
+                                <th>Scope / Domain</th>
+                                <th>Active Version</th>
+                                <th>Primary Interface / Entrypoint</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Master Training Suite</strong></td>
+                                <td>PyTorch training loops, Sawtooth Governor, SOTA ladders</td>
+                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>python -m training.cli.lemtrain</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dataset Compiler</strong></td>
+                                <td>Shard synthesis, WebP transcoding, Kaggle/HF ingestion</td>
+                                <td><code>v16.9.6</code></td>
+                                <td><code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Environment Manager</strong></td>
+                                <td>Hardware probe, virtual environments, compliance audits</td>
+                                <td><code>v16.9.3</code></td>
+                                <td><code>lem-env</code> / <code>lemgendary_env_manager.ps1</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>AI Studio Desktop GUI</strong></td>
+                                <td>Tauri v2 desktop application &amp; Operator Cockpit</td>
+                                <td><code>v2.0.0</code> (Client)</td>
+                                <td><code>lemgendary-ai-studio-gui</code> executable</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Documentation Hub</strong></td>
+                                <td>Master architectural whitepapers, manuals, HTML papers</td>
+                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>lemgendary-docs/index.html</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Production Models</strong></td>
+                                <td>Authoritative model weights, ONNX exports, metrics</td>
+                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>LemGendaryModels/&lt;model_key&gt;/</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Clinical Diagnostic Specs</strong></td>
+                                <td>Training pathology &amp; medical failure mode taxonomies</td>
+                                <td><code>v1.4.0</code></td>
+                                <td><code>PAPER_TRAINING_PATHOLOGY.md</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Quantitative Algorithmic Specs</strong></td>
+                                <td>Multi-Scale CNN-Transformer Forex &amp; Commodities</td>
+                                <td><code>v2.7.1</code></td>
+                                <td><code>PAPER_FOREX_PREDICTOR.md</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-hierarchy">
+                <h2>3. Document Authority Hierarchy</h2>
+                <p>To guarantee consistency across documentation and codebase implementations, all documentation strictly adheres to the four-tier authority hierarchy:</p>
+                $$\text{Code Manifests (SSOT)} \succ \text{Master Manuals} \succ \text{Architectural Whitepapers} \succ \text{Educational Guides}$$
+                <ol>
+                    <li><strong>Level 1 — Single Source of Truth Configuration Manifests</strong>:
+                        <ul>
+                            <li><code>unified_models_v2.yaml</code>, <code>unified_data.yaml</code>, <code>presets.yaml</code>, <code>openapi.json</code>.</li>
+                            <li>Highest physical authority for parameters, architecture baselines, and data bindings.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Level 2 — Master Operational &amp; Technical Manuals</strong>:
+                        <ul>
+                            <li><code>MANUAL_AI_STUDIO_GUI.md</code>, <code>MANUAL_CLI.md</code>, <code>MANUAL_API.md</code>, <code>GUI_CONTROL_REGISTRY.md</code>.</li>
+                            <li>Authoritative for operational workflows, control IDs, CLI flags, and API payloads.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Level 3 — Architectural &amp; Technical Whitepapers</strong>:
+                        <ul>
+                            <li><code>ECOSYSTEM_ARCHITECTURE.md</code>, <code>PAPER_TRAINING_SUITE.md</code>, <code>PAPER_DATASET_COMPILER.md</code>, <code>PAPER_AI_STUDIO_GUI.md</code>, <code>PAPER_DEGRADATION_ENGINE.md</code>, <code>PAPER_TRAINING_PATHOLOGY.md</code>, and the 22 model deep-dive whitepapers.</li>
+                            <li>Authoritative for physical optical formulations, asymptotic runtime complexity, memory sentinels, and scientific citations.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Level 4 — Educational &amp; Ecosystem Guides</strong>:
+                        <ul>
+                            <li><code>GENERAL_AI_TRAINING_KNOWLEDGE.md</code>, <code>GLOSSARY.md</code>, <code>LEMGENDARY_CURRENT_STATE.md</code>.</li>
+                            <li>Comprehensive reference manuals for engineering principles and universal deep learning theory.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+
+            <section id="section-topology">
+                <h2>4. Tripartite Microservice Topology &amp; Port Bindings</h2>
+                <p>The local orchestration layer operates across three background sidecar services:</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sidecar Service</th>
+                                <th>Port</th>
+                                <th>Protocol</th>
+                                <th>Responsibilities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Environment Manager</strong></td>
+                                <td><code>8000</code></td>
+                                <td>HTTP / WebSocket</td>
+                                <td>Hardware sensing, venv provisioning, package drift analytics, compliance gating.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dataset Compiler</strong></td>
+                                <td><code>8100</code></td>
+                                <td>HTTP / WebSocket</td>
+                                <td>Manifold sharding, WebP conversion, Kaggle sync hub, custom compilation.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Training Suite</strong></td>
+                                <td><code>8200</code></td>
+                                <td>HTTP / WebSocket</td>
+                                <td>Training job submission, live loss streaming, GPU device allocation, SOTA audits.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-models">
+                <h2>5. Registered Model Architectures &amp; Convergence Status</h2>
+                <p>The suite governs <strong>22 production neural network architectures</strong> tracked in <code>unified_models_v2.yaml</code>:</p>
+                <ol>
+                    <li><strong>Blind Face Restoration</strong>: <code>codeformer</code> (Vector-Quantized Codebook Lookup)</li>
+                    <li><strong>Atmospheric Dehazing</strong>: <code>ffanet_indoor</code>, <code>ffanet_outdoor</code> (Feature Fusion Attention)</li>
+                    <li><strong>Frame Interpolation</strong>: <code>film_restorer</code> (Feature-Interpolated Motion Restorer)</li>
+                    <li><strong>Quantitative Finance</strong>: <code>forex_predictor</code> (Multi-Timeframe Causal CNN-Transformer)</li>
+                    <li><strong>Exposure &amp; Lighting Correction</strong>: <code>mirnet_exposure</code>, <code>mirnet_lowlight</code> (Multi-Scale Residual Network)</li>
+                    <li><strong>Precipitation Restoration</strong>: <code>mprnet_deraining</code> (Cross-Stage Feature Fusion)</li>
+                    <li><strong>High-Fidelity Restoration</strong>: <code>nafnet_debluring</code>, <code>nafnet_denoising</code> (SimpleGate Nonlinearity-Free)</li>
+                    <li><strong>Perceptual Quality Scoring</strong>:
+                        <ul>
+                            <li><code>nima_aesthetic_mobile</code> (MobileNetV2 EMD Scorer)</li>
+                            <li><code>nima_aesthetic_efficientnet</code> (EfficientNetV2-S Scorer)</li>
+                            <li><code>nima_aesthetic_pro</code> (Swin-v2-T Multiscale Scorer)</li>
+                            <li><code>nima_authenticity</code> (AI vs Human Generative Classifier)</li>
+                            <li><code>nima_technical</code> (Micro-Defect ISO Scorer)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Face Parsing &amp; Landmarks</strong>: <code>parsenet</code>, <code>retinaface</code></li>
+                    <li><strong>Universal Restoration Engine</strong>: <code>professional_multitask_restoration</code> (11-Head MoE Router)</li>
+                    <li><strong>Super-Resolution</strong>: <code>ultrazoom</code> (Sub-Pixel ESPCN / Residual SR)</li>
+                    <li><strong>Content Moderation</strong>: <code>universal_nsfw_classification</code> (GeM Pooling Safety Filter)</li>
+                    <li><strong>Parameter Steering</strong>: <code>upn_v2</code> (Continuous Parameter Predictor)</li>
+                    <li><strong>Object Detection</strong>: <code>yolov8n</code> (Anchor-Free CSPDarknet + PANet Curriculum Governor)</li>
+                </ol>
+                <p>Every model enforces the authoritative <strong>3-Pillar Fully-Trained Verification Invariant</strong>:</p>
+                $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m, T_m)\right) \land \text{LadderPassed} \land (\text{DataFraction} \ge 1.0)$$
+            </section>
+
+            <section id="section-ingestion">
+                <h2>6. Manifold Ingestion &amp; Container Modernization</h2>
+                <ul>
+                    <li><strong>Storage Location</strong>: <code>LemGendaryDatasets/</code> (suffix-free directory topology).</li>
+                    <li><strong>Container Formats</strong>: WebDataset (<code>.tar</code>), MosaicML (<code>.mds</code>), Lightning AI LitData (<code>.bin</code>), Apache Parquet (<code>.parquet</code>), Directory (<code>.webp</code>).</li>
+                    <li><strong>Transcoding Standard</strong>: In-flight 12-thread WebP zero-intermediate compression:
+                        <ul>
+                            <li>Input / Degraded: WebP Lossy (\(q=92\)).</li>
+                            <li>Ground Truth Target: WebP High-Fidelity (\(q=95\)).</li>
+                            <li>Alpha / Segmentation Masks: WebP Lossless.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="section-cloud">
+                <h2>7. Cloud Training &amp; Remote Synchronization Pipeline</h2>
+                <ul>
+                    <li><strong>Kaggle Pipelines (<code>kaggle_training/</code>)</strong>: 22 standalone notebooks consuming attached input datasets directly from <code>/kaggle/input/</code> with zero redundant cloud downloads.</li>
+                    <li><strong>Google Colab Pipelines (<code>colab_training/</code>)</strong>: 22 automated training pipelines synchronized idempotently to Google Drive via <code>push_to_drive.py</code>.</li>
+                    <li><strong>Bidirectional Metadata Sync</strong>:
+                        <ul>
+                            <li><code>push_kaggle_dataset_metadata</code> automatically verifies remote repository existence via <code>ensure_kaggle_dataset_exists</code>.</li>
+                            <li>If a target dataset slug does not exist on Kaggle, the synchronizer auto-creates a minimal public placeholder dataset containing <code>README.md</code> first, permanently eliminating <code>403 Forbidden</code> errors during metadata updates.</li>
+                            <li>Interactive options in PowerShell (<code>lemgendary_datasets_hub.ps1</code> options <code>3</code> and <code>A</code>) and Desktop GUI (<code>CompilerPanel.tsx</code> "Update Metadata Only" tab) enable single and batch metadata updates without re-uploading multi-gigabyte data archives.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="section-hardware">
+                <h2>8. Hardware Sentinels &amp; Physical Execution Constraints</h2>
+                <ul>
+                    <li><strong>GTX 1650 (4GB VRAM) Edge Baseline</strong>: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (\(12.5\times\) batch retrieval speedup).</li>
+                    <li><strong>Continuous Memory Formula</strong>: Dynamic batch calculation scales continuously with available VRAM:
+                        $$B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot \text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})} \right\rfloor$$
+                    </li>
+                    <li><strong>Sawtooth VRAM Governor</strong>: Dynamically halves batch sizes when memory pressure exceeds 90% and scales up when headroom exceeds 40%.</li>
+                    <li><strong>Sub-Second Minibatch Cancellation</strong>: Evaluates non-blocking cancellation listeners at batch boundaries, instantly interrupting runaway runs.</li>
+                </ul>
+            </section>
+
+            <section id="section-compliance">
+                <h2>9. Zero-Suppression Policy Compliance</h2>
+                <p>The codebase strictly adheres to 100% zero-suppression error telemetry:</p>
+                <ul>
+                    <li><code>0</code> instances of <code># type: ignore</code></li>
+                    <li><code>0</code> instances of <code># noqa</code></li>
+                    <li><code>0</code> instances of <code># pylint: disable</code></li>
+                    <li>Zero programmatic <code>warnings.filterwarnings</code> suppressions.</li>
+                </ul>
+                <p>All warnings and type checks are resolved through rigorous static type annotations, Pydantic schema validation, and defensive programming.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 LemGenda AI Hub. All models designed and optimized for Universal Hardware resilience.</p>
+    </footer>
+</body>
+</html>

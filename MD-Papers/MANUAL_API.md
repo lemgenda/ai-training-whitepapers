@@ -405,6 +405,170 @@ One-way copy of centralized manifests to project directories. Returns per-projec
 }
 ```
 
+#### `GET /api/manifests/registry`
+
+Enumerates all manageable ecosystem manifests across all repositories, including file existence, size in bytes, and resolved disk paths.
+
+Response:
+
+```json
+{
+  "manifests": [
+    {
+      "name": "unified_data.yaml",
+      "project": "lemgendary-datasets",
+      "format": "yaml",
+      "description": "Authoritative dataset and source repository registry.",
+      "exists": true,
+      "size_bytes": 10240,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
+    },
+    {
+      "name": "unified_models_v2.yaml",
+      "project": "lemgendary-training-suite",
+      "format": "yaml",
+      "description": "Neural architecture registry and training hyperparameters.",
+      "exists": true,
+      "size_bytes": 16384,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
+    }
+  ]
+}
+```
+
+#### `GET /api/manifests/read`
+
+Retrieves the raw text content, format, and resolved path of a designated registered manifest.
+
+Query Parameters:
+
+- `name` (string, required): Registered manifest name (e.g., `unified_models_v2.yaml`, `runtime_env.yaml`, `config.yaml`).
+
+Response:
+
+```json
+{
+  "name": "unified_models_v2.yaml",
+  "format": "yaml",
+  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
+  "content": "version: '2.0.0'\nmodels:\n  ..."
+}
+```
+
+#### `POST /api/manifests/validate`
+
+Performs strict syntax and structure validation on arbitrary manifest content prior to disk persistence. Supports YAML, JSON, and text formats.
+
+Request body:
+
+```json
+{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}
+```
+
+Response:
+
+```json
+{
+  "valid": true,
+  "error": null
+}
+```
+
+#### `POST /api/manifests/save`
+
+Safely writes updated manifest content to disk with automatic pre-validation and generation of a `.bak` backup file before atomic replacement.
+
+Request body:
+
+```json
+{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "name": "unified_models_v2.yaml",
+  "bytes_written": 16420
+}
+```
+
+#### `GET /api/secrets`
+
+Retrieves all stored ecosystem secrets from `.secrets.yaml`. Automatically seeds defaults from existing credential files (`.kaggle_users`, `.GOOGLE_DRIVE`, `.GITHUB_PAT`, `.huggingface_token`, `.mt5_credentials`, `.SATURN_PAT`) if `.secrets.yaml` does not yet exist.
+
+Response:
+
+```json
+{
+  "status": "success",
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}
+```
+
+#### `POST /api/secrets`
+
+Atomically writes the ecosystem secrets registry to `.secrets.yaml` and propagates mandatory authentication credentials (such as Kaggle tokens) across dependent projects (`lemgendary-datasets`, `lemgendary-training-suite`, and `lemgendary-env-manager`).
+
+Request body:
+
+```json
+{
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "count": 1,
+  "message": "Secrets securely persisted and propagated across repositories."
+}
+```
+
+#### `GET /api/docs/status`
+
+Reports availability of the local offline documentation hub mounted at `/documentation-hub` and provides the canonical GitHub Pages URL.
+
+Response:
+
+```json
+{
+  "offline_available": true,
+  "local_url": "http://127.0.0.1:8000/documentation-hub/index.html",
+  "online_url": "https://lemgenda.github.io/ai-training-whitepapers/index.html"
+}
+```
+
 #### `POST /api/clean`
 
 Purges orphaned bytecode caches and temporary build artifacts.

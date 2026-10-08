@@ -6,9 +6,46 @@
 
 ---
 
+## Table of Contents
+
+- [1. Abstract](#1-abstract)
+- [2. High-Fidelity "Nuclear" Hardening](#2-high-fidelity-nuclear-hardening)
+  - [2.1. Dynamic Memory-Sentinel (Batch Decoupling)](#21-dynamic-memory-sentinel-batch-decoupling)
+  - [2.2. Intelligent Curriculum & Sawtooth Governance](#22-intelligent-curriculum--sawtooth-governance)
+  - [2.3. Hardened Resolution Ladders & SOTA Guards](#23-hardened-resolution-ladders--sota-guards)
+    - [2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant](#231-authoritative-3-pillar-fully-trained-verification-invariant)
+  - [2.4. Checkpoint Resumption & Singularity Hardening](#24-checkpoint-resumption--singularity-hardening)
+  - [2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture](#25-mixture-of-experts-moe-11-manifold-architecture)
+  - [2.6. Multi-Scale Forex Trading Architecture (`ForexPredictor`)](#26-multi-scale-forex-trading-architecture-forexpredictor)
+  - [2.7. Omni-Metric Autonomous SOTA Adaptation](#27-omni-metric-autonomous-sota-adaptation)
+  - [2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety Sentinels](#28-smart-governor-plateau-breaking-engine--nuclear-safety-sentinels)
+  - [2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank](#29-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank)
+  - [2.10. Spatial Statistical Pooling Upgrade ($\text{Mean} \oplus \text{Std}$) & Universal Safety Filter](#210-spatial-statistical-pooling-upgrade-textmean-oplus-textstd--universal-safety-filter)
+  - [2.11. Headless Kaggle Cloud Engine & Dataset Bypass](#211-headless-kaggle-cloud-engine--dataset-bypass)
+  - [2.12. Universal Post-Training Target Audit & Interactive Guidance](#212-universal-post-training-target-audit--interactive-guidance)
+  - [2.13. Native Multi-Container Ingestion Architecture](#213-native-multi-container-ingestion-architecture)
+  - [2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target Convergence](#214-autonomous-yolo-multi-stage-curriculum-governor--sota-target-convergence)
+  - [2.15. Single Source of Truth (SSOT) Config-Governed GUI Training Controls & Dynamic Run-State Lifecycle](#215-single-source-of-truth-ssot-config-governed-gui-training-controls--dynamic-run-state-lifecycle)
+- [3. Judicial Audit Engine](#3-judicial-audit-engine)
+  - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
+  - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
+- [4. Universal Models Registry & SOTA Baselines](#4-universal-models-registry--sota-baselines)
+- [5. Universal SOTA Telemetry & Cloud Sync](#5-universal-sota-telemetry--cloud-sync)
+  - [5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)](#51-multi-gpu-dataparallel-capabilities-kaggle-scale)
+  - [5.2. Universal Hardware Inference](#52-universal-hardware-inference)
+  - [5.3. Hybrid Cloud Synchronization & Tiered Lifecycle](#53-hybrid-cloud-synchronization--tiered-lifecycle)
+  - [5.4. Multi-Account Kaggle Cloud Telemetry & Live Monitor](#54-multi-account-kaggle-cloud-telemetry--live-monitor)
+- [6. Distributed Edge Training: LemGendary Cloud Link](#6-distributed-edge-training-lemgendary-cloud-link)
+  - [6.1. Federated Gradient Accumulation (Average-Sync)](#61-federated-gradient-accumulation-average-sync)
+  - [6.2. Memory-Sentinel WebGPU Zero-Copy Export](#62-memory-sentinel-webgpu-zero-copy-export)
+- [7. Conclusion](#7-conclusion)
+  - [Omni-Metric Autonomous SOTA Adaptation & MS-SWA](#omni-metric-autonomous-sota-adaptation--ms-swa)
+
+---
+
 ## 1. Abstract
 
-The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.8.0-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
+The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.9.16-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
 
 ---
 
@@ -23,11 +60,11 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Sub-Nuclear 4GB Lockdown**: On GTX 1650/4GB cards, it enforces a strict **Serial-Only Mode** after an OOM, delivering a **2x performance gain** by preventing Windows System RAM paging.
 - **Hardware-Aware Resolution Capping**: Dynamically limits maximum training and validation resolution (e.g. `max_allowed_local_resolution: 640`, `max_allowed_cloud_resolution: 512` on 16GB tiers) on local and cloud environments to prevent VRAM exhaustion and hardware ECC faults, while permitting 1024px+ scaling on robust high-memory cloud infrastructures.
 - **Worker Lifecycle Graceful Shutdown & GC Teardown**: Explicitly reaps training DataLoader iterator processes (`persistent_workers=False`), caps workers, and injects `gc.collect()` and `torch.cuda.empty_cache()` teardown sequences before spawning the validation pipeline. This eliminates System RAM hoarding and extreme VRAM fragmentation, stabilizing high-resolution validation on Kaggle kernels (T4/P100).
-- **Multi-GPU DataParallel Gathering Safeguard (v20.0)**: Automatically detects multiple CUDA devices and wraps the active manifold in PyTorch's `DataParallel` engine. Fixes primary-device VRAM bottlenecking by eliminating naive `gpu_count` micro-batch multiplication at high resolutions ($\ge 512\text{px}$) and for restoration architectures. GPU 0 is protected from output gathering saturation and loss graph spikes, utilizing Universal Gradient Accumulation to maintain the target effective batch size.
+- **Multi-GPU DataParallel Gathering Safeguard**: Automatically detects multiple CUDA devices and wraps the active manifold in PyTorch's `DataParallel` engine. Fixes primary-device VRAM bottlenecking by eliminating naive `gpu_count` micro-batch multiplication at high resolutions ($\ge 512\text{px}$) and for restoration architectures. GPU 0 is protected from output gathering saturation and loss graph spikes, utilizing Universal Gradient Accumulation to maintain the target effective batch size.
 - **Dynamic Headroom Tiering & Pre-Jump Dry-Run Probe**: Enforces a 30% free VRAM safety headroom margin (`safety_multiplier = 0.70`) for spatial ladders $\ge 512\text{px}$ and perceptual loss engines (LPIPS/VGG). Runs an isolated forward and backward dry-run probe with full loss evaluation before committing to spatial ladder escalation (`512px -> 640px`), automatically vetoing resolution jumps and anchoring weights at the proven resolution if physical VRAM headroom is breached.
 - **Hardware ECC, CUDA Kernel Compatibility & Virtual Memory Fragmentation Guard**: Detects uncorrectable ECC hardware errors and CUDA compute kernel incompatibilities (such as Pascal sm_60 on modern CUDA 12 builds) during pre-flight sanity checks with clear diagnostic recovery guidance and auto-remediation, and configures `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` to eliminate CUDA memory allocator fragmentation.
 - **Dynamic Validation Sharding & Auto-Expansion**: Subsets the validation dataloader to 30% per epoch to accelerate perceptual metric computation. Once the model hits the Refinement Phase, or the dynamically configurable `high_fidelity_fraction` (default 70%) at maximum resolution, it dynamically auto-expands validation to **100% (full dataset)** to guarantee an absolute SOTA generalizability audit. **Note:** Financial Time-Series & Forex Predictors bypass this sharding entirely, evaluating 100% of the validation manifold every epoch to ensure rigorous Walk-Forward temporal progression matrices.
-- **Windows Memory-Mapped Sequence Multiprocessing Guard (v17.7)**: PyTorch `DataLoader` with `num_workers > 0` on Windows uses `multiprocessing.spawn`, duplicating dataset indices and memory-mapped file handles into each worker process (consuming 20+ GB across 4 workers). For large time-series manifolds (e.g. 16-symbol Forex), the suite strictly enforces `num_workers = 0` on Windows, keeping total process RAM at 1.1 GB, eliminating 50GB+ pagefile thrashing, and keeping `.npy` arrays cached in the OS file cache for $12.5\times$ faster batch throughput (0.27s vs 3.43s).
+- **Windows Memory-Mapped Sequence Multiprocessing Guard**: PyTorch `DataLoader` with `num_workers > 0` on Windows uses `multiprocessing.spawn`, duplicating dataset indices and memory-mapped file handles into each worker process (consuming 20+ GB across 4 workers). For large time-series manifolds (e.g. 16-symbol Forex), the suite strictly enforces `num_workers = 0` on Windows, keeping total process RAM at 1.1 GB, eliminating 50GB+ pagefile thrashing, and keeping `.npy` arrays cached in the OS file cache for $12.5\times$ faster batch throughput (0.27s vs 3.43s).
 
 ### 2.2. Intelligent Curriculum & Sawtooth Governance
 
@@ -72,9 +109,9 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Atomic Governor Fraction Expansion Persistence & Checkpoint State Flush (v16.3.4)**: Solves cloud session preemption rollback during dynamic dataset fraction expansion. When the SOTA Guard triggers sample fraction promotion (e.g. `75% -> 90% -> 100%`), the engine immediately updates the active DataLoader topology, flushes `governor.get_state()` into the checkpoint payload, and overwrites both `_latest.pth` and `_best.pth` on disk. Hub Lock skip-paths are anchored directly to live governor telemetry, guaranteeing that cloud restarts resume precisely at the expanded manifold fraction rather than reverting to pre-expansion checkpoints.
 - **ONNX Trace Resilience (FakeTensor Guards)**: Dynamically wraps unmapped `FakeTensor` memory pointer access (`data_ptr()`) during FX/ONNX graph tracing within the DataParallel multi-GPU engine to prevent false-positive segmentation faults during structural graph export.
 - **Clean Training Initialization (--clean / --fresh)**: Operators can trigger pristine training starts via the `--clean` / `--fresh` flag, which instructs Hub Sync to bypass `git lfs pull`, purges existing local checkpoints and locks, resets `curriculum_state.json`, and wipes `metrics.csv` to begin strictly from epoch 1.
-- **Early-Epoch Checkpoint Curriculum Fraction Guard (v17.7)**: Prevents legacy checkpoints saved prior to fractional scaling fixes from overriding active fold curricula. During early-epoch resumption (Epoch $\le 2$), if a loaded state contains $\ge 99\%$ sample fraction for a model with an active sub-unitary curriculum (`initial_fraction: 0.15`), the Governor automatically overrides the legacy fraction, resets the data loader to the initial curriculum fraction (reducing batches from 27,300 to 3,900), and rescales intra-epoch resumption iterations accordingly.
-- **Real-Time Cross-Model Checkpoint Parity (v16.9.11)**: All training workflows (both standard PyTorch pipelines and governed YOLO runners) enforce continuous dual-path synchronization: active rung checkpoints (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) are mirrored to `checkpoints/<model_key>/` and `LemGendaryModels/<model_key>/checkpoints/` on every epoch and stage completion.
-- **Sub-Second Minibatch Cancellation Protocol (v16.9.11)**: Training loops incorporate non-blocking cancellation listeners. For YOLO models, an `on_train_batch_end` callback sets `trainer.stop = True` within milliseconds of an abort signal, while standard PyTorch models evaluate `cancel_check()` at batch boundaries, permanently preventing mid-epoch runaway execution.
+- **Early-Epoch Checkpoint Curriculum Fraction Guard**: Prevents legacy checkpoints saved prior to fractional scaling fixes from overriding active fold curricula. During early-epoch resumption (Epoch $\le 2$), if a loaded state contains $\ge 99\%$ sample fraction for a model with an active sub-unitary curriculum (`initial_fraction: 0.15`), the Governor automatically overrides the legacy fraction, resets the data loader to the initial curriculum fraction (reducing batches from 27,300 to 3,900), and rescales intra-epoch resumption iterations accordingly.
+- **Real-Time Cross-Model Checkpoint Parity**: All training workflows (both standard PyTorch pipelines and governed YOLO runners) enforce continuous dual-path synchronization: active rung checkpoints (`best.pt`, `best.pth`, `last.pt`, `progress.pth`) are mirrored to `checkpoints/<model_key>/` and `LemGendaryModels/<model_key>/checkpoints/` on every epoch and stage completion.
+- **Sub-Second Minibatch Cancellation Protocol**: Training loops incorporate non-blocking cancellation listeners. For YOLO models, an `on_train_batch_end` callback sets `trainer.stop = True` within milliseconds of an abort signal, while standard PyTorch models evaluate `cancel_check()` at batch boundaries, permanently preventing mid-epoch runaway execution.
 - **Mid-Rung Checkpoint Resumption & Stage Skip Protocol (v16.9.12)**: Solved premature epoch-1 restart bugs across both governed YOLO curricula and standard PyTorch pipelines. The checkpoint recovery subsystem (`training/checkpoint/recovery.py` and `training/governance/yolo_governor.py`) dynamically interrogates candidate checkpoint metadata (`torch.load`). If a ladder rung was already completed, it skips directly to the next stage; if interrupted mid-rung, it activates `resume=True` pointing to `last.pt` and resumes execution from `ckpt_epoch + 2` without resetting optimizer states or epoch counters.
 - **Authoritative Single Source of Truth Persistence (`LemGendaryModels/`) (v16.9.12)**: Fixed workspace relative path resolution in `recovery.py` and aligned all training engines so that `LemGendaryModels/<model_key>/checkpoints/` and `LemGendaryModels/<model_key>/metrics.csv` serve as the primary authoritative persistence storage across the entire development tree.
 - **Literature & Reference Paper Citations (v16.9.12)**: Embedded canonical academic paper citations, conference publications, arXiv references, and BibTeX entries across all model documentation in `LemGendaryModels/<model_key>/README.md` via `training/doc_generator.py`.
@@ -109,11 +146,11 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Confidence-Gated Dual Head & Loss**: Emits 3-class trade direction probabilities (Down/Sideways/Up) and magnitude estimates (TP/SL pips). Direction entropy dynamically gates Huber magnitude loss (`ForexDualLoss`) to prevent fitting noise on low-confidence bars.
 - **Normalized Pip Scaling (`PAIR_PIP_SCALE`)**: Standardizes multi-asset volatility swings into Normalized Pip Units ($[0, 100]$ NPUs) via symbol-specific scaling factors ($1.0\times$ FX Majors, $5.0\times$ Commodities, $10.0\times$ Gold, $20.0\text{--}40.0\times$ Indices), eliminating magnitude head saturation and stabilizing validation losses.
 - **Calibrated Dual Loss Formulation**: Balances directional Focal/Cross-Entropy supervision ($0.50$) with normalized Huber regression ($0.02$, $\delta=2.0$), maintaining loss values in the clean $0.05\text{--}1.0$ numerical range matching vision restoration models.
-- **Vectorized Cross-Timeframe Alignment Caching & Dynamic Hardware Scaling (v17.7)**: Precomputes cross-timeframe temporal alignment matrices in vector space ($O(1)$ integer array lookup replacing $35\text{M}$ individual $O(\log N)$ binary searches per epoch). Dynamically scales physical sequence batch size by GPU VRAM tier (256 on 4GB GTX 1650 to maximize memory-sentinel headroom).
-- **Unified Apache Parquet Streaming & LRU Row-Group Caching (v20.1)**: Operates directly on unified annual Parquet data stores (`ForexUniverse{year}.parquet`). Employs `ParquetRowGroupCache` for zero-seek random access and sub-microsecond batch tensor recovery ($<1\mu\text{s}$), eliminating NTFS cluster slack space and reducing dataset initialization time across 24M+ multi-timeframe bars to under $0.1\text{s}$.
+- **Vectorized Cross-Timeframe Alignment Caching & Dynamic Hardware Scaling**: Precomputes cross-timeframe temporal alignment matrices in vector space ($O(1)$ integer array lookup replacing $35\text{M}$ individual $O(\log N)$ binary searches per epoch). Dynamically scales physical sequence batch size by GPU VRAM tier (256 on 4GB GTX 1650 to maximize memory-sentinel headroom).
+- **Unified Apache Parquet Streaming & LRU Row-Group Caching**: Operates directly on unified annual Parquet data stores (`ForexUniverse{year}.parquet`). Employs `ParquetRowGroupCache` for zero-seek random access and sub-microsecond batch tensor recovery ($<1\mu\text{s}$), eliminating NTFS cluster slack space and reducing dataset initialization time across 24M+ multi-timeframe bars to under $0.1\text{s}$.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
-### 2.7. Omni-Metric Autonomous SOTA Adaptation (v17.5)
+### 2.7. Omni-Metric Autonomous SOTA Adaptation
 
 - **Dynamic On-the-Fly Tuning**: `SmartTrainingGovernor` dynamically audits model convergence against target SOTA benchmarks across all metrics simultaneously (e.g., PLCC, SRCC, EMD, PSNR, LPIPS, DirAcc).
 - **Dynamic Severity Thresholds**: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.
@@ -123,7 +160,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Multi-Path Candidate Directory Resolver**: All generated training notebooks in the matrix dynamically resolve working directory candidates (`/kaggle/working/lemgendary-training-suite`, `/kaggle/working/model-training/lemgendary-training-suite`, `/kaggle/working`) before executing `os.chdir()` or `%pip install`, permanently eliminating `FileNotFoundError` across all cloud platforms.
 - **Stateless ONNX Deployment**: Fully decoupled architecture exports cleanly to ONNX for low-latency inference in MetaTrader 5 Expert Advisors.
 
-### 2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety Sentinels (v16.4.0)
+### 2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety Sentinels
 
 - **3-Epoch Sustained Jolt Window**: Replaces single-epoch sawtooth LR thrashing with a 3-epoch sustained propulsion window, allowing AdamW momentum buffers to seat into new loss basins without premature cooling.
 - **Early-Collapse Safety Valve**: Continuously monitors metric deltas during Sustained Jolt windows. If single-epoch quality regresses ($\Delta \text{Quality} < -0.015$), the window collapses immediately, triggering soft LR cooling ($0.85\times$) and momentum dampening.
@@ -133,7 +170,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 
 ---
 
-### 2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)
+### 2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank
 
 - **Continuous Ranking Supervision**: Replaces non-differentiable sort operations with a continuous sigmoid-based soft ranking formulation:
   $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
@@ -145,10 +182,10 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
   $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
 - **Localized Defect Retention**: Prevents localized micro-defects (compression blocking, fine sensor noise) and small NSFW triggers occupying $5\%\text{--}15\%$ canvas area from being diluted by $85\%\text{--}95\%$ background pixels.
 
-### 2.11. Headless Kaggle Cloud Engine & Dataset Bypass (v16.4)
+### 2.11. Headless Kaggle Cloud Engine & Dataset Bypass
 
 - **Zero-Browser Cloud Deployment**: Launches, monitors, and downloads full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell without manual web browser intervention.
-- **Kaggle Metadata API Hardening (v16.4.1)**: Strictly enforces string serialization (`"true"` / `"false"`) across all boolean fields (`enable_gpu`, `enable_internet`, `is_private`) in `kernel-metadata.json`. Resolves Kaggle API deserialization behavior where Python boolean values (`True`) led Kaggle's backend to ignore GPU flags and default worker allocation to CPU.
+- **Kaggle Metadata API Hardening**: Strictly enforces string serialization (`"true"` / `"false"`) across all boolean fields (`enable_gpu`, `enable_internet`, `is_private`) in `kernel-metadata.json`. Resolves Kaggle API deserialization behavior where Python boolean values (`True`) led Kaggle's backend to ignore GPU flags and default worker allocation to CPU.
 - **Autonomous Dataset Bypass**: Autonomously bypasses unnecessary 200GB+ dataset downloads by inspecting `/images` and `/targets` structures directly on the Kaggle root block.
 - **Autonomous Checkpoint Syncing**: Uses `kagglehub` model registry and kernel output endpoints to seamlessly pull trained `.pth` weights and `metrics.csv` logs into `LemGendaryModels/<model_name>/`.
 - **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`), `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
@@ -159,7 +196,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Benchmark Gap Audit**: Automatically tabulates achieved metrics against mathematical `sota_targets` upon reaching the maximum epoch ceiling.
 - **Interactive Action Matrix**: Presents operators with immediate in-process options to extend training, launch cloud GPU escalation, fine-tune from the best checkpoint, or export ONNX matrices.
 
-### 2.13. Native Multi-Container Ingestion Architecture (v16.8.0)
+### 2.13. Native Multi-Container Ingestion Architecture
 
 - **Pluggable Container Format Engines (`training/data/containers/`)**: Decoupled reader ecosystem providing zero-IPC streaming ingestion across all modernized storage formats: `WebDatasetReader` (`.tar`), `MdsReader` (`.mds`), `LitDataReader` (`chunk*.bin`), and `ParquetReader` (`.parquet`).
 - **Paired Restoration Multi-Modal WebDataset Sharding**: Native extraction of ground truth targets (`target.webp`), semantic segmentation masks (`mask.webp`), text captions, and full 10-bin human perceptual quality distributions directly from compressed tar archives without unpacking loose files to disk.
@@ -167,7 +204,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Lightning AI LitData Tensor Streaming**: High-throughput memory-mapped binary chunk reading for regression and parameter prediction (`upn_v2`), supporting variable-shape tensors and robust fallback error handling.
 - **Universal Container Resolver Ecosystem**: Upgraded `resolve_container_reader` dynamically reads `canonical_format` and `format` fields from `dataset_info.yaml`, falling back to candidate directory heuristics (`shards/`, `mds/`, `litdata/`, `parquet/`) for transparent zero-configuration ingestion.
 
-### 2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target Convergence (v16.9.10)
+### 2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target Convergence
 
 - **Curriculum Stage Progression**: Governed by `YOLOCurriculumGovernor` (`training/governance/yolo_governor.py`), YOLO models progress through a multi-stage spatial resolution ladder (`320px -> 480px -> 640px`) paired with gradual dataset fraction scaling (13-stage ladder: `30% -> 50% -> 70% -> 85% -> 100%` at 320px; `50% -> 65% -> 80% -> 100%` at 480px and 640px). Every step advances on plateau or overfitting detection rather than a fixed epoch budget, epochs are monotonic across stages, and an open-ended SOTA convergence loop continues at the top rung until the targets are met.
 - **Autonomous Checkpoint Handoff**: Each stage trains with warm-start weight handoff (`best.pt` of stage $k$ becomes the initialization weights for stage $k+1$), accelerating convergence while preserving learned multi-scale spatial representations.
@@ -295,7 +332,7 @@ The suite integrates a multi-node, collision-resistant **LemGendary Cloud Link**
 
 The Master Training Suite provides the critical nuclear-hardened infrastructure necessary to orchestrate, audit, and deploy high-fidelity generative models. By integrating dynamic memory management, SOTA verification gates, and multi-GPU distributed orchestration natively, LemGendary AI ensures maximum hardware efficiency and an unbroken trajectory toward optimal perceptual performance.
 
-### Omni-Metric Autonomous SOTA Adaptation & MS-SWA (v17.5)
+### Omni-Metric Autonomous SOTA Adaptation & MS-SWA
 
 - **Dynamic Severity Thresholds**: Automatically tightens deficit classification ($\ge 10\%$ = CRITICAL) for highly asymptotic correlation and probability metrics (SRCC, PLCC, Accuracy) to aggressively combat late-stage plateaus.
 - **Metric Deficit Engine**: The `SmartTrainingGovernor` tracks individual deficits ($\Delta_m$) for all SOTA metrics (e.g., PSNR, LPIPS, PLCC, SRCC, Directional Accuracy).

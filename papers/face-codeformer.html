@@ -13,8 +13,8 @@
 <body class="paper-page">
     <div class="container">
         <header>
-            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+            <a href="https://lemgenda.hr" target="_blank">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
@@ -28,7 +28,7 @@
             <div class="meta">
                 <span>By Lem Treursic</span>
                 <span>Category 08 FACE</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.16-STABLE</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -37,9 +37,9 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#vq-codebook">2. Discrete Codebook Prior</a></li>
                 <li><a href="#transformer">3. Transformer Feature Matching</a></li>
@@ -64,26 +64,26 @@
                     <li><strong>The Naturalness Dial (Alpha):</strong> Operators have a simple slider dial from 0% to 100%. Set it to 100% to keep the exact original face shape, or set it to 0% to maximize sharpness and photo-clarity.</li>
                 </ul>
 
-                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
-                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration: Before &amp; After Face Restoration</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,59,48,0.3);">
-                            <div style="color: #ff5f56; font-weight: 700; margin-bottom: 8px;">BEFORE RESTORATION (Input)</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.</p>
-                            <img src="../assets/codeformer_before.png" alt="Before: Degraded low-resolution vintage portrait with compression artifacts" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration: Before &amp; After Face Restoration</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-reject">
+                            <div class="score-badge-red">BEFORE RESTORATION (Input)</div>
+                            <p class="sample-label-neutral">Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.</p>
+                            <img src="../assets/codeformer_before.png" alt="Before: Degraded low-resolution vintage portrait with compression artifacts" class="sample-img-card">
                         </div>
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
-                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">AFTER RESTORATION (CodeFormer Output)</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity.</p>
-                            <img src="../assets/codeformer_after.png" alt="After: CodeFormer restored portrait with reconstructed iris detail and natural skin texture" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">AFTER RESTORATION (CodeFormer Output)</div>
+                            <p class="sample-label-neutral">Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity.</p>
+                            <img src="../assets/codeformer_after.png" alt="After: CodeFormer restored portrait with reconstructed iris detail and natural skin texture" class="sample-img-card">
                         </div>
                     </div>
                 </div>
 
-                <div style="margin: 25px 0; text-align: center;">
-                    <h3 style="color: #ffffff; text-align: left;">CodeFormer Training Convergence Metrics (LPIPS &amp; Loss)</h3>
-                    <img src="../assets/codeformer_training.png" alt="CodeFormer Training Metrics Curve" style="width: 100%; border-radius: 6px; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Figure 1: Training convergence across 100,000 iterations illustrating LPIPS perceptual loss minimization and codebook commitment stability.</p>
+                <div class="figure-center">
+                    <h3 class="th-left-white">CodeFormer Training Convergence Metrics (LPIPS &amp; Loss)</h3>
+                    <img src="../assets/codeformer_training.png" alt="CodeFormer Training Metrics Curve" class="sample-img-wide" onerror="this.style.display='none'">
+                    <p class="sample-caption">Figure 1: Training convergence across 100,000 iterations illustrating LPIPS perceptual loss minimization and codebook commitment stability.</p>
                 </div>
             </section>
 

@@ -12,18 +12,24 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper" onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="ai-studio-whitepaper.html" class="tab-link active">Architectural Whitepaper</a>
-                <a href="ai-studio-manual.html" class="tab-link">Operator User Manual</a>
+                <a href="ecosystem-architecture.html" class="tab-link${isArch ? " active" : ""}">Architecture Hub</a>
+                <a href="current-state.html" class="tab-link${isState ? " active" : ""}">Current State</a>
+                <a href="env_manager.html" class="tab-link${isEnv ? " active" : ""}">Env Manager</a>
+                <a href="dataset-compiler.html" class="tab-link${isData ? " active" : ""}">Dataset Compiler</a>
+                <a href="degradation-engine.html" class="tab-link${isDeg ? " active" : ""}">Degradation Engine</a>
+                <a href="training-suite-master.html" class="tab-link${isTrain ? " active" : ""}">Training Suite</a>
+                <a href="ai-studio-whitepaper.html" class="tab-link${isGui ? " active" : ""}">Desktop GUI</a>
+                <a href="gui-control-registry.html" class="tab-link${isReg ? " active" : ""}">GUI Registry</a>
+                <a href="versioning-policy.html" class="tab-link${isVer ? " active" : ""}">Versioning Policy</a>
             </div>
             <h1>LemGendary AI Studio GUI: Architectural Whitepaper</h1>
             <p class="subtitle">High-Performance Desktop Orchestration for Universal ML Workflows</p>
             <div class="meta">
                 <span>Category 01.4 GUI</span>
-                <span>Version 16.7.3</span>
+                <span>Version 16.9.16-STABLE</span>
             </div>
         </header>
 
@@ -31,10 +37,10 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
-                <li><a href="ai-studio-manual.html" style="color: var(--accent-secondary); border-left: none; padding-left: 0;">→ Operator User Manual</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+                <li><a href="ai-studio-manual.html" class="toc-link-secondary">→ Operator User Manual</a></li>
                 <li><a href="#section-1">1. Abstract</a></li>
                 <li><a href="#section-2">2. High-Velocity Optimizations</a></li>
                 <li><a href="#section-3">3. Hybrid Cloud &amp; Registry Integration</a></li>

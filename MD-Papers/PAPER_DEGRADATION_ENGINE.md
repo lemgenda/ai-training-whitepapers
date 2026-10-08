@@ -6,12 +6,39 @@
 
 ---
 
+## Table of Contents
+
+1. [Abstract](#1-abstract)
+2. [High-Velocity Optimizations & Physics Formulations](#2-high-velocity-optimizations--physics-formulations)
+   - [2.1 Physics-Based Kernel Formulations](#21-physics-based-kernel-formulations)
+     - [2.1.1 Atmospheric Haze & Scattering](#211-atmospheric-haze--scattering)
+     - [2.1.2 Heteroscedastic Sensor Noise (ISO-Calibrated)](#212-heteroscedastic-sensor-noise-iso-calibrated)
+     - [2.1.3 Directional Linear Motion Blur](#213-directional-linear-motion-blur)
+     - [2.1.4 Circular Defocus Aperture Blur](#214-circular-defocus-aperture-blur)
+     - [2.1.5 Low-Light Photon Starvation](#215-low-light-photon-starvation)
+     - [2.1.6 Precipitation Dynamics (Rain Streaks & Mist)](#216-precipitation-dynamics-rain-streaks--mist)
+     - [2.1.7 Lossy Discrete Cosine Transform (DCT) Quantization](#217-lossy-discrete-cosine-transform-dct-quantization)
+   - [2.2 Complexity Mappings & Execution Efficiency](#22-complexity-mappings--execution-efficiency)
+3. [Hybrid Cloud & Registry Integration](#3-hybrid-cloud--registry-integration)
+   - [3.1 Quantitative Parameter Supervision](#31-quantitative-parameter-supervision-labelssplitnamejson)
+   - [3.2 Registry Schema](#32-registry-schema)
+4. [Multi-Modal & Format Resilience](#4-multi-modal--format-resilience)
+   - [4.1 WebP Container Standardization & Quality Policies](#41-webp-container-standardization--quality-policies)
+   - [4.2 Zero-Duplication Training Suite Bridge](#42-zero-duplication-training-suite-bridge)
+5. [Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
+   - [5.1 Degradation Kernel Performance Matrix](#51-degradation-kernel-performance-matrix)
+6. [Synthesis Flow & Topology](#6-synthesis-flow--topology)
+7. [Unified Models Registry & Downstream Restoration Targets](#7-unified-models-registry--downstream-restoration-targets)
+8. [Conclusion](#8-conclusion)
+
+---
+
 ## 1. Abstract
 
 The LemGendary Degradation Engine (v16.4.1-MODERNIZED) is an industrial-standard synthetic image degradation and manifold derivation framework designed for Deep Learning Vision Restoration, Super-Resolution, and Artifact Removal pipelines. It unifies offline batch manifold derivation with real-time, on-the-fly training augmentation into a single, pure NumPy, SciPy, and Pillow execution engine. By deterministically simulating physical optical aberrations, atmospheric scattering, sensor noise electronics, precipitation dynamics, lossy compression artifacts, and analog film degradation, the engine synthesizes paired restoration datasets while recording exact per-sample quantitative parameter descriptors into structured JSON annotations for parameter-conditioned neural network supervision.
 
-* **Project Repository**: [lemgendary-dataset-generator](https://github.com/lemgenda/lemgendary-dataset-generator)
-* **Training Suite Integration**: [lemgendary-model-training](https://github.com/lemgenda/lemgendary-model-training)
+- **Project Repository**: [lemgendary-dataset-generator](https://github.com/lemgenda/lemgendary-dataset-generator)
+- **Training Suite Integration**: [lemgendary-model-training](https://github.com/lemgenda/lemgendary-model-training)
 
 ---
 
@@ -29,10 +56,10 @@ $$I(x) = J(x) \cdot t(x) + A \cdot (1 - t(x))$$
 
 where:
 
-* $I(x)$ is the observed hazy image radiance at spatial coordinate $x = (u, v)$.
-* $J(x)$ is the true scene radiance (clean ground truth target).
-* $A$ is the global atmospheric airlight vector ($A \in [0.85, 0.95]^3$).
-* $t(x)$ is the medium transmission map defined via the exponential attenuation law:
+- $I(x)$ is the observed hazy image radiance at spatial coordinate $x = (u, v)$.
+- $J(x)$ is the true scene radiance (clean ground truth target).
+- $A$ is the global atmospheric airlight vector ($A \in [0.85, 0.95]^3$).
+- $t(x)$ is the medium transmission map defined via the exponential attenuation law:
 
 $$t(x) = \exp(-\beta \cdot d(x))$$
 
@@ -88,10 +115,10 @@ JPEG compression artifacts are synthesized by encoding in-memory buffers through
 
 ### 2.2 Complexity Mappings & Execution Efficiency
 
-* **Linear Time Complexity ($\mathcal{O}(N \cdot H \cdot W \cdot C)$)**:
+- **Linear Time Complexity ($\mathcal{O}(N \cdot H \cdot W \cdot C)$)**:
   Every kernel operates in linear spatial complexity $\mathcal{O}(H \cdot W \cdot C)$ per image. For a dataset of $N$ samples, total compilation time complexity scales as:
   $$T_{\text{synth}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$
-* **Constant In-Memory Footprint ($\mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$)**:
+- **Constant In-Memory Footprint ($\mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$)**:
   Images are processed in parallel worker threads without allocating global array memory, keeping memory bounded by:
   $$\text{Mem}_{\text{peak}} = \mathcal{O}(W_{\text{threads}} \cdot H_{\text{max}} \cdot W_{\text{max}} \cdot 3)$$
 

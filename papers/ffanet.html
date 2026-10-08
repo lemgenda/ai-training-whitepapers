@@ -13,19 +13,21 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper">
             </a>
         <div class="tabs-nav">
-            <a href="nafnet.html" class="tab-link">NAFNet</a>
-            <a href="mirnet.html" class="tab-link">MIRNet</a>
-            <a href="ffanet.html" class="tab-link active">FFANet</a>
-            <a href="mprnet.html" class="tab-link">MPRNet</a>
-        </div>
+                <a href="restoration-master.html" class="tab-link">Restoration Hub</a>
+                <a href="restoration-suite.html" class="tab-link">Suite Overview</a>
+                <a href="nafnet.html" class="tab-link${isNaf ? " active" : ""}">NAFNet</a>
+                <a href="mprnet.html" class="tab-link${isMpr ? " active" : ""}">MPRNet</a>
+                <a href="mirnet.html" class="tab-link${isMir ? " active" : ""}">MIRNet</a>
+                <a href="ffanet.html" class="tab-link${isFfa ? " active" : ""}">FFANet</a>
+            </div>
             <h1>Architecture of LemGendary AI</h1>
             <p class="subtitle">High-Fidelity FFANet Dehazing via SOTA Infrastructure</p>
             <div class="meta">
                 <span>By Lem Treursić</span>
-                <span>Version: 2.6.0 - Dynamic VRAM Sync</span>
+                <span>Version: 16.9.16-STABLE</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -35,9 +37,9 @@
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
                 <li><a href="#section-1">1. Abstract</a>
                 </li>
                 <li><a href="#section-3">2. Visual Taxonomy: The LemGendary Restoration Subset</a>

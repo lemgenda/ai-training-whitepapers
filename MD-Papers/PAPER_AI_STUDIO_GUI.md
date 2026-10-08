@@ -21,7 +21,13 @@
 
 ## 1. Abstract
 
-The LemGendary AI Studio Desktop GUI establishes an authoritative, hardware-aware desktop orchestration system engineered to provide a low-latency, deterministic control plane for machine learning workflows. Addressing developer friction, process fragmentation, and high memory footprints inherent in traditional web wrappers, this architecture decouples native operating system integration from presentation logic using a high-throughput Rust sidecar boundary, a reactive React 18 frontend, and a local WebSocket telemetry channel. Through asynchronous process multiplexing, strict zero-copy IPC streaming, and native DirectML/CUDA accelerator probing, the system achieves sub-millisecond control loop responsiveness while minimizing memory overhead to under 45 megabytes.
+The LemGendary AI Studio Desktop GUI (Client Version `v2.0.0`, orchestrated with the `v16.9.16` backend engine ecosystem) establishes an authoritative, hardware-aware desktop orchestration system engineered to provide a low-latency, deterministic control plane for machine learning workflows. Addressing developer friction, process fragmentation, and high memory footprints inherent in traditional web wrappers, this architecture decouples native operating system integration from presentation logic using a high-throughput Rust sidecar boundary (Tauri v2), a reactive React 18 frontend, and a local WebSocket telemetry channel. Through asynchronous process multiplexing, strict zero-copy IPC streaming, and native DirectML/CUDA accelerator probing, the system achieves sub-millisecond control loop responsiveness while minimizing memory overhead to under 45 megabytes.
+
+> [!NOTE]
+> **Dual Versioning Architecture**: The desktop application operates on two intentional versioning tracks:
+>
+> 1. **Client Desktop Cockpit (`v2.0.0`)**: Governs the Tauri v2 desktop application, React 18 frontend components, and the Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md)).
+> 2. **Backend Engine Ecosystem (`v16.9.16`)**: Governs the tripartite Python sidecar daemons (Environment Manager on Port 8000, Dataset Compiler on Port 8100, Master Training Suite on Port 8200) consumed via frozen OpenAPI 3.1 contracts. See the [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md) for formal track governance.
 
 ## 2. High-Velocity Optimizations
 

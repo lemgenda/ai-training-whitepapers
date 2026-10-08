@@ -13,12 +13,13 @@
 <body class="paper-page">
     <div class="container">
         <header>
-            <a href="https://lemgenda.hr" target="_blank" style="display: inline-block;">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+            <a href="https://lemgenda.hr" target="_blank">
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
                 <a href="detection-master.html" class="tab-link">Detection Hub</a>
+                <a href="detection-classification.html" class="tab-link">Suite Overview</a>
                 <a href="detection-yolov8n.html" class="tab-link active">YOLOv8n Multi-Task</a>
                 <a href="classification-nsfw.html" class="tab-link">NSFW Safety Classifier</a>
             </div>
@@ -27,7 +28,7 @@
             <div class="meta">
                 <span>By Lem Treursic</span>
                 <span>Category 09 VISION</span>
-                <span>Version 16.9.11</span>
+                <span>Version 16.9.16-STABLE</span>
                 <span>Hardware: NVIDIA / MPS / XPU</span>
             </div>
         </header>
@@ -36,9 +37,9 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-                <li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#architecture">2. Anchor-Free CSPDarknet &amp; PANet</a></li>
                 <li><a href="#decoupled-head">3. Decoupled Head &amp; TAL Assignment</a></li>
@@ -64,30 +65,30 @@
                     <li><strong>Ultra-Lightweight Efficiency:</strong> Weighing only 6.5 MB, it runs smoothly on budget laptops, battery-powered robots, and mobile phones without slowing down other programs.</li>
                 </ul>
 
-                <div class="card" style="margin: 25px 0; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
-                    <h3 style="margin-top:0; color: #79c0ff;">Visual Demonstration: Real-Time Detection Matrix</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: center;">
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
-                            <div style="color: #e0e0e0; font-weight: 700; margin-bottom: 8px;">INPUT VIDEO FRAME</div>
-                            <img src="../assets/yolov8n_before.png" alt="Raw unannotated urban city street intersection frame" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration: Real-Time Detection Matrix</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-neutral">
+                            <div class="score-badge-neutral">INPUT VIDEO FRAME</div>
+                            <img src="../assets/yolov8n_before.png" alt="Raw unannotated urban city street intersection frame" class="sample-img-card">
                         </div>
-                        <div style="background: #141418; padding: 15px; border-radius: 6px; border: 1px solid rgba(52,199,89,0.3);">
-                            <div style="color: #34c759; font-weight: 700; margin-bottom: 8px;">REAL-TIME DETECTION BOXES</div>
-                            <p style="color: #888899; font-size: 0.85rem; margin-bottom: 12px;">Bounding boxes: 'bus (95%)', 'car (89%)', 'person (94%)', 'bicycle (91%)' in 3.1ms.</p>
-                            <img src="../assets/yolov8n_after.png" alt="Real-time YOLOv8n object detection overlays with labeled bounding boxes and confidence scores" style="width: 100%; border-radius: 4px; object-fit: cover; height: 180px;">
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">REAL-TIME DETECTION BOXES</div>
+                            <p class="sample-label-neutral">Bounding boxes: 'bus (95%)', 'car (89%)', 'person (94%)', 'bicycle (91%)' in 3.1ms.</p>
+                            <img src="../assets/yolov8n_after.png" alt="Real-time YOLOv8n object detection overlays with labeled bounding boxes and confidence scores" class="sample-img-card">
                         </div>
                     </div>
                 </div>
 
-                <div style="margin: 25px 0; text-align: center;">
-                    <h3 style="color: #ffffff; text-align: left;">YOLOv8n Training Convergence &amp; SOTA Targets (mAP@50-95 &amp; Box Loss)</h3>
-                    <div style="background: #14141c; border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; text-align: left; font-family: Fira Code, monospace; font-size: 0.85rem; color: #79c0ff;">
+                <div class="figure-center">
+                    <h3 class="th-left-white">YOLOv8n Training Convergence &amp; SOTA Targets (mAP@50-95 &amp; Box Loss)</h3>
+                    <div class="tech-spec-block">
                         <div>[STAGE 1 - 320px @  30% DATA] train_loss: 3.432 | val_loss: 0.026 | mAP@50: 0.352 | mAP@50-95: 0.242</div>
                         <div>[STAGE 2 - 320px @  50% DATA] train_loss: 2.944 | val_loss: 0.028 | mAP@50: 0.445 | mAP@50-95: 0.316</div>
                         <div>[STAGE 3 - 480px @  50% DATA] train_loss: 2.450 | val_loss: 0.024 | mAP@50: 0.490 | mAP@50-95: 0.350</div>
                         <div>[STAGE 5 - 640px @ 100% DATA] train_loss: 1.820 | val_loss: 0.019 | mAP@50: 0.540 | mAP@50-95: 0.390 (SOTA TARGET)</div>
                     </div>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 8px;">Table 1: Governed curriculum trajectory across spatial rungs to SOTA convergence targets on COCO manifolds.</p>
+                    <p class="sample-caption">Table 1: Governed curriculum trajectory across spatial rungs to SOTA convergence targets on COCO manifolds.</p>
                 </div>
             </section>
 
@@ -123,10 +124,10 @@
                     <li><strong>Gradual Intra-Resolution Fraction Ladder Progression</strong>: On the base resolution rung (\(320\text{px}\)), training starts at \(30\%\) data and systematically increases by \(15\%\)&ndash;\(20\%\) increments (\(30\% \to 50\% \to 70\% \to 85\% \to 100\%\)). When escalating to higher spatial rungs (\(480\text{px}, 640\text{px}\)), training initiates at \(50\%\) data and gradually scales in \(15\%\)&ndash;\(20\%\) steps (\(50\% \to 65\% \to 80\% \to 100\%\)) to prevent overfitting and break representation plateaus. Advancement between every rung and fraction step is driven exclusively by plateau or overfitting detection (see below); no step has a fixed epoch budget.</li>
                     <li><strong>Open-Ended SOTA Convergence Protocol</strong>: Training does not terminate at a fixed epoch count. Instead, training on the final resolution rung (\(640\text{px}\)) at \(100\%\) data continues dynamically until SOTA metric targets (\(\text{mAP50} \ge 0.54\), \(\text{mAP50-95} \ge 0.39\)) are attained, triggering immediate ONNX and PyTorch artifact packaging. The global epoch ceiling is a soft limit that auto-extends by 100 epochs whenever training approaches it, and every extension cycle at the top rung runs until plateau or SOTA with no epoch cap.</li>
                     <li><strong>Plateau- and Overfitting-Driven Rung Advancement</strong>: Fraction steps and resolution rungs are never tied to an epoch count. A stage advances when the quality score \(0.7 \cdot \text{mAP50-95} + 0.3 \cdot \text{mAP50}\) fails to improve by more than \(0.001\) for 5 consecutive epochs (after at least 3 epochs on the stage; tunable via <code>rung_plateau_patience</code>, <code>rung_min_epochs</code>, <code>rung_plateau_min_delta</code>). In addition, at every fraction the governor continuously monitors for overfitting signatures (e.g. decreasing training loss alongside rising validation loss over a 3-epoch window, or validation mAP stagnation). Upon detection, the governor halts the partial stage early (<code>trainer.stop = True</code>) and immediately triggers dataset expansion to introduce sample variety and rescue model generalization.</li>
-                    <li><strong>Sawtooth VRAM Sentinel &amp; OOM Protection</strong>: Continuous sampling of physical GPU VRAM prevents memory exhaustion on 4GB consumer devices by dynamically scaling batch allocations and gradient accumulation.</li>
+                    <li><strong>First-Principles Dynamic Sawtooth VRAM Governor &amp; OOM Sentinel</strong>: Replaced hardcoded lookup tables with continuous, first-principles VRAM arithmetic deriving physical batch size from total hardware capacity (\(\text{VRAM}_{\text{GB}} \cdot 1024 \cdot \text{safety} - \text{static\_overhead}\)) divided by resolution-scaled per-sample consumption (\(\text{per\_sample}_{640} \cdot (\text{imgsz}/640)^2\)). All governor thresholds (<code>static_vram_mb</code>, <code>per_sample_vram_mb_640</code>, <code>sawtooth_vram_safety</code>, <code>sawtooth_vram_pressure_thresh</code>, <code>sawtooth_vram_headroom_thresh</code>, <code>batch_min</code>, <code>batch_max</code>) are externalized to <code>unified_models_v2.yaml</code>. In addition, runtime VRAM pressure is sampled via <code>torch.cuda.max_memory_allocated()</code>: if usage crosses \(\ge 90\%\), minibatches are dynamically halved; when headroom \(&lt; 60\%\) is detected, batch allocations are promoted up to the safe hardware ceiling.</li>
                     <li><strong>Turing FP32 Numerical Stability</strong>: Turing TU117/TU116 hardware (such as GTX 1650) lacks native Tensor Cores; standard PyTorch AMP (<code>check_amp()</code>) can produce unstable gradient scaling and degenerate NaN losses. The governor automatically overrides AMP on these devices, forcing numerical precision to FP32 (<code>amp=False</code>).</li>
-                    <li><strong>Continuous Telemetry Bridge</strong>: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to <code>checkpoints/yolov8n/metrics.csv</code> and sidecar WebSockets, feeding live convergence dashboards.</li>
-                    <li><strong>Real-Time Checkpoint Parity</strong>: Synchronizes intermediate weights (<code>best.pt</code>, <code>best.pth</code>, <code>last.pt</code>, <code>progress.pth</code>) strictly to <code>checkpoints/yolov8n/</code> and <code>LemGendaryModels/yolov8n/checkpoints/</code> on every epoch (<code>on_fit_epoch_end</code>) and stage transition, ensuring instant discovery by the Studio GUI checkpoint inspector.</li>
+                    <li><strong>Continuous Telemetry Bridge</strong>: Epoch metrics across all stages are captured via Ultralytics event hooks and written directly to <code>LemGendaryModels/yolov8n/metrics.csv</code> and sidecar WebSockets, feeding live convergence dashboards.</li>
+                    <li><strong>Real-Time Checkpoint Parity &amp; Plot Synchronization</strong>: Synchronizes intermediate weights (<code>best.pt</code>, <code>best.pth</code>, <code>last.pt</code>, <code>progress.pth</code>, and <code>curriculum_state.json</code>) along with confusion matrices (<code>confusion_matrix.png</code>, <code>confusion_matrix_normalized.png</code>) and validation curves strictly to <code>LemGendaryModels/yolov8n/</code> on every epoch and stage transition, ensuring instant discovery by the Studio GUI.</li>
                     <li><strong>Minibatch-Level Cancellation Protocol</strong>: Registers an <code>on_train_batch_end</code> hook instructing the Ultralytics trainer to halt immediately (<code>trainer.stop = True</code>) upon operator cancellation signals, preventing runaway GPU iterations mid-epoch.</li>
                 </ul>
 

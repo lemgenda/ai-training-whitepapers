@@ -14,7 +14,7 @@
     <div class="container">
         <header>
             <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" style="height: 60px; margin-bottom: 20px;"
+                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
                      onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
             </a>
             <div class="tabs-nav">
@@ -36,9 +36,9 @@
             <a href="../index.html" class="toc-brand">
                 <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
             </a>
-            <h2 style="font-size: 1.1em;">Navigation Matrix</h2>
+            <h2 class="toc-heading">Navigation Matrix</h2>
             <ul>
-<li><a href="../index.html" style="color: var(--accent-color); border-left: none; padding-left: 0;">← Back to Index</a></li>
+<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
                 <li><a href="#section-1">1. Abstract</a></li>
                 <li><a href="#section-2">2. The Diagnostic Master Table</a></li>
                 <li><a href="#section-3">3. The "Fast Audit" Framework</a>
@@ -329,7 +329,7 @@
                     <h4>2. Activation Sparsity</h4>
                     <p>Monitor the percentage of zeros in layer outputs. If a layer is <strong>>80% sparse</strong>, your initialization is too aggressive or LR is too high.</p>
                 </div>
-                <div class="quad-card" style="grid-column: span 2;">
+                <div class="quad-card" class="grid-col-span-2">
                     <h4>3. Weight-to-Update Ratio</h4>
                     <p>Calculate <code>|Δw| / |w|</code>. Target ratio: <span class="metric-highlight">10<sup>-3</sup></span>.</p>
                     <p>If 10<sup>-1</sup>: updates are <strong>Violent (Exploding)</strong>. If 10<sup>-5</sup>: you are <strong>Stagnating</strong>.</p>
@@ -1339,7 +1339,7 @@
 <h2>12. Conclusion: The Indestructible Paradigm</h2>
                 <p>The transition from manual hyperparameter tuning to autonomous, <strong>"Nuclear-Hardened"</strong> training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the <strong>LemGendary</strong> ecosystem has achieved a state of indestructible convergence.</p>
                 <p>The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware.</p>
-            <p style="text-align: center; margin-top: 40px; color: var(--accent-primary); font-family: 'Outfit', sans-serif; font-weight: 700;">
+            <p class="section-footer">
                 Status: SOTA-Autonomous &amp; High-Fidelity Hardened.
             </p>
 </section>
