@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: NIMA Technical Quality Engine
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: 16.9.16  
 **Category**: Category 07 QUALITY  
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
+* [1.1 Visual Demonstration & Perceptual Assessment](#11-visual-demonstration--perceptual-assessment)
 * [2. Backbone & Feature Extraction](#2-backbone--feature-extraction)
 * [3. Loss Formulation & Probability Distribution](#3-loss-formulation--probability-distribution)
 * [4. Correlation & Latency Benchmarks](#4-correlation--latency-benchmarks)
@@ -21,6 +22,20 @@
 ## 1. Abstract
 
 The **NIMA Technical Quality Engine** is a dedicated neural evaluation engine engineered for precise image quality assessment. Operating on the compiled manifold, it leverages **EfficientNetV2-S Multi-Head Regressor** to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle human aesthetic judgments with verified mathematical resilience.
+
+---
+
+## 1.1 Visual Demonstration & Perceptual Assessment
+
+The NIMA Technical Quality Engine functions like an automated laboratory quality technician, inspecting photographic inputs for sensor noise, high ISO artifacts, severe JPEG blocking, blur, and color banding, differentiating between technical flaws and intentional artistic aesthetics.
+
+| Assessment Category | Visual Specimen | Perceptual Attributes | Technical Quality Score |
+| :--- | :--- | :--- | :--- |
+| **POOR TECHNICAL QUALITY** (Heavy Artifacts) | ![Poor technical quality sample](../assets/technical_compression.png) | Severe sensor noise, aggressive JPEG block boundaries, compression degradation. | **2.4 / 10.0** (Reject) |
+| **PRISTINE TECHNICAL FIDELITY** | ![Pristine technical quality sample](../assets/technical_sharp_boring.png) | Sub-pixel edge clarity, low noise floor, uncompressed optical sharpness. | **8.7 / 10.0** (Accept) |
+
+![NIMA Technical Quality Training Metrics](../assets/nima_technical_training.png)
+*Figure 1: Earth Mover's Distance (EMD) and rank correlation convergence over synthetic artifact manifolds.*
 
 ---
 

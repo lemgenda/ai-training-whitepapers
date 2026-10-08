@@ -44,6 +44,7 @@
             <ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#plain-english">1.1 Visual Demonstration & Perceptual Assessment</a></li>
                 <li><a href="#architecture">2. Backbone & Feature Extraction</a></li>
                 <li><a href="#loss">3. Loss Formulation & Probability Distribution</a></li>
                 <li><a href="#benchmarks">4. Correlation & Latency Benchmarks</a></li>
@@ -54,6 +55,35 @@
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>NIMA Technical Quality Engine</strong> is a dedicated neural evaluation engine engineered for precise image quality assessment. Operating on the compiled manifold, it leverages <strong>EfficientNetV2-S Multi-Head Regressor</strong> to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle human aesthetic judgments with verified mathematical resilience.</p>
+            </section>
+
+            <section id="plain-english">
+                <h2>1.1 What NIMA Technical Does (In Plain English)</h2>
+                <p><strong>Like an automated laboratory quality technician. It inspects photographic inputs for sensor noise, high ISO artifacts, severe JPEG blocking, blur, and color banding, differentiating between technical flaws and intentional artistic aesthetics.</strong></p>
+
+                <div class="card comparison-card">
+                    <h3>Visual Demonstration &amp; Perceptual Assessment</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-reject">
+                            <div class="score-badge-red">POOR TECHNICAL QUALITY (HEAVY ARTIFACTS)</div>
+                            <p class="sample-label-neutral">Severe sensor noise, aggressive JPEG block boundaries, and compression degradation.</p>
+                            <img src="../assets/technical_compression.png" alt="High compression and artifacted image scoring 2.4/10 on technical quality assessment" class="sample-img-card">
+                            <div class="score-sub-red">Technical Score: 2.4 / 10.0</div>
+                        </div>
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">PRISTINE TECHNICAL FIDELITY</div>
+                            <p class="sample-label-neutral">Sub-pixel edge clarity, low noise floor, and uncompressed optical sharpness.</p>
+                            <img src="../assets/technical_sharp_boring.png" alt="Pristine optical sharpness and low noise photograph scoring 8.7/10 on technical quality" class="sample-img-card">
+                            <div class="score-sub-green">Technical Score: 8.7 / 10.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="figure-center">
+                    <h3 class="th-left-white">NIMA Technical Quality Engine Training Metrics &amp; Convergence</h3>
+                    <img src="../assets/nima_technical_training.png" alt="NIMA Technical Quality Training Metrics" class="sample-img-wide" onerror="this.style.display='none'">
+                    <p class="sample-caption">Figure 1: Earth Mover's Distance (EMD) and rank correlation convergence over synthetic artifact manifolds.</p>
+                </div>
             </section>
 
             <section id="architecture">
