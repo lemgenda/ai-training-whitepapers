@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: RetinaFace: Multi-Scale Facial Landmark Localization
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: 16.9.16-STABLE  
 **Category**: Category 08 FACE  
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
+  * [1.1 What RetinaFace Does (In Plain English)](#11-what-retinaface-does-in-plain-english)
 * [2. Feature Pyramid & Deformable Convolutions](#2-feature-pyramid--deformable-convolutions)
 * [3. Tri-Head Multi-Task Detection](#3-tri-head-multi-task-detection)
 * [4. Multi-Task Objective & OHEM](#4-multi-task-objective--ohem)
@@ -22,6 +23,26 @@
 ## 1. Abstract
 
 **RetinaFace** is a single-stage face localization network engineered for high-precision facial bounding box detection and **5-point landmark regression** (left eye, right eye, nose tip, left mouth corner, right mouth corner). Utilizing a lightweight MobileNet-0.25 backbone paired with Deformable Convolutions and a Feature Pyramid Network (FPN), RetinaFace achieves robust detection under extreme angles, harsh lighting, and microscopic face scales (&lt; 16px).
+
+---
+
+## 1.1 What RetinaFace Does (In Plain English)
+
+Imagine an intelligent autofocus system that finds every single human face in a bustling crowd scene, even if someone is turning away, standing in shadows, or wearing sunglasses:
+
+* **Instant Face Localization:** In under 3 milliseconds, RetinaFace scans an entire image, locating faces from full-frame portraits down to tiny faces only 16 pixels wide in stadium crowds.
+* **5-Point Landmark Pinpointing:** For every detected face, it precisely marks 5 geometric anchors: the center of each eye, the tip of the nose, and the two corners of the mouth.
+* **Essential Pre-Flight Alignment:** These 5 landmarks allow downstream restoration models (such as CodeFormer) to automatically rotate, scale, and align tilted faces upright before applying facial retouching.
+
+### 5-Point Landmark Regression & Detection Matrix
+
+| Landmark Keypoint | Anatomical Target | Primary Utility in Pipeline |
+| :--- | :--- | :--- |
+| **Point 1 (Left Eye)** | Pupil center / ocular iris | Geometric tilt calculation & eye restoration guidance |
+| **Point 2 (Right Eye)** | Pupil center / ocular iris | Horizontal eye-line leveling & inter-ocular scale reference |
+| **Point 3 (Nose Tip)** | Pronasale nasal apex | 3D facial pitch/yaw pose estimation & perspective correction |
+| **Point 4 (Mouth Left)** | Left oral cheilion / lip corner | Oral symmetry baseline & mouth crop bounding |
+| **Point 5 (Mouth Right)** | Right oral cheilion / lip corner | Lip alignment & expressive deformation monitoring |
 
 ---
 

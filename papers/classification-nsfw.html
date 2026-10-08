@@ -1,57 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal NSFW Safety Classifier - LemGendary AI</title>
     <meta name="description" content="EfficientNetV2-S Content Moderation and 5-Tier Safety Classification Engine">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="detection-master.html" class="tab-link">Detection Hub</a>
-                <a href="detection-classification.html" class="tab-link">Suite Overview</a>
-                <a href="detection-yolov8n.html" class="tab-link">YOLOv8n Multi-Task</a>
-                <a href="classification-nsfw.html" class="tab-link active">NSFW Safety Classifier</a>
-            </div>
-            <h1>Universal NSFW Safety Classifier</h1>
-            <p class="subtitle">EfficientNetV2-S Content Moderation and 5-Tier Safety Classification Engine</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 09 VISION</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="detection-master.html">Detection Hub</a>
+                <a href="detection-classification.html">Suite Overview</a>
+                <a href="detection-yolov8n.html">YOLOv8n Multi-Task</a>
+                <a href="classification-nsfw.html" class="active">NSFW Safety Classifier</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#plain-english">1.1 What NSFW Classifier Does (In Plain English)</a></li>
                 <li><a href="#taxonomy">2. The 5-Tier Moderation Taxonomy</a></li>
                 <li><a href="#backbone">3. EfficientNetV2-S Architecture</a></li>
                 <li><a href="#loss">4. Class-Balanced Focal Loss</a></li>
                 <li><a href="#benchmarks">5. Verification Targets & False Positives</a></li>
                 <li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Universal NSFW Safety Classifier</h1>
+        <p class="subtitle">EfficientNetV2-S Content Moderation and 5-Tier Safety Classification Engine</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 09 VISION</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>LemGendary Universal NSFW Classifier</strong> is a high-speed, on-device content moderation model powered by an EfficientNetV2-S backbone. Designed to safeguard automated data pipelines, public model endpoints, and desktop GUI workflows, the classifier categorizes incoming images into a 5-tier safety hierarchy. By optimizing Class-Balanced Focal Loss on curated edge distributions, the system achieves a verified False Positive Rate &lt; 0.4% on benign artistic content while reliably identifying explicit material in &lt; 5ms.</p>
+            </section>
+
+            <section id="plain-english">
+                <h2>1.1 What NSFW Classifier Does (In Plain English)</h2>
+                <p>Imagine an automatic gatekeeper protecting datasets and cloud uploads from explicit, harmful, or inappropriate imagery:</p>
+                <ul>
+                    <li><strong>Instant Content Gatekeeping:</strong> In under 5 milliseconds, it analyzes an image and computes confidence percentages across 5 distinct safety tiers.</li>
+                    <li><strong>Smart Artistic Disambiguation:</strong> Unlike simple filters that block classical sculptures or museum paintings, it distinguishes benign fine-art drawings and neutral photography from truly explicit material.</li>
+                    <li><strong>Pipeline Safety:</strong> Automatically quarantines inappropriate images before they contaminate dataset shards or reach public models.</li>
+                </ul>
+                <h3>5-Tier Content Moderation Classification Distribution</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Safety Tier</th>
+                                <th>Typical Imagery Description</th>
+                                <th>Pipeline Action Threshold</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Drawings</strong></td>
+                                <td>Fine art, digital anime illustrations, benign sketches</td>
+                                <td>Permitted (Confidence &ge; 90%)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Neutral</strong></td>
+                                <td>Real-world photography, landscapes, nature, everyday items</td>
+                                <td>Permitted (Confidence &ge; 90%)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sexy</strong></td>
+                                <td>Provocative poses, swimwear, lingerie, non-explicit fitness</td>
+                                <td>Flagged for operator review (&gt; 65%)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hentai</strong></td>
+                                <td>Explicit illustrated adult themes</td>
+                                <td>Auto-quarantined (&gt; 50%)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Porn</strong></td>
+                                <td>Explicit real-world adult content</td>
+                                <td>Hard rejected &amp; quarantined (&gt; 50%)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="taxonomy">
@@ -116,10 +158,7 @@
             <section id="conclusion">
                 <h2>6. Conclusion</h2>
                 <p>The Universal NSFW Classifier provides privacy-preserving, zero-telemetry content filtering natively integrated into the LemGendary AI Ecosystem.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

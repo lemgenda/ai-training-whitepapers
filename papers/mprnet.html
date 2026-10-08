@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture of LemGendary AI: High-Fidelity MPRNet Deraining - LemGendary AI</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script>
     MathJax = {
       tex: {
@@ -23,39 +22,23 @@
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     </script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper">
-            </a>
-        <div class="tabs-nav">
-                <a href="restoration-master.html" class="tab-link">Restoration Hub</a>
-                <a href="restoration-suite.html" class="tab-link">Suite Overview</a>
-                <a href="nafnet.html" class="tab-link">NAFNet</a>
-                <a href="mprnet.html" class="tab-link active">MPRNet</a>
-                <a href="mirnet.html" class="tab-link">MIRNet</a>
-                <a href="ffanet.html" class="tab-link">FFANet</a>
-            </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity MPRNet Deraining via SOTA Infrastructure</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 16.9.16-STABLE</span>
-                <span>Category Restoration</span>
-            </div>
-        </header>
-
-<nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="restoration-master.html">Restoration Hub</a>
+                <a href="restoration-suite.html">Suite Overview</a>
+                <a href="nafnet.html">NAFNet</a>
+                <a href="mprnet.html" class="active">MPRNet</a>
+                <a href="mirnet.html">MIRNet</a>
+                <a href="ffanet.html">FFANet</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
 <li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
-                <li><a href="#1-abstract">1. Abstract</a>
-                </li>
+                <li><a href="#1-abstract">1. Abstract</a></li>
+                <li><a href="#1-1-plain-english">1.1 What MPRNet Does (In Plain English)</a></li>
                 <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
                     <ul class="sub-item">
                         <li><a href="#21-the-deraining-track-mprnet_deraining">2.1 The Deraining Track (mprnet_deraining)</a></li>
@@ -116,36 +99,54 @@
                 </li>
             </ul>
 </nav>
-
-
-
-
-
-
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<section id="1-abstract">
+<main id="content" class="toc-fixed-content">
+        <h1>Architecture of LemGendary AI</h1>
+        <p class="subtitle">High-Fidelity MPRNet Deraining via SOTA Infrastructure</p>
+        <div class="meta">
+                <span>By Lem Treursić</span>
+                <span>Version: 16.9.16-STA<section id="1-abstract">
 <h2>1. Abstract</h2>
             <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by the <strong>Multi-Stage Progressive Image Restoration Network (MPRNet)</strong>. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.</p>
+</section>
+
+<section id="1-1-plain-english">
+<h2>1.1 What MPRNet Does (In Plain English)</h2>
+<p>Imagine capturing an outdoor photograph during a torrential downpour, where heavy rain streaks and splashing water droplets completely obscure faces, signs, and background objects:</p>
+<ul>
+    <li><strong>Progressive Multi-Stage Cleaning:</strong> MPRNet cleans rain in three sequential passes: the first pass identifies major torrential downpour streaks, the second pass removes finer mist and water droplets, and the third pass restores ultra-fine background textures.</li>
+    <li><strong>Supervised Attention Shielding:</strong> Specialized attention modules ensure that water droplets are cleanly extracted without scrubbing away actual object textures, delicate tree leaves, or building facades behind the rain.</li>
+    <li><strong>Benchmark Deraining Power:</strong> Delivering over 53.9 dB PSNR on benchmark evaluations, it produces crystal-clear images that look as though it never rained at all.</li>
+</ul>
+<h3>Visual Demonstration: Rain Distortions &amp; Restoration</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Rain Artifact Type</th>
+                <th>Visual Impact on Input Image</th>
+                <th>MPRNet Cleaned Output</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Volumetric Downpour</strong></td>
+                <td>Dense white streak curtains across entire scene</td>
+                <td>Complete streak removal with natural depth clarity</td>
+            </tr>
+            <tr>
+                <td><strong>Refractive Drops</strong></td>
+                <td>Lens-distortion blur and water droplet glare</td>
+                <td>Crisp edge restoration and accurate color balance</td>
+            </tr>
+            <tr>
+                <td><strong>Atmospheric Mist</strong></td>
+                <td>Low contrast and gray background haze</td>
+                <td>Punchy contrast and restored background geometry</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</section>/p>
 <hr />
 <hr />
 
@@ -878,11 +879,6 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 <p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.</p>
 <p>The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
 </section>
-<footer>
-    <div class="container">
-        <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-    </div>
-</footer>
-</div>
+</main>
 </body>
 </html>

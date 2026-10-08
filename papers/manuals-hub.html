@@ -1,44 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Operations Manuals Hub - LemGendary AI</title>
     <meta name="description" content="Unified Operational Cockpit and Standard Operating Procedures across AI Studio GUI, CLI, and REST/WebSocket API">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="manuals-hub.html" class="tab-link active">Manuals Hub</a>
-                <a href="ai-studio-manual.html" class="tab-link">AI Studio GUI Manual</a>
-                <a href="cli-manual.html" class="tab-link">Master CLI Manual</a>
-                <a href="api-manual.html" class="tab-link">Master API Manual</a>
-            </div>
-            <h1>Master Operations Manuals Hub</h1>
-            <p class="subtitle">Unified Operational Cockpit and Standard Operating Procedures across AI Studio GUI, CLI, and REST/WebSocket API</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 03 MANUALS</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="manuals-hub.html" class="active">Manuals Hub</a>
+                <a href="ai-studio-manual.html">AI Studio GUI Manual</a>
+                <a href="cli-manual.html">Master CLI Manual</a>
+                <a href="api-manual.html">Master API Manual</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#topology">2. Interface Control Boundaries</a></li>
@@ -48,8 +30,18 @@
                 <li><a href="#cross-automation">6. Cross-Project Automation (CPA)</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Master Operations Manuals Hub</h1>
+        <p class="subtitle">Unified Operational Cockpit and Standard Operating Procedures across AI Studio GUI, CLI, and REST/WebSocket API</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 03 MANUALS</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The LemGendary AI Ecosystem is governed by three interoperable control planes: the <strong>AI Studio Desktop GUI</strong> (presentation tier), the <strong>Master CLI Suite</strong> (scripted pipeline dispatch), and the <strong>Master Sidecar API</strong> (asynchronous REST, WebSocket, and IPC services). This manual hub establishes the authoritative operating procedures, communication contracts, and error remediation pathways for operators running data synthesis, hyperparameter tuning, model training, and checkpoint validation across universal hardware.</p>
@@ -137,10 +129,7 @@ lemtrain --model nafnet_debluring --precision fp16 --batch-size auto</code></pre
                 <h2>7. Conclusion</h2>
                 <p>The Master Operations Manuals Hub establishes clear operational guidelines across all user-facing and programmatic entrypoints, ensuring deterministic execution from local developer workstations to cloud cluster deployments.</p>
             </section>
-        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+        
+</main>
 </body>
 </html>

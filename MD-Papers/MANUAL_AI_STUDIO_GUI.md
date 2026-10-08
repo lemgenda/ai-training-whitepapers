@@ -15,6 +15,14 @@
 - [3. Universal Configuration & Secrets Vault](#3-universal-configuration--secrets-vault)
 - [4. One-Click Environment Setup: The 7-Stage Clean Install Pipeline](#4-one-click-environment-setup-the-7-stage-clean-install-pipeline)
 - [5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync](#5-dataset-compilation-pipeline-modernization-custom-multi-source-ingestion--kaggle-sync)
+  - [5.1 Dataset Compiler & Storage Modernization Control Card](#51-dataset-compiler--storage-modernization-control-card)
+    - [5.1.1 Standard Manifold Compilation](#511-standard-manifold-compilation)
+    - [5.1.2 Custom Multi-Source Compilation](#512-custom-multi-source-compilation)
+  - [5.2 Kaggle Cloud Synchronization & Storage Hub](#52-kaggle-cloud-synchronization--storage-hub)
+    - [5.2.1 Download from Kaggle](#521-download-from-kaggle)
+    - [5.2.2 Upload to Kaggle](#522-upload-to-kaggle)
+    - [5.2.3 Update Metadata Only](#523-update-metadata-only)
+  - [5.3 Production Manifolds Catalog & Format Breakdown](#53-production-manifolds-catalog--format-breakdown)
 - [6. Model Training Pipeline: Architectures, Ladders & Sawtooth Governor](#6-model-training-pipeline-architectures-ladders--sawtooth-governor)
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
 - [8. Health Matrix & Cross-Project Version Drift Analytics](#8-health-matrix--cross-project-version-drift-analytics)
@@ -276,11 +284,13 @@ High-velocity deep learning requires converting raw, loose image files into mode
 
 ### 5.1 Dataset Compiler & Storage Modernization Control Card
 
+#### 5.1.1 Standard Manifold Compilation
+
 ![Dataset Compiler & Storage Modernization Card](../assets/gui/gui_dataset_compiler.png)
 
-#### Dataset Compiler Card Numbered Reference
+##### Standard Compilation Numbered Reference
 
-1. **Compilation Mode Segmented Control**: Switches between `Standard Manifold Compilation` and `Custom Multi-Source Compilation`.
+1. **Compilation Mode Segmented Control**: Switches between `Standard Manifold Compilation` and `Custom Multi-Source Compilation`. A `HelpTooltip` explains each mode.
 2. **Target Manifold Dropdown Selector**: Selects dataset to modernize from registered definitions in `unified_data.yaml`.
 3. **Storage Format Preset Dropdown**: Selects container architecture (`Streaming WebDataset Shards`, `Columnar Parquet`, `MosaicML MDS`, `LitData`).
 4. **Samples Per Shard Input Field**: Configures container partition size (default: `5,000` samples per shard, yielding optimal 300MB–400MB archives).
@@ -300,27 +310,115 @@ High-velocity deep learning requires converting raw, loose image files into mode
 
 ---
 
-### 5.2 Kaggle Cloud Synchronization & Storage Hub
+#### 5.1.2 Custom Multi-Source Compilation
 
-![Kaggle Cloud Synchronization & Storage Hub](../assets/gui/gui_kaggle_cloud_hub.png)
+Activated by switching the **Compilation Mode Segmented Control** (Callout 1 above) to `Custom Multi-Source Compilation`. This mode ingests datasets from external cloud platforms — Kaggle, HuggingFace, Google Drive, or GitHub — into a brand-new named manifold, without requiring a pre-existing `unified_data.yaml` entry.
 
-#### Kaggle Cloud Hub Numbered Reference
+![Custom Multi-Source Compilation Panel](../assets/gui/gui_custom_compilation.png)
 
-1. **Cloud Action Mode Subtabs**: Toggles between `Download from Kaggle` and `Upload to Kaggle` workflows.
-2. **Download Source Mode Switcher**: Selects between official `Registry Datasets` and `Custom Kaggle Link / Slug` input modes.
-3. **Select Registry Dataset Dropdown**: Lists all 20 canonical Kaggle-linked manifolds from `unified_data.yaml` with local availability tags (`Present Locally` vs `Not Downloaded`).
-4. **Target Destination Folder Name Input**: Specifies local storage destination directory inside `LemGendaryDatasets/`.
-5. **Force Overwrite Checkbox**: When enabled, redownloads all shards even if files exist locally.
-6. **Download from Kaggle Primary Button**: Initiates authenticated multi-threaded download via the official Kaggle API.
+##### Custom Compilation Numbered Reference
+
+1. **Manifold ID Text Input**: Unique canonical name for the new compiled manifold (e.g. `SuperResMaster`, `AnimeDiffusion`, `FaceRestorationPro`). Used as the storage folder name and registry key.
+2. **Target Domain Dropdown**: Machine learning task domain (`restoration`, `detection`, `classification`, `segmentation`, `forex`) — governs vetting policies and schema rules applied during compilation.
+3. **Storage Format Dropdown**: Container architecture for the custom manifold (`Streaming WebDataset Shards`, `Columnar Parquet`, `MosaicML MDS`, `LitData`).
+4. **Quality Preset Dropdown**: Predefined compression profile controlling WebP encode quality bounds and shard density.
+5. **Samples Per Shard Number Input**: Target partition size for each container chunk in the custom manifold.
+6. **Dataset Source URL / Path Input**: Accepts Kaggle slugs (`kaggle://owner/slug` or `https://kaggle.com/datasets/...`), HuggingFace repos (`hf://dataset-name` or `https://huggingface.co/datasets/...`), Google Drive links (`gd://file-id`), or GitHub repos (`gh://owner/repo`).
+7. **Sync Multi-Source Dataset Button**: Initiates authenticated ingestion from the configured source URL into a fresh local manifold directory.
+8. **Compile Multi-Source Manifold Button**: After sync, compiles the ingested raw sources into the selected container format with WebP transcoding and integrity vetting.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("download" \| "upload")` | Switches between cloud pulling and manifold publishing. |
+| **1** | Manifold ID | Text Input | `setCustomManifoldId(e.target.value)` | Canonical name for new dataset. Lowercase, no spaces recommended (e.g. `face-hq-512`). |
+| **2** | Target Domain | Select Dropdown | `setCustomDomain(e.target.value)` | Governs annotation schema, vetting filters, and pre-flight integrity rules. |
+| **3** | Storage Format | Select Dropdown | `setCustomFormat(e.target.value)` | Container architecture: WebDataset for streaming, MDS for random access. |
+| **4** | Quality Preset | Select Dropdown | `setCustomPreset(e.target.value)` | Compression envelope: `ultra`, `high`, `balanced`, `draft`. |
+| **5** | Samples Per Shard | Number Input | `setCustomShardSize(Number(e.target.value))` | Partition density. Default: 5,000 samples per archive. |
+| **6** | Source URL / Path | Text Input | `setCustomSourceUrl(e.target.value)` | Accepts Kaggle, HuggingFace, Google Drive, or GitHub URL/slug. |
+| **7** | Sync Multi-Source | Action Button | `POST http://127.0.0.1:8100/api/ingest` | Downloads raw data from external source into local staging directory. |
+| **8** | Compile Multi-Source | Primary Button | `POST http://127.0.0.1:8100/api/compile/custom` | Runs full compilation pipeline on ingested sources: dedupe, vetting, WebP, sharding. |
+
+---
+
+### 5.2 Kaggle Cloud Synchronization & Storage Hub
+
+The Kaggle hub provides bidirectional cloud synchronization with three distinct operating modes accessible via the subtab navigation row.
+
+#### 5.2.1 Download from Kaggle
+
+![Kaggle Cloud Synchronization — Download Tab](../assets/gui/gui_kaggle_cloud_hub.png)
+
+##### Download from Kaggle Numbered Reference
+
+1. **Cloud Action Mode Subtabs**: Toggles between `Download from Kaggle`, `Upload to Kaggle`, and `Update Metadata Only` workflows. A `HelpTooltip` explains all three modes.
+2. **Download Source Mode Switcher**: Selects between official `Registry Datasets (unified_data.yaml)` and `Custom Kaggle Link / Slug` input modes. A `HelpTooltip` explains each option.
+3. **Select Registry Dataset Dropdown**: Lists all canonical Kaggle-linked manifolds from `unified_data.yaml` with local availability tags (`Present Locally` vs `Not Downloaded`). Visible in Registry mode only.
+4. **Custom Kaggle Link / Slug Input**: Accepts a direct Kaggle URL (`https://www.kaggle.com/datasets/username/dataset-name`) or repository slug (`owner/dataset-name`). Visible in Custom mode only.
+5. **Target Destination Folder Name Input**: Optional local storage destination subfolder inside `LemGendaryDatasets/`. Defaults to the manifest folder name.
+6. **Force Redownload Checkbox**: When enabled, re-downloads all shards even if files exist locally — bypasses local caching for bit-for-bit cloud refresh.
+7. **Download from Kaggle Primary Button**: Initiates authenticated multi-threaded download via the official Kaggle API. Requires valid `~/.kaggle/kaggle.json` credentials.
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("download" \| "upload" \| "metadata")` | Switches between cloud pulling, manifold publishing, and metadata-only sync. |
 | **2** | Source Mode | Segmented Control | `setKaggleDownloadMode("registry" \| "custom")` | Switches between curated registry manifolds and ad-hoc repository links. |
-| **3** | Registry Dataset | Select Dropdown | `setSelectedRegistryKey(e.target.value)` | Picks verified dataset manifold linked in `unified_data.yaml`. |
-| **4** | Target Folder | Text Input | `setDownloadTargetFolder(e.target.value)` | Customizes local destination path inside dataset directory. |
-| **5** | Force Redownload | Checkbox Toggle | `setDownloadForce(e.target.checked)` | Bypasses local caching to perform bit-for-bit cloud refresh. |
-| **6** | Download from Kaggle | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/download` | Dispatches background downloader streaming from Kaggle API. |
+| **3** | Registry Dataset | Select Dropdown | `setSelectedRegistryKey(e.target.value)` | Picks verified dataset manifold linked in `unified_data.yaml`. Registry mode only. |
+| **4** | Custom URL / Slug | Text Input | `setCustomKaggleRef(e.target.value)` | Direct Kaggle link or owner/slug identifier. Custom mode only. |
+| **5** | Target Folder | Text Input | `setDownloadTargetFolder(e.target.value)` | Customizes local destination path inside dataset directory. Optional. |
+| **6** | Force Redownload | Checkbox Toggle | `setDownloadForce(e.target.checked)` | Bypasses local caching to perform bit-for-bit cloud refresh. |
+| **7** | Download from Kaggle | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/download` | Dispatches background downloader streaming from Kaggle API. |
+
+---
+
+#### 5.2.2 Upload to Kaggle
+
+Activated by clicking the `Upload to Kaggle` subtab. Packages a locally compiled manifold and publishes it to Kaggle Datasets cloud storage.
+
+![Upload to Kaggle Tab](../assets/gui/gui_kaggle_upload_hub.png)
+
+##### Upload to Kaggle Numbered Reference
+
+1. **Action Subtabs (Upload Active)**: The `Upload to Kaggle` subtab is highlighted active. Switches back to `Download from Kaggle` or `Update Metadata Only` when clicked.
+2. **Local Compiled Manifold Selector**: Dropdown listing all locally compiled manifolds. Selecting one populates the upload target from its compiled container directory.
+3. **Target Kaggle Repository Slug Input**: Optional Kaggle repository identifier in `owner/dataset-slug` format. If left blank, auto-resolved from `unified_data.yaml` bindings for the selected manifold.
+4. **Upload to Kaggle Primary Button**: Packages the selected manifold into a Kaggle dataset archive and initiates upload via the official Kaggle API.
+5. **Upload Status Banner**: Real-time feedback panel showing upload progress, authentication confirmation, or error messages from the Dataset Compiler sidecar (Port 8100).
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("upload")` | Sets the active Kaggle operation mode to cloud publishing. |
+| **2** | Local Manifold Selector | Select Dropdown | `setUploadManifold(e.target.value)` | Picks the compiled local dataset to package and upload. |
+| **3** | Target Kaggle Slug | Text Input | `setUploadKaggleRef(e.target.value)` | Kaggle repo ID (`owner/slug`). Leave blank for auto-resolution from registry. |
+| **4** | Upload to Kaggle | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/upload` | Initiates multi-part dataset upload to Kaggle cloud storage. |
+| **5** | Upload Status Banner | Status Banner | `uploadStatus` state | Displays upload confirmation, progress steps, or API error feedback. |
+
+---
+
+#### 5.2.3 Update Metadata Only
+
+Activated by clicking the `Update Metadata Only` subtab. Pushes `dataset-metadata.json` records (title, description, license, column descriptors) to Kaggle without re-uploading any data files.
+
+![Update Metadata Only Tab](../assets/gui/gui_kaggle_metadata_hub.png)
+
+##### Update Metadata Only Numbered Reference
+
+1. **Action Subtabs (Metadata Active)**: The `Update Metadata Only` subtab is highlighted active.
+2. **Update Scope Segmented Control**: Switches between `Single Dataset` (one manifold) and `All Datasets (unified_data.yaml)` (batch update all bound datasets).
+3. **Local Manifold Selector** *(Single mode only)*: Dropdown to pick which manifold's `dataset-metadata.json` to push to Kaggle.
+4. **Kaggle Repository Slug Input** *(Single mode only)*: Optional override slug (`owner/dataset-slug`). Leave blank to auto-resolve from `unified_data.yaml`.
+5. **All Datasets Description** *(All mode only)*: Informational text confirming that every dataset in `unified_data.yaml` with a local `dataset-metadata.json` will be updated — no data re-uploaded.
+6. **Update Metadata on Kaggle Primary Button**: Triggers the metadata push for the selected scope. Only metadata records (JSON fields) are updated via the Kaggle API — zero data transfer.
+7. **Metadata Update Status Banner**: Real-time feedback panel showing per-dataset push status, success confirmations, or API error messages.
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("metadata")` | Sets the active Kaggle operation mode to metadata-only sync. |
+| **2** | Update Scope | Segmented Control | `setMetaUpdateMode("single" \| "all")` | Single: one manifold. All: batch-push metadata for every registered dataset. |
+| **3** | Local Manifold | Select Dropdown | `setMetaUpdateManifold(e.target.value)` | Single mode only. Selects which manifold's metadata file to push. |
+| **4** | Kaggle Slug Override | Text Input | `setMetaUpdateRef(e.target.value)` | Optional. Leave blank to auto-resolve slug from `unified_data.yaml`. |
+| **5** | All Datasets Info | Informational Text | None | Explains scope of batch operation — all datasets with local metadata file. |
+| **6** | Update Metadata | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/update-metadata` | Pushes metadata JSON records to Kaggle. Zero data bytes transferred. |
+| **7** | Status Banner | Status Banner | `metaUpdateStatus` state | Shows per-dataset push results and API confirmation or error codes. |
 
 ---
 

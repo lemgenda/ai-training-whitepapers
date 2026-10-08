@@ -1,44 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Film Restorer - LemGendary AI</title>
     <meta name="description" content="Archival Emulsion Restoration, Grain Synthesis, Scratch Inpainting & Color Fading Inversion">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="universal-hybrid.html" class="tab-link">Universal Hybrid Overview</a>
-                <a href="hybrid-upn-v2.html" class="tab-link">UPN v2</a>
-                <a href="hybrid-film-restorer.html" class="tab-link active">Universal Film Restorer</a>
-                <a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
-            </div>
-            <h1>Universal Film Restorer</h1>
-            <p class="subtitle">Archival Emulsion Restoration, Grain Synthesis, Scratch Inpainting & Color Fading Inversion</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 05 HYBRID</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="universal-hybrid.html">Universal Hybrid Overview</a>
+                <a href="hybrid-upn-v2.html">UPN v2</a>
+                <a href="hybrid-film-restorer.html" class="active">Universal Film Restorer</a>
+                <a href="hybrid-multitask.html">MultiTask Restorer</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#analog-physics">2. Analog Emulsion Physics</a></li>
@@ -48,8 +30,18 @@
                 <li><a href="#benchmarks">6. Archival Preservation Targets</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Universal Film Restorer</h1>
+        <p class="subtitle">Archival Emulsion Restoration, Grain Synthesis, Scratch Inpainting & Color Fading Inversion</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 05 HYBRID</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>Universal Film Restorer</strong> is a specialized deep neural network designed to preserve historical, cinematic, and analog photographic media. Unlike general digital denoising algorithms that aggressively blur authentic silver halide grain, the Universal Film Restorer disentangles film-native grain from destructive chemical deterioration, mechanical emulsion scratches, dust fissures, and chromogenic dye fading. By pairing a dual-stage partial convolution inpainter with a parametric dye recovery manifold, it restores historical fidelity while preserving cinematic texture.</p>
@@ -146,10 +138,7 @@
             <section id="conclusion">
                 <h2>7. Conclusion</h2>
                 <p>The Universal Film Restorer guarantees historical preservation by treating analog media as a distinct physical medium, ensuring authentic aesthetic preservation without modern digital smoothing.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

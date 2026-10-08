@@ -2,7 +2,7 @@
 # Architecture of LemGendary AI: Universal NSFW Safety Classifier
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: 16.9.16-STABLE  
 **Category**: Category 09 VISION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -11,6 +11,7 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
+  * [1.1 What NSFW Classifier Does (In Plain English)](#11-what-nsfw-classifier-does-in-plain-english)
 * [2. The 5-Tier Moderation Taxonomy](#2-the-5-tier-moderation-taxonomy)
 * [3. EfficientNetV2-S Architecture](#3-efficientnetv2-s-architecture)
 * [4. Class-Balanced Focal Loss](#4-class-balanced-focal-loss)
@@ -22,6 +23,26 @@
 ## 1. Abstract
 
 The **LemGendary Universal NSFW Classifier** is a high-speed, on-device content moderation model powered by an EfficientNetV2-S backbone. Designed to safeguard automated data pipelines, public model endpoints, and desktop GUI workflows, the classifier categorizes incoming images into a 5-tier safety hierarchy. By optimizing Class-Balanced Focal Loss on curated edge distributions, the system achieves a verified False Positive Rate &lt; 0.4% on benign artistic content while reliably identifying explicit material in &lt; 5ms.
+
+---
+
+## 1.1 What NSFW Classifier Does (In Plain English)
+
+Imagine an automatic gatekeeper protecting datasets and cloud uploads from explicit, harmful, or inappropriate imagery:
+
+* **Instant Content Gatekeeping:** In under 5 milliseconds, it analyzes an image and computes confidence percentages across 5 distinct safety tiers.
+* **Smart Artistic Disambiguation:** Unlike simple filters that block classical sculptures or museum paintings, it distinguishes benign fine-art drawings and neutral photography from truly explicit material.
+* **Pipeline Safety:** Automatically quarantines inappropriate images before they contaminate dataset shards or reach public models.
+
+### 5-Tier Content Moderation Classification Distribution
+
+| Safety Tier | Typical Imagery Description | Pipeline Action Threshold |
+| :--- | :--- | :--- |
+| **Drawings** | Fine art, digital anime illustrations, benign sketches | Permitted (Confidence $\ge 90\%$) |
+| **Neutral** | Real-world photography, landscapes, nature, everyday items | Permitted (Confidence $\ge 90\%$) |
+| **Sexy** | Provocative poses, swimwear, lingerie, non-explicit fitness | Flagged for operator review ($> 65\%$) |
+| **Hentai** | Explicit illustrated adult themes | Auto-quarantined ($> 50\%$) |
+| **Porn** | Explicit real-world adult content | Hard rejected & quarantined ($> 50\%$) |
 
 ---
 

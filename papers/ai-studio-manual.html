@@ -1,43 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemGendary AI Studio GUI: Comprehensive Operator Manual</title>
     <meta name="description" content="Exhaustive, beginner-friendly operator guide for the LemGendary AI Studio Desktop GUI covering environment setup, secrets vault, dataset compilation, model training, and cloud publishing.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
-                <a href="ai-studio-manual.html" class="tab-link active">AI Studio GUI Manual</a>
-                <a href="cli-manual.html" class="tab-link">Master CLI Manual</a>
-                <a href="api-manual.html" class="tab-link">Master API Manual</a>
-            </div>
-            <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
-            <p class="subtitle">Complete Operator Guide for Visual Orchestration, Secrets Management, Dataset Synthesis, and Production Model Training</p>
-            <div class="meta">
-                <span>Category 03 MANUALS</span>
-                <span>Version 2.0.0</span>
-                <span>Author: LemGendary AI Core Team</span>
-                <span>Hardware: Universal Accelerator Topology</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="manuals-hub.html">Manuals Hub</a>
+                <a href="ai-studio-manual.html" class="active">AI Studio GUI Manual</a>
+                <a href="cli-manual.html">Master CLI Manual</a>
+                <a href="api-manual.html">Master API Manual</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="ai-studio-whitepaper.html" class="toc-link-secondary">Architectural Whitepaper</a></li>
                 <li><a href="#section-1">1. Abstract &amp; The Gardening Model Philosophy</a></li>
@@ -54,9 +36,18 @@
                 <li><a href="#section-12">12. Tripartite Multi-Sidecar Network</a></li>
                 <li><a href="#section-13">13. Automated Testing &amp; Quality Assurance</a></li>
             </ul>
-        </nav>
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
+        <p class="subtitle">Complete Operator Guide for Visual Orchestration, Secrets Management, Dataset Synthesis, and Production Model Training</p>
+        <div class="meta">
+                <span>Category 03 MANUALS</span>
+                <span>Version 2.0.0</span>
+                <span>Author: LemGendary AI Core Team</span>
+                <span>Hardware: Universal Accelerator Topology</span>
+            </div>
 
-        <main class="content">
+
             <!-- SECTION 1 -->
             <section id="section-1">
                 <h2>1. Abstract & The Gardening Model Philosophy</h2>
@@ -819,18 +810,23 @@
                     </table>
                 </div>
                 <p>---</p>
-                <h3>5.2 Kaggle Cloud Synchronization & Storage Hub</h3>
+                                <h3>5.2 Kaggle Cloud Synchronization & Storage Hub</h3>
+                <p>The Kaggle Cloud Synchronization & Storage Hub integrates the official Kaggle API directly into the desktop workspace. Operating across three specialized subtabs, it provides automated downloading of registered and custom datasets, packaging and cloud publishing of locally compiled manifolds, and frictionless metadata updates.</p>
+
+                <h4>5.2.1 Download from Kaggle</h4>
+                <p>Activated by selecting the <code>Download from Kaggle</code> subtab. Manages authenticated cloud downloads of datasets either registered in <code>unified_data.yaml</code> or specified via arbitrary Kaggle URLs.</p>
                 <div class="figure-center">
-                    <img src="../assets/gui/gui_kaggle_cloud_hub.png" alt="Kaggle Cloud Synchronization & Storage Hub" class="img-paper">
+                    <img src="../assets/gui/gui_kaggle_cloud_hub.png" alt="Download from Kaggle Hub View" class="img-paper">
                 </div>
-                <h4>Kaggle Cloud Hub Numbered Reference</h4>
+                <h5>Download from Kaggle Numbered Reference</h5>
                 <ol>
-                    <li><strong>Cloud Action Mode Subtabs</strong>: Toggles between <code>Download from Kaggle</code> and <code>Upload to Kaggle</code> workflows.</li>
-                    <li><strong>Download Source Mode Switcher</strong>: Selects between official <code>Registry Datasets</code> and <code>Custom Kaggle Link / Slug</code> input modes.</li>
-                    <li><strong>Select Registry Dataset Dropdown</strong>: Lists all 20 canonical Kaggle-linked manifolds from <code>unified_data.yaml</code> with local availability tags (<code>Present Locally</code> vs <code>Not Downloaded</code>).</li>
-                    <li><strong>Target Destination Folder Name Input</strong>: Specifies local storage destination directory inside <code>LemGendaryDatasets/</code>.</li>
-                    <li><strong>Force Overwrite Checkbox</strong>: When enabled, redownloads all shards even if files exist locally.</li>
-                    <li><strong>Download from Kaggle Primary Button</strong>: Initiates authenticated multi-threaded download via the official Kaggle API.</li>
+                    <li><strong>Cloud Action Mode Subtabs</strong>: Toggles between <code>Download from Kaggle</code>, <code>Upload to Kaggle</code>, and <code>Update Metadata Only</code> workflows. A <code>HelpTooltip</code> explains all three modes.</li>
+                    <li><strong>Download Source Mode Switcher</strong>: Selects between official <code>Registry Datasets (unified_data.yaml)</code> and <code>Custom Kaggle Link / Slug</code> input modes. A <code>HelpTooltip</code> explains each option.</li>
+                    <li><strong>Select Registry Dataset Dropdown</strong>: Lists all canonical Kaggle-linked manifolds from <code>unified_data.yaml</code> with local availability tags (<code>Present Locally</code> vs <code>Not Downloaded</code>). Visible in Registry mode only.</li>
+                    <li><strong>Custom Kaggle Link / Slug Input</strong>: Accepts a direct Kaggle URL (<code>https://www.kaggle.com/datasets/username/dataset-name</code>) or repository slug (<code>owner/dataset-name</code>). Visible in Custom mode only.</li>
+                    <li><strong>Target Destination Folder Name Input</strong>: Optional local storage destination subfolder inside <code>LemGendaryDatasets/</code>. Defaults to the manifest folder name.</li>
+                    <li><strong>Force Redownload Checkbox</strong>: When enabled, re-downloads all shards even if files exist locally — bypasses local caching for bit-for-bit cloud refresh.</li>
+                    <li><strong>Download from Kaggle Primary Button</strong>: Initiates authenticated multi-threaded download via the official Kaggle API. Requires valid <code>~/.kaggle/kaggle.json</code> credentials.</li>
                 </ol>
                 <div class="table-scroll">
                     <table class="table-dense">
@@ -843,44 +839,49 @@
                         </tr></thead>
                         <tbody>
                         <tr>
-                            <td><strong>1<strong></td>
+                            <td><strong>1</strong></td>
                             <td>Action Subtabs</td>
                             <td>Subtab Navigation</td>
-                            <td>`setKaggleActiveTab("download" \</td>
-                            <td>"upload")`</td>
-                            <td>Switches between cloud pulling and manifold publishing.</td>
+                            <td><code>setKaggleActiveTab("download" | "upload" | "metadata")</code></td>
+                            <td>Switches between cloud pulling, manifold publishing, and metadata-only sync.</td>
                         </tr>
                         <tr>
-                            <td><strong>2<strong></td>
+                            <td><strong>2</strong></td>
                             <td>Source Mode</td>
                             <td>Segmented Control</td>
-                            <td>`setKaggleDownloadMode("registry" \</td>
-                            <td>"custom")`</td>
+                            <td><code>setKaggleDownloadMode("registry" | "custom")</code></td>
                             <td>Switches between curated registry manifolds and ad-hoc repository links.</td>
                         </tr>
                         <tr>
-                            <td><strong>3<strong></td>
+                            <td><strong>3</strong></td>
                             <td>Registry Dataset</td>
                             <td>Select Dropdown</td>
                             <td><code>setSelectedRegistryKey(e.target.value)</code></td>
-                            <td>Picks verified dataset manifold linked in <code>unified_data.yaml</code>.</td>
+                            <td>Picks verified dataset manifold linked in <code>unified_data.yaml</code>. Registry mode only.</td>
                         </tr>
                         <tr>
-                            <td><strong>4<strong></td>
+                            <td><strong>4</strong></td>
+                            <td>Custom URL / Slug</td>
+                            <td>Text Input</td>
+                            <td><code>setCustomKaggleRef(e.target.value)</code></td>
+                            <td>Direct Kaggle link or owner/slug identifier. Custom mode only.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong></td>
                             <td>Target Folder</td>
                             <td>Text Input</td>
                             <td><code>setDownloadTargetFolder(e.target.value)</code></td>
-                            <td>Customizes local destination path inside dataset directory.</td>
+                            <td>Customizes local destination path inside dataset directory. Optional.</td>
                         </tr>
                         <tr>
-                            <td><strong>5<strong></td>
+                            <td><strong>6</strong></td>
                             <td>Force Redownload</td>
                             <td>Checkbox Toggle</td>
                             <td><code>setDownloadForce(e.target.checked)</code></td>
                             <td>Bypasses local caching to perform bit-for-bit cloud refresh.</td>
                         </tr>
                         <tr>
-                            <td><strong>6<strong></td>
+                            <td><strong>7</strong></td>
                             <td>Download from Kaggle</td>
                             <td>Primary Button</td>
                             <td><code>POST http://127.0.0.1:8100/api/kaggle/download</code></td>
@@ -889,7 +890,146 @@
                         </tbody>
                     </table>
                 </div>
-                <p>---</p>
+
+                <h4>5.2.2 Upload to Kaggle</h4>
+                <p>Activated by clicking the <code>Upload to Kaggle</code> subtab. Packages a locally compiled manifold and publishes it to Kaggle Datasets cloud storage.</p>
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_kaggle_upload_hub.png" alt="Upload to Kaggle Hub View" class="img-paper">
+                </div>
+                <h5>Upload to Kaggle Numbered Reference</h5>
+                <ol>
+                    <li><strong>Action Subtabs (Upload Active)</strong>: The <code>Upload to Kaggle</code> subtab is highlighted active. Switches back to <code>Download from Kaggle</code> or <code>Update Metadata Only</code> when clicked.</li>
+                    <li><strong>Local Compiled Manifold Selector</strong>: Dropdown listing all locally compiled manifolds. Selecting one populates the upload target from its compiled container directory.</li>
+                    <li><strong>Target Kaggle Repository Slug Input</strong>: Optional Kaggle repository identifier in <code>owner/dataset-slug</code> format. If left blank, auto-resolved from <code>unified_data.yaml</code> bindings for the selected manifold.</li>
+                    <li><strong>Upload to Kaggle Primary Button</strong>: Packages the selected manifold into a Kaggle dataset archive and initiates upload via the official Kaggle API.</li>
+                    <li><strong>Upload Status Banner</strong>: Real-time feedback panel showing upload progress, authentication confirmation, or error messages from the Dataset Compiler sidecar (Port 8100).</li>
+                </ol>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td>Action Subtabs</td>
+                            <td>Subtab Navigation</td>
+                            <td><code>setKaggleActiveTab("upload")</code></td>
+                            <td>Sets the active Kaggle operation mode to cloud publishing.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td>Local Manifold Selector</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setUploadManifold(e.target.value)</code></td>
+                            <td>Picks the compiled local dataset to package and upload.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td>Target Kaggle Slug</td>
+                            <td>Text Input</td>
+                            <td><code>setUploadKaggleRef(e.target.value)</code></td>
+                            <td>Kaggle repo ID (<code>owner/slug</code>). Leave blank for auto-resolution from registry.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td>Upload to Kaggle</td>
+                            <td>Primary Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/upload</code></td>
+                            <td>Initiates multi-part dataset upload to Kaggle cloud storage.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong></td>
+                            <td>Upload Status Banner</td>
+                            <td>Status Banner</td>
+                            <td><code>uploadStatus</code> state</td>
+                            <td>Displays upload confirmation, progress steps, or API error feedback.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>5.2.3 Update Metadata Only</h4>
+                <p>Activated by clicking the <code>Update Metadata Only</code> subtab. Pushes <code>dataset-metadata.json</code> records (title, description, license, column descriptors) to Kaggle without re-uploading any data files.</p>
+                <div class="figure-center">
+                    <img src="../assets/gui/gui_kaggle_metadata_hub.png" alt="Update Metadata Only Hub View" class="img-paper">
+                </div>
+                <h5>Update Metadata Only Numbered Reference</h5>
+                <ol>
+                    <li><strong>Action Subtabs (Metadata Active)</strong>: The <code>Update Metadata Only</code> subtab is highlighted active.</li>
+                    <li><strong>Update Scope Segmented Control</strong>: Switches between <code>Single Dataset</code> (one manifold) and <code>All Datasets (unified_data.yaml)</code> (batch update all bound datasets).</li>
+                    <li><strong>Local Manifold Selector</strong> <em>(Single mode only)</em>: Dropdown to pick which manifold's <code>dataset-metadata.json</code> to push to Kaggle.</li>
+                    <li><strong>Kaggle Repository Slug Input</strong> <em>(Single mode only)</em>: Optional override slug (<code>owner/dataset-slug</code>). Leave blank to auto-resolve from <code>unified_data.yaml</code>.</li>
+                    <li><strong>All Datasets Description</strong> <em>(All mode only)</em>: Informational text confirming that every dataset in <code>unified_data.yaml</code> with a local <code>dataset-metadata.json</code> will be updated — no data re-uploaded.</li>
+                    <li><strong>Update Metadata on Kaggle Primary Button</strong>: Triggers the metadata push for the selected scope. Only metadata records (JSON fields) are updated via the Kaggle API — zero data transfer.</li>
+                    <li><strong>Metadata Update Status Banner</strong>: Real-time feedback panel showing per-dataset push status, success confirmations, or API error messages.</li>
+                </ol>
+                <div class="table-scroll">
+                    <table class="table-dense">
+                        <thead><tr>
+                            <th>Callout #</th>
+                            <th>UI Element</th>
+                            <th>Control Type</th>
+                            <th>Triggered Endpoint / Action</th>
+                            <th>Operator Guide & Behavioral Safeguards</th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td><strong>1</strong></td>
+                            <td>Action Subtabs</td>
+                            <td>Subtab Navigation</td>
+                            <td><code>setKaggleActiveTab("metadata")</code></td>
+                            <td>Sets the active Kaggle operation mode to metadata-only sync.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2</strong></td>
+                            <td>Update Scope</td>
+                            <td>Segmented Control</td>
+                            <td><code>setMetaUpdateMode("single" | "all")</code></td>
+                            <td>Single: one manifold. All: batch-push metadata for every registered dataset.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3</strong></td>
+                            <td>Local Manifold</td>
+                            <td>Select Dropdown</td>
+                            <td><code>setMetaUpdateManifold(e.target.value)</code></td>
+                            <td>Single mode only. Selects which manifold's metadata file to push.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4</strong></td>
+                            <td>Kaggle Slug Override</td>
+                            <td>Text Input</td>
+                            <td><code>setMetaUpdateRef(e.target.value)</code></td>
+                            <td>Optional. Leave blank to auto-resolve slug from <code>unified_data.yaml</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5</strong></td>
+                            <td>All Datasets Info</td>
+                            <td>Informational Text</td>
+                            <td>None</td>
+                            <td>Explains scope of batch operation — all datasets with local metadata file.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>6</strong></td>
+                            <td>Update Metadata</td>
+                            <td>Primary Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/update-metadata</code></td>
+                            <td>Pushes metadata JSON records to Kaggle. Zero data bytes transferred.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7</strong></td>
+                            <td>Status Banner</td>
+                            <td>Status Banner</td>
+                            <td><code>metaUpdateStatus</code> state</td>
+                            <td>Shows per-dataset push results and API confirmation or error codes.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <h3>5.3 Production Manifolds Catalog & Format Breakdown</h3>
                 <div class="figure-center">
                     <img src="../assets/gui/gui_production_manifolds.png" alt="Production Manifolds Catalog Grid" class="img-paper">
@@ -1437,12 +1577,7 @@ lem-env validate --all</code></pre>
                 <p>Every test verifies strict code compliance, dependency lockfile validity, and the absolute absence of emojis across all codebases and documentation.</p>
             </section>
 
-        </main>
-
-        <footer>
-            <p>LemGendary AI Studio Desktop GUI Master Operations Manual. Authored by the LemGendary AI Core Architecture Team.</p>
-            <p>Permanent Local Offline Documentation Server: <code>http://127.0.0.1:8000/documentation-hub/</code></p>
-        </footer>
-    </div>
+        
+</main>
 </body>
 </html>

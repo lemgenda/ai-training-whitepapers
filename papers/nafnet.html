@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture of LemGendary AI: High-Fidelity NAFNet Restoration</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script>
     MathJax = {
       tex: {
@@ -23,39 +22,23 @@
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     </script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper">
-            </a>
-            <div class="tabs-nav">
-                <a href="restoration-master.html" class="tab-link">Restoration Hub</a>
-                <a href="restoration-suite.html" class="tab-link">Suite Overview</a>
-                <a href="nafnet.html" class="tab-link active">NAFNet</a>
-                <a href="mprnet.html" class="tab-link">MPRNet</a>
-                <a href="mirnet.html" class="tab-link">MIRNet</a>
-                <a href="ffanet.html" class="tab-link">FFANet</a>
-            </div>
-            <h1>Architecture of LemGendary AI</h1>
-            <p class="subtitle">High-Fidelity NAFNet Restoration via SOTA Infrastructure</p>
-            <div class="meta">
-                <span>By Lem Treursić</span>
-                <span>Version: 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-<nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="restoration-master.html">Restoration Hub</a>
+                <a href="restoration-suite.html">Suite Overview</a>
+                <a href="nafnet.html" class="active">NAFNet</a>
+                <a href="mprnet.html">MPRNet</a>
+                <a href="mirnet.html">MIRNet</a>
+                <a href="ffanet.html">FFANet</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
 <li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
-                <li><a href="#1-abstract">1. Abstract</a>
-                </li>
+                <li><a href="#1-abstract">1. Abstract</a></li>
+                <li><a href="#1-1-plain-english">1.1 What NAFNet Does (In Plain English)</a></li>
                 <li><a href="#2-visual-taxonomy-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
                     <ul class="sub-item">
                         <li><a href="#21-the-denoising-track-nafnet_denoising">2.1 The Denoising Track (nafnet_denoising)</a></li>
@@ -118,36 +101,53 @@
                 </li>
             </ul>
 </nav>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<main id="content" class="toc-fixed-content">
+        <h1>Architecture of LemGendary AI</h1>
+        <p class="subtitle">High-Fidelity NAFNet Restoration via SOTA Infrastructure</p>
+        <div class="meta">
+                <span>By Lem Treursić</span>
+                <span>Version: 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
 
 <section id="1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>NAFNet</strong> (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked &gt;32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.</p>
+</section>
+
+<section id="1-1-plain-english">
+<h2>1.1 What NAFNet Does (In Plain English)</h2>
+<p>Imagine taking an action photo that came out completely blurred because your hands shook, or a low-light snapshot covered in rough speckled noise:</p>
+<ul>
+    <li><strong>Nonlinear Activation-Free Design:</strong> Conventional neural networks use complex non-linear functions (like GELU or ReLU) that slow down calculation. NAFNet proves you don't need them: it replaces heavy operations with simple element-wise multiplications (SimpleGate), making it blazing fast.</li>
+    <li><strong>Dual Deblurring & Denoising Power:</strong> In a single unified model family, it fixes camera motion blur (restoring crisp readable text and distinct eyelashes) and wipes away digital sensor grain.</li>
+    <li><strong>High Efficiency for Browser Runtimes:</strong> Because its building blocks are so simple, NAFNet runs smoothly inside WebGPU-accelerated browsers without burning through computer memory.</li>
+</ul>
+<h3>Visual Demonstration: Deblurring and Denoising Performance</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Task Track</th>
+                <th>Severe Input Degradation</th>
+                <th>NAFNet Cleaned Output</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Deblurring (<code>nafnet_debluring</code>)</strong></td>
+                <td>Heavy camera shake &amp; high-speed motion blur</td>
+                <td>Razor-sharp edges, crisp text, and restored focus</td>
+            </tr>
+            <tr>
+                <td><strong>Denoising (<code>nafnet_denoising</code>)</strong></td>
+                <td>High ISO electronic noise &amp; color grain</td>
+                <td>Smooth surfaces, natural gradients, and sharp textures</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</section>/p>
 <hr />
 <hr />
 
@@ -980,11 +980,6 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 <p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.</p>
 <p>The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
 </section>
-<footer>
-    <div class="container">
-        <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-    </div>
-</footer>
-</div>
+</main>
 </body>
 </html>

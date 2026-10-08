@@ -1,57 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetinaFace: Multi-Scale Facial Landmark Localization - LemGendary AI</title>
     <meta name="description" content="Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="face-suite.html" class="tab-link">Face Suite Hub</a>
-                <a href="face-codeformer.html" class="tab-link">CodeFormer</a>
-                <a href="face-parsenet.html" class="tab-link">ParseNet</a>
-                <a href="face-retinaface.html" class="tab-link active">RetinaFace</a>
-            </div>
-            <h1>RetinaFace: Multi-Scale Facial Landmark Localization</h1>
-            <p class="subtitle">Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 08 FACE</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="face-suite.html">Face Suite Hub</a>
+                <a href="face-codeformer.html">CodeFormer</a>
+                <a href="face-parsenet.html">ParseNet</a>
+                <a href="face-retinaface.html" class="active">RetinaFace</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
+                <li><a href="#plain-english">1.1 What RetinaFace Does (In Plain English)</a></li>
                 <li><a href="#architecture">2. Feature Pyramid & Deformable Convolutions</a></li>
                 <li><a href="#multitask">3. Tri-Head Multi-Task Detection</a></li>
                 <li><a href="#loss">4. Multi-Task Objective & OHEM</a></li>
                 <li><a href="#benchmarks">5. WIDER Face & Landmark Benchmarks</a></li>
                 <li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>RetinaFace: Multi-Scale Facial Landmark Localization</h1>
+        <p class="subtitle">Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 08 FACE</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). Utilizing a lightweight MobileNet-0.25 backbone paired with Deformable Convolutions and a Feature Pyramid Network (FPN), RetinaFace achieves robust detection under extreme angles, harsh lighting, and microscopic face scales (&lt; 16px).</p>
+            </section>
+
+            <section id="plain-english">
+                <h2>1.1 What RetinaFace Does (In Plain English)</h2>
+                <p>Imagine an intelligent autofocus system that finds every single human face in a bustling crowd scene, even if someone is turning away, standing in shadows, or wearing sunglasses:</p>
+                <ul>
+                    <li><strong>Instant Face Localization:</strong> In under 3 milliseconds, RetinaFace scans an entire image, locating faces from full-frame portraits down to tiny faces only 16 pixels wide in stadium crowds.</li>
+                    <li><strong>5-Point Landmark Pinpointing:</strong> For every detected face, it precisely marks 5 geometric anchors: the center of each eye, the tip of the nose, and the two corners of the mouth.</li>
+                    <li><strong>Essential Pre-Flight Alignment:</strong> These 5 landmarks allow downstream restoration models (such as CodeFormer) to automatically rotate, scale, and align tilted faces upright before applying facial retouching.</li>
+                </ul>
+                <h3>5-Point Landmark Regression & Detection Matrix</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Landmark Keypoint</th>
+                                <th>Anatomical Target</th>
+                                <th>Primary Utility in Pipeline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Point 1 (Left Eye)</strong></td>
+                                <td>Pupil center / ocular iris</td>
+                                <td>Geometric tilt calculation & eye restoration guidance</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Point 2 (Right Eye)</strong></td>
+                                <td>Pupil center / ocular iris</td>
+                                <td>Horizontal eye-line leveling & inter-ocular scale reference</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Point 3 (Nose Tip)</strong></td>
+                                <td>Pronasale nasal apex</td>
+                                <td>3D facial pitch/yaw pose estimation & perspective correction</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Point 4 (Mouth Left)</strong></td>
+                                <td>Left oral cheilion / lip corner</td>
+                                <td>Oral symmetry baseline & mouth crop bounding</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Point 5 (Mouth Right)</strong></td>
+                                <td>Right oral cheilion / lip corner</td>
+                                <td>Lip alignment & expressive deformation monitoring</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="architecture">
@@ -103,10 +145,7 @@
             <section id="conclusion">
                 <h2>6. Conclusion</h2>
                 <p>RetinaFace anchors the spatial alignment pipeline for all downstream face analysis and restoration tasks.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

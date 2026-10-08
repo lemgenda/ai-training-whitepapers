@@ -1,44 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPN v2: Universal Parameterized Network - LemGendary AI</title>
     <meta name="description" content="Continuous Multi-Degradation Space-Recovery Regressor with Dynamic Conditioning">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="universal-hybrid.html" class="tab-link">Universal Hybrid Overview</a>
-                <a href="hybrid-upn-v2.html" class="tab-link active">UPN v2</a>
-                <a href="hybrid-film-restorer.html" class="tab-link">Universal Film Restorer</a>
-                <a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
-            </div>
-            <h1>UPN v2: Universal Parameterized Network</h1>
-            <p class="subtitle">Continuous Multi-Degradation Space-Recovery Regressor with Dynamic Conditioning</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 05 HYBRID</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="universal-hybrid.html">Universal Hybrid Overview</a>
+                <a href="hybrid-upn-v2.html" class="active">UPN v2</a>
+                <a href="hybrid-film-restorer.html">Universal Film Restorer</a>
+                <a href="hybrid-multitask.html">MultiTask Restorer</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#architecture">2. Parameterized Latent Steering</a></li>
@@ -48,8 +30,18 @@
                 <li><a href="#deployment">6. WebGPU & Real-Time Steering</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>UPN v2: Universal Parameterized Network</h1>
+        <p class="subtitle">Continuous Multi-Degradation Space-Recovery Regressor with Dynamic Conditioning</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 05 HYBRID</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>Universal Parameterized Network v2 (UPN v2)</strong> represents a breakthrough in blind image restoration by replacing discrete task-specific checkpoints with a continuous, steered manifold regressor. Rather than retraining or switching networks between deblurring, denoising, and compression removal, UPN v2 accepts a multi-dimensional continuous degradation vector \(\mathbf{z} \in [0, 1]^K\). This conditioning vector modulates internal intermediate feature activations via Adaptive Instance Normalization (AdaIN) and Feature Modulation Blocks (FMB), enabling smooth, real-time parametric control over restoration strength directly inside edge inference runtimes.</p>
@@ -169,10 +161,7 @@
             <section id="conclusion">
                 <h2>7. Conclusion</h2>
                 <p>UPN v2 establishes a unified paradigm for universal image restoration, demonstrating that continuous latent steering achieves parity with dedicated single-task networks while dramatically reducing deployment footprint.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

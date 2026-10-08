@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD051 MD013 -->
 # Master Training Suite Guide: LemGendary AI
 
 ## Category 01.3 | Subpage of Master Ecosystem Architecture

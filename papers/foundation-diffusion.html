@@ -1,44 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latent Diffusion & Score-Based Generative Architectures - LemGendary AI</title>
     <meta name="description" content="Continuous Score Matching, Latent Autoencoding, Classifier-Free Guidance & Euler Schedulers">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="foundation-models-master.html" class="tab-link">Foundation Hub</a>
-                <a href="foundation-diffusion.html" class="tab-link active">Latent Diffusion</a>
-                <a href="foundation-image-to-text.html" class="tab-link">Image-to-Text VLM</a>
-                <a href="foundation-llm.html" class="tab-link">LLM & MoE Decoders</a>
-            </div>
-            <h1>Latent Diffusion & Score-Based Generative Architectures</h1>
-            <p class="subtitle">Continuous Score Matching, Latent Autoencoding, Classifier-Free Guidance & Euler Schedulers</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 10 FOUNDATION</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="foundation-models-master.html">Foundation Hub</a>
+                <a href="foundation-diffusion.html" class="active">Latent Diffusion</a>
+                <a href="foundation-image-to-text.html">Image-to-Text VLM</a>
+                <a href="foundation-llm.html">LLM & MoE Decoders</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#latent-space">2. Latent Space Compression</a></li>
@@ -48,8 +30,18 @@
                 <li><a href="#specifications">6. Architecture & Training Parameters</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Latent Diffusion & Score-Based Generative Architectures</h1>
+        <p class="subtitle">Continuous Score Matching, Latent Autoencoding, Classifier-Free Guidance & Euler Schedulers</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 10 FOUNDATION</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>LemGendary Latent Diffusion Engine</strong> implements score-based generative modeling over continuous latent representations. Rather than executing stochastic reverse-diffusion in high-dimensional pixel space \(\mathbb{R}^{H \times W \times 3}\), the model operates within the spatial latent manifold of a pre-trained Vector-Quantized Variational Autoencoder (VQ-VAE). Paired with cross-attention text conditioners, classifier-free guidance, and second-order Euler Ancestral sampling schedulers, the system synthesizes high-fidelity photographic content in as few as 20 sampling steps.</p>
@@ -120,10 +112,7 @@
             <section id="conclusion">
                 <h2>7. Conclusion</h2>
                 <p>Latent Diffusion serves as the generative foundation for generative synthesis and guided inpainting across the ecosystem.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

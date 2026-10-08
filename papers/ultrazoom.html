@@ -1,45 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UltraZoom Super-Resolution Master Suite - LemGendary AI</title>
     <meta name="description" content="Multi-Scale Sub-Pixel Convolutional Upscaling (x2, x3, x4, x8) via ESPCN and Edge WebGPU Acceleration">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="ultrazoom.html" class="tab-link active">UltraZoom Master</a>
-                <a href="#variant-x2" class="tab-link">x2 Upscaler</a>
-                <a href="#variant-x3" class="tab-link">x3 Upscaler</a>
-                <a href="#variant-x4" class="tab-link">x4 Master</a>
-                <a href="#variant-x8" class="tab-link">x8 Extreme</a>
-            </div>
-            <h1>UltraZoom Super-Resolution Master Suite</h1>
-            <p class="subtitle">Multi-Scale Sub-Pixel Convolutional Upscaling (x2, x3, x4, x8) via ESPCN and Edge WebGPU Acceleration</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 06 SUPER-RES</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="ultrazoom.html" class="active">UltraZoom Master</a>
+                <a href="#variant-x2">x2 Upscaler</a>
+                <a href="#variant-x3">x3 Upscaler</a>
+                <a href="#variant-x4">x4 Master</a>
+                <a href="#variant-x8">x8 Extreme</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#taxonomy">2. Multi-Scale Super-Resolution Manifolds</a></li>
@@ -53,8 +35,18 @@
                 <li><a href="#benchmarks">7. SOTA Architectural Performance Matrix</a></li>
                 <li><a href="#conclusion">8. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>UltraZoom Super-Resolution Master Suite</h1>
+        <p class="subtitle">Multi-Scale Sub-Pixel Convolutional Upscaling (x2, x3, x4, x8) via ESPCN and Edge WebGPU Acceleration</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 06 SUPER-RES</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>LemGendary UltraZoom Super-Resolution Suite</strong> establishes an authoritative, hardware-aware deep learning framework for sub-pixel image upscaling across four distinct magnification factors: <strong>x2, x3, x4, and x8</strong>. Rather than relying on computationally heavy bicubic pre-upsampling that inflates intermediate feature maps in VRAM by $\mathcal{O}(r^2)$, UltraZoom operates entirely in the low-resolution latent space, projecting directly into high-resolution space at the final layer via Efficient Sub-Pixel Convolution (ESPCN) pixel-shuffling. This paper presents the mathematical foundations, spatial ladder progression schedules, loss dynamics, and WebGPU deployment specifications across the compiled manifold <code>LemGendizedUltraZoomLarge</code>.</p>
@@ -244,10 +236,7 @@ floor, c \cdot r^2 + (y mod r) \cdot r + (x mod r)}$$
                 <h2>8. Conclusion</h2>
                 <p>The UltraZoom Super-Resolution Suite provides high-throughput, multi-scale image upscaling engineered for real-time edge execution and high-fidelity archival recovery.</p>
             </section>
-        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+        
+</main>
 </body>
 </html>

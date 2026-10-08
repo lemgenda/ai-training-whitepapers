@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
+  - [1.1 What FFANet Does (In Plain English)](#11-what-ffanet-does-in-plain-english)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 Indoor Dehazing Track (ffanet_indoor)](#21-indoor-dehazing-track-ffanet_indoor)
   - [2.2 Outdoor Dehazing Track (ffanet_outdoor)](#22-outdoor-dehazing-track-ffanet_outdoor)
@@ -32,6 +33,26 @@
 ## 1. Abstract
 
 The LemGendary Training Suite has achieved unparalleled visual restoration by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike standard architectures, FFANet explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics. This enables high-bandwidth recovery of depth geometry while natively exporting multi-task object bounding boxes through the specialized BranchedFFANet topology.
+
+---
+
+## 1.1 What FFANet Does (In Plain English)
+
+Imagine driving through dense mountain fog or attempting to view security camera footage obscured by thick indoor smoke:
+
+- **Atmospheric Haze Subtraction:** FFANet functions like an intelligent optical defogging filter, analyzing exactly where atmospheric particles scatter light and mathematically subtracting the fog layer pixel-by-pixel.
+- **Dual Pixel & Channel Attention:** Instead of crudely cranking up contrast across the whole photograph (which ruins clean foreground subjects), FFANet selectively concentrates its restorative power only on hazy zones.
+- **Structural Depth Preservation:** By preserving depth maps and edge gradients, it restores natural color saturation and distant horizon details without halo artifacts.
+
+### Visual Demonstration: Atmospheric Occlusion Recovery
+
+| Dehazing Modality | Typical Atmospheric Degradation | High-Fidelity Restored Output |
+| :--- | :--- | :--- |
+| **Indoor Dehazing** | Uniform artificial mist & particulate scatter | Sharp wall boundaries & natural interior lighting |
+| **Outdoor Dehazing** | Natural depth fog & mountain haze | Balanced horizon contrast & rich foliage colors |
+| **Synthetic Smoke** | Heavy smoke plumes & dense occlusions | Clear structural visibility & zero color casting |
+
+---
 
 ## 2. Visual Taxonomy: The LemGendary Restoration Subset
 

@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
+  - [1.1 What ForexPredictor Does (In Plain English)](#11-what-forexpredictor-does-in-plain-english)
 - [2. Visual Taxonomy: Multi-Asset & Temporal Manifolds](#2-visual-taxonomy-multi-asset--temporal-manifolds)
   - [2.1 The Titan Four Asset Universe](#21-the-titan-four-asset-universe)
   - [2.2 The 16-Symbol Financial Foundation Model](#22-the-16-symbol-financial-foundation-model)
@@ -50,6 +51,25 @@
 This paper presents the theoretical design, mathematical formulation, and production verification of the **LemGendary ForexPredictor**, a deep multi-scale quantitative architecture designed for multi-currency algorithmic trading across MetaTrader 5 environments. Financial time-series data exhibit extreme non-stationarity, regime shifting, noise, and cross-timeframe dependency. Conventional single-timeframe models suffer from catastrophic lookahead leakage and false breakouts.
 
 The LemGendary ForexPredictor integrates per-timeframe **Causal Dilated Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage embargo gap, the architecture achieves a **Directional Accuracy of 49.69%**, **Win Rate of 49.69%**, **Profit Factor of 0.99**, **Sharpe Ratio of -0.16**, and a **Max Drawdown of 665.80%**, demonstrating current training volatility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.
+
+---
+
+## 1.1 What ForexPredictor Does (In Plain English)
+
+Imagine an algorithmic market analyst watching currency charts across 4 different timeframes simultaneously before making an investment call:
+
+- **Multi-Timeframe Vision:** Instead of staring only at 15-minute price blips (which are noisy and cause whipsaws), the model checks the 15-Minute, 1-Hour, 4-Hour, and Daily charts together. It identifies macro trends on the Daily chart and uses the 15-minute chart purely to pinpoint entry triggers.
+- **Leakage-Free Temporal Guardrails:** Standard machine learning models often accidentally cheat during backtesting by peeking into future price data. ForexPredictor enforces strict causal convolutions and a mandatory 14-day embargo gap between training and testing periods.
+- **Sub-5ms Execution Latency:** Once trained, the model exports to compact ONNX format, calculating buy, sell, or neutral predictions within 5 milliseconds directly inside MetaTrader 5 Expert Advisors.
+
+### Multi-Timeframe Confluence & Risk Matrix
+
+| Timeframe Ladder | Temporal Resolution | Core Role in Predictive Synthesis |
+| :--- | :--- | :--- |
+| **M15 (15 Minutes)** | Micro-Structure | High-frequency trigger timing & spread friction evaluation |
+| **H1 (1 Hour)** | Intraday Momentum | Session volume dynamics & swing level confirmation |
+| **H4 (4 Hours)** | Interday Structure | Structural trend boundaries & support/resistance zones |
+| **D1 (Daily)** | Macro Regime | Major monetary policy trends & carry-trade direction |
 
 ---
 

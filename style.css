@@ -898,6 +898,52 @@ body.toc-fixed-layout .toc-fixed-content {
     color: var(--accent-color);
 }
 
+/* Brand icon on the left — links to index */
+.tabs-top-bar .nav-brand-icon {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: none;
+}
+
+.tabs-top-bar .nav-brand-icon:hover {
+    background: rgba(0, 122, 255, 0.12);
+}
+
+.tabs-top-bar .nav-brand-icon img {
+    height: 24px;
+    width: 24px;
+    display: block;
+}
+
+/* Brand logo on the right — links to lemgenda.hr */
+.tabs-top-bar .nav-brand-logo {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding: 4px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: none;
+}
+
+.tabs-top-bar .nav-brand-logo:hover {
+    background: rgba(0, 122, 255, 0.08);
+}
+
+.tabs-top-bar .nav-brand-logo img {
+    height: 22px;
+    display: block;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+}
+
+.tabs-top-bar .nav-brand-logo:hover img {
+    opacity: 1;
+}
+
 /* Responsive: hide fixed TOC on small screens */
 @media (max-width: 900px) {
     body.toc-fixed-layout .toc-fixed-bar {

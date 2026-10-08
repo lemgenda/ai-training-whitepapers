@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
+  - [1.1 What NAFNet Does (In Plain English)](#11-what-nafnet-does-in-plain-english)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 The Denoising Track (nafnet_denoising)](#21-the-denoising-track-nafnet_denoising)
   - [2.2 The Deblurring Track (nafnet_debluring)](#22-the-deblurring-track-nafnet_debluring)
@@ -84,6 +85,21 @@
 The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **NAFNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
 
 ---
+
+## 1.1 What NAFNet Does (In Plain English)
+
+Imagine taking an action photo that came out completely blurred because your hands shook, or a low-light snapshot covered in rough speckled noise:
+
+- **Nonlinear Activation-Free Design:** Conventional neural networks use complex non-linear functions (like GELU or ReLU) that slow down calculation. NAFNet proves you don't need them: it replaces heavy operations with simple element-wise multiplications (SimpleGate), making it blazing fast.
+- **Dual Deblurring & Denoising Power:** In a single unified model family, it fixes camera motion blur (restoring crisp readable text and distinct eyelashes) and wipes away digital sensor grain.
+- **High Efficiency for Browser Runtimes:** Because its building blocks are so simple, NAFNet runs smoothly inside WebGPU-accelerated browsers without burning through computer memory.
+
+### Visual Demonstration: Deblurring and Denoising Performance
+
+| Task Track | Severe Input Degradation | NAFNet Cleaned Output |
+| :--- | :--- | :--- |
+| **Deblurring (`nafnet_debluring`)** | Heavy camera shake & high-speed motion blur | Razor-sharp edges, crisp text, and restored focus |
+| **Denoising (`nafnet_denoising`)** | High ISO electronic noise & color grain | Smooth surfaces, natural gradients, and sharp textures |
 
 ---
 

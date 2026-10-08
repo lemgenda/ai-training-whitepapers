@@ -1,44 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canonical Glossary &amp; Terminology Specification - LemGendary AI</title>
     <meta name="description" content="Official single source of truth for terminology, mathematical primitives, architectural definitions, and system invariants across the LemGendary AI Ecosystem.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="glossary.html" class="tab-link active">Canonical Glossary</a>
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
-                <a href="general-ai-training-knowledge.html" class="tab-link">General AI Knowledge</a>
-            </div>
-            <h1>Canonical Glossary &amp; Terminology Specification</h1>
-            <p class="subtitle">Single Source of Truth (SSOT) for System Primitives, Architectural Boundaries, and Operational Invariants</p>
-            <div class="meta">
-                <span>Category 12 GLOSSARY</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Component: System Invariants</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="glossary.html" class="active">Canonical Glossary</a>
+                <a href="ecosystem-architecture.html">Architecture Hub</a>
+                <a href="manuals-hub.html">Manuals Hub</a>
+                <a href="general-ai-training-knowledge.html">General AI Knowledge</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#section-abstract">1. Abstract &amp; Scope</a></li>
                 <li><a href="#section-taxonomy">2. Core Taxonomy: Dataset vs. Manifold</a>
@@ -53,9 +36,17 @@
                 <li><a href="#section-env">6. Environment &amp; Infrastructure</a></li>
                 <li><a href="#section-matrix">7. Authoritative "Do Not Confuse With" Matrix</a></li>
             </ul>
-        </nav>
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Canonical Glossary &amp; Terminology Specification</h1>
+        <p class="subtitle">Single Source of Truth (SSOT) for System Primitives, Architectural Boundaries, and Operational Invariants</p>
+        <div class="meta">
+                <span>Category 12 GLOSSARY</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Component: System Invariants</span>
+            </div>
 
-        <main class="content">
+
             <section id="section-abstract">
                 <h2>1. Abstract &amp; Scope</h2>
                 <p>This authoritative specification establishes the single source of truth (SSOT) for all terminology, mathematical primitives, architectural definitions, and system invariants utilized across the LemGendary AI Ecosystem. Designed to eliminate semantic ambiguity across machine learning pipelines, desktop operators, agentic reasoning models, and technical documentation, every entry in this glossary carries strict operational definitions and cross-reference boundaries.</p>
@@ -172,7 +163,7 @@
                     </table>
                 </div>
             </section>
-        </main>
-    </div>
+        
+</main>
 </body>
 </html>

@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
+  - [1.1 What MPRNet Does (In Plain English)](#11-what-mprnet-does-in-plain-english)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
   - [2.2 Multi-Stage Progressive Operators (CSFF & SAM)](#22-multi-stage-progressive-operators-csff--sam)
@@ -76,6 +77,22 @@
 The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
 
 ---
+
+## 1.1 What MPRNet Does (In Plain English)
+
+Imagine capturing an outdoor photograph during a torrential downpour, where heavy rain streaks and splashing water droplets completely obscure faces, signs, and background objects:
+
+- **Progressive Multi-Stage Cleaning:** MPRNet cleans rain in three sequential passes: the first pass identifies major torrential downpour streaks, the second pass removes finer mist and water droplets, and the third pass restores ultra-fine background textures.
+- **Supervised Attention Shielding:** Specialized attention modules ensure that water droplets are cleanly extracted without scrubbing away actual object textures, delicate tree leaves, or building facades behind the rain.
+- **Benchmark Deraining Power:** Delivering over 53.9 dB PSNR on benchmark evaluations, it produces crystal-clear images that look as though it never rained at all.
+
+### Visual Demonstration: Rain Distortions & Restoration
+
+| Rain Artifact Type | Visual Impact on Input Image | MPRNet Cleaned Output |
+| :--- | :--- | :--- |
+| **Volumetric Downpour** | Dense white streak curtains across entire scene | Complete streak removal with natural depth clarity |
+| **Refractive Drops** | Lens-distortion blur and water droplet glare | Crisp edge restoration and accurate color balance |
+| **Atmospheric Mist** | Low contrast and gray background haze | Punchy contrast and restored background geometry |
 
 ---
 

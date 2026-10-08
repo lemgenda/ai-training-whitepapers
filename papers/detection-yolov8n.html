@@ -1,44 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOLOv8n Multi-Task Perception Architecture - LemGendary AI</title>
     <meta name="description" content="Anchor-Free CSPDarknet Object Detection, Categorical Classification & 17-Point Pose Estimation">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="detection-master.html" class="tab-link">Detection Hub</a>
-                <a href="detection-classification.html" class="tab-link">Suite Overview</a>
-                <a href="detection-yolov8n.html" class="tab-link active">YOLOv8n Multi-Task</a>
-                <a href="classification-nsfw.html" class="tab-link">NSFW Safety Classifier</a>
-            </div>
-            <h1>YOLOv8n Multi-Task Perception Architecture</h1>
-            <p class="subtitle">Anchor-Free CSPDarknet Object Detection, Categorical Classification & 17-Point Pose Estimation</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 09 VISION</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="detection-master.html">Detection Hub</a>
+                <a href="detection-classification.html">Suite Overview</a>
+                <a href="detection-yolov8n.html" class="active">YOLOv8n Multi-Task</a>
+                <a href="classification-nsfw.html">NSFW Safety Classifier</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#architecture">2. Anchor-Free CSPDarknet &amp; PANet</a></li>
@@ -49,8 +31,18 @@
                 <li><a href="#benchmarks">6. Performance Targets &amp; WebGPU</a></li>
                 <li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>YOLOv8n Multi-Task Perception Architecture</h1>
+        <p class="subtitle">Anchor-Free CSPDarknet Object Detection, Categorical Classification & 17-Point Pose Estimation</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 09 VISION</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>LemGendary YOLOv8n Multi-Task Model</strong> provides a lightweight, anchor-free visual perception engine capable of simultaneous object detection, categorical classification, and 17-point human keypoint pose estimation. Operating on the compiled manifold <code>LemGendizedYoloV8n</code>, the network replaces heuristic anchor boxes with continuous bounding box distribution modeling. Decoupled detection heads eliminate task conflicts between classification and spatial regression, achieving high-throughput inference (&lt; 8ms on consumer GPUs) suitable for real-time edge processing.</p>
@@ -217,10 +209,7 @@
             <section id="conclusion">
                 <h2>8. Conclusion</h2>
                 <p>YOLOv8n Multi-Task unifies spatial detection, categorization, and human pose estimation within a resilient, anchor-free framework optimized for universal hardware, governed curriculum progression, and authoritative persistence across the LemGendary ecosystem.</p>
-            </section>        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+            </section>        
+</main>
 </body>
 </html>

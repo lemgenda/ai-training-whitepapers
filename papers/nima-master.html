@@ -1,47 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Quality Assessment & Authenticity Suite - LemGendary AI</title>
     <meta name="description" content="Deep Neural Assessment of Aesthetic Composition, Technical Integrity, and Generative Authenticity via Resonance Loss">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 </head>
-<body class="paper-page">
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="nima-master.html" class="tab-link active">NIMA Master</a>
-                <a href="nima-quality.html" class="tab-link">Unified Architecture</a>
-                <a href="nima-mobile.html" class="tab-link">Aesthetic Mobile</a>
-                <a href="nima-efficientnet.html" class="tab-link">Aesthetic EfficientNetV2</a>
-                <a href="nima-pro.html" class="tab-link">Aesthetic Pro Swin-v2</a>
-                <a href="nima-technical.html" class="tab-link">Technical Quality</a>
-                <a href="nima-authenticity.html" class="tab-link">Authenticity & DeepFake</a>
-            </div>
-            <h1>Image Quality Assessment & Authenticity Suite</h1>
-            <p class="subtitle">Deep Neural Assessment of Aesthetic Composition, Technical Integrity, and Generative Authenticity via Resonance Loss</p>
-            <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 07 QUALITY</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar" aria-label="Table of Contents">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="nima-master.html" class="active">NIMA Master</a>
+                <a href="nima-quality.html">Unified Architecture</a>
+                <a href="nima-mobile.html">Aesthetic Mobile</a>
+                <a href="nima-efficientnet.html">Aesthetic EfficientNetV2</a>
+                <a href="nima-pro.html">Aesthetic Pro Swin-v2</a>
+                <a href="nima-technical.html">Technical Quality</a>
+                <a href="nima-authenticity.html">Authenticity & DeepFake</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
                 <li><a href="#abstract">1. Abstract</a></li>
                 <li><a href="#taxonomy">2. Four-Quadrant Quality Taxonomy</a></li>
@@ -50,8 +32,18 @@
                 <li><a href="#benchmarks">5. SOTA Architectural Performance Matrix</a></li>
                 <li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
-        </nav>
-        <main class="content">
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Image Quality Assessment & Authenticity Suite</h1>
+        <p class="subtitle">Deep Neural Assessment of Aesthetic Composition, Technical Integrity, and Generative Authenticity via Resonance Loss</p>
+        <div class="meta">
+                <span>By Lem Treursic</span>
+                <span>Category 07 QUALITY</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Hardware: NVIDIA / MPS / XPU</span>
+            </div>
+
+
             <section id="abstract">
                 <h2>1. Abstract</h2>
                 <p>The <strong>LemGendary NIMA Suite (Category 07)</strong> provides a multi-dimensional perceptual assessment system spanning three fundamental axes of vision evaluation: <strong>Aesthetic Appeal</strong>, <strong>Technical Quality</strong>, and <strong>Generative Media Authenticity (Real vs. AI)</strong>. Leveraging Earth Mover's Distance (EMD) and Soft-Spearman rank correlation loss, the suite maps continuous visual manifolds to human perceptual ratings without score saturation.</p>
@@ -139,10 +131,7 @@ ight)^{1/r}$$
                 <h2>6. Conclusion</h2>
                 <p>Category 07 provides complete visual quality perception, delivering quantitative scoring for automated quality gates and dataset synthesis pipelines.</p>
             </section>
-        </main>
-        <footer>
-            <p>&copy; 2026 LemGendary AI Ecosystem. All models and frameworks engineered for Universal Hardware resilience.</p>
-        </footer>
-    </div>
+        
+</main>
 </body>
 </html>

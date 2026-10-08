@@ -11,6 +11,7 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
+  - [1.1 What MIRNet Does (In Plain English)](#11-what-mirnet-does-in-plain-english)
 - [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
   - [2.1 Low-Light Manifold (mirnet_lowlight)](#21-low-light-manifold-mirnet_lowlight)
   - [2.2 Exposure Manifold (mirnet_exposure)](#22-exposure-manifold-mirnet_exposure)
@@ -31,6 +32,23 @@
 ## 1. Abstract
 
 The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **MIRNet v2** (Multi-Scale Residual Network). This paper details the structural and mathematical breakthroughs required to stabilize MIRNet's massive multi-scale gating on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked unprecedented convergence—setting a new benchmark for browser-based image illumination enhancement.
+
+---
+
+## 1.1 What MIRNet Does (In Plain English)
+
+Imagine taking photos in almost pitch-black darkness or on an intensely sunny beach where parts of the image are completely blown out:
+
+- **Dual-Track Illumination Recovery:** MIRNet v2 operates across two difficult lighting regimes: pulling sharp, colorful images out of near-black shadows, and recovering highlight texture from overexposed skies.
+- **Parallel Multi-Scale Streams:** Rather than shrinking the image down and guessing missing fine details on the way back up, MIRNet processes full-resolution, medium, and low-scale streams in parallel, allowing crisp textures and broad exposure corrections to communicate continuously.
+- **Zero Grainy Noise Amplification:** It brightens dim subjects naturally without blowing up the ugly multi-colored sensor grain typical of night-mode camera processing.
+
+### Visual Demonstration: Lighting Correction Profiles
+
+| Correction Manifold | Extreme Lighting Problem | MIRNet v2 Enhanced Output |
+| :--- | :--- | :--- |
+| **Low-Light (`mirnet_lowlight`)** | Severe darkness, lost dynamic range, heavy ISO noise | Natural illumination, clean shadows & restored color fidelity |
+| **Exposure (`mirnet_exposure`)** | Blown-out white highlights & harsh contrast gradients | Recovered highlight textures & balanced mid-tone contrast |
 
 ---
 

@@ -1,47 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Degradation Engine Whitepaper - LemGendary AI</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="../assets/sticky-tabs.js" defer></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <a href="https://lemgenda.hr" target="_blank" class="brand-logo">
-                <img src="../assets/lemgenda-logo.svg" alt="LemGenda Logo" class="logo-paper"
-                     onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
-            </a>
-            <div class="tabs-nav">
-                <a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
-                <a href="current-state.html" class="tab-link">Current State</a>
-                <a href="env_manager.html" class="tab-link">Env Manager</a>
-                <a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
-                <a href="degradation-engine.html" class="tab-link active">Degradation Engine</a>
-                <a href="training-suite-master.html" class="tab-link">Training Suite</a>
-                <a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
-                <a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
-                <a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
-            </div>
-            <h1>Degradation Engine Whitepaper</h1>
-            <p class="subtitle">Synthetic Manifold Synthesis &amp; Physics-Based Optical Degradation</p>
-            <div class="meta">
-                <span>Category 01</span>
-                <span>Version: v16.9.16-STABLE</span>
-                <span>Hardware: CPU Vectorized / WebP Accelerated</span>
-            </div>
-        </header>
-
-        <nav class="toc-sidebar">
-            <a href="../index.html" class="toc-brand">
-                <img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon">
-            </a>
-            <h2 class="toc-heading">Navigation Matrix</h2>
-            <ul>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="ecosystem-architecture.html">Architecture Hub</a>
+                <a href="current-state.html">Current State</a>
+                <a href="env_manager.html">Env Manager</a>
+                <a href="dataset-compiler.html">Dataset Compiler</a>
+                <a href="degradation-engine.html" class="active">Degradation Engine</a>
+                <a href="training-suite-master.html">Training Suite</a>
+                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
+                <a href="gui-control-registry.html">GUI Registry</a>
+                <a href="versioning-policy.html">Versioning Policy</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
                 <li><a href="../index.html" class="toc-link-accent">&larr; Back to Index</a></li>
                 <li><a href="#section-1">1. Abstract</a></li>
                 <li><a href="#section-2">2. High-Velocity Optimizations &amp; Physics Formulations</a></li>
@@ -52,9 +35,17 @@
                 <li><a href="#section-7">7. Unified Models Registry</a></li>
                 <li><a href="#section-8">8. Conclusion</a></li>
             </ul>
-        </nav>
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Degradation Engine Whitepaper</h1>
+        <p class="subtitle">Synthetic Manifold Synthesis &amp; Physics-Based Optical Degradation</p>
+        <div class="meta">
+                <span>Category 01</span>
+                <span>Version: v16.9.16-STABLE</span>
+                <span>Hardware: CPU Vectorized / WebP Accelerated</span>
+            </div>
 
-        <section id="section-1">
+<section id="section-1">
             <h2>1. Abstract</h2>
             <p>The LemGendary Degradation Engine (v16.4.1-MODERNIZED) is an industrial-standard synthetic image degradation and manifold derivation framework designed for Deep Learning Vision Restoration, Super-Resolution, and Artifact Removal pipelines. It unifies offline batch manifold derivation with real-time, on-the-fly training augmentation into a single, pure NumPy, SciPy, and Pillow execution engine. By deterministically simulating physical optical aberrations, atmospheric scattering, sensor noise electronics, precipitation dynamics, lossy compression artifacts, and analog film degradation, the engine synthesizes paired restoration datasets while recording exact per-sample quantitative parameter descriptors into structured JSON annotations for parameter-conditioned neural network supervision.</p>
         </section>
@@ -145,12 +136,6 @@
             <h2>8. Conclusion</h2>
             <p>The LemGendary Degradation Engine establishes a unified, deterministic, and physically accurate synthetic data generation system, eliminating code duplication across dataset compilation and model training.</p>
         </section>
-
-        <footer>
-            <div class="container">
-                <p>&copy; 2026 LemGendary AI Training Suite. All Rights Reserved.</p>
-            </div>
-        </footer>
-    </div>
+</main>
 </body>
 </html>
