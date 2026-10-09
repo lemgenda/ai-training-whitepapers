@@ -81,7 +81,7 @@
 <h2>3. Shared Foundations: Decoupled Head, TAL &amp; Losses</h2>
 <h3>3.1 Decoupled Head &amp; Task-Aligned Assignment</h3>
 <p>Unlike anchor-based YOLO models that share classification and localization convolutional layers, YOLOv8n features a decoupled head where classification and regression branches branch independently. Target assignment is governed by Task-Aligned Assigner (TAL):</p>
-<p>\[t = s^lpha 	\times 	\text{IoU}^\beta\]</p>
+<p>\[t = s^\alpha \times \text{IoU}^\beta\]</p>
 <p>where \(s\) is the classification score and \(	\text{IoU}\) is the spatial bounding overlap.</p>
 <h3>3.2 CIoU &amp; Distribution Focal Loss (DFL)</h3>
 <p>Bounding box regression optimizes Complete IoU (CIoU) and Distribution Focal Loss (DFL) to model boundary uncertainty:</p>

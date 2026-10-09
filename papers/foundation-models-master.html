@@ -11,8 +11,8 @@
     <script>
     MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        inlineMath: [['$', '$'], ['\|^2\right]\|^2\right](', '\|^2\right]\|^2\right])']],
+        displayMath: [['$$', '$$'], ['\|^2\right]\|^2\right][', '\|^2\right]\|^2\right]]']]
       },
       svg: {
         fontCache: 'global'
@@ -64,33 +64,31 @@
             <section id="scaling">
                 <h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
                 <p>Foundation model optimization follows the Chinchilla compute-optimal scaling formulation:</p>
-                $$C \\approx 6ND$$
+                $$C \|^2\right]\|^2\right]approx 6ND$$
                 <p>where $C$ represents FLOPs, $N$ denotes non-embedding parameter count, and $D$ denotes training token/sample volume. For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision FP16/BF16 memory containment:</p>
-                $$\text{VRAM}_{\text{total}} = 2 N_{\text{model}} + 2 N_{\text{grad}} + 12 N_{\text{optim}} + \mathcal{O}(B \cdot S \cdot H \cdot L)$$
+                $$\|^2\right]text{VRAM}_{\|^2\right]text{total}} = 2 N_{\|^2\right]text{model}} + 2 N_{\|^2\right]text{grad}} + 12 N_{\|^2\right]text{optim}} + \|^2\right]mathcal{O}(B \|^2\right]cdot S \|^2\right]cdot H \|^2\right]cdot L)$$
             </section>
 
             <section id="diffusion">
                 <h2>3. Latent Diffusion Models (LDM)</h2>
-                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $\beta_t$:</p>
-                $$q(\mathbf{z}_t | \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{ar{lpha}_t} \mathbf{z}_0, (1 - ar{lpha}_t) \mathbf{I}
-ight)$$
-                <p>The denoising network $\epsilon_	\theta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
-                $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_	\theta(\mathbf{z}_t, t, c)\|^2 
-ight]$$
+                <p>Operates by compressing pixel manifolds $\|^2\right]mathbf{x} \|^2\right]in \|^2\right]mathbb{R}^{H \|^2\right]times W \|^2\right]times 3}$ into a latent spatial distribution $\|^2\right]mathbf{z} = \|^2\right]mathcal{E}(\|^2\right]mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $\|^2\right]beta_t$:</p>
+                $$q(\|^2\right]mathbf{z}_t | \|^2\right]mathbf{z}_0) = \|^2\right]mathcal{N}\|^2\right]left(\|^2\right]mathbf{z}_t; \|^2\right]sqrt{\|^2\right]bar{\|^2\right]alpha}_t} \|^2\right]mathbf{z}_0, (1 - \|^2\right]bar{\|^2\right]alpha}_t) \|^2\right]mathbf{I}\|^2\right]right)$$
+                <p>The denoising network $\|^2\right]epsilon_	\|^2\right]theta(\|^2\right]mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
+                $$\|^2\right]mathcal{L}_{\|^2\right]text{LDM}} = \|^2\right]mathbb{E}_{\|^2\right]mathbf{z}_0, \|^2\right]epsilon, t, c}\|^2\right]left[ \|^2\right]|\|^2\right]epsilon - \|^2\right]epsilon_	\|^2\right]theta(\|^2\right]mathbf{z}_t, t, c)\|^2\right]|\|^2\right]$$
                 <p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
             </section>
 
             <section id="vlm">
                 <h2>4. Image-to-Text Vision-Language Models</h2>
-                <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition the language model through cross-attention:</p>
-                $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_	\theta(y_i \mid y_{<i}, \mathbf{H}_v)$$
+                <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\|^2\right]mathbf{H}_v$ condition the language model through cross-attention:</p>
+                $$\|^2\right]mathcal{L}_{\|^2\right]text{VLM}} = -\|^2\right]sum_{i=1}^T \|^2\right]log P_	\|^2\right]theta(y_i \|^2\right]mid y_{<i}, \|^2\right]mathbf{H}_v)$$
                 <p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
             </section>
 
             <section id="llm">
                 <h2>5. Causal Decoder Transformers &amp; MoE</h2>
                 <p>Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and top-$k$ sparse Mixture-of-Experts routing:</p>
-                $$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$
+                $$\|^2\right]text{MoE}(\|^2\right]mathbf{x}) = \|^2\right]sum_{i=1}^E \|^2\right]text{Softmax}(\|^2\right]text{TopK}(\|^2\right]mathbf{x} \|^2\right]mathbf{W}_g, k))_i \|^2\right]cdot \|^2\right]text{Expert}_i(\|^2\right]mathbf{x})$$
                 <p>Dedicated documentation: <a href="foundation-llm.html">Large Language Models Specification</a>.</p>
             </section>
 

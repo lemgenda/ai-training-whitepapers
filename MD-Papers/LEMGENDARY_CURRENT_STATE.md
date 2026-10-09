@@ -1,6 +1,6 @@
 # LemGendary Ecosystem: Current State & Architectural Manifest
 
-## Category 00 STATUS | Authoritative Workspace State Manifest
+## Category 01.0 STATUS | Authoritative Workspace State Manifest
 
 **Timestamp**: 2026-10-08  
 **Master Architectural Baseline**: `v16.9.16-STABLE`  
@@ -101,8 +101,8 @@ The suite governs **22 production neural network architectures** tracked in `uni
    - `nima_aesthetic_mobile` (MobileNetV3-Small EMD Scorer)
    - `nima_aesthetic_efficientnet` (EfficientNetV2-S Scorer)
    - `nima_aesthetic_pro` (Swin-v2-T Multiscale Scorer)
-   - `nima_authenticity` (AI vs Human Generative Classifier)
-   - `nima_technical` (Micro-Defect ISO Scorer)
+   - `nima_authenticity` (EfficientNetV2-S AI vs Human Generative Classifier)
+   - `nima_technical` (EfficientNetV2-S Micro-Defect ISO Scorer)
 9. **Face Parsing & Landmarks**: `parsenet`, `retinaface`
 10. **Universal Restoration Engine**: `professional_multitask_restoration` (11-Head MoE Router)
 11. **Super-Resolution**: `ultrazoom` (Sub-Pixel ESPCN / Residual SR)

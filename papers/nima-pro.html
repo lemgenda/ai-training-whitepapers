@@ -72,16 +72,15 @@
     <section id="visual-taxonomy">
         <h2>2. Visual Taxonomy: Perceptual Rating Distribution</h2>
         <p>Ground-truth human evaluations follow categorical score histograms \(p = [p_1, \dots, p_{10}]^T \in \Delta^9\) <span class="score-badge-neutral">[THEORETICAL]</span>. Intermediate convolutional and transformer representations isolate spatial composition, luminance contrast, and semantic coherence:</p>
-        <p>\[p_k = \frac{\exp(z_k / 	au)}{\sum_{j=1}^{10} \exp(z_j / 	au)}\]</p>
-        <p>where temperature \(	au = 1.0\) anchors calibration against the human voting distribution.</p>
+        <p>\[p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}\]</p>
+        <p>where temperature \(\tau = 1.0\) anchors calibration against the human voting distribution.</p>
     </section>
 
     <section id="shared-foundations">
         <h2>3. Shared Foundations: Earth Mover's Distance</h2>
         <p>Rather than minimizing standard Cross-Entropy that ignores inter-class distance, training optimizes normalized Earth Mover's Distance (EMD):</p>
-        <p>\[\mathcal{L}_{	\text{EMD}}(p, \hat{p}) = \left( \frac{1}{N} \sum_{k=1}^N |	\text{CDF}_p(k) - 	\text{CDF}_{\hat{p}}(k)|^r 
-ight)^{1/r}\]</p>
-        <p>Coupled with a soft rank-correlation regularizer \(\mathcal{L}_{	\text{Spearman}}\), the loss guides monotonic feature ordering across perceptual degradation spectra.</p>
+        <p>\[\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( \frac{1}{N} \sum_{k=1}^N |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r \right)^{1/r}\]</p>
+        <p>Coupled with a soft rank-correlation regularizer \(\mathcal{L}_{\text{Spearman}}\), the loss guides monotonic feature ordering across perceptual degradation spectra.</p>
     </section>
 
     <section id="model-deep-dives">

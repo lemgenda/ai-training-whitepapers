@@ -11,13 +11,16 @@ class TestDocumentationIntegrity(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.docs_root = os.path.abspath('lemgendary-docs')
+        cls.docs_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        cls.workspace_root = os.path.abspath(os.path.join(cls.docs_root, '..'))
         cls.html_files = glob.glob(os.path.join(cls.docs_root, 'papers', '*.html'))
         cls.index_html = os.path.join(cls.docs_root, 'index.html')
         if os.path.exists(cls.index_html):
             cls.html_files.append(cls.index_html)
         cls.md_files = glob.glob(os.path.join(cls.docs_root, 'MD-Papers', '*.md'))
-        cls.manifest_path = os.path.abspath('lemgendary-training-suite/unified_models_v2.yaml')
+        cls.manifest_path = os.path.join(cls.workspace_root, 'lemgendary-training-suite', 'unified_models_v2.yaml')
+        if not os.path.exists(cls.manifest_path):
+            cls.manifest_path = os.path.abspath('lemgendary-training-suite/unified_models_v2.yaml')
         with open(cls.manifest_path, 'r', encoding='utf-8') as f:
             cls.manifest = yaml.safe_load(f)
 
@@ -334,5 +337,123 @@ class TestDocumentationIntegrity(unittest.TestCase):
         missing = required_categories - val_categories
         self.assertEqual(len(missing), 0, f"Held-out validation set missing categories: {missing}")
 
+    # ── 14. Global Category Taxonomy Uniqueness ──────────────────────────────
+    def test_category_taxonomy_uniqueness(self):
+        """Rule: Category identifiers must be globally unambiguous and unique across the hub."""
+        # GUI Control Registry must be Category 03.4 CONTROLS (not colliding with Category 04 Restoration)
+        gui_registry_html = os.path.join(self.docs_root, 'papers', 'gui-control-registry.html')
+        if os.path.exists(gui_registry_html):
+            with open(gui_registry_html, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            self.assertNotIn("Category 04 CONTROLS", content, "gui-control-registry.html must not use Category 04 (reserved for Restoration)")
+            self.assertIn("Category 03.4 CONTROLS", content, "gui-control-registry.html must be categorized under Category 03.4 CONTROLS")
+
+        # Category 00 must be General AI Training Knowledge, not governance/operational docs
+        for fname, expected_cat, forbidden_cat in [
+            ('current-state.html', 'Category 01.0 STATUS', 'Category 00 STATUS'),
+            ('env_manager.html', 'Category 01.1 ENV', 'Category 00 ENV'),
+            ('versioning-policy.html', 'Category 01.5 POLICY', 'Category 00 POLICY')
+        ]:
+            fpath = os.path.join(self.docs_root, 'papers', fname)
+            if os.path.exists(fpath):
+                with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                    c = f.read()
+                self.assertNotIn(forbidden_cat, c, f"{fname} must not use {forbidden_cat}")
+                self.assertIn(expected_cat, c, f"{fname} must use {expected_cat}")
+
+    # ── 15. Deep Mathematical & LaTeX Integrity ─────────────────────────────
+    def test_latex_deep_integrity(self):
+        """Rule: No malformed LaTeX stems or escape-truncated Greek symbols in any HTML/MD file."""
+        deep_broken_pats = [
+            (re.compile(r'(?<![a-zA-Z\\])lpha\b'), 'Malformed alpha stem: "lpha"'),
+            (re.compile(r'ar\{lpha\}'), 'Malformed bar-alpha: "ar{lpha}"'),
+            (re.compile(r'(?<![a-zA-Z\\])ight\b'), 'Malformed right delimiter: "ight"'),
+            (re.compile(r'(?<![a-zA-Z\\])egin\{'), 'Malformed begin environment: "egin{"'),
+            (re.compile(r'(?<![a-zA-Z\\])ho\('), 'Malformed rho notation: "ho("'),
+            (re.compile(r'(?<![a-zA-Z\\])eta\('), 'Malformed beta notation: "eta("'),
+        ]
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            for pat, desc in deep_broken_pats:
+                if pat.search(content):
+                    failures.append((os.path.basename(path), desc))
+        self.assertEqual(len(failures), 0, f"Deep LaTeX integrity issues found: {failures}")
+
+    # ── 16. No Stray HTML Syntax Fragments ───────────────────────────────────
+    def test_no_stray_html_fragments(self):
+        """Rule: No visible broken HTML fragments like ' /p>' or stray tags in documentation."""
+        failures = []
+        stray_pat = re.compile(r'(\s/p>|> /p>|\b/p>)')
+        for path in self.html_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            if stray_pat.search(content):
+                failures.append(os.path.basename(path))
+        self.assertEqual(len(failures), 0, f"Stray HTML fragments found in: {failures}")
+
+    # ── 17. No Unsupported Operational CLI Commands ──────────────────────────
+    def test_no_unsupported_cli_commands(self):
+        """Rule: Documentation must never teach ungrounded/non-existent CLI commands or flags."""
+        forbidden_commands = [
+            '--storage uncompressed-tar',
+            '--dedup phash --phash-threshold',
+            'lem-env datasets compile',
+            'lem-env training'
+        ]
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            for cmd in forbidden_commands:
+                if cmd in content:
+                    failures.append((os.path.basename(path), cmd))
+        self.assertEqual(len(failures), 0, f"Unsupported CLI commands found in documentation: {failures}")
+
+    # ── 18. Compiler API Contract Parity ─────────────────────────────────────
+    def test_compiler_api_parity(self):
+        """Rule: All documented compiler endpoints (including custom-compile) must be present in API manual."""
+        api_manual_path = os.path.join(self.docs_root, 'papers', 'api-manual.html')
+        api_manual_md = os.path.join(self.docs_root, 'MD-Papers', 'MANUAL_API.md')
+        self.assertTrue(os.path.exists(api_manual_path), "api-manual.html missing")
+        self.assertTrue(os.path.exists(api_manual_md), "MANUAL_API.md missing")
+
+        with open(api_manual_path, 'r', encoding='utf-8', errors='ignore') as f:
+            html_txt = f.read()
+        with open(api_manual_md, 'r', encoding='utf-8', errors='ignore') as f:
+            md_txt = f.read()
+
+        for route in ['/api/gui/custom-compile', '/api/gui/quick-compile', '/api/jobs/compile']:
+            self.assertIn(route, html_txt, f"api-manual.html missing route {route}")
+            self.assertIn(route, md_txt, f"MANUAL_API.md missing route {route}")
+
+    # ── 19. Model Registry Specification Parity ──────────────────────────────
+    def test_model_registry_specification_parity(self):
+        """Rule: Current State manifest and model whitepapers must agree with canonical backbones."""
+        current_state_html = os.path.join(self.docs_root, 'papers', 'current-state.html')
+        self.assertTrue(os.path.exists(current_state_html), "current-state.html missing")
+        with open(current_state_html, 'r', encoding='utf-8', errors='ignore') as f:
+            cs_txt = f.read()
+
+        # NIMA Aesthetic Mobile must be MobileNetV3-Small
+        self.assertIn("MobileNetV3-Small", cs_txt, "current-state.html must specify MobileNetV3-Small for nima_aesthetic_mobile")
+        # NIMA Technical and Authenticity must specify EfficientNetV2-S
+        self.assertIn("EfficientNetV2-S", cs_txt, "current-state.html must specify EfficientNetV2-S for technical/authenticity backbones")
+
+    # ── 20. Benchmark Evidence Condition Qualification ───────────────────────
+    def test_evidence_condition_labeling(self):
+        """Rule: Performance figures with multi-stage evaluations (e.g. NAFNet) must explicitly qualify conditions."""
+        nafnet_html = os.path.join(self.docs_root, 'papers', 'nafnet.html')
+        self.assertTrue(os.path.exists(nafnet_html), "nafnet.html missing")
+        with open(nafnet_html, 'r', encoding='utf-8', errors='ignore') as f:
+            txt = f.read()
+
+        self.assertIn("51.60 dB", txt, "nafnet.html missing peak 256px metric")
+        self.assertIn("48.29 dB", txt, "nafnet.html missing 640px stage metric")
+        self.assertIn("256x256 ladder stage", txt, "nafnet.html missing evaluation condition qualifier for 51.60 dB")
+        self.assertIn("640x640 stage", txt, "nafnet.html missing evaluation condition qualifier for 48.29 dB")
+
 if __name__ == '__main__':
     unittest.main()
+

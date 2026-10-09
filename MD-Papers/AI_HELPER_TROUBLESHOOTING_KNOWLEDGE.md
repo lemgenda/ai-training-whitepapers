@@ -41,7 +41,7 @@ Every troubleshooting scenario in this knowledge base conforms strictly to the f
   3. Verify `num_workers` setting in `unified_models_v2.yaml`.
 * **`recommended_action`**:
   1. Set `num_workers: 4` and enable `pin_memory: true` in dataloader initialization.
-  2. If using WebDataset on HDD, pre-compile the manifold with `--storage uncompressed-tar` or migrate shards to NVMe SSD.
+  2. If using WebDataset on HDD, pre-compile the manifold into WebDataset tar shards (`--also-format webdataset`) and stream from NVMe SSD.
   3. Increase prefetch factor to `prefetch_factor: 2` in the PyTorch DataLoader.
 
 ---
@@ -230,10 +230,10 @@ Every troubleshooting scenario in this knowledge base conforms strictly to the f
   1. User selected `Hardlink Deduplication` instead of `Perceptual Deduplication (pHash)`.
   2. Hardlink deduplication only identifies byte-for-byte identical files on the same filesystem.
 * **`diagnostic_steps`**:
-  1. Inspect compile command options: check whether `--dedup hardlink` or `--dedup phash` was passed.
+  1. Inspect compile command options: verify whether deduplication was active (default: enabled; bypassable via `--no-hash`).
   2. Compute perceptual hash distance between suspected image duplicates.
 * **`recommended_action`**:
-  1. For visual datasets sourced from web crawls or multiple archives, select **Perceptual Deduplication** (`--dedup phash --phash-threshold 4`).
+  1. For visual datasets sourced from web crawls or multiple archives, rely on the default perceptual deduplication pass, and ensure `--no-hash` is not passed.
   2. Reserve **Hardlink Deduplication** exclusively for local repository multi-directory caching where identical files reside on the same NTFS/ext4 volume.
 
 ---
@@ -256,7 +256,7 @@ Every troubleshooting scenario in this knowledge base conforms strictly to the f
   1. Execute Dataset Compiler first:
 
      ```bash
-     lem-env datasets compile --input ./raw_images --output ./LemGendaryDatasets/MyCompiledManifold --preset webdataset
+     python cli.py compile --model <model_key> --preset webdataset
      ```
 
   2. Point the training suite directly to the compiled manifold output directory.

@@ -121,7 +121,7 @@
                 <div class="attr-content">
                     <ol>
                         <li>Set <code>num_workers: 4</code> and enable <code>pin_memory: true</code> in dataloader initialization.</li>
-                        <li>If using WebDataset on HDD, pre-compile the manifold with <code>--storage uncompressed-tar</code> or migrate shards to NVMe SSD.</li>
+                        <li>If using WebDataset on HDD, pre-compile the manifold into WebDataset tar shards (<code>--also-format webdataset</code>) and stream from NVMe SSD.</li>
                         <li>Increase prefetch factor to <code>prefetch_factor: 2</code> in the PyTorch DataLoader.</li>
                     </ol>
                 </div>
@@ -259,7 +259,7 @@
                 <div class="attr-label">Diagnostic Steps</div>
                 <div class="attr-content">
                     <ol>
-                        <li>Inspect compile command options: check whether <code>--dedup hardlink</code> or <code>--dedup phash</code> was passed.</li>
+                        <li>Inspect compile command options: verify whether deduplication was active (default: enabled; bypassable via <code>--no-hash</code>).</li>
                         <li>Compute perceptual hash distance between suspected image duplicates.</li>
                     </ol>
                 </div>
@@ -267,7 +267,7 @@
                 <div class="attr-label">Recommended Action</div>
                 <div class="attr-content">
                     <ol>
-                        <li>For visual datasets sourced from web crawls or multiple archives, select <strong>Perceptual Deduplication</strong> (<code>--dedup phash --phash-threshold 4</code>).</li>
+                        <li>For visual datasets sourced from web crawls or multiple archives, rely on the default perceptual deduplication pass, and ensure <code>--no-hash</code> is not passed.</li>
                         <li>Reserve <strong>Hardlink Deduplication</strong> exclusively for local repository multi-directory caching where identical files reside on the same NTFS/ext4 volume.</li>
                     </ol>
                 </div>
@@ -312,7 +312,7 @@
                 <div class="attr-label">Recommended Action</div>
                 <div class="attr-content">
                     <ol>
-                        <li>Execute Dataset Compiler first: <code>lem-env datasets compile --input ./raw_images --output ./LemGendaryDatasets/MyCompiledManifold --preset webdataset</code></li>
+                        <li>Execute Dataset Compiler first: <code>python cli.py compile --model <model_key> --preset webdataset</code> (executed in <code>lemgendary-datasets</code>)</li>
                         <li>Point the training suite directly to the compiled manifold output directory.</li>
                     </ol>
                 </div>

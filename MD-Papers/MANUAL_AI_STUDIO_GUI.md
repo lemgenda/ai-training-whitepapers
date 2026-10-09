@@ -435,6 +435,10 @@ Activated by clicking the `Update Metadata Only` subtab. Pushes `dataset-metadat
 5. **Disk Storage Footprint Metric**: Physical volume occupied on local disk in gigabytes (e.g. `67.6 GB`).
 6. **Container Shards Counter**: Number of container shards partitioned across disk (e.g. `0 shards` or `14 shards`).
 7. **Image Encoding Distribution Bar**: Real-time counter of samples formatted as WebP, JPG, or PNG (`WebP: 0 JPG: 0 PNG: 0`).
+8. **Update Metadata Action Button**: Primary blue button (`btn btn-primary`) triggering push of `dataset-metadata.json` descriptors to Kaggle Cloud.
+9. **Audit Notebooks Link Button**: Cloud purple button (`btn btn-cloud`) opening the Kaggle Registry Metadata Training Audit notebook in browser.
+10. **Download Manifold Action Button**: Dark vault outline button (`btn btn-vault-pull`) pulling the compiled manifold from Kaggle Cloud Storage.
+11. **Upload Manifold Action Button**: Dark vault outline button (`btn btn-vault-push`) uploading the local compiled manifold to Kaggle Cloud Storage.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
@@ -445,6 +449,10 @@ Activated by clicking the `Update Metadata Only` subtab. Pushes `dataset-metadat
 | **5** | Disk Footprint | Metric Readout | `os.stat` recursive sum | Displays disk volume occupied by compressed shards. |
 | **6** | Container Shards | Metric Readout | Shard count verification | Confirms number of container files written to local storage. |
 | **7** | Format Breakdown | Encoding Stats | Metadata inspection | Quantifies WebP, JPEG, and PNG image components. |
+| **8** | Update Metadata | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/update-metadata` | Pushes metadata JSON descriptors to Kaggle Cloud (`btn-primary`). |
+| **9** | Audit Notebooks | Cloud Link | Link to Kaggle Notebook | Opens Kaggle Registry Metadata Training Audit notebook (`btn-cloud`). |
+| **10** | Download | Vault Button | `POST http://127.0.0.1:8100/api/kaggle/download` | Downloads manifold shards from Kaggle Cloud Storage (`btn-vault-pull`). |
+| **11** | Upload | Vault Button | `POST http://127.0.0.1:8100/api/kaggle/upload` | Packages and uploads local manifold shards to Kaggle (`btn-vault-push`). |
 
 ---
 

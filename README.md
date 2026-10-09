@@ -14,6 +14,16 @@
 
 ---
 
+### v16.9.21 — 20-Rule Automated Test Suite Expansion, Category Taxonomy & Pre-Commit Hardening
+
+* **20-Rule Comprehensive Documentation Test Battery** — Expanded `tests/test_documentation.py` from 13 to 20 automated tests, enforcing zero emojis, LaTeX deep integrity, stray HTML fragment detection, category taxonomy uniqueness, ungrounded CLI command rejection, compiler API parity, model registry specification alignment, and benchmark evidence qualification.
+* **Global Category Taxonomy Unification** — Reconciled category collisions: GUI Control Registry reassigned to `Category 03.4 CONTROLS`, reserving `Category 04` exclusively for Dedicated Image Restoration. Centralized governance and operational specs under `Category 01.x` (`01.0 STATUS`, `01.1 ENV`, `01.5 POLICY`), preserving `Category 00` strictly for General AI Training Knowledge.
+* **Deep Mathematical & LaTeX Notation Repairs** — Corrected escape-truncated primitives (`\alpha`, `\bar{\alpha}_t`, `\tau`, `\right`, `\begin{cases}`, `\rho(`, `\beta(`) across all 48 HTML whitepapers and Markdown companion sources.
+* **SSOT Model Registry & Compiler API Synchronization** — Aligned NIMA Mobile backbone specification to `MobileNetV3-Small`, technical and authenticity backbones to `EfficientNetV2-S`, and documented compiler endpoints (`POST /api/gui/custom-compile`, `/api/kaggle/...`) across both HTML and Markdown API manuals.
+* **Git Pre-Commit Hook Hardening** — Hardened pre-commit hook path resolution across `.githooks/pre-commit` and `.git/hooks/pre-commit` with dynamic directory inspection (`HOOK_DIR`) and direct `test_documentation.py` execution, ensuring commits from any CWD trigger the full 20-rule battery.
+
+---
+
 ### v16.9.20 — Stage 8: Documentation, Manuals & GUI Training Panel Synchronization
 
 * **Universal Automated Documentation Test Suite Validation** — Expanded automated test suite in `lemgendary-docs/tests/test_documentation.py` (12/12 passing) covering zero emojis, LaTeX syntax integrity, HTML tag balancing, internal link existence across all 48 publications, and CSS brace balance.

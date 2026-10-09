@@ -120,7 +120,7 @@
 </ul>
 
 <h3>4.4 UltraZoom-x8 (Extreme Hallucination)</h3>
-<p>Implements a cascaded two-stage pixel-shuffling pipeline ($x2 	o x4 	o x8$) with residual gradient clipping to eliminate phase explosion on microscopic textures.</p>
+<p>Implements a cascaded two-stage pixel-shuffling pipeline ($x2 \to x4 \to x8$) with residual gradient clipping to eliminate phase explosion on microscopic textures.</p>
 <ul>
 <li><strong>Target PSNR</strong>: <span class="score-badge-green">[MEASURED]</span> ≥ 28.50 dB</li>
 <li><strong>Target SSIM</strong>: ≥ 0.885</li>
@@ -136,7 +136,7 @@
 <ul>
 <li><strong>Periodic Checkerboard Artifacts</strong>: Neutralized by enforcing ICNR (Initialization to Convolutional Neural Network Resizing) weight initializations on all sub-pixel convolution kernels.</li>
 <li><strong>High-Frequency Ringing (Gibbs Phenomenon)</strong>: Mitigated via Laplacian edge penalty $\Delta \mathbf{I}$ during spatial resolution ladder transitions.</li>
-<li><strong>VRAM Headroom Sentinel</strong>: Dynamically scales tile overlap margins during inference to guarantee zero out-of-memory exceptions on 4GB GPUs.</li>
+<li><strong>VRAM Headroom Sentinel</strong>: Dynamically scales tile overlap margins during inference to maintain execution safely within 4GB VRAM limits.</li>
 </ul>
 </section>
 <section id="deployment">

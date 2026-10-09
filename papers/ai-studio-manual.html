@@ -1043,6 +1043,10 @@
                     <li><strong>Disk Storage Footprint Metric</strong>: Physical volume occupied on local disk in gigabytes (e.g. <code>67.6 GB</code>).</li>
                     <li><strong>Container Shards Counter</strong>: Number of container shards partitioned across disk (e.g. <code>0 shards</code> or <code>14 shards</code>).</li>
                     <li><strong>Image Encoding Distribution Bar</strong>: Real-time counter of samples formatted as WebP, JPG, or PNG (<code>WebP: 0 JPG: 0 PNG: 0</code>).</li>
+                    <li><strong>Update Metadata Action Button</strong>: Primary blue button (<code>btn btn-primary</code>) triggering push of <code>dataset-metadata.json</code> descriptors to Kaggle Cloud.</li>
+                    <li><strong>Audit Notebooks Link Button</strong>: Cloud purple button (<code>btn btn-cloud</code>) opening the Kaggle Registry Metadata Training Audit notebook in browser.</li>
+                    <li><strong>Download Manifold Action Button</strong>: Dark vault outline button (<code>btn btn-vault-pull</code>) pulling the compiled manifold from Kaggle Cloud Storage.</li>
+                    <li><strong>Upload Manifold Action Button</strong>: Dark vault outline button (<code>btn btn-vault-push</code>) uploading the local compiled manifold to Kaggle Cloud Storage.</li>
                 </ol>
                 <div class="table-scroll">
                     <table class="table-dense">
@@ -1055,53 +1059,81 @@
                         </tr></thead>
                         <tbody>
                         <tr>
-                            <td><strong>1<strong></td>
+                            <td><strong>1</strong></td>
                             <td>Manifold Heading</td>
                             <td>Card Heading</td>
                             <td>None</td>
                             <td>Identifies dataset name and task domain.</td>
                         </tr>
                         <tr>
-                            <td><strong>2<strong></td>
+                            <td><strong>2</strong></td>
                             <td>Compiled Badge</td>
                             <td>Status Pill</td>
                             <td>On-disk validation</td>
                             <td>Green badge indicates streaming archive is fully built and ready for training.</td>
                         </tr>
                         <tr>
-                            <td><strong>3<strong></td>
+                            <td><strong>3</strong></td>
                             <td>Format Architecture</td>
                             <td>Metric Readout</td>
                             <td>Sourced from <code>unified_data.yaml</code></td>
                             <td>Displays container protocol: WebDataset, Parquet, or MDS.</td>
                         </tr>
                         <tr>
-                            <td><strong>4<strong></td>
+                            <td><strong>4</strong></td>
                             <td>Total Samples</td>
                             <td>Metric Readout</td>
                             <td>Shard header inspection</td>
                             <td>Shows exact quantity of training sample pairs available.</td>
                         </tr>
                         <tr>
-                            <td><strong>5<strong></td>
+                            <td><strong>5</strong></td>
                             <td>Disk Footprint</td>
                             <td>Metric Readout</td>
                             <td><code>os.stat</code> recursive sum</td>
                             <td>Displays disk volume occupied by compressed shards.</td>
                         </tr>
                         <tr>
-                            <td><strong>6<strong></td>
+                            <td><strong>6</strong></td>
                             <td>Container Shards</td>
                             <td>Metric Readout</td>
                             <td>Shard count verification</td>
                             <td>Confirms number of container files written to local storage.</td>
                         </tr>
                         <tr>
-                            <td><strong>7<strong></td>
+                            <td><strong>7</strong></td>
                             <td>Format Breakdown</td>
                             <td>Encoding Stats</td>
                             <td>Metadata inspection</td>
                             <td>Quantifies WebP, JPEG, and PNG image components.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>8</strong></td>
+                            <td>Update Metadata</td>
+                            <td>Primary Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/update-metadata</code></td>
+                            <td>Pushes metadata JSON descriptors to Kaggle Cloud (<code>btn-primary</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>9</strong></td>
+                            <td>Audit Notebooks</td>
+                            <td>Cloud Link</td>
+                            <td>Link to Kaggle Notebook</td>
+                            <td>Opens Kaggle Registry Metadata Training Audit notebook (<code>btn-cloud</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10</strong></td>
+                            <td>Download</td>
+                            <td>Vault Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/download</code></td>
+                            <td>Downloads manifold shards from Kaggle Cloud Storage (<code>btn-vault-pull</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>11</strong></td>
+                            <td>Upload</td>
+                            <td>Vault Button</td>
+                            <td><code>POST http://127.0.0.1:8100/api/kaggle/upload</code></td>
+                            <td>Packages and uploads local manifold shards to Kaggle (<code>btn-vault-push</code>).</td>
                         </tr>
                         </tbody>
                     </table>

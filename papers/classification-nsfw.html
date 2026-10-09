@@ -112,7 +112,7 @@
     <section id="shared-foundations">
         <h2>3. Shared Foundations: EfficientNetV2-S &amp; Focal Loss</h2>
         <p>Utilizing Fused-MBConv layers in early stages and MBConv with Squeeze-and-Excitation (SE) in deeper layers, EfficientNetV2-S minimizes training memory while maximizing receptive field coverage. Progressive training gradually increases image resolution from 128px to 256px alongside data augmentation intensity.</p>
-        <p>To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting \(lpha_t\) and focusing parameter \(\gamma = 2.0\):</p>
+        <p>To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting \(\a\alpha_t\) and focusing parameter \(\gamma = 2.0\):</p>
         <p>\[\mathcal{L}_{	\text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 - p_t)^\gamma \log(p_t)\]</p>
     </section>
 

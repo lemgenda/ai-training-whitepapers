@@ -2,7 +2,12 @@
 # LemGendary Ecosystem Pre-Commit Hook
 # Standardized hook enforcing full validation via lemgendary-env-manager
 
-ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ "$(basename "$HOOK_DIR")" = "hooks" ]; then
+    ROOT_DIR="$(cd "$HOOK_DIR/../.." && pwd)"
+else
+    ROOT_DIR="$(cd "$HOOK_DIR/.." && pwd)"
+fi
 PROJECT_NAME="$(basename "$ROOT_DIR")"
 WORKSPACE_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
 
@@ -29,6 +34,18 @@ if [ $EXIT_CODE -ne 0 ]; then
     echo "Run 'lem-env validate --project $PROJECT_NAME' to inspect."
     echo "====================================================="
     exit $EXIT_CODE
+fi
+
+if [ -d "$ROOT_DIR/tests" ]; then
+    echo "[PRE-COMMIT] Running documentation integrity test suite..."
+    "$LEM_ENV_PY" -m unittest discover -s "$ROOT_DIR/tests"
+    TEST_EXIT=$?
+    if [ $TEST_EXIT -ne 0 ]; then
+        echo "====================================================="
+        echo "COMMIT BLOCKED: Documentation integrity tests failed."
+        echo "====================================================="
+        exit $TEST_EXIT
+    fi
 fi
 
 echo "[PRE-COMMIT] Validation passed for $PROJECT_NAME."

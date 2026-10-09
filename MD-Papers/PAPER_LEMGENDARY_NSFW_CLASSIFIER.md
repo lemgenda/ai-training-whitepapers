@@ -64,7 +64,7 @@ The model categorizes content into mutually exclusive probability distributions 
 
 Utilizing Fused-MBConv layers in early stages and MBConv with Squeeze-and-Excitation (SE) in deeper layers, EfficientNetV2-S minimizes training memory while maximizing receptive field coverage. Progressive training gradually increases image resolution from 128px to 256px alongside data augmentation intensity.
 
-To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting $lpha_t$ and focusing parameter $\gamma = 2.0$:
+To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting $\alpha_t$ and focusing parameter $\gamma = 2.0$:
 
 $$\mathcal{L}_{ \text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 - p_t)^\gamma \log(p_t)$$
 

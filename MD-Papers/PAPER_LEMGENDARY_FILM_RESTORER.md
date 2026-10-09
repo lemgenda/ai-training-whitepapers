@@ -51,9 +51,9 @@ Historic movie reels, 8mm home videos, and vintage family photograph prints degr
 Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as `[THEORETICAL]`:
 
 $$I_{ \text{archival}} = \mathcal{C}_{ \text{dye}}\left( I_{ \text{scene}} \odot e^{-\kappa d}
-ight) + \mathcal{G}_{ \text{grain}}(\sigma_{ \text{ISO}}) + \mathcal{M}_{ \text{defect}} \odot I_{ \text{scratch}}$$
+\right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}$$
 
-where $\mathcal{C}_{ \text{dye}}$ models cyan, magenta, and yellow dye fading over decades, $\mathcal{G}_{ \text{grain}}$ is non-Gaussian photographic grain, and $\mathcal{M}_{ \text{defect}}$ is a binary mask of physical scratches.
+where $\mathcal{C}_{ \text{dye}}$ models cyan, magenta, and yellow dye fading over decades, $\mathcal{G}_{\text{grain}}$ is non-Gaussian photographic grain, and $\mathcal{M}_{\text{defect}}$ is a binary mask of physical scratches.
 
 ---
 
@@ -63,7 +63,7 @@ The architecture processes archival frames through three dedicated pathways: (1)
 
 Partial convolutions conditioned on defect masks ensure valid feature propagation without bleed:
 
-$$W' = egin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} &  \text{if } \mathbf{1}^T M > 0 \ 0 &  \text{otherwise} \end{cases}$$
+$$W' = \begin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} &  \text{if } \mathbf{1}^T M > 0 \ 0 &  \text{otherwise} \end{cases}$$
 
 A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts channel-wise restoration matrices $\mathbf{T}_{ \text{RGB}}$, reviving lost spectral richness.
 

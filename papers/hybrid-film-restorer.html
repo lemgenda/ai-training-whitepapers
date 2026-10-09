@@ -76,15 +76,15 @@
         <h2>2. Visual Taxonomy: Analog Emulsion Physics</h2>
         <p>Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as <span class="score-badge-neutral">[THEORETICAL]</span>:</p>
         <p>\[I_{	\text{archival}} = \mathcal{C}_{	\text{dye}}\left( I_{	\text{scene}} \odot e^{-\kappa d} 
-ight) + \mathcal{G}_{	\text{grain}}(\sigma_{	\text{ISO}}) + \mathcal{M}_{	\text{defect}} \odot I_{	\text{scratch}}\]</p>
-        <p>where \(\mathcal{C}_{	\text{dye}}\) models cyan, magenta, and yellow dye fading over decades, \(\mathcal{G}_{	\text{grain}}\) is non-Gaussian photographic grain, and \(\mathcal{M}_{	\text{defect}}\) is a binary mask of physical scratches.</p>
+\right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}\]</p>
+        <p>where \(\mathcal{C}_{	\text{dye}}\) models cyan, magenta, and yellow dye fading over decades, \(\mathcal{G}_{\text{grain}}\) is non-Gaussian photographic grain, and \(\mathcal{M}_{\text{defect}}\) is a binary mask of physical scratches.</p>
     </section>
 
     <section id="shared-foundations">
         <h2>3. Shared Foundations: Tri-Stream &amp; Partial Convolution</h2>
         <p>The architecture processes archival frames through three dedicated pathways: (1) Defect Detection &amp; Inpainting, (2) Dye Correction &amp; Exposure Equalization, and (3) Texture &amp; Grain Synthesizer.</p>
         <p>Partial convolutions conditioned on defect masks ensure valid feature propagation without bleed:</p>
-        <p>\[W' = egin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} & 	\text{if } \mathbf{1}^T M > 0 \ 0 & 	\text{otherwise} \end{cases}\]</p>
+        <p>\[W' = \begin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} & \text{if } \mathbf{1}^T M > 0 \ 0 & \text{otherwise} \end{cases}\]</p>
         <p>A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts channel-wise restoration matrices \(\mathbf{T}_{	\text{RGB}}\), reviving lost spectral richness.</p>
     </section>
 

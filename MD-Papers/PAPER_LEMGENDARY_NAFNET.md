@@ -303,7 +303,7 @@ The **LemGendary NAFNet Denoising** is a professional-grade AI model optimized f
 #### 4.1.4 Performance Metrics
 
 - **Current Training Epochs**: 24 `[CURRENT]`
-- **Best PSNR**: 51.60 dB `[MEASURED]`
+- **Best PSNR**: 51.60 dB `[MEASURED]` (Validation Split: 256x256 ladder stage, Dual T4, Epoch 18; 48.29 dB at final 640x640 stage, Epoch 22)
 - **Best SSIM**: 0.9997 `[MEASURED]`
 - **Best LPIPS**: 0.0019 `[MEASURED]`
 - **Best FID**: 1.8097 `[MEASURED]`

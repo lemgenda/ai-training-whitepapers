@@ -1217,6 +1217,30 @@ python cli.py server stop</code></pre>
                             <td>Fast-dispatch compilation using a predefined compiler preset profile</td>
                         </tr>
                         <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/custom-compile</code></td>
+                            <td>Required</td>
+                            <td>Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/kaggle/registry-datasets</code></td>
+                            <td>None</td>
+                            <td>Catalog canonical Kaggle production manifolds with local presence flags</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/download</code></td>
+                            <td>Required</td>
+                            <td>Asynchronous Kaggle dataset archive pull and shard decompression</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/upload</code></td>
+                            <td>Required</td>
+                            <td>Package and upload local compiled manifold to Kaggle Datasets Hub</td>
+                        </tr>
+                        <tr>
                             <td><code>GET</code></td>
                             <td><code>/api/env/status</code></td>
                             <td>Required</td>
@@ -1278,6 +1302,22 @@ python cli.py server stop</code></pre>
                 <h4><code>POST /api/gui/quick-compile</code></h4>
                 <p>
                     Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
+                </p>
+                <h4><code>POST /api/gui/custom-compile</code></h4>
+                <p>
+                    Custom multi-source compilation endpoint accepting user-defined manifold names, domain task types (<code>restoration</code>, <code>detection</code>, <code>quality</code>, <code>vision</code>), storage presets, container architectures (<code>webdataset</code>, <code>parquet</code>, <code>mds</code>, <code>litdata</code>), shard sizes, loose file cleanup toggles, and heterogeneous source repository links spanning Kaggle (<code>kaggle://</code>), HuggingFace (<code>hf://</code>), Google Drive (<code>gd://</code>), and GitHub (<code>gh://</code>). Normalizes links to standard URI schemes, dynamically updates <code>unified_data.yaml</code>, and dispatches background compilation.
+                </p>
+                <h4><code>GET /api/kaggle/registry-datasets</code></h4>
+                <p>
+                    Returns an array of all canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code>. Each entry includes manifold key, human-readable title, repository slug, container format, sample count, and local presence flags.
+                </p>
+                <h4><code>POST /api/kaggle/download</code></h4>
+                <p>
+                    Initiates an asynchronous download job from Kaggle for a registry manifold or custom repository reference. Unpacks and organizes shards directly into the dataset root.
+                </p>
+                <h4><code>POST /api/kaggle/upload</code></h4>
+                <p>
+                    Packages and uploads a local compiled manifold to Kaggle Datasets Hub with automatic directory discovery, manifest generation, and streaming upload.
                 </p>
             </section>
 
