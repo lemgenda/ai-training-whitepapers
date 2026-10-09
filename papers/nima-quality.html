@@ -346,7 +346,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <p>The <strong>LemGendary NIMA Aesthetic Scorer (Mobile)</strong> is a professional-grade AI model optimized for the <code>quality</code> lifecycle. It functions as an aesthetic quality scorer trained on a standardized dataset, evaluating artistic composition and color harmony using a lightweight backbone.</p>
 <h4 id="412-model-info">4.1.2 Model Info</h4>
 <ul>
-<li><strong>Architecture</strong>: NIMA_Model (MobileNetV3-Small (Global Composition))</li>
+<li><strong>Architecture</strong>: NIMA_Model (MobileNetV2 (Global Composition))</li>
 <li><strong>Input Resolution</strong>: 224x224</li>
 <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
 <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
@@ -367,7 +367,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 </ul>
 <h4 id="415-training-curve">4.1.5 Training Curve</h4>
 <p><img alt="NIMA Aesthetic Mobile Training Curve" src="../assets/nima_aesthetic_mobile_training.png" />
-<em>Figure: Training Convergence for NIMA Aesthetic (MobileNetV3-Small).</em></p>
+<em>Figure: Training Convergence for NIMA Aesthetic (MobileNetV2).</em></p>
 <h4 id="416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
 <p>This model previously hit a hard representational ceiling around PLCC 0.47 due to its thin 1280-dim pooled embedding and a single <code>res_ladder</code> rung at 224px. In <strong>v16.1</strong>, the model was upgraded with a <code>hidden_dim: 256</code> projection layer (Dropout → Linear(1280, 256) → GELU → Dropout → Linear(256, 10)) and an expanded <code>res_ladder</code> of <code>[224, 256]</code> to unlock higher capacity.</p>
 <h4 id="417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
@@ -862,12 +862,12 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 </ol>
 <hr />
 <h3 id="541-head-projection-upgrade-resolution-ladder-expansion-v161">5.41 Head Projection Upgrade &amp; Resolution Ladder Expansion (v16.1)</h3>
-<p><strong>Issue</strong>: The <code>nima_aesthetic_mobile</code> model uses a bare <code>Dropout(0.5) → Linear(1280, 10)</code> classification head. This single linear mapping from the MobileNetV3-Small feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.</p>
+<p><strong>Issue</strong>: The <code>nima_aesthetic_mobile</code> model uses a bare <code>Dropout(0.5) → Linear(1280, 10)</code> classification head. This single linear mapping from the MobileNetV2 feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.</p>
 <p>Additionally, the <code>res_ladder</code> config contained only <code>[224]</code>, preventing the Governor from ever triggering the <code>DEEPENING</code> phase (a spatial resolution jump). The model spent 95+ epochs at a single resolution without any opportunity to learn higher-frequency spatial features.</p>
 <p><strong>Fix</strong>: Two complementary changes applied to unlock further capacity:</p>
 <ol>
 <li>
-<p><strong>Hidden Projection Layer</strong> (<code>nima.py</code>, Governor v16.1): Added an optional <code>hidden_dim</code> parameter to <code>NIMA_Model</code>. When set to <code>256</code> via <code>kwargs</code> in the YAML, the head becomes <code>Dropout(0.5) → Linear(1280, 256) → GELU → Dropout(0.25) → Linear(256, 10)</code>. This intermediate manifold allows the model to learn richer aesthetic representations before collapsing to 10 bins. The change is backwards-compatible: all other NIMA variants default to <code>hidden_dim=None</code> and are completely unaffected. The checkpoint loader uses <code>strict=False</code>, so the pretrained MobileNetV3-Small backbone weights are fully preserved and only the new head is randomly initialized on the next restart.</p>
+<p><strong>Hidden Projection Layer</strong> (<code>nima.py</code>, Governor v16.1): Added an optional <code>hidden_dim</code> parameter to <code>NIMA_Model</code>. When set to <code>256</code> via <code>kwargs</code> in the YAML, the head becomes <code>Dropout(0.5) → Linear(1280, 256) → GELU → Dropout(0.25) → Linear(256, 10)</code>. This intermediate manifold allows the model to learn richer aesthetic representations before collapsing to 10 bins. The change is backwards-compatible: all other NIMA variants default to <code>hidden_dim=None</code> and are completely unaffected. The checkpoint loader uses <code>strict=False</code>, so the pretrained MobileNetV2 backbone weights are fully preserved and only the new head is randomly initialized on the next restart.</p>
 </li>
 <li>
 <p><strong>Resolution Ladder Expansion</strong> (<code>unified_models_v2.yaml</code>): Expanded <code>res_ladder</code> for <code>nima_aesthetic_mobile</code> from <code>[224]</code> to <code>[224, 256]</code>, enabling the Governor's spatial jump mechanism to trigger a <code>DEEPENING</code> phase at 256px once the 224px performance has plateaued.</p>
@@ -1105,7 +1105,7 @@ $$Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}$$</p>
 <h3 id="81-summary-of-breakthroughs">8.1 Summary of Breakthroughs</h3>
 <p>By collapsing the legacy divide between "Artistic beauty" and "Technical clarity" into a single <strong>LemGendized Universal Quality Subset</strong>, we have created a training environment where models achieve <strong>0.9848 PLCC</strong> and <strong>0.9068 SRCC</strong> stability. These metrics are not merely academic; they signify a level of ordinal stability that matches human rater consensus across 440,000 diverse samples.</p>
 <h3 id="82-the-impact-of-data-first-engineering">8.2 The Impact of Data-First Engineering</h3>
-<p>The core takeaway of the LemGendary project is that <strong>merging and standardizing datasets</strong> is as critical as architectural selection. By neutralizing rater bias and standardizing diverse score distributions into a single 1-10 probability matrix, we provided the backbones (MobileNetV3-Small and EfficientNetV2-S) with a cleaner signal than any original research track.</p>
+<p>The core takeaway of the LemGendary project is that <strong>merging and standardizing datasets</strong> is as critical as architectural selection. By neutralizing rater bias and standardizing diverse score distributions into a single 1-10 probability matrix, we provided the backbones (MobileNetV2 and EfficientNetV2-S) with a cleaner signal than any original research track.</p>
 <h3 id="83-future-outlook-from-browser-to-edge">8.3 Future Outlook: From Browser to Edge</h3>
 <p>The graduation of these models to the <strong>ONNX / WebGPU</strong> ecosystem marks the beginning of a new era for browser-based image restoration. The ability to score and select high-quality images in real-time, locally on a user's machine, removes the cloud-latency hurdle for AI photo editing suites. Future iterations will focus on:</p>
 <ul>

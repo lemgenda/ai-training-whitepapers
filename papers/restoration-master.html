@@ -56,11 +56,11 @@
                     <li><strong>Motion &amp; Defocus Blur ($\mathbf{I}_B$)</strong>: Modeled as a spatially variant blur kernel $\mathbf{K}$ acting on clean latent image $\mathbf{I}$:
                         $$\mathbf{I}_B = \mathbf{I} \otimes \mathbf{K} + \mathbf{N}$$</li>
                     <li><strong>Sensor Noise ($\mathbf{I}_N$)</strong>: Heteroscedastic additive white Gaussian and Poisson sensor noise:
-                        $$\mathbf{I}_N \sim \mathcal{P}(lpha \mathbf{I}) + \mathcal{N}(0, \sigma^2)$$</li>
+                        $$\mathbf{I}_N \sim \mathcal{P}(lpha \mathbf{I}) + \mathcal{N}(0, \sigma^2)$$</li>
                     <li><strong>Rain Streaks &amp; Veiling Effect ($\mathbf{I}_R$)</strong>: Additive physical rain layer $\mathbf{R}$ with transmission modulation $\mathbf{T}$:
                         $$\mathbf{I}_R = \mathbf{I} \odot \mathbf{T} + \mathbf{R}$$</li>
-                    <li><strong>Atmospheric Haze ($\mathbf{I}_H$)</strong>: Koschmieder atmospheric scattering model governed by scene depth $d(x)$ and extinction coefficient $eta$:
-                        $$\mathbf{I}_H(x) = \mathbf{I}(x) t(x) + A(1 - t(x)), \quad t(x) = e^{-eta d(x)}$$</li>
+                    <li><strong>Atmospheric Haze ($\mathbf{I}_H$)</strong>: Koschmieder atmospheric scattering model governed by scene depth $d(x)$ and extinction coefficient $\beta$:
+                        $$\mathbf{I}_H(x) = \mathbf{I}(x) t(x) + A(1 - t(x)), \quad t(x) = e^{-\beta d(x)}$$</li>
                     <li><strong>Low-Light &amp; Extreme Exposure ($\mathbf{I}_E$)</strong>: Non-linear photometric sensor under-illumination with dynamic range clipping.</li>
                 </ul>
             </section>
@@ -111,8 +111,8 @@
                 <h2>4. Mathematical Loss Formulations</h2>
                 <p>Reconstruction loss is anchored in edge-aware Charbonnier and Perceptual guidance:</p>
                 $$\mathcal{L}_{\text{Restoration}} = \sqrt{\|\mathbf{I}_{\text{pred}} - \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{edge}} \sqrt{\|
-abla \mathbf{I}_{\text{pred}} - 
-abla \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perc}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{pred}}, \mathbf{I}_{\text{gt}})$$
+\nabla \mathbf{I}_{\text{pred}} - 
+\nabla \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perc}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{pred}}, \mathbf{I}_{\text{gt}})$$
             </section>
 
             <section id="benchmarks">

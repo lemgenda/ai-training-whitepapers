@@ -4,15 +4,15 @@
 **Author**: Lem Treursic
 **Version**: 16.7.3
 **Category**: Category 06 SUPER-RES
-**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
+**Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
 
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Multi-Scale Super-Resolution Manifolds](#2-multi-scale-super-resolution-manifolds)
-* [3. Sub-Pixel Convolution & ESPCN Foundations](#3-sub-pixel-convolution--espcn-foundations)
+* [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`](#2-multi-scale-The `[CURRENT]` ultra-resolution checkpoint provides multi-scale super-resolution-manifolds)
+* [3. Shared Foundations: Sub-Pixel Convolution & ESPCN](#3-sub-pixel-convolution--espcn-foundations)
 * [4. Model Deep-Dives](#4-model-deep-dives)
   * [4.1 UltraZoom-x2 (Real-Time Edge)](#41-ultrazoom-x2-real-time-edge)
   * [4.2 UltraZoom-x3 (Fractional Recovery)](#42-ultrazoom-x3-fractional-recovery)
@@ -37,10 +37,10 @@ When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
 
 * **Intelligent Texture Synthesis:** Instead of simply stretching existing pixels, UltraZoom analyzes image patterns and reconstructs realistic fine textures (individual leaf veins, flower petals, and sharp text edges).
 * **Four Specialized Scale Variants:**
-  * `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and real-time feeds (38.45 dB PSNR).
-  * `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR).
-  * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K displays (32.15 dB PSNR).
-  * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial surveillance (28.90 dB PSNR).
+  * `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and real-time feeds (38.45 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K displays (32.15 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial surveillance (28.90 dB PSNR `[MEASURED]`).
 
 ### Visual Demonstration: 4x Detail Super-Resolution
 
@@ -50,7 +50,7 @@ When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
 
 ![UltraZoom Scale Convergence & Benchmarks](../assets/ultrazoom_training.png)
 
-## 2. Multi-Scale Super-Resolution Manifolds
+## 2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`
 
 * **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration with minimal perceptual hallucination.
 * **UltraZoom-x3 Manifold**: Fractional scaling designed for irregular display resolution matching.
@@ -59,7 +59,7 @@ When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
 
 ---
 
-## 3. Sub-Pixel Convolution & ESPCN Foundations
+## 3. Shared Foundations: Sub-Pixel Convolution & ESPCN
 
 The Efficient Sub-Pixel Convolution operator $\mathcal{PS}$ rearranges tensors of shape $(H, W, C \cdot r^2)$ into $(r H, r W, C)$:
 
@@ -107,7 +107,9 @@ $$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{
 
 ---
 
-## 6. WebGPU & Zero-Copy Shader Pipeline
+## 6. Deployment Strategy & Production Acceleration
+
+### 6.1 WebGPU & Zero-Copy Shader Pipeline
 
 Exported using ONNX Opset 17 with fixed tensor shapes, ensuring direct mapping to WebGPU compute shaders.
 
@@ -127,3 +129,10 @@ Exported using ONNX Opset 17 with fixed tensor shapes, ensuring direct mapping t
 ## 8. Conclusion
 
 The UltraZoom Super-Resolution Suite provides high-throughput, multi-scale image upscaling engineered for real-time edge execution.
+
+### Related Ecosystem Documentation
+
+* [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedUltraZoomLarge`)
+* [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+* [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

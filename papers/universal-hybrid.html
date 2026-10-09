@@ -236,11 +236,11 @@
                     <li><strong>Adaptive Average Pooling:</strong> Downsamples spatial feature tensors dynamically to a stable sequence map of 32x32 pixels.</li>
                     <li><strong>Global Attention Computation:</strong> Executes multihead spatial self-attention on the pooled 1,024-token sequence, reducing memory consumption by over <strong>4,000x</strong> (limiting attention matrices to &lt;4 MB of VRAM).</li>
                     <li><strong>Bilinear Interpolation:</strong> Interpolates the processed attention map back to the original input resolution (H x W) and injects it residually:</li>
-                </ol>
+                </ul>
                 <div class="math-block">
                     X_out = X + Interpolate(Attention(Pool(X)))
                 </div>
-                <p>This maintains 100% checkpoint compatibility with existing weights while rendering OOM crashes structurally impossible.</p>
+                <p>This maintains high-fidelity backward checkpoint compatibility with existing weights while rendering OOM crashes substantially minimized by architectural design.</p>
             </div>
 
             <div class="card" id="task-ingestion">
@@ -322,7 +322,7 @@
 
 <section id="section-7">
 <h2>4. Deployment Strategy & WebGPU Compatibility</h2>
-            <p>All Universal Hybrid models are exported utilizing <strong>Opset 15/17</strong> validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and zero-latency shader execution inside modern WebGPU browser kernels.</p>
+            <p>All Universal Hybrid models are exported utilizing <strong>Opset 15/17</strong> validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and low-latency GPU compute shader dispatch inside modern WebGPU browser kernels.</p>
         
 
         

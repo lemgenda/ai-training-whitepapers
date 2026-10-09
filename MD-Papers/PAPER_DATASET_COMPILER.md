@@ -185,7 +185,28 @@ Supports concurrent multi-format emission (`--also-format`) alongside canonical 
 * **WebDataset (WDS)**: Tarball shard emission for legacy deep-learning cluster ingestion.
 * **Parquet + Zstandard**: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.
 
-### 5.3 Hardlink Dedup Preservation & Pre-Flight Gate Architecture
+> **Dataset Compiler Format Ingestion Notice**: Formats such as **TFRecord**, **HDF5**, and **CSV** represent valid general machine learning dataset structures covered in General AI Training Knowledge. However, they are **not natively parsed** by the LemGendary Dataset Compiler engine. Prior to ingestion, users must convert them into supported representations (**MDS**, **LitData**, **WebDataset**, **Parquet**, **YOLO**, or **VOC**).
+
+### 5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix
+
+The LemGendary Dataset Compiler strictly delineates between **Studio Native Supported Formats** (first-class streaming manifolds and annotation converters natively ingested by `lemgendary-datasets` and `lemgendary-training-suite`) and **General Knowledge Formats** (industry-standard storage containers documented for broad ML ecosystem context, but not natively emitted as streaming storage containers by the LemGendary suite).
+
+| Format Identifier | Format Family | Classification | Ingestion / Emission | Shard Indexing & Streaming Mechanism | Primary Optimization Target |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **WebDataset (.tar)** | Archive Tarball Shard | **STUDIO SUPPORTED** | Native Bidirectional | Sequential POSIX tar shard streaming with `wds.WebDataset` | Large vision manifolds on POSIX/Linux clusters |
+| **MosaicML MDS (.mds)** | Binary Indexed Chunks | **STUDIO SUPPORTED** | Native Bidirectional | Index JSON manifest + raw binary chunks with deterministic global shuffle | Cloud-native elastic multi-node streaming |
+| **LitData (.litdata)** | Lightning Streaming | **STUDIO SUPPORTED** | Native Bidirectional | Chunked binary records with dynamic index boundaries | Variable-length detection & regression targets |
+| **Apache Parquet (.parquet)** | Columnar Table + Zstandard | **STUDIO SUPPORTED** | Native Bidirectional | PyArrow row-group indexing + dictionary zstd compression | High-frequency financial & tabular time-series |
+| **Flat Image Manifold (.webp/.png)** | Directory Structure | **STUDIO SUPPORTED** | Native Bidirectional | In-memory `os.scandir` hash-set with O(1) physical skip-indexing | Zero-intermediate transcoding, NTFS cluster recovery |
+| **YOLO / COCO / VOC / MAT** | Annotation Vectors | **STUDIO SUPPORTED** | Ingestion via `converters/` | Per-sample spatial parsing into normalized target tensors | Object detection, facial landmarks, bounding boxes |
+| **TFRecord (.tfrecord)** | Protocol Buffer Binary | **GENERAL KNOWLEDGE** | Non-Native / Documented | `tf.data.TFRecordDataset` sequential record reader | Legacy TensorFlow pipelines; non-standard in PyTorch 2.x |
+| **Petastorm (.parquet via Spark)** | Columnar PySpark Container | **GENERAL KNOWLEDGE** | Non-Native / Documented | Apache Arrow PySpark IPC connector | Distributed Spark analytics; superseded by native PyArrow |
+| **LMDB (.lmdb)** | Memory-Mapped B-Tree Key-Value | **GENERAL KNOWLEDGE** | Non-Native / Documented | Single mmap memory address space with transaction locks | Legacy Caffe/PyTorch; lacks cloud-chunked streaming |
+| **HDF5 / H5 (.h5, .hdf5)** | Hierarchical Scientific Container | **GENERAL KNOWLEDGE** | Non-Native / Documented | `h5py` hierarchical dataset pointers | Multidimensional physics arrays; prone to MP write lock contention |
+| **RecordIO (.rec)** | MXNet Sequential Record | **GENERAL KNOWLEDGE** | Non-Native / Documented | `mxnet.recordio` sequential chunk reader | Legacy Apache MXNet pipelines |
+| **Feather / Arrow IPC (Raw)** | Memory-Mapped Flat Binary | **GENERAL KNOWLEDGE** | Non-Native / Documented | Uncompressed Arrow memory buffer mapping | Ephemeral IPC transfer; lacks compressed row-group partitions |
+
+### 5.4 Hardlink Dedup Preservation & Pre-Flight Gate Architecture
 
 Because container formats (tarballs, MDS chunks) pack raw byte streams and unavoidably destroy NTFS/POSIX hardlink deduplication, the compiler enforces an automated pre-flight hardlink audit gate (`audit_hardlinks()`):
 
@@ -193,7 +214,7 @@ $$\text{Verdict} = \begin{cases} \text{PROCEED} & \text{if } \text{HardlinkRatio
 
 Any attempt to emit container formats on restoration manifolds with heavy hardlink dedup (such as `LemGendizedUpnV2` with $1.06\text{ TB}$ recovered) is safely blocked unless explicitly overridden via `--force-duplicate`.
 
-### 5.4 Smart Multi-Modal Generation Engine (Phase 5)
+### 5.5 Smart Multi-Modal Generation Engine (Phase 5)
 
 Integrated AI backends run directly across compiled manifolds:
 
@@ -202,7 +223,7 @@ Integrated AI backends run directly across compiled manifolds:
 * **YOLO Detection & Auto-Labeling**: Derives normalized bounding boxes and object class distributions.
 * **ParseNet & SAM Segmentation**: Generates discrete face and instance masks.
 
-### 5.5 Physical Degradation Synthesis Engine (Phase 6)
+### 5.6 Physical Degradation Synthesis Engine (Phase 6)
 
 Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic restoration manifolds from clean targets:
 
@@ -212,7 +233,7 @@ Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic resto
 * **DCT Quantization**: 8x8 block discrete cosine transform simulation modeling JPEG artifacts.
 * **Provenance Logging**: Exact quantitative parameter values (blur kernel dimensions, angle, noise variance, gamma) logged per sample to `labels/<split>/<name>.json`.
 
-### 5.6 Asynchronous Sidecar API & Hybrid CLI Architecture (Phase 7)
+### 5.7 Asynchronous Sidecar API & Hybrid CLI Architecture (Phase 7)
 
 * **FastAPI / Uvicorn Daemon (`api/`)**: Runs on `127.0.0.1:8100` exposing REST endpoints for health telemetry, configuration schema validation, manifold inspection, and background job queuing.
 * **SQLite Job Registry (`.lgd_server/jobs.db`)**: Persistent state machine with automatic restart recovery marking orphaned runs `interrupted`.
@@ -473,21 +494,21 @@ The modernized interactive dashboard for end-to-end manifold management, backed 
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 321,369
-* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
 ### LemGendizedNimaAuthenticityLarge
 
 * **Category:** Image Authenticity Assessment
 * **Total Samples:** 209,196 (189 corrupt samples were filtered during the latest manifold build)
-* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict image authenticity score and map to binary categorical distribution.
 
 ### LemGendizedNimaTechnicalLarge
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 26,093
-* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
 ### LemGendizedParseNetLarge

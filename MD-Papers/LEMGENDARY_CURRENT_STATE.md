@@ -98,7 +98,7 @@ The suite governs **22 production neural network architectures** tracked in `uni
 6. **Precipitation Restoration**: `mprnet_deraining` (Cross-Stage Feature Fusion)
 7. **High-Fidelity Restoration**: `nafnet_debluring`, `nafnet_denoising` (SimpleGate Nonlinearity-Free)
 8. **Perceptual Quality Scoring**:
-   - `nima_aesthetic_mobile` (MobileNetV3-Small EMD Scorer)
+   - `nima_aesthetic_mobile` (MobileNetV2 EMD Scorer)
    - `nima_aesthetic_efficientnet` (EfficientNetV2-S Scorer)
    - `nima_aesthetic_pro` (Swin-v2-T Multiscale Scorer)
    - `nima_authenticity` (AI vs Human Generative Classifier)

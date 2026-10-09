@@ -4,7 +4,7 @@
 **Author**: Lem Treursić  
 **Version**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
 **Category**: Category 11 FINANCIAL  
-**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
+**Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
 ---
 
@@ -39,7 +39,7 @@
   - [5.4 Risk-Adjusted Position Sizing via Fractional Kelly](#54-risk-adjusted-position-sizing-via-fractional-kelly)
   - [5.5 Sub-5ms Real-Time Inference Deployment](#55-sub-5ms-real-time-inference-deployment)
 - [6. Deployment Strategy: MetaTrader 5 Expert Advisor Bridge](#6-deployment-strategy-metatrader-5-expert-advisor-bridge)
-  - [6.1 Stateless ONNX Model Export](#61-stateless-onnx-model-export)
+  - [6.1 Stateless ONNX Model Export `[THEORETICAL]`](#61-stateless-onnx-model-export)
   - [6.2 Automated Real-Time Tick Ingestion](#62-automated-real-time-tick-ingestion)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
@@ -249,7 +249,7 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 - **Embedding Dimension ($d_{\text{model}}$)**: 192
 - **Attention Heads**: 6
 - **Parameters**: 2.75M FP32 Parameters (~11 MB)
-- **Primary Checkpoint**: `ForexPredictorWeights_FP32.pth`
+- **Primary Checkpoint**: `[CURRENT]` `ForexPredictorWeights_FP32.pth`
 - **ONNX Export**: `ForexPredictor.onnx` (Opset 17, Fixed Shape)
 
 ### 4.3 Manifold Info
@@ -377,7 +377,7 @@ Benchmarked across 100 consecutive forward passes, the PyTorch/ONNX engine deliv
 
 ## 6. Deployment Strategy: MetaTrader 5 Expert Advisor Bridge
 
-### 6.1 Stateless ONNX Model Export
+### 6.1 Stateless ONNX Model Export `[THEORETICAL]`
 
 The trained model is exported to ONNX format with static tensor dimensions:
 
@@ -393,7 +393,7 @@ The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
 
 | Model Architecture | Task | Dir Acc (%) | Win Rate (%) | Profit Factor | Sharpe | MaxDD (%) | Quality Score |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **ForexPredictor** | FX & Gold Prediction | **49.69%** | **49.69%** | **0.99** | **-0.16** | **665.80%** | **105.87** |
+| **ForexPredictor** | FX & Gold Prediction | **49.69%** `[MEASURED]` | **49.69%** | **0.99** | **-0.16** | **665.80%** | **105.87** |
 | NAFNet Deblurring | Deblurring | 32.85 dB (PSNR) | 0.942 (SSIM) | — | — | — | 51.69 |
 | NAFNet Denoising | Denoising | 38.40 dB (PSNR) | 0.968 (SSIM) | — | — | — | 57.76 |
 | MPRNet Deraining | Deraining | 33.12 dB (PSNR) | 0.948 (SSIM) | — | — | — | 52.08 |
@@ -413,3 +413,10 @@ The **LemGendary ForexPredictor** sets a new standard for quantitative deep lear
 - **Normalized Pip Scaling & Financial Governance Hardening (v17.4)**: Solves commodity and equity index pip scale divergence via `PAIR_PIP_SCALE` mapping (FX Majors 1.0, Commodities 5.0–10.0, Indices 20.0–40.0) standardizing regression targets to 0–100 NPUs, enforcing a 0.75 temperature floor, and gating differential LR jolts to $\le 1.15\times$.
 - **Clean Training Execution & Checkpoint Isolation (v17.5)**: Clean execution CLI flags (`--clean` / `--fresh`) reset `curriculum_state.json`, wipe `metrics.csv`, and strictly isolate all checkpoints into `LemGendaryModels/<model>/checkpoints/`.
 - **16-Symbol Forex Universe & Timeframe Dropout Regularizer (v17.6)**: Ingestion of `LemGendizedForexUniverseLarge` (30.8M samples across 2019–2026) with expanding-window 6-fold WFCV, broker symbol aliasing (`NAS100` $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`), and stochastic timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.
+
+### Related Ecosystem Documentation
+
+- [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedForexUniverse`)
+- [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

@@ -4,7 +4,7 @@
 **Author**: Lem Treursić  
 **Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
 **Category**: Category 04 RESTORATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
+**Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
 
@@ -52,7 +52,7 @@ Imagine taking photos in almost pitch-black darkness or on an intensely sunny be
 
 ---
 
-## 2. Visual Taxonomy: The LemGendary Restoration Subset
+## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
 The LemGendary MIRNet is explicitly built to handle the most mathematically disruptive illumination artifacts in digital photography: extreme low-light environments and blown-out overexposures.
 
@@ -117,7 +117,7 @@ While PSNR measures absolute mathematical pixel differences, it is notoriously p
 
 #### Low-Light Performance Metrics
 
-- **Best PSNR**: 33.89 dB
+- **Best PSNR**: `[MEASURED]` 33.89 dB
 - **Best SSIM**: 0.9702
 - **Best LPIPS**: 0.0759
 - **Best FID**: 7.7552
@@ -149,7 +149,7 @@ MIRNet requires high VRAM to maintain parallel feature streams. To prevent OOM e
 
 #### Exposure Performance Metrics
 
-- **Best PSNR**: 23.18 dB
+- **Best PSNR**: `[MEASURED]` 23.18 dB
 - **Best SSIM**: 0.9551
 - **Best LPIPS**: 0.1143
 - **Best FID**: 1.6751
@@ -193,7 +193,7 @@ Correcting overexposure without dulling midtones requires precise gradient scali
 
 ### Standalone Exporters
 
-Checkpoints saved under `DataParallel` are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.
+The [CURRENT] checkpoints saved under `DataParallel` are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.
 
 ### The Ghost-Severing Protocol
 
@@ -217,3 +217,10 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By mastering multi-scale gating memory pressures and enforcing contiguous tensor mappings, we built a framework capable of handling MIRNet v2's massive parameter requirements.
 
 The resulting Low-Light and Exposure models prove that studio-grade illumination restoration can be generated automatically in the cloud and deployed instantly via WebGPU, without resorting to expensive multi-pass compositing.
+
+### Related Ecosystem Documentation
+
+- [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMirnetLarge`)
+- [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

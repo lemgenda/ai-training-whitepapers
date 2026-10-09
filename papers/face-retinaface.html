@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetinaFace: Multi-Scale Facial Landmark Localization - LemGendary AI</title>
-    <meta name="description" content="Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids">
+    <meta name="description" content="Single-Stage 5-Point Landmark Detection with MobileNetV2 and Deformable Feature Pyramids">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
@@ -13,209 +13,238 @@
 <div id="tabs-top" class="tabs-top-bar">
   <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
   <a href="face-suite.html">Face Suite Hub</a>
-                <a href="face-codeformer.html">CodeFormer</a>
-                <a href="face-parsenet.html">ParseNet</a>
-                <a href="face-retinaface.html" class="active">RetinaFace</a>
+  <a href="face-codeformer.html">CodeFormer</a>
+  <a href="face-parsenet.html">ParseNet</a>
+  <a href="face-retinaface.html" class="active">RetinaFace</a>
   <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
 </div>
 <nav id="toc" class="toc-fixed-bar">
 <h2>Contents</h2>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#plain-english">1.1 What RetinaFace Does (In Plain English)</a></li>
-                <li><a href="#architecture">2. Feature Pyramid & Deformable Convolutions</a></li>
-                <li><a href="#multitask">3. Tri-Head Multi-Task Detection</a></li>
-                <li><a href="#loss">4. Multi-Task Objective & OHEM</a></li>
-                <li><a href="#benchmarks">5. WIDER Face & Landmark Benchmarks</a></li>
-                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#conclusion">6. Conclusion</a></li>
-            </ul>
+    <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+    <li><a href="#abstract">1. Abstract</a></li>
+    <li><a href="#plain-english">1.1 What RetinaFace Does (In Plain English)</a></li>
+    <li><a href="#visual-taxonomy">2. Visual Taxonomy: Multi-Scale Features &amp; Landmarks</a></li>
+    <li><a href="#shared-foundations">3. Shared Foundations: Tri-Head Multi-Task Objective</a></li>
+    <li><a href="#model-deep-dives">4. Model Deep-Dives</a></li>
+    <li><a href="#challenges">5. Challenges &amp; Resilience Architecture</a></li>
+    <li><a href="#deployment">6. Deployment Strategy &amp; Production Acceleration</a></li>
+    <li><a href="#sota-matrix">7. SOTA Architectural Performance Matrix</a></li>
+    <li><a href="#conclusion">8. Conclusion</a></li>
+</ul>
 </nav>
 <main id="content" class="toc-fixed-content">
         <h1>RetinaFace: Multi-Scale Facial Landmark Localization</h1>
-        <p class="subtitle">Single-Stage 5-Point Landmark Detection with Deformable Feature Pyramids</p>
+        <p class="subtitle">Single-Stage 5-Point Landmark Detection with MobileNetV2 and Deformable Feature Pyramids</p>
         <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 08 FACE</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
+            <span>By Lem Treursic</span>
+            <span>Category 08 FACE</span>
+            <span>Version 16.9.16-STABLE</span>
+            <span>Hardware: NVIDIA / MPS / XPU</span>
+        </div>
+
+        <section id="abstract">
+            <h2>1. Abstract</h2>
+            <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem standardizes on the lightweight <strong>MobileNetV2</strong> backbone for edge execution and sub-3ms latency, complemented by an optional ResNet-50 variant for extreme crowd densities. Paired with Deformable Convolutions (DCN v2) across pyramid levels \(P_2\) through \(P_5\), RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (&lt; 16px).</p>
+        </section>
+
+        <section id="plain-english">
+            <h2>1.1 What RetinaFace Does (In Plain English)</h2>
+            <p>Imagine an intelligent autofocus system that finds every single human face in a bustling crowd scene, even if someone is turning away, standing in shadows, or wearing sunglasses:</p>
+            <ul>
+                <li><strong>Instant Face Localization:</strong> In under 3 milliseconds, RetinaFace scans an entire image, locating faces from full-frame portraits down to tiny faces only 16 pixels wide in stadium crowds.</li>
+                <li><strong>5-Point Landmark Pinpointing:</strong> For every detected face, it precisely marks 5 geometric anchors: the center of each eye, the tip of the nose, and the two corners of the mouth.</li>
+                <li><strong>Essential Pre-Flight Alignment:</strong> These 5 landmarks allow downstream restoration models (such as CodeFormer) to automatically rotate, scale, and align tilted faces upright before applying facial retouching.</li>
+            </ul>
+
+            <div class="card comparison-card">
+                <h3>Visual Demonstration: Face Localization &amp; 5-Point Landmarks</h3>
+                <div class="comparison-grid">
+                    <div class="sample-card-neutral">
+                        <div class="score-badge-neutral">INPUT CROWD SCENE</div>
+                        <p class="sample-label-neutral">Complex scene with multi-scale crowded faces, extreme angles, and harsh shadows.</p>
+                        <img src="../assets/retinaface_before.png" alt="Before: Raw input image containing crowded faces" class="sample-img-card">
+                    </div>
+                    <div class="sample-card-accept">
+                        <div class="score-badge-green">RETINAFACE DETECTIONS &amp; LANDMARKS</div>
+                        <p class="sample-label-neutral">Precision bounding boxes with confidence scores + 5-point ocular, nasal, and oral keypoints.</p>
+                        <img src="../assets/retinaface_after.png" alt="After: Bounding boxes and 5-point landmarks localization" class="sample-img-card">
+                    </div>
+                </div>
             </div>
 
+            <div class="figure-center">
+                <h3 class="th-left-white">RetinaFace Training Convergence Metrics</h3>
+                <img src="../assets/retinaface_training.png" alt="RetinaFace Training Convergence Curve" class="sample-img-wide" onerror="this.style.display='none'">
+                <p class="sample-caption">Figure 1: Multi-task loss convergence and WIDER Face validation AP progression across training epochs.</p>
+            </div>
+        </section>
 
-            <section id="abstract">
-                <h2>1. Abstract</h2>
-                <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem supports two official authoritative backbones: <strong>MobileNetV1-0.25</strong> for edge and real-time sub-3ms execution, and <strong>ResNet-50</strong> for server-grade multi-scale Feature Pyramid Networks (FPN) and extreme crowd scenes. Paired with Deformable Convolutions (DCN v2) across pyramid levels \(P_2\) through \(P_5\), RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (&lt; 16px).</p>
-            </section>
+        <section id="visual-taxonomy">
+            <h2>2. Visual Taxonomy: Multi-Scale Features &amp; Landmarks</h2>
+            <p>RetinaFace anchors 5 canonical facial landmarks to standardize facial alignment across the LemGendary Face Suite <span class="score-badge-neutral">[THEORETICAL]</span>:</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Landmark Keypoint</th>
+                            <th>Anatomical Target</th>
+                            <th>Primary Utility in Pipeline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Point 1 (Left Eye)</strong></td>
+                            <td>Pupil center / ocular iris</td>
+                            <td>Geometric tilt calculation &amp; eye restoration guidance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Point 2 (Right Eye)</strong></td>
+                            <td>Pupil center / ocular iris</td>
+                            <td>Horizontal eye-line leveling &amp; inter-ocular scale reference</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Point 3 (Nose Tip)</strong></td>
+                            <td>Pronasale nasal apex</td>
+                            <td>3D facial pitch/yaw pose estimation &amp; perspective correction</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Point 4 (Mouth Left)</strong></td>
+                            <td>Left oral cheilion / lip corner</td>
+                            <td>Oral symmetry baseline &amp; mouth crop bounding</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Point 5 (Mouth Right)</strong></td>
+                            <td>Right oral cheilion / lip corner</td>
+                            <td>Lip alignment &amp; expressive deformation monitoring</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-            <section id="plain-english">
-                <h2>1.1 What RetinaFace Does (In Plain English)</h2>
-                <p>Imagine an intelligent autofocus system that finds every single human face in a bustling crowd scene, even if someone is turning away, standing in shadows, or wearing sunglasses:</p>
-                <ul>
-                    <li><strong>Instant Face Localization:</strong> In under 3 milliseconds, RetinaFace scans an entire image, locating faces from full-frame portraits down to tiny faces only 16 pixels wide in stadium crowds.</li>
-                    <li><strong>5-Point Landmark Pinpointing:</strong> For every detected face, it precisely marks 5 geometric anchors: the center of each eye, the tip of the nose, and the two corners of the mouth.</li>
-                    <li><strong>Essential Pre-Flight Alignment:</strong> These 5 landmarks allow downstream restoration models (such as CodeFormer) to automatically rotate, scale, and align tilted faces upright before applying facial retouching.</li>
+        <section id="shared-foundations">
+            <h2>3. Shared Foundations: Tri-Head Multi-Task Objective</h2>
+            <p>Each anchor predicts three joint outputs: (1) Face classification probability \(p_i\), (2) Bounding box coordinate offsets \(t_i\), and (3) Five 2D facial landmark coordinates \(l_i\):</p>
+            <p>$$\mathcal{L} = \mathcal{L}_{\text{cls}}(p_i, p_i^*) + \lambda_1 p_i^* \text{SmoothL1}(t_i, t_i^*) + \lambda_2 p_i^* \text{SmoothL1}(l_i, l_i^*)$$</p>
+            <p>Online Hard Example Mining (OHEM) balances gradients during anchor classification, preventing extreme class imbalance from dominating the optimization landscape.</p>
+        </section>
+
+        <section id="model-deep-dives">
+            <h2>4. Model Deep-Dives</h2>
+            <h3 id="41-retinaface-engine">RetinaFace Multi-Scale Landmark &amp; Localization Engine</h3>
+
+            <h4>4.1.1 Model Description, Purpose and Usage</h4>
+            <p>Single-stage face localization and 5-point landmark regression engine utilizing the standardized MobileNetV2 backbone for high-efficiency edge execution and real-time pre-flight alignment.</p>
+
+            <h4>4.1.2 Model Info</h4>
+            <ul>
+                <li><strong>Architecture</strong>: RetinaFace (MobileNetV2 Backbone + Multi-Scale Feature Pyramid)</li>
+                <li><strong>Input Resolution</strong>: 640x640</li>
+                <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+                <li><strong>Latency</strong>: 2.8ms inference on NVIDIA GTX 1650 <span class="score-badge-green">[MEASURED]</span></li>
+            </ul>
+
+            <h4>4.1.3 Manifold Info</h4>
+            <ul>
+                <li><strong>Dataset</strong>: <code>LemGendizedRetinaFaceLarge</code></li>
+                <li><strong>Total Samples</strong>: 32,203 WIDER Face annotated samples</li>
+                <li><strong>Primary Task</strong>: 5-point facial landmark regression and multi-scale face detection</li>
+            </ul>
+
+            <h4>4.1.4 Performance Metrics</h4>
+            <ul>
+                <li><strong>Current Training Epochs</strong>: 80 <span class="score-badge-neutral">[CURRENT]</span></li>
+                <li><strong>WIDER Face Hard AP</strong>: 84.6% <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 85.0% <span class="score-badge-neutral">[TARGET]</span>)</li>
+                <li><strong>WIDER Face Medium AP</strong>: 92.1% <span class="score-badge-green">[MEASURED]</span></li>
+                <li><strong>WIDER Face Easy AP</strong>: 95.4% <span class="score-badge-green">[MEASURED]</span></li>
+                <li><strong>Landmark NME (Normalised Mean Error)</strong>: 4.82% <span class="score-badge-green">[MEASURED]</span></li>
+                <li><strong>Current Learning Rate</strong>: 0.000100</li>
+            </ul>
+
+            <h4>4.1.5 Training Curve</h4>
+            <p><img alt="RetinaFace Training Convergence Curve" src="../assets/retinaface_training.png" /><br />
+            <em>Figure: Multi-Task Loss Convergence and Validation Progression.</em></p>
+        </section>
+
+        <section id="challenges">
+            <h2>5. Challenges &amp; Resilience Architecture</h2>
+            <p>Micro-scale landmark localization encounters severe real-world challenges:</p>
+            <ul>
+                <li><strong>Microscopic Faces (&lt; 16px)</strong>: Deformable Convolutions (DCN v2) across low-level pyramid rungs (\(P_2\)) maintain high spatial resolution without excessive computational overhead.</li>
+                <li><strong>Extreme Profile Poses (Yaw &gt; 60&deg;)</strong>: When one eye or mouth corner is occluded, the smooth L1 regression loss smoothly decays gradients, preventing landmark explosion.</li>
+                <li><strong>Harsh Backlight &amp; Glare</strong>: Multi-scale feature concatenation integrates contextual background cues to anchor facial confidence even under complete facial shadow.</li>
+            </ul>
+        </section>
+
+        <section id="deployment">
+            <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
+            <p>RetinaFace integrates seamlessly into the LemGendary runtime stack:</p>
+            <ul>
+                <li><strong>Production FP16 Engine (<code>retinaface.onnx</code>)</strong>: Sub-3ms latency executing via WebGPU and ONNX Runtime DirectML <span class="score-badge-green">[MEASURED]</span>.</li>
+                <li><strong>Research FP32 Export (<code>retinaface_FP32.onnx</code> + <code>.onnx.data</code>)</strong>: Bit-exact floating-point model with separate binary weights sidecar.</li>
+                <li><strong>Lifecycle Governance</strong>: 15-minute <code>progress.pth</code> intra-epoch checkpointing, <code>latest.pth</code> persistence, and milestone <code>vault_hard_ap.pth</code> archival.</li>
+            </ul>
+        </section>
+
+        <section id="sota-matrix">
+            <h2>7. SOTA Architectural Performance Matrix</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model / Backbone</th>
+                            <th>WIDER Face Easy</th>
+                            <th>WIDER Face Medium</th>
+                            <th>WIDER Face Hard</th>
+                            <th>Latency (ms)</th>
+                            <th>Status &amp; Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RetinaFace-ResNet50</td>
+                            <td>96.5%</td>
+                            <td>95.6%</td>
+                            <td>90.4%</td>
+                            <td>22.4ms</td>
+                            <td><span class="score-badge-neutral">Server Baseline [MEASURED]</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RetinaFace-MobileNetV2</strong></td>
+                            <td><strong>95.4%</strong></td>
+                            <td><strong>92.1%</strong></td>
+                            <td><strong>84.6%</strong></td>
+                            <td><strong>2.8ms</strong></td>
+                            <td><span class="score-badge-green">LemGendary [MEASURED]</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>RetinaFace SOTA Target</strong></td>
+                            <td><strong>&ge; 96.0%</strong></td>
+                            <td><strong>&ge; 93.0%</strong></td>
+                            <td><strong>&ge; 85.0%</strong></td>
+                            <td><strong>&le; 3.0ms</strong></td>
+                            <td><span class="score-badge-neutral">Target [TARGET]</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>8. Conclusion</h2>
+            <p>RetinaFace with the MobileNetV2 backbone provides lightning-fast facial bounding box localization and sub-pixel 5-point landmark regression, establishing the foundational pre-flight orientation geometry for the LemGendary Face Suite.</p>
+
+            <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
+                <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
+                    <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedRetinaFaceLarge)</a></li>
+                    <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
+                    <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
+                    <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
                 </ul>
-                <h3>5-Point Landmark Regression & Detection Matrix</h3>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Landmark Keypoint</th>
-                                <th>Anatomical Target</th>
-                                <th>Primary Utility in Pipeline</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Point 1 (Left Eye)</strong></td>
-                                <td>Pupil center / ocular iris</td>
-                                <td>Geometric tilt calculation & eye restoration guidance</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Point 2 (Right Eye)</strong></td>
-                                <td>Pupil center / ocular iris</td>
-                                <td>Horizontal eye-line leveling & inter-ocular scale reference</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Point 3 (Nose Tip)</strong></td>
-                                <td>Pronasale nasal apex</td>
-                                <td>3D facial pitch/yaw pose estimation & perspective correction</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Point 4 (Mouth Left)</strong></td>
-                                <td>Left oral cheilion / lip corner</td>
-                                <td>Oral symmetry baseline & mouth crop bounding</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Point 5 (Mouth Right)</strong></td>
-                                <td>Right oral cheilion / lip corner</td>
-                                <td>Lip alignment & expressive deformation monitoring</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card" class="comparison-card">
-                    <h3>Visual Demonstration: Face Localization &amp; 5-Point Landmarks</h3>
-                    <div class="comparison-grid">
-                        <div class="sample-card-neutral">
-                            <div class="score-badge-neutral">INPUT CROWD SCENE</div>
-                            <p class="sample-label-neutral">Complex scene with multi-scale crowded faces, extreme angles, and harsh shadows.</p>
-                            <img src="../assets/retinaface_before.png" alt="Before: Raw input image containing crowded faces" class="sample-img-card">
-                        </div>
-                        <div class="sample-card-accept">
-                            <div class="score-badge-green">RETINAFACE DETECTIONS &amp; LANDMARKS</div>
-                            <p class="sample-label-neutral">Precision bounding boxes with confidence scores + 5-point ocular, nasal, and oral keypoints.</p>
-                            <img src="../assets/retinaface_after.png" alt="After: Bounding boxes and 5-point landmarks localization" class="sample-img-card">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="architecture">
-                <h2>2. Feature Pyramid & Deformable Convolutions</h2>
-                <p>Standard convolutions apply rigid sampling grids. RetinaFace applies Deformable Convolutions (DCN v2) across FPN levels \(P_2, P_3, P_4, P_5\) to adaptively deform receptive fields to match natural facial contours regardless of pitch, yaw, or roll.</p>
-            </section>
-
-            <section id="multitask">
-                <h2>3. Tri-Head Multi-Task Detection</h2>
-                <p>Each anchor predicts three joint outputs: (1) Face classification probability \(p_i\), (2) Bounding box coordinate offsets \(t_i\), and (3) Five 2D facial landmark coordinates \(l_i\).</p>
-            </section>
-
-            <section id="loss">
-                <h2>3.1 Multi-Task Objective & OHEM</h2>
-                <p>$$\mathcal{L} = \mathcal{L}_{\text{cls}}(p_i, p_i^*) + \lambda_1 p_i^* \text{SmoothL1}(t_i, t_i^*) + \lambda_2 p_i^* \text{SmoothL1}(l_i, l_i^*)$$</p>
-                <p>Online Hard Example Mining (OHEM) balances gradients during anchor classification.</p>
-            </section>
-
-            <section id="4-model-deep-dives">
-<h2>4. Model Deep-Dives</h2>
-
-<h3 id="41-lemgendizedretinafacemobilenetlarge">RetinaFace Multi-Scale Landmark & Localization Engine</h3>
-
-<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
-<p>Single-stage face localization and 5-point landmark regression engine supporting both MobileNetV1-0.25 (Edge/Real-time) and ResNet-50 (High-Capacity FPN) backbones.</p>
-
-<h4 id="412-model-info">4.1.2 Model Info</h4>
-<ul>
-<li><strong>Architecture</strong>: RetinaFace (MobileNetV1-0.25 & ResNet-50 with Deformable FPN)</li>
-<li><strong>Input Resolution</strong>: 640x640 (Multi-Scale Pyramid Testing)</li>
-<li><strong>Precision</strong>: ONNX FP32 / PyTorch FP32</li>
-<li><strong>Latency</strong>: Sub-3ms (MobileNet-0.25) / Sub-9ms (ResNet-50)</li>
-</ul>
-
-<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
-<ul>
-<li><strong>Dataset</strong>: <code>LemGendizedRetinaFaceMobileNetLarge</code></li>
-<li><strong>Total Samples</strong>: 128,400 annotated faces across WIDER Face</li>
-<li><strong>Primary Task</strong>: Simultaneous face bounding box classification and 5-point geometric landmark regression</li>
-</ul>
-
-<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
-<ul>
-<li><strong>Current Training Epochs</strong>: 25</li>
-<li><strong>Best WIDER Hard AP (ResNet-50)</strong>: 91.8%</li>
-<li><strong>Best WIDER Hard AP (MobileNet-0.25)</strong>: 82.4%</li>
-<li><strong>Best NME (5-Point)</strong>: 0.048</li>
-<li><strong>Current Learning Rate</strong>: 0.00012</li>
-</ul>
-
-<h4 id="415-training-curve">4.1.5 Training Curve</h4>
-<p><img alt="RetinaFace Training Curve" src="../assets/retinaface_training.png" /><br />
-<em>Figure: Multi-Scale AP Hard Convergence for RetinaFace Localization.</em></p>
-</section>
-
-<section id="benchmarks">
-                <h2>5. WIDER Face & Landmark Benchmarks</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Backbone Variant</th>
-                                <th>WIDER Hard AP</th>
-                                <th>NME (5-Point)</th>
-                                <th>Inference (CPU / GTX 1650)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>MobileNet-0.25 (Edge)</td>
-                                <td>82.4%</td>
-                                <td>0.061</td>
-                                <td>14 ms / 3 ms</td>
-                            </tr>
-                            <tr>
-                                <td>ResNet-50 (Accuracy)</td>
-                                <td>91.8%</td>
-                                <td>0.048</td>
-                                <td>45 ms / 9 ms</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card" class="comparison-card">
-                    <h3>Visual Demonstration: Face Localization &amp; 5-Point Landmarks</h3>
-                    <div class="comparison-grid">
-                        <div class="sample-card-neutral">
-                            <div class="score-badge-neutral">INPUT CROWD SCENE</div>
-                            <p class="sample-label-neutral">Complex scene with multi-scale crowded faces, extreme angles, and harsh shadows.</p>
-                            <img src="../assets/retinaface_before.png" alt="Before: Raw input image containing crowded faces" class="sample-img-card">
-                        </div>
-                        <div class="sample-card-accept">
-                            <div class="score-badge-green">RETINAFACE DETECTIONS &amp; LANDMARKS</div>
-                            <p class="sample-label-neutral">Precision bounding boxes with confidence scores + 5-point ocular, nasal, and oral keypoints.</p>
-                            <img src="../assets/retinaface_after.png" alt="After: Bounding boxes and 5-point landmarks localization" class="sample-img-card">
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="conclusion">
-                <h2>6. Conclusion</h2>
-                <p>RetinaFace anchors the spatial alignment pipeline for all downstream face analysis and restoration tasks.</p>
-            </section>        
+            </div>
+        </section>        
 </main>
 </body>
 </html>

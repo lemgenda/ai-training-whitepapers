@@ -64,18 +64,18 @@
             <section id="scaling">
                 <h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
                 <p>Foundation model optimization follows the Chinchilla compute-optimal scaling formulation:</p>
-                $$C pprox 6 N D$$
+                $$C \\approx 6ND$$
                 <p>where $C$ represents FLOPs, $N$ denotes non-embedding parameter count, and $D$ denotes training token/sample volume. For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision FP16/BF16 memory containment:</p>
                 $$\text{VRAM}_{\text{total}} = 2 N_{\text{model}} + 2 N_{\text{grad}} + 12 N_{\text{optim}} + \mathcal{O}(B \cdot S \cdot H \cdot L)$$
             </section>
 
             <section id="diffusion">
                 <h2>3. Latent Diffusion Models (LDM)</h2>
-                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $eta_t$:</p>
-                $$q(\mathbf{z}_t | \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{ar{lpha}_t} \mathbf{z}_0, (1 - ar{lpha}_t) \mathbf{I}
+                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $\beta_t$:</p>
+                $$q(\mathbf{z}_t | \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{ar{lpha}_t} \mathbf{z}_0, (1 - ar{lpha}_t) \mathbf{I}
 ight)$$
-                <p>The denoising network $\epsilon_	heta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
-                $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_	heta(\mathbf{z}_t, t, c)\|^2 
+                <p>The denoising network $\epsilon_	\theta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
+                $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_	\theta(\mathbf{z}_t, t, c)\|^2 
 ight]$$
                 <p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
             </section>
@@ -83,7 +83,7 @@ ight]$$
             <section id="vlm">
                 <h2>4. Image-to-Text Vision-Language Models</h2>
                 <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition the language model through cross-attention:</p>
-                $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_	heta(y_i \mid y_{<i}, \mathbf{H}_v)$$
+                $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_	\theta(y_i \mid y_{<i}, \mathbf{H}_v)$$
                 <p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
             </section>
 

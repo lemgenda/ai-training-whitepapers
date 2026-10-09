@@ -259,7 +259,7 @@ The **LemGendary NIMA Aesthetic Scorer (Mobile)** is a professional-grade AI mod
 
 #### 4.1.2 Model Info
 
-- **Architecture**: NIMA_Model (MobileNetV3-Small (Global Composition))
+- **Architecture**: NIMA_Model (MobileNetV2 (Global Composition))
 - **Input Resolution**: 224x224
 - **Precision**: ONNX FP16 (Edge) / PyTorch FP32 (Training)
 - **Latency**: Sub-50ms inference bound on target local GPU hardware
@@ -281,7 +281,7 @@ The **LemGendary NIMA Aesthetic Scorer (Mobile)** is a professional-grade AI mod
 #### 4.1.5 Training Curve
 
 ![NIMA Aesthetic Mobile Training Curve](../assets/nima_aesthetic_mobile_training.png)
-*Figure: Training Convergence for NIMA Aesthetic (MobileNetV3-Small).*
+*Figure: Training Convergence for NIMA Aesthetic (MobileNetV2).*
 
 #### 4.1.6 Model specific issues and optimizations
 
@@ -725,13 +725,13 @@ The training of 440,000 samples on a 48-hour continuous cycle required "Resilien
 
 ### 5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)
 
-**Issue**: The `nima_aesthetic_mobile` model uses a bare `Dropout(0.5) → Linear(1280, 10)` classification head. This single linear mapping from the MobileNetV3-Small feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.
+**Issue**: The `nima_aesthetic_mobile` model uses a bare `Dropout(0.5) → Linear(1280, 10)` classification head. This single linear mapping from the MobileNetV2 feature space directly to 10 score bins provides insufficient representational capacity for aesthetic quality assessment, resulting in a hard PLCC ceiling around 0.47 despite the backbone being fully converged.
 
 Additionally, the `res_ladder` config contained only `[224]`, preventing the Governor from ever triggering the `DEEPENING` phase (a spatial resolution jump). The model spent 95+ epochs at a single resolution without any opportunity to learn higher-frequency spatial features.
 
 **Fix**: Two complementary changes applied to unlock further capacity:
 
-1. **Hidden Projection Layer** (`nima.py`, Governor v16.1): Added an optional `hidden_dim` parameter to `NIMA_Model`. When set to `256` via `kwargs` in the YAML, the head becomes `Dropout(0.5) → Linear(1280, 256) → GELU → Dropout(0.25) → Linear(256, 10)`. This intermediate manifold allows the model to learn richer aesthetic representations before collapsing to 10 bins. The change is backwards-compatible: all other NIMA variants default to `hidden_dim=None` and are completely unaffected. The checkpoint loader uses `strict=False`, so the pretrained MobileNetV3-Small backbone weights are fully preserved and only the new head is randomly initialized on the next restart.
+1. **Hidden Projection Layer** (`nima.py`, Governor v16.1): Added an optional `hidden_dim` parameter to `NIMA_Model`. When set to `256` via `kwargs` in the YAML, the head becomes `Dropout(0.5) → Linear(1280, 256) → GELU → Dropout(0.25) → Linear(256, 10)`. This intermediate manifold allows the model to learn richer aesthetic representations before collapsing to 10 bins. The change is backwards-compatible: all other NIMA variants default to `hidden_dim=None` and are completely unaffected. The checkpoint loader uses `strict=False`, so the pretrained MobileNetV2 backbone weights are fully preserved and only the new head is randomly initialized on the next restart.
 
 2. **Resolution Ladder Expansion** (`unified_models_v2.yaml`): Expanded `res_ladder` for `nima_aesthetic_mobile` from `[224]` to `[224, 256]`, enabling the Governor's spatial jump mechanism to trigger a `DEEPENING` phase at 256px once the 224px performance has plateaued.
 
@@ -873,7 +873,7 @@ By collapsing the legacy divide between "Artistic beauty" and "Technical clarity
 
 ### 8.2 The Impact of Data-First Engineering
 
-The core takeaway of the LemGendary project is that **merging and standardizing datasets** is as critical as architectural selection. By neutralizing rater bias and standardizing diverse score distributions into a single 1-10 probability matrix, we provided the backbones (MobileNetV3-Small and EfficientNetV2-S) with a cleaner signal than any original research track.
+The core takeaway of the LemGendary project is that **merging and standardizing datasets** is as critical as architectural selection. By neutralizing rater bias and standardizing diverse score distributions into a single 1-10 probability matrix, we provided the backbones (MobileNetV2 and EfficientNetV2-S) with a cleaner signal than any original research track.
 
 ### 8.3 Future Outlook: From Browser to Edge
 
@@ -898,4 +898,4 @@ Under the v16.8.0 SSOT container architecture, NIMA manifolds (`LemGendizedNimaA
 
 - **Shard Organization**: Packaged into $\sim 500\text{ MB}$ tar shards containing paired `sample.webp` inputs and `sample.json` metadata records.
 - **10-Bin Human Perceptual Distributions**: Serializes the full 10-element floating-point score probability distributions (`[p_1, p_2, ..., p_{10}]`) into compact JSON, directly ingested by `WebDatasetReader` without intermediate file extraction.
-- **Multi-Architecture Streaming**: Powers zero-copy streaming across all NIMA variants (Swin-v2-T, EfficientNetV2-S, MobileNetV3-Small) with deterministic cross-worker shuffling and zero NTFS metadata lookup overhead.
+- **Multi-Architecture Streaming**: Powers zero-copy streaming across all NIMA variants (Swin-v2-T, EfficientNetV2-S, MobileNetV2) with deterministic cross-worker shuffling and zero NTFS metadata lookup overhead.

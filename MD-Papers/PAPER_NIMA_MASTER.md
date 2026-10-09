@@ -44,7 +44,7 @@ $$\mathcal{L}_{\text{Resonance}} = \mathcal{L}_{\text{EMD}} + \lambda_{\text{ran
 
 ## 4. Model Family Architecture
 
-* `nima_aesthetic_mobile`: MobileNetV3-Small backbone (224px, SRCC &ge; 0.650)
+* `nima_aesthetic_mobile`: MobileNetV2 backbone (224px, SRCC &ge; 0.650)
 * `nima_aesthetic_efficientnet`: EfficientNetV2-S backbone (384px, SRCC &ge; 0.700)
 * `nima_aesthetic_pro`: Swin-v2-T Transformer backbone (384px, SRCC &ge; 0.720)
 * `nima_technical`: EfficientNetV2-S artifact detection (384px, SRCC &ge; 0.750)

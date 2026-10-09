@@ -1623,13 +1623,13 @@ graphs and propagate derivatives backward.</p>
 <hr/>
 <h2 id="74-gradient-descent">7.4 Gradient descent</h2>
 <p>Basic gradient descent:</p>
-<pre><code class="language-text">theta_(t+1) = theta_t - eta * grad_theta L
+<pre><code class="language-text">theta_(t+1) = theta_t - \beta * grad_theta L
 </code></pre>
-<p>where <code>eta</code> is the learning rate.</p>
+<p>where <code>\beta</code> is the learning rate.</p>
 <hr/>
 <h1 id="8-optimizers">8. Optimizers</h1>
 <h2 id="81-sgd">8.1 SGD</h2>
-<pre><code class="language-text">theta &lt;- theta - eta * g
+<pre><code class="language-text">theta &lt;- theta - \beta * g
 </code></pre>
 <h3 id="strengths-17">Strengths</h3>
 <ul>
@@ -1646,7 +1646,7 @@ graphs and propagate derivatives backward.</p>
 <h2 id="82-momentum">8.2 Momentum</h2>
 <p>Momentum maintains a running update direction.</p>
 <pre><code class="language-text">v_t = beta * v_(t-1) + g_t
-theta_t = theta_(t-1) - eta * v_t
+theta_t = theta_(t-1) - \beta * v_t
 </code></pre>
 <p>It reduces oscillation and can accelerate movement along persistent
 gradient directions.</p>
@@ -1713,14 +1713,14 @@ training.</p>
 <h2 id="92-cosine-decay">9.2 Cosine decay</h2>
 <p>A cosine schedule smoothly decreases the learning rate.</p>
 <p>Conceptually:</p>
-<pre><code class="language-text">eta(t) = eta_min + 0.5*(eta_max-eta_min)*(1 + cos(pi*t/T))
+<pre><code class="language-text">\beta(t) = \beta_min + 0.5*(\beta_max-\beta_min)*(1 + cos(pi*t/T))
 </code></pre>
 <h2 id="93-onecycle">9.3 OneCycle</h2>
 <p>OneCycle increases and then decreases the learning rate, often with an
 inverse momentum relationship.</p>
 <p>It can be effective for some supervised training workloads.</p>
 <h2 id="94-exponential-decay">9.4 Exponential decay</h2>
-<pre><code class="language-text">eta_t = eta_0 * gamma^t
+<pre><code class="language-text">\beta_t = \beta_0 * gamma^t
 </code></pre>
 <p>Simple but can decay too aggressively if not tuned.</p>
 <h2 id="95-warmup-stable-decay">9.5 Warmup-Stable-Decay</h2>

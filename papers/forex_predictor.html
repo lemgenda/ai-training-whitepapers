@@ -144,7 +144,7 @@
         </section>
 
         <section id="2-visual-taxonomy-multi-asset--temporal-manifolds">
-            <h2>2. Visual Taxonomy: Multi-Asset & Temporal Manifolds</h2>
+            <h2>2. Visual Taxonomy <span class="score-badge-neutral">[THEORETICAL]</span></h2>
             
             <h3 id="21-the-titan-four-asset-universe">2.1 The Titan Four Asset Universe</h3>
             <p>The primary production deployment focuses on the <strong>Titan Four</strong> core instruments representing over 65% of global foreign exchange and commodity spot turnover, while maintaining an extensible embedding table supporting up to 16 multi-asset classes:</p>
@@ -291,7 +291,7 @@ Fold 6: Train [2019-2025] -&gt; Validation [2026] (Current Live Market Out-of-Sa
         </section>
 
         <section id="4-model-deep-dive-lemgendary-forexpredictor">
-            <h2>4. Model Deep-Dive: LemGendary ForexPredictor</h2>
+            <h2>4. Model Deep-Dives: LemGendary ForexPredictor</h2>
 
             <h3 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h3>
             <p>The <strong>ForexPredictor</strong> outputs dual synchronous heads:</p>
@@ -308,7 +308,7 @@ Fold 6: Train [2019-2025] -&gt; Validation [2026] (Current Live Market Out-of-Sa
                 <li><strong>Embedding Dimension ($d_{\text{model}}$)</strong>: 192</li>
                 <li><strong>Attention Heads</strong>: 6</li>
                 <li><strong>Parameters</strong>: 2.75M FP32 Parameters (~11 MB)</li>
-                <li><strong>Primary Checkpoint</strong>: <code>ForexPredictorWeights_FP32.pth</code></li>
+                <li><strong>Primary Checkpoint</strong>: [CURRENT] <code>ForexPredictorWeights_FP32.pth</code></li>
                 <li><strong>ONNX Export</strong>: <code>ForexPredictor.onnx</code> (Opset 17, Fixed Shape)</li>
             </ul>
 
@@ -329,7 +329,7 @@ Fold 6: Train [2019-2025] -&gt; Validation [2026] (Current Live Market Out-of-Sa
                         <th>Baseline (LSTM)</th>
                         <th>Transformer (Vanilla)</th>
                         <th>LemGendary ForexPredictor (SOTA)</th>
-                        <th>Target</th>
+                        <th>Target <span class="score-badge-neutral">[TARGET]</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -337,14 +337,14 @@ Fold 6: Train [2019-2025] -&gt; Validation [2026] (Current Live Market Out-of-Sa
                         <td><strong>Direction Accuracy</strong></td>
                         <td>52.10%</td>
                         <td>55.40%</td>
-                        <td><strong>49.69%</strong></td>
+                        <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
                         <td>$&gt; 60.00\%$</td>
                     </tr>
                     <tr>
                         <td><strong>Trade Win Rate</strong></td>
                         <td>49.30%</td>
                         <td>52.20%</td>
-                        <td><strong>49.69%</strong></td>
+                        <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
                         <td>$&gt; 56.00\%$</td>
                     </tr>
                     <tr>
@@ -461,8 +461,8 @@ Fold 6: Train [2019-2025] -&gt; Validation [2026] (Current Live Market Out-of-Sa
                     </tr>
                     <tr>
                         <td><strong>Mean Universe</strong></td>
-                        <td><strong>49.69%</strong></td>
-                        <td><strong>49.69%</strong></td>
+                        <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
+                        <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
                         <td><strong>0.99</strong></td>
                         <td><strong>-0.16</strong></td>
                         <td><strong>665.80%</strong></td>
@@ -559,8 +559,8 @@ The <code>train_forex_curriculum.py</code> orchestrator supports explicit YAML-b
                     <tr>
                     <td><strong>ForexPredictor</strong></td>
                     <td>FX &amp; Gold Prediction</td>
-                    <td><strong>49.69%</strong></td>
-                    <td><strong>49.69%</strong></td>
+                    <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
+                    <td><strong>49.69%</strong> <span class="score-badge-green">[MEASURED]</span></td>
                     <td><strong>0.99</strong></td>
                     <td><strong>-0.16</strong></td>
                     <td><strong>665.80%</strong></td>
@@ -623,7 +623,17 @@ The <code>train_forex_curriculum.py</code> orchestrator supports explicit YAML-b
                 <li><strong>Clean Training Execution &amp; Checkpoint Isolation (v17.5)</strong>: Clean execution CLI flags (<code>--clean</code> / <code>--fresh</code>) reset <code>curriculum_state.json</code>, wipe <code>metrics.csv</code>, and strictly isolate all checkpoints into <code>LemGendaryModels/&lt;model&gt;/checkpoints/</code>.</li>
                 <li><strong>16-Symbol Forex Universe &amp; Timeframe Dropout Regularizer (v17.6)</strong>: Ingestion of <code>LemGendizedForexUniverseLarge</code> (30.8M samples across 2019–2026) with expanding-window 6-fold WFCV, broker symbol aliasing (<code>NAS100</code> $\leftrightarrow$ <code>USTEC</code>, <code>DE40</code> $\leftrightarrow$ <code>GER40</code>), and stochastic timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.</li>
             </ul>
+        
+            <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
+                <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
+                    <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedForexUniverse)</a></li>
+                    <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
+                    <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
+                    <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
+                </ul>
+            </div>
         </section>
-    </main>
+</main>
 </body>
 </html>

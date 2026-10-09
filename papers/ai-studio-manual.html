@@ -1248,56 +1248,56 @@
                         </tr></thead>
                         <tbody>
                         <tr>
-                            <td><strong>1<strong></td>
+                            <td><strong>1</strong></td>
                             <td>Model Card Header</td>
                             <td>Card Title</td>
                             <td>None</td>
                             <td>Labels neural architecture name and specialization.</td>
                         </tr>
                         <tr>
-                            <td><strong>2<strong></td>
+                            <td><strong>2</strong></td>
                             <td>3-Pillar Status Badge</td>
                             <td>Status Badge</td>
                             <td>Multi-pillar verification</td>
                             <td>Certified status reflecting training completion and checkpoint readiness.</td>
                         </tr>
                         <tr>
-                            <td><strong>3<strong></td>
+                            <td><strong>3</strong></td>
                             <td>Neural Architecture</td>
                             <td>Metric Readout</td>
                             <td>Sourced from <code>unified_models_v2.yaml</code></td>
                             <td>Specifies network layer topology and block design.</td>
                         </tr>
                         <tr>
-                            <td><strong>4<strong></td>
+                            <td><strong>4</strong></td>
                             <td>Parameter Counter</td>
                             <td>Metric Readout</td>
                             <td>Weight tensor count</td>
                             <td>Quantifies parameter count to guide hardware VRAM requirements.</td>
                         </tr>
                         <tr>
-                            <td><strong>5<strong></td>
+                            <td><strong>5</strong></td>
                             <td>Best Metric</td>
                             <td>Metric Readout</td>
                             <td>Validation pass output</td>
                             <td>Records benchmark evaluation score against academic baselines.</td>
                         </tr>
                         <tr>
-                            <td><strong>6<strong></td>
+                            <td><strong>6</strong></td>
                             <td>SOTA Targets Met</td>
                             <td>Progress Ratio</td>
                             <td>Evaluation benchmark</td>
                             <td>Tracks progress toward target convergence criteria.</td>
                         </tr>
                         <tr>
-                            <td><strong>7<strong></td>
+                            <td><strong>7</strong></td>
                             <td>Primary Target</td>
                             <td>Metric Readout</td>
                             <td>Convergence threshold</td>
                             <td>Indicates targeted benchmark score for full training certification.</td>
                         </tr>
                         <tr>
-                            <td><strong>8<strong></td>
+                            <td><strong>8</strong></td>
                             <td>Resolution Ladder</td>
                             <td>Metric Readout</td>
                             <td>Progressive curriculum</td>
@@ -1306,7 +1306,17 @@
                         </tbody>
                     </table>
                 </div>
-                <p>---</p>
+
+                <h3>6.5 Revamped 1/4 - 3/4 Training Dashboard Topology & Interactive SOTA Inspection</h3>
+                <p>The modern Training Panel employs a high-productivity 1/4 - 3/4 split layout:</p>
+                <ol>
+                    <li><strong>Left 1/4 Sidebar (Global Orchestrator)</strong>: Houses high-level configuration controls, including Global Training Presets (<code>quick-sota</code>, <code>forex-production</code>, <code>vision-standard</code>), runtime hyperparameters, VRAM safety limits, and one-click Sidecar Services management.</li>
+                    <li><strong>Right 3/4 Workspace (Model Catalog &amp; Telemetry)</strong>: Displays the active Model Card Grid with top-level metric filters and the interactive bottom-docked Telemetry Console.</li>
+                    <li><strong>Full-Width Model Card Header</strong>: Every architecture card features a full-width header bar displaying the model title, domain badges, parameter count, and an inline progress bar showing the active spatial ladder progress or SOTA target completion.</li>
+                    <li><strong>Interactive Pinned/Persisted SOTA Tooltip</strong>: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.</li>
+                    <li><strong>Dual Local vs. Cloud Execution Triggers</strong>: Card action buttons provide <strong>"Start Training"</strong> (local dispatch) and <strong>"Cloud Training"</strong> (opens the interactive Cloud Training modal). Both triggers automatically scroll down to focus the bottom Telemetry console.</li>
+                    <li><strong>Interactive Cloud Training Modal</strong>: Dedicated dialog allowing users to choose target cloud notebooks (<code>Kaggle</code>, <code>Colab</code>, <code>SageMaker</code>), verify manifold bindings, review required secrets (<code>SUITE_PAT</code>, <code>KAGGLE_KEY</code>), and launch cloud runs with zero manual setup.</li>
+                </ol>
             </section>
 
             <!-- SECTION 7 -->

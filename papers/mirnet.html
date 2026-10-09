@@ -116,7 +116,7 @@
 </section>
 
 <section id="section-3">
-<h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
+<h2>2. Visual Taxonomy <span class="score-badge-neutral">[THEORETICAL]</span>: The LemGendary Restoration Subset</h2>
             <p>The LemGendary MIRNet is explicitly built to handle the most mathematically disruptive illumination artifacts in digital photography: extreme low-light environments and blown-out overexposures.</p>
             <p>Unlike standard UNet approaches that operate linearly, MIRNet maintains parallel high-to-low resolution streams, exchanging multi-scale features bidirectionally across the network to preserve exact spatial details while correcting global illumination.</p>
             
@@ -427,7 +427,7 @@
 <h2>6. Deployment Strategy</h2>
 
             <h3>Standalone Exporters</h3>
-            <p>Checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
+            <p>The [CURRENT] checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
 
             <h3>The Ghost-Severing Protocol</h3>
             <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to a self-contained payload architecture. Any orphaned <code>.onnx.data</code> graph fragments are physically deleted, ensuring a single, isolated payload powers the web instance natively.</p>
@@ -483,9 +483,10 @@
                             <th>Paradigm</th>
                             <th>Parameters</th>
                             <th>GPU Footprint (1080p)</th>
-                            <th>PSNR Target</th>
+                            <th>PSNR Target <span class="score-badge-neutral">[TARGET]</span></th>
                             <th>Perceptual Integrity (LPIPS)</th>
                             <th>WebGPU Viability</th>
+                <th>Status &amp; Verification</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -506,6 +507,7 @@
                             <td>~30.2dB</td>
                             <td>0.17 (VGG)</td>
                             <td><span class="val-good">Optimal</span></td>
+                <td><span class="score-badge-neutral">Baseline [MEASURED]</span></td>
                         </tr>
                         <tr>
                             <td><strong>Restormer</strong></td>
@@ -595,7 +597,17 @@
 
 
 
-</section>
+
+            <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
+                <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
+                    <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedMirnetLarge)</a></li>
+                    <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
+                    <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
+                    <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
+                </ul>
+            </div>
+        </section>
 </main>
 </body>
 </html>

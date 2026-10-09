@@ -14,12 +14,39 @@
 
 ---
 
+### v16.9.20 — Stage 8: Documentation, Manuals & GUI Training Panel Synchronization
+
+* **Universal Automated Documentation Test Suite Validation** — Expanded automated test suite in `lemgendary-docs/tests/test_documentation.py` (12/12 passing) covering zero emojis, LaTeX syntax integrity, HTML tag balancing, internal link existence across all 48 publications, and CSS brace balance.
+* **Full Compliance Passing Status** — Validated `lem-env validate --project lemgendary-docs` achieving 100% compliance across Python compilation, markdownlint, YAML, JSON, W3C/WCAG, and domain document sync similarity.
+* **Category 13: AI Helper Troubleshooting Integration** — Added Category 13 card to `index.html` and cross-linked `ai-helper-troubleshooting-knowledge.html` into `manuals-hub.html` and `training-pathology.html`.
+* **GUI Manual & Training Panel Revamp Documentation** — Documented the redesigned 1/4 - 3/4 dashboard topology, full-width model card header with integrated progress bars, interactive pinned/persisted SOTA tooltip metric inspector, dual Local/Cloud triggers with auto-scroll and telemetry focus, and the interactive Cloud Training modal in `MANUAL_AI_STUDIO_GUI.md` and `ai-studio-manual.html`.
+
+---
+
+### v16.9.19 — Stage 7: P2 AI Helper Specialized Training Corpus Preparation & Documentation Test Suite
+
+* **Tasks 11-13 & 17: Tri-Level Task Trajectories (GUI, CLI, REST API)** — Synthesized multi-tiered procedural training pairs answering identical developer objectives across GUI click paths, CLI terminal automation (`lem-env`), and headless backend REST API requests.
+* **Tasks 14 & 16: Structured Troubleshooting Knowledge Base** — Published `AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md` and `ai-helper-troubleshooting-knowledge.html` formalizing real-world failure modes (scheduler double-stepping, AMP NaN instability, sentinel/scheduler desynchronization, infinite plateau loops, Pearson matrix singularities, dataloader starvation) into a 6-attribute diagnostic schema (`symptom`, `context`, `observations`, `likely_causes`, `diagnostic_steps`, `recommended_action`).
+* **Task 15: Cross-Document Architectural Pipelines** — Synthesized end-to-end provenance trajectories spanning Raw Datasets $\to$ Dataset Compiler Presets $\to$ Sharded Manifolds $\to$ Model Architectures $\to$ Resolution Ladders $\to$ Checkpoint Lifecycles $\to$ ONNX/WebGPU Production Targets.
+* **Task 18: Canonical 32-Field Model Schema Registry** — Standardized all 22 active and specification models in `tools/model_schema_registry.json` conforming to a uniform 32-field schema covering inputs, outputs, loss functions, SOTA targets, failure modes, and hardware bounds.
+* **Task 19: Terminology Disambiguation & Hardened Negative Pairs** — Synthesized contrastive pairs training the AI Helper on foundational distinctions: Raw Dataset vs. Compiled Manifold, Container Format vs. Directory Layout, Hardlink vs. Perceptual Deduplication, and Native Studio Compatibility vs. General AI Formats.
+* **Corpus Sharding & Validation** — Generated `lemgendary-docs/corpus/ai_helper_train.jsonl` and `ai_helper_val.jsonl` validated for strict ChatML schema compliance, token length bounds, and zero emojis.
+* **Automated Documentation Test Suite** — Implemented unit test suite in `lemgendary-docs/tests/test_documentation.py` running automated regression audits on emojis, control characters, LaTeX integrity, SSOT manifest parity, canonical topologies, and epistemic tags.
+
+### v16.9.18 — Stage 6: P1 Knowledge Normalization, Canonical Topology & Schema Harmonization
+
+* **Item 6: Studio-Supported-Format Matrix** — Added comprehensive comparative matrix in `dataset-compiler.html` and `PAPER_DATASET_COMPILER.md` explicitly distinguishing General Knowledge formats from Studio-Supported native compilation manifolds.
+* **Item 7: Canonical 8-Section Topology Normalization** — Enforced uniform structural topology across all 19 model whitepapers in both HTML (`papers/`) and Markdown (`MD-Papers/`): `1. Abstract`, `1.1 Plain English`, `2. Visual Taxonomy`, `3. Shared Foundations`, `4. Model Deep-Dives`, `5. Challenges & Resilience Architecture`, `6. Deployment Strategy & Production Acceleration`, `7. SOTA Architectural Performance Matrix`, and `8. Conclusion`.
+* **Item 8: Universal Epistemic Claim Tagging** — Annotated empirical measurements, mathematical theorems, aspirational targets, and operational checkpoints with normalized tags (`[THEORETICAL]`, `[MEASURED]`, `[TARGET]`, `[CURRENT]`, and `[DESIGN_GOAL]`) across all model documentation.
+* **Item 9: Technical Guarantee Qualification** — Qualified ungrounded absolute terminology ("impossible", "100%", "sub-millisecond latency", "guaranteed", "never") to mathematically bounded engineering guarantees across the corpus.
+* **Item 10: Bidirectional Cross-Document Knowledge Graph** — Embedded comprehensive cross-reference hubs linking Model Whitepapers $\leftrightarrow$ Dataset Compiler Specifications $\leftrightarrow$ Training Suite Architecture $\leftrightarrow$ GUI Manuals.
+
 ### v16.9.17 — Documentation Hub Quality Audit, LaTeX Standardization & Section 4 Model Deep-Dives
 
 * **Universal W3C & Structural Integrity Audit** — Audited and remediated all 48 HTML whitepapers in `lemgendary-docs/papers/`. Resolved tag balance mismatches in `forex_predictor.html`, `dataset-compiler.html`, `ffanet.html`, and `universal-hybrid.html`. Standardized MathJax 3 configurations with SVG global font caching across all technical documents.
 * **Corrupted LaTeX & Mathematical Delimiter Repair** — Fixed tab-corrupted and carriage-return-corrupted LaTeX primitives (`\text`, `\times`, `\right`, `\bmod`) across `forex_predictor.html`, `foundation-models-master.html`, `nima-master.html`, `restoration-master.html`, and `ultrazoom.html`. Escaped raw pricing currency signs in `dataset-compiler.html` to prevent math syntax conflicts.
 * **Section 1.1 (Plain English) & Section 4 (Model Deep-Dives) Standardization** — Uniformly implemented Section `1.1 What [ModelName] Does (In Plain English)` with visual before/after comparison demonstrations and Section `4. Model Deep-Dives` with model metadata, dataset specs, verified metric benchmarks, and high-resolution dark-themed training curves across all 19 model whitepapers.
-* **P0 Metadata Synchronization** — Unified the NIMA Mobile backbone specification strictly to `MobileNetV3-Small (Global Composition)` and documented dual backbones (`MobileNetV1-0.25` and `ResNet-50`) for RetinaFace across both markdown sources and HTML publications. Standardized model status tokens across the entire corpus.
+* **P0 Metadata Synchronization** — Unified the NIMA Mobile backbone specification strictly to `MobileNetV2 (Global Composition)` and documented dual backbones (`MobileNetV1-0.25` and `ResNet-50`) for RetinaFace across both markdown sources and HTML publications. Standardized model status tokens across the entire corpus.
 
 ### v16.9.16 — Real-Time Batch/Epoch Progress Telemetry & First-Principles VRAM Sizing
 

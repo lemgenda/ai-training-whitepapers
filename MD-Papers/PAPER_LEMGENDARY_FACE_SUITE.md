@@ -151,7 +151,7 @@ RetinaFace provides single-stage, real-time facial bounding box detection and 5-
 #### 4.3.2 Model Info
 
 * **Model Key**: `retinaface`
-* **Architecture**: MobileNetV3-Small Backbone
+* **Architecture**: MobileNetV2 Backbone
 * **Status**: Pre-Training Architectural Specification
 * **Loss Function**: Multi-Task Bounding Box, Keypoint & Classification Loss
 * **Learning Rate**: $5 \times 10^{-4}$
@@ -196,7 +196,7 @@ The Facial Vision Suite compiles into quantized ONNX (Opset 18) and WebGPU/WASM 
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `codeformer` | Transformer VQ-Codebook | `LemGendizedCodeFormerLarge` | 512x512 | PSNR 30.5 dB, FID 5.2 | Checkpoint Trained |
 | `parsenet` | Bilateral Segmentation | `LemGendizedParseNetLarge` | 512x512 | mIoU 0.860 | In-Progress / Pre-Training |
-| `retinaface` | MobileNetV3-Small Backbone | `LemGendizedRetinaFaceMobileNetLarge` | 640x640 | mAP Easy 0.915 | Pre-Training Spec |
+| `retinaface` | MobileNetV2 Backbone | `LemGendizedRetinaFaceMobileNetLarge` | 640x640 | mAP Easy 0.915 | Pre-Training Spec |
 
 ---
 

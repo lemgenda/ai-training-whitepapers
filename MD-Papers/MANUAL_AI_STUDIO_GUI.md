@@ -522,6 +522,19 @@ To ensure optimal situational awareness, the **Real-time Telemetry & Pipeline St
 
 ---
 
+### 6.5 Revamped 1/4 - 3/4 Training Dashboard Topology & Interactive SOTA Inspection
+
+The modern Training Panel employs a high-productivity 1/4 - 3/4 split layout:
+
+1. **Left 1/4 Sidebar (Global Orchestrator)**: Houses high-level configuration controls, including Global Training Presets (`quick-sota`, `forex-production`, `vision-standard`), runtime hyperparameters, VRAM safety limits, and one-click Sidecar Services management.
+2. **Right 3/4 Workspace (Model Catalog & Telemetry)**: Displays the active Model Card Grid with top-level metric filters and the interactive bottom-docked Telemetry Console.
+3. **Full-Width Model Card Header**: Every architecture card features a full-width header bar displaying the model title, domain badges, parameter count, and an inline progress bar showing the active spatial ladder progress or SOTA target completion.
+4. **Interactive Pinned/Persisted SOTA Tooltip**: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.
+5. **Dual Local vs. Cloud Execution Triggers**: Card action buttons provide **"Start Training"** (local dispatch) and **"Cloud Training"** (opens the interactive Cloud Training modal). Both triggers automatically scroll down to focus the bottom Telemetry console.
+6. **Interactive Cloud Training Modal**: Dedicated dialog allowing users to choose target cloud notebooks (`Kaggle`, `Colab`, `SageMaker`), verify manifold bindings, review required secrets (`SUITE_PAT`, `KAGGLE_KEY`), and launch cloud runs with zero manual setup.
+
+---
+
 ## 7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive
 
 ### 7.1 Real-Time Metrics & Live Loss Curves

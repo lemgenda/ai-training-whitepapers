@@ -154,7 +154,7 @@
 <hr />
 
 <section id="2-visual-taxonomy-the-lemgendary-restoration-subset">
-<h2>2. Visual Taxonomy: The LemGendary Restoration Subset</h2>
+<h2>2. Visual Taxonomy <span class="score-badge-neutral">[THEORETICAL]</span>: The LemGendary Restoration Subset</h2>
 <p>The LemGendary MPRNet is explicitly built to handle one of the most mathematically disruptive artifacts in digital photography: torrential rain and water distortion.</p>
 
 <h3 id="21-the-deraining-track-mprnet_deraining">2.1 The Deraining Track (mprnet_deraining)</h3>
@@ -386,7 +386,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 
 <h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
 <ul>
-<li><strong>Current Training Epochs</strong>: 22</li>
+<li><strong>Current Training Epochs</strong>: <span class="score-badge-neutral">[CURRENT]</span> 22</li>
 <li><strong>Best PSNR</strong>: 53.95 dB</li>
 <li><strong>Best SSIM</strong>: 0.9996</li>
 <li><strong>Best LPIPS</strong>: 0.0013</li>
@@ -407,7 +407,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 <tr>
 <th class="text-left">Metric</th>
 <th class="text-left">Current Reality (Epoch 22)</th>
-<th class="text-left">Target SOTA Baseline</th>
+<th class="text-left">Target SOTA <span class="score-badge-neutral">[TARGET]</span> Baseline</th>
 <th class="text-left">Gap</th>
 </tr>
 </thead>
@@ -415,6 +415,9 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 <tr>
 <td class="text-left"><strong>PSNR</strong></td>
 <td class="text-left">53.95 dB</td>
+                <td>0.0013 (VGG)</td>
+                <td><span class="td-accent-bold">Production Grade</span></td>
+                <td><span class="score-badge-green">LemGendary [MEASURED]</span></td>
 <td class="text-left">30.60 dB</td>
 <td class="text-left">+23.35 dB</td>
 </tr>
@@ -560,7 +563,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 <h3 id="520-time-aware-checkpoint-governance-15-min-window">5.20 Time-Aware Checkpoint Governance (15-min Window)</h3>
 <p>To protect training progress on high-complexity manifolds, the suite implements a <strong>Time-Aware Checkpoint Governor</strong>. It monitors iteration velocity and dynamically recalibrates the save frequency to target a 15-minute resiliency window, ensuring that no more than 15 minutes of work is ever at risk.</p>
 <h3 id="521-dynamic-min_delta-scaling-for-high-range-quality">5.21 Dynamic min_delta Scaling for High-Range Quality</h3>
-<p><strong>Issue:</strong> Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. <code>475.25</code>). The legacy Governor used a static <code>min_delta</code> of <code>0.0005</code> to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, thus completely freezing the dataset expansion engine.
+<p><strong>Issue:</strong> Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. <code>475.25</code>). The legacy Governor used a static <code>min_delta</code> of <code>0.0005</code> to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for statistically improbable fractional improvements, thus completely freezing the dataset expansion engine.
 <strong>Fix:</strong> The Governor dynamically queries <code>task_type</code>. For <code>restoration</code> tasks, it multiplies the tolerance by 100x (<code>0.05</code>), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).</p>
 <h3 id="522-resolution-aware-patience-reset-sota-guard">5.22 Resolution-Aware Patience Reset (SOTA Guard)</h3>
 <p><strong>Issue:</strong> When the Governor triggered a spatial jump (e.g. expanding validation from 512px to 640px), the baseline metric mathematically plummeted (e.g. <code>450</code> down to <code>300</code>) because processing 6.25x more pixels is inherently more difficult. However, the Governor stubbornly held onto the old <code>450</code> score in its <code>best_quality</code> memory, declaring the model "stagnant" forever because it could never beat the low-res score.
@@ -712,6 +715,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
                 <th>PSNR</th>
                 <th>Perceptual Integrity (LPIPS)</th>
                 <th>WebGPU Viability</th>
+                <th>Status &amp; Verification</th>
             </tr>
         </thead>
         <tbody>
@@ -732,6 +736,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
                 <td>~30.2dB</td>
                 <td>0.17 (VGG)</td>
                 <td><span class="val-good">Optimal</span></td>
+                <td><span class="score-badge-neutral">Baseline [MEASURED]</span></td>
             </tr>
             <tr>
                 <td><strong>MIRNet</strong></td>
@@ -741,6 +746,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
                 <td>~31.8dB</td>
                 <td>0.08 (VGG)</td>
                 <td><span class="val-warn">Questionable</span></td>
+                <td><span class="score-badge-neutral">Baseline [MEASURED]</span></td>
             </tr>
             <tr>
                 <td><strong>Restormer</strong></td>
@@ -750,6 +756,7 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
                 <td>~32.4dB</td>
                 <td>0.05 (VGG)</td>
                 <td><span class="val-bad">Highly Degraded (Opset)</span></td>
+                <td><span class="score-badge-neutral">Baseline [MEASURED]</span></td>
             </tr>
             <tr class="row-highlight">
                 <td class="cell-accent"><strong>LemGendary MPRNet</strong></td>
@@ -825,9 +832,19 @@ This bounds VRAM utilization to ~500MB regardless of the total validation sample
 
 <section id="conclusion">
 <h2>8. Conclusion</h2>
-<p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.</p>
+<p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework highly resilient against runtime exceptions and numerical instabilities.</p>
 <p>The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.</p>
-</section>
+
+            <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
+                <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
+                <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
+                    <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedMprnetLarge)</a></li>
+                    <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
+                    <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
+                    <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
+                </ul>
+            </div>
+        </section>
 </main>
 </body>
 </html>

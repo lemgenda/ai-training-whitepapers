@@ -54,7 +54,7 @@ Imagine driving through dense mountain fog or attempting to view security camera
 
 ---
 
-## 2. Visual Taxonomy: The LemGendary Restoration Subset
+## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
 The transition to FFANet architectures required distinct manifolds for processing atmospheric occlusions.
 
@@ -140,7 +140,7 @@ The dual-attention heads originally choked the backward pass memory limit. We en
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Mid-Training) | Target SOTA `[TARGET]` Baseline | Gap |
 | :--- | :--- | :--- | :--- |
 | **PSNR** | 45.49 dB | 36.50 dB | +8.99 dB |
 | **SSIM** | 0.9975 | 0.9900 | +0.0075 |
@@ -186,7 +186,7 @@ Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the d
 
 #### 4.2.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA Baseline | Gap |
+| Metric | Current Reality (Mid-Training) | Target SOTA `[TARGET]` Baseline | Gap |
 | :--- | :--- | :--- | :--- |
 | **PSNR** | 33.93 dB | 33.70 dB | +0.23 dB |
 | **SSIM** | 0.9326 | 0.9860 | -0.0534 |
@@ -205,8 +205,15 @@ The ONNX Ghost-Severing protocol automatically prunes the auxiliary detection he
 
 ## 7. SOTA Architectural Performance Matrix
 
-BranchedFFANet systematically outperforms legacy atmospheric restoration algorithms by treating haze as a dense 3D tensor map rather than a linear pixel overlay.
+BranchedFFANet systematically outperforms legacy The `[CURRENT]` atmospheric dehazing engine achieves `[MEASURED]` performance in atmospheric restoration algorithms by treating haze as a dense 3D tensor map rather than a linear pixel overlay.
 
 ## 8. Conclusion
 
 By upgrading to the BranchedFFANet infrastructure and implementing the multi-task `CombinedLoss` engine, the LemGendary Suite now wields a robust, mathematically resilient atmospheric processor capable of dynamic environmental dehazing while detecting tactical landmarks.
+
+### Related Ecosystem Documentation
+
+- [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedFfanetLarge`)
+- [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

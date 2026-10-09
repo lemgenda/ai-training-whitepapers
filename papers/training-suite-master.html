@@ -53,6 +53,7 @@
                 <li><a href="#section-7">4. Universal Models Registry & SOTA Baselines</a>
                 </li>
                 <li><a href="#section-9">5. Universal SOTA Telemetry & Cloud Sync</a>
+                    <ul class="sub-item">
                         <li><a href="#multi-gpu-dataparallel">5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)</a></li>
                         <li><a href="#universal-inference">5.2. Universal Hardware Inference</a></li>
                         <li><a href="#hybrid-cloud-sync">5.3. Hybrid Cloud Synchronization & Tiered Lifecycle</a></li>
@@ -453,7 +454,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>LemGendary NIMA Aesthetic Scorer (Mobile)</td><td>MobileNetV3-Small (Global Composition)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.60 | SRCC: 0.60</td></tr>
+                    <tr><td>LemGendary NIMA Aesthetic Scorer (Mobile)</td><td>MobileNetV2 (Global Composition)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.60 | SRCC: 0.60</td></tr>
                     <tr><td>LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S)</td><td>EfficientNetV2-S (Global Composition)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.7 | SRCC: 0.7</td></tr>
                     <tr><td>LemGendary NIMA Aesthetic Scorer (Pro ViT)</td><td>Swin-v2-T (Global Multi-Scale Attention)</td><td>LemGendizedNimaAesthetic</td><td>PLCC: 0.75 | SRCC: 0.75</td></tr>
                     <tr><td>LemGendary NIMA Technical Scorer</td><td>EfficientNetV2-S (Spatial Integrity)</td><td>LemGendizedNimaTechnical</td><td>PLCC: 0.88 | SRCC: 0.88</td></tr>
@@ -575,7 +576,7 @@
                         <li><strong>4. Setup / Verify Credentials</strong>: Configures and validates API authentication keys.</li>
                     </ul>
                 </li>
-                <li><strong>Concurrent Kernel Discovery</strong>: Queries user kernel manifolds via multi-threaded workers (<code>ThreadPoolExecutor</code>), checking execution states (<code>RUNNING</code>, <code>QUEUED</code>, <code>COMPLETE</code>, <code>ERROR</code>) with near-zero latency.</li>
+                <li><strong>Concurrent Kernel Discovery</strong>: Queries user kernel manifolds via multi-threaded workers (<code>ThreadPoolExecutor</code>), checking execution states (<code>RUNNING</code>, <code>QUEUED</code>, <code>COMPLETE</code>, <code>ERROR</code>) with near-sub-millisecond latency.</li>
                 <li><strong>Incremental Telemetry Stream</strong>: Streams stdout and stderr logs incrementally via Kaggle API midtier endpoints, rendering live progress lines and status notifications in real time with non-destructive detachment (<code>Ctrl+C</code>).</li>
             </ul>
         

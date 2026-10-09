@@ -86,7 +86,7 @@ To achieve robust consumer-grade hardware compatibility (targeting NVIDIA GTX 16
 3. **Bilinear Interpolation**: Interpolates the processed attention map back to the original input resolution $(H \times W)$ and injects it residually:
    $$\mathbf{X}_{\text{out}} = \mathbf{X} + \text{Interpolate}(\text{Attention}(\text{Pool}(\mathbf{X})))$$
 
-This maintains 100% checkpoint compatibility with existing weights while rendering OOM crashes structurally impossible.
+This maintains high-fidelity backward checkpoint compatibility with existing weights while rendering OOM crashes substantially minimized by architectural design.
 
 ### 3.2 Dynamic Filename Task Ingestion
 
@@ -109,7 +109,7 @@ To balance computational efficiency during optimization with rigorous quality as
 
 ## 4. Deployment Strategy & WebGPU Compatibility
 
-All Universal Hybrid models are exported utilizing **Opset 15/17** validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and zero-latency shader execution inside modern WebGPU browser kernels.
+All Universal Hybrid models are exported utilizing **Opset 15/17** validation structures. The network architectures are stripped of all dynamic resizing logic and fully normalized to fixed visual dimensions. Weights are stored in highly efficient float16 parameters, ensuring fast transfer over PCIe lanes and low-latency GPU compute shader dispatch inside modern WebGPU browser kernels.
 
 ---
 

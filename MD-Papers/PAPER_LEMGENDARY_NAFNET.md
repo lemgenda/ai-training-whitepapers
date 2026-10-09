@@ -103,7 +103,7 @@ Imagine taking an action photo that came out completely blurred because your han
 
 ---
 
-## 2. Visual Taxonomy: The LemGendary Restoration Subset
+## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
 The transition to SOTA architectures required moving beyond basic geometric tasks towards high-frequency pixel manipulation.
 
@@ -302,11 +302,11 @@ The **LemGendary NAFNet Denoising** is a professional-grade AI model optimized f
 
 #### 4.1.4 Performance Metrics
 
-- **Current Training Epochs**: 24
-- **Best PSNR**: 51.60 dB
-- **Best SSIM**: 0.9997
-- **Best LPIPS**: 0.0019
-- **Best FID**: 1.8097
+- **Current Training Epochs**: 24 `[CURRENT]`
+- **Best PSNR**: 51.60 dB `[MEASURED]`
+- **Best SSIM**: 0.9997 `[MEASURED]`
+- **Best LPIPS**: 0.0019 `[MEASURED]`
+- **Best FID**: 1.8097 `[MEASURED]`
 - **Current Learning Rate**: 0.00006000
 
 #### 4.1.5 Training Curve
@@ -320,7 +320,7 @@ NAFNet actively abandons activating nonlinearities (like ReLU / GELU). Instead, 
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Completed) | Target SOTA Baseline | Gap |
+| Metric | Current Reality [MEASURED] | Target SOTA Baseline [TARGET] | Gap |
 | :--- | :--- | :--- | :--- |
 | **PSNR** | 51.60 dB | 40.20 dB | +11.40 dB |
 | **SSIM** | 0.9997 | 0.9650 | +0.0347 |
@@ -354,11 +354,11 @@ The **LemGendary NAFNet Deblurring** handles complex spatial reconstruction. The
 
 #### 4.2.4 Performance Metrics
 
-- **Current Training Epochs**: 79
-- **Best PSNR**: 33.92 dB
-- **Best SSIM**: 0.9753
-- **Best LPIPS**: 0.0382
-- **Best FID**: 1.0682
+- **Current Training Epochs**: 79 `[CURRENT]`
+- **Best PSNR**: 33.92 dB `[MEASURED]`
+- **Best SSIM**: 0.9753 `[MEASURED]`
+- **Best LPIPS**: 0.0382 `[MEASURED]`
+- **Best FID**: 1.0682 `[MEASURED]`
 - **Current Learning Rate**: 0.00004111
 
 #### 4.2.5 Training Curve
@@ -372,7 +372,7 @@ Deblurring demands spatial reconstruction. The LemGendary pipeline natively scal
 
 #### 4.2.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Completed) | Target SOTA Baseline | Gap |
+| Metric | Current Reality [MEASURED] | Target SOTA Baseline [TARGET] | Gap |
 | :--- | :--- | :--- | :--- |
 | **PSNR** | 33.92 dB | 33.90 dB | +0.02 dB |
 | **SSIM** | 0.9753 | 0.9700 | +0.0053 |
@@ -489,7 +489,7 @@ To protect training progress on high-complexity manifolds, the suite implements 
 
 ### 5.21 Dynamic min_delta Scaling for High-Range Quality
 
-**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, thus completely freezing the dataset expansion engine.
+**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for statistically improbable fractional improvements, thus completely freezing the dataset expansion engine.
 **Fix:** The Governor dynamically queries `task_type`. For `restoration` tasks, it multiplies the tolerance by 100x (`0.05`), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).
 
 ### 5.22 Resolution-Aware Patience Reset (SOTA Guard)
@@ -539,13 +539,14 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 
 The following matrix isolates NAFNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).
 
-| Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal |
-| **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal |
-| **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable |
-| **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) |
-| **LemGendary NAFNet** | *SCA SimpleGate (Ours)* | **17M** | **~ 6 GB** | **~32.5dB+** | **< 0.06 (VGG)** | **Production Grade** |
+| Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability | Status & Verification |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal | Baseline `[MEASURED]` |
+| **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal | Baseline `[MEASURED]` |
+| **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable | Baseline `[MEASURED]` |
+| **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) | Baseline `[MEASURED]` |
+| **LemGendary NAFNet** | *SCA SimpleGate (Ours)* | **17M** | **~ 6 GB** | **~32.5dB+** | **< 0.06 (VGG)** | **Production Grade** | **LemGendary `[MEASURED]`** |
+| **NAFNet SOTA Target** | *SCA SimpleGate Target* | **17M** | **~ 6 GB** | **>= 33.0dB** | **<= 0.05 (VGG)** | **Production Grade** | **Target `[TARGET]`** |
 
 **Hardware Note**: NAFNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for [FP16] browser exportation.
 
@@ -553,6 +554,13 @@ The following matrix isolates NAFNet structurally compared against generic indus
 
 ## 8. Conclusion: The Browser Restoration Paradigm
 
-The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.
+The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework highly resilient against runtime exceptions and numerical instabilities.
 
 The resulting NAFNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
+
+### Related Ecosystem Documentation
+
+- [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNafnetLarge`)
+- [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

@@ -49,17 +49,18 @@
                     <ul class="sub-item">
                         <li><a href="#51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding</a></li>
                         <li><a href="#52-modular-container-format">5.2 Modular Container Format Layer</a></li>
-                        <li><a href="#53-hardlink-dedup-preflight">5.3 Hardlink Dedup Preservation &amp; Pre-Flight Gate</a></li>
-                        <li><a href="#54-smart-multimodal-generation">5.4 Smart Multi-Modal Generation Engine</a></li>
-                        <li><a href="#55-physical-degradation-synthesis">5.5 Physical Degradation Synthesis Engine</a></li>
-                        <li><a href="#56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
-                        <li><a href="#57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
-                        <li><a href="#58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
-                        <li><a href="#59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
-                        <li><a href="#510-canonical-storage-format">5.10 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
-                        <li><a href="#511-streaming-zip-container">5.11 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
-                        <li><a href="#512-native-archive-acceleration">5.12 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
-                        <li><a href="#513-three-pipelines">5.13 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
+                        <li><a href="#53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</a></li>
+                        <li><a href="#54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate</a></li>
+                        <li><a href="#55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine</a></li>
+                        <li><a href="#56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine</a></li>
+                        <li><a href="#57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
+                        <li><a href="#58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
+                        <li><a href="#59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
+                        <li><a href="#510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
+                        <li><a href="#511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
+                        <li><a href="#512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
+                        <li><a href="#513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
+                        <li><a href="#514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -519,12 +520,128 @@
                 <li><strong>Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
             </ul>
 
-            <h3 id="53-hardlink-dedup-preflight">5.3 Hardlink Dedup Preservation &amp; Pre-Flight Gate Architecture</h3>
+            <h3 id="53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</h3>
+            <p>The LemGendary Dataset Compiler strictly delineates between <strong>Studio Native Supported Formats</strong> (first-class streaming manifolds and annotation converters natively ingested by <code>lemgendary-datasets</code> and <code>lemgendary-training-suite</code>) and <strong>General Knowledge Formats</strong> (industry-standard storage containers documented for broad ML ecosystem context, but not natively emitted as streaming storage containers by the LemGendary suite).</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Format Identifier</th>
+                            <th>Format Family</th>
+                            <th>Classification</th>
+                            <th>Ingestion / Emission</th>
+                            <th>Shard Indexing &amp; Streaming Mechanism</th>
+                            <th>Primary Optimization Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WebDataset (.tar)</strong></td>
+                            <td>Archive Tarball Shard</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Sequential POSIX tar shard streaming with <code>wds.WebDataset</code></td>
+                            <td>Large vision manifolds on POSIX/Linux clusters</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MosaicML MDS (.mds)</strong></td>
+                            <td>Binary Indexed Chunks</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Index JSON manifest + raw binary chunks with deterministic global shuffle</td>
+                            <td>Cloud-native elastic multi-node streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LitData (.litdata)</strong></td>
+                            <td>Lightning Streaming</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Chunked binary records with dynamic index boundaries</td>
+                            <td>Variable-length detection &amp; regression targets</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apache Parquet (.parquet)</strong></td>
+                            <td>Columnar Table + Zstandard</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>PyArrow row-group indexing + dictionary zstd compression</td>
+                            <td>High-frequency financial &amp; tabular time-series</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flat Image Manifold (.webp/.png)</strong></td>
+                            <td>Directory Structure</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>In-memory <code>os.scandir</code> hash-set with O(1) physical skip-indexing</td>
+                            <td>Zero-intermediate transcoding, NTFS cluster recovery</td>
+                        </tr>
+                        <tr>
+                            <td><strong>YOLO / COCO / VOC / MAT</strong></td>
+                            <td>Annotation Vectors</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Ingestion via <code>converters/</code></td>
+                            <td>Per-sample spatial parsing into normalized target tensors</td>
+                            <td>Object detection, facial landmarks, bounding boxes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TFRecord (.tfrecord)</strong></td>
+                            <td>Protocol Buffer Binary</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>tf.data.TFRecordDataset</code> sequential record reader</td>
+                            <td>Legacy TensorFlow pipelines; non-standard in PyTorch 2.x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Petastorm (.parquet via Spark)</strong></td>
+                            <td>Columnar PySpark Container</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Apache Arrow PySpark IPC connector</td>
+                            <td>Distributed Spark analytics; superseded by native PyArrow</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LMDB (.lmdb)</strong></td>
+                            <td>Memory-Mapped B-Tree Key-Value</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Single mmap memory address space with transaction locks</td>
+                            <td>Legacy Caffe/PyTorch; lacks cloud-chunked streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HDF5 / H5 (.h5, .hdf5)</strong></td>
+                            <td>Hierarchical Scientific Container</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>h5py</code> hierarchical dataset pointers</td>
+                            <td>Multidimensional physics arrays; prone to MP write lock contention</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RecordIO (.rec)</strong></td>
+                            <td>MXNet Sequential Record</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>mxnet.recordio</code> sequential chunk reader</td>
+                            <td>Legacy Apache MXNet pipelines</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feather / Arrow IPC (Raw)</strong></td>
+                            <td>Memory-Mapped Flat Binary</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Uncompressed Arrow memory buffer mapping</td>
+                            <td>Ephemeral IPC transfer; lacks compressed row-group partitions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 id="54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate Architecture</h3>
             <p>Because container formats (tarballs, MDS chunks) pack raw byte streams and unavoidably destroy NTFS/POSIX hardlink deduplication, the compiler enforces an automated pre-flight hardlink audit gate (<code>audit_hardlinks()</code>):</p>
             <p>Verdict = PROCEED if HardlinkRatio &lt; 5.0%, WARN if 5.0% &le; HardlinkRatio &le; 25.0%, BLOCK if HardlinkRatio &gt; 25.0%</p>
             <p>Any attempt to emit container formats on restoration manifolds with heavy hardlink dedup (such as <code>LemGendizedUpnV2</code> with 1.06 TB recovered) is safely blocked unless explicitly overridden via <code>--force-duplicate</code>.</p>
 
-            <h3 id="54-smart-multimodal-generation">5.4 Smart Multi-Modal Generation Engine (Phase 5)</h3>
+            <h3 id="55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine (Phase 5)</h3>
             <p>Integrated AI backends run directly across compiled manifolds:</p>
             <ul>
                 <li><strong>BLIP Captioning &amp; NIMA Quality Vetting</strong>: Generates descriptive prompts and perceptual quality distributions.</li>
@@ -533,7 +650,7 @@
                 <li><strong>ParseNet &amp; SAM Segmentation</strong>: Generates discrete face and instance masks.</li>
             </ul>
 
-            <h3 id="55-physical-degradation-synthesis">5.5 Physical Degradation Synthesis Engine (Phase 6)</h3>
+            <h3 id="56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine (Phase 6)</h3>
             <p>Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic restoration manifolds from clean targets:</p>
             <ul>
                 <li><strong>Optical Defocus &amp; Motion Blur</strong>: Directional linear trajectories and circular aperture disk diffraction.</li>
@@ -543,7 +660,7 @@
                 <li><strong>Provenance Logging</strong>: Exact quantitative parameter values (blur kernel dimensions, angle, noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
             </ul>
 
-            <h3 id="56-sidecar-api-hybrid-cli">5.6 Asynchronous Sidecar API &amp; Hybrid CLI Architecture (Phase 7)</h3>
+            <h3 id="57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI Architecture (Phase 7)</h3>
             <ul>
                 <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> exposing REST endpoints for health telemetry, configuration schema validation, manifold inspection, and background job queuing.</li>
                 <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with automatic restart recovery marking orphaned runs <code>interrupted</code>.</li>
@@ -551,7 +668,7 @@
                 <li><strong>Hybrid Transparent CLI</strong>: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.</li>
             </ul>
 
-            <h3 id="57-cpa-integration-gui-presets">5.7 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets (Phase 8)</h3>
+            <h3 id="58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets (Phase 8)</h3>
             <ul>
                 <li><strong>Canonical Compiler Presets (<code>presets.yaml</code>, <code>presets.py</code>)</strong>: Shipped formal compilation profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) defining standard quality floors, resampling filters, auto-labeling toggles, and container targets.</li>
                 <li><strong>Aggregated Desktop GUI Endpoints (<code>api/routes/gui.py</code>)</strong>: Unified <code>/api/gui/state</code>, <code>/api/gui/datasets/with-stats</code>, <code>/api/gui/jobs/active</code>, <code>/api/gui/presets</code>, and <code>/api/gui/quick-compile</code> for instant hydration of the <code>lemgendary-ai-studio-gui</code> desktop dashboard.</li>
@@ -559,7 +676,7 @@
                 <li><strong>Multi-Sidecar Top-Bar Observability</strong>: Interoperable with <code>lemgendary-env-manager</code> (port 8000) for synchronized cross-project governance.</li>
             </ul>
 
-            <h3 id="58-solid-services-layer">5.8 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</h3>
+            <h3 id="59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</h3>
             <ul>
                 <li><strong>In-Process Services Layer (<code>services/</code>)</strong>: Decomposed monolithic compiler workflows into dedicated single-responsibility services (<code>CompilerService</code>, <code>DegradeService</code>, <code>AuditService</code>, <code>DocService</code>, <code>GenerationService</code>, <code>MigrationService</code>, <code>SyncService</code>). All CLI commands invoke typed service layers in-process directly rather than shelling out to external subprocesses.</li>
                 <li><strong>Unified Audit Engine</strong>: Implemented <code>AuditService.audit_manifold()</code> unifying magic-byte resolution checking, aspect ratio validation, DCT perceptual deduplication, and NTFS hardlink fraction audits into a single command (<code>lemgendary audit</code>).</li>
@@ -568,7 +685,7 @@
                 <li><strong>Zero Suppression Policy Enforcement</strong>: Completely eliminated all programmatic warning suppressions (<code>warnings.filterwarnings</code>) and diagnostic silencing directives across all codebase modules.</li>
             </ul>
 
-            <h3 id="59-two-tier-resumption">5.9 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</h3>
+            <h3 id="510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</h3>
             <ul>
                 <li><strong>Suffix-Removal Modernization</strong>: Retires legacy <code>Large</code> naming conventions across manifolds into streamlined, production-standard suffixes while preserving legacy folders intact during migration.</li>
                 <li><strong>Two-Tier State Verification</strong>: Solves false-positive completion bugs by checking terminal manifest generation (<code>dataset_info.yaml</code> and <code>index.json</code>). Partially transcoded sets are accurately classified as <code>[RESUMABLE]</code>.</li>
@@ -576,7 +693,7 @@
                 <li><strong>Real-Time Visual Telemetry</strong>: Integrates single-line <code>tqdm</code> progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.</li>
             </ul>
 
-            <h3 id="510-canonical-storage-format">5.10 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</h3>
+            <h3 id="511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</h3>
             <p>To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 establishes an authoritative Single Source of Truth (SSOT) container governance matrix across all 20 production manifolds:</p>
             <ul>
                 <li><strong>Zero-Duplication Format Assignment</strong>: Eliminates duplicate coexistence of loose directory trees and streaming tar archives by enforcing a single canonical storage format per manifold:
@@ -591,7 +708,7 @@
                 <li><strong>Automated Kaggle Metadata Governance</strong>: Upgraded <code>unified_data.yaml</code> (v4.3.0) and <code>core/config_schema.py</code> to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.</li>
             </ul>
 
-            <h3 id="511-streaming-zip-container">5.11 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
+            <h3 id="512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
             <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposureLarge</code> with 2.82M loose files and <code>LemGendizedUpnV2Large</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
             <ul>
                 <li><strong>Zero-Unpack Architecture</strong>: Directly mounts legacy <code>.zip</code> archives and streams raw byte streams into canonical WebDataset POSIX <code>.tar</code> shards in memory, eliminating loose file generation on physical disk.</li>
@@ -600,7 +717,7 @@
                 <li><strong>Automated Disk Reclamation</strong>: Automatically extracts root metadata (<code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, <code>README.md</code>, <code>index.json</code>, notebooks), validates shard byte integrity, updates canonical format to <code>webdataset</code>, unlinks multi-gigabyte source <code>.zip</code> archives (<code>--delete-zip</code>), and purges legacy uncompressed directories (<code>--delete-legacy-dir</code>), recovering over 120 GB of local storage space.</li>
             </ul>
 
-            <h3 id="512-native-archive-acceleration">5.12 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration (<code>utils/archive.py</code>)</h3>
+            <h3 id="513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration (<code>utils/archive.py</code>)</h3>
             <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code> (<code>smart_extract</code>) is upgraded with native subsystem delegation:</p>
             <ul>
                 <li><strong>Binary Auto-Discovery</strong>: Probes system paths for native 64-bit <code>7z.exe</code> (<code>C:\Program Files\7-Zip\7z.exe</code>) and native POSIX <code>tar.exe</code> (<code>C:\Windows\System32\tar.exe</code>), falling back gracefully to Python standard library engines.</li>
@@ -608,7 +725,7 @@
                 <li><strong>Automated Root Flattening</strong>: Detects single root manifold directory envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.</li>
             </ul>
 
-            <h3 id="513-three-pipelines">5.13 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</h3>
+            <h3 id="514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</h3>
             <p>The v16.8.0 ecosystem establishes three distinct, standardized operational pipelines governing all lifecycle phases of training datasets:</p>
             <h4>1. Regular Ingestion &amp; Manifold Compilation Pipeline (<code>compile</code> / <code>compile_all</code>)</h4>
             <ul>
@@ -1019,7 +1136,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 321,369</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
                         </ul>
                     </div>
@@ -1030,7 +1147,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Authenticity Assessment</li>
                             <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
                         </ul>
                     </div>
@@ -1041,7 +1158,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
                         </ul>
                     </div>

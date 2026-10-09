@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Helper Troubleshooting Knowledge Base | LemGendary AI Studio</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .scenario-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .scenario-card h3 {
+            color: #60a5fa;
+            margin-top: 0;
+            font-size: 1.15rem;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 8px;
+        }
+        .attr-label {
+            font-weight: 600;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .attr-content {
+            color: #e5e7eb;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .attr-content ul, .attr-content ol {
+            margin: 4px 0 8px 20px;
+            padding: 0;
+        }
+        .badge-symptom {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <header class="header">
+        <div class="container">
+            <h1>AI Helper Troubleshooting Knowledge Base</h1>
+            <p class="subtitle">Structured diagnostics, historical failure modes, root-cause analyses, and mitigation playbooks for the LemGendary AI ecosystem.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="schema">
+            <h2>1. Diagnostic Schema Specification</h2>
+            <p>Every troubleshooting scenario in this knowledge base conforms strictly to the canonical 6-attribute diagnostic schema:</p>
+            <ul>
+                <li><strong>symptom</strong>: The observable failure state, error message, or telemetry anomaly.</li>
+                <li><strong>context</strong>: Operational environment, active model architecture, dataset container, hardware footprint, and active resolution rung.</li>
+                <li><strong>observations</strong>: Specific metric signals, log traces, hardware utilization patterns, and gradient telemetry.</li>
+                <li><strong>likely_causes</strong>: Mechanistic root-cause hypotheses ranked by likelihood.</li>
+                <li><strong>diagnostic_steps</strong>: Sequential procedural verification actions to isolate the root cause.</li>
+                <li><strong>recommended_action</strong>: Concrete, deterministic mitigation steps spanning configuration adjustments, CLI flags, or GUI controls.</li>
+            </ul>
+        </section>
+
+        <section id="scenarios">
+            <h2>2. Core Diagnostic Scenarios</h2>
+
+            <div class="scenario-card">
+                <h3>Scenario 01: Low GPU Utilization and Dataloader Starvation</h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">GPU compute utilization fluctuates wildly between 10% and 35% with periodic zero-utilization troughs during restoration training.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li><strong>Model</strong>: NAFNet Deblurring / MPRNet Restoration</li>
+                        <li><strong>Dataset</strong>: Sharded WebDataset (.tar archives containing WebP tiles)</li>
+                        <li><strong>Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB VRAM), SATA SSD / HDD storage</li>
+                        <li><strong>Active Resolution</strong>: 384px or 512px</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Observations</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>GPU temperature remains low (&lt;55&deg;C) and GPU memory is under-allocated.</li>
+                        <li>System CPU utilization spikes on single core while training loop blocks on <code>get_batch()</code>.</li>
+                        <li>Dataloader worker process wait times exceed 250ms per iteration.</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Likely Causes</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Compressed WebP image decoding overhead in Python PIL workers.</li>
+                        <li>Insufficient worker thread count or absence of pinned memory.</li>
+                        <li>Disk I/O bottleneck caused by reading from high-latency rotational drives.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Diagnostic Steps</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Inspect dataloader latency in telemetry logs: <code>metrics.csv</code> dataloader wait column.</li>
+                        <li>Check host RAM cache and disk queue depth in Task Manager.</li>
+                        <li>Verify <code>num_workers</code> setting in <code>unified_models_v2.yaml</code>.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Recommended Action</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Set <code>num_workers: 4</code> and enable <code>pin_memory: true</code> in dataloader initialization.</li>
+                        <li>If using WebDataset on HDD, pre-compile the manifold with <code>--storage uncompressed-tar</code> or migrate shards to NVMe SSD.</li>
+                        <li>Increase prefetch factor to <code>prefetch_factor: 2</code> in the PyTorch DataLoader.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3>Scenario 02: NaN Instability in Mixed Precision (AMP FP16)</h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Training loss suddenly spikes to NaN or Inf within the first 50 iterations; gradients zero out.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li><strong>Model</strong>: NIMA Mobile (Aesthetic) / NIMA Technical</li>
+                        <li><strong>Loss Function</strong>: Earth Mover's Distance (EMD) Loss with CDF integration</li>
+                        <li><strong>Hardware</strong>: NVIDIA Turing Architecture (GTX 1650)</li>
+                        <li><strong>Precision</strong>: Automatic Mixed Precision (AMP) enabled (<code>amp=True</code>)</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Observations</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Loss transitions from ~0.08 directly to NaN.</li>
+                        <li><code>GradScaler</code> scale factor drops exponentially: 65536 &rarr; 32768 &rarr; ... &rarr; 1e-4.</li>
+                        <li>Cumulative distribution function (CDF) calculation produces negative differences or unconstrained logits.</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Likely Causes</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Turing GTX 1650 lacks Tensor Cores and experiences numerical underflow in FP16 cumulative sums.</li>
+                        <li>Unclamped logits in softmax before Earth Mover's Distance computation.</li>
+                        <li>Division by zero in normalizer epsilon.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Diagnostic Steps</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Inspect <code>loss_fn</code> implementation in <code>lemgendary-training-suite/losses/emd.py</code>.</li>
+                        <li>Check whether <code>amp=False</code> restores numerical stability.</li>
+                        <li>Verify logit clamping bounds in <code>unified_models_v2.yaml</code> under <code>stabilizers.logit_clamp</code>.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Recommended Action</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Set <code>amp: false</code> (force FP32 mode) for all Turing GTX 1650 configurations.</li>
+                        <li>Apply numerical sentinel clamp: <code>torch.clamp(logits, min=-15.0, max=15.0)</code> before computing softmax.</li>
+                        <li>Ensure <code>emd_epsilon: 1e-4</code> is added inside the square root of the distance metric.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3>Scenario 03: Scheduler Double-Stepping & Premature LR Decay</h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Learning rate drops to minimum floor (eta_min) within 5 epochs despite a 100-epoch schedule.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li><strong>Model</strong>: UltraZoom Super-Resolution / Hybrid UPN v2</li>
+                        <li><strong>Training Suite</strong>: Multi-stage curriculum with intra-fraction progression</li>
+                        <li><strong>Scheduler</strong>: <code>CosineAnnealingLR</code> combined with custom <code>SawtoothGovernor</code></li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Observations</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>LR decay occurs after every minibatch step instead of every epoch.</li>
+                        <li>Telemetry displays learning rate stepping at N * B frequency rather than N.</li>
+                        <li>Validation loss plateaus prematurely at high values.</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Likely Causes</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Scheduler <code>step()</code> called inside both the inner batch loop and outer epoch loop.</li>
+                        <li>Fractional ladder progression triggering premature epoch counter increments.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Diagnostic Steps</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Search codebase for <code>scheduler.step()</code> calls in <code>trainer.py</code>.</li>
+                        <li>Check whether batch-level warmups are improperly wrapping epoch-level cosine decoders.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Recommended Action</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Restrict <code>scheduler.step()</code> invocation strictly to epoch boundary.</li>
+                        <li>When using <code>OneCycleLR</code>, step per batch; when using <code>CosineAnnealingLR</code>, step once per epoch after validation.</li>
+                        <li>Ensure <code>SawtoothGovernor</code> modifies learning rate multiplier directly without advancing the internal scheduler epoch counter.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3>Scenario 04: Hardlink vs. Perceptual Deduplication Conflicts</h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Dataset compilation claims 0 duplicate images removed, but visual inspection shows hundreds of duplicate photos with minor JPEG re-compression.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li><strong>Tool</strong>: LemGendary Dataset Compiler</li>
+                        <li><strong>Module</strong>: Deduplication Engine</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Observations</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Hardlink inode deduplication finds zero matches because byte hashes (SHA-256) differ due to distinct JPEG metadata/quantization tables.</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Likely Causes</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>User selected Hardlink Deduplication instead of Perceptual Deduplication (pHash).</li>
+                        <li>Hardlink deduplication only identifies byte-for-byte identical files on the same filesystem.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Diagnostic Steps</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Inspect compile command options: check whether <code>--dedup hardlink</code> or <code>--dedup phash</code> was passed.</li>
+                        <li>Compute perceptual hash distance between suspected image duplicates.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Recommended Action</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>For visual datasets sourced from web crawls or multiple archives, select <strong>Perceptual Deduplication</strong> (<code>--dedup phash --phash-threshold 4</code>).</li>
+                        <li>Reserve <strong>Hardlink Deduplication</strong> exclusively for local repository multi-directory caching where identical files reside on the same NTFS/ext4 volume.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3>Scenario 05: Raw Dataset vs. Compiled Manifold Path Confusion</h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Training script aborts with FileNotFoundError: Manifest 'manifest.json' not found in path.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li><strong>Tool</strong>: Training Suite CLI / GUI</li>
+                        <li><strong>Input</strong>: User specified raw download directory (e.g. <code>raw_images/</code>) as <code>--dataset-path</code>.</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Observations</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Directory contains loose .jpg and .png files without shard archives (.tar) or index manifest (manifest.json).</li>
+                    </ul>
+                </div>
+
+                <div class="attr-label">Likely Causes</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>User provided a raw source dataset directory directly to the training suite instead of a compiled manifold.</li>
+                        <li>Training suite requires standardized manifold architecture with pre-split shards, validation subsets, and schema declarations.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Diagnostic Steps</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Check contents of <code>--dataset-path</code>: look for <code>manifest.json</code>, <code>shards/</code>, or <code>splits.json</code>.</li>
+                        <li>Verify if Dataset Compiler was executed on the raw folder.</li>
+                    </ol>
+                </div>
+
+                <div class="attr-label">Recommended Action</div>
+                <div class="attr-content">
+                    <ol>
+                        <li>Execute Dataset Compiler first: <code>lem-env datasets compile --input ./raw_images --output ./LemGendaryDatasets/MyCompiledManifold --preset webdataset</code></li>
+                        <li>Point the training suite directly to the compiled manifold output directory.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 LemGendary AI Ecosystem. Authoritative Engineering Reference.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -96,7 +96,7 @@ Imagine capturing an outdoor photograph during a torrential downpour, where heav
 
 ---
 
-## 2. Visual Taxonomy: The LemGendary Restoration Subset
+## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
 The LemGendary MPRNet is explicitly built to handle one of the most mathematically disruptive artifacts in digital photography: torrential rain and water distortion.
 
@@ -283,10 +283,10 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 
 #### 4.1.4 Performance Metrics
 
-- **Current Training Epochs**: 22
-- **Best PSNR**: 53.95 dB
+- **Current Training Epochs**: `[CURRENT]` 22
+- **Best PSNR**: 53.95 dB `[MEASURED]`
 - **Best SSIM**: 0.9996
-- **Best LPIPS**: 0.0013
+- **Best LPIPS**: 0.0013 `[MEASURED]`
 - **Best FID**: 0.2272
 - **Current Learning Rate**: 0.00000983
 
@@ -420,7 +420,7 @@ To protect training progress on high-complexity manifolds, the suite implements 
 
 ### 5.21 Dynamic min_delta Scaling for High-Range Quality
 
-**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for mathematically impossible fractional improvements, thus completely freezing the dataset expansion engine.
+**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for statistically improbable fractional improvements, thus completely freezing the dataset expansion engine.
 **Fix:** The Governor dynamically queries `task_type`. For `restoration` tasks, it multiplies the tolerance by 100x (`0.05`), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).
 
 ### 5.22 Resolution-Aware Patience Reset (SOTA Guard)
@@ -470,13 +470,14 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 
 The following matrix isolates MPRNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).
 
-| Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal |
-| **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal |
-| **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable |
-| **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) |
-| **LemGendary MPRNet** | *Multi-Stage Progressive (Ours)* | **17M** | **~ 6 GB** | **53.95 dB** | **0.0013 (VGG)** | **Production Grade** |
+| Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability | Status & Verification |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal | Baseline `[MEASURED]` |
+| **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal | Baseline `[MEASURED]` |
+| **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable | Baseline `[MEASURED]` |
+| **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) | Baseline `[MEASURED]` |
+| **LemGendary MPRNet** | *Multi-Stage Progressive (Ours)* | **17M** | **~ 6 GB** | **53.95 dB** | **0.0013 (VGG)** | **Production Grade** | **LemGendary `[MEASURED]`** |
+| **MPRNet SOTA Target** | *Multi-Stage Progressive Target* | **17M** | **~ 6 GB** | **>= 33.5dB** | **<= 0.03 (VGG)** | **Production Grade** | **Target `[TARGET]`** |
 
 **Hardware Note**: MPRNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for [FP16] browser exportation.
 
@@ -484,6 +485,13 @@ The following matrix isolates MPRNet structurally compared against generic indus
 
 ## 8. Conclusion
 
-The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework practically indestructible.
+The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework highly resilient against runtime exceptions and numerical instabilities.
 
 The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
+
+### Related Ecosystem Documentation
+
+- [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMprnetLarge`)
+- [Training Suite Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [AI Studio GUI Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)

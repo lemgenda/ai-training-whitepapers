@@ -63,7 +63,7 @@
             <section id="resonance-loss">
                 <h2>3. Resonance Loss &amp; Rank Optimization</h2>
                 <p>The core loss formulation combines Earth Mover's Distance over probability mass functions (PMF) with differentiable temperature-anchored rank correlation:</p>
-                $$\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( rac{1}{N} \sum_{k=1}^N |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r 
+                $$\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( \frac{1}{N} \sum_{k=1}^N |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r 
 ight)^{1/r}$$
                 $$\mathcal{L}_{\text{Resonance}} = \mathcal{L}_{\text{EMD}} + \lambda_{\text{rank}} \mathcal{L}_{\text{SoftSpearman}}$$
             </section>
@@ -85,7 +85,7 @@ ight)^{1/r}$$
                             <tr>
                                 <td><code>nima_aesthetic_mobile</code></td>
                                 <td>Mobile Aesthetic Scoring</td>
-                                <td>MobileNetV3-Small</td>
+                                <td>MobileNetV2</td>
                                 <td>224x224</td>
                                 <td>SRCC &ge; 0.650</td>
                             </tr>

@@ -1561,10 +1561,10 @@ graphs and propagate derivatives backward.
 Basic gradient descent:
 
 ``` text
-theta_(t+1) = theta_t - eta * grad_theta L
+theta_(t+1) = theta_t - \beta * grad_theta L
 ```
 
-where `eta` is the learning rate.
+where `\beta` is the learning rate.
 
 ------------------------------------------------------------------------
 
@@ -1573,7 +1573,7 @@ where `eta` is the learning rate.
 ## 8.1 SGD
 
 ``` text
-theta <- theta - eta * g
+theta <- theta - \beta * g
 ```
 
 ### Strengths
@@ -1595,7 +1595,7 @@ Momentum maintains a running update direction.
 
 ``` text
 v_t = beta * v_(t-1) + g_t
-theta_t = theta_(t-1) - eta * v_t
+theta_t = theta_(t-1) - \beta * v_t
 ```
 
 It reduces oscillation and can accelerate movement along persistent
@@ -1706,7 +1706,7 @@ A cosine schedule smoothly decreases the learning rate.
 Conceptually:
 
 ``` text
-eta(t) = eta_min + 0.5*(eta_max-eta_min)*(1 + cos(pi*t/T))
+\beta(t) = \beta_min + 0.5*(\beta_max-\beta_min)*(1 + cos(pi*t/T))
 ```
 
 ## 9.3 OneCycle
@@ -1719,7 +1719,7 @@ It can be effective for some supervised training workloads.
 ## 9.4 Exponential decay
 
 ``` text
-eta_t = eta_0 * gamma^t
+\beta_t = \beta_0 * gamma^t
 ```
 
 Simple but can decay too aggressively if not tuned.
