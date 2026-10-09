@@ -273,5 +273,66 @@ class TestDocumentationIntegrity(unittest.TestCase):
                 failures.append((h_name, f"H:{len(h_tags)} M:{len(m_tags)}"))
         self.assertEqual(len(failures), 0, f"Epistemic tag failures: {failures}")
 
+    # ── 13. AI Helper Training Corpus Integrity ─────────────────────────────
+    def test_ai_helper_corpus_integrity(self):
+        """Rule: AI Helper JSONL corpus must exist, parse cleanly, obey zero-emojis,
+        strictly align with unified_models_v2.yaml SSOT, and maintain balanced validation coverage."""
+        import json
+        corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus'))
+        train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
+        val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
+
+        self.assertTrue(os.path.exists(train_path), "ai_helper_train.jsonl missing")
+        self.assertTrue(os.path.exists(val_path), "ai_helper_val.jsonl missing")
+
+        train_records = []
+        with open(train_path, 'r', encoding='utf-8') as f:
+            for line_idx, line in enumerate(f, 1):
+                try:
+                    train_records.append(json.loads(line))
+                except Exception as e:
+                    self.fail(f"Malformed JSON on line {line_idx} of ai_helper_train.jsonl: {e}")
+
+        val_records = []
+        with open(val_path, 'r', encoding='utf-8') as f:
+            for line_idx, line in enumerate(f, 1):
+                try:
+                    val_records.append(json.loads(line))
+                except Exception as e:
+                    self.fail(f"Malformed JSON on line {line_idx} of ai_helper_val.jsonl: {e}")
+
+        all_records = train_records + val_records
+        all_ids = [r['id'] for r in all_records]
+        self.assertEqual(len(all_ids), len(set(all_ids)), "Duplicate IDs found in corpus")
+
+        emoji_pat = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
+        for r in all_records:
+            text = " ".join(m["content"] for m in r["messages"])
+            self.assertEqual(len(emoji_pat.findall(text)), 0, f"Emoji detected in {r['id']}")
+
+            # Verify NIMA mobile backbone SSOT
+            if "nima_aesthetic_mobile" in text.lower():
+                self.assertFalse(
+                    bool(re.search(r'nima_aesthetic_mobile.*MobileNetV[12]', text, re.IGNORECASE)),
+                    f"Corpus {r['id']} claimed legacy MobileNet for NIMA Mobile instead of MobileNetV3-Small"
+                )
+
+            # Verify no invalid endpoint routes
+            self.assertNotIn("POST /api/compile\n", text)
+            self.assertNotIn("/api/ws/telemetry", text)
+            self.assertNotIn("lem-env training", text)
+            self.assertNotIn("lem-env datasets", text)
+            self.assertNotIn("default: 1000", text)
+
+        # Check validation set coverage across all required categories
+        val_categories = {r['category'] for r in val_records}
+        required_categories = {
+            'gui_procedure', 'cli_procedure', 'api_procedure',
+            'troubleshooting_diagnostics', 'model_selection',
+            'unsupported_and_negative', 'cross_document_pipeline'
+        }
+        missing = required_categories - val_categories
+        self.assertEqual(len(missing), 0, f"Held-out validation set missing categories: {missing}")
+
 if __name__ == '__main__':
     unittest.main()

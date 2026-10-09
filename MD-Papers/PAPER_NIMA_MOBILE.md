@@ -24,7 +24,7 @@
 
 ## 1. Abstract
 
-The **NIMA Aesthetic Mobile Architecture** is a dedicated neural evaluation engine engineered for precise visual quality assessment. Operating on the compiled manifold `LemGendizedNimaAesthetic`, it leverages **MobileNetV2 (2.8M Parameters)** to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle perceptual judgments with verified mathematical resilience.
+The **NIMA Aesthetic Mobile Architecture** is a dedicated neural evaluation engine engineered for precise visual quality assessment. Operating on the compiled manifold `LemGendizedNimaAesthetic`, it leverages **MobileNetV3-Small (2.5M Parameters)** to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle perceptual judgments with verified mathematical resilience.
 
 ---
 
@@ -76,7 +76,7 @@ Delivers rapid, distribution-aware perceptual scoring for dataset pre-filtering,
 
 #### 4.2 Model Info
 
-* **Architecture**: MobileNetV2 (2.8M Parameters)
+* **Architecture**: MobileNetV3-Small (2.5M Parameters)
 * **Input Resolution**: 224x224
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 4.8ms on NVIDIA GTX 1650 `[MEASURED]`

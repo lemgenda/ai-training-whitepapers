@@ -106,7 +106,7 @@ Mobile-lite continuous parameter regressor inferring noise variance, blur angle,
 #### 4.3.2 Model Info
 
 * **Model Key**: `upn_v2`
-* **Architecture**: UPN_v2 (MobileNetV2 Parameter Regressor)
+* **Architecture**: UPN_v2 (MobileNetV3-Small Parameter Regressor)
 * **Status**: Pre-Training Architectural Specification
 * **Resolution Ladder**: `[128, 192, 256]`
 * **Loss Function**: `smooth_l1`
@@ -167,7 +167,7 @@ Compiled via ONNX Runtime and TensorRT with dynamic batching. Export scripts tar
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `film_restorer` | Residual Dense Autoencoder | `LemGendizedFilmRestorerLarge` | [256, 384, 512] | PSNR 24.0 dB, SSIM 0.80 | Checkpoint Trained |
 | `ultrazoom` | Sub-Pixel ESPCN | `LemGendizedUltraZoomLarge` | [256, 384, 512] | PSNR 34.0 dB, SSIM 0.95 | Checkpoint Trained |
-| `upn_v2` | MobileNetV2 Regressor | `LemGendizedUpnV2Large` | [128, 192, 256] | MAE 0.050 | Pre-Training Spec |
+| `upn_v2` | MobileNetV3-Small Regressor | `LemGendizedUpnV2Large` | [128, 192, 256] | MAE 0.050 | Pre-Training Spec |
 | `professional_multitask_restoration` | Shared Encoder MoE | `LemGendizedProfessionalMultitaskRestorationLarge` | [256, 384, 512] | PSNR 32.0 dB, SSIM 0.93 | In-Progress / Pre-Training |
 
 ---

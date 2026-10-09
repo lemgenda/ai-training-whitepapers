@@ -26,11 +26,11 @@
 
 ## 1. Abstract
 
-This technical whitepaper details the architectural design, manifold engineering, loss formulations, and deployment specifications for the LemGendary Facial Vision Suite. As part of Category 13 within the LemGendary AI Documentation Hub, this suite coordinates three specialized networks targeting facial perception:
+This technical whitepaper details the architectural design, manifold engineering, loss formulations, and deployment specifications for the LemGendary Facial Vision Suite. As part of Category 08 within the LemGendary AI Documentation Hub, this suite coordinates three specialized networks targeting facial perception:
 
 1. **LemGendary CodeFormer**: A transformer-based blind face restoration model employing a discrete vector-quantized (VQ) codebook prior to reconstruct high-fidelity facial features from heavily degraded, blurred, and low-resolution inputs.
 2. **LemGendary ParseNet**: A bilateral face parsing semantic segmentation network segmenting 19 anatomical regions to provide dense spatial boundary guidance.
-3. **LemGendary RetinaFace**: A single-shot multi-scale face localization and 5-point landmark regression engine utilizing a lightweight MobileNetV1-0.25 feature pyramid backbone.
+3. **LemGendary RetinaFace**: A single-shot multi-scale face localization and 5-point landmark regression engine utilizing a lightweight MobileNet feature pyramid backbone.
 
 This specification documents the mathematical operators, target SOTA metrics, memory-sentinel bounds, and training telemetry hooks for active and in-progress training cycles across the compiled manifolds `LemGendizedCodeFormerLarge`, `LemGendizedParseNetLarge`, and `LemGendizedRetinaFaceMobileNetLarge`.
 
@@ -151,7 +151,7 @@ RetinaFace provides single-stage, real-time facial bounding box detection and 5-
 #### 4.3.2 Model Info
 
 * **Model Key**: `retinaface`
-* **Architecture**: MobileNetV2 Backbone
+* **Architecture**: MobileNetV3-Small Backbone
 * **Status**: Pre-Training Architectural Specification
 * **Loss Function**: Multi-Task Bounding Box, Keypoint & Classification Loss
 * **Learning Rate**: $5 \times 10^{-4}$
@@ -196,7 +196,7 @@ The Facial Vision Suite compiles into quantized ONNX (Opset 18) and WebGPU/WASM 
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `codeformer` | Transformer VQ-Codebook | `LemGendizedCodeFormerLarge` | 512x512 | PSNR 30.5 dB, FID 5.2 | Checkpoint Trained |
 | `parsenet` | Bilateral Segmentation | `LemGendizedParseNetLarge` | 512x512 | mIoU 0.860 | In-Progress / Pre-Training |
-| `retinaface` | MobileNetV2 Backbone | `LemGendizedRetinaFaceMobileNetLarge` | 640x640 | mAP Easy 0.915 | Pre-Training Spec |
+| `retinaface` | MobileNetV3-Small Backbone | `LemGendizedRetinaFaceMobileNetLarge` | 640x640 | mAP Easy 0.915 | Pre-Training Spec |
 
 ---
 

@@ -305,7 +305,7 @@ High-velocity deep learning requires converting raw, loose image files into mode
 | **3** | Storage Preset | Select Dropdown | `setSelectedPreset(e.target.value)` | Selects container format: WebDataset (.tar), Parquet, MDS, or LitData. |
 | **4** | Samples Per Shard | Number Input | `setShardSize(Number(e.target.value))` | Sets chunk capacity. Range: 100 to 50,000 samples per archive. |
 | **5** | Purge Loose Images | Checkbox Toggle | `setPurgeLooseImages(e.target.checked)` | Deletes loose raw images after verified container compilation. |
-| **6** | Compile Manifold | Primary Button | `POST http://127.0.0.1:8100/api/compile` | Initiates parallel container compilation and WebP transcoding. |
+| **6** | Compile Manifold | Primary Button | `POST http://127.0.0.1:8100/api/gui/quick-compile` | Initiates parallel container compilation and WebP transcoding via quick-compile preset (or direct `POST /api/jobs/compile`). |
 | **7** | Refresh Catalog | Action Button | `fetchDatasets()` | Re-scans disk storage and updates sample metrics in under 50ms. |
 
 ---
@@ -335,8 +335,8 @@ Activated by switching the **Compilation Mode Segmented Control** (Callout 1 abo
 | **4** | Quality Preset | Select Dropdown | `setCustomPreset(e.target.value)` | Compression envelope: `ultra`, `high`, `balanced`, `draft`. |
 | **5** | Samples Per Shard | Number Input | `setCustomShardSize(Number(e.target.value))` | Partition density. Default: 5,000 samples per archive. |
 | **6** | Source URL / Path | Text Input | `setCustomSourceUrl(e.target.value)` | Accepts Kaggle, HuggingFace, Google Drive, or GitHub URL/slug. |
-| **7** | Sync Multi-Source | Action Button | `POST http://127.0.0.1:8100/api/ingest` | Downloads raw data from external source into local staging directory. |
-| **8** | Compile Multi-Source | Primary Button | `POST http://127.0.0.1:8100/api/compile/custom` | Runs full compilation pipeline on ingested sources: dedupe, vetting, WebP, sharding. |
+| **7** | Sync Multi-Source | Action Button | `POST http://127.0.0.1:8100/api/sources/download` | Ingests data from external repository or URL into local staging directory. |
+| **8** | Compile Multi-Source | Primary Button | `POST http://127.0.0.1:8100/api/gui/custom-compile` | Runs full multi-source compilation pipeline: dedupe, vetting, WebP, sharding. |
 
 ---
 

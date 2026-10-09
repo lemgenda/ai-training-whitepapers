@@ -494,21 +494,21 @@ The modernized interactive dashboard for end-to-end manifold management, backed 
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 321,369
-* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
 ### LemGendizedNimaAuthenticityLarge
 
 * **Category:** Image Authenticity Assessment
 * **Total Samples:** 209,196 (189 corrupt samples were filtered during the latest manifold build)
-* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict image authenticity score and map to binary categorical distribution.
 
 ### LemGendizedNimaTechnicalLarge
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 26,093
-* **Architecture Base:** MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
+* **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
 ### LemGendizedParseNetLarge

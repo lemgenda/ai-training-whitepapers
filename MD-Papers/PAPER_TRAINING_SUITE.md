@@ -243,16 +243,16 @@ Below is the exhaustive matrix of supported architectures natively integrated wi
 
 | Model Name | Architecture / Backbone | LemGendized Dataset | SOTA Targets |
 | --- | --- | --- | --- |
-| LemGendary NIMA Aesthetic Scorer (Mobile) | MobileNetV2 (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.60 \| SRCC: 0.60 |
+| LemGendary NIMA Aesthetic Scorer (Mobile) | MobileNetV3-Small (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.60 \| SRCC: 0.60 |
 | LemGendary NIMA Aesthetic Scorer (EfficientNetV2-S) | EfficientNetV2-S (Global Composition) | LemGendizedNimaAesthetic | PLCC: 0.7 \| SRCC: 0.7 |
 | LemGendary NIMA Aesthetic Scorer (Pro ViT) | Swin-v2-T (Global Multi-Scale Attention) | LemGendizedNimaAesthetic | PLCC: 0.75 \| SRCC: 0.75 |
 | LemGendary NIMA Technical Scorer | EfficientNetV2-S (Spatial Integrity) | LemGendizedNimaTechnical | PLCC: 0.88 \| SRCC: 0.88 |
 | LemGendary Authenticity Scorer (AI vs Human) | EfficientNetV2-S (Distribution Scorer) | LemGendizedNimaAuthenticity | N/A |
-| LemGendary UPN v2 Parameter Predictor | MobileNetV2 Parameter Regressor | LemGendizedUpnV2 | MAE: 0.05 |
+| LemGendary UPN v2 Parameter Predictor | MobileNetV3-Small Parameter Regressor | LemGendizedUpnV2 | MAE: 0.05 |
 | LemGendary Universal Film Restorer | N/A | LemGendizedFilmRestorer | PSNR: 24.0 \| SSIM: 0.8 |
 | LemGendary CodeFormer Face Restoration | N/A | LemGendizedCodeFormer | PSNR: 33.0 \| SSIM: 0.92 |
 | LemGendary ParseNet Face Parsing | N/A | LemGendizedParseNet | N/A |
-| LemGendary RetinaFace MobileNet Detection | MobileNetV2 Backbone | LemGendizedRetinaFaceMobileNet | N/A |
+| LemGendary RetinaFace MobileNet Detection | MobileNetV3-Small Backbone | LemGendizedRetinaFaceMobileNet | N/A |
 | LemGendary RetinaFace ResNet Detection | N/A | LemGendizedRetinaFaceResNet | N/A |
 | LemGendary FFANet Dehazing (Indoor) | N/A | LemGendizedFfaNetIndoor | PSNR: 36.39 \| SSIM: 0.988 |
 | LemGendary FFANet Dehazing (Outdoor) | N/A | LemGendizedFfaNetOutdoor | PSNR: 33.57 \| SSIM: 0.984 |
@@ -268,7 +268,7 @@ Below is the exhaustive matrix of supported architectures natively integrated wi
 | LemGendary FLUX.1 Master Diffusion | N/A | diffusion_master_manifold | N/A |
 | LemGendary LLaVA v1.5 Master VLM | N/A | vision_language_master_manifold | N/A |
 | LemGendary BLIP-2 Master VLM | N/A | vision_language_master_manifold | N/A |
-| LemGendary Universal NSFW Classifier | MobileNetV2 (Categorical Anchor) | classification_master_manifold | N/A |
+| LemGendary Universal NSFW Classifier | EfficientNetV2-S (Categorical Anchor) | classification_master_manifold | N/A |
 | LemGendary Forex Predictor | Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention) | ForexMT5Majors | Dir Acc: 0.60 \| Win Rate: 0.55 |
 
 ---

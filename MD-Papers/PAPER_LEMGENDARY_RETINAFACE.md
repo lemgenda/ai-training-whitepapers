@@ -24,7 +24,7 @@
 
 ## 1. Abstract
 
-**RetinaFace** is a single-stage face localization network engineered for high-precision facial bounding box detection and **5-point landmark regression** (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem standardizes on the lightweight **MobileNetV2** backbone for edge execution and sub-3ms latency, complemented by an optional ResNet-50 variant for extreme crowd densities. Paired with Deformable Convolutions (DCN v2) across pyramid levels $P_2$ through $P_5$, RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (< 16px).
+**RetinaFace** is a single-stage face localization network engineered for high-precision facial bounding box detection and **5-point landmark regression** (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem standardizes on the lightweight **MobileNetV3-Small** backbone for edge execution and sub-3ms latency, complemented by an optional ResNet-50 variant for extreme crowd densities. Paired with Deformable Convolutions (DCN v2) across pyramid levels $P_2$ through $P_5$, RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (< 16px).
 
 ---
 
@@ -76,11 +76,11 @@ Online Hard Example Mining (OHEM) balances gradients during anchor classificatio
 
 #### 4.1 Model Description, Purpose and Usage
 
-Single-stage face localization and 5-point landmark regression engine utilizing the standardized MobileNetV2 backbone for high-efficiency edge execution and real-time pre-flight alignment.
+Single-stage face localization and 5-point landmark regression engine utilizing the standardized MobileNetV3-Small backbone for high-efficiency edge execution and real-time pre-flight alignment.
 
 #### 4.2 Model Info
 
-* **Architecture**: RetinaFace (MobileNetV2 Backbone + Multi-Scale Feature Pyramid)
+* **Architecture**: RetinaFace (MobileNetV3-Small Backbone + Multi-Scale Feature Pyramid)
 * **Input Resolution**: 640x640
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 2.8ms inference on NVIDIA GTX 1650 `[MEASURED]`
@@ -127,14 +127,14 @@ RetinaFace integrates seamlessly into the LemGendary runtime stack:
 | Model / Backbone | WIDER Face Easy | WIDER Face Medium | WIDER Face Hard | Latency (ms) | Status & Verification |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | RetinaFace-ResNet50 | 96.5% | 95.6% | 90.4% | 22.4ms | Server Baseline `[MEASURED]` |
-| **RetinaFace-MobileNetV2** | **95.4%** | **92.1%** | **84.6%** | **2.8ms** | **LemGendary `[MEASURED]`** |
+| **RetinaFace-MobileNetV3-Small** | **95.4%** | **92.1%** | **84.6%** | **2.8ms** | **LemGendary `[MEASURED]`** |
 | **RetinaFace SOTA Target** | **$\ge 96.0\%$** | **$\ge 93.0\%$** | **$\ge 85.0\%$** | **$\le 3.0\text{ms}$** | **Target `[TARGET]`** |
 
 ---
 
 ## 8. Conclusion
 
-RetinaFace with the MobileNetV2 backbone provides lightning-fast facial bounding box localization and sub-pixel 5-point landmark regression, establishing the foundational pre-flight orientation geometry for the LemGendary Face Suite.
+RetinaFace with the MobileNetV3-Small backbone provides lightning-fast facial bounding box localization and sub-pixel 5-point landmark regression, establishing the foundational pre-flight orientation geometry for the LemGendary Face Suite.
 
 ### Related Ecosystem Documentation
 

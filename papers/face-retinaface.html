@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetinaFace: Multi-Scale Facial Landmark Localization - LemGendary AI</title>
-    <meta name="description" content="Single-Stage 5-Point Landmark Detection with MobileNetV2 and Deformable Feature Pyramids">
+    <meta name="description" content="Single-Stage 5-Point Landmark Detection with MobileNetV3-Small and Deformable Feature Pyramids">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
@@ -35,7 +35,7 @@
 </nav>
 <main id="content" class="toc-fixed-content">
         <h1>RetinaFace: Multi-Scale Facial Landmark Localization</h1>
-        <p class="subtitle">Single-Stage 5-Point Landmark Detection with MobileNetV2 and Deformable Feature Pyramids</p>
+        <p class="subtitle">Single-Stage 5-Point Landmark Detection with MobileNetV3-Small and Deformable Feature Pyramids</p>
         <div class="meta">
             <span>By Lem Treursic</span>
             <span>Category 08 FACE</span>
@@ -45,7 +45,7 @@
 
         <section id="abstract">
             <h2>1. Abstract</h2>
-            <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem standardizes on the lightweight <strong>MobileNetV2</strong> backbone for edge execution and sub-3ms latency, complemented by an optional ResNet-50 variant for extreme crowd densities. Paired with Deformable Convolutions (DCN v2) across pyramid levels \(P_2\) through \(P_5\), RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (&lt; 16px).</p>
+            <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem standardizes on the lightweight <strong>MobileNetV3-Small</strong> backbone for edge execution and sub-3ms latency, complemented by an optional ResNet-50 variant for extreme crowd densities. Paired with Deformable Convolutions (DCN v2) across pyramid levels \(P_2\) through \(P_5\), RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (&lt; 16px).</p>
         </section>
 
         <section id="plain-english">
@@ -135,11 +135,11 @@
             <h3 id="41-retinaface-engine">RetinaFace Multi-Scale Landmark &amp; Localization Engine</h3>
 
             <h4>4.1.1 Model Description, Purpose and Usage</h4>
-            <p>Single-stage face localization and 5-point landmark regression engine utilizing the standardized MobileNetV2 backbone for high-efficiency edge execution and real-time pre-flight alignment.</p>
+            <p>Single-stage face localization and 5-point landmark regression engine utilizing the standardized MobileNetV3-Small backbone for high-efficiency edge execution and real-time pre-flight alignment.</p>
 
             <h4>4.1.2 Model Info</h4>
             <ul>
-                <li><strong>Architecture</strong>: RetinaFace (MobileNetV2 Backbone + Multi-Scale Feature Pyramid)</li>
+                <li><strong>Architecture</strong>: RetinaFace (MobileNetV3-Small Backbone + Multi-Scale Feature Pyramid)</li>
                 <li><strong>Input Resolution</strong>: 640x640</li>
                 <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
                 <li><strong>Latency</strong>: 2.8ms inference on NVIDIA GTX 1650 <span class="score-badge-green">[MEASURED]</span></li>
@@ -211,7 +211,7 @@
                             <td><span class="score-badge-neutral">Server Baseline [MEASURED]</span></td>
                         </tr>
                         <tr>
-                            <td><strong>RetinaFace-MobileNetV2</strong></td>
+                            <td><strong>RetinaFace-MobileNetV3-Small</strong></td>
                             <td><strong>95.4%</strong></td>
                             <td><strong>92.1%</strong></td>
                             <td><strong>84.6%</strong></td>
@@ -233,7 +233,7 @@
 
         <section id="conclusion">
             <h2>8. Conclusion</h2>
-            <p>RetinaFace with the MobileNetV2 backbone provides lightning-fast facial bounding box localization and sub-pixel 5-point landmark regression, establishing the foundational pre-flight orientation geometry for the LemGendary Face Suite.</p>
+            <p>RetinaFace with the MobileNetV3-Small backbone provides lightning-fast facial bounding box localization and sub-pixel 5-point landmark regression, establishing the foundational pre-flight orientation geometry for the LemGendary Face Suite.</p>
 
             <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
                 <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
