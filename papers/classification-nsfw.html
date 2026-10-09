@@ -28,7 +28,8 @@
                 <li><a href="#backbone">3. EfficientNetV2-S Architecture</a></li>
                 <li><a href="#loss">4. Class-Balanced Focal Loss</a></li>
                 <li><a href="#benchmarks">5. Verification Targets & False Positives</a></li>
-                <li><a href="#conclusion">6. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -114,12 +115,49 @@
             </section>
 
             <section id="loss">
-                <h2>4. Class-Balanced Focal Loss</h2>
+                <h2>3.1 Class-Balanced Focal Loss</h2>
                 <p>To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting \(\alpha_t\) and focusing parameter \(\gamma = 2.0\):</p>
                 <p>$$\mathcal{L}_{\text{focal}}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedclassificationmastermanifoldlarge">Universal Content Safety Categorization Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>Multi-category visual safety filter classifying inputs into 5 canonical buckets: Drawings, Neutral, Sexy, Porn, and Hentai with calibrated softmax probabilities.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: MobileNetV2 / EfficientNetV2 Categorical Anchor</li>
+<li><strong>Input Resolution</strong>: 224x224</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-2.5ms inference on local GPU</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedClassificationMasterManifoldLarge</code></li>
+<li><strong>Total Samples</strong>: 788,034 labeled image samples</li>
+<li><strong>Primary Task</strong>: 5-Class safety classification using Focal Cross-Entropy Loss</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 20</li>
+<li><strong>Validation Accuracy</strong>: 98.5%</li>
+<li><strong>Precision (Porn/Hentai)</strong>: 0.991</li>
+<li><strong>Recall (Safety Threshold)</strong>: 0.984</li>
+<li><strong>Current Learning Rate</strong>: 0.00015</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="NSFW Classifier Training Curve" src="../assets/nsfw_classifier_training.png" /><br />
+<em>Figure: Categorical Accuracy and Cross-Entropy Loss for NSFW Classifier.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>5. Verification Targets & False Positives</h2>
                 <div class="table-container">
                     <table>

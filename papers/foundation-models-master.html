@@ -7,7 +7,21 @@
     <meta name="description" content="Architectural Specifications for Latent Diffusion, Image-to-Text Vision-Language, and Causal LLM/MoE Systems">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
 </head>
 <body class="toc-fixed-layout">
 <div id="tabs-top" class="tabs-top-bar">
@@ -52,16 +66,16 @@
                 <p>Foundation model optimization follows the Chinchilla compute-optimal scaling formulation:</p>
                 $$C pprox 6 N D$$
                 <p>where $C$ represents FLOPs, $N$ denotes non-embedding parameter count, and $D$ denotes training token/sample volume. For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision FP16/BF16 memory containment:</p>
-                $$	ext{VRAM}_{	ext{total}} = 2 N_{	ext{model}} + 2 N_{	ext{grad}} + 12 N_{	ext{optim}} + \mathcal{O}(B \cdot S \cdot H \cdot L)$$
+                $$\text{VRAM}_{\text{total}} = 2 N_{\text{model}} + 2 N_{\text{grad}} + 12 N_{\text{optim}} + \mathcal{O}(B \cdot S \cdot H \cdot L)$$
             </section>
 
             <section id="diffusion">
                 <h2>3. Latent Diffusion Models (LDM)</h2>
-                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H 	imes W 	imes 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $eta_t$:</p>
+                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $eta_t$:</p>
                 $$q(\mathbf{z}_t | \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{ar{lpha}_t} \mathbf{z}_0, (1 - ar{lpha}_t) \mathbf{I}
 ight)$$
                 <p>The denoising network $\epsilon_	heta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
-                $$\mathcal{L}_{	ext{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_	heta(\mathbf{z}_t, t, c)\|^2 
+                $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_	heta(\mathbf{z}_t, t, c)\|^2 
 ight]$$
                 <p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
             </section>
@@ -69,14 +83,14 @@ ight]$$
             <section id="vlm">
                 <h2>4. Image-to-Text Vision-Language Models</h2>
                 <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition the language model through cross-attention:</p>
-                $$\mathcal{L}_{	ext{VLM}} = -\sum_{i=1}^T \log P_	heta(y_i \mid y_{<i}, \mathbf{H}_v)$$
+                $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_	heta(y_i \mid y_{<i}, \mathbf{H}_v)$$
                 <p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
             </section>
 
             <section id="llm">
                 <h2>5. Causal Decoder Transformers &amp; MoE</h2>
                 <p>Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and top-$k$ sparse Mixture-of-Experts routing:</p>
-                $$	ext{MoE}(\mathbf{x}) = \sum_{i=1}^E 	ext{Softmax}(	ext{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot 	ext{Expert}_i(\mathbf{x})$$
+                $$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$
                 <p>Dedicated documentation: <a href="foundation-llm.html">Large Language Models Specification</a>.</p>
             </section>
 

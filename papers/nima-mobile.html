@@ -29,7 +29,8 @@
                 <li><a href="#architecture">2. Backbone & Feature Extraction</a></li>
                 <li><a href="#loss">3. Loss Formulation & Probability Distribution</a></li>
                 <li><a href="#benchmarks">4. Correlation & Latency Benchmarks</a></li>
-                <li><a href="#conclusion">5. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">5. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -89,7 +90,44 @@
                 <p>Optimized for sub-5ms mobile and client-side web edge scoring.</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizednimaaestheticlarge">NIMA Aesthetic MobileNetV3-Small Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>Ultra-low latency photographic aesthetic evaluation model utilizing MobileNetV3-Small to predict human aesthetic score distributions in sub-5ms.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: NIMA MobileNetV3-Small (Global Composition)</li>
+<li><strong>Input Resolution</strong>: 224x224</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-4.5ms inference on edge mobile and desktop GPU</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedNimaAestheticLarge</code></li>
+<li><strong>Total Samples</strong>: 250,000 photographic aesthetic ratings from AVA & aesthetic manifolds</li>
+<li><strong>Primary Task</strong>: 10-bin Earth Mover's Distance distribution prediction</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 24</li>
+<li><strong>Best PLCC</strong>: 0.624</li>
+<li><strong>Best SRCC</strong>: 0.618</li>
+<li><strong>Earth Mover Distance (EMD)</strong>: 0.048</li>
+<li><strong>Current Learning Rate</strong>: 0.00012</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="NIMA Aesthetic Mobile Training Curve" src="../assets/nima_aesthetic_mobile_training.png" /><br />
+<em>Figure: Training Convergence for NIMA Aesthetic (MobileNetV3-Small).</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>4. Correlation & Latency Benchmarks</h2>
                 <div class="table-container">
                     <table>

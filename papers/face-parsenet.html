@@ -28,7 +28,8 @@
                 <li><a href="#architecture">3. Bilateral Boundary Architecture</a></li>
                 <li><a href="#loss">4. Boundary-Aware Cross-Entropy Loss</a></li>
                 <li><a href="#benchmarks">5. Mean IoU Targets & Benchmarks</a></li>
-                <li><a href="#conclusion">6. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -94,7 +95,23 @@
             <section id="classes">
                 <h2>2. The 19 Anatomical Classes</h2>
                 <p>ParseNet segments: Background, Skin, Left Eyebrow, Right Eyebrow, Left Eye, Right Eye, Nose, Upper Lip, Inner Mouth / Teeth, Lower Lip, Hair, Left Ear, Right Ear, Eyeglasses, Earring, Necklace, Neck, Clothing, and Hat.</p>
-            </section>
+            
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration: 19-Class Semantic Mask Segmentation</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-neutral">
+                            <div class="score-badge-neutral">RAW INPUT PORTRAIT</div>
+                            <p class="sample-label-neutral">Unsegmented portrait with complex hair boundary, skin, and micro-facial components.</p>
+                            <img src="../assets/parsenet_before.png" alt="Before: Raw unannotated input portrait" class="sample-img-card">
+                        </div>
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">19-CLASS SEGMENTATION MASK</div>
+                            <p class="sample-label-neutral">Discrete color-coded semantic segmentation maps for hair, skin, brows, eyes, nose, and lips.</p>
+                            <img src="../assets/parsenet_after.png" alt="After: 19-class segmented semantic color mask" class="sample-img-card">
+                        </div>
+                    </div>
+                </div>
+</section>
 
             <section id="architecture">
                 <h2>3. Bilateral Boundary Architecture</h2>
@@ -102,11 +119,48 @@
             </section>
 
             <section id="loss">
-                <h2>4. Boundary-Aware Cross-Entropy Loss</h2>
+                <h2>3.1 Boundary-Aware Cross-Entropy Loss</h2>
                 <p>$$\mathcal{L} = \mathcal{L}_{\text{CE}}(Y, \hat{Y}) + \lambda_{\text{Dice}} \mathcal{L}_{\text{Dice}}(Y, \hat{Y}) + \lambda_{\text{edge}} \|E_{\text{gt}} - E_{\text{pred}}\|_2$$</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedparsenetlarge">ParseNet 19-Class Semantic Parsing Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>High-resolution face segmentation network that maps 19 distinct anatomical facial categories (eyes, brows, nose, lips, hair, skin, ears, cloth) for fine-grained editing.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: ParseNet (ResNet-18 Backbone with Multi-Scale Context Aggregation)</li>
+<li><strong>Input Resolution</strong>: 512x512</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-15ms inference on local GPU</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedParseNetLarge</code></li>
+<li><strong>Total Samples</strong>: 30,000 CelebAMask-HQ annotated masks</li>
+<li><strong>Primary Task</strong>: Pixel-level 19-class semantic segmentation using Cross-Entropy and Dice Loss</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 25</li>
+<li><strong>Best mIoU</strong>: 0.868</li>
+<li><strong>Pixel Accuracy</strong>: 96.4%</li>
+<li><strong>F1 Score (Facial Features)</strong>: 0.892</li>
+<li><strong>Current Learning Rate</strong>: 0.000085</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="ParseNet Semantic Parsing Training Curve" src="../assets/parsenet_training.png" /><br />
+<em>Figure: Semantic Segmentation mIoU Convergence for ParseNet.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>5. Mean IoU Targets & Benchmarks</h2>
                 <div class="table-container">
                     <table>

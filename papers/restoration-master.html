@@ -110,9 +110,9 @@
             <section id="loss-formulations">
                 <h2>4. Mathematical Loss Formulations</h2>
                 <p>Reconstruction loss is anchored in edge-aware Charbonnier and Perceptual guidance:</p>
-                $$\mathcal{L}_{	ext{Restoration}} = \sqrt{\|\mathbf{I}_{	ext{pred}} - \mathbf{I}_{	ext{gt}}\|^2 + \epsilon^2} + \lambda_{	ext{edge}} \sqrt{\|
-abla \mathbf{I}_{	ext{pred}} - 
-abla \mathbf{I}_{	ext{gt}}\|^2 + \epsilon^2} + \lambda_{	ext{perc}} \mathcal{L}_{	ext{LPIPS}}(\mathbf{I}_{	ext{pred}}, \mathbf{I}_{	ext{gt}})$$
+                $$\mathcal{L}_{\text{Restoration}} = \sqrt{\|\mathbf{I}_{\text{pred}} - \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{edge}} \sqrt{\|
+abla \mathbf{I}_{\text{pred}} - 
+abla \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perc}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{pred}}, \mathbf{I}_{\text{gt}})$$
             </section>
 
             <section id="benchmarks">

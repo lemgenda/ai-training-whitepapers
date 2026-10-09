@@ -749,64 +749,64 @@
 
             <h3 id="62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
             
-            <div class="visual-taxonomy" class="mt-20">
-                <div class="quadrant" class="mb-20">
+            <div class="visual-taxonomy mt-20">
+                <div class="quadrant mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
                         <ul>
                             <li><strong>Pros:</strong> Blazing GPU-accelerated MinHash deduplication &amp; VLM semantic filtering; native integration with NeMo training framework.</li>
                             <li><strong>Cons:</strong> Requires multi-GPU DGX/HGX clusters for heavy tasks; significant VRAM overhead during pre-processing; locked to NVIDIA ecosystem.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Commercial Enterprise License via <strong>NVIDIA AI Enterprise ($4,500/GPU/year)</strong> or cloud GPU usage rates ($3.50&ndash;$4.80/GPU-hr).</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Commercial Enterprise License via <strong>NVIDIA AI Enterprise (&#36;4,500/GPU/year)</strong> or cloud GPU usage rates (&#36;3.50&ndash;&#36;4.80/GPU-hr).</li>
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" class="mb-20">
+                <div class="quadrant mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Gold standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); seamless HF Hub integration and dataset sharing.</li>
                             <li><strong>Cons:</strong> High Windows IPC serialization penalty; tarball creation forces physical data duplication; slow random-access seek times.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core; <strong>HF Enterprise Hub ($20/user/month)</strong> + HF Endpoints storage &amp; ingress costs (~$0.02/GB/month).</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core; <strong>HF Enterprise Hub (&#36;20/user/month)</strong> + HF Endpoints storage &amp; ingress costs (~&#36;0.02/GB/month).</li>
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" class="mb-20">
+                <div class="quadrant mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.3 Ray Data / Anyscale Distributed Compiler</h3>
                         <ul>
                             <li><strong>Pros:</strong> Highly scalable distributed batch execution across thousands of CPU/GPU worker nodes; resilient task graphs.</li>
                             <li><strong>Cons:</strong> High memory footprint due to Plasma Object Store serialization overhead; complex cluster orchestration and setup.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core (Ray); <strong>Anyscale Managed Cloud ($0.10&ndash;$0.30 per Anyscale Compute Unit hour)</strong> + underlying AWS/GCP infrastructure costs.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core (Ray); <strong>Anyscale Managed Cloud (&#36;0.10&ndash;&#36;0.30 per Anyscale Compute Unit hour)</strong> + underlying AWS/GCP infrastructure costs.</li>
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" class="mb-20">
+                <div class="quadrant mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.4 Cohere / DeepSpeed Data Engine</h3>
                         <ul>
                             <li><strong>Pros:</strong> Optimized for massive-scale LLM/VLM text-image tokenization and multi-modal sharding; excellent multi-node streaming.</li>
                             <li><strong>Cons:</strong> Poor support for image restoration/super-resolution paired targets; high multi-node network bandwidth requirements.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (DeepSpeed); <strong>Cohere Enterprise / Enterprise API custom tier ($15,000&ndash;$50,000+/year commitment)</strong> for managed enterprise pipeline deployment.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (DeepSpeed); <strong>Cohere Enterprise / Enterprise API custom tier (&#36;15,000&ndash;&#36;50,000+/year commitment)</strong> for managed enterprise pipeline deployment.</li>
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" class="mb-20">
+                <div class="quadrant mb-20">
                     <div class="quadrant-info">
                         <h3>6.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
                         <ul>
                             <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem compatibility; zero external framework dependencies.</li>
                             <li><strong>Cons:</strong> Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (BSD License); <strong>$0 software cost</strong>, but incurs standard unoptimized cloud compute &amp; storage overheads due to lack of hardlinking.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (BSD License); <strong>&#36;0 software cost</strong>, but incurs standard unoptimized cloud compute &amp; storage overheads due to lack of hardlinking.</li>
                         </ul>
                     </div>
                 </div>
-                <div class="quadrant" class="callout-accent">
+                <div class="quadrant callout-accent">
                     <div class="quadrant-info">
                         <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.8.0)</h3>
                         <ul>
                             <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
                             <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> <strong>$0 Software License Cost</strong>; Zero Cloud Lock-in; <strong>100% Storage Cost Reduction</strong> on paired restoration targets via native hardlinking.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> <strong>&#36;0 Software License Cost</strong>; Zero Cloud Lock-in; <strong>100% Storage Cost Reduction</strong> on paired restoration targets via native hardlinking.</li>
                         </ul>
                     </div>
                 </div>
@@ -1019,7 +1019,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 321,369</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
                         </ul>
                     </div>
@@ -1030,7 +1030,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Authenticity Assessment</li>
                             <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
                         </ul>
                     </div>
@@ -1041,202 +1041,7 @@
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedParseNetLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Segmentation</li>
-                            <li><strong>Total Samples:</strong> 853,546</li>
-                            <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
-                            <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 343,911</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
-                            <li><strong>Total Samples:</strong> 853,546</li>
-                            <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
-                            <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedUltraZoomLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Super-Resolution</li>
-                            <li><strong>Total Samples:</strong> 17,724</li>
-                            <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
-                            <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedUpnV2Large</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 1,378,070</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                            <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
-                            <li><strong>Total Samples:</strong> 22,000</li>
-                            <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetIndoorLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 196,304</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 217,113</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFilmRestorerLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 67,542</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedForexUniverseLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Financial Time-Series</li>
-                            <li><strong>Total Samples:</strong> 24,850,000</li>
-                            <li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code> .. <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
-                            <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
-                            <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMirNetExposureLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 1,416,459</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMirNetLowLightLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 15,070</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMprNetDerainingLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 248,190</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDebluringLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDenoisingLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 7,727</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaAestheticLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Quality Assessment</li>
-                            <li><strong>Total Samples:</strong> 321,369</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaAuthenticityLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Authenticity Assessment</li>
-                            <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaTechnicalLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Quality Assessment</li>
-                            <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV2 / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
                             <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
                         </ul>
                     </div>

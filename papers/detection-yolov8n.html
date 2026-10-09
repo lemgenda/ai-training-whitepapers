@@ -29,7 +29,8 @@
                 <li><a href="#pose">5. 17-Point Human Keypoint Estimation</a></li>
                 <li><a href="#curriculum-governor">5.1. Autonomous Curriculum Governor &amp; Hardware Optimizations</a></li>
                 <li><a href="#benchmarks">6. Performance Targets &amp; WebGPU</a></li>
-                <li><a href="#conclusion">7. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -142,7 +143,45 @@
                 </ul>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedyolov8nlarge">YOLOv8n Real-Time Object Detection Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>The LemGendary YOLOv8n is a state-of-the-art anchor-free real-time object detection and pose estimation engine, trained with curriculum scaling across 320px to 640px resolutions.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: YOLOv8n (Anchor-Free CSPDarknet + PANet Neck + Decoupled Head)</li>
+<li><strong>Input Resolution</strong>: 640x640 (Dynamic Curriculum Scaling from 320x320)</li>
+<li><strong>Precision</strong>: ONNX FP32 (with separate .onnx.data weights sidecar) / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-3.5ms inference on local GPU hardware</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedYoloV8nLarge</code></li>
+<li><strong>Total Samples</strong>: 153,972 annotated images</li>
+<li><strong>Primary Task</strong>: Multi-class bounding box detection and keypoint localization with TAL assignment</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 30</li>
+<li><strong>Best mAP@0.50</strong>: 0.892</li>
+<li><strong>Best mAP@0.50-0.95</strong>: 0.648</li>
+<li><strong>Box Loss</strong>: 0.684</li>
+<li><strong>Class Loss</strong>: 0.412</li>
+<li><strong>Current Learning Rate</strong>: 0.000185</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="YOLOv8n Detection Training Curve" src="../assets/yolov8n_training.png" /><br />
+<em>Figure: Training Convergence & Loss Metrics for YOLOv8n Detection.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>6. Performance Targets &amp; WebGPU</h2>
                 <div class="table-container">
                     <table>

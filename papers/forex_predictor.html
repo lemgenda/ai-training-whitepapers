@@ -90,10 +90,13 @@
         <p class="subtitle">Multi-Scale CNN-Transformer Forex & Commodity Predictor via SOTA Infrastructure</p>
         <div class="meta">
                 <span>By Lem Treursić</span>
-                <span>Version: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engi<section id="1-abstract">
+                <span>Version: 2.7.1 - Quantitative Manifold Matrix</span>
+        </div>
+
+    <section id="1-abstract">
             <h2>1. Abstract</h2>
             <p>This paper presents the theoretical design, mathematical formulation, and production verification of the <strong>LemGendary ForexPredictor</strong>, a deep multi-scale quantitative architecture designed for multi-currency algorithmic trading across MetaTrader 5 environments. Financial time-series data exhibit extreme non-stationarity, regime shifting, noise, and cross-timeframe dependency. Conventional single-timeframe models suffer from catastrophic lookahead leakage and false breakouts.</p>
-            <p>The LemGendary ForexPredictor integrates per-timeframe <strong>Causal Dilated Convolutional Networks (TCN)</strong> with a <strong>Cross-Timeframe Multi-Head Attention (CT-MHA)</strong> fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($	ext{M15}, 	ext{H1}, 	ext{H4}, 	ext{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an <strong>Anchored 6-Fold Walk-Forward Matrix (2019–2026)</strong> with a 14-day anti-leakage embargo gap, the architecture achieves a <strong>Directional Accuracy of 49.69%</strong>, <strong>Win Rate of 49.69%</strong>, <strong>Profit Factor of 0.99</strong>, <strong>Sharpe Ratio of -0.16</strong>, and a <strong>Max Drawdown of 665.80%</strong>, demonstrating current training volatility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.</p>
+            <p>The LemGendary ForexPredictor integrates per-timeframe <strong>Causal Dilated Convolutional Networks (TCN)</strong> with a <strong>Cross-Timeframe Multi-Head Attention (CT-MHA)</strong> fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an <strong>Anchored 6-Fold Walk-Forward Matrix (2019–2026)</strong> with a 14-day anti-leakage embargo gap, the architecture achieves a <strong>Directional Accuracy of 49.69%</strong>, <strong>Win Rate of 49.69%</strong>, <strong>Profit Factor of 0.99</strong>, <strong>Sharpe Ratio of -0.16</strong>, and a <strong>Max Drawdown of 665.80%</strong>, demonstrating current training volatility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.</p>
         </section>
 
         <section id="1-1-plain-english">
@@ -138,7 +141,6 @@
                     </tbody>
                 </table>
             </div>
-        </section>tility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.</p>
         </section>
 
         <section id="2-visual-taxonomy-multi-asset--temporal-manifolds">
@@ -622,6 +624,6 @@ The <code>train_forex_curriculum.py</code> orchestrator supports explicit YAML-b
                 <li><strong>16-Symbol Forex Universe &amp; Timeframe Dropout Regularizer (v17.6)</strong>: Ingestion of <code>LemGendizedForexUniverseLarge</code> (30.8M samples across 2019–2026) with expanding-window 6-fold WFCV, broker symbol aliasing (<code>NAS100</code> $\leftrightarrow$ <code>USTEC</code>, <code>DE40</code> $\leftrightarrow$ <code>GER40</code>), and stochastic timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.</li>
             </ul>
         </section>
-</main>
+    </main>
 </body>
 </html>

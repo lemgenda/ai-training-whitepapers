@@ -28,7 +28,8 @@
                 <li><a href="#multitask">3. Tri-Head Multi-Task Detection</a></li>
                 <li><a href="#loss">4. Multi-Task Objective & OHEM</a></li>
                 <li><a href="#benchmarks">5. WIDER Face & Landmark Benchmarks</a></li>
-                <li><a href="#conclusion">6. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">6. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -44,7 +45,7 @@
 
             <section id="abstract">
                 <h2>1. Abstract</h2>
-                <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). Utilizing a lightweight MobileNet-0.25 backbone paired with Deformable Convolutions and a Feature Pyramid Network (FPN), RetinaFace achieves robust detection under extreme angles, harsh lighting, and microscopic face scales (&lt; 16px).</p>
+                <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for high-precision facial bounding box detection and <strong>5-point landmark regression</strong> (left eye, right eye, nose tip, left mouth corner, right mouth corner). The LemGendary ecosystem supports two official authoritative backbones: <strong>MobileNetV1-0.25</strong> for edge and real-time sub-3ms execution, and <strong>ResNet-50</strong> for server-grade multi-scale Feature Pyramid Networks (FPN) and extreme crowd scenes. Paired with Deformable Convolutions (DCN v2) across pyramid levels \(P_2\) through \(P_5\), RetinaFace achieves verified detection stability under extreme head poses, harsh illumination, and microscopic face scales (&lt; 16px).</p>
             </section>
 
             <section id="plain-english">
@@ -94,6 +95,22 @@
                         </tbody>
                     </table>
                 </div>
+
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration: Face Localization &amp; 5-Point Landmarks</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-neutral">
+                            <div class="score-badge-neutral">INPUT CROWD SCENE</div>
+                            <p class="sample-label-neutral">Complex scene with multi-scale crowded faces, extreme angles, and harsh shadows.</p>
+                            <img src="../assets/retinaface_before.png" alt="Before: Raw input image containing crowded faces" class="sample-img-card">
+                        </div>
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">RETINAFACE DETECTIONS &amp; LANDMARKS</div>
+                            <p class="sample-label-neutral">Precision bounding boxes with confidence scores + 5-point ocular, nasal, and oral keypoints.</p>
+                            <img src="../assets/retinaface_after.png" alt="After: Bounding boxes and 5-point landmarks localization" class="sample-img-card">
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section id="architecture">
@@ -107,12 +124,49 @@
             </section>
 
             <section id="loss">
-                <h2>4. Multi-Task Objective & OHEM</h2>
+                <h2>3.1 Multi-Task Objective & OHEM</h2>
                 <p>$$\mathcal{L} = \mathcal{L}_{\text{cls}}(p_i, p_i^*) + \lambda_1 p_i^* \text{SmoothL1}(t_i, t_i^*) + \lambda_2 p_i^* \text{SmoothL1}(l_i, l_i^*)$$</p>
                 <p>Online Hard Example Mining (OHEM) balances gradients during anchor classification.</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedretinafacemobilenetlarge">RetinaFace Multi-Scale Landmark & Localization Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>Single-stage face localization and 5-point landmark regression engine supporting both MobileNetV1-0.25 (Edge/Real-time) and ResNet-50 (High-Capacity FPN) backbones.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: RetinaFace (MobileNetV1-0.25 & ResNet-50 with Deformable FPN)</li>
+<li><strong>Input Resolution</strong>: 640x640 (Multi-Scale Pyramid Testing)</li>
+<li><strong>Precision</strong>: ONNX FP32 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-3ms (MobileNet-0.25) / Sub-9ms (ResNet-50)</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedRetinaFaceMobileNetLarge</code></li>
+<li><strong>Total Samples</strong>: 128,400 annotated faces across WIDER Face</li>
+<li><strong>Primary Task</strong>: Simultaneous face bounding box classification and 5-point geometric landmark regression</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 25</li>
+<li><strong>Best WIDER Hard AP (ResNet-50)</strong>: 91.8%</li>
+<li><strong>Best WIDER Hard AP (MobileNet-0.25)</strong>: 82.4%</li>
+<li><strong>Best NME (5-Point)</strong>: 0.048</li>
+<li><strong>Current Learning Rate</strong>: 0.00012</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="RetinaFace Training Curve" src="../assets/retinaface_training.png" /><br />
+<em>Figure: Multi-Scale AP Hard Convergence for RetinaFace Localization.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>5. WIDER Face & Landmark Benchmarks</h2>
                 <div class="table-container">
                     <table>
@@ -139,6 +193,22 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="card" class="comparison-card">
+                    <h3>Visual Demonstration: Face Localization &amp; 5-Point Landmarks</h3>
+                    <div class="comparison-grid">
+                        <div class="sample-card-neutral">
+                            <div class="score-badge-neutral">INPUT CROWD SCENE</div>
+                            <p class="sample-label-neutral">Complex scene with multi-scale crowded faces, extreme angles, and harsh shadows.</p>
+                            <img src="../assets/retinaface_before.png" alt="Before: Raw input image containing crowded faces" class="sample-img-card">
+                        </div>
+                        <div class="sample-card-accept">
+                            <div class="score-badge-green">RETINAFACE DETECTIONS &amp; LANDMARKS</div>
+                            <p class="sample-label-neutral">Precision bounding boxes with confidence scores + 5-point ocular, nasal, and oral keypoints.</p>
+                            <img src="../assets/retinaface_after.png" alt="After: Bounding boxes and 5-point landmarks localization" class="sample-img-card">
+                        </div>
+                    </div>
                 </div>
             </section>
 

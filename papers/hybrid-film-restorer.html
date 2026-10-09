@@ -28,7 +28,8 @@
                 <li><a href="#scratch-inpainting">4. Partial Convolution Inpainting</a></li>
                 <li><a href="#color-fading">5. Chemical Dye Inversion</a></li>
                 <li><a href="#benchmarks">6. Archival Preservation Targets</a></li>
-                <li><a href="#conclusion">7. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">7. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -102,7 +103,44 @@
                 <p>Kodachrome and Ektachrome dyes decay at asymmetric exponential rates. A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts channel-wise restoration matrices \(\mathbf{T}_{\text{RGB}}\), reviving lost spectral richness.</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedfilmrestorerlarge">Universal Film & Archival Restoration Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>Specialized neural restorer engineered for archival movie frames, historical photography, physical film scratches, dust motes, and chemical fading.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: FilmRestorer (Recurrent Temporal Attention + Scratch Inpainting)</li>
+<li><strong>Input Resolution</strong>: 512x512</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-40ms inference on target GPU</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedFilmRestorerLarge</code></li>
+<li><strong>Total Samples</strong>: 542,000 synthetic and archival film frame pairs</li>
+<li><strong>Primary Task</strong>: Scratch inpainting, flicker stabilization, and chemical grain rejuvenation</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 30</li>
+<li><strong>Best PSNR</strong>: 41.8 dB</li>
+<li><strong>Best SSIM</strong>: 0.982</li>
+<li><strong>Best LPIPS</strong>: 0.015</li>
+<li><strong>Current Learning Rate</strong>: 0.00005</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="Film Restorer Training Curve" src="../assets/film_restorer_training.png" /><br />
+<em>Figure: PSNR and Scratch Inpainting Loss for Universal Film Restorer.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>6. Archival Preservation Targets</h2>
                 <div class="table-container">
                     <table>

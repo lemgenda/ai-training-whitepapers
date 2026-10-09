@@ -63,9 +63,9 @@
             <section id="resonance-loss">
                 <h2>3. Resonance Loss &amp; Rank Optimization</h2>
                 <p>The core loss formulation combines Earth Mover's Distance over probability mass functions (PMF) with differentiable temperature-anchored rank correlation:</p>
-                $$\mathcal{L}_{	ext{EMD}}(p, \hat{p}) = \left( rac{1}{N} \sum_{k=1}^N |	ext{CDF}_p(k) - 	ext{CDF}_{\hat{p}}(k)|^r 
+                $$\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( rac{1}{N} \sum_{k=1}^N |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r 
 ight)^{1/r}$$
-                $$\mathcal{L}_{	ext{Resonance}} = \mathcal{L}_{	ext{EMD}} + \lambda_{	ext{rank}} \mathcal{L}_{	ext{SoftSpearman}}$$
+                $$\mathcal{L}_{\text{Resonance}} = \mathcal{L}_{\text{EMD}} + \lambda_{\text{rank}} \mathcal{L}_{\text{SoftSpearman}}$$
             </section>
 
             <section id="models">

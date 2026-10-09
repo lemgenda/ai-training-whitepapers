@@ -33,7 +33,8 @@
                 <li><a href="#challenges">5. Challenges & Resilience Architecture</a></li>
                 <li><a href="#deployment">6. WebGPU & Zero-Copy Shader Pipeline</a></li>
                 <li><a href="#benchmarks">7. SOTA Architectural Performance Matrix</a></li>
-                <li><a href="#conclusion">8. Conclusion</a></li>
+                <li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#conclusion">8. Conclusion</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -107,17 +108,14 @@
                 </ul>
             </section>
 
-            <section id="foundations">
+                        <section id="foundations">
                 <h2>3. Sub-Pixel Convolution &amp; ESPCN Foundations</h2>
                 <p>Standard deconvolution or bicubic upsampling introduces checkerboard artifacts and quadratic memory overhead. UltraZoom implements the periodic pixel-shuffle operator $\mathcal{PS}$:</p>
-                $$\mathbf{I}_{	ext{SR}} = \mathcal{PS}\left(\mathbf{W}_L * f_{L-1}(\mathbf{I}_{	ext{LR}}) + \mathbf{b}_L
-ight)$$
-                <p>where the feature tensor $\mathbf{T} \in \mathbb{R}^{H 	imes W 	imes (C \cdot r^2)}$ is mathematically reorganized into $\mathbf{T}' \in \mathbb{R}^{(r H) 	imes (r W) 	imes C}$:</p>
-                $$\mathcal{PS}(\mathbf{T})_{x, y, c} = \mathbf{T}_{\lfloor x/r 
-floor, \lfloor y/r 
-floor, c \cdot r^2 + (y mod r) \cdot r + (x mod r)}$$
+                $$\mathbf{I}_{\text{SR}} = \mathcal{PS}\left(\mathbf{W}_L * f_{L-1}(\mathbf{I}_{\text{LR}}) + \mathbf{b}_L\right)$$
+                <p>where the feature tensor $\mathbf{T} \in \mathbb{R}^{H \times W \times (C \cdot r^2)}$ is mathematically reorganized into $\mathbf{T}' \in \mathbb{R}^{(r H) \times (r W) \times C}$:</p>
+                $$\mathcal{PS}(\mathbf{T})_{x, y, c} = \mathbf{T}_{\lfloor x/r \rfloor, \lfloor y/r \rfloor, c \cdot r^2 + (y \bmod r) \cdot r + (x \bmod r)}$$
                 <p>The total loss incorporates pixel-level Charbonnier loss, Laplacian edge frequency penalty, and LPIPS perceptual distance:</p>
-                $$\mathcal{L}_{	ext{UltraZoom}} = \sqrt{\|\mathbf{I}_{	ext{SR}} - \mathbf{I}_{	ext{HR}}\|^2 + \epsilon^2} + \lambda_{	ext{Lap}} \|\Delta \mathbf{I}_{	ext{SR}} - \Delta \mathbf{I}_{	ext{HR}}\|_1 + \lambda_{	ext{perceptual}} \mathcal{L}_{	ext{LPIPS}}(\mathbf{I}_{	ext{SR}}, \mathbf{I}_{	ext{HR}})$$
+                $$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{\text{HR}}\|^2 + \epsilon^2} + \lambda_{\text{Lap}} \|\Delta \mathbf{I}_{\text{SR}} - \Delta \mathbf{I}_{\text{HR}}\|_1 + \lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{SR}}, \mathbf{I}_{\text{HR}})$$
             </section>
 
             <section id="variant-x2">
@@ -175,7 +173,44 @@ floor, c \cdot r^2 + (y mod r) \cdot r + (x mod r)}$$
                 <p>UltraZoom models are exported to fixed-shape ONNX Opset 17 graphs and mapped to WebGPU WGSL compute shaders. By avoiding all dynamic tensor slices, shaders execute with direct buffer reuse on modern browser hardware.</p>
             </section>
 
-            <section id="benchmarks">
+            <section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+
+<h3 id="41-lemgendizedultrazoomlarge">UltraZoom 4x Neural Super-Resolution Engine</h3>
+
+<h4 id="411-model-description">4.1.1 Model description, purpose and usage</h4>
+<p>4x generative super-resolution model synthesizing ultra-fine microscopic surface textures and sharp geometric edges from low-resolution crops.</p>
+
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: UltraZoom (Deep Residual Swin-Transformer Super-Resolver)</li>
+<li><strong>Input Resolution</strong>: 256x256 input to 1024x1024 output (4x)</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: Sub-48ms inference on target GPU</li>
+</ul>
+
+<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedUltraZoomLarge</code></li>
+<li><strong>Total Samples</strong>: 17,724 high-resolution 4x paired crops</li>
+<li><strong>Primary Task</strong>: 4x super-resolution with frequency-aware texture discriminator</li>
+</ul>
+
+<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 35</li>
+<li><strong>Best PSNR</strong>: 36.8 dB</li>
+<li><strong>Best SSIM</strong>: 0.964</li>
+<li><strong>Best LPIPS</strong>: 0.038</li>
+<li><strong>Current Learning Rate</strong>: 0.00004</li>
+</ul>
+
+<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<p><img alt="UltraZoom Super-Resolution Training Curve" src="../assets/ultrazoom_training.png" /><br />
+<em>Figure: Training Convergence & Texture Reconstruction for UltraZoom.</em></p>
+</section>
+
+<section id="benchmarks">
                 <h2>7. SOTA Architectural Performance Matrix</h2>
                 <div class="table-container">
                     <table>
