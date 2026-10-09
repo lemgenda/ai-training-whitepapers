@@ -45,11 +45,11 @@ A high-velocity filesystem technique where a single flat `os.scandir` traversal 
 
 ### 3.2 Zero-IPC ThreadPool
 
-An execution model utilizing Python's `ThreadPoolExecutor` within a single virtual memory space for pure I/O operations (image decoding, transcoding, and disk writing). By avoiding multiprocessing serialization (IPC pipes/pickling), it eliminates Windows IPC latency completely ($0.0\text{ seconds}$ serialization overhead).
+An execution model utilizing Python's `ThreadPoolExecutor` within a single virtual memory space for pure I/O operations (image decoding, transcoding, and disk writing). By executing within a shared memory space, it avoids inter-process serialization and pickling overhead (measured near-zero IPC serialization overhead relative to multi-process queue IPC under standard Python I/O worker benchmarks).
 
 ### 3.3 NTFS Cluster Slack Space Recovery
 
-Standard NTFS filesystems allocate physical disk space in $4,096\text{-byte}$ clusters. Loose sliding-window arrays waste up to $4\text{ KB}$ per file in cluster slack. The compiler's columnar Parquet + Zstandard architecture aggregates temporal records into contiguous row groups, reclaiming physical disk space with up to $99.3\%$ compression ratios.
+Standard NTFS filesystems allocate physical disk space in $4,096\text{-byte}$ clusters. Loose sliding-window arrays waste up to $4\text{ KB}$ per file in cluster slack. The compiler's columnar Parquet + Zstandard architecture aggregates temporal records into contiguous row groups, achieving compression ratios up to $99.3\%$ on highly repetitive tick-level financial datasets (measured against raw uncompressed CSV dumps in the MetaTrader 5 Forex benchmark suite).
 
 ### 3.4 Hardlink Deduplication (Identity Mapping)
 

@@ -28,15 +28,15 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | Control ID | UI Component / Label | Element Type | Bound Sidecar Endpoint | Expected Behavior |
 | :--- | :--- | :--- | :--- | :--- |
 | `dash-nav-sidebar` | Sidebar Navigation Container | `<nav>` | — | Houses top-level route switches. |
-| `dash-btn-refresh-audit` | "Refresh Audit" | `<button>` | `POST /api/audit/system` (8000) | Triggers asynchronous system probe and updates all status cards. |
+| `dash-btn-refresh-audit` | "Refresh Audit" | `<button>` | `GET /api/health` (8000) | Triggers asynchronous system probe and updates all status cards. |
 | `dash-badge-sidecar-status` | Connection Status Indicator | `<span>` | `WS /ws/telemetry` (8000) | Displays emerald glow for online or rose alert for offline. |
 | `dash-card-hardware` | System & Hardware Architecture | `<div>` | `GET /api/hardware` (8000) | Renders CPU core counts, total RAM, and detected GPU adapters. |
-| `dash-btn-clean-install` | "Execute Full Clean Install Pipeline" | `<button>` | `POST /api/pipeline/clean-install` | Initiates the 7-stage deterministic provisioning sequence. |
-| `pipe-stage-1-hardware` | Stage 1: Hardware Discovery | `<li>` | `GET /api/probe/gpu` (8000) | Queries DXGI and NVML interfaces for compute acceleration. |
-| `pipe-stage-4-reqs` | Stage 4: Requirements Sync | `<li>` | `POST /api/env/sync` (8000) | Copies requirements manifests and executes pip install. |
-| `pipe-stage-6-verify` | Stage 6: Codebase Verification | `<li>` | `POST /api/validate/bytecode` (8000) | Compiles scripts via `py_compile` and audits zero-emoji rules. |
-| `proj-card-training` | `lemgendary-training-suite` Card | `<div>` | `GET /api/env/training-suite` | Details virtual environment path, packages, and health status. |
-| `proj-btn-reconcile-datasets` | "Reconcile lemgendary-datasets" | `<button>` | `POST /api/env/reconcile` (8000) | Reconciles dataset compiler dependencies against manifest. |
+| `dash-btn-clean-install` | "Execute Full Clean Install Pipeline" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates the 7-stage deterministic provisioning sequence. |
+| `pipe-stage-1-hardware` | Stage 1: Hardware Discovery | `<li>` | `GET /api/hardware` (8000) | Queries DXGI and NVML interfaces for compute acceleration. |
+| `pipe-stage-4-reqs` | Stage 4: Requirements Sync | `<li>` | `POST /api/pipeline/run` (8000) | Copies requirements manifests and executes pip install. |
+| `pipe-stage-6-verify` | Stage 6: Codebase Verification | `<li>` | `POST /api/pipeline/run` (8000) | Compiles scripts via `py_compile` and audits zero-emoji rules. |
+| `proj-card-training` | `lemgendary-training-suite` Card | `<div>` | `GET /api/projects` (8000) | Details virtual environment path, packages, and health status. |
+| `proj-btn-reconcile-datasets` | "Reconcile lemgendary-datasets" | `<button>` | `POST /api/services/start-all` (8000) | Reconciles dataset compiler dependencies against manifest. |
 | `health-table-drift` | Cross-Project Version Drift Table | `<table>` | `GET /api/health/drift` (8000) | Renders comparative grid of shared dependencies. |
 | `drift-badge-sync` | "[SYNC]" Status Badge | `<span>` | — | Indicates identical package versions across all active repositories. |
 | `drift-badge-alert` | "[DRIFT]" Alert Badge | `<span>` | — | Highlights version discrepancies across projects. |
@@ -58,8 +58,8 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | `comp-btn-kaggle-download` | "Download from Kaggle" | `<button>` | `POST /api/kaggle/download` (8100) | Queues download and extraction of Kaggle datasets. |
 | `comp-select-kaggle-upload` | "Local Compiled Manifold" | `<select>` | — | Selects compiled local manifold for packaging. |
 | `comp-btn-kaggle-upload` | "Upload to Kaggle" | `<button>` | `POST /api/kaggle/upload` (8100) | Packages and streams local manifold to Kaggle. |
-| `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/models` | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
-| `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/training/launch` | Dispatches training worker with spatial resolution ladder. |
+| `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/gui/models/with-stats` (8200) | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
+| `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/gui/quick-train` (8200) | Dispatches training worker with spatial resolution ladder. |
 
 ---
 

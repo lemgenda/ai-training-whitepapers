@@ -12,6 +12,14 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.22 — GUI Control Registry Reconciliation, Troubleshooting CLI Alignment & Claims Qualification
+
+* **GUI Control Registry Contract Alignment** — Reconciled bound sidecar endpoints in `GUI_CONTROL_REGISTRY.md` and `gui-control-registry.html` with canonical API manual specifications (`GET /api/health`, `POST /api/pipeline/run`, `GET /api/gui/models/with-stats`, `POST /api/gui/quick-train`).
+* **Troubleshooting CLI Command Standardization** — Verified dataset compilation command syntax strictly uses `python cli.py compile` with valid `cli.py` options across troubleshooting knowledge documentation.
+* **Mathematical Delimiter & LaTeX Audit** — Audited LaTeX equations and validated delimiter integrity (`\left` / `\right`) across all NIMA publications.
+* **API Manual Version Metadata Alignment** — Updated sidecar health endpoint example version metadata in `MANUAL_API.md` and `api-manual.html` to align with `v16.9.16-STABLE`.
+* **Technical Claims Qualification & Benchmark Linking** — Qualified absolute claims for Zero-IPC ThreadPool and Parquet Zstd cluster slack recovery in `GLOSSARY.md` and `glossary.html` with explicit benchmark conditions.
+
 ---
 
 ### v16.9.21 — 20-Rule Automated Test Suite Expansion, Category Taxonomy & Pre-Commit Hardening

@@ -813,7 +813,7 @@ Operational endpoints under `/api` requiring modification or system access enfor
 
 | Method | Endpoint | Auth | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | None | Basic liveness, uptime, accelerator device, and version 16.2.9 |
+| `GET` | `/api/health` | None | Basic liveness, uptime, accelerator device, and version v16.9.16-STABLE (illustrative example payload) |
 | `GET` | `/api/config` | Required | Active configuration parameters and loaded training configurations |
 | `GET` | `/api/presets` | Required | Canonical training presets list and hyperparameter definitions |
 | `GET` | `/api/presets/{name}` | Required | Detailed hyperparameter parameters for a specific preset |

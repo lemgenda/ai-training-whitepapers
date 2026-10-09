@@ -85,7 +85,7 @@
                                 <td><code>dash-btn-refresh-audit</code></td>
                                 <td>Refresh Audit</td>
                                 <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/audit/system</code> (8000)</td>
+                                <td><code>GET /api/health</code> (8000)</td>
                                 <td>Triggers asynchronous system probe and updates all status cards.</td>
                             </tr>
                             <tr>
@@ -106,42 +106,42 @@
                                 <td><code>dash-btn-clean-install</code></td>
                                 <td>Execute Full Clean Install Pipeline</td>
                                 <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/clean-install</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
                                 <td>Initiates the 7-stage deterministic provisioning sequence.</td>
                             </tr>
                             <tr>
                                 <td><code>pipe-stage-1-hardware</code></td>
                                 <td>Stage 1: Hardware Discovery</td>
                                 <td><code>&lt;li&gt;</code></td>
-                                <td><code>GET /api/probe/gpu</code> (8000)</td>
+                                <td><code>GET /api/hardware</code> (8000)</td>
                                 <td>Queries DXGI and NVML interfaces for compute acceleration.</td>
                             </tr>
                             <tr>
                                 <td><code>pipe-stage-4-reqs</code></td>
                                 <td>Stage 4: Requirements Sync</td>
                                 <td><code>&lt;li&gt;</code></td>
-                                <td><code>POST /api/env/sync</code> (8000)</td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
                                 <td>Copies requirements manifests and executes pip install.</td>
                             </tr>
                             <tr>
                                 <td><code>pipe-stage-6-verify</code></td>
                                 <td>Stage 6: Codebase Verification</td>
                                 <td><code>&lt;li&gt;</code></td>
-                                <td><code>POST /api/validate/bytecode</code> (8000)</td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
                                 <td>Compiles scripts via py_compile and audits zero-emoji rules.</td>
                             </tr>
                             <tr>
                                 <td><code>proj-card-training</code></td>
                                 <td>lemgendary-training-suite Card</td>
                                 <td><code>&lt;div&gt;</code></td>
-                                <td><code>GET /api/env/training-suite</code></td>
+                                <td><code>GET /api/projects</code> (8000)</td>
                                 <td>Details virtual environment path, packages, and health status.</td>
                             </tr>
                             <tr>
                                 <td><code>proj-btn-reconcile-datasets</code></td>
                                 <td>Reconcile lemgendary-datasets</td>
                                 <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/env/reconcile</code> (8000)</td>
+                                <td><code>POST /api/services/start-all</code> (8000)</td>
                                 <td>Reconciles dataset compiler dependencies against manifest.</td>
                             </tr>
                             <tr>
@@ -176,35 +176,35 @@
                                 <td><code>comp-select-manifold</code></td>
                                 <td>Manifold Target Selector</td>
                                 <td><code>&lt;select&gt;</code></td>
-                                <td><code>GET /api/datasets</code> (8100)</td>
-                                <td>Populates list of 20 canonical training manifolds.</td>
+                                <td><code>GET /api/gui/datasets/with-stats</code> (8100)</td>
+                                <td>Populates list of 22 canonical training manifolds.</td>
                             </tr>
                             <tr>
                                 <td><code>comp-toggle-transcode</code></td>
                                 <td>Enable WebP Transcoding</td>
                                 <td><code>&lt;input type=checkbox&gt;</code></td>
-                                <td><code>POST /api/jobs/compile</code> (8100)</td>
+                                <td><code>POST /api/gui/quick-compile</code> (8100)</td>
                                 <td>Activates <i>q</i>=92 WebP image and lossless mask encoding.</td>
                             </tr>
                             <tr>
                                 <td><code>comp-btn-compile</code></td>
                                 <td>Compile Manifold</td>
                                 <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/jobs/compile</code> (8100)</td>
+                                <td><code>POST /api/gui/quick-compile</code> (8100)</td>
                                 <td>Dispatches dataset compilation job to the dataset sidecar.</td>
                             </tr>
                             <tr>
                                 <td><code>train-select-model</code></td>
                                 <td>Model Architecture Dropdown</td>
                                 <td><code>&lt;select&gt;</code></td>
-                                <td><code>GET /api/models</code></td>
+                                <td><code>GET /api/gui/models/with-stats</code> (8200)</td>
                                 <td>Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.).</td>
                             </tr>
                             <tr>
                                 <td><code>train-btn-launch</code></td>
                                 <td>Launch Master Training</td>
                                 <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/launch</code></td>
+                                <td><code>POST /api/gui/quick-train</code> (8200)</td>
                                 <td>Dispatches training worker with spatial resolution ladder.</td>
                             </tr>
                         </tbody>
