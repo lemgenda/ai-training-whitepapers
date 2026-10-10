@@ -454,6 +454,67 @@ class TestDocumentationIntegrity(unittest.TestCase):
         self.assertIn("256x256 ladder stage", txt, "nafnet.html missing evaluation condition qualifier for 51.60 dB")
         self.assertIn("640x640 stage", txt, "nafnet.html missing evaluation condition qualifier for 48.29 dB")
 
+    # ── 21. Search Bar & Task-Oriented Entry Portals ───────────────────────
+    def test_index_search_and_task_portals(self):
+        """Rule: Central index.html must feature a live search bar and task-oriented entry portals."""
+        with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
+            txt = f.read()
+
+        self.assertIn('id="hub-search-input"', txt, "index.html missing search input element")
+        self.assertIn('id="task-portals"', txt, "index.html missing task entry portals container")
+        for portal in ['getting-started', 'dataset-engineering', 'training-debugging', 'model-reference']:
+            self.assertIn(f'data-filter="{portal}"', txt, f"index.html missing task portal filter {portal}")
+
+    # ── 22. Header Authority & Version Metadata ────────────────────────────
+    def test_header_version_authority_metadata(self):
+        """Rule: Central index.html header must expose version, last-reviewed date, and authority status."""
+        with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
+            txt = f.read()
+
+        self.assertIn('Version v16.9.22-STABLE', txt, "index.html missing header version metadata")
+        self.assertIn('Last Reviewed:', txt, "index.html missing last-reviewed date metadata")
+        self.assertIn('AUTHORITATIVE SSOT', txt, "index.html missing authoritative SSOT badge")
+
+    # ── 23. AI Helper Knowledge Contract & Resolution Protocol ──────────────
+    def test_ai_helper_knowledge_contract(self):
+        """Rule: AI Helper Troubleshooting Knowledge Base must specify authority hierarchy, intake protocol, and admission bounds."""
+        tb_md = os.path.join(self.docs_root, 'MD-Papers', 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md')
+        tb_html = os.path.join(self.docs_root, 'papers', 'ai-helper-troubleshooting-knowledge.html')
+
+        with open(tb_md, 'r', encoding='utf-8', errors='ignore') as f:
+            md_txt = f.read()
+        with open(tb_html, 'r', encoding='utf-8', errors='ignore') as f:
+            html_txt = f.read()
+
+        for content in [md_txt, html_txt]:
+            self.assertIn("Authority Hierarchy", content, "Missing Authority Hierarchy section")
+            self.assertIn("Mandatory Citation Policy", content, "Missing Mandatory Citation Policy")
+            self.assertIn("Diagnostic Intake Protocol", content, "Missing Diagnostic Intake Protocol")
+            self.assertIn("UNVERIFIED IN PUBLISHED HUB", content, "Missing Explicit Admission Bound statement")
+
+    # ── 24. Task-Based Diagnostic Scenario Coverage ─────────────────────────
+    def test_troubleshooting_task_scenarios(self):
+        """Rule: AI Helper Knowledge Base must cover key real-world diagnostic failure scenarios."""
+        tb_md = os.path.join(self.docs_root, 'MD-Papers', 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md')
+        with open(tb_md, 'r', encoding='utf-8', errors='ignore') as f:
+            txt = f.read()
+
+        scenarios = [
+            "Low GPU Utilization and Dataloader Starvation",
+            "NaN Instability in Mixed Precision",
+            "Scheduler Double-Stepping",
+            "Sentinel and Scheduler Desynchronization",
+            "Infinite Plateau Loop",
+            "Pearson & Spearman Matrix Singularities",
+            "Power-Loss Resilience",
+            "Runway Bloat During Spatial Resolution Escalation",
+            "Hardlink vs. Perceptual Deduplication Conflicts",
+            "Raw Dataset vs. Compiled Manifold Path Confusion"
+        ]
+        for scenario in scenarios:
+            self.assertIn(scenario, txt, f"Missing diagnostic scenario: {scenario}")
+
 if __name__ == '__main__':
     unittest.main()
+
 

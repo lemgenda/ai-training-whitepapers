@@ -12,6 +12,16 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.23 — Hub Live Search, Task Entry Portals, AI-Helper Contract & 24-Test Expansion
+
+* **Client-Side Live Search & Keyboard Navigation** — Integrated real-time client-side search bar (`#hub-search-input`) with glassmorphism styling and keyboard shortcut (`/`) filtering across category titles, summaries, and keyword tags.
+* **Task-Oriented Entry Portals** — Added dynamic task filters on `index.html` allowing instant filtering by developer intent: `Getting Started` (Cat 01, 03), `Dataset Engineering` (Cat 00, 12), `Training & Debugging` (Cat 02, 13), and `Model Reference` (Cat 04–11).
+* **Document Authority & Metadata Standard** — Exposed visible header metadata pills (`v16.9.23-STABLE`, `Last Reviewed: 2026-10-09`, `AUTHORITATIVE SSOT`) and tier authority badges (`Tier 1 OpenAPI`, `Tier 2 Manual`, `Tier 3 Spec/Whitepaper`, `Tier 4 Playbook`) across category cards.
+* **AI-Helper Knowledge Contract & Resolution Protocol** — Added formal 4-part AI Helper operational contract to `AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md` and `ai-helper-troubleshooting-knowledge.html` establishing strict Authority Hierarchy (Tiers 1–4), Mandatory Citation Policy, Diagnostic Intake Protocol, and Explicit Admission Bounds (`"UNVERIFIED IN PUBLISHED HUB"`).
+* **24-Rule Test Battery** — Expanded `test_documentation.py` from 20 to 24 automated tests covering live search integration, task portals, authority metadata badges, knowledge contract assertions, and real-world failure scenario resolution.
+
+---
+
 ### v16.9.22 — GUI Control Registry Reconciliation, Troubleshooting CLI Alignment & Claims Qualification
 
 * **GUI Control Registry Contract Alignment** — Reconciled bound sidecar endpoints in `GUI_CONTROL_REGISTRY.md` and `gui-control-registry.html` with canonical API manual specifications (`GET /api/health`, `POST /api/pipeline/run`, `GET /api/gui/models/with-stats`, `POST /api/gui/quick-train`).

@@ -5,32 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LemGendary AI Documentation Hub</title>
+    <meta name="description" content="Authoritative documentation portal for LemGendary AI hardware-aware neural architectures, dataset compilers, training engines, and diagnostic knowledge base.">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="hub-page">
     <header>
-        <a href="https://lemgenda.hr" target="_blank" >
+        <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer">
             <img src="assets/lemgenda-logo.svg" alt="LemGenda" class="logo"
                 onerror="this.src='https://cdn.iconscout.com/icon/free/png-256/free-abstract-38-450942.png'">
         </a>
         <h1>LemGendary AI Documentation Hub</h1>
-        <p class="subtitle">Official documentation hub for our hardware-aware AI models, training engines, and scientific whitepapers.</p>
+        <p class="subtitle">Official documentation portal for our hardware-aware AI models, dataset compilers, training engines, and scientific whitepapers.</p>
+        
+        <div class="hub-header-meta">
+            <span class="meta-pill meta-pill-active">Version v16.9.22-STABLE</span>
+            <span class="meta-pill">Last Reviewed: 2026-10-09</span>
+            <span class="meta-pill meta-pill-canonical">AUTHORITATIVE SSOT</span>
+            <span class="meta-pill">Scope: Ecosystem Operations &amp; Whitepapers</span>
+        </div>
     </header>
 
     <div class="hub-container">
-        <div class="grid">
+        <!-- Live Search Bar -->
+        <div class="hub-search-box">
+            <svg class="search-icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="hub-search-input" class="hub-search-input" placeholder="Search knowledge base (e.g. CUDA OOM, dataset compilation, NIMA, YOLO, quick-train)..." aria-label="Search documentation">
+            <span class="search-kbd-hint"><kbd>/</kbd> to search</span>
+        </div>
 
+        <!-- Task-Oriented Entry Portals -->
+        <div class="task-portals" id="task-portals">
+            <button class="task-portal-btn active" data-filter="all">All Categories (14)</button>
+            <button class="task-portal-btn" data-filter="getting-started">Getting Started (Cat 01, 03)</button>
+            <button class="task-portal-btn" data-filter="dataset-engineering">Dataset Engineering (Cat 00, 12)</button>
+            <button class="task-portal-btn" data-filter="training-debugging">Training &amp; Debugging (Cat 02, 13)</button>
+            <button class="task-portal-btn" data-filter="model-reference">Model Reference (Cat 04–11)</button>
+        </div>
+
+        <div class="grid" id="hub-grid">
 
             <!-- Category 00 KNOWLEDGE -->
-            <a href="papers/general-ai-training-knowledge.html" class="hub-card">
+            <a href="papers/general-ai-training-knowledge.html" class="hub-card" data-task-group="dataset-engineering" data-keywords="general ai training knowledge dataset formats container parquet arrow zarr lmdb safetensors torchscript onnx webgpu dataset engineering">
                 <div class="card-content">
                     <div class="card-header">
                         <span class="category-num">CAT. 00 KNOWLEDGE</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="tier-badge tier-3">TIER 3 SPEC</span>
                     </div>
                     <h2>General AI Training Knowledge</h2>
                     <p class="models-list">Authoritative systems engineering reference covering data container formats (Parquet, Arrow, Zarr, LMDB), safe model weights, neural architectures, optimization dynamics, evaluation metrics, and dataset engineering.</p>
@@ -39,11 +62,11 @@
             </a>
 
             <!-- Category 01 -->
-            <a href="papers/ecosystem-architecture.html" class="hub-card">
+            <a href="papers/ecosystem-architecture.html" class="hub-card" data-task-group="getting-started" data-keywords="master ecosystem architecture sidecar daemon ports 8000 8100 8200 triple daemon topology env manager dataset compiler training suite desktop gui versioning policy">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 01</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 01 ARCHITECTURE</span>
+                        <span class="tier-badge tier-2">TIER 2 MANUAL</span>
                     </div>
                     <h2>Master Ecosystem Architecture</h2>
                     <p class="models-list">Unified framework hub and triple-daemon topology (ports 8000, 8100, 8200). Serves as parent gateway for Environment Manager, Dataset Compiler, Degradation Engine, Training Suite, Desktop GUI, and Versioning Policy.</p>
@@ -51,13 +74,12 @@
                 </div>
             </a>
 
-
             <!-- Category 02 -->
-            <a href="papers/training-pathology.html" class="hub-card">
+            <a href="papers/training-pathology.html" class="hub-card" data-task-group="training-debugging" data-keywords="training pathology diagnostics nuclear stability nan shield vanishing gradients loss plateaus kinetic lr dynamic governor sawtooth sentinel resume training">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 02</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 02 PATHOLOGY</span>
+                        <span class="tier-badge tier-4">TIER 4 PLAYBOOK</span>
                     </div>
                     <h2>Training Pathology &amp; Diagnostics</h2>
                     <p class="models-list">Nuclear stability master guide for diagnosing and remediating deep learning training failures: vanishing gradients, NaN shields, loss plateaus, kinetic LR injection, and mitochondrial pulse persistence.</p>
@@ -66,11 +88,11 @@
             </a>
 
             <!-- Category 03 -->
-            <a href="papers/manuals-hub.html" class="hub-card">
+            <a href="papers/manuals-hub.html" class="hub-card" data-task-group="getting-started" data-keywords="master operations manuals gui desktop operator manual cli manual lem-env lemtrain api manual rest websocket ipc start-all quick-compile quick-train">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 03</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 03 MANUALS</span>
+                        <span class="tier-badge tier-2">TIER 2 MANUAL</span>
                     </div>
                     <h2>Master Operations Manuals</h2>
                     <p class="models-list">Consolidated operations portal connecting the AI Studio Desktop GUI Operator Manual, Master CLI Operations Manual (lem-env, lemtrain), and Master API Specification (REST, WebSocket, and IPC daemons).</p>
@@ -79,11 +101,11 @@
             </a>
 
             <!-- Category 04 -->
-            <a href="papers/restoration-master.html" class="hub-card">
+            <a href="papers/restoration-master.html" class="hub-card" data-task-group="model-reference" data-keywords="dedicated image restoration suite nafnet deblurring denoising mprnet progressive deraining mirnet low light exposure ffanet dehazing">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 04</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 04 RESTORATION</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Dedicated Image Restoration Suite</h2>
                     <p class="models-list">Parent hub for classical single-task restoration: NAFNet (Deblurring &amp; Denoising), MPRNet (Progressive Multi-Stage Deraining), MIRNet v2 (Exposure &amp; Low-Light), and FFANet (Feature Fusion Dehazing).</p>
@@ -92,11 +114,11 @@
             </a>
 
             <!-- Category 05 -->
-            <a href="papers/universal-hybrid.html" class="hub-card">
+            <a href="papers/universal-hybrid.html" class="hub-card" data-task-group="model-reference" data-keywords="universal hybrid restoration suite upn v2 parameterized space recovery universal film restorer analog degradation multitask restorer moe routing">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 05</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 05 HYBRID</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Universal Hybrid Restoration Suite</h2>
                     <p class="models-list">Multi-task restoration and parameterized steering networks: UPN v2 (Parameterized Space-Recovery), Universal Film Restorer (Analog Degradation Synthesis), and MultiTask Restorer (11-Head MoE Routing).</p>
@@ -105,11 +127,11 @@
             </a>
 
             <!-- Category 06 -->
-            <a href="papers/ultrazoom.html" class="hub-card">
+            <a href="papers/ultrazoom.html" class="hub-card" data-task-group="model-reference" data-keywords="ultrazoom super resolution suite x2 x3 x4 x8 real time edge fractional extreme hallucination">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 06</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 06 SUPER-RES</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>UltraZoom Super-Resolution Suite</h2>
                     <p class="models-list">Standalone master super-resolution suite covering all four scale variants: UltraZoom-x2 (Real-Time Edge), UltraZoom-x3 (Fractional Recovery), UltraZoom-x4 (Master Standard), and UltraZoom-x8 (Extreme Hallucination).</p>
@@ -118,11 +140,11 @@
             </a>
 
             <!-- Category 07 -->
-            <a href="papers/nima-master.html" class="hub-card">
+            <a href="papers/nima-master.html" class="hub-card" data-task-group="model-reference" data-keywords="image quality assessment authenticity nima aesthetic mobile mobilenetv3-small efficientnetv2-s swin-v2-t technical quality deepfake detection real vs ai">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 07</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 07 QUALITY</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Image Quality Assessment &amp; Authenticity</h2>
                     <p class="models-list">Parent hub for NIMA perceptual scoring: Aesthetic Mobile, Aesthetic EfficientNetV2-S, Aesthetic Pro (Swin-v2-T), Technical Quality, and Generative Authenticity (AI vs. Real DeepFake Detection).</p>
@@ -131,11 +153,11 @@
             </a>
 
             <!-- Category 08 -->
-            <a href="papers/face-suite.html" class="hub-card">
+            <a href="papers/face-suite.html" class="hub-card" data-task-group="model-reference" data-keywords="high fidelity facial vision suite codeformer transformer vq codebook face restoration parsenet 19-class anatomical parsing retinaface 5-point landmark detection">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 08</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 08 FACE VISION</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>High-Fidelity Facial Vision Suite</h2>
                     <p class="models-list">Master facial perception suite connecting CodeFormer (Transformer VQ-codebook face restoration), ParseNet (19-class anatomical face parsing), and RetinaFace (MobileNet-0.25 multi-scale 5-point landmark detection).</p>
@@ -144,11 +166,11 @@
             </a>
 
             <!-- Category 09 -->
-            <a href="papers/detection-master.html" class="hub-card">
+            <a href="papers/detection-master.html" class="hub-card" data-task-group="model-reference" data-keywords="real time detection moderation suite yolov8n object detection classification 17-point pose nsfw classifier safety filter">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 09</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 09 DETECTION</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Real-Time Detection &amp; Moderation Suite</h2>
                     <p class="models-list">Anchor-free spatial localization and content safety: YOLOv8n (Multi-task object detection, classification, and 17-point pose) and LemGendary Universal NSFW Classifier (EfficientNetV2 safety filter).</p>
@@ -157,11 +179,11 @@
             </a>
 
             <!-- Category 10 -->
-            <a href="papers/foundation-models-master.html" class="hub-card">
+            <a href="papers/foundation-models-master.html" class="hub-card" data-task-group="model-reference" data-keywords="generative multimodal foundation models latent diffusion score based synthesis vlm image to text llm causal decoder moe">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 10</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 10 FOUNDATION</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Generative &amp; Multimodal Foundation Models</h2>
                     <p class="models-list">Foundational architectural specifications: Latent Diffusion &amp; Score-Based Synthesis, Image-to-Text Vision-Language Models (VLM), and Large Language Models (LLM Causal Decoders &amp; Sparse MoE).</p>
@@ -170,11 +192,11 @@
             </a>
 
             <!-- Category 11 -->
-            <a href="papers/forex_predictor.html" class="hub-card">
+            <a href="papers/forex_predictor.html" class="hub-card" data-task-group="model-reference" data-keywords="algorithmic financial prediction forex predictor cnn transformer causal tcn eurusd gbpusd usdjpy xauusd walk forward risk">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 11</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 11 FOREX</span>
+                        <span class="tier-badge tier-3">TIER 3 WHITEPAPER</span>
                     </div>
                     <h2>Algorithmic Financial Prediction</h2>
                     <p class="models-list">Multi-Scale CNN-Transformer &amp; Causal TCN architecture for EURUSD, GBPUSD, USDJPY, and XAUUSD algorithmic trading and quantitative walk-forward risk management.</p>
@@ -183,11 +205,11 @@
             </a>
 
             <!-- Category 12 -->
-            <a href="papers/glossary.html" class="hub-card">
+            <a href="papers/glossary.html" class="hub-card" data-task-group="dataset-engineering" data-keywords="canonical glossary terminology single source of truth ssot dataset vs manifold invariants cluster slack zero ipc threadpool">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 12</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 12 GLOSSARY</span>
+                        <span class="tier-badge tier-3">TIER 3 SPEC</span>
                     </div>
                     <h2>Canonical Glossary &amp; Terminology</h2>
                     <p class="models-list">Single source of truth (SSOT) for core taxonomy, dataset vs. manifold invariants, mathematical primitives, architectural definitions, and authoritative "Do Not Confuse With" matrix.</p>
@@ -196,11 +218,11 @@
             </a>
 
             <!-- Category 13 -->
-            <a href="papers/ai-helper-troubleshooting-knowledge.html" class="hub-card">
+            <a href="papers/ai-helper-troubleshooting-knowledge.html" class="hub-card" data-task-group="training-debugging" data-keywords="ai helper troubleshooting knowledge base diagnostic scenarios dataloader starvation mixed precision nan instability plateau loops power loss recovery cuda oom">
                 <div class="card-content">
                     <div class="card-header">
-                        <span class="category-num">CAT. 13</span>
-                        <span class="status-badge status-active">Published</span>
+                        <span class="category-num">CAT. 13 TROUBLESHOOTING</span>
+                        <span class="tier-badge tier-4">TIER 4 PLAYBOOK</span>
                     </div>
                     <h2>AI Helper Troubleshooting Knowledge Base</h2>
                     <p class="models-list">Structured 6-attribute diagnostic scenarios, pathology histories, and root-cause mitigations covering dataloader starvation, mixed-precision NaN instabilities, plateau loops, and power-loss recovery.</p>
@@ -212,8 +234,57 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 LemGenda AI Hub. All models designed and optimized for Universal Hardware resilience.</p>
+        <p>&copy; 2026 LemGenda AI Hub. All models designed and optimized for Universal Hardware resilience. Canonical URL: <a href="https://lemgenda.github.io/ai-training-whitepapers/index.html" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">https://lemgenda.github.io/ai-training-whitepapers/index.html</a></p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('hub-search-input');
+            const portalBtns = document.querySelectorAll('.task-portal-btn');
+            const cards = document.querySelectorAll('.hub-card');
+
+            let activeFilter = 'all';
+
+            function filterCards() {
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+                cards.forEach(card => {
+                    const group = card.getAttribute('data-task-group') || '';
+                    const keywords = card.getAttribute('data-keywords') || '';
+                    const cardText = card.textContent.toLowerCase();
+
+                    const matchesFilter = (activeFilter === 'all') || (group === activeFilter);
+                    const matchesQuery = !query || cardText.includes(query) || keywords.includes(query);
+
+                    if (matchesFilter && matchesQuery) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterCards);
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === '/' && document.activeElement !== searchInput) {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                });
+            }
+
+            portalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    portalBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeFilter = btn.getAttribute('data-filter') || 'all';
+                    filterCards();
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
+

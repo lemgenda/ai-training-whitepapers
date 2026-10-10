@@ -17,7 +17,39 @@ Every troubleshooting scenario in this knowledge base conforms strictly to the f
 
 ---
 
-## 2. Core Diagnostic Scenarios
+## 2. AI-Helper Knowledge Contract & Conflict Resolution Protocol
+
+To guarantee reliable assistant behavior, source attribution, and deterministic failure resolution, the AI Helper operates under four strict operational contracts:
+
+### 2.1 Authority Hierarchy & Resolution Protocol
+
+When resolving ambiguous or conflicting instructions, the AI Helper evaluates sources strictly in descending order of precedence:
+
+1. **Tier 1 (Supreme Ground Truth)**: Active in-process code manifests (`unified_models_v2.yaml`, `unified_data.yaml`) and sidecar OpenAPI specifications (`http://127.0.0.1:8000/openapi.json`, `http://127.0.0.1:8100/openapi.json`, `http://127.0.0.1:8200/openapi.json`).
+2. **Tier 2 (Operational Manuals)**: Master API Reference ([`MANUAL_API.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_API.md)), Master CLI Manual ([`MANUAL_CLI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_CLI.md)), Desktop GUI Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md)), and Ecosystem Architecture ([`ECOSYSTEM_ARCHITECTURE.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)).
+3. **Tier 3 (Architectural Whitepapers)**: Model whitepapers (`PAPER_LEMGENDARY_*.md`, `PAPER_NIMA_*.md`).
+4. **Tier 4 (Diagnostic Playbooks)**: Troubleshooting knowledge base (`AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md`).
+
+### 2.2 Mandatory Citation Policy
+
+The AI Helper must explicitly cite the authoritative document, section title, and specific file path for every technical recommendation or procedural claim.
+
+### 2.3 Diagnostic Intake Protocol
+
+Before formulating targeted diagnostic hypotheses, the AI Helper must verify or request four mandatory telemetry points from the operator:
+
+1. Active model key, spatial ladder stage, and dataset container format.
+2. Log traces from `metrics.csv` or `telemetry.csv` (specifically loss curves, gradient norms, and dataloader wait times).
+3. VRAM allocation metrics from `torch.cuda.mem_get_info()` or GUI telemetry stream.
+4. Exact CLI command line arguments or active GUI configuration toggles.
+
+### 2.4 Explicit Admission Bound
+
+If a requested behavior, obscure failure state, or ungrounded option is not established by Tier 1–4 documentation, the AI Helper must explicitly respond: `"UNVERIFIED IN PUBLISHED HUB: The current documentation does not establish a single authoritative resolution for this state."` and prescribe running `lem-env audit` or querying active REST sidecars.
+
+---
+
+## 3. Core Diagnostic Scenarios
 
 ### Scenario 01: Low GPU Utilization and Dataloader Starvation
 

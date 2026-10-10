@@ -72,8 +72,37 @@
             </ul>
         </section>
 
+        <section id="contract">
+            <h2>2. AI-Helper Knowledge Contract &amp; Conflict Resolution Protocol</h2>
+            <p>To guarantee reliable assistant behavior, source attribution, and deterministic failure resolution, the AI Helper operates under four strict operational contracts:</p>
+            
+            <h3>2.1 Authority Hierarchy &amp; Resolution Protocol</h3>
+            <p>When resolving ambiguous or conflicting instructions, the AI Helper evaluates sources strictly in descending order of precedence:</p>
+            <ol>
+                <li><strong>Tier 1 (Supreme Ground Truth)</strong>: Active in-process code manifests (<code>unified_models_v2.yaml</code>, <code>unified_data.yaml</code>) and sidecar OpenAPI specifications (<code>http://127.0.0.1:8000/openapi.json</code>, <code>http://127.0.0.1:8100/openapi.json</code>, <code>http://127.0.0.1:8200/openapi.json</code>).</li>
+                <li><strong>Tier 2 (Operational Manuals)</strong>: Master API Reference (<a href="api-manual.html"><code>MANUAL_API.md</code></a>), Master CLI Manual (<a href="cli-manual.html"><code>MANUAL_CLI.md</code></a>), Desktop GUI Operator Manual (<a href="ai-studio-manual.html"><code>MANUAL_AI_STUDIO_GUI.md</code></a>), and Ecosystem Architecture (<a href="ecosystem-architecture.html"><code>ECOSYSTEM_ARCHITECTURE.md</code></a>).</li>
+                <li><strong>Tier 3 (Architectural Whitepapers)</strong>: Model whitepapers (<code>PAPER_LEMGENDARY_*.md</code>, <code>PAPER_NIMA_*.md</code>).</li>
+                <li><strong>Tier 4 (Diagnostic Playbooks)</strong>: Troubleshooting knowledge base (<code>AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md</code>).</li>
+            </ol>
+
+            <h3>2.2 Mandatory Citation Policy</h3>
+            <p>The AI Helper must explicitly cite the authoritative document, section title, and specific file path for every technical recommendation or procedural claim.</p>
+
+            <h3>2.3 Diagnostic Intake Protocol</h3>
+            <p>Before formulating targeted diagnostic hypotheses, the AI Helper must verify or request four mandatory telemetry points from the operator:</p>
+            <ol>
+                <li>Active model key, spatial ladder stage, and dataset container format.</li>
+                <li>Log traces from <code>metrics.csv</code> or <code>telemetry.csv</code> (specifically loss curves, gradient norms, and dataloader wait times).</li>
+                <li>VRAM allocation metrics from <code>torch.cuda.mem_get_info()</code> or GUI telemetry stream.</li>
+                <li>Exact CLI command line arguments or active GUI configuration toggles.</li>
+            </ol>
+
+            <h3>2.4 Explicit Admission Bound</h3>
+            <p>If a requested behavior, obscure failure state, or ungrounded option is not established by Tier 1&ndash;4 documentation, the AI Helper must explicitly respond: <code>"UNVERIFIED IN PUBLISHED HUB: The current documentation does not establish a single authoritative resolution for this state."</code> and prescribe running <code>lem-env audit</code> or querying active REST sidecars.</p>
+        </section>
+
         <section id="scenarios">
-            <h2>2. Core Diagnostic Scenarios</h2>
+            <h2>3. Core Diagnostic Scenarios</h2>
 
             <div class="scenario-card">
                 <h3>Scenario 01: Low GPU Utilization and Dataloader Starvation</h3>
