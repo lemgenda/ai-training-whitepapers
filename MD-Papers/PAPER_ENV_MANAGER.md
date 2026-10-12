@@ -163,6 +163,7 @@ To minimize HTTP handshake overhead in desktop graphical clients, the Environmen
 
 - **State Aggregation (`/api/gui/state`)**: Packages system identity, hardware sensors, discovered repository trees, and active pipeline statuses into a single non-blocking payload, eliminating waterfall polling.
 - **Ecosystem Sidecar Interoperability (`/api/gui/ecosystem`)**: Probes the `lemgendary-datasets` compiler sidecar on port 8100 concurrently, reporting unified health vectors to the `lemgendary-ai-studio-gui` status bar.
+- **Governance & Maintenance Endpoints (`/api/hooks/install`, `/api/clean`)**: Provides programmatic endpoints for ecosystem-wide Git hook installation and recursive temporary cache/staging artifact purges with space recovery telemetry.
 - **Frozen API Contract**: Ships `openapi.json` guaranteeing zero-drift type generation for Tauri Rust and TypeScript clients.
 
 ---

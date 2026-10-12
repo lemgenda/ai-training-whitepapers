@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Authoritative Desktop Client Release**: `v2.0.0` (Tauri v2 Native Desktop Cockpit)  
-**Target Backend Ecosystem**: `v16.9.16-STABLE` (Tripartite Sidecar Topology: Ports 8000, 8100, 8200)  
+**Authoritative Desktop Client Release**: `v2.0.0` (Tauri v2 Native Desktop Cockpit)
+**Target Backend Ecosystem**: `v16.9.16-STABLE` (Tripartite Sidecar Topology: Ports 8000, 8100, 8200)
 **Parent Authority**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
 
 ---
@@ -40,6 +40,7 @@
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
 - [8. Health Matrix & Cross-Project Version Drift Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites & Version Drift Matrix](#81-toolchain-prerequisites--version-drift-matrix)
+  - [8.2 Ecosystem Maintenance & Governance Controls](#82-ecosystem-maintenance--governance-controls)
 - [9. Real-Time Telemetry & Monospace Event Diagnostics](#9-real-time-telemetry--monospace-event-diagnostics)
   - [9.1 Telemetry Terminal Numbered Reference](#91-telemetry-terminal-numbered-reference)
 - [10. Contextual UX Help & Interactive Hover Guidance System](#10-contextual-ux-help--interactive-hover-guidance-system)
@@ -457,11 +458,20 @@ Activated by clicking the `Update Metadata Only` subtab. Pushes `dataset-metadat
 
 ### 5.3 Production Manifolds Catalog & Format Breakdown
 
-The Production Manifolds catalog presents all verified datasets within the **LemGendary Compiled Manifolds Repo** (`./LemGendaryDatasets/`):
+The Production Manifolds section presents all verified datasets within the **LemGendary Compiled Manifolds Repo** (`./LemGendaryDatasets/`), organized under three dedicated sub-tabs:
+
+#### 5.3.1 Section 2 Top Toolbar Actions
+
+The toolbar header provides global batch operations across all manifolds:
+
+1. **Update All Kaggle Metadata Button**: Triggers `POST /api/kaggle/update-metadata` with `all_datasets: true`, synchronizing dataset descriptions, titles, and schema metadata across all 20 canonical Kaggle datasets in a single non-blocking call.
+2. **Regenerate Manifolds Index Button**: Triggers `POST /api/modernize/regenerate-manifolds`, rescanning on-disk datasets and refreshing `manifolds.json` and `dataset-metadata.json` across the entire ecosystem.
+
+#### 5.3.2 Manifolds Catalog Tab
 
 ![Production Manifolds Catalog Grid](../assets/gui/gui_production_manifolds.png)
 
-#### Production Manifolds Catalog Numbered Reference
+##### Production Manifolds Catalog Numbered Reference
 
 1. **Compiled Manifold Card Title**: Displays canonical manifold identifier (e.g. `LemGendized Classification Master`).
 2. **Compiled Status Badge**: Displays green `COMPILED` reflecting verified on-disk container archives.
@@ -481,6 +491,25 @@ The Production Manifolds catalog presents all verified datasets within the **Lem
 | **6** | Container Shards | Metric Readout | Shard count verification | Confirms number of container files written to local storage. |
 | **7** | Format Breakdown | Encoding Stats | Metadata inspection | Quantifies WebP, JPEG, and PNG image components. |
 
+#### 5.3.3 Modernization Queue & Transcode Tab
+
+The Modernization Queue sub-tab inspects manifolds for legacy image formats and orchestrates parallel WebP transcoding:
+
+1. **Scan Modernization Queue Button**: Fetches `GET /api/modernize/queue` to detect datasets containing legacy PNG/JPEG images that need transcoding to modern WebP format.
+2. **Batch Modernize All Button**: Initiates `POST /api/modernize/run` background worker pool.
+3. **Parallel Workers Slider**: Adjusts worker thread pool count (1 to 16, default 8).
+4. **Push to Kaggle Checkbox**: Automatically uploads updated manifold to Kaggle upon completion.
+5. **Dry Run Checkbox**: Simulates transcoding without writing changes.
+6. **Force Re-Transcode Checkbox**: Overwrites existing WebP files.
+
+#### 5.3.4 Scale Reduction (Downsample) Tab
+
+The Scale Reduction sub-tab derives spatially downscaled and sample-reduced dataset variants for rapid experimentation:
+
+1. **Target Manifold Dropdown**: Selects source manifold from local inventory.
+2. **Scale Factor Buttons**: One-click downsampling targets: `10% Preview`, `25% Fast Test`, `50% Balanced`, `75% High Res`.
+3. **Dispatch Reduction Button**: Initiates `POST /api/modernize/reduce` with Lanczos-3 spatial downsampling and class-balanced subsampling.
+
 ---
 
 ## 6. Model Training Pipeline: Architectures, Ladders & Sawtooth Governor
@@ -495,23 +524,35 @@ Once your dataset is compiled, you are ready to train a production-grade neural 
 
 1. **Model Name Search & Filter Input Field**: Real-time search filter allowing instant narrowing of the registered architecture catalog by model key or architecture name.
 2. **Machine Learning Task Domain Filter Dropdown**: Domain filter selector (`All Domains`, `restoration`, `detection`, `classification`, `segmentation`, `forex`).
-3. **Model Architecture Card Title**: Primary heading identifying the model architecture (e.g. `LemGendary CodeFormer Face Restoration`).
-4. **Three-Pillar Training Status Badge**: Authoritative status badge evaluating training completion (`FULLY TRAINED`, `PARTIALLY TRAINED`, or `WEIGHTS READY`).
-5. **Start Training Dynamic Action Button**: Launches local training dispatch (`POST /api/gui/quick-train`) and automatically focuses the live telemetry stream.
-6. **Cloud Training Modal Trigger Button**: Opens the interactive Cloud Training modal (`btn-cloud`) for deploying training jobs to Kaggle or Colab GPU clusters.
-7. **Push Weights to Cloud Action Button**: Packages current best checkpoints and uploads them to cloud storage repositories.
-8. **Pull Weights from Cloud Action Button**: Downloads remote checkpoint weights from cloud mirrors to the local **LemGendary Trained Models Repo** (`.\LemGendaryModels\`).
+3. **Run 1-Epoch Diagnostic (All 22 Models) Button**: Global toolbar button submitting an asynchronous background job (`POST /api/training/unit-test-all`) executing a 1-epoch test sequentially across all 22 models via `tools/train_all.py`.
+4. **Generate All Notebooks Button**: Global toolbar button (`POST /api/notebooks/generate-all`) batch regenerating and synchronizing training, inference, and usage notebooks across all 22 models.
+5. **Model Architecture Card Title**: Primary heading identifying the model architecture (e.g. `LemGendary CodeFormer Face Restoration`).
+6. **Three-Pillar Training Status Badge**: Authoritative status badge evaluating training completion (`FULLY TRAINED`, `PARTIALLY TRAINED`, or `WEIGHTS READY`).
+7. **Start Training Dynamic Action Button**: Launches local training dispatch (`POST /api/gui/quick-train`) and automatically focuses the live telemetry stream.
+8. **Cloud Training Modal Trigger Button**: Opens the interactive Cloud Training modal (`btn-cloud`) for deploying training jobs to Kaggle or Colab GPU clusters.
+9. **Evaluate Model Action Button**: Launches in-process deterministic evaluation under `torch.no_grad()` (`POST /api/training/evaluate`) computing PSNR, SSIM, mAP50, or SRCC metrics.
+10. **Export Binaries Action Button**: Launches multi-target binary compiler (`POST /api/training/export`) producing FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, and MT5 formats.
+11. **Push Weights to Cloud Action Button**: Packages current best checkpoints and uploads them to cloud storage repositories.
+12. **Pull Weights from Cloud Action Button**: Downloads remote checkpoint weights from cloud mirrors to the local **LemGendary Trained Models Repo** (`.\LemGendaryModels\`).
+13. **Training Notebook Regeneration Action Button**: One-click regeneration and synchronization of Kaggle and Colab training notebooks across model folders, workspace staging directories, and dataset manifolds.
+14. **Usage Notebook Regeneration Action Button**: One-click regeneration of standalone Kaggle and Colab model usage guide notebooks.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Model Search Filter | Text Input | Client-side filter | Filters architecture catalog in real time by name or keyword. |
 | **2** | Domain Filter | Select Dropdown | Client-side filter | Restricts catalog display to specific ML task domains. |
-| **3** | Model Title | Card Heading | None | Labels neural architecture name and specialization. |
-| **4** | 3-Pillar Status Badge | Status Badge | Multi-pillar verification | Certified status reflecting training completion and checkpoint readiness. |
-| **5** | Start Training | Dynamic Action Button | `POST /api/gui/quick-train` | Dispatches local training execution and focuses telemetry console. |
-| **6** | Cloud Training | Modal Trigger Button | `setIsCloudModalOpen(true)` | Opens the interactive Cloud Training modal. |
-| **7** | Push Weights | Action Button | `POST /api/training/cloud/push` | Packages and uploads model weights to remote cloud storage. |
-| **8** | Pull Weights | Action Button | `POST /api/training/cloud/pull` | Fetches verified remote checkpoints to `LemGendaryModels/`. |
+| **3** | Run 1-Epoch Diagnostic | Toolbar Button | `POST /api/training/unit-test-all` | Dispatches rapid 1-epoch smoke test across all 22 models. |
+| **4** | Generate All Notebooks | Toolbar Button | `POST /api/notebooks/generate-all` | Batch regenerates Jupyter notebooks for all registered architectures. |
+| **5** | Model Title | Card Heading | None | Labels neural architecture name and specialization. |
+| **6** | 3-Pillar Status Badge | Status Badge | Multi-pillar verification | Certified status reflecting training completion and checkpoint readiness. |
+| **7** | Start Training | Dynamic Action Button | `POST /api/gui/quick-train` | Dispatches local training execution and focuses telemetry console. |
+| **8** | Cloud Training | Modal Trigger Button | `setIsCloudModalOpen(true)` | Opens the interactive Cloud Training modal. |
+| **9** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Evaluates checkpoint against validation benchmark criteria. |
+| **10** | Export Binaries | Action Button | `POST /api/training/export` | Compiles checkpoint into deployable production formats. |
+| **11** | Push Weights | Action Button | `POST /api/training/kaggle/train` | Packages and pushes checkpoints to Cloud Vault. |
+| **12** | Pull Weights | Action Button | `POST /api/training/kaggle/pull` | Fetches verified remote checkpoints to `LemGendaryModels/`. |
+| **13** | Training Notebook | Action Button | `POST /api/notebooks/generate` (`training`) | Regenerates training notebooks across model, staging, and manifold folders. |
+| **14** | Usage Notebook | Action Button | `POST /api/notebooks/generate` (`usage`) | Regenerates standalone usage guide notebooks in model directory. |
 
 ---
 
@@ -558,16 +599,18 @@ The Cloud Training modal enables zero-friction dispatch of intensive neural trai
 1. **Cloud Training Modal Header**: Displays modal title and active model name selected for remote dispatch.
 2. **Kaggle GPU Kernel Option Card**: Selects Kaggle compute environment supporting Dual-T4 (`nvidia-tesla-t4-x2`) and P100 (`nvidia-tesla-p100`) accelerators with automatic manifold attaching and checkpoint syncing.
 3. **Google Colab Enterprise Option Card**: Selects Google Colab runtime with Google Drive checkpoint mirroring and GPU acceleration.
-4. **Dispatch Cloud Training Primary Button**: Authenticates using active Secrets Vault credentials, compiles remote launch manifest, and dispatches the cloud training kernel.
-5. **Close Modal Action Button**: Dismisses the cloud training dialog without dispatching remote workloads.
+4. **Upload Checkpoints Tab**: Stages and uploads trained model weights directly to Kaggle Models (`lemtrain sync push` / API dispatch) with progress tracking.
+5. **Dispatch Cloud Training Primary Button**: Authenticates using active Secrets Vault credentials, compiles remote launch manifest, and dispatches the cloud training kernel.
+6. **Close Modal Action Button**: Dismisses the cloud training dialog without dispatching remote workloads.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Modal Header | Modal Title | None | Confirms model selection and target deployment workflow. |
 | **2** | Kaggle Option Card | Selection Card | `setSelectedCloudProvider("kaggle")` | Configures Kaggle GPU cluster deployment. |
 | **3** | Colab Option Card | Selection Card | `setSelectedCloudProvider("colab")` | Configures Google Colab enterprise runtime deployment. |
-| **4** | Dispatch Cloud Run | Primary Button | `POST /api/training/cloud/dispatch` | Dispatches authenticated cloud training job. |
-| **5** | Close Dialog | Action Button | `setIsCloudModalOpen(false)` | Dismisses modal safely. |
+| **4** | Upload Checkpoints | Subtab Navigation | `setSelectedCloudProvider("upload")` | Stages and publishes model weights to Kaggle Models repository. |
+| **5** | Dispatch Cloud Run | Primary Button | `POST /api/training/cloud/dispatch` | Dispatches authenticated cloud training job. |
+| **6** | Close Dialog | Action Button | `setIsCloudModalOpen(false)` | Dismisses modal safely. |
 
 ---
 
@@ -652,6 +695,24 @@ In modern multi-project software suites, one project updating a shared library (
 | **7** | Package Name | Table Column | Manifest inspection | Lists library identifier across ecosystem projects. |
 | **8** | Target Environments | Table Column | Manifest inspection | Compares installed releases across active project virtual environments. |
 | **9** | Drift Status Pill | Status Indicator | Automated comparison | Flags synchronized packages or highlights version drift. |
+
+### 8.2 Ecosystem Maintenance & Governance Controls
+
+The Health and Maintenance view provides nuclear-hardened ecosystem maintenance controls backed by `lemgendary-env-manager` on port 8000:
+
+1. **Safe Package Upgrade Button**: Dispatches `POST /api/update` (`dry_run: false`), applying dependency upgrades in dependency-safe reverse topological order with automated rollback if `pip check` fails.
+2. **Upgrade Dry Run Button**: Dispatches `POST /api/update` (`dry_run: true`), computing the safe upgrade plan and highlighting potential reverse dependency blockers without touching installed packages.
+3. **Deep Cache Purge Button**: Dispatches `POST /api/clean`, recursively purging `__pycache__`, temporary files, build residues, and staging directories across all ecosystem repositories, reporting total bytes reclaimed.
+4. **Install Git Hooks Button**: Dispatches `POST /api/hooks/install`, ensuring pre-commit hooks are active across all 7 repositories to prevent commits that fail zero-emoji, compilation, or linting gates.
+5. **Run Ecosystem Validation Button**: Dispatches `POST /api/validate`, executing the full multi-gate validation suite across all repositories and reporting per-project gate status.
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Safe Package Upgrade | Action Button | `POST /api/update` (`dry_run: false`) | Upgrades outdated packages safely with automated snapshot rollback. |
+| **2** | Upgrade Dry Run | Action Button | `POST /api/update` (`dry_run: true`) | Previews candidate package upgrades without altering disk state. |
+| **3** | Deep Cache Purge | Action Button | `POST /api/clean` | Purges bytecode, build caches, and temporary staging artifacts. |
+| **4** | Install Git Hooks | Action Button | `POST /api/hooks/install` | Synchronizes and repairs mandatory pre-commit validation hooks. |
+| **5** | Run Ecosystem Validation | Action Button | `POST /api/validate` | Executes multi-gate compilation, zero-emoji, and schema validation. |
 
 ---
 

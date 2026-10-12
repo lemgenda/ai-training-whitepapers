@@ -281,7 +281,9 @@ class TestDocumentationIntegrity(unittest.TestCase):
         """Rule: AI Helper JSONL corpus must exist, parse cleanly, obey zero-emojis,
         strictly align with unified_models_v2.yaml SSOT, and maintain balanced validation coverage."""
         import json
-        corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus'))
+        corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend'))
+        if not os.path.exists(corpus_dir):
+            corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus'))
         train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
         val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
 

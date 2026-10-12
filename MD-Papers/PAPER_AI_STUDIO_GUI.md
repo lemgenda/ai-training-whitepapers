@@ -140,8 +140,12 @@ The desktop interface integrates a dedicated visual control plane for the Datase
   - **Registry Datasets Ingestion**: Dropdown interface bound to all 20 Kaggle-linked manifolds in `unified_data.yaml`, indicating local presence or missing status with one-click download.
   - **Custom Kaggle Link / Slug Ingestion**: Input field accepting direct Kaggle URLs or `owner/dataset` slugs for downloading and unzipping external research datasets directly into the local storage root.
   - **Local Manifold Publishing**: Selects compiled local manifolds to package and upload directly to Kaggle.
-- **Production Manifolds Catalog & Format Breakdown**:
-  - Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified `COMPILED` badges backed by in-memory filesystem caching.
+  - **Bulk Metadata Synchronization**: One-click bulk synchronization (`POST /api/kaggle/update-metadata` with `all_datasets: true`) pushing metadata records across all 20 canonical Kaggle datasets.
+- **Production Manifolds Catalog, Modernization Queue & Scale Reduction**:
+  - Live inspection grid displaying all 21 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified `COMPILED` badges backed by in-memory filesystem caching.
+  - Modernization Queue sub-tab detecting legacy PNG/JPEG datasets, configuring worker threads, dry-run flags, and dispatching parallel WebP transcoding (`POST /api/modernize/run`).
+  - Scale Reduction sub-tab deriving spatially downsampled dataset variants (10%, 25%, 50%, 75%) for rapid training iterations (`POST /api/modernize/reduce`).
+  - Master manifolds index regeneration (`POST /api/modernize/regenerate-manifolds`).
 
 ### 6.5 Headless Windowless Service Lifecycle & Auto-Start on Launch
 
@@ -157,6 +161,15 @@ The GUI codebase is verified by an exhaustive automated testing battery:
 
 - **Component & Integration Testing**: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.
 - **Ecosystem Compliance**: Enforced via `lem-env validate --project lemgendary-ai-studio-gui`, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.
+
+### 6.7 Ecosystem Maintenance & Governance Controls
+
+The Health view embeds direct operational controls for repository governance backed by Environment Manager:
+
+- **Safe Package Upgrades & Dry Runs**: Dispatches reverse topological upgrades with automated rollback on `pip check` failure (`POST /api/update`).
+- **Deep Cache Purges**: Recursively cleans `__pycache__`, build remnants, and staging residues with byte recovery feedback (`POST /api/clean`).
+- **Standardized Git Hooks**: Installs and validates pre-commit hooks enforcing zero-emoji and compilation gates (`POST /api/hooks/install`).
+- **Multi-Gate Ecosystem Validation**: Runs the 10-gate validation suite across all repositories directly from the UI (`POST /api/validate`).
 
 ## 7. Unified Models Registry
 

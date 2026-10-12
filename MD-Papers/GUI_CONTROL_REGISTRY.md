@@ -58,8 +58,28 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | `comp-btn-kaggle-download` | "Download from Kaggle" | `<button>` | `POST /api/kaggle/download` (8100) | Queues download and extraction of Kaggle datasets. |
 | `comp-select-kaggle-upload` | "Local Compiled Manifold" | `<select>` | — | Selects compiled local manifold for packaging. |
 | `comp-btn-kaggle-upload` | "Upload to Kaggle" | `<button>` | `POST /api/kaggle/upload` (8100) | Packages and streams local manifold to Kaggle. |
+| `comp-btn-update-all-kaggle` | "Update All Kaggle Metadata" | `<button>` | `POST /api/kaggle/update-metadata` (8100) | Bulk pushes metadata to Kaggle for all 20 canonical manifolds. |
+| `comp-btn-regen-manifolds` | "Regenerate Manifolds Index" | `<button>` | `POST /api/modernize/regenerate-manifolds` (8100) | Regenerates master manifolds.json and dataset-metadata.json files. |
+| `comp-subtab-catalog` | "Manifolds Catalog" Subtab | `<button>` | — | Shows the 21 production manifold cards with WebP/PNG breakdown. |
+| `comp-subtab-modernize` | "Modernization Queue & Transcode" Subtab | `<button>` | — | Activates legacy format scan and batch WebP transcode queue. |
+| `comp-subtab-reduce` | "Scale Reduction (Downsample)" Subtab | `<button>` | — | Activates spatial downsample and dataset scaling derivation view. |
+| `comp-btn-scan-modernize-queue` | "Scan Queue" | `<button>` | `GET /api/modernize/queue` (8100) | Scans local datasets and builds transcode modernization queue. |
+| `comp-btn-batch-modernize-all` | "Batch Modernize All" | `<button>` | `POST /api/modernize/run` (8100) | Dispatches batch modernization job across queued manifolds. |
+| `comp-slider-modernize-workers` | "Parallel Workers Slider" | `<input type=range>` | — | Configures worker thread count for parallel WebP transcoding. |
+| `comp-select-reduce-manifold` | "Target Manifold Selector" | `<select>` | — | Chooses dataset manifold for scale reduction / downsampling. |
+| `comp-btn-dispatch-reduce` | "Dispatch Reduction" | `<button>` | `POST /api/modernize/reduce` (8100) | Initiates downsampling derivation job for selected manifold. |
 | `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/gui/models/with-stats` (8200) | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
 | `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/gui/quick-train` (8200) | Dispatches training worker with spatial resolution ladder. |
+| `train-btn-unit-test-all` | "Run 1-Epoch Diagnostic (All 22 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test across all models. |
+| `train-btn-generate-all-notebooks` | "Generate All Notebooks" | `<button>` | `POST /api/notebooks/generate-all` (8200) | Batch generates notebooks across all 22 registered architectures. |
+| `train-card-btn-eval` | "Evaluate Model" | `<button>` | `POST /api/training/evaluate` (8200) | Evaluates checkpoint against validation benchmark criteria. |
+| `train-card-btn-export` | "Export Binaries" | `<button>` | `POST /api/training/export` (8200) | Compiles model to ONNX, PyTorch, and WebGPU binary formats. |
+| `train-modal-tab-upload` | "Upload Checkpoints" Tab | `<button>` | — | Stages and uploads local model checkpoints directly to Kaggle Models. |
+| `health-btn-safe-upgrade` | "Safe Package Upgrade" | `<button>` | `POST /api/update` (8000) | Safely upgrades outdated packages with rollback validation. |
+| `health-btn-upgrade-dry-run` | "Upgrade Dry Run" | `<button>` | `POST /api/update` (8000) | Previews dependency upgrade plan without altering disk state. |
+| `health-btn-deep-clean` | "Deep Cache Purge" | `<button>` | `POST /api/clean` (8000) | Purges build caches, **pycache**, and staging residues. |
+| `health-btn-install-hooks` | "Install Git Hooks" | `<button>` | `POST /api/hooks/install` (8000) | Installs or repairs standardized pre-commit validation hooks. |
+| `health-btn-validate-ecosystem` | "Run Ecosystem Validation" | `<button>` | `POST /api/validate` (8000) | Runs full multi-gate ecosystem code validation suite. |
 
 ---
 

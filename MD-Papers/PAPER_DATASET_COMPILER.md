@@ -303,7 +303,7 @@ The v16.8.0 ecosystem establishes three distinct, standardized operational pipel
   3. *Auto-Labeling & Resampling*: Derives normalized YOLO bounding boxes, SAM/ParseNet segmentation masks, or BLIP captions where applicable, applying high-fidelity Lanczos-3 anti-aliasing interpolation for spatial rescales.
   4. *Zero-Intermediate WebP Transcoding*: Transcodes input images directly in memory (`quality=92` for inputs, `quality=95` for restoration targets) avoiding redundant uncompressed intermediate disk writes.
   5. *Emission & Container Sharding*: Emits canonical directory layouts with NTFS hardlink deduplication preserved, or simultaneously exports modern streaming container shards (`--also-format webdataset`, `--also-format mds`, `--also-format litdata`).
-  6. *Manifest Generation*: Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
+  6. *Manifest & Documentation Generation*: Master documentation orchestrator (`core/docs/orchestrator.py`) dispatches isolated single-responsibility generator scripts generating `category.txt`, `classes.txt`, `<ModelName>.jpg` (564x284 architecture banner), `dataset_info.yaml`, `index.json`, `README.md`, and Frictionless `dataset-metadata.json` for seamless Kaggle API synchronization.
 
 #### 2. Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)
 
@@ -331,6 +331,15 @@ To eliminate severe terminal line wrapping and eradicate intermediate disk consu
 1. **Direct In-Memory Streaming on Cloud Download (`[GET]`)**: In `core/common_sync.py` (`perform_dataset_download`), downloaded legacy `.zip` archives are inspected prior to extraction. If an archive contains legacy loose image structures (`images/`, `targets/`) without pre-existing `.tar` shards, the compiler completely bypasses disk extraction via 7-Zip and routes the archive directly through `stream_zip_to_webdataset` (`tools/stream_zip_to_container.py`). Input and target images are decoded and transcoded to lossless WebP in memory directly into POSIX `.tar` shards across parallel worker threads. Upon verified completion, the source `.zip` archive is automatically deleted, saving 60 GB to 130+ GB of intermediate disk headroom and eliminating millions of loose filesystem writes.
 2. **Terminal Telemetry & Column Width Hardening**: Fixes a critical PowerShell and Windows conhost line wrapping defect in Kaggle API downloads where multi-byte block characters (`█`, `▋`) and unbounded column widths caused terminal buffer overflow, cascading carriage returns (`\r`) onto new lines for every download tick. The download engine encapsulates `tqdm.tqdm` to enforce strict ASCII rendering (`ascii=True`) and fixed column width boundaries (`ncols=80`), guaranteeing single-line in-place telemetry updates across all Windows host environments.
 3. **Silent Subsystem Extraction Delegation**: Updated native 7-Zip execution parameters in `utils/archive.py` (`smart_extract`) from `-bsp1` to `-bsp0`, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.
+
+### 5.15 Single Source of Truth (SSOT) Notebook Delegation & Deduplication (v16.9.7)
+
+To enforce strict ecosystem DRY principles (Don't Repeat Yourself) and establish a single authoritative source of truth for training and inference notebooks, v16.9.7 completely extracts notebook generation logic out of `lemgendary-datasets`:
+
+1. **Deduplication of Generator Codebase**: Removed legacy and duplicated notebook builders (`tools/notebook_generator.py` and `tools/notebooks/`), eliminating redundant cell synthesis templates and diverging execution logic across repositories.
+2. **Dynamic In-Process Delegation (`core/manifold_compile.py`)**: During manifold compilation, notebook generation dynamically resolves and imports `generate_training_notebook` and `generate_colab_training_notebook` directly from sibling `lemgendary-training-suite`. If the training suite is unavailable on the Python path, the compiler logs clear, actionable setup instructions rather than silently falling back to stale local templates.
+3. **Identical Manifold & Model Training Notebooks**: Because both manifold compilation and training launches use the identical builder engine from `lemgendary-training-suite`, the `.ipynb` files placed in `LemGendaryDatasets/<manifold>/` are bit-exact copies of those placed in `LemGendaryModels/<model>/`, `kaggle_training/`, and `colab_training/`.
+4. **Stale Artifact Purge**: All obsolete or unreferenced legacy notebooks across compiled manifolds (such as `classification_master_manifold_training.ipynb` or legacy detection artifacts) are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.
 
 ---
 

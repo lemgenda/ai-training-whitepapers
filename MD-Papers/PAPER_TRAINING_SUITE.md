@@ -27,6 +27,8 @@
   - [2.13. Native Multi-Container Ingestion Architecture](#213-native-multi-container-ingestion-architecture)
   - [2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target Convergence](#214-autonomous-yolo-multi-stage-curriculum-governor--sota-target-convergence)
   - [2.15. Single Source of Truth (SSOT) Config-Governed GUI Training Controls & Dynamic Run-State Lifecycle](#215-single-source-of-truth-ssot-config-governed-gui-training-controls--dynamic-run-state-lifecycle)
+  - [2.16. Single Source of Truth (SSOT) Jupyter Notebook Generation & Cross-Workspace Staging](#216-single-source-of-truth-ssot-jupyter-notebook-generation--cross-workspace-staging)
+  - [2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing & Kaggle Models Checkpoint Publishing](#217-fleet-wide-1-epoch-diagnostic-smoke-testing--kaggle-models-checkpoint-publishing)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -218,6 +220,23 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Read-Only Parameter Locking**: To eliminate operational configuration drift, the training interface locks primary hyperparameters (`Training Epochs`, `Minibatch Size`, `Initial Learning Rate`, and `Spatial Ladder Stage` / `Timeframe Confluence Stage`) to read-only mode for all neural models. Values are strictly sourced from authoritative manifests (`unified_models_v2.yaml` / `presets.yaml`).
 - **In-App Manifest Adjustments**: Parameter modifications are routed through the Config Editor Modal (`onOpenConfigEditor`), ensuring all changes undergo schema validation and syntax checks before being committed.
 - **Dynamic Start/Stop Action Toggle**: The training launch button automatically transforms into `Stop Training` (`.btn-danger`) while a background training job is active. Operators can gracefully cancel running jobs (`POST /api/jobs/{job_id}/cancel`), releasing GPU memory and updating state cleanly.
+
+### 2.16. Single Source of Truth (SSOT) Jupyter Notebook Generation & Cross-Workspace Staging
+
+- **Consolidated Architecture**: Consolidates all training, inference, and standalone usage guide Jupyter notebook generation exclusively within `lemgendary-training-suite` (`training/notebooks/`, `training/services/notebook_service.py`). Completely eliminates fragmented or duplicated generation logic from external toolsets.
+- **Polymorphic Builder Interfaces**: Provides backward-compatible and modern call signatures (`(pascal_name, model_key, output_path)` and `(model_key, export_dir)`) in `builders/kaggle.py` and `builders/colab.py`, generating 100% reproducible execution environments tailored for Kaggle GPU environments (T4x2, P100) and Google Colab runtimes.
+- **Multi-Vector Distribution & Staging**: Synthesized notebooks are atomically persisted and synchronized across four ecosystem locations:
+  1. `LemGendaryModels/<model_key>/`: Canonical model architecture directory (both Kaggle and Colab training + usage notebooks).
+  2. `LemGendaryDatasets/<manifold>/`: Matching compiled dataset manifold folder (training notebooks matching bound dataset).
+  3. `kaggle_training/`: Workspace-level Kaggle execution staging directory.
+  4. `colab_training/`: Workspace-level Colab execution staging directory.
+- **Automated Pre-Flight Hook**: Step 0 of `TrainingService.train()` automatically invokes `notebook_service.generate_notebooks(model_key)` before local training or remote submission begins, ensuring on-disk notebooks are perpetually synchronized with active model configurations in `unified_models_v2.yaml`.
+- **Omni-Channel Control (CLI, API, GUI)**: Exposed via Typer CLI (`lemtrain notebooks generate`), FastAPI REST endpoints (`/api/notebooks/*`), and one-click action buttons in the Desktop GUI (`lemgendary-ai-studio-gui`).
+
+### 2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing & Kaggle Models Checkpoint Publishing
+
+- **Sequential Fleet Diagnostics (`tools/train_all.py` / `lemtrain test-all`)**: The suite provides a rapid 1-epoch smoke test sequence executing across all 22 registered neural architectures. Available via CLI (`lemtrain test-all [--epochs 1]`), REST API (`POST /api/training/unit-test-all`), and GUI toolbar ("Run 1-Epoch Diagnostic"). The runner verifies data loading, forward pass execution, backward gradient computation, checkpoint generation, and GPU memory cleanup per architecture.
+- **Kaggle Models Direct Publishing (`lemtrain sync push`)**: Dedicated cloud publishing pipeline allowing operators to package trained weights, configuration manifests, and model cards, uploading them directly to Kaggle Models repositories via official APIs with zero intermediate file staging.
 
 ---
 

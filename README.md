@@ -12,6 +12,28 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.25 — Ecosystem Synchronization, Modernization & Fleet Testing API/CLI/GUI Manuals Alignment
+
+* **Master API Reference Manual (`MANUAL_API.md`)** — Documented new endpoints across all 3 sidecars: Environment Manager (`POST /api/hooks/install`, `POST /api/clean`), Dataset Compiler (`GET /api/modernize/queue`, `POST /api/modernize/run`, `POST /api/modernize/reduce`, `POST /api/modernize/regenerate-manifolds`, `POST /api/kaggle/update-metadata` with `all_datasets: true`), and Training Suite (`POST /api/training/unit-test-all`, `POST /api/notebooks/generate-all`).
+* **Master CLI Operations Manual (`MANUAL_CLI.md`)** — Documented new CLI commands and aliases: `lem-env hooks`, `python cli.py modernize queue|run|reduce|regen`, `python cli.py sync metadata [--all]`, `lemtrain test-all [--epochs 1]`, and `lemtrain sync push <model>`.
+* **AI Studio GUI Operator Manual (`MANUAL_AI_STUDIO_GUI.md`)** — Documented CompilerPanel Section 2 sub-tabs (Catalog, Modernization Queue, Scale Reduction) and top toolbar actions, TrainingPanel fleet diagnostic test button, notebook generator button, per-card eval/export actions, CloudTrainModal checkpoint upload tab, and HealthPanel Ecosystem Maintenance & Governance card.
+* **GUI Control Registry (`GUI_CONTROL_REGISTRY.md`)** — Registered all newly added control IDs across Compiler, Training, and Health panels with bound sidecar endpoints.
+* **Architectural Whitepapers (`PAPER_DATASET_COMPILER.md`, `PAPER_TRAINING_SUITE.md`, `PAPER_ENV_MANAGER.md`, `PAPER_AI_STUDIO_GUI.md`)** — Synchronized architectural sections with the new modernization, fleet testing, git hook installation, and governance capabilities.
+* **Test Battery Pass** — Verified 24/24 automated integrity tests passing in `tests/test_documentation.py`.
+
+---
+
+### v16.9.24 — SSOT Notebook Generation Architecture, Manuals & Whitepaper Synchronization
+
+* **Single Source of Truth (SSOT) Notebook Generation Architecture** — Synchronized whitepapers and operational manuals with the consolidation of Jupyter notebook synthesis into `lemgendary-training-suite` (`training/notebooks/`, `training/services/notebook_service.py`) and removal of redundant generators from `lemgendary-datasets`.
+* **Master CLI Operations Manual (`MANUAL_CLI.md`)** — Documented Section 6.5 (`lemtrain notebooks list`, `lemtrain notebooks generate --model`, `lemtrain notebooks generate --all`) detailing multi-target staging across `LemGendaryModels/`, `LemGendaryDatasets/`, `kaggle_training/`, and `colab_training/`.
+* **Master API Reference Manual (`MANUAL_API.md`)** — Documented Section 4.3 REST endpoints (`GET /api/notebooks/models`, `POST /api/notebooks/generate`, `POST /api/notebooks/refresh-all`) on port 8200.
+* **AI Studio GUI Manual (`MANUAL_AI_STUDIO_GUI.md`)** — Documented Section 6.1 Callouts 9 & 10 detailing the dedicated "Training Notebook" and "Usage Notebook" one-click action buttons on model cards.
+* **Master Training Suite Whitepaper (`PAPER_TRAINING_SUITE.md`)** — Added Section 2.16 covering unified notebook synthesis, polymorphic Kaggle/Colab builders, and Step 0 training pre-flight synchronization hooks.
+* **Dataset Compiler Whitepaper (`PAPER_DATASET_COMPILER.md`)** — Added Section 5.15 covering dynamic SSOT notebook delegation, compiler deduplication, and stale artifact purging.
+
+---
+
 ### v16.9.23 — Hub Live Search, Task Entry Portals, AI-Helper Contract & 24-Test Expansion
 
 * **Client-Side Live Search & Keyboard Navigation** — Integrated real-time client-side search bar (`#hub-search-input`) with glassmorphism styling and keyboard shortcut (`/`) filtering across category titles, summaries, and keyword tags.

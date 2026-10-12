@@ -385,6 +385,62 @@ Response:
 }
 ```
 
+#### `POST /api/clean`
+
+Purges temporary build residues, bytecode caches (`__pycache__`, `*.pyc`), and staging artifacts across all projects or a specified project.
+
+Request body:
+
+```json
+{
+  "project": null
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "cleaned_count": 142,
+  "reclaimed_bytes": 52428800,
+  "reclaimed_mb": 50.0
+}
+```
+
+#### `POST /api/hooks/install`
+
+Installs or repairs standardized pre-commit hooks across all ecosystem projects or a specified target project. The hooks delegate to `lem-env validate` to prevent invalid commits.
+
+Request body:
+
+```json
+{
+  "project": null
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "all_ok": true,
+  "results": [
+    {
+      "project": "lemgendary-datasets",
+      "success": true,
+      "message": "Pre-commit hook installed successfully."
+    },
+    {
+      "project": "lemgendary-training-suite",
+      "success": true,
+      "message": "Pre-commit hook installed successfully."
+    }
+  ]
+}
+```
+
 #### `POST /api/manifests/sync`
 
 One-way copy of centralized manifests to project directories. Returns per-project sync status.
@@ -569,7 +625,7 @@ Response:
 }
 ```
 
-#### `POST /api/clean`
+#### `POST /api/clean` - Purge Caches
 
 Purges orphaned bytecode caches and temporary build artifacts.
 
@@ -828,11 +884,114 @@ Operational endpoints under `/api` requiring modification or system access enfor
 | `POST` | `/api/training/train` | Required | In-process training initiation with hardware discovery |
 | `POST` | `/api/training/evaluate` | Required | In-process checkpoint evaluation under torch.no_grad() |
 | `POST` | `/api/training/export` | Required | In-process multi-format model compilation and export |
+| `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 22 registered models |
+| `GET` | `/api/notebooks/models` | Required | Enumerate registered architectures available for notebook generation |
+| `POST` | `/api/notebooks/generate` | Required | Generate Jupyter training, inference, or usage notebooks for a model |
+| `POST` | `/api/notebooks/refresh-all` | Required | Batch regenerate and synchronize notebooks across all registered models |
+| `POST` | `/api/notebooks/generate-all` | Required | Alias for refresh-all; batch regenerate all notebooks |
 | `GET` | `/api/datasets` | Required | Discover available compiled datasets and dataset manifolds |
 | `GET` | `/api/env/telemetry` | Required | System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk |
 | `GET` | `/api/gui/state` | Required | Consolidated GUI snapshot: daemon, hardware, active jobs, models |
 | `GET` | `/api/gui/models/with-stats` | Required | Model cards hydrated with checkpoint and export disk stats |
 | `POST` | `/api/gui/quick-train` | Required | High-velocity one-click preset training dispatch |
+
+#### Diagnostic & Unit Test Fleet Endpoints
+
+##### `POST /api/training/unit-test-all`
+
+Submits an asynchronous background job executing a 1-epoch diagnostic smoke test across all 22 registered neural architectures via `tools/train_all.py`.
+
+Request body:
+
+```json
+{
+  "epochs": 1
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "status": "pending",
+  "message": "Enqueued 1-epoch diagnostic run for all models."
+}
+```
+
+#### Notebook Synthesis Endpoints
+
+##### `GET /api/notebooks/models`
+
+Returns the list of model architecture keys available for notebook synthesis.
+
+Response:
+
+```json
+[
+  "codeformer",
+  "ffanet_indoor",
+  "ffanet_outdoor",
+  "film_restorer",
+  "forex_predictor",
+  "mirnet_exposure"
+]
+```
+
+##### `POST /api/notebooks/generate`
+
+Generates execution or usage guide notebooks for a specific model architecture and platform.
+
+Request body:
+
+```json
+{
+  "model_key": "forex_predictor",
+  "platform": "all",
+  "kinds": ["training"],
+  "output_dir": null
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "model_key": "forex_predictor",
+  "platform": "all",
+  "generated": {
+    "kaggle_training": "C:\\Development\\python\\model-training\\LemGendaryModels\\forex_predictor\\forex_predictor_training.ipynb",
+    "colab_training": "C:\\Development\\python\\model-training\\LemGendaryModels\\forex_predictor\\forex_predictor_colab_training.ipynb"
+  }
+}
+```
+
+##### `POST /api/notebooks/refresh-all`
+
+Batch regenerates and synchronizes notebooks across all 22 registered models.
+
+Request body:
+
+```json
+{
+  "platform": "all",
+  "kinds": null,
+  "output_dir": null
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "platform": "all",
+  "total_models": 22,
+  "total_files": 110,
+  "results": { ... }
+}
+```
 
 ### 4.4 WebSocket Real-Time Telemetry & Log Streaming
 
@@ -985,6 +1144,11 @@ All operational endpoints under `/api` requiring modification privileges enforce
 | `POST` | `/api/kaggle/download` | None | Ingest dataset from Kaggle via URL or repo slug with auto-extraction |
 | `POST` | `/api/kaggle/upload` | None | Package and upload local compiled manifold to Kaggle repository |
 | `POST` | `/api/kaggle/sync` | Required | Queue a Kaggle push/pull metadata synchronization job |
+| `POST` | `/api/kaggle/update-metadata` | Required | Pushes dataset metadata JSON to Kaggle (supports all_datasets: true) |
+| `GET` | `/api/modernize/queue` | None | Scans all manifolds and queues those requiring WebP modernization |
+| `POST` | `/api/modernize/run` | Required | Dispatches batch modernization and parallel WebP transcoding |
+| `POST` | `/api/modernize/reduce` | Required | Dispatches spatial or sample scale reduction (downsample) job |
+| `POST` | `/api/modernize/regenerate-manifolds` | Required | Batch regenerates master manifolds.json and dataset-metadata.json |
 | `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
 | `GET` | `/api/gui/state` | None | Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets |
 | `GET` | `/api/gui/datasets/with-stats` | None | Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics |
@@ -1068,6 +1232,103 @@ Initiates an asynchronous download job from Kaggle for a registry manifold or cu
 #### `POST /api/kaggle/upload`
 
 Packages and uploads a local compiled manifold to Kaggle. Accepts `{ "manifold": "LemGendizedUpnV2", "kaggle_ref": "owner/slug" }`. Automatically discovers dataset directory, generates manifests, and streams to Kaggle via the API manager.
+
+#### `POST /api/kaggle/update-metadata`
+
+Updates dataset metadata on Kaggle. Supports single-manifold updates by specifying `dataset_name`, or bulk updates across all canonical manifolds by setting `all_datasets: true`.
+
+Request body:
+
+```json
+{
+  "dataset_name": "LemGendizedUpnV2",
+  "title": null,
+  "description": null,
+  "all_datasets": false
+}
+```
+
+#### `GET /api/modernize/queue`
+
+Scans all manifolds across `LemGendaryDatasets/` and returns the queue of datasets requiring WebP modernization and transcode. Each item details sample counts, format breakdowns (`webp`, `jpg`, `png`), and whether modernization is required.
+
+Response:
+
+```json
+{
+  "queue": [
+    {
+      "name": "LemGendizedMirNetExposure",
+      "total_samples": 45000,
+      "format_counts": { "png": 45000, "webp": 0 },
+      "needs_modernization": true
+    }
+  ],
+  "total": 1
+}
+```
+
+#### `POST /api/modernize/run`
+
+Submits an asynchronous background job to batch modernizes and transcodes manifolds to WebP.
+
+Request body:
+
+```json
+{
+  "max_workers": 8,
+  "push_kaggle": false,
+  "dry_run": false,
+  "force": false
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "c4d29e3a-7f61-432d-8629-843e4b7b25a1",
+  "status": "pending",
+  "message": "Enqueued batch modernization job."
+}
+```
+
+#### `POST /api/modernize/reduce`
+
+Submits a scale reduction (spatial/sample downsampling) job for a specified manifold.
+
+Request body:
+
+```json
+{
+  "manifold": "LemGendizedClassificationMaster",
+  "scale_factor": 0.25
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "a1b2c3d4-e5f6-4789-0123-456789abcdef",
+  "status": "pending",
+  "message": "Enqueued scale reduction job for LemGendizedClassificationMaster."
+}
+```
+
+#### `POST /api/modernize/regenerate-manifolds`
+
+Regenerates master `manifolds.json` and synchronized `dataset-metadata.json` across all manifolds on disk.
+
+Response:
+
+```json
+{
+  "status": "success",
+  "count": 21,
+  "message": "Regenerated metadata for 21 manifolds."
+}
+```
 
 ### 5.7 Three Architectural Ingestion & Modernization Pipelines
 

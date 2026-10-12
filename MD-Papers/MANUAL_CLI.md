@@ -305,11 +305,13 @@ Server lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handle
 
 ### 2.10 Git Hook Installation (`setup-hooks`)
 
-The `setup-hooks` command installs or repairs standardized pre-commit hooks across all ecosystem projects.
+The `setup-hooks` command (with canonical alias `hooks`) installs or repairs standardized pre-commit hooks across all ecosystem projects.
 
 ```bash
 # Install hooks across all projects
 lem-env setup-hooks
+# Or using the concise alias:
+lem-env hooks
 
 # Install for a single project
 lem-env setup-hooks --project lemgendary-datasets
@@ -496,7 +498,19 @@ python cli.py mask --model parsenet --strategy sam --device cuda
 ### 5.7 Variant Reduction & Modernization (`reduce`, `modernize`)
 
 ```bash
-# Create downsampled reduced manifold variant
+# Modernization queue inspection and management
+python cli.py modernize queue
+
+# Run batch modernization and WebP transcoding
+python cli.py modernize run --workers 8 --push-kaggle
+
+# Scale reduction (spatial downsampling) for a specific manifold
+python cli.py modernize reduce --manifold LemGendizedClassificationMaster --scale-factor 0.25
+
+# Batch regenerate manifolds index and dataset-metadata.json files
+python cli.py modernize regen
+
+# Create downsampled reduced manifold variant (legacy CLI syntax)
 python cli.py reduce --max-gb 10
 
 # Retire legacy `Large` suffix locally and in registry
@@ -559,6 +573,10 @@ python cli.py env install
 # Kaggle dataset push and pull
 python cli.py sync push --model nima_aesthetic
 python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
+
+# Update Kaggle metadata across all manifolds or a single manifold
+python cli.py sync metadata --all
+python cli.py sync metadata --model nima_aesthetic
 
 # Documentation regeneration
 python cli.py docs regen
@@ -710,6 +728,7 @@ python cli.py version
 | Command | Description |
 | :--- | :--- |
 | `train` | Train a neural architecture in-process using presets or custom hyperparameters |
+| `test-all` | Run a 1-epoch diagnostic smoke test across all 22 registered neural architectures |
 | `eval` | Evaluate a trained model checkpoint under torch.no_grad() |
 | `export` | Compile models to FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, or MT5 |
 | `notebooks` | Generate reproducible Kaggle and Google Colab training notebooks |
@@ -729,6 +748,18 @@ python cli.py train mirnet_exposure --preset quick-sota --epochs 50
 
 # Custom hyperparameter overrides
 python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean
+```
+
+#### Fleet Diagnostic Smoke Test (`test-all`)
+
+Executes a rapid 1-epoch diagnostic smoke test sequentially across all 22 registered neural architectures using `tools/train_all.py`:
+
+```bash
+# Run 1-epoch diagnostic test across all models
+lemtrain test-all
+
+# Override test epochs
+lemtrain test-all --epochs 2
 ```
 
 ### 6.3 Checkpoint Evaluation (`eval`)
@@ -754,12 +785,39 @@ python cli.py export mirnet_exposure --format webgpu
 
 ### 6.5 Notebook Generation (`notebooks`)
 
-Generates reproducible standalone Jupyter notebooks for Kaggle and Google Colab environments:
+Generates reproducible standalone Jupyter training, inference, and usage notebooks for Kaggle and Google Colab environments from the Training Suite Single Source of Truth:
 
 ```bash
-# Generate Kaggle and Google Colab notebooks for a model
-python cli.py notebooks mirnet_exposure --platform all --output-dir notebooks/
+# List all registered architectures available for notebook compilation
+lemtrain notebooks list
+
+# Generate Kaggle and Google Colab training & usage notebooks for a specific model
+lemtrain notebooks generate --model mirnet_exposure
+
+# Generate only Kaggle training notebooks for a specific model
+lemtrain notebooks generate --model forex_predictor --platform kaggle --kind training
+
+# Batch generate and synchronize notebooks across all 22 registered models
+lemtrain notebooks generate --all
+
+# Specify custom output export directory
+lemtrain notebooks generate --model nima_aesthetic_mobile --output-dir custom_notebooks/
 ```
+
+| Parameter | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--model`, `-m` | String | `None` | Target neural architecture key (e.g., `forex_predictor`, `codeformer`) |
+| `--all`, `-a` | Flag | `False` | Batch generate notebooks across all 22 registered model architectures |
+| `--platform`, `-p` | Choice | `all` | Target cloud execution platform (`kaggle`, `colab`, `all`) |
+| `--kind`, `-k` | List | `all` | Notebook kinds to generate (`training`, `inference`, `usage`) |
+| `--output-dir`, `-o` | Path | `LemGendaryModels` | Custom directory to persist generated `.ipynb` files |
+
+All generated notebooks are automatically distributed and mirrored across:
+
+1. `LemGendaryModels/<model_key>/` (canonical model folder)
+2. `LemGendaryDatasets/<manifold>/` (matching dataset manifold)
+3. `kaggle_training/` (workspace-level Kaggle staging directory)
+4. `colab_training/` (workspace-level Colab staging directory)
 
 ### 6.6 Checkpoint Management (`checkpoints`)
 
@@ -808,6 +866,9 @@ python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset 
 Transfers checkpoints and artifacts between local storage and remote cloud providers:
 
 ```bash
+# Push model checkpoints and metadata to Kaggle Models
+lemtrain sync push mirnet_exposure
+
 # Sync checkpoint artifacts to Google Drive
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10
 
