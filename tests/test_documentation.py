@@ -792,6 +792,38 @@ class TestDocumentationIntegrity(unittest.TestCase):
 
         overlap = train_ids.intersection(val_ids)
         self.assertEqual(len(overlap), 0, f"Train and validation splits share duplicate IDs: {overlap}")
+        self.assertGreaterEqual(
+            len(val_ids), 25,
+            "Held-out validation set must contain >= 25 records for robust evaluation"
+        )
+
+        # Verify metadata synchronization and purge of irrelevant lineage
+        info_path = os.path.join(dataset_dir, 'dataset_info.yaml')
+        meta_path = os.path.join(dataset_dir, 'dataset-metadata.json')
+        readme_path = os.path.join(dataset_dir, 'README.md')
+
+        for fpath in [info_path, meta_path, readme_path]:
+            if os.path.exists(fpath):
+                with open(fpath, 'r', encoding='utf-8') as f:
+                    txt = f.read()
+                self.assertNotIn(
+                    "Rain Streaks", txt,
+                    f"Found irrelevant 'Rain Streaks' lineage in {os.path.basename(fpath)}"
+                )
+                self.assertNotIn(
+                    "Parquet feature tensors", txt,
+                    f"Found stale Parquet description in {os.path.basename(fpath)}"
+                )
+
+        if os.path.exists(info_path):
+            with open(info_path, 'r', encoding='utf-8') as f:
+                info_data = yaml.safe_load(f)
+            self.assertEqual(info_data.get('train_samples'), len(train_ids), "dataset_info.yaml train count mismatch")
+            self.assertEqual(info_data.get('val_samples'), len(val_ids), "dataset_info.yaml val count mismatch")
+            self.assertEqual(
+                info_data.get('count'), len(train_ids) + len(val_ids),
+                "dataset_info.yaml total count mismatch"
+            )
 
 if __name__ == '__main__':
     unittest.main()
