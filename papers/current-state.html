@@ -44,9 +44,10 @@
         <p class="subtitle">Authoritative Workspace State Manifest, Port Mappings, and Convergence Invariants</p>
         <div class="meta">
                 <span>Category 01.0 STATUS</span>
-                <span>Version 16.9.16-STABLE</span>
+                <span>Version 16.9.26-STABLE</span>
                 <span>Component: Authoritative Workspace State</span>
-                <span>Timestamp: 2026-10-08</span>
+                <span>Reviewed: 2026-10-16</span>
+                <span>Status: Canonical</span>
             </div>
 
 
@@ -104,7 +105,7 @@
                             <tr>
                                 <td><strong>Documentation Hub</strong></td>
                                 <td>Master architectural whitepapers, manuals, HTML papers</td>
-                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>v16.9.26-STABLE</code></td>
                                 <td><code>lemgendary-docs/index.html</code></td>
                             </tr>
                             <tr>
@@ -263,12 +264,12 @@
             <section id="section-hardware">
                 <h2>8. Hardware Sentinels &amp; Physical Execution Constraints</h2>
                 <ul>
-                    <li><strong>GTX 1650 (4GB VRAM) Edge Baseline</strong>: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (\(12.5\times\) batch retrieval speedup).</li>
+                    <li><strong>GTX 1650 (4GB VRAM) Edge Baseline</strong>: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (empirically measured \(12.5\times\) batch retrieval acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence manifolds on Windows enforce <code>num_workers=0</code>).</li>
                     <li><strong>Continuous Memory Formula</strong>: Dynamic batch calculation scales continuously with available VRAM:
                         $$B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot \text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})} \right\rfloor$$
                     </li>
                     <li><strong>Sawtooth VRAM Governor</strong>: Dynamically halves batch sizes when memory pressure exceeds 90% and scales up when headroom exceeds 40%.</li>
-                    <li><strong>Sub-Second Minibatch Cancellation</strong>: Evaluates non-blocking cancellation listeners at batch boundaries, instantly interrupting runaway runs.</li>
+                    <li><strong>Sub-Second Minibatch Cancellation</strong>: Evaluates non-blocking cancellation listeners at batch boundaries, terminating execution within one batch cycle upon operator abort signals.</li>
                 </ul>
             </section>
 

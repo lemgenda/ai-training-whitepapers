@@ -1,8 +1,10 @@
 import glob
 from html.parser import HTMLParser
+import json
 import os
 import re
 import unittest
+
 import yaml
 
 class TestDocumentationIntegrity(unittest.TestCase):
@@ -210,7 +212,10 @@ class TestDocumentationIntegrity(unittest.TestCase):
     # ── 10. SSOT Manifest Parity ────────────────────────────────────────────
     def test_ssot_manifest_conformance(self):
         """Rule: Registered model keys and canonical status values conform to unified_models_v2.yaml."""
-        valid_statuses = {'PLANNED', 'SPECIFICATION', 'DATASET_READY', 'TRAINING', 'TRAINED', 'VALIDATED', 'PRODUCTION', 'DEPRECATED'}
+        valid_statuses = {
+            'PLANNED', 'SPECIFICATION', 'DATASET_READY', 'TRAINING',
+            'TRAINED', 'VALIDATED', 'PRODUCTION', 'DEPRECATED'
+        }
         for k, v in self.manifest.items():
             if isinstance(v, dict) and 'status' in v:
                 self.assertIn(v['status'].upper(), valid_statuses, f"Model {k} has non-canonical status {v['status']}")
@@ -281,10 +286,13 @@ class TestDocumentationIntegrity(unittest.TestCase):
     def test_ai_helper_corpus_integrity(self):
         """Rule: AI Helper JSONL corpus must exist, parse cleanly, obey zero-emojis,
         strictly align with unified_models_v2.yaml SSOT, and maintain balanced validation coverage."""
-        import json
-        corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend'))
+        corpus_dir = os.path.abspath(
+            os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend')
+        )
         if not os.path.exists(corpus_dir):
-            corpus_dir = os.path.abspath(os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus'))
+            corpus_dir = os.path.abspath(
+                os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus')
+            )
         train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
         val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
 
@@ -348,8 +356,14 @@ class TestDocumentationIntegrity(unittest.TestCase):
         if os.path.exists(gui_registry_html):
             with open(gui_registry_html, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
-            self.assertNotIn("Category 04 CONTROLS", content, "gui-control-registry.html must not use Category 04 (reserved for Restoration)")
-            self.assertIn("Category 03.4 CONTROLS", content, "gui-control-registry.html must be categorized under Category 03.4 CONTROLS")
+            self.assertNotIn(
+                "Category 04 CONTROLS", content,
+                "gui-control-registry.html must not use Category 04 (reserved for Restoration)"
+            )
+            self.assertIn(
+                "Category 03.4 CONTROLS", content,
+                "gui-control-registry.html must be categorized under Category 03.4 CONTROLS"
+            )
 
         # Category 00 must be General AI Training Knowledge, not governance/operational docs
         for fname, expected_cat, forbidden_cat in [
@@ -440,9 +454,15 @@ class TestDocumentationIntegrity(unittest.TestCase):
             cs_txt = f.read()
 
         # NIMA Aesthetic Mobile must be MobileNetV3-Small
-        self.assertIn("MobileNetV3-Small", cs_txt, "current-state.html must specify MobileNetV3-Small for nima_aesthetic_mobile")
+        self.assertIn(
+            "MobileNetV3-Small", cs_txt,
+            "current-state.html must specify MobileNetV3-Small for nima_aesthetic_mobile"
+        )
         # NIMA Technical and Authenticity must specify EfficientNetV2-S
-        self.assertIn("EfficientNetV2-S", cs_txt, "current-state.html must specify EfficientNetV2-S for technical/authenticity backbones")
+        self.assertIn(
+            "EfficientNetV2-S", cs_txt,
+            "current-state.html must specify EfficientNetV2-S for technical/authenticity backbones"
+        )
 
     # ── 20. Benchmark Evidence Condition Qualification ───────────────────────
     def test_evidence_condition_labeling(self):
@@ -474,13 +494,14 @@ class TestDocumentationIntegrity(unittest.TestCase):
         with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
             txt = f.read()
 
-        self.assertIn('Version v16.9.22-STABLE', txt, "index.html missing header version metadata")
+        self.assertIn('Version v16.9.26-STABLE', txt, "index.html missing header version metadata")
         self.assertIn('Last Reviewed:', txt, "index.html missing last-reviewed date metadata")
         self.assertIn('AUTHORITATIVE SSOT', txt, "index.html missing authoritative SSOT badge")
 
     # ── 23. AI Helper Knowledge Contract & Resolution Protocol ──────────────
     def test_ai_helper_knowledge_contract(self):
-        """Rule: AI Helper Troubleshooting Knowledge Base must specify authority hierarchy, intake protocol, and admission bounds."""
+        """Rule: AI Helper Troubleshooting Knowledge Base must specify authority hierarchy,
+        intake protocol, and admission bounds."""
         tb_md = os.path.join(self.docs_root, 'MD-Papers', 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md')
         tb_html = os.path.join(self.docs_root, 'papers', 'ai-helper-troubleshooting-knowledge.html')
 
@@ -553,7 +574,8 @@ class TestDocumentationIntegrity(unittest.TestCase):
 
     # ── 28. SwiGLU Architectural Formulation Integrity ──────────────────────
     def test_swiglu_equation_integrity(self):
-        """Rule: SwiGLU formula must explicitly project inputs through independent gate (W_1) and value (W_2) matrices."""
+        """Rule: SwiGLU formula must explicitly project inputs through independent gate (W_1)
+        and value (W_2) matrices."""
         llm_html = os.path.join(self.docs_root, 'papers', 'foundation-llm.html')
         llm_md = os.path.join(self.docs_root, 'MD-Papers', 'PAPER_LEMGENDARY_LLM.md')
         for fpath in [llm_html, llm_md]:
@@ -561,7 +583,10 @@ class TestDocumentationIntegrity(unittest.TestCase):
                 txt = f.read()
             self.assertIn("W_1", txt, f"Missing W_1 gate projection in {os.path.basename(fpath)}")
             self.assertIn("W_2", txt, f"Missing W_2 value projection in {os.path.basename(fpath)}")
-            self.assertNotIn("(x W_1 \\odot \\sigma(x W_1)) W_2", txt, f"Degenerate non-gated SwiGLU found in {os.path.basename(fpath)}")
+            self.assertNotIn(
+                "(x W_1 \\odot \\sigma(x W_1)) W_2", txt,
+                f"Degenerate non-gated SwiGLU found in {os.path.basename(fpath)}"
+            )
 
     # ── 29. VLM Cross-Entropy Equation Integrity ────────────────────────────
     def test_vlm_cross_entropy_equation_integrity(self):
@@ -571,7 +596,10 @@ class TestDocumentationIntegrity(unittest.TestCase):
         for fpath in [vlm_html, vlm_md]:
             with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
                 txt = f.read()
-            self.assertNotIn("w_{<t}", txt, f"Unescaped w_{{<t}} causing HTML tag truncation in {os.path.basename(fpath)}")
+            self.assertNotIn(
+                "w_{<t}", txt,
+                f"Unescaped w_{{<t}} causing HTML tag truncation in {os.path.basename(fpath)}"
+            )
             self.assertIn("w_{\\lt t}", txt, f"Expected w_{{\\lt t}} in {os.path.basename(fpath)}")
 
     # ── 30. Hub Index Branding Consistency ──────────────────────────────────
@@ -586,7 +614,8 @@ class TestDocumentationIntegrity(unittest.TestCase):
 
     # ── 31. Universal LaTeX Formula & Tag Integrity ──────────────────────────
     def test_universal_latex_formula_and_tag_integrity(self):
-        """Rule: All LaTeX blocks across all publications must have balanced delimiters, braces, and 0 unescaped HTML tags."""
+        """Rule: All LaTeX blocks across all publications must have balanced delimiters,
+        braces, and 0 unescaped HTML tags."""
         patterns = [
             re.compile(r'\$\$([\s\S]*?)\$\$'),
             re.compile(r'\\\[([\s\S]*?)\\\]'),
@@ -632,7 +661,10 @@ class TestDocumentationIntegrity(unittest.TestCase):
                 self.filename = filename
                 self.errors = []
                 self.stack = []
-                self.void_tags = {'meta', 'link', 'img', 'br', 'hr', 'input', 'area', 'base', 'col', 'embed', 'param', 'source', 'track', 'wbr'}
+                self.void_tags = {
+                    'meta', 'link', 'img', 'br', 'hr', 'input', 'area', 'base', 'col',
+                    'embed', 'param', 'source', 'track', 'wbr'
+                }
 
             def handle_starttag(self, tag, attrs):
                 t = tag.lower()
@@ -652,8 +684,14 @@ class TestDocumentationIntegrity(unittest.TestCase):
                     top_tag, pos = self.stack.pop()
                     if top_tag == t:
                         return
-                    if top_tag in {'html', 'head', 'body', 'main', 'nav', 'header', 'footer', 'table', 'thead', 'tbody', 'section'}:
-                        self.errors.append(f'Unclosed major tag <{top_tag}> from line {pos[0]} when encountering </{tag}> at line {self.getpos()[0]}')
+                    if top_tag in {
+                        'html', 'head', 'body', 'main', 'nav', 'header', 'footer',
+                        'table', 'thead', 'tbody', 'section'
+                    }:
+                        self.errors.append(
+                            f'Unclosed major tag <{top_tag}> from line {pos[0]} '
+                            f'when encountering </{tag}> at line {self.getpos()[0]}'
+                        )
                         return
 
         all_errors = []
@@ -664,6 +702,95 @@ class TestDocumentationIntegrity(unittest.TestCase):
             if validator.errors:
                 all_errors.append(f"{os.path.basename(path)}: {validator.errors}")
         self.assertEqual(len(all_errors), 0, f"HTML parser tag integrity failures: {all_errors}")
+
+    # ── 33. Cross-Repository Runtime & Manifest Consistency ─────────────────
+    def test_cross_repo_manifest_and_runtime_consistency(self):
+        """Rule: Model identifiers in unified_models_v2.yaml and sidecar ports (8000, 8100, 8200)
+        must match documentation."""
+        models = [k for k in self.manifest.keys() if not k.startswith('_')]
+        self.assertGreater(len(models), 10, "unified_models_v2.yaml must declare model definitions")
+
+        # Verify port bindings in authoritative documents
+        current_state_path = os.path.join(self.docs_root, 'papers', 'current-state.html')
+        with open(current_state_path, 'r', encoding='utf-8', errors='ignore') as f:
+            cs_txt = f.read()
+        self.assertIn("8000", cs_txt, "Current state must reference Port 8000 (Training Suite)")
+        self.assertIn("8100", cs_txt, "Current state must reference Port 8100 (Env Manager)")
+        self.assertIn("8200", cs_txt, "Current state must reference Port 8200 (Dataset Compiler)")
+
+    # ── 34. 3-Stage Diagnostic Intake Protocol Integrity ────────────────────
+    def test_three_stage_diagnostic_protocol_integrity(self):
+        """Rule: AI Helper troubleshooting documentation must strictly implement the
+        3-Stage Diagnostic Protocol with epistemic tags."""
+        html_diag = os.path.join(self.docs_root, 'papers', 'ai-helper-troubleshooting-knowledge.html')
+        md_diag = os.path.join(self.docs_root, 'MD-Papers', 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md')
+
+        for fpath in [html_diag, md_diag]:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            self.assertIn("Stage 1: Initial Triage", content, f"Missing Stage 1 in {os.path.basename(fpath)}")
+            self.assertIn("Stage 2: Targeted Diagnosis", content, f"Missing Stage 2 in {os.path.basename(fpath)}")
+            self.assertIn("Stage 3: Bounded Remediation", content, f"Missing Stage 3 in {os.path.basename(fpath)}")
+            self.assertIn("[CONFIRMED]", content, f"Missing [CONFIRMED] tag in {os.path.basename(fpath)}")
+            self.assertIn("[PROBABLE]", content, f"Missing [PROBABLE] tag in {os.path.basename(fpath)}")
+            self.assertIn("[ILLUSTRATIVE]", content, f"Missing [ILLUSTRATIVE] tag in {os.path.basename(fpath)}")
+
+    # ── 35. Evidence-Bounded Quantitative Performance Claims ─────────────────
+    def test_evidence_bounded_quantitative_claims(self):
+        """Rule: Quantitative acceleration claims (such as 12.5x) must specify benchmark
+        conditions and baseline metrics."""
+        html_cs = os.path.join(self.docs_root, 'papers', 'current-state.html')
+        md_cs = os.path.join(self.docs_root, 'MD-Papers', 'LEMGENDARY_CURRENT_STATE.md')
+
+        for fpath in [html_cs, md_cs]:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            self.assertIn("12.5", content, f"Missing 12.5x reference in {os.path.basename(fpath)}")
+            self.assertIn(
+                "3.43s", content,
+                f"12.5x speedup claim must cite 3.43s baseline in {os.path.basename(fpath)}"
+            )
+            self.assertIn(
+                "0.27s", content,
+                f"12.5x speedup claim must cite 0.27s result in {os.path.basename(fpath)}"
+            )
+            self.assertIn(
+                "num_workers=0", content,
+                f"12.5x speedup claim must cite num_workers=0 condition in {os.path.basename(fpath)}"
+            )
+
+    # ── 36. AI Helper Dataset Schema & Split Integrity ───────────────────────
+    def test_ai_helper_dataset_integrity(self):
+        """Rule: ai_helper_train.jsonl and ai_helper_val.jsonl must have valid schemas, zero overlap, and 0 emojis."""
+        dataset_dir = os.path.join(self.workspace_root, 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend')
+        train_path = os.path.join(dataset_dir, 'ai_helper_train.jsonl')
+        val_path = os.path.join(dataset_dir, 'ai_helper_val.jsonl')
+
+        if not os.path.exists(train_path) or not os.path.exists(val_path):
+            return  # Skip if dataset directory is not located at expected path
+
+        train_ids = set()
+        val_ids = set()
+        emoji_pat = re.compile(r'[\U00010000-\U0010ffff]', flags=re.UNICODE)
+
+        for p, id_set in [(train_path, train_ids), (val_path, val_ids)]:
+            with open(p, 'r', encoding='utf-8') as f:
+                for line_idx, line in enumerate(f):
+                    if not line.strip():
+                        continue
+                    rec = json.loads(line)
+                    self.assertIn('id', rec, f"Missing 'id' at line {line_idx+1} in {os.path.basename(p)}")
+                    self.assertIn('category', rec, f"Missing 'category' at line {line_idx+1} in {os.path.basename(p)}")
+                    self.assertIn('messages', rec, f"Missing 'messages' at line {line_idx+1} in {os.path.basename(p)}")
+                    self.assertEqual(
+                        len(rec['messages']), 3,
+                        f"Expected 3 messages (system, user, assistant) in {rec['id']}"
+                    )
+                    id_set.add(rec['id'])
+                    self.assertFalse(emoji_pat.search(line), f"Found emoji in {os.path.basename(p)} record {rec['id']}")
+
+        overlap = train_ids.intersection(val_ids)
+        self.assertEqual(len(overlap), 0, f"Train and validation splits share duplicate IDs: {overlap}")
 
 if __name__ == '__main__':
     unittest.main()

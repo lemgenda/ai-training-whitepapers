@@ -74,7 +74,7 @@ The active canonical versions across all workspace components are synchronized a
 | **Dataset Compiler** | `lemgendary-datasets` | `v16.9.6` | `unified_data.yaml` | `python cli.py` / `lemgendary_datasets_hub.ps1` |
 | **Env Manager** | `lemgendary-env-manager` | `v16.9.3` | `pyproject.toml`, `package.json` | `lem-env` / `lemgendary_env_manager.ps1` |
 | **Desktop Operator GUI** | `lemgendary-ai-studio-gui` | `v2.0.0` (Client) | `package.json`, `src-tauri/tauri.conf.json` | Tauri v2 Desktop App / Ports 8000/8100/8200 |
-| **Documentation Hub** | `lemgendary-docs` | `v16.9.16-STABLE` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
+| **Documentation Hub** | `lemgendary-docs` | `v16.9.26-STABLE` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
 | **Model Registry** | `LemGendaryModels` | `v16.9.16-STABLE` | `LemGendaryModels/*/README.md` | Authoritative Model Weights & SOTA Exports |
 
 ---

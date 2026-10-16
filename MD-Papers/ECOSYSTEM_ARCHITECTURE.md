@@ -11,6 +11,11 @@
 * [AI Studio Desktop GUI Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_AI_STUDIO_GUI.md)
 * [Unified Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
 
+**Hub Version**: `v16.9.26-STABLE`
+**Runtime Baseline**: `v16.9.16-STABLE`
+**Last Reviewed / Verified**: 2026-10-16
+**Status**: Canonical
+
 ---
 
 ## 1. Abstract & High-Level System Topology

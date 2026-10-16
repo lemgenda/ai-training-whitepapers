@@ -2,9 +2,11 @@
 # LemGendary Ecosystem: Master Operations Manuals Hub
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
 **Category**: Category 03 MANUALS  
-**Target Hardware**: NVIDIA / Apple Silicon / Intel ARC / CPU
+**Hub Version**: `v16.9.26-STABLE`  
+**Runtime Baseline**: `v16.9.16-STABLE`  
+**Last Reviewed / Verified**: 2026-10-16  
+**Status**: Canonical  
 
 ---
 

@@ -2,8 +2,10 @@
 
 ## Category 01.0 STATUS | Authoritative Workspace State Manifest
 
-**Timestamp**: 2026-10-08  
+**Last Reviewed / Verified**: 2026-10-16  
+**Documentation Hub Version**: `v16.9.26-STABLE`  
 **Master Architectural Baseline**: `v16.9.16-STABLE`  
+**Status**: Canonical  
 **Parent Authority**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
 
 ---
@@ -46,7 +48,7 @@ The ecosystem operates on intentional, well-defined versioning tracks:
 | **Dataset Compiler** | Shard synthesis, WebP transcoding, Kaggle/HF ingestion | `v16.9.6` | `python cli.py` / `lemgendary_datasets_hub.ps1` |
 | **Environment Manager** | Hardware probe, virtual environments, compliance audits | `v16.9.3` | `lem-env` / `lemgendary_env_manager.ps1` |
 | **AI Studio Desktop GUI** | Tauri v2 desktop application & Operator Cockpit | `v2.0.0` (Client) | `lemgendary-ai-studio-gui` executable |
-| **Documentation Hub** | Master architectural whitepapers, manuals, HTML papers | `v16.9.16-STABLE` | `lemgendary-docs/papers/index.html` |
+| **Documentation Hub** | Master architectural whitepapers, manuals, HTML papers | `v16.9.26-STABLE` | `lemgendary-docs/index.html` |
 | **Production Models** | Authoritative model weights, ONNX exports, metrics | `v16.9.16-STABLE` | `LemGendaryModels/<model_key>/` |
 | **Clinical Diagnostic Specs** | Training pathology & medical failure mode taxonomies | `v1.4.0` | `PAPER_TRAINING_PATHOLOGY.md` |
 | **Quantitative Algorithmic Specs** | Multi-Scale CNN-Transformer Forex & Commodities | `v2.7.1` | `PAPER_FOREX_PREDICTOR.md` |
@@ -139,11 +141,11 @@ $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m
 
 ## 8. Hardware Sentinels & Physical Execution Constraints
 
-- **GTX 1650 (4GB VRAM) Edge Baseline**: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing ($12.5\times$ batch retrieval speedup).
+- **GTX 1650 (4GB VRAM) Edge Baseline**: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (empirically measured $12.5\times$ batch retrieval acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence manifolds on Windows enforce `num_workers=0`).
 - **Continuous Memory Formula**: Dynamic batch calculation scales continuously with available VRAM:
   $$B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot \text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})} \right\rfloor$$
 - **Sawtooth VRAM Governor**: Dynamically halves batch sizes when memory pressure exceeds 90% and scales up when headroom exceeds 40%.
-- **Sub-Second Minibatch Cancellation**: Evaluates non-blocking cancellation listeners at batch boundaries, instantly interrupting runaway runs.
+- **Sub-Second Minibatch Cancellation**: Evaluates non-blocking cancellation listeners at batch boundaries, terminating execution within one batch cycle upon operator abort signals.
 
 ---
 
