@@ -1,11 +1,12 @@
 import glob
-from html.parser import HTMLParser
 import json
 import os
 import re
 import unittest
+from html.parser import HTMLParser
 
 import yaml
+
 
 class TestDocumentationIntegrity(unittest.TestCase):
     """Authoritative, comprehensive test suite verifying the integrity, typography,
