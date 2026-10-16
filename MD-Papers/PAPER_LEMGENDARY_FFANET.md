@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: High-Fidelity FFANet Dehazing via SOTA Infrastructure
 
-**Author**: Lem Treursić  
+**Author**: Lem Treursic  
 **Version**: 2.6.0 - Dynamic VRAM Sync  
 **Category**: Category 04 RESTORATION  
 **Hardware**: NVIDIA / MPS / XPU

@@ -50,7 +50,7 @@ The language decoder processes interleaved text tokens and visual prompt tokens 
 
 ## 5. Cross-Entropy Generation Objective
 
-$$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{<t}, Z)$$
+$$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)$$
 
 ---
 

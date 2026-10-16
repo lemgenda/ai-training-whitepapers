@@ -27,6 +27,8 @@ The **LemGendary NIMA Suite (Category 07)** provides a multi-dimensional percept
 
 ## 2. Four-Quadrant Quality Taxonomy
 
+Quality assessment decouples visual aesthetics from technical integrity across a 2x2 four-quadrant matrix, with Generative Media Authenticity evaluated as an orthogonal classification axis:
+
 1. Quadrant 1: High Aesthetic / High Technical
 2. Quadrant 2: High Aesthetic / Low Technical
 3. Quadrant 3: Low Aesthetic / Low Technical

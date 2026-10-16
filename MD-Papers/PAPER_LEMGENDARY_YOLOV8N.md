@@ -45,7 +45,7 @@ Imagine having an intelligent security guard scanning a video camera 60 times ev
 ### Training Convergence & SOTA Targets
 
 * **mAP@50:** SOTA Target $\ge 0.540$ across 80 COCO classes at 640px (exceeding canonical $0.525$ baseline).
-* **mAP@50-95:** SOTA Target $\ge 0.390$ with inference latency of 3.1ms on edge devices (exceeding canonical $0.373$ baseline).
+* **mAP@50-95:** SOTA Target $\ge 0.390$ with inference latency of 7.2ms (detection) / 3.1ms (classification) on GTX 1650 (exceeding canonical $0.373$ baseline).
 
 ## 2. Visual Taxonomy: Anchor-Free CSPDarknet & PANet
 
@@ -98,7 +98,7 @@ The LemGendary YOLOv8n is a high-throughput, anchor-free real-time object detect
 * **Architecture**: YOLOv8n (Anchor-Free CSPDarknet + PANet Neck + Decoupled Head)
 * **Input Resolution**: 640x640 (Dynamic Curriculum Scaling from 320x320)
 * **Precision**: ONNX FP16 / ONNX FP32 sidecar / PyTorch FP32
-* **Latency**: 3.1ms inference on edge devices `[MEASURED]`
+* **Latency**: 7.2ms (Detection) / 3.1ms (Classification) / 8.4ms (Pose) on GTX 1650 (FP16 ONNX) `[MEASURED]`
 
 #### 4.3 Manifold Info
 
@@ -108,17 +108,19 @@ The LemGendary YOLOv8n is a high-throughput, anchor-free real-time object detect
 
 #### 4.4 Performance Metrics
 
-* **Current Training Epochs**: 30 `[CURRENT]`
-* **Best mAP@0.50**: 0.892 `[MEASURED]` (Target: $\ge 0.540$ `[TARGET]`)
-* **Best mAP@0.50-0.95**: 0.648 `[MEASURED]` (Target: $\ge 0.390$ `[TARGET]`)
-* **Box Loss**: 0.684 `[MEASURED]`
-* **Class Loss**: 0.412 `[MEASURED]`
-* **Current Learning Rate**: 0.000185
+* **Current Training Epochs**: 265 `[CURRENT]`
+* **Best mAP@0.50**: 0.698 (69.8%) `[MEASURED]` (Target: $\ge 0.540$ `[TARGET]`)
+* **Best mAP@0.50-0.95**: 0.582 (58.2%) `[MEASURED]` (Target: $\ge 0.390$ `[TARGET]`)
+* **Validation Box Loss**: 0.567 `[MEASURED]`
+* **Validation Class Loss**: 0.681 `[MEASURED]`
+* **Validation DFL Loss**: 0.893 `[MEASURED]`
+* **Current Learning Rate**: 0.003864
+* **Curriculum Resolution & Fraction**: 640x640 @ 0.80 Fraction
 
 #### 4.5 Training Curve
 
 ![YOLOv8n Detection Training Curve](../assets/yolov8n_training.png)
-*Figure: Training Convergence & Loss Metrics for YOLOv8n Detection.*
+*Figure: Training Convergence & Loss Metrics for YOLOv8n Detection (Epochs 1–265).*
 
 ---
 

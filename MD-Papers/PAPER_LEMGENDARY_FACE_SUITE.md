@@ -60,9 +60,11 @@ The Headroom-Aware Memory-Sentinel dynamically throttles chunk size $b_{\text{ch
 
 ### 3.2 Scalar Restoration Quality Score
 
-Perceptual reconstruction quality across restoration phases is governed by the scalar quality function:
+Perceptual reconstruction quality across restoration phases is monitored via the heuristic scalar quality function:
 
 $$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$
+
+*Metric Calibration Rationale:* PSNR (higher is better) typically spans $20\text{--}35\text{ dB}$ in restoration tasks. SSIM (higher is better) and LPIPS (lower is better, measuring deep perceptual distance) are normalized indices bounded in $[0, 1]$. To prevent unit-scale distortion where a $0.05$ perceptual shift would be dwarfed by a $1.0\text{ dB}$ PSNR variation, a scaling factor of $20\times$ maps both SSIM and LPIPS to equivalent dynamic magnitudes ($\Delta = 1.0\text{ unit}$ per $0.05$ metric change), while the negative sign for LPIPS enforces consistent positive directionality for automated checkpoint selection.
 
 ---
 

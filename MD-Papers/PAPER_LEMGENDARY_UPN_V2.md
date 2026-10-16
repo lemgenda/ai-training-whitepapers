@@ -39,7 +39,7 @@ Imagine having a single universal digital darkroom knob. Traditionally, if an im
 ### Multi-Degradation Recovery & Metrics
 
 * **Input:** Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.
-* **Output:** Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18ms `[MEASURED]`.
+* **Output:** Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18.0ms on RTX 3060 (256x256 preview) / 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) `[MEASURED]`.
 
 | Multi-Degraded Input | UPN v2 Single-Pass Output |
 | :---: | :---: |
@@ -90,7 +90,7 @@ UPN v2 unifies blind restoration across diverse pathologies into a single contin
 * **Architecture**: UPN v2 (AdaIN-FMB + Multi-Scale Feature Modulation)
 * **Input Resolution**: 512x512
 * **Precision**: ONNX FP16 / PyTorch FP32
-* **Latency**: 31.0ms on NVIDIA GTX 1650 `[MEASURED]`
+* **Latency**: 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) / 18.0ms on RTX 3060 (256x256 preview) `[MEASURED]`
 
 #### 4.3 Manifold Info
 

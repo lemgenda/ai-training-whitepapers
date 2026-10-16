@@ -62,8 +62,9 @@
                 <h2>3. Shared Foundations & Universal Acceleration</h2>
                 <p>Memory bounds during training strictly satisfy:</p>
                 <div class="math-block">$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C) \quad \text{vs} \quad \text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$</div>
-                <p>Restoration quality is audited via the unified Scalar Restoration Quality Score:</p>
+                <p>Restoration quality across checkpoints is monitored via the heuristic Scalar Restoration Quality Score:</p>
                 <div class="math-block">$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
+                <p><em>Metric Calibration Rationale:</em> PSNR (higher is better) typically spans $20\text{--}35\text{ dB}$ in restoration tasks. SSIM (higher is better) and LPIPS (lower is better, measuring deep perceptual distance) are normalized indices bounded in $[0, 1]$. To prevent unit-scale distortion where a $0.05$ perceptual shift would be dwarfed by a $1.0\text{ dB}$ PSNR variation, a scaling factor of $20\times$ maps both SSIM and LPIPS to equivalent dynamic magnitudes ($\Delta = 1.0\text{ unit}$ per $0.05$ metric change), while the negative sign for LPIPS enforces consistent positive directionality for automated checkpoint selection.</p>
             </section>
 
             <section id="codeformer">

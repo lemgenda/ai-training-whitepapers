@@ -146,4 +146,4 @@ We are seeking strategic partners to accelerate the transition from a **Producti
 
 ---
 
-*Created and written by Lem Treursić owner of LemGenda for LemGendary Strategic Operations, 2026.*
+*Created and written by Lem Treursic owner of LemGenda for LemGendary Strategic Operations, 2026.*

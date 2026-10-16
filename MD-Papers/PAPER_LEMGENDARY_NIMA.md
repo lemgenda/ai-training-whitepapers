@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: High-Fidelity NIMA Assessment via Hardware-Aware Optimization
 
-**Author**: Lem Treursić
+**Author**: Lem Treursic
 **Version**: 3.2.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14)
 **Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)

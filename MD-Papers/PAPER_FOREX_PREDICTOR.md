@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: Multi-Scale CNN-Transformer Forex & Commodity Predictor
 
-**Author**: Lem Treursić  
+**Author**: Lem Treursic  
 **Version**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
 **Category**: Category 11 FINANCIAL  
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
@@ -50,7 +50,7 @@
 
 This paper presents the theoretical design, mathematical formulation, and production verification of the **LemGendary ForexPredictor**, a deep multi-scale quantitative architecture designed for multi-currency algorithmic trading across MetaTrader 5 environments. Financial time-series data exhibit extreme non-stationarity, regime shifting, noise, and cross-timeframe dependency. Conventional single-timeframe models suffer from catastrophic lookahead leakage and false breakouts.
 
-The LemGendary ForexPredictor integrates per-timeframe **Causal Dilated Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage embargo gap, the architecture achieves a **Directional Accuracy of 49.69%**, **Win Rate of 49.69%**, **Profit Factor of 0.99**, **Sharpe Ratio of -0.16**, and a **Max Drawdown of 665.80%**, demonstrating current training volatility prior to full convergence while guaranteeing sub-5ms ONNX execution latency.
+The LemGendary ForexPredictor integrates per-timeframe **Causal Dilated Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting the Multi-Timeframe Confluence Ladder ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend identification from high-precision intraday trigger timing. Validated across an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage embargo gap, the baseline research checkpoint demonstrates high training volatility prior to full convergence (Directional Accuracy 49.69%, Profit Factor 0.99, Sharpe Ratio -0.16, and Max Cumulative Drawdown 665.80%), demonstrating that live capital deployment remains strictly gated until reaching SOTA convergence targets while ONNX inference executes in sub-5ms latency.
 
 ---
 
@@ -273,6 +273,8 @@ $$\mathcal{L}_{\text{total}} = 0.5 \cdot \mathcal{L}_{\text{Focal}}(\hat{\mathbf
 | **TP MAE (pips)** | 18.40 | 14.60 | **615.42** | $< 12.00$ |
 | **SL MAE (pips)** | 16.20 | 12.80 | **617.95** | $< 10.00$ |
 | **Quality Score** | 98.42 | 125.64 | **105.87** | $> 150.00$ |
+
+*\*Drawdown Metric Convention Note:* The reported Max Drawdown (665.80%) reflects the cumulative leveraged equity decline ($100 \times \text{Cumulative Loss} / \text{Initial Margin}$) across unconstrained Walk-Forward test windows without simulated broker margin stop-out, modeling raw unhedged model conviction rather than capital-managed execution. Production deployment targets require $\text{Max Drawdown} < 6.50\%$ with mandatory stop-loss risk governors.
 
 ### 4.5 Training Curve
 

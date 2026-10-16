@@ -12,6 +12,22 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.26 — Technical Documentation Hub Audit Remediation & 32-Rule Test Suite Expansion
+
+* **Mathematical Delimiter & LaTeX Corruption Purge** — Eradicated corrupted `\|^2\right]` regex escape artifacts and malformed delimiters across scaling laws, VRAM capacity equations, and diffusion transition dynamics in `foundation-models-master.html`. Standardized MathJax configuration delimiters.
+* **VLM Cross-Entropy Equation Integrity** — Replaced unescaped `<t` and `<i` operators with `\lt t` and `\lt i` in `foundation-image-to-text.html`, `foundation-models-master.html`, and companion markdown, preventing browser HTML tag truncation and rendering complete autoregressive loss $\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)$.
+* **Gated SwiGLU Formulation Correction** — Replaced single-matrix placeholder with the dual-projection gated formulation $\text{SwiGLU}(x) = (\text{Swish}(x W_1) \odot (x W_2)) W_3$ in `foundation-llm.html` and companion markdown, qualifying PagedAttention non-contiguous memory claims.
+* **Diffusion Sampler & Spatial Resolution Qualification** — Disambiguated second-order Euler Ancestral claims in `foundation-diffusion.html` to fast stochastic Euler Ancestral (Euler-A) and deterministic DDIM; clarified latent spatial area downsampling ($8 \times 8 = 64\times$) versus channel expansion.
+* **Taxonomy Alignment & Elimination of Category 15** — Re-indexed legacy Category 15 references in `detection-classification.html` and companion markdown to `Category 09 VISION` (sub-designation `Category 09.1 SPECIFICATION`).
+* **YOLOv8n & UPN v2 Latency Disambiguation** — Reconciled YOLOv8n task-specific benchmarks (7.2 ms detection, 3.1 ms classification, 8.4 ms pose) and UPN v2 benchmarks (18.0 ms preview on RTX 3060 vs. 31.0 ms full-resolution on GTX 1650 FP16 ONNX). Qualified 4GB VRAM execution guarantees to dynamic micro-batch scaling.
+* **NIMA Taxonomy Matrix Clarification** — Formally clarified the 2x2 four-quadrant aesthetic and technical matrix alongside the orthogonal generative media authenticity axis in `nima-master.html` and companion markdown.
+* **Forex Predictor Backtest & Drawdown Boundary** — Clarified baseline volatility in abstract and documented the 665.80% maximum drawdown convention as cumulative leveraged loss on unconstrained Walk-Forward validation without margin stop-out.
+* **Facial Restoration Metric Calibration Rationale** — Added mathematical justification for the $20\times$ multiplier in composite visual quality scoring ($\text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$) bringing normalized $[0, 1]$ indices into parity with decibel scales.
+* **Hub Index Branding Consistency & Canonical Author Standardization** — Standardized logo alt text and copyright notice to `LemGendary AI Hub` in `index.html`; standardized all author attributions to canonical ASCII `Lem Treursic` across 17 files; aligned dataset compiler version to `v16.9.6` across HTML and Markdown.
+* **32-Rule Automated Test Suite Expansion** — Expanded `tests/test_documentation.py` from 24 to 32 automated tests with new regression checks for regex escape math corruptions, category taxonomy drift, author standardization, SwiGLU equation integrity, VLM cross-entropy syntax, index branding consistency, universal LaTeX delimiter balance, and strict HTMLParser tag hierarchy validation. All 32 tests passing with 0 warnings.
+
+---
+
 ### v16.9.25 — Ecosystem Synchronization, Modernization & Fleet Testing API/CLI/GUI Manuals Alignment
 
 * **Master API Reference Manual (`MANUAL_API.md`)** — Documented new endpoints across all 3 sidecars: Environment Manager (`POST /api/hooks/install`, `POST /api/clean`), Dataset Compiler (`GET /api/modernize/queue`, `POST /api/modernize/run`, `POST /api/modernize/reduce`, `POST /api/modernize/regenerate-manifolds`, `POST /api/kaggle/update-metadata` with `all_datasets: true`), and Training Suite (`POST /api/training/unit-test-all`, `POST /api/notebooks/generate-all`).

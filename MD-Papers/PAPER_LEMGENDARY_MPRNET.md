@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: High-Fidelity MPRNet Deraining via SOTA Infrastructure
 
-**Author**: Lem Treursić  
+**Author**: Lem Treursic  
 **Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
 **Category**: Category 04 RESTORATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)

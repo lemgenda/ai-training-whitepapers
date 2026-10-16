@@ -2,7 +2,7 @@
 
 # Nuclear Stability: AI Training Pathology Master Guide (v1.4.0)
 
-**Author**: Lem Treursić  
+**Author**: Lem Treursic  
 **Version**: 1.4.0 - Governor v17 Hardened (2026-09-11)  
 **Category**: Category 02 PATHOLOGY  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud  

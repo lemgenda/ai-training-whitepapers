@@ -52,7 +52,7 @@
 <h2>1.1 What YOLOv8n Does (In Plain English)</h2>
 <p>Imagine having an intelligent security guard scanning a video camera 60 times every second. <strong>YOLOv8n ("You Only Look Once" Nano) is an ultra-fast, real-time object detector</strong>:</p>
 <ul>
-<li><strong>Instant Object Finding:</strong> In just 3 milliseconds, it scans an entire image and draws tight colored boxes around objects—identifying people, animals, garden tools, cars, and plants.</li>
+<li><strong>Instant Object Finding:</strong> In under 8 milliseconds (7.2 ms for full 640x640 detection, 3.1 ms for classification), it scans an entire image and draws tight colored boxes around objects—identifying people, animals, garden tools, cars, and plants.</li>
 <li><strong>Body Pose &amp; Keypoint Tracking:</strong> In addition to finding objects, it can track 17 human body joints (knees, elbows, shoulders) in real time.</li>
 <li><strong>Ultra-Lightweight Efficiency:</strong> Weighing only 6.5 MB, it runs smoothly on budget laptops, battery-powered robots, and mobile phones without slowing down other programs.</li>
 </ul>
@@ -102,7 +102,7 @@
 <li><strong>Architecture</strong>: YOLOv8n (Anchor-Free CSPDarknet + PANet Neck + Decoupled Head)</li>
 <li><strong>Input Resolution</strong>: 640x640 (Dynamic Curriculum Scaling from 320x320)</li>
 <li><strong>Precision</strong>: ONNX FP16 / ONNX FP32 sidecar / PyTorch FP32</li>
-<li><strong>Latency</strong>: 3.1ms inference on edge devices <span class="score-badge-green">[MEASURED]</span></li>
+<li><strong>Latency</strong>: 7.2 ms (640x640 Object Detection) / 3.1 ms (224x224 Classification) / 8.4 ms (Pose) on NVIDIA GTX 1650 (FP16 ONNX, batch=1) <span class="score-badge-green">[MEASURED]</span></li>
 </ul>
 <h4>4.1.3 Manifold Info</h4>
 <ul>
@@ -112,16 +112,18 @@
 </ul>
 <h4>4.1.4 Performance Metrics</h4>
 <ul>
-<li><strong>Current Training Epochs</strong>: 30 <span class="score-badge-neutral">[CURRENT]</span></li>
-<li><strong>Best mAP@0.50</strong>: 0.892 <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.540 <span class="score-badge-neutral">[TARGET]</span>)</li>
-<li><strong>Best mAP@0.50-0.95</strong>: 0.648 <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.390 <span class="score-badge-neutral">[TARGET]</span>)</li>
-<li><strong>Box Loss</strong>: 0.684 <span class="score-badge-green">[MEASURED]</span></li>
-<li><strong>Class Loss</strong>: 0.412 <span class="score-badge-green">[MEASURED]</span></li>
-<li><strong>Current Learning Rate</strong>: 0.000185</li>
+<li><strong>Current Training Epochs</strong>: 265 <span class="score-badge-neutral">[CURRENT]</span></li>
+<li><strong>Best mAP@0.50</strong>: 0.698 (69.8%) <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.540 <span class="score-badge-neutral">[TARGET]</span>)</li>
+<li><strong>Best mAP@0.50-0.95</strong>: 0.582 (58.2%) <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.390 <span class="score-badge-neutral">[TARGET]</span>)</li>
+<li><strong>Validation Box Loss</strong>: 0.567 <span class="score-badge-green">[MEASURED]</span></li>
+<li><strong>Validation Class Loss</strong>: 0.681 <span class="score-badge-green">[MEASURED]</span></li>
+<li><strong>Validation DFL Loss</strong>: 0.893 <span class="score-badge-green">[MEASURED]</span></li>
+<li><strong>Current Learning Rate</strong>: 0.003864</li>
+<li><strong>Curriculum Resolution &amp; Fraction</strong>: 640x640 @ 0.80 Fraction</li>
 </ul>
 <h4>4.1.5 Training Curve</h4>
 <p><img alt="YOLOv8n Detection Training Curve" src="../assets/yolov8n_training.png"/><br/>
-<em>Figure: Training Convergence &amp; Loss Metrics for YOLOv8n Detection.</em></p>
+<em>Figure: Training Convergence &amp; Loss Metrics for YOLOv8n Detection (Epochs 1–265).</em></p>
 </section>
 
 <section id="challenges">
@@ -131,7 +133,7 @@
 <ol>
 <li><strong>Gradual Intra-Resolution Fraction Ladder Progression</strong>: Base rung (320px) advances through 30% to 100% data increments, escalating to 480px and 640px smoothly.</li>
 <li><strong>Plateau- and Overfitting-Driven Advancement</strong>: Stages advance dynamically based on quality score improvements, avoiding premature epoch budget exhaustion.</li>
-<li><strong>Sawtooth VRAM Governor &amp; OOM Sentinel</strong>: Dynamic first-principles batch calculation guarantees stable execution on 4GB hardware ceilings.</li>
+<li><strong>Sawtooth VRAM Governor &amp; OOM Sentinel</strong>: Dynamic first-principles batch calculation is engineered to prevent out-of-memory faults on 4GB hardware ceilings through dynamic micro-batch scaling.</li>
 </ol>
 <h3>5.2 Checkpoint Resumption &amp; Progress Recovery</h3>
 <p>Loads candidate checkpoints to inspect training metadata, skipping superseded stages and resuming active fraction ladders without resetting monotonic global epoch counters.</p>

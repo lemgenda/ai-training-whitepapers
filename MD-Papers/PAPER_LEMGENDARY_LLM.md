@@ -38,9 +38,9 @@ Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and k
 
 $$R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots, R_{\theta_{d/2}, m})$$
 
-Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear Units):
+Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear Units, Shazeer 2020), projecting inputs through independent gate ($W_1$) and value ($W_2$) matrices before down-projection ($W_3$):
 
-$$\text{SwiGLU}(x) = (x W_1 \odot \sigma(x W_1)) W_2$$
+$$\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left( (x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3$$
 
 ---
 
@@ -56,7 +56,7 @@ $$\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i$$
 
 ## 5. KV Cache & Inference Throughput
 
-Grouped-Query Attention (GQA) combined with PagedAttention KV-caching maximizes continuous batching throughput, eliminating VRAM fragmentation.
+Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block allocation maximizes continuous batching throughput, significantly mitigating virtual memory fragmentation during extended context inference.
 
 ---
 

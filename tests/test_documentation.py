@@ -1,4 +1,5 @@
 import glob
+from html.parser import HTMLParser
 import os
 import re
 import unittest
@@ -515,6 +516,154 @@ class TestDocumentationIntegrity(unittest.TestCase):
         ]
         for scenario in scenarios:
             self.assertIn(scenario, txt, f"Missing diagnostic scenario: {scenario}")
+
+    # ── 25. Regex Escape Math Corruption Defense ─────────────────────────────
+    def test_no_regex_escape_math_corruptions(self):
+        r"""Rule: Documentation must never contain corrupted regex escapes such as '\|^2\\right]'."""
+        corrupted_pat = re.compile(r'(\|\|?\^2\\right\]|\\right\]\|\|?\^2)')
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            if corrupted_pat.search(content):
+                failures.append(os.path.basename(path))
+        self.assertEqual(len(failures), 0, f"Corrupted LaTeX escape artifacts found in: {failures}")
+
+    # ── 26. Global Category Taxonomy Integrity ──────────────────────────────
+    def test_no_category_taxonomy_drift(self):
+        """Rule: Documentation must adhere to canonical Category 00 through 13 taxonomy with zero Category 15 drift."""
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            if "Category 15" in content or "CATEGORY 15" in content:
+                failures.append(os.path.basename(path))
+        self.assertEqual(len(failures), 0, f"Drifted Category 15 found in: {failures}")
+
+    # ── 27. Canonical Author Standardization ─────────────────────────────────
+    def test_canonical_author_standardization(self):
+        """Rule: Author name must be consistently standardized as 'Lem Treursic' without diacritic variants."""
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            if "Lem Treursić" in content:
+                failures.append(os.path.basename(path))
+        self.assertEqual(len(failures), 0, f"Non-canonical author spelling 'Lem Treursić' found in: {failures}")
+
+    # ── 28. SwiGLU Architectural Formulation Integrity ──────────────────────
+    def test_swiglu_equation_integrity(self):
+        """Rule: SwiGLU formula must explicitly project inputs through independent gate (W_1) and value (W_2) matrices."""
+        llm_html = os.path.join(self.docs_root, 'papers', 'foundation-llm.html')
+        llm_md = os.path.join(self.docs_root, 'MD-Papers', 'PAPER_LEMGENDARY_LLM.md')
+        for fpath in [llm_html, llm_md]:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                txt = f.read()
+            self.assertIn("W_1", txt, f"Missing W_1 gate projection in {os.path.basename(fpath)}")
+            self.assertIn("W_2", txt, f"Missing W_2 value projection in {os.path.basename(fpath)}")
+            self.assertNotIn("(x W_1 \\odot \\sigma(x W_1)) W_2", txt, f"Degenerate non-gated SwiGLU found in {os.path.basename(fpath)}")
+
+    # ── 29. VLM Cross-Entropy Equation Integrity ────────────────────────────
+    def test_vlm_cross_entropy_equation_integrity(self):
+        """Rule: VLM cross-entropy loss must escape less-than operators to prevent HTML tag truncation."""
+        vlm_html = os.path.join(self.docs_root, 'papers', 'foundation-image-to-text.html')
+        vlm_md = os.path.join(self.docs_root, 'MD-Papers', 'PAPER_LEMGENDARY_IMAGE_TO_TEXT.md')
+        for fpath in [vlm_html, vlm_md]:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                txt = f.read()
+            self.assertNotIn("w_{<t}", txt, f"Unescaped w_{{<t}} causing HTML tag truncation in {os.path.basename(fpath)}")
+            self.assertIn("w_{\\lt t}", txt, f"Expected w_{{\\lt t}} in {os.path.basename(fpath)}")
+
+    # ── 30. Hub Index Branding Consistency ──────────────────────────────────
+    def test_hub_index_branding_consistency(self):
+        """Rule: Hub index must consistently use 'LemGendary AI' for product and copyright branding."""
+        index_html = os.path.join(self.docs_root, 'index.html')
+        with open(index_html, 'r', encoding='utf-8', errors='ignore') as f:
+            txt = f.read()
+        self.assertNotIn('alt="LemGenda"', txt, "Index logo alt text should be 'LemGendary AI'")
+        self.assertNotIn('&copy; 2026 LemGenda AI Hub', txt, "Index copyright should be 'LemGendary AI Hub'")
+        self.assertIn('&copy; 2026 LemGendary AI Hub', txt, "Missing canonical 'LemGendary AI Hub' copyright")
+
+    # ── 31. Universal LaTeX Formula & Tag Integrity ──────────────────────────
+    def test_universal_latex_formula_and_tag_integrity(self):
+        """Rule: All LaTeX blocks across all publications must have balanced delimiters, braces, and 0 unescaped HTML tags."""
+        patterns = [
+            re.compile(r'\$\$([\s\S]*?)\$\$'),
+            re.compile(r'\\\[([\s\S]*?)\\\]'),
+            re.compile(r'\\\(([\s\S]*?)\\\)')
+        ]
+        failures = []
+        for fpath in self.html_files:
+            with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            for regex in patterns:
+                for match in regex.finditer(content):
+                    math_text = match.group(1).strip()
+                    if re.search(r'<[a-zA-Z/][^>]*>', math_text):
+                        failures.append(f"{os.path.basename(fpath)}: HTML tag inside math block: {math_text[:50]}")
+                    n_left = len(re.findall(r'\\left(?![a-zA-Z])', math_text))
+                    n_right = len(re.findall(r'\\right(?![a-zA-Z])', math_text))
+                    if n_left != n_right:
+                        failures.append(f"{os.path.basename(fpath)}: Unbalanced \\left/\\right ({n_left} vs {n_right})")
+                    if math_text.count('{') != math_text.count('}'):
+                        failures.append(f"{os.path.basename(fpath)}: Unbalanced braces in math block")
+        self.assertEqual(len(failures), 0, f"Universal LaTeX integrity violations: {failures}")
+
+    # ── 32. HTML Parser Tag Hierarchy Integrity ─────────────────────────────
+    def test_html_parser_tag_integrity(self):
+        """Rule: All HTML files must parse cleanly with zero unescaped tags or unclosed major containers."""
+        valid_tags = {
+            'a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo',
+            'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup',
+            'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed',
+            'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'head', 'header', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'legend',
+            'li', 'link', 'main', 'map', 'mark', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol',
+            'optgroup', 'option', 'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt',
+            'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strong', 'style',
+            'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th',
+            'thead', 'time', 'title', 'tr', 'track', 'u', 'ul', 'var', 'video', 'wbr', 'circle', 'line',
+            'path', 'rect', 'polygon', 'polyline', 'text', 'g', 'defs', 'clippath', 'use'
+        }
+
+        class StrictValidator(HTMLParser):
+            def __init__(self, filename):
+                super().__init__()
+                self.filename = filename
+                self.errors = []
+                self.stack = []
+                self.void_tags = {'meta', 'link', 'img', 'br', 'hr', 'input', 'area', 'base', 'col', 'embed', 'param', 'source', 'track', 'wbr'}
+
+            def handle_starttag(self, tag, attrs):
+                t = tag.lower()
+                if t not in valid_tags:
+                    self.errors.append(f'Unescaped or invalid tag <{tag}> at line {self.getpos()[0]}')
+                if t not in self.void_tags:
+                    self.stack.append((t, self.getpos()))
+
+            def handle_endtag(self, tag):
+                t = tag.lower()
+                if t in self.void_tags:
+                    return
+                if not self.stack:
+                    self.errors.append(f'Stray closing </{tag}> at line {self.getpos()[0]}')
+                    return
+                while self.stack:
+                    top_tag, pos = self.stack.pop()
+                    if top_tag == t:
+                        return
+                    if top_tag in {'html', 'head', 'body', 'main', 'nav', 'header', 'footer', 'table', 'thead', 'tbody', 'section'}:
+                        self.errors.append(f'Unclosed major tag <{top_tag}> from line {pos[0]} when encountering </{tag}> at line {self.getpos()[0]}')
+                        return
+
+        all_errors = []
+        for path in self.html_files:
+            validator = StrictValidator(path)
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                validator.feed(f.read())
+            if validator.errors:
+                all_errors.append(f"{os.path.basename(path)}: {validator.errors}")
+        self.assertEqual(len(all_errors), 0, f"HTML parser tag integrity failures: {all_errors}")
 
 if __name__ == '__main__':
     unittest.main()

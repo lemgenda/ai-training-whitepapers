@@ -58,7 +58,7 @@
         </ul>
         <h3>Multi-Degradation Recovery &amp; Metrics</h3>
         <p><strong>Input:</strong> Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.<br>
-        <strong>Output:</strong> Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18ms <span class="score-badge-green">[MEASURED]</span>.</p>
+        <strong>Output:</strong> Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18.0ms on RTX 3060 (256x256 preview) / 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) <span class="score-badge-green">[MEASURED]</span>.</p>
         <div class="table-container">
             <table>
                 <thead>
@@ -103,7 +103,7 @@
             <li><strong>Architecture</strong>: UPN v2 (AdaIN-FMB + Multi-Scale Feature Modulation)</li>
             <li><strong>Input Resolution</strong>: 512x512</li>
             <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
-            <li><strong>Latency</strong>: 31.0ms on NVIDIA GTX 1650 <span class="score-badge-green">[MEASURED]</span></li>
+            <li><strong>Latency</strong>: 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) / 18.0ms on RTX 3060 (256x256 preview) <span class="score-badge-green">[MEASURED]</span></li>
         </ul>
         <h4>4.3 Manifold Info</h4>
         <ul>

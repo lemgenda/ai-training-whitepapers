@@ -22,13 +22,13 @@
 
 ## 1. Abstract
 
-The **LemGendary Latent Diffusion Engine** implements score-based generative modeling over continuous latent representations. Rather than executing stochastic reverse-diffusion in high-dimensional pixel space $\mathbb{R}^{H \times W \times 3}$, the model operates within the spatial latent manifold of a pre-trained Vector-Quantized Variational Autoencoder (VQ-VAE). Paired with cross-attention text conditioners, classifier-free guidance, and second-order Euler Ancestral sampling schedulers, the system synthesizes high-fidelity photographic content in as few as 20 sampling steps.
+The **LemGendary Latent Diffusion Engine** implements score-based generative modeling over continuous latent representations. Rather than executing stochastic reverse-diffusion in high-dimensional pixel space $\mathbb{R}^{H \times W \times 3}$, the model operates within the spatial latent manifold of a pre-trained Autoencoder (KL-divergence or VQ-regularized). Paired with cross-attention text conditioners, classifier-free guidance, and fast stochastic Euler Ancestral (Euler-A) or deterministic DDIM sampling schedulers, the system synthesizes high-fidelity photographic content in as few as 20 sampling steps.
 
 ---
 
 ## 2. Latent Space Compression
 
-A convolutional autoencoder encodes pixel inputs $x \in \mathbb{R}^{H \times W \times 3}$ into latent tensors $z = \mathcal{E}(x) \in \mathbb{R}^{h \times w \times c}$ with downsampling factor $f = H/h = 8$. The reverse diffusion process operates strictly in this compressed manifold, reducing memory footprint by $64\times$.
+A convolutional autoencoder encodes pixel inputs $x \in \mathbb{R}^{H \times W \times 3}$ into latent tensors $z = \mathcal{E}(x) \in \mathbb{R}^{h \times w \times c}$ with spatial downsampling factor $f = H/h = 8$ (yielding an $8 \times 8 = 64\times$ spatial area reduction prior to channel expansion). The reverse diffusion process operates strictly in this compressed manifold, drastically minimizing intermediate activation memory.
 
 ---
 
