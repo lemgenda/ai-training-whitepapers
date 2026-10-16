@@ -65,8 +65,10 @@
                 <h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
                 <p>Foundation model optimization follows the Chinchilla compute-optimal scaling formulation:</p>
                 $$C \approx 6ND$$
-                <p>where $C$ represents FLOPs, $N$ denotes non-embedding parameter count, and $D$ denotes training token/sample volume. For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision FP16/BF16 memory containment:</p>
-                $$\text{VRAM}_{\text{total}} = 2 N_{\text{model}} + 2 N_{\text{grad}} + 12 N_{\text{optim}} + \mathcal{O}(B \cdot S \cdot H \cdot L)$$
+                <p>where $C$ represents FLOPs, $N$ denotes non-embedding active parameter count (accounting for $2N$ forward FLOPs/token and $4N$ backward FLOPs/token across dense GEMM layers), and $D$ denotes training token volume. Crucially, quadratic attention overhead $\mathcal{O}(S^2 \cdot d)$ is assumed negligible for $S \le 4096$, and for sparse MoE, $N$ is replaced by active parameters $N_{\text{active}}$.</p>
+                <p>For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision memory containment based on first-principles accounting:</p>
+                $$\text{VRAM}_{\text{total}} = M_{\text{params}} + M_{\text{grads}} + M_{\text{opt}} + M_{\text{activations}} + M_{\text{workspace}}$$
+                <p>where in standard FP16/BF16 training with AdamW, $M_{\text{params}} = 2N$, $M_{\text{grads}} = 2N$, and $M_{\text{opt}} = 12N$ (master FP32 weights plus two FP32 momentum tensors), reducible to $4N$ with 8-bit AdamW, while activation memory scales as $\mathcal{O}(B \cdot S \cdot d_{\text{model}} \cdot \sqrt{L})$ with selective FlashAttention-2 and activation checkpointing.</p>
             </section>
 
             <section id="diffusion">

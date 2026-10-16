@@ -21,7 +21,7 @@ The **LemGendary Training Suite** operates at the intersection of high-fidelity 
 2. [The Diagnostic Master Table](#2-the-diagnostic-master-table)
 3. [The "Fast Audit" Framework](#3-the-fast-audit-framework)
 4. [Modern 2026 Pathologies](#4-modern-2026-pathologies)
-5. [High-Fidelity Strategy (v16.2.8)](#5-high-fidelity-strategy-v1628)
+5. [High-Fidelity Strategy & Historical Evolution Taxonomy](#5-high-fidelity-strategy--historical-evolution-taxonomy)
 6. [Best Practices Checklist](#6-best-practices-checklist)
 7. [Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
 8. [Mapping Pathologies to Pipeline Stages](#8-mapping-pathologies-to-pipeline-stages)
@@ -189,13 +189,16 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 ---
 
-## 5. High-Fidelity Strategy (v16.2.8)
+## 5. High-Fidelity Strategy & Historical Evolution Taxonomy
 
-### The "Low-Resolution Blur" Pathology
+> [!NOTE]
+> **Historical Evolution & Version Authority Note**: The strategies documented in this section reflect the chronological hardening of the LemGendary Training Suite across architectural milestones. Historical tags (`v16.2.8`, `v17.2`, `v18.0`, `v22.0`) represent historical development phases and research prototypes. In the authoritative active baseline (**v16.9.16-STABLE**), all of these individual mechanisms (high-fidelity resolution floors, zero-worker serial lockdown, sawtooth VRAM memory sentinels, and ladder-aware resolution jumps) have been fully consolidated into the unified `SmartTrainingGovernor` runtime engine.
+
+### The "Low-Resolution Blur" Pathology (Milestone v16.2.8)
 
 **The Issue:** Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.
 
-**Remedy:** **Mandatory High-Fidelity Floor**. As of v16.2.8, all models must start at a minimum of **224px** or **512px** (Metric Scorers).
+**Remedy:** **Mandatory High-Fidelity Floor**. As of v16.2.8 (consolidated into v16.9.16-STABLE), all models must start at a minimum of **224px** or **512px** (Metric Scorers).
 
 ### Memory-Sentinel Drift
 
@@ -211,13 +214,13 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 **Remedy:** **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.
 
-### The Serial Recovery Shield (v17.2)
+### The Serial Recovery Shield (Prototype v17.2)
 
 **The Issue:** On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.
 
 **Remedy:** **Serial Lockdown**. After an OOM event, the suite must force-disable all parallel workers and revert to **Serial Mode (0 workers)** for the remainder of the manifold stage.
 
-### The Sub-Nuclear 4GB Lockdown (v22.0)
+### The Sub-Nuclear 4GB Lockdown (Design Study v22.0)
 
 **The Issue:** 4GB cards (GTX 1650) trigger **System RAM Paging** when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.
 
@@ -233,11 +236,11 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 **Remedy:** **Absolute Energy Floor**. Implement an absolute mathematical threshold (e.g., `> 0.05` unscaled) to the spike detection logic. A spike is now only considered dangerous if it represents a massive relative deviation *and* breaches the absolute baseline energy floor.
 
-### Premature SOTA Termination
+### Premature SOTA Termination (Ladder Guard v18.0)
 
 **The Issue:** The training suite terminates immediately upon reaching SOTA targets at low-resolution rungs, resulting in lack of high-frequency spatial maturity.
 
-**Remedy:** **Ladder-Aware SOTA Guard (v18.0)**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution instead of mission shutdown.
+**Remedy:** **Ladder-Aware SOTA Guard**. Targets met at lower rungs now trigger an autonomous **Force-Jump** to the next resolution instead of mission shutdown.
 
 ### Manifold Fragility (Glass Manifold Effect)
 

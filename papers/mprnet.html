@@ -274,10 +274,10 @@ Measures the statistical distance between real ($r$) and generated ($g$) manifol
 $$d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)$$
 <br>
 where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.</li>
-<li><strong>Restoration Quality Score Formulation</strong>:
-The orchestrator unifies structural and perceptual metrics into a single scalar score:
+<li><strong>Restoration Quality Score Formulation (Project-Specific Heuristic)</strong>:
+The orchestrator unifies structural and perceptual metrics into a single internal scalar score for automated ladder gating (not an academic standard; decoupled metrics must be reported for benchmark comparisons):
 <br>
-$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</li>
+$$\text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</li>
 </ul>
 
 <h4 id="323-pcie-vram-thrashing-the-chunking-fix">3.2.3 PCIe VRAM Thrashing &amp; The Chunking Fix</h4>

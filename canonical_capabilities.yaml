@@ -1,0 +1,775 @@
+---
+schema_version: "1.0.0"
+document_baseline: "v16.9.26-STABLE"
+runtime_engine_baseline: "v16.9.16-STABLE"
+desktop_client_baseline: "v2.0.0"
+last_audited: "2026-10-16"
+
+control_planes:
+  gui:
+    framework: "Tauri v2 + React 18 + Vite"
+    version: "v2.0.0"
+    ports:
+      training_sidecar: 8000
+      dataset_compiler_sidecar: 8100
+      hardware_environment_sidecar: 8200
+  cli:
+    engine: "Python argparse / click"
+    entrypoints:
+      training: "python -m training.cli.lemtrain"
+      dataset_compiler: "python cli.py"
+      environment_manager: "lem-env"
+  api:
+    framework: "FastAPI + WebSocket"
+    openapi_specification: "openapi.json"
+    contracts: "Frozen OpenAPI 3.1"
+
+models:
+  - id: "forex_predictor"
+    name: "Forex Predictor (Multi-Scale CNN-Transformer)"
+    category: "forex"
+    domain: "time_series_quantitative_finance"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/ForexPredictor/ForexPredictor.py"
+    weights_path: "LemGendaryModels/ForexPredictor/ForexPredictorWeights_FP32.pth"
+    architecture_type: "Causal TCN + Multi-Head Cross-Timeframe Attention"
+    supported_formats:
+      input: ["csv", "parquet", "mt5_ticks"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-forex-predictor"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model forex_predictor"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 128
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#forex_predictor"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_FOREX_PREDICTOR.md"
+    limitations:
+      - "Inference sub-5ms target applies to compiled ONNX runtime; PyTorch eager latency is ~12-18ms."
+      - "Requires continuous non-gapped M1-MN data."
+
+  - id: "nima_aesthetic_mobile"
+    name: "NIMA Aesthetic Mobile"
+    category: "quality_assessment"
+    domain: "perceptual_aesthetic_scoring"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nima_aesthetic_mobile/model.py"
+    weights_path: "LemGendaryModels/nima_aesthetic_mobile/weights.pth"
+    architecture_type: "MobileNetV3-Small + Earth Mover's Distance Head"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nima-aesthetic-mobile"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nima_aesthetic_mobile"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 2.0
+      recommended_batch_size: 64
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nima_aesthetic_mobile"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_NIMA_MOBILE.md"
+    limitations:
+      - "Optimized for lightweight inference (10-class probability distribution)."
+
+  - id: "nima_aesthetic_efficientnet"
+    name: "NIMA Aesthetic EfficientNet"
+    category: "quality_assessment"
+    domain: "perceptual_aesthetic_scoring"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nima_aesthetic_efficientnet/model.py"
+    weights_path: "LemGendaryModels/nima_aesthetic_efficientnet/weights.pth"
+    architecture_type: "EfficientNet-B0 Backbone + EMD Loss"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nima-aesthetic-efficientnet"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nima_aesthetic_efficientnet"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 32
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nima_aesthetic_efficientnet"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_NIMA_EFFICIENTNET.md"
+    limitations:
+      - "Higher FLOP count than Mobile variant; balanced for edge workstation scoring."
+
+  - id: "nima_aesthetic_pro"
+    name: "NIMA Aesthetic Pro"
+    category: "quality_assessment"
+    domain: "perceptual_aesthetic_scoring"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nima_aesthetic_pro/model.py"
+    weights_path: "LemGendaryModels/nima_aesthetic_pro/weights.pth"
+    architecture_type: "DenseNet-201 / ConvNeXt-Tiny + Multi-Head EMD"
+    supported_formats:
+      input: ["png", "jpg", "webp", "tiff"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nima-aesthetic-pro"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nima_aesthetic_pro"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 16
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nima_aesthetic_pro"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_NIMA_PRO.md"
+    limitations:
+      - "Demands minimum 6GB VRAM for batch sizes greater than 16."
+
+  - id: "nima_technical"
+    name: "NIMA Technical Quality"
+    category: "quality_assessment"
+    domain: "technical_distortion_scoring"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nima_technical/model.py"
+    weights_path: "LemGendaryModels/nima_technical/weights.pth"
+    architecture_type: "MobileNetV3 Backbone + Multi-Distortion Classification Head"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nima-technical"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nima_technical"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 3.0
+      recommended_batch_size: 32
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nima_technical"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_NIMA_TECHNICAL.md"
+    limitations:
+      - "Sensitive to JPEG block boundary artifacts."
+
+  - id: "nima_authenticity"
+    name: "NIMA Authenticity & Artifact Detection"
+    category: "quality_assessment"
+    domain: "synthetic_generation_authenticity"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nima_authenticity/model.py"
+    weights_path: "LemGendaryModels/nima_authenticity/weights.pth"
+    architecture_type: "Frequency-Aware High-Pass ResNet Backbone"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nima-authenticity"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nima_authenticity"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 32
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nima_authenticity"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_NIMA_AUTHENTICITY.md"
+    limitations:
+      - "Requires uncompressed or high-quality WebP inputs; excessive downsampling destroys frequency signatures."
+
+  - id: "upn_v2"
+    name: "Universal Perceptual Network V2"
+    category: "restoration"
+    domain: "vision_hybrid_restoration"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/upn_v2/model.py"
+    weights_path: "LemGendaryModels/upn_v2/weights.pth"
+    architecture_type: "Residual-in-Residual Dense Blocks with Spatial Attention"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-upn-v2"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model upn_v2"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 8
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#upn_v2"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_UPN_V2.md"
+    limitations:
+      - "Requires tiling for images exceeding 1920x1080 on 6GB VRAM."
+
+  - id: "film_restorer"
+    name: "Film Restorer (Vintage Grain & Scratch Removal)"
+    category: "restoration"
+    domain: "vintage_photographic_restoration"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/film_restorer/model.py"
+    weights_path: "LemGendaryModels/film_restorer/weights.pth"
+    architecture_type: "Dual-Branch Attention Network (Structure + Grain Decomposition)"
+    supported_formats:
+      input: ["png", "jpg", "webp", "tiff"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-film-restorer"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model film_restorer"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#film_restorer"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_FILM_RESTORER.md"
+    limitations:
+      - "High scratch density may require iterative 2-pass restoration."
+
+  - id: "codeformer"
+    name: "CodeFormer Face Restoration"
+    category: "face_restoration"
+    domain: "blind_face_restoration"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/codeformer/model.py"
+    weights_path: "LemGendaryModels/codeformer/weights.pth"
+    architecture_type: "Learned Discrete Codebook Transformer with Fidelity Controllability"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-codeformer"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model codeformer"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#codeformer"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_CODEFORMER.md"
+    limitations:
+      - "Requires 512x512 aligned facial crops."
+
+  - id: "parsenet"
+    name: "ParseNet Facial Parsing"
+    category: "facial_segmentation"
+    domain: "semantic_face_segmentation"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/parsenet/model.py"
+    weights_path: "LemGendaryModels/parsenet/weights.pth"
+    architecture_type: "BiSeNet-V2 with Spatial and Context Paths"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-parsenet"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model parsenet"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 16
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#parsenet"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_PARSENET.md"
+    limitations:
+      - "Generates 19 discrete facial semantic classes."
+
+  - id: "ffanet_indoor"
+    name: "FFA-Net Indoor Dehazing"
+    category: "restoration"
+    domain: "feature_fusion_indoor_dehazing"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/ffanet_indoor/model.py"
+    weights_path: "LemGendaryModels/ffanet_indoor/weights.pth"
+    architecture_type: "Feature Fusion Attention Network (Channel + Pixel Attention)"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-ffanet-indoor"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model ffanet_indoor"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#ffanet_indoor"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_FFANET.md"
+    limitations:
+      - "Trained specifically on homogeneous indoor diffusion scatter."
+
+  - id: "ffanet_outdoor"
+    name: "FFA-Net Outdoor Dehazing"
+    category: "restoration"
+    domain: "feature_fusion_outdoor_dehazing"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/ffanet_outdoor/model.py"
+    weights_path: "LemGendaryModels/ffanet_outdoor/weights.pth"
+    architecture_type: "Feature Fusion Attention Network (Extended Depth Layers)"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-ffanet-outdoor"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model ffanet_outdoor"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#ffanet_outdoor"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_FFANET.md"
+    limitations:
+      - "Atmospheric haze depth maps require dynamic contrast bounds."
+
+  - id: "mirnet_lowlight"
+    name: "MIRNet Low-Light Enhancement"
+    category: "restoration"
+    domain: "multi_scale_low_light_restoration"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/mirnet_lowlight/model.py"
+    weights_path: "LemGendaryModels/mirnet_lowlight/weights.pth"
+    architecture_type: "Multi-Scale Residual Block with Dual Attention Units"
+    supported_formats:
+      input: ["png", "jpg", "webp", "raw"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-mirnet-lowlight"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model mirnet_lowlight"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 2
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#mirnet_lowlight"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MIRNET.md"
+    limitations:
+      - "High memory footprint due to multi-resolution parallel branches; use gradient accumulation."
+
+  - id: "mirnet_exposure"
+    name: "MIRNet Exposure Correction"
+    category: "restoration"
+    domain: "dual_exposure_over_under_correction"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/mirnet_exposure/model.py"
+    weights_path: "LemGendaryModels/mirnet_exposure/weights.pth"
+    architecture_type: "Multi-Scale Residual Block with Highlight Preservation"
+    supported_formats:
+      input: ["png", "jpg", "webp", "raw"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-mirnet-exposure"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model mirnet_exposure"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 2
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#mirnet_exposure"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MIRNET.md"
+    limitations:
+      - "Extreme clipping (>99% saturation) may show residual color tinting."
+
+  - id: "mprnet_deraining"
+    name: "MPRNet Deraining & Drop Removal"
+    category: "restoration"
+    domain: "multi_stage_progressive_deraining"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/mprnet_deraining/model.py"
+    weights_path: "LemGendaryModels/mprnet_deraining/weights.pth"
+    architecture_type: "3-Stage Progressive Architecture with Cross-Stage Feature Fusion"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-mprnet-deraining"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model mprnet_deraining"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 2
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#mprnet_deraining"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MPRNET.md"
+    limitations:
+      - "Achieved 53.95 dB PSNR in Kaggle T4 dual runs; requires FP32 clamps on CSFF modules."
+
+  - id: "nafnet_debluring"
+    name: "NAFNet Deblurring"
+    category: "restoration"
+    domain: "nonlinear_activation_free_deblurring"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nafnet_debluring/model.py"
+    weights_path: "LemGendaryModels/nafnet_debluring/weights.pth"
+    architecture_type: "Nonlinear Activation Free Network (SimpleGate + Simplified Channel Attention)"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nafnet-debluring"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nafnet_debluring"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nafnet_debluring"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NAFNET.md"
+    limitations:
+      - "SimpleGate layers must run in FP32 on specific legacy CUDA driver revisions to avoid NaN."
+
+  - id: "nafnet_denoising"
+    name: "NAFNet Denoising"
+    category: "restoration"
+    domain: "nonlinear_activation_free_denoising"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/nafnet_denoising/model.py"
+    weights_path: "LemGendaryModels/nafnet_denoising/weights.pth"
+    architecture_type: "Nonlinear Activation Free Network (36-Block Backbone)"
+    supported_formats:
+      input: ["png", "jpg", "webp", "tiff"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nafnet-denoising"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model nafnet_denoising"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#nafnet_denoising"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NAFNET.md"
+    limitations:
+      - "Achieved 48.29 dB PSNR on 640px test sets; full FP32 clamps recommended."
+
+  - id: "yolov8n"
+    name: "YOLOv8 Nano Object Detection"
+    category: "detection"
+    domain: "realtime_object_detection"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/yolov8n/model.py"
+    weights_path: "LemGendaryModels/yolov8n/weights.pth"
+    architecture_type: "Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned Assigner)"
+    supported_formats:
+      input: ["png", "jpg", "webp", "video_mp4"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-yolov8n"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model yolov8n"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 16
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#yolov8n"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_YOLOV8N.md"
+    limitations:
+      - "Export targets ONNX opset 17 for WebGPU zero-slice compliance."
+
+  - id: "professional_multitask_restoration"
+    name: "Professional Multitask Restoration Pro"
+    category: "hybrid_restoration"
+    domain: "unified_multi_distortion_restoration"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/professional_multitask_restoration/model.py"
+    weights_path: "LemGendaryModels/professional_multitask_restoration/weights.pth"
+    architecture_type: "Dynamic Multi-Head Transformer with Task Prompt Embeddings"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-multitask"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model professional_multitask_restoration"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 8.0
+      recommended_batch_size: 2
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#professional_multitask_restoration"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MULTITASK.md"
+    limitations:
+      - "Demands dynamic gradient loss balancing (GradNorm) across competing task heads."
+
+  - id: "ultrazoom"
+    name: "UltraZoom Super-Resolution"
+    category: "super_resolution"
+    domain: "perceptual_super_resolution"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/ultrazoom/model.py"
+    weights_path: "LemGendaryModels/ultrazoom/weights.pth"
+    architecture_type: "Cascaded Residual LapSRN + High-Frequency Edge Head"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-ultrazoom"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model ultrazoom"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 6.0
+      recommended_batch_size: 4
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#ultrazoom"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_ULTRAZOOM.md"
+    limitations:
+      - "4x scale factor requires tiling on cards with <=6GB VRAM."
+
+  - id: "universal_nsfw_classification"
+    name: "Universal NSFW & Content Moderation Classifier"
+    category: "moderation"
+    domain: "content_safety_classification"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/universal_nsfw_classification/model.py"
+    weights_path: "LemGendaryModels/universal_nsfw_classification/weights.pth"
+    architecture_type: "Vision Transformer (ViT-Small / EfficientNet-B2 Head)"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-nsfw"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model universal_nsfw_classification"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 32
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#universal_nsfw_classification"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NSFW_CLASSIFIER.md"
+    limitations:
+      - "Outputs 5-class safety logits (Drawings, Hentai, Neutral, Porn, Sexy)."
+
+  - id: "retinaface"
+    name: "RetinaFace Landmark Detection"
+    category: "face_detection"
+    domain: "dense_face_and_landmark_localization"
+    general_ai_support: true
+    studio_implementation_status: "implemented"
+    runtime_baseline: "v16.9.16-STABLE"
+    codebase_path: "LemGendaryModels/retinaface/model.py"
+    weights_path: "LemGendaryModels/retinaface/weights.pth"
+    architecture_type: "Feature Pyramid Network with Context Modules and Multi-Task Loss"
+    supported_formats:
+      input: ["png", "jpg", "webp"]
+      manifold: "tar_stream"
+    control_planes:
+      gui:
+        available: true
+        element_id: "model-select-retinaface"
+      cli:
+        available: true
+        command: "python -m training.cli.lemtrain --model retinaface"
+      api:
+        available: true
+        route: "POST /v16/train/start"
+        port: 8000
+    hardware_constraints:
+      min_vram_gb: 4.0
+      recommended_batch_size: 8
+      supports_amp: true
+    evidence:
+      manifest_entry: "lemgendary-training-suite/unified_models_v2.yaml#retinaface"
+      whitepaper: "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md"
+    limitations:
+      - "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners)."

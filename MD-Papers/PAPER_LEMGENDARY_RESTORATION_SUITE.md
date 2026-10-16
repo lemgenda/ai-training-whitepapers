@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: Advanced Film Restoration & Super-Resolution Master Suite
 
-**Author**: Lem Treursic  
-**Version**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)  
+**Author**: Lem Treursic
+**Version**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Dual T4 Cloud Nodes
 
 ---
@@ -56,9 +56,20 @@ Restoration fidelity optimizes a combined Charbonnier reconstruction and deep pe
 
 $$\mathcal{L}_{\text{total}} = \sqrt{\|I_{\text{restored}} - I_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perceptual}} \|\phi(I_{\text{restored}}) - \phi(I_{\text{gt}})\|_2^2$$
 
-### 3.2 Restoration Quality Score Formulation
+### 3.2 Empirical Restoration Quality Score Formulation (Project-Specific Heuristic)
 
-$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$
+> [!NOTE]
+> **Heuristic Classification**: The scalar Restoration Quality Score defined below is an internal, project-specific empirical heuristic utilized by the `SmartTrainingGovernor` for automated checkpoint ladder progression. It is not an established academic standard or universal perceptual metric. Academic comparisons must report decoupled individual metrics ($\text{PSNR}$, $\text{SSIM}$, $\text{LPIPS}$, and $\text{FID}$).
+
+$$\text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$
+
+#### Empirical Weighting & Normalization Rationale
+
+* **$\text{PSNR}$ (Scale factor $1.0$)**: Provides global pixel-level intensity fidelity in decibels ($\text{dB}$), typically ranging from $20.0$ to $50.0$.
+
+* **$\text{SSIM} \times 20$ (Scale factor $20.0$)**: Maps structural similarity (bounded $[0, 1]$) into a $[0, 20]$ interval, making a $\Delta 0.05$ structural difference equivalent to $\Delta 1.0\text{ dB}$ PSNR.
+* **$-\text{LPIPS} \times 20$ (Scale factor $-20.0$)**: Maps deep perceptual patch distance (bounded $[0, 1]$, lower is better) into a $[-20, 0]$ penalty, penalizing perceptual artifacts proportionally to structural gains.
+* **Convergence Target**: Convergence ladders treat scores $\ge 50.0$ as entry-level fidelity, $\ge 60.0$ as production-grade, and $\ge 65.0$ as benchmark state-of-the-art.
 
 ---
 

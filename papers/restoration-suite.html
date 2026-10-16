@@ -57,9 +57,19 @@
             </section>
 
             <section id="foundations">
-                <h2>3. Shared Foundations & Universal Acceleration</h2>
+                <h2>3. Shared Foundations &amp; Universal Acceleration</h2>
                 <p>Loss optimization combines Charbonnier reconstruction with VGG perceptual supervision:</p>
                 <div class="math-block">$$\mathcal{L}_{\text{total}} = \sqrt{\|I_{\text{restored}} - I_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perceptual}} \|\phi(I_{\text{restored}}) - \phi(I_{\text{gt}})\|_2^2$$</div>
+                <h3>3.2 Empirical Restoration Quality Score Formulation (Project-Specific Heuristic)</h3>
+                <div class="abstract-box">
+                    <p><strong>Heuristic Classification</strong>: The scalar Restoration Quality Score defined below is an internal, project-specific empirical heuristic utilized by the <code>SmartTrainingGovernor</code> for automated checkpoint ladder progression. It is not an established academic standard or universal perceptual metric. Academic comparisons must report decoupled individual metrics ($\text{PSNR}$, $\text{SSIM}$, $\text{LPIPS}$, and $\text{FID}$).</p>
+                </div>
+                <div class="math-block">$$\text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
+                <ul>
+                    <li><strong>$\text{PSNR}$ (Scale factor $1.0$):</strong> Provides global pixel-level intensity fidelity in decibels ($\text{dB}$), typically ranging from $20.0$ to $50.0$.</li>
+                    <li><strong>$\text{SSIM} \times 20$ (Scale factor $20.0$):</strong> Maps structural similarity (bounded $[0, 1]$) into a $[0, 20]$ interval, making a $\Delta 0.05$ structural difference equivalent to $\Delta 1.0\text{ dB}$ PSNR.</li>
+                    <li><strong>$-\text{LPIPS} \times 20$ (Scale factor $-20.0$):</strong> Maps deep perceptual patch distance (bounded $[0, 1]$, lower is better) into a $[-20, 0]$ penalty.</li>
+                </ul>
             </section>
 
             <section id="film">

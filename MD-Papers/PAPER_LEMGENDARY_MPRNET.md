@@ -207,11 +207,11 @@ While structural metrics capture high-frequency alignment, they fail to correlat
 
   where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
 
-- **Restoration Quality Score Formulation**:
-  The orchestrator unifies structural and perceptual metrics into a single scalar score:
+- **Restoration Quality Score Formulation (Project-Specific Heuristic)**:
+  The orchestrator unifies structural and perceptual metrics into a single internal scalar score for automated ladder gating (not an academic standard; decoupled metrics must be reported for benchmark comparisons):
 
   $$
-  \text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)
+  \text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)
   $$
 
 #### 3.2.3 PCIe VRAM Thrashing & The Chunking Fix
