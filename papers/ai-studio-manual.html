@@ -1042,14 +1042,14 @@
 
         <h4>Training Orchestrator Toolbar Numbered Reference</h4>
         <ol>
-            <li><strong>Model Name Search &amp; Filter Input Field</strong>: Real-time search filter allowing instant narrowing of the registered architecture catalog by model key or architecture name (<code>Search 22 models...</code>).</li>
-            <li><strong>Machine Learning Task Domain &amp; Ladder Filters</strong>: Multi-level dropdown selectors (<code>All Domains</code>, <code>restoration</code>, <code>detection</code>, <code>classification</code>, <code>segmentation</code>, <code>forex</code>) and spatial ladder selectors (<code>All Ladders</code>).</li>
-            <li><strong>Global Batch Operations Toolbar Buttons</strong>:
-                <ul>
-                    <li><code>Run 1-Epoch Diagnostic (All 22 Models)</code>: Submits an asynchronous background job (<code>POST /api/training/unit-test-all</code>) executing a rapid 1-epoch smoke test sequentially across all 22 models via <code>tools/train_all.py</code>.</li>
-                    <li><code>Generate All Notebooks</code>: Batch regenerates and synchronizes Jupyter training, inference, and usage notebooks across all 22 models (<code>POST /api/notebooks/generate-all</code>).</li>
-                </ul>
-            </li>
+            <li><strong>Model Name Search Input Field</strong>: Real-time live search filter narrowing the architecture catalog by model key, architecture, or category (<code>Filter by model name, architecture, category...</code>).</li>
+            <li><strong>Status Filter Dropdown</strong>: Dropdown selector filtering architectures by training and weights status (<code>All Statuses</code>, <code>Fully Trained</code>, <code>Partially Trained</code>, <code>Weights Ready</code>, <code>Initializing</code>).</li>
+            <li><strong>Category Filter Dropdown</strong>: Dropdown selector restricting catalog display to specific ML task domains (<code>All Categories</code>, <code>enhance</code>, <code>face</code>, <code>forex</code>, <code>llm</code>, <code>restoration</code>, <code>yolo</code>).</li>
+            <li><strong>Architecture Filter Dropdown</strong>: Dropdown selector filtering the registry by specific neural backbone architecture.</li>
+            <li><strong>Unit Test All Models Action Button</strong>: Submits an asynchronous background job (<code>POST /api/training/unit-test-all</code>) executing a rapid 1-epoch diagnostic pass sequentially across all registered models.</li>
+            <li><strong>Generate All Notebooks Action Button</strong>: Batch regenerates and synchronizes Jupyter training, inference, and usage notebooks across all models (<code>POST /api/notebooks/generate-all</code>).</li>
+            <li><strong>Push All Models to Kaggle Action Button</strong>: Enqueues background fleet synchronization (<code>POST /api/training/kaggle/push-all</code>) staging isolated variations, verifying isolation, and publishing all registered models, checkpoints, and variations to Kaggle Models Hub.</li>
+            <li><strong>Refresh Models Action Button</strong>: Polls the Training Suite sidecar daemon on port 8200 to refresh model weights status, metrics.csv progress, and resolution ladder completion.</li>
         </ol>
 
         <div class="table-scroll">
@@ -1069,21 +1069,56 @@
                         <td>Model Search Filter</td>
                         <td>Text Input</td>
                         <td>Client-side filter</td>
-                        <td>Filters architecture catalog in real time by name or keyword.</td>
+                        <td>Filters architecture catalog in real time by name, architecture, or category.</td>
                     </tr>
                     <tr>
                         <td><strong>2</strong></td>
-                        <td>Domain &amp; Ladder Filter</td>
-                        <td>Select Dropdowns</td>
+                        <td>Status Filter</td>
+                        <td>Select Dropdown</td>
                         <td>Client-side filter</td>
-                        <td>Restricts catalog display to specific ML task domains and ladders.</td>
+                        <td>Restricts catalog display by training lifecycle and weights state.</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
-                        <td>Batch Toolbar Buttons</td>
-                        <td>Action Buttons</td>
-                        <td><code>POST /api/training/...</code></td>
-                        <td>Dispatches 1-epoch smoke tests or batch notebook generation.</td>
+                        <td>Category Filter</td>
+                        <td>Select Dropdown</td>
+                        <td>Client-side filter</td>
+                        <td>Restricts catalog display to specific ML task domains.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Architecture Filter</td>
+                        <td>Select Dropdown</td>
+                        <td>Client-side filter</td>
+                        <td>Restricts catalog display to specific neural backbone architecture.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Unit Test All Models</td>
+                        <td>Secondary Button</td>
+                        <td><code>POST /api/training/unit-test-all</code></td>
+                        <td>Dispatches rapid 1-epoch fleet diagnostic smoke test across all models.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Generate All Notebooks</td>
+                        <td>Secondary Button</td>
+                        <td><code>POST /api/notebooks/generate-all</code></td>
+                        <td>Batch regenerates Jupyter training, inference, and usage notebooks across all models.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Push All Models to Kaggle</td>
+                        <td>Secondary Button</td>
+                        <td><code>POST /api/training/kaggle/push-all</code></td>
+                        <td>Stages isolated variations and publishes all registered models to Kaggle Models Hub.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td>Refresh Models</td>
+                        <td>Secondary Button</td>
+                        <td><code>GET /api/models</code> / <code>:8200</code> poll</td>
+                        <td>Polls sidecar daemon to refresh weights status, metrics, and ladder completion.</td>
                     </tr>
                 </tbody>
             </table>
@@ -1606,6 +1641,8 @@
                 </tbody>
             </table>
         </div>
+
+        <p><strong>Fleet Synchronization Note:</strong> In addition to publishing individual model variations through the Cloud &amp; Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 22 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
     </section>
 
     <!-- SECTION 8 -->

@@ -1140,11 +1140,20 @@ python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset 
                 <p>
                     Transfers checkpoints and artifacts between local storage and remote cloud providers:
                 </p>
-                <pre><code># Push model checkpoints and metadata to Kaggle Models with strict 3-variation isolation verification
+                <pre><code># Push single model checkpoints and metadata to Kaggle Models Hub
 lemtrain sync push yolov8n
 
 # Push with custom source directory or username override
 lemtrain sync push yolov8n --source-dir /custom/path --username lemlegendary
+
+# Push all 22 registered models to Kaggle Models Hub with metadata, checkpoints, and isolated variations
+lemtrain sync push --all
+
+# Push all models with specific variation and custom release notes
+lemtrain sync push --all --variation all --notes "Production SOTA Release"
+
+# Perform a dry-run validation of metadata and isolation across all models without uploading
+lemtrain sync push --all --dry-run
 
 # Sync checkpoint artifacts to Google Drive
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10

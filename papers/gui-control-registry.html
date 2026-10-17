@@ -194,6 +194,174 @@
                                 <td>Dispatches dataset compilation job to the dataset sidecar.</td>
                             </tr>
                             <tr>
+                                <td><code>comp-mode-standard</code></td>
+                                <td>Standard Manifold Compilation</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Switches compilation interface to standard preset mode.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-mode-custom</code></td>
+                                <td>Custom Multi-Source Compilation</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Switches compilation interface to custom multi-source mode.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-input-custom-name</code></td>
+                                <td>Custom Manifold Name</td>
+                                <td><code>&lt;input type=text&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Specifies unique identifier for custom dataset synthesis.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-custom-task</code></td>
+                                <td>Domain Task</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Selects target ML domain (restoration, detection, segmentation).</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-custom-format</code></td>
+                                <td>Container Architecture</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Selects target format (WebDataset, Parquet, MDS, LitData).</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-textarea-sources</code></td>
+                                <td>Source Repositories &amp; Dataset URLs</td>
+                                <td><code>&lt;textarea&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Multi-line input for Kaggle, HF, GD, GH repositories.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-custom-compile</code></td>
+                                <td>Compile Custom Dataset</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/gui/custom-compile</code> (8100)</td>
+                                <td>Dispatches multi-source aggregation and sharding job.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-tab-kaggle-download</code></td>
+                                <td>Download from Kaggle Subtab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Activates Kaggle cloud download controls.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-tab-kaggle-upload</code></td>
+                                <td>Upload to Kaggle Subtab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Activates Kaggle manifold upload controls.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-kaggle-registry</code></td>
+                                <td>Select Registry Dataset</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td><code>GET /api/kaggle/registry-datasets</code> (8100)</td>
+                                <td>Lists 20 canonical Kaggle-bound production manifolds.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-input-kaggle-custom-ref</code></td>
+                                <td>Kaggle Dataset Link or Slug</td>
+                                <td><code>&lt;input type=text&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Input for direct Kaggle URLs or owner/dataset references.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-kaggle-download</code></td>
+                                <td>Download from Kaggle</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/kaggle/download</code> (8100)</td>
+                                <td>Queues download and extraction of Kaggle datasets.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-kaggle-upload</code></td>
+                                <td>Local Compiled Manifold</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Selects compiled local manifold for packaging.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-kaggle-upload</code></td>
+                                <td>Upload to Kaggle</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/kaggle/upload</code> (8100)</td>
+                                <td>Packages and streams local manifold to Kaggle.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-update-all-kaggle</code></td>
+                                <td>Update All Kaggle Metadata</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/kaggle/update-metadata</code> (8100)</td>
+                                <td>Bulk pushes metadata to Kaggle for all 20 canonical manifolds.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-regen-manifolds</code></td>
+                                <td>Regenerate Manifolds Index</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/modernize/regenerate-manifolds</code> (8100)</td>
+                                <td>Regenerates master manifolds.json and dataset-metadata.json files.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-subtab-catalog</code></td>
+                                <td>Manifolds Catalog Subtab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Shows the 21 production manifold cards with WebP/PNG breakdown.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-subtab-modernize</code></td>
+                                <td>Modernization Queue &amp; Transcode Subtab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Activates legacy format scan and batch WebP transcode queue.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-subtab-reduce</code></td>
+                                <td>Scale Reduction (Downsample) Subtab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Activates spatial downsample and dataset scaling derivation view.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-scan-modernize-queue</code></td>
+                                <td>Scan Queue</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>GET /api/modernize/queue</code> (8100)</td>
+                                <td>Scans local datasets and builds transcode modernization queue.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-batch-modernize-all</code></td>
+                                <td>Batch Modernize All</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/modernize/run</code> (8100)</td>
+                                <td>Dispatches batch modernization job across queued manifolds.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-slider-modernize-workers</code></td>
+                                <td>Parallel Workers Slider</td>
+                                <td><code>&lt;input type=range&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Configures worker thread count for parallel WebP transcoding.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-select-reduce-manifold</code></td>
+                                <td>Target Manifold Selector</td>
+                                <td><code>&lt;select&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Chooses dataset manifold for scale reduction / downsampling.</td>
+                            </tr>
+                            <tr>
+                                <td><code>comp-btn-dispatch-reduce</code></td>
+                                <td>Dispatch Reduction</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/modernize/reduce</code> (8100)</td>
+                                <td>Initiates downsampling derivation job for selected manifold.</td>
+                            </tr>
+                            <tr>
                                 <td><code>train-select-model</code></td>
                                 <td>Model Architecture Dropdown</td>
                                 <td><code>&lt;select&gt;</code></td>
@@ -206,6 +374,90 @@
                                 <td><code>&lt;button&gt;</code></td>
                                 <td><code>POST /api/gui/quick-train</code> (8200)</td>
                                 <td>Dispatches training worker with spatial resolution ladder.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-btn-unit-test-all</code></td>
+                                <td>Run 1-Epoch Diagnostic (All 22 Models)</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/unit-test-all</code> (8200)</td>
+                                <td>Dispatches 1-epoch diagnostic smoke test across all models.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-btn-generate-all-notebooks</code></td>
+                                <td>Generate All Notebooks</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/notebooks/generate-all</code> (8200)</td>
+                                <td>Batch generates notebooks across all 22 registered architectures.</td>
+                            </tr>
+                            <tr>
+                                <td><code>training-toolbar-push-all-models-btn</code></td>
+                                <td>Push All Models to Kaggle</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/kaggle/push-all</code> (8200)</td>
+                                <td>Stages and publishes all registered model checkpoints, variations, and metadata to Kaggle Models Hub.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-btn-refresh-models</code></td>
+                                <td>Refresh Models</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>GET /api/gui/models/with-stats</code> (8200)</td>
+                                <td>Polls sidecar to synchronize model weights status and metrics.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-card-btn-eval</code></td>
+                                <td>Evaluate Model</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/evaluate</code> (8200)</td>
+                                <td>Evaluates checkpoint against validation benchmark criteria.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-card-btn-export</code></td>
+                                <td>Export Binaries</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/export</code> (8200)</td>
+                                <td>Compiles model to ONNX, PyTorch, and WebGPU binary formats.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-modal-tab-upload</code></td>
+                                <td>Upload Checkpoints Tab</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Stages and uploads local model checkpoints directly to Kaggle Models.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-btn-safe-upgrade</code></td>
+                                <td>Safe Package Upgrade</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/update</code> (8000)</td>
+                                <td>Safely upgrades outdated packages with rollback validation.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-btn-upgrade-dry-run</code></td>
+                                <td>Upgrade Dry Run</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/update</code> (8000)</td>
+                                <td>Previews dependency upgrade plan without altering disk state.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-btn-deep-clean</code></td>
+                                <td>Deep Cache Purge</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/clean</code> (8000)</td>
+                                <td>Purges build caches, __pycache__, and staging residues.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-btn-install-hooks</code></td>
+                                <td>Install Git Hooks</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/hooks/install</code> (8000)</td>
+                                <td>Installs or repairs standardized pre-commit validation hooks.</td>
+                            </tr>
+                            <tr>
+                                <td><code>health-btn-validate-ecosystem</code></td>
+                                <td>Run Ecosystem Validation</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/validate</code> (8000)</td>
+                                <td>Runs full multi-gate ecosystem code validation suite.</td>
                             </tr>
                         </tbody>
                     </table>

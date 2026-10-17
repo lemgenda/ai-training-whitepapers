@@ -228,7 +228,7 @@
                     <li><strong>Unified Global State Store</strong>: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.</li>
                     <li><strong>Single Responsibility Deconstruction</strong>: Monolithic view components are deconstructed into focused, decoupled micro-components:
                         <ul>
-                            <li><code>TrainingPanel.tsx</code>: Refactored into a lightweight coordinator delegating to <code>ModelManifoldCard.tsx</code>, <code>TelemetryConsole.tsx</code>, and <code>TrainingToolbar.tsx</code>.</li>
+                            <li><code>TrainingPanel.tsx</code>: Refactored into a lightweight coordinator delegating to <code>ModelManifoldCard.tsx</code>, <code>TelemetryConsole.tsx</code>, and <code>TrainingToolbar.tsx</code> (housing live search, status/category/architecture filters, fleet diagnostic smoke tests, notebook batch generation, and &quot;Push All Models to Kaggle&quot;).</li>
                             <li><code>CompilerPanel.tsx</code>: Refactored into a coordinator delegating to <code>DatasetManifoldCard.tsx</code>, <code>DatasetCompilationForm.tsx</code>, <code>ModernizationQueueTable.tsx</code>, <code>ScaleReductionView.tsx</code>, and <code>CompilerToolbar.tsx</code>.</li>
                             <li><code>ConfigEditorModal.tsx</code>: Deconstructed from 790 lines into <code>ManifestEditorTab.tsx</code> (YAML/JSON syntax validation, Monaco diff viewer) and <code>SecretsEditorTab.tsx</code> (encrypted credentials vault).</li>
                             <li><code>CloudTrainModal.tsx</code>: Extracted <code>VariationIsolationChecker.tsx</code> for multi-variation validation.</li>
@@ -252,6 +252,7 @@
                             <li>Variation 3 (<code>onnx_fp16</code>): Edge-optimized half-precision ONNX exports (<code>*.onnx</code>).</li>
                         </ul>
                     </li>
+                    <li><strong>Fleet-Wide Kaggle Models Hub Push</strong>: One-click &quot;Push All Models to Kaggle&quot; toolbar action triggering <code>POST /api/training/kaggle/push-all</code> to stage, validate, and publish all 22 registered neural architectures and their multi-format variations with pre-flight isolation verification.</li>
                     <li><strong>Pre-Upload Isolation Gate</strong>: Built-in <code>StrictIsolationValidator</code> blocks non-compliant or cross-contaminated binaries before transmission.</li>
                     <li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.</li>
                 </ul>

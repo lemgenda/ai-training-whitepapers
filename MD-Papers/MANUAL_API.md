@@ -888,6 +888,7 @@ Operational endpoints under `/api` requiring modification or system access enfor
 | `POST` | `/api/training/models/{model_key}/export/stage` | Required | Stage exported model binaries into canonical isolated Kaggle variation subdirectories |
 | `GET` | `/api/training/models/{model_key}/variations/validate` | Required | Validate strict binary isolation across all Kaggle variation directories |
 | `POST` | `/api/training/kaggle/push-model` | Required | Publish validated isolated model variation(s) to Kaggle Models Hub |
+| `POST` | `/api/training/kaggle/push-all` | Required | Enqueue fleet synchronization staging and pushing all registered models to Kaggle Models Hub |
 | `POST` | `/api/training/llm/train` | Required | Enqueue background QLoRA instruction tuning job for assistant LLM |
 | `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 22 registered models |
 | `GET` | `/api/notebooks/models` | Required | Enumerate registered architectures available for notebook generation |
@@ -1082,6 +1083,32 @@ Response:
     "onnx_fp32": { "success": true, "version": 1 },
     "onnx_fp16": { "success": true, "version": 1 }
   },
+  "dry_run": false
+}
+```
+
+##### `POST /api/training/kaggle/push-all`
+
+Enqueues an asynchronous background job to stage, validate binary isolation, and publish all registered neural models, checkpoints, and variations to Kaggle Models Hub.
+
+Request body:
+
+```json
+{
+  "variation": "all",
+  "version_notes": "Production SOTA Release: All Models",
+  "dry_run": false
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "status": "pending",
+  "message": "Kaggle fleet push enqueued for all models (variation: all, dry_run: false)",
+  "variation": "all",
   "dry_run": false
 }
 ```

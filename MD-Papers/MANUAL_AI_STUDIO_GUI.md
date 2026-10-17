@@ -425,17 +425,25 @@ The top toolbar of the Model Training panel provides high-level search, domain f
 
 #### Training Orchestrator Toolbar Numbered Reference
 
-1. **Model Name Search & Filter Input Field**: Real-time search filter allowing instant narrowing of the registered architecture catalog by model key or architecture name (`Search 22 models...`).
-2. **Machine Learning Task Domain & Ladder Filters**: Multi-level dropdown selectors (`All Domains`, `restoration`, `detection`, `classification`, `segmentation`, `forex`) and spatial ladder selectors (`All Ladders`).
-3. **Global Batch Operations Toolbar Buttons**:
-   - `Run 1-Epoch Diagnostic (All 22 Models)`: Submits an asynchronous background job (`POST /api/training/unit-test-all`) executing a rapid 1-epoch smoke test sequentially across all 22 models via `tools/train_all.py`.
-   - `Generate All Notebooks`: Batch regenerates and synchronizes Jupyter training, inference, and usage notebooks across all 22 models (`POST /api/notebooks/generate-all`).
+1. **Model Name Search Input Field**: Real-time live search filter narrowing the architecture catalog by model key, architecture, or category (`Filter by model name, architecture, category...`).
+2. **Status Filter Dropdown**: Dropdown selector filtering architectures by training and weights status (`All Statuses`, `Fully Trained`, `Partially Trained`, `Weights Ready`, `Initializing`).
+3. **Category Filter Dropdown**: Dropdown selector restricting catalog display to specific ML task domains (`All Categories`, `enhance`, `face`, `forex`, `llm`, `restoration`, `yolo`).
+4. **Architecture Filter Dropdown**: Dropdown selector filtering the registry by specific neural backbone architecture.
+5. **Unit Test All Models Action Button**: Submits an asynchronous background job (`POST /api/training/unit-test-all`) executing a rapid 1-epoch diagnostic pass sequentially across all registered models.
+6. **Generate All Notebooks Action Button**: Batch regenerates and synchronizes Jupyter training, inference, and usage notebooks across all models (`POST /api/notebooks/generate-all`).
+7. **Push All Models to Kaggle Action Button**: Enqueues background fleet synchronization (`POST /api/training/kaggle/push-all`) staging isolated variations, verifying isolation, and publishing all registered models, checkpoints, and variations to Kaggle Models Hub.
+8. **Refresh Models Action Button**: Polls the Training Suite sidecar daemon on port 8200 to refresh model weights status, metrics.csv progress, and resolution ladder completion.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Model Search Filter | Text Input | Client-side filter | Filters architecture catalog in real time by name or keyword. |
-| **2** | Domain & Ladder Filter | Select Dropdowns | Client-side filter | Restricts catalog display to specific ML task domains and ladders. |
-| **3** | Batch Toolbar Buttons | Action Buttons | `POST /api/training/...` | Dispatches 1-epoch smoke tests or batch notebook generation. |
+| **1** | Model Search Filter | Text Input | Client-side filter | Filters architecture catalog in real time by name, architecture, or category. |
+| **2** | Status Filter | Select Dropdown | Client-side filter | Restricts catalog display by training lifecycle and weights state. |
+| **3** | Category Filter | Select Dropdown | Client-side filter | Restricts catalog display to specific ML task domains. |
+| **4** | Architecture Filter | Select Dropdown | Client-side filter | Restricts catalog display to specific neural backbone architecture. |
+| **5** | Unit Test All Models | Secondary Button | `POST /api/training/unit-test-all` | Dispatches rapid 1-epoch fleet diagnostic smoke test across all models. |
+| **6** | Generate All Notebooks | Secondary Button | `POST /api/notebooks/generate-all` | Batch regenerates Jupyter training, inference, and usage notebooks across all models. |
+| **7** | Push All Models to Kaggle | Secondary Button | `POST /api/training/kaggle/push-all` | Stages isolated variations and publishes all registered models to Kaggle Models Hub. |
+| **8** | Refresh Models | Secondary Button | `GET /api/models` / `:8200` poll | Polls sidecar daemon to refresh weights status, metrics, and ladder completion. |
 
 ---
 
@@ -608,6 +616,8 @@ Clicking `Sync Kaggle Models Hub` on any registered architecture card opens the 
 | **15** | Kaggle Models Hub Link | External Link | Opens browser URL | Direct link opening model repository on Kaggle Models Hub. |
 | **16** | Cancel Action Button | Secondary Button | `onCloseModal()` | Closes dialog cleanly without altering local or remote state. |
 | **17** | Push to Kaggle / Validate | Primary Button | `POST /api/training/push` | Publishes multi-variation release weights to Kaggle Models Hub. |
+
+**Fleet Synchronization Note:** In addition to publishing individual model variations through the Cloud & Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 22 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (`lemtrain sync push --all`).
 
 ---
 

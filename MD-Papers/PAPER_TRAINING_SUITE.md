@@ -237,6 +237,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 
 - **Sequential Fleet Diagnostics (`tools/train_all.py` / `lemtrain test-all`)**: The suite provides a rapid 1-epoch smoke test sequence executing across all 22 registered neural architectures. Available via CLI (`lemtrain test-all [--epochs 1]`), REST API (`POST /api/training/unit-test-all`), and GUI toolbar ("Run 1-Epoch Diagnostic"). The runner verifies data loading, forward pass execution, backward gradient computation, checkpoint generation, and GPU memory cleanup per architecture.
 - **Kaggle Models Direct Publishing (`lemtrain sync push`)**: Dedicated cloud publishing pipeline allowing operators to package trained weights, configuration manifests, and model cards, uploading them directly to Kaggle Models repositories via official APIs with zero intermediate file staging.
+- **Fleet-Wide Models Hub Synchronization (`POST /api/training/kaggle/push-all`)**: Enterprise batch publishing pipeline executing via REST API (`POST /api/training/kaggle/push-all`), CLI (`lemtrain sync push --all [-v ...] [-n ...] [--dry-run]`), and desktop GUI toolbar ("Push All Models to Kaggle"). Iterates across all 22 registered architectures, running automated pre-flight isolation verification across PyTorch, ONNX FP32, and ONNX FP16 variations before streaming artifacts directly to Kaggle Models.
 
 ---
 

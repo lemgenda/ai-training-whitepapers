@@ -176,7 +176,7 @@ To ensure deterministic state transitions and eliminate prop drilling across dee
 
 - **Unified Global State Store**: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.
 - **Single Responsibility Deconstruction**: Monolithic view components are deconstructed into focused, decoupled micro-components:
-  - `TrainingPanel.tsx`: Refactored into a lightweight coordinator delegating to `ModelManifoldCard.tsx`, `TelemetryConsole.tsx`, and `TrainingToolbar.tsx`.
+  - `TrainingPanel.tsx`: Refactored into a lightweight coordinator delegating to `ModelManifoldCard.tsx`, `TelemetryConsole.tsx`, and `TrainingToolbar.tsx` (housing live search, status/category/architecture filters, fleet diagnostic smoke tests, notebook batch generation, and "Push All Models to Kaggle").
   - `CompilerPanel.tsx`: Refactored into a coordinator delegating to `DatasetManifoldCard.tsx`, `DatasetCompilationForm.tsx`, `ModernizationQueueTable.tsx`, `ScaleReductionView.tsx`, and `CompilerToolbar.tsx`.
   - `ConfigEditorModal.tsx`: Deconstructed from 790 lines into `ManifestEditorTab.tsx` (YAML/JSON syntax validation, Monaco diff viewer) and `SecretsEditorTab.tsx` (encrypted credentials vault).
   - `CloudTrainModal.tsx`: Extracted `VariationIsolationChecker.tsx` for multi-variation validation.
@@ -192,6 +192,7 @@ The desktop application directly orchestrates the LemGendary multi-variation dis
   - Variation 1 (`pytorch`): Canonical PyTorch checkpoint weights (`*.pt`).
   - Variation 2 (`onnx_fp32`): High-precision standard ONNX exports (`*_FP32.onnx*`).
   - Variation 3 (`onnx_fp16`): Edge-optimized half-precision ONNX exports (`*.onnx`).
+- **Fleet-Wide Kaggle Models Hub Push**: One-click "Push All Models to Kaggle" toolbar action triggering `POST /api/training/kaggle/push-all` to stage, validate, and publish all 22 registered neural architectures and their multi-format variations with pre-flight isolation verification.
 - **Pre-Upload Isolation Gate**: Built-in `StrictIsolationValidator` blocks non-compliant or cross-contaminated binaries before transmission.
 - **Dry-Run Staging**: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.
 

@@ -919,6 +919,12 @@ python cli.py server stop</code></pre>
                         </tr>
                         <tr>
                             <td><code>POST</code></td>
+                            <td><code>/api/training/kaggle/push-all</code></td>
+                            <td>Required</td>
+                            <td>Enqueue fleet synchronization staging and pushing all registered models to Kaggle Models Hub</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
                             <td><code>/api/training/llm/train</code></td>
                             <td>Required</td>
                             <td>Enqueue background QLoRA instruction tuning job for assistant LLM</td>
@@ -1041,6 +1047,23 @@ python cli.py server stop</code></pre>
     "onnx_fp32": { "success": true, "version": 1 },
     "onnx_fp16": { "success": true, "version": 1 }
   },
+  "dry_run": false
+}</code></pre>
+
+                <h5><code>POST /api/training/kaggle/push-all</code></h5>
+                <p>Enqueues an asynchronous background job to stage, validate binary isolation, and publish all registered neural models, checkpoints, and variations to Kaggle Models Hub.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "variation": "all",
+  "version_notes": "Production SOTA Release: All Models",
+  "dry_run": false
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "status": "pending",
+  "message": "Kaggle fleet push enqueued for all models (variation: all, dry_run: false)",
+  "variation": "all",
   "dry_run": false
 }</code></pre>
 
