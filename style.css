@@ -743,6 +743,17 @@ blockquote,
     border: 1px solid var(--border-color);
 }
 
+/* Scaled variants for compact cards and modals */
+.img-paper-50 {
+    width: 50%;
+    max-width: 525px;
+}
+
+.img-paper-70 {
+    width: 70%;
+    max-width: 735px;
+}
+
 /* Standard section image (narrower) */
 .img-section {
     width: 100%;

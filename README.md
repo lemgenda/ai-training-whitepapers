@@ -12,6 +12,20 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.27 — AI Studio Manual Visual Formatting, Badging & Screenshot Precision Audit
+
+* **Section 4.2 Individual Pipeline Step Cards Audit** — Captured complete 7-stage cards grid (`gui_pipeline_step_cards.png`) badging all 7 stages with 14 distinct callouts (card titles and isolated run buttons). Documented Step 5 (Dependency Audit & Upgrades), Step 6 (Codebase Verification), and Step 7 (Health Matrix) in both HTML and Markdown manuals.
+* **Section 4.3 Hardware Sentinel Scaling** — Scaled Hardware Acceleration Sentinel card image down by 50% (`.img-paper-50`, `max-width: 525px;`).
+* **Section 5.2 Production Manifolds Header & Margins** — Recaptured Production Manifolds catalog screenshot (`gui_production_manifolds.png`) with scroll offset and 20px padding margins, eliminating header and badge clipping. Harmonized reference list and table to 7 unified badges.
+* **Section 6.2 Architecture Telemetry All Rows & Buttons Numbering & Scaling** — Recaptured neural architecture card screenshot (`gui_architecture_telemetry.png`) including full card header, model title, and pin button. Scaled image down by 50% (`.img-paper-50`). Numbered every single row (1–10) and action button (11–21) with 21 distinct badges, fully referenced and documented in HTML and Markdown tables.
+* **Section 6.4 Training Dashboard Filter Section Callout** — Recaptured Training Dashboard topology screenshot (`gui_training_panel_overview.png`) adding callout badge 2 to the Interactive Filter & Search Section. Documented search query bar and dropdown filters in HTML and Markdown tables.
+* **Section 7.3 Publishing Modal Numbering, Badge 2 Relocation & Scaling** — Recaptured Cloud & Registry Dispatch modal (`gui_model_export_publish.png`) tightly cropped, scaled down by 30% (`.img-paper-70`), and numbered with 17 distinct badges covering all buttons, dropdowns, and pre-flight verification rows. Re-anchored badge 2 directly on cloud platform switcher buttons.
+* **Section 8.2 Ecosystem Maintenance Controls Screenshot** — Captured and integrated dedicated numbered screenshot (`gui_ecosystem_maintenance.png`) with 5 action button badges into Section 8.2 across HTML and Markdown manuals.
+* **Section 9 Contextual Help Popover Scaling** — Scaled contextual help popover screenshot (`gui_contextual_help_popover.png`) down by 50% (`.img-paper-50`, `max-width: 525px;`).
+* **Automated Integrity Verification** — All 36 automated documentation test gates in `tests/test_documentation.py` passing with zero warnings and 100% zero-emoji compliance.
+
+---
+
 ### v16.9.26 — Technical Documentation Hub Audit Remediation & 32-Rule Test Suite Expansion
 
 * **Mathematical Delimiter & LaTeX Corruption Purge** — Eradicated corrupted `\|^2\right]` regex escape artifacts and malformed delimiters across scaling laws, VRAM capacity equations, and diffusion transition dynamics in `foundation-models-master.html`. Standardized MathJax configuration delimiters.
