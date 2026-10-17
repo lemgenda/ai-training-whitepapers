@@ -884,6 +884,11 @@ Operational endpoints under `/api` requiring modification or system access enfor
 | `POST` | `/api/training/train` | Required | In-process training initiation with hardware discovery |
 | `POST` | `/api/training/evaluate` | Required | In-process checkpoint evaluation under torch.no_grad() |
 | `POST` | `/api/training/export` | Required | In-process multi-format model compilation and export |
+| `POST` | `/api/training/models/{model_key}/docs/generate` | Required | Regenerate model card README and Kaggle model-metadata.json |
+| `POST` | `/api/training/models/{model_key}/export/stage` | Required | Stage exported model binaries into canonical isolated Kaggle variation subdirectories |
+| `GET` | `/api/training/models/{model_key}/variations/validate` | Required | Validate strict binary isolation across all Kaggle variation directories |
+| `POST` | `/api/training/kaggle/push-model` | Required | Publish validated isolated model variation(s) to Kaggle Models Hub |
+| `POST` | `/api/training/llm/train` | Required | Enqueue background QLoRA instruction tuning job for assistant LLM |
 | `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 22 registered models |
 | `GET` | `/api/notebooks/models` | Required | Enumerate registered architectures available for notebook generation |
 | `POST` | `/api/notebooks/generate` | Required | Generate Jupyter training, inference, or usage notebooks for a model |
@@ -990,6 +995,131 @@ Response:
   "total_models": 22,
   "total_files": 110,
   "results": { ... }
+}
+```
+
+#### Kaggle Models Hub & Variation Isolation Endpoints
+
+##### `POST /api/training/models/{model_key}/docs/generate`
+
+Regenerates the model card (`README.md`) with live SOTA targets and Kaggle Models manifest (`model-metadata.json`) directly into `LemGendaryModels/<model_key>/`.
+
+Response:
+
+```json
+{
+  "status": "success",
+  "model_key": "yolov8n",
+  "readme_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\README.md",
+  "metadata_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\model-metadata.json",
+  "message": "Documentation and Kaggle metadata regenerated for yolov8n"
+}
+```
+
+##### `POST /api/training/models/{model_key}/export/stage`
+
+Stages exported model binaries into canonical isolated Kaggle variation subdirectories (`dist/kaggle/pytorch/`, `dist/kaggle/onnx_fp32/`, `dist/kaggle/onnx_fp16/`).
+
+Response:
+
+```json
+{
+  "status": "success",
+  "model_key": "yolov8n",
+  "staged_files": {
+    "pytorch": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
+    "onnx_fp32": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
+    "onnx_fp16": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
+  },
+  "is_valid": true,
+  "errors": [],
+  "message": "Staged variations for yolov8n"
+}
+```
+
+##### `GET /api/training/models/{model_key}/variations/validate`
+
+Validates strict binary isolation across all Kaggle variation directories for the specified model key, verifying zero cross-contamination.
+
+Response:
+
+```json
+{
+  "model_key": "yolov8n",
+  "is_valid": true,
+  "variations": {
+    "pytorch": { "variation": "pytorch", "is_valid": true, "errors": [] },
+    "onnx_fp32": { "variation": "onnx_fp32", "is_valid": true, "errors": [] },
+    "onnx_fp16": { "variation": "onnx_fp16", "is_valid": true, "errors": [] }
+  },
+  "summary": "Validation Report for yolov8n: 3 valid, 0 invalid"
+}
+```
+
+##### `POST /api/training/kaggle/push-model`
+
+Publishes validated isolated model variation(s) to Kaggle Models Hub using the Kaggle API.
+
+Request body:
+
+```json
+{
+  "model": "yolov8n",
+  "variation": "all",
+  "version_notes": "Production release with strict 3-variation isolation",
+  "dry_run": false
+}
+```
+
+Response:
+
+```json
+{
+  "model_key": "yolov8n",
+  "success": true,
+  "results": {
+    "pytorch": { "success": true, "version": 1 },
+    "onnx_fp32": { "success": true, "version": 1 },
+    "onnx_fp16": { "success": true, "version": 1 }
+  },
+  "dry_run": false
+}
+```
+
+#### LLM Instruction Tuning Endpoints
+
+##### `POST /api/training/llm/train`
+
+Enqueues a background QLoRA instruction fine-tuning job for the Causal LLM assistant (`AIHelperLemGend`).
+
+Request body:
+
+```json
+{
+  "model": "ai_helper_lemgend",
+  "epochs": 3,
+  "batch_size": 2,
+  "lr": 0.0002,
+  "max_seq_length": 2048,
+  "env": "local"
+}
+```
+
+Response:
+
+```json
+{
+  "job_id": "7f8b9c1d-2e3a-4b5c-6d7e-8f9a0b1c2d3e",
+  "status": "pending",
+  "message": "LLM instruction tuning job enqueued for ai_helper_lemgend",
+  "config": {
+    "model": "ai_helper_lemgend",
+    "epochs": 3,
+    "batch_size": 2,
+    "lr": 0.0002,
+    "max_seq_length": 2048,
+    "env": "local"
+  }
 }
 ```
 

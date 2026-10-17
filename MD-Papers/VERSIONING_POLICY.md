@@ -16,6 +16,7 @@
 - [6. Standalone Diagnostic & Specialized Specifications](#6-standalone-diagnostic--specialized-specifications)
 - [7. Frozen Contract Guarantees (OpenAPI 3.1 & Zero Drift)](#7-frozen-contract-guarantees-openapi-31--zero-drift)
 - [8. Ecosystem Enforcement & Audit Gating](#8-ecosystem-enforcement--audit-gating)
+- [9. Canonical Model Variation Isolation & Licensing Policy](#9-canonical-model-variation-isolation--licensing-policy)
 
 ---
 
@@ -128,3 +129,42 @@ lem-env validate --project lemgendary-training-suite,lemgendary-datasets,lemgend
 ```
 
 Any attempt to introduce uncalibrated calendar versioning (`2026.*`), uncoordinated major version tags outside defined tracks, or mismatched package manifest strings is rejected by the pre-commit gate before touching version control.
+
+---
+
+## 9. Canonical Model Variation Isolation & Licensing Policy
+
+To maintain deterministic cloud artifact distribution and strict legal compliance across public hubs (Kaggle Models Hub, Hugging Face, and edge deployment pipelines), all trained models in `LemGendaryModels/` adhere to two strict governance pillars:
+
+### 9.1 Canonical Repository Topology & Isolation Contract
+
+Every model repository under `LemGendaryModels/<model_key>/` maintains an immutable directory structure separating checkpoints, serialized distributions, and evaluation records:
+
+```text
+LemGendaryModels/<model_key>/
+├── README.md               # Model Card & SOTA benchmark targets
+├── metrics.csv             # Training and validation loss curves
+├── model-metadata.json     # Kaggle Models manifest (Public, CC BY-NC 4.0)
+├── checkpoints/            # Best and milestone checkpoint vaults (*.pth)
+├── notebooks/              # Standardized Kaggle & Colab notebooks
+├── dist/                   # Isolated production distributions
+│   └── kaggle/
+│       ├── pytorch/        # Variation 1: Standalone PyTorch binary (*.pt)
+│       ├── onnx_fp32/      # Variation 2: ONNX FP32 with external data (*_FP32.onnx*)
+│       └── onnx_fp16/      # Variation 3: Edge-optimized ONNX FP16 (*.onnx)
+└── visualizations/         # Training curves, confusion matrices, and diagnostics
+```
+
+All model binaries published to Kaggle Models Hub must satisfy strict binary isolation verified prior to deployment via `StrictIsolationValidator`:
+
+1. **Variation 1 (`pytorch`)**: Exclusively standalone PyTorch weights (`<ModelStem>.pt`).
+2. **Variation 2 (`onnx_fp32`)**: Exclusively standard precision ONNX model (`<ModelStem>_FP32.onnx`) and sidecar tensor data (`<ModelStem>_FP32.onnx.data`).
+3. **Variation 3 (`onnx_fp16`)**: Exclusively half-precision embedded ONNX model (`<ModelStem>.onnx`) with zero external tensor references.
+
+### 9.2 Licensing & Intellectual Property Governance
+
+All publicly distributed model checkpoints, model cards, manifests, and documentation hosted on Kaggle Models Hub are released under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license.
+
+- **Non-Commercial Academic & Research Use**: Non-commercial evaluation, academic citation, reproducible benchmarking, and fine-tuning on custom datasets are explicitly permitted with proper attribution.
+- **Commercial & Enterprise Deployment**: Commercial use, production deployment within closed proprietary software, or monetization of weight checkpoints requires an explicit enterprise commercial license from LemGendary AI.
+- **Manifest Conformance**: Every `model-metadata.json` must declare `is_private: false` and `license_name: "CC BY-NC 4.0"`.

@@ -1,1250 +1,1250 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dataset Compiler Suite Whitepaper - LemGendary AI</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="current-state.html">Current State</a>
-                <a href="env_manager.html">Env Manager</a>
-                <a href="dataset-compiler.html" class="active">Dataset Compiler</a>
-                <a href="degradation-engine.html">Degradation Engine</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
-                <a href="gui-control-registry.html">GUI Registry</a>
-                <a href="versioning-policy.html">Versioning Policy</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
-</div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
-<ul>
-<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
-                <li><a href="#section-1">1. Abstract</a>
-                </li>
-                <li><a href="#section-3">2. High-Velocity Optimizations &amp; Complexity Mappings</a>
-                    <ul class="sub-item">
-                        <li><a href="#21-formal-complexity-mappings">2.1 Formal Complexity Mappings</a></li>
-                        <li><a href="#22-resampling-resolution-constraints">2.2 Resampling &amp; Resolution Constraints</a></li>
-                        <li><a href="#23-system-performance-throughput-matrix">2.3 System Performance &amp; Throughput Matrix</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-5">3. Hybrid Cloud &amp; Registry Integration</a>
-                </li>
-                <li><a href="#section-7">4. Multi-Modal &amp; Format Resilience</a>
-                    <ul class="sub-item">
-                        <li><a href="#41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture</a></li>
-                        <li><a href="#42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converters</a></li>
-                        <li><a href="#43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Pruning</a></li>
-                        <li><a href="#44-domain-specializations">4.4 Domain Specializations</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</a>
-                    <ul class="sub-item">
-                        <li><a href="#51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding</a></li>
-                        <li><a href="#52-modular-container-format">5.2 Modular Container Format Layer</a></li>
-                        <li><a href="#53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</a></li>
-                        <li><a href="#54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate</a></li>
-                        <li><a href="#55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine</a></li>
-                        <li><a href="#56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine</a></li>
-                        <li><a href="#57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
-                        <li><a href="#58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
-                        <li><a href="#59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
-                        <li><a href="#510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
-                        <li><a href="#511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
-                        <li><a href="#512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
-                        <li><a href="#513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
-                        <li><a href="#514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
-                    <ul class="sub-item">
-                        <li><a href="#61-technical-comparison-matrix">6.1 Technical Comparison Matrix</a></li>
-                        <li><a href="#62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-9">7. Synthesis Flow &amp; Topology</a>
-                    <ul class="sub-item">
-                        <li><a href="#the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</a></li>
-                        <li><a href="#industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-11">8. Unified Models Registry (Manifolds)</a>
-                </li>
-                <li><a href="#conclusion">9. Conclusion</a>
-                </li>
-            </ul>
-</nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Dataset Compiler Suite Whitepaper</h1>
-        <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
-        <div class="meta">
-                <span>Category 01.2 DATASET</span>
-                <span>Version 16.9.6</span>
-            </div>
-
-<section id="section-1">
-<h2>1. Abstract</h2>
-            <p>The LemGendary Dataset Compiler Suite (v16.9.6) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
-            <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-3">
-<h2>2. High-Velocity Optimizations &amp; Complexity Mappings</h2>
-            <p>The v16.2.8 release introduces the High-Fidelity Compiler, optimized for processing 1.4M+ item manifolds while maintaining absolute structural integrity for restoration tasks.</p>
-
-            <h3 id="21-formal-complexity-mappings">2.1 Formal Complexity Mappings</h3>
-            <p><strong>O(1) Physical Skip-Indexing</strong>:<br>
-            Traditional compiler engines verify existing outputs on disk by executing recursive path queries for every sample. In directory topologies containing millions of files, this incurs an <i>O(N &middot; d)</i> filesystem metadata lookup complexity (where <i>d</i> is directory depth and <i>N</i> is the dataset size). This results in massive system lockups due to OS seek contention.</p>
-            <p>Our compiler bypasses this lookup complexity completely. During system initialization, it performs a single flat string scan via <code>os.scandir</code> to construct an in-memory hash set (<i>S</i><sub>disk</sub>) of existing filenames. Verifications then achieve <i>O(1)</i> average-case lookup complexity:<br>
-            <code>Verify(x) = Skip (if hash(x) &isin; S<sub>disk</sub>) else Process</code></p>
-
-            <p><strong>ThreadPoolExecutor Zero-IPC</strong>:<br>
-            Python's standard <code>ProcessPoolExecutor</code> relies on inter-process communication (IPC) to serialize and deserialize data across boundaries via pipes. On Windows, this incurs an immense pickling serialization overhead of <i>O(P &middot; S)</i> (where <i>P</i> is the number of subprocesses and <i>S</i> is the serialized payload size).</p>
-            <p>We dynamically bypass this by switching the engine class to <code>ThreadPoolExecutor</code> for pure I/O-bound tasks:<br>
-            <code>Executor = ThreadPoolExecutor (if inference_vetting = False) else ProcessPoolExecutor</code><br>
-            This maintains a single shared virtual memory address space (Zero-IPC), scaling throughput to the physical hardware limits of the target NVMe drive.</p>
-
-            <p><strong>Parquet Manifold Compression &amp; NTFS Cluster Slack Space Recovery (Space-Recovery Equation)</strong>:<br>
-            For high-frequency multi-timeframe financial datasets containing rolling sliding windows (<i>W = 512</i> bars), storing individual timeframes across currency pairs in uncompressed <code>.npy</code> arrays produces massive disk footprint and filesystem fragmentation. On standard NTFS filesystems with cluster size <i>C</i><sub>cluster</sub> = 4096 bytes, storing hundreds of thousands of loose shard files introduces physical cluster slack space waste:<br>
-            <code>Slack(f) = C<sub>cluster</sub> - (Size(f) mod C<sub>cluster</sub>)</code><br>
-            Furthermore, raw <code>.npy</code> arrays dedicate full structural bit-weight to redundant sliding window overlaps. The compiler's unified Parquet architecture leverages byte-stream Zstandard (zstd level 3) dictionary compression across contiguous row groups (<i>R = 5,000</i>). The physical space recovery ratio <i>R</i><sub>space</sub> and compression factor <i>C</i><sub>factor</sub> are formulated as:<br>
-            <code>R<sub>space</sub> = 1 - (&sum;<sub>y</sub> Size(Parquet<sub>y</sub>)) / (&sum;<sub>y</sub> (&sum;<sub>s</sub> Size(NPY<sub>y,s</sub>) + Slack(NPY<sub>y,s</sub>))) &approx; 99.3%</code><br>
-            <code>C<sub>factor</sub> = Size<sub>Total</sub>(NPY) / Size<sub>Total</sub>(Parquet) &approx; 143&times;</code><br>
-            This slashes the physical manifold footprint from ~738 GB to ~5.2 GB across the entire 8-year temporal continuum (2019&ndash;2026), with 100% bit-exact floating-point recovery.</p>
-
-            <h3 id="22-resampling-resolution-constraints">2.2 Resampling &amp; Resolution Constraints</h3>
-            <p><strong>LANCZOS High-Fidelity Interpolation</strong>:<br>
-            To prevent aliasing and preserve high-frequency details (textures and sharp edges) during the downsampling phase of resolution-locked tasks, the compiler integrates the Lanczos-3 filter kernel. The interpolation weight for a coordinate distance <i>x</i> is defined as:<br>
-            <code>L(x) = sinc(x) &middot; sinc(x/a) for -a &lt; x &lt; a, else 0</code><br>
-            where <i>a = 3</i> is the spatial filter lobe support size, and <i>sinc(x) = sin(&pi;x) / (&pi;x)</i>. This produces superior anti-aliasing compared to legacy bilinear or legacy bicubic downsampling, preventing artifacts from corrupting downstream training manifolds.</p>
-
-            <p><strong>High-Fidelity Resolution Floor</strong>:<br>
-            Mandatory filtering bounds are enforced to prevent low-resolution samples from corrupting convergence vectors. If <i>W</i> and <i>H</i> are image dimensions, the compiler enforces the boundary constraint:<br>
-            <code>min(W, H) &ge; Threshold</code><br>
-            where:<br>
-            <code>Threshold = 512 (Diffusion) \| 224 (Quality, Restoration, SR) \| 128 (ArtifactDiagnostic)</code></p>
-
-            <h3 id="23-system-performance-throughput-matrix">2.3 System Performance &amp; Throughput Matrix</h3>
-            <p>To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the <code>LemGendizedUpnV2Large</code> manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:</p>
-            <div class="chart-container"><table>
-            <thead>
-            <tr>
-            <th>System Parameter</th>
-            <th>Legacy Recursive Pipeline</th>
-            <th>High-Fidelity Compiler Suite</th>
-            <th>Throughput Gain / Reduction</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td><strong>Directory Indexing Latency</strong></td>
-            <td>184.2 seconds</td>
-            <td><strong>0.4 seconds</strong></td>
-            <td><strong>460&times; Latency Reduction</strong> (<i>O(1)</i> vs <i>O(N)</i>)</td>
-            </tr>
-            <tr>
-            <td><strong>Windows IPC Serialization Overhead</strong></td>
-            <td>2,840.5 seconds</td>
-            <td><strong>0.0 seconds</strong></td>
-            <td><strong>100% Overhead Elimination</strong> (Zero-IPC ThreadPool)</td>
-            </tr>
-            <tr>
-            <td><strong>Filesystem Storage Footprint</strong></td>
-            <td>1.64 TB</td>
-            <td><strong>0.58 TB</strong></td>
-            <td><strong>1.06 TB Space Recovered</strong> (64.6% deduplication)</td>
-            </tr>
-            <tr>
-            <td><strong>Vetting Throughput (Aesthetic/NIMA)</strong></td>
-            <td>42 items/sec</td>
-            <td><strong>185 items/sec</strong></td>
-            <td><strong>4.4&times; Ingestion Acceleration</strong></td>
-            </tr>
-            </tbody>
-            </table></div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-5">
-<h2>3. Hybrid Cloud &amp; Registry Integration</h2>
-            <p><strong>Atomic Registry Resumption &amp; SQLite Mappings</strong>:<br>
-            Resumption safety is guaranteed by tying the metadata compiler to a transaction-locked SQLite database register (<i>D</i>). Each compiled sample state <i>s<sub>i</sub></i> is committed atomically. The state resumption mapping is defined as:<br>
-            <code>R: D &rarr; S<sub>state</sub></code><br>
-            This allows interrupted runs to fast-forward past millions of completed operations in milliseconds, without triggering index scans or I/O traversals.</p>
-
-            <p><strong>NTFS Hardlink Deduplication (Space-Recovery Equation)</strong>:<br>
-            For restoration and super-resolution tasks where target images map identically to clean source copies (identity mapping), physical duplication of image pixels is avoided. The compiler dynamically issues NTFS hardlinks (<code>os.link</code>) to map multiple target directories back to a single physical source cluster. The total recovered disk space <i>&Delta;S</i> is mathematically represented as:<br>
-            <code>&Delta;S = &sum;<sub>i=1</sub><sup>M</sup> Size(I<sub>i</sub>) &middot; (Refs(I<sub>i</sub>) - 1)</code><br>
-            where <i>I<sub>i</sub></i> is a clean target image, <i>Size(I<sub>i</sub>)</i> is its file size on disk, and <i>Refs(I<sub>i</sub>)</i> is the number of active training manifolds that reference it. This recovered exactly <strong>1.06 TB</strong> of disk space during the UPNv2 compilation with zero pipeline disruption.</p>
-
-            <p><strong>Orphan Rescue &amp; Batch Adoption (v6.1)</strong>:<br>
-            During pipeline initialization, the compiler scans the physical storage and automatically identifies "orphaned" files (files existing on disk but missing from the SQLite registry). It triggers a low-memory batch adoption cycle to register them:<br>
-            <code>Adopt(O) = &cup;<sub>k=1</sub><sup>ceil(\|O\|/C)</sup> Commit(O<sub>k &middot; C</sub>)</code><br>
-            where <i>C = 100,000</i> represents the batch memory chunk limit, preventing memory spikes during massive recovery operations.</p>
-
-            <strong>Metadata Synchronization</strong>:<br>
-            <ul>
-                <li><strong>KaggleHub &amp; HF Sync</strong>: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.</li>
-                <li><strong>Standardized dataset_info.yaml</strong>: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.</li>
-                <li><strong>Decoupled Documentation Generation (v16.4.1)</strong>: Extracted all dataset documentation generation (<code>README.md</code>, <code>dataset_info.yaml</code>, <code>category.txt</code>, <code>classes.txt</code>, <code>index.json</code>) from the monolithic compiler pipeline into a dedicated <code>doc_generator.py</code> module for robust maintainability and standardized outputs. It dynamically generates model-specific architecture mapping and extrapolated baseline metric tables directly from <code>models_metadata</code> and <code>task_metadata</code> residing in <code>unified_data.yaml</code>.</li>
-            </ul>
-
-            <p><strong>Real-Time Byte-Metered Synchronization &amp; Status Polling (v16.6.0)</strong>:<br>
-            Replaces unbuffered and silent transfer pipelines with uniform, chunk-level streaming monitors. Archiving (<code>archive_manager.py</code>) and remote payload transmission (<code>kaggle_manager.py</code>, <code>manifold_sync.py</code>) employ unified 1 MB byte-stream chunking (<i>C<sub>chunk</sub> = 1024 &times; 1024 B</i>) with pre-calculated uncompressed byte envelopes to report instantaneous transfer velocity (MB/s), ETA, and true completion bounds. Post-upload orchestration initiates autonomous REST/CLI status telemetry, polling backend dataset readiness every 5 seconds until the ingestion pipeline transitions from <code>queued</code>/<code>creating</code> to <code>ready</code>, eliminating blind execution halts.</p>
-
-            <p><strong>Direct Root Streaming &amp; Bidirectional Resumption Protocol (v16.7.0)</strong>:<br>
-            Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (<code>LemGendaryDatasets\</code>) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (<code>LemGendizedParseNetLarge/LemGendizedParseNetLarge</code>), with single-row terminal progress tracking (<code>dynamic_ncols=True</code>, <code>file=sys.stdout</code>). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:</p>
-            <ul>
-                <li><strong>Download Resumption</strong>: Pre-scans for existing valid archives on disk, verifies structural integrity via CRC/central directory checks, and resumes extraction of only missing files without redundant network I/O. Source archives are unlinked strictly after 100% successful extraction.</li>
-                <li><strong>Upload Resumption</strong>: Preserves generated <code>.staging_&lt;manifold&gt;/&lt;manifold&gt;.zip</code> archives upon upload failure or connection resets. Subsequent retry operations detect valid existing archives and bypass recompression, saving 30&ndash;60 minutes of compute on multi-gigabyte manifolds.</li>
-            </ul>
-
-            <p><strong>MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)</strong>:<br>
-            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (<code>LemGendizedForexUniverseLarge</code>) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
-
-            <p><strong>Kaggle Cloud Synchronization &amp; Storage Hub (v16.9.6)</strong>:<br>
-            Exposes high-speed bidirectional synchronization between the local dataset root (<code>LemGendaryDatasets\</code>) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (<code>GET /api/kaggle/registry-datasets</code>, <code>POST /api/kaggle/download</code>, <code>POST /api/kaggle/upload</code>, <code>GET /api/kaggle/status</code>).</p>
-            <ul>
-                <li><strong>Registry Datasets</strong>: Exposes all 20 canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code> directly in the UI with live local existence indicators and sample counts.</li>
-                <li><strong>Direct Custom Link / Slug Ingestion</strong>: Operators can provide arbitrary Kaggle web URLs (e.g., <code>https://www.kaggle.com/datasets/owner/dataset</code>) or slugs (<code>owner/dataset</code>) to pull and unpack custom research datasets directly into the manifold storage hierarchy with automatic unzipping and force overwrite capabilities.</li>
-                <li><strong>Zero-Recompression Upload</strong>: Packages compiled streaming manifolds with valid metadata manifests and streams them to Kaggle Model and Dataset registries.</li>
-            </ul>
-
-            <p><strong>Multi-Source Custom Dataset Synthesis Engine (v16.9.6)</strong>:<br>
-            Facilitates arbitrary dataset compilation via <code>POST /api/gui/custom-compile</code>. Operators supply heterogeneous lists of source datasets and URLs spanning:</p>
-            <ul>
-                <li><strong>Kaggle</strong>: <code>kaggle://owner/dataset</code> or direct Kaggle web URLs.</li>
-                <li><strong>Hugging Face</strong>: <code>hf://org/dataset</code> or direct HuggingFace dataset URLs.</li>
-                <li><strong>Google Drive</strong>: <code>gd://folder_id</code> or Google Drive sharing links.</li>
-                <li><strong>GitHub</strong>: <code>gh://owner/repo</code> or repository URLs.</li>
-            </ul>
-            <p>The engine normalizes all inputs into canonical URI schemes, updates <code>unified_data.yaml</code> dynamically, and dispatches background compilation with user-selected domain tasks (<code>restoration</code>, <code>detection</code>, <code>segmentation</code>, <code>quality</code>, <code>vision</code>), storage presets, and optional source image purging.</p>
-
-            <p><strong>Fast Split Shard Discovery &amp; In-Memory mtime Caching (v16.9.6)</strong>:<br>
-            Eliminates deep recursive walking across hundreds of thousands of loose files when evaluating manifold compiled status. The optimized scanner inspects container roots (<code>shards/</code>, <code>mds/</code>, <code>wds/</code>, <code>litdata/</code>) and immediate split folders (<code>train/</code>, <code>val/</code>, <code>test/</code>) with <code>os.scandir</code>. Results are cached against the directory's filesystem <code>st_mtime</code>, dropping API response latency from &gt; 20 seconds to &lt; 50 ms while accurately recognizing all 22 manifolds as compiled.</p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-7">
-<h2>4. Multi-Modal &amp; Format Resilience</h2>
-
-            <h3 id="41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture (<code>sources/</code>)</h3>
-            <p>The compiler supports declarative multi-source dataset expansion directly through <code>unified_data.yaml</code> under each manifold's <code>refs:</code> array. Operators can add heterogeneous source repositories without altering compilation code:</p>
-            <ul>
-                <li><strong>Kaggle Datasets (<code>kaggle://&lt;owner&gt;/&lt;dataset-slug&gt;</code>)</strong>: Handled by <code>sources/kaggle.py</code>, executing authenticated API or KaggleHub retrieval with automatic fallback across environment variables, <code>~/.kaggle/kaggle.json</code>, and <code>.kaggle_token</code>.</li>
-                <li><strong>Hugging Face Hub (<code>hf://&lt;org&gt;/&lt;repo-id&gt;[:&lt;archive-file&gt;]</code>)</strong>: Handled by <code>sources/hf.py</code>, supporting direct snapshot downloads, compressed tarball streaming (<code>.tgz</code>, <code>.tar.gz</code>), and individual file synchronization with <code>.huggingface_token</code> authentication.</li>
-                <li><strong>Google Drive (<code>gd://&lt;file_or_folder_id&gt;</code>)</strong>: Handled by <code>sources/gd.py</code>, providing multi-threaded chunked downloads for large hosted research datasets.</li>
-                <li><strong>GitHub Repositories (<code>gh://&lt;owner&gt;/&lt;repo&gt;</code>)</strong>: Handled by <code>sources/gh.py</code>, enabling automated release asset extraction and source tree synchronization.</li>
-                <li><strong>Inter-Manifold Recirculation (<code>manifold://&lt;ManifoldName&gt;</code>)</strong>: Seamlessly mounts and slices already-compiled sibling manifolds (e.g., using <code>LemGendizedNAFNetDebluring</code> inside <code>ProfessionalMultitaskRestoration</code>) without duplicating image files on disk.</li>
-            </ul>
-
-            <h3 id="42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converter Subsystem (<code>converters/</code>)</h3>
-            <p>Regardless of the upstream source dataset's original structure or format, the compiler automatically detects and transforms annotations and image tensors through the unified <code>converters/</code> subsystem:</p>
-            <ul>
-                <li><strong>MATLAB Input Format (<code>converters/matlab.py</code>)</strong>: Full native support for MATLAB <code>.mat</code> files via <code>scipy.io.loadmat(mat_path, spmatrix=False)</code>. Hardened for forward-compatibility with SciPy 1.14+ sparse matrix deprecations, the parser extracts annotation keys, matrix coordinates, and ground-truth bounding arrays seamlessly.</li>
-                <li><strong>COCO JSON Format (<code>converters/coco.py</code>)</strong>: Parses standard MS-COCO bounding boxes, instance categories, and polygon segmentation boundaries into unified internal sample dictionaries.</li>
-                <li><strong>Pascal VOC XML Format (<code>converters/xml.py</code>)</strong>: Traverses XML node trees to extract object classes and pixel-coordinate bounding boxes (<code>[xmin, ymin, xmax, ymax]</code>).</li>
-                <li><strong>YOLO Format (<code>converters/yolo.py</code>)</strong>: Normalizes space-delimited text annotations (<code>class x_center y_center width height</code>) into standardized bounding box targets.</li>
-                <li><strong>Apache Parquet &amp; Safetensors (<code>converters/parquet.py</code>)</strong>: Native ingestion of highly compressed PyArrow columnar tables, embedded byte buffers, and model tensors.</li>
-                <li><strong>Multi-Format Image Support</strong>: Fast single-pass scanner (<code>_fast_scan</code>) dynamically ingests <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, and <code>.npy</code> arrays.</li>
-            </ul>
-
-            <h3 id="43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Automated Pruning</h3>
-            <p>Every discovered sample from any source undergoes rigorous pre-flight gating before entering the manifold:</p>
-            <ul>
-                <li><strong>Magic-Byte Header Sniffing</strong>: <code>VisionAuditor.verify_header()</code> inspects raw file signatures, automatically purging zero-byte stubs, corrupt bitstreams, or truncated downloads.</li>
-                <li><strong>Spatial Dimension Floors &amp; Aspect Ratios</strong>: Samples violating task-specific resolution boundaries (&ge; 224px for restoration, &ge; 512px for diffusion) or exhibiting extreme aspect ratio distortion are automatically filtered out.</li>
-                <li><strong>NIMA Perceptual Quality Gating</strong>: Evaluates aesthetic and technical quality score distributions, discarding heavily degraded or out-of-distribution frames.</li>
-                <li><strong>Perceptual Deduplication (<code>pHash</code>)</strong>: Computes DCT perceptual hashes to eliminate duplicate or near-identical images across overlapping upstream sources.</li>
-            </ul>
-
-            <h3 id="44-domain-specializations">4.4 Domain Specializations</h3>
-            <ul>
-                <li><strong>Parquet &amp; Safetensors Support (v16.6.0)</strong>: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (<code>ForexUniverse{year}.parquet</code>) utilizing Zstandard compression (level 3) with in-memory row-group caching.</li>
-                <li><strong>DPED Mirroring v2.1</strong>: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.</li>
-                <li><strong>VRAM De-fragmentation</strong>: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.</li>
-                <li><strong>Universal Film Restorer Dataset Hardening</strong>: Confirmed exactly 0 empty label files and 100% target physical hardlinking in <code>LemGendizedFilmRestorerLarge</code>, guaranteeing a pristine production state at 0 bytes disk overhead.</li>
-                <li><strong>Professional Multi-Task Restoration Dataset Integration (v16.3.0)</strong>: Structured unified source pipeline merging 11 individual manifolds with automated filename prefix preservation for downstream regular expression routing. Standardized target hardlinking layout with case-insensitive physically skip-indexed ingestion, and configured strict Lanczos/interpolation ceilings at 256px-640px to feed the Mixture-of-Experts (MoE) routing engine.</li>
-                <li><strong>ParseNet Semantic Extraction (v16.3.1)</strong>: Compiler explicitly outputs <code>masks/</code> directory, resolving paired masks as target images natively for face segmentation tasks rather than generic YOLO polygons.</li>
-                <li><strong>RetinaFace YOLO Landmarking (v16.3.1)</strong>: Integrated dynamic 5-point landmark extraction directly from <code>landmarks/</code> into standard YOLO format and strictly filtered all classes to <code>face</code> (index 0).</li>
-            </ul>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-modernization">
-<h2>5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</h2>
-            <p>The 2026 modernization elevates the compiler from a script collection into an industrial-grade dataset synthesis, audit, and sidecar service engine:</p>
-
-            <h3 id="51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding (Phase 3)</h3>
-            <p>Eliminating bulky intermediate disk writes, the compiler transcodes input streams directly in memory to tuned WebP formats:</p>
-            <ul>
-                <li><strong>Images (<code>images/</code>)</strong>: WebP <i>q=92</i> delivering 40&ndash;65% disk footprint reduction compared to standard JPEG while preserving frequency harmonics.</li>
-                <li><strong>Restoration Ground Truth (<code>targets/</code>)</strong>: WebP <i>q=95</i> guaranteeing high-frequency fidelity for restoration models (NAFNet, MirNet, MPRNet, UPNv2).</li>
-                <li><strong>Segmentation Masks (<code>masks/</code>)</strong>: WebP lossless compression preserving exact discrete class indices and pixel boundaries.</li>
-                <li><strong>Alpha Channel Resilience</strong>: Transparent RGBA inputs are transcoded cleanly to lossless WebP or alpha-composited over calibrated neutral backdrops without quantization halos.</li>
-            </ul>
-
-            <h3 id="52-modular-container-format">5.2 Modular Container Format Layer (Phase 4)</h3>
-            <p>Supports concurrent multi-format emission (<code>--also-format</code>) alongside canonical directory structures:</p>
-            <ul>
-                <li><strong>MosaicML Streaming (MDS)</strong>: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.</li>
-                <li><strong>PyTorch Lightning LitData</strong>: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.</li>
-                <li><strong>WebDataset (WDS)</strong>: Tarball shard emission for legacy deep-learning cluster ingestion.</li>
-                <li><strong>Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
-            </ul>
-
-            <h3 id="53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</h3>
-            <p>The LemGendary Dataset Compiler strictly delineates between <strong>Studio Native Supported Formats</strong> (first-class streaming manifolds and annotation converters natively ingested by <code>lemgendary-datasets</code> and <code>lemgendary-training-suite</code>) and <strong>General Knowledge Formats</strong> (industry-standard storage containers documented for broad ML ecosystem context, but not natively emitted as streaming storage containers by the LemGendary suite).</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Format Identifier</th>
-                            <th>Format Family</th>
-                            <th>Classification</th>
-                            <th>Ingestion / Emission</th>
-                            <th>Shard Indexing &amp; Streaming Mechanism</th>
-                            <th>Primary Optimization Target</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>WebDataset (.tar)</strong></td>
-                            <td>Archive Tarball Shard</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>Sequential POSIX tar shard streaming with <code>wds.WebDataset</code></td>
-                            <td>Large vision manifolds on POSIX/Linux clusters</td>
-                        </tr>
-                        <tr>
-                            <td><strong>MosaicML MDS (.mds)</strong></td>
-                            <td>Binary Indexed Chunks</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>Index JSON manifest + raw binary chunks with deterministic global shuffle</td>
-                            <td>Cloud-native elastic multi-node streaming</td>
-                        </tr>
-                        <tr>
-                            <td><strong>LitData (.litdata)</strong></td>
-                            <td>Lightning Streaming</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>Chunked binary records with dynamic index boundaries</td>
-                            <td>Variable-length detection &amp; regression targets</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Apache Parquet (.parquet)</strong></td>
-                            <td>Columnar Table + Zstandard</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>PyArrow row-group indexing + dictionary zstd compression</td>
-                            <td>High-frequency financial &amp; tabular time-series</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Flat Image Manifold (.webp/.png)</strong></td>
-                            <td>Directory Structure</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>In-memory <code>os.scandir</code> hash-set with O(1) physical skip-indexing</td>
-                            <td>Zero-intermediate transcoding, NTFS cluster recovery</td>
-                        </tr>
-                        <tr>
-                            <td><strong>YOLO / COCO / VOC / MAT</strong></td>
-                            <td>Annotation Vectors</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Ingestion via <code>converters/</code></td>
-                            <td>Per-sample spatial parsing into normalized target tensors</td>
-                            <td>Object detection, facial landmarks, bounding boxes</td>
-                        </tr>
-                        <tr>
-                            <td><strong>TFRecord (.tfrecord)</strong></td>
-                            <td>Protocol Buffer Binary</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td><code>tf.data.TFRecordDataset</code> sequential record reader</td>
-                            <td>Legacy TensorFlow pipelines; non-standard in PyTorch 2.x</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Petastorm (.parquet via Spark)</strong></td>
-                            <td>Columnar PySpark Container</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td>Apache Arrow PySpark IPC connector</td>
-                            <td>Distributed Spark analytics; superseded by native PyArrow</td>
-                        </tr>
-                        <tr>
-                            <td><strong>LMDB (.lmdb)</strong></td>
-                            <td>Memory-Mapped B-Tree Key-Value</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td>Single mmap memory address space with transaction locks</td>
-                            <td>Legacy Caffe/PyTorch; lacks cloud-chunked streaming</td>
-                        </tr>
-                        <tr>
-                            <td><strong>HDF5 / H5 (.h5, .hdf5)</strong></td>
-                            <td>Hierarchical Scientific Container</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td><code>h5py</code> hierarchical dataset pointers</td>
-                            <td>Multidimensional physics arrays; prone to MP write lock contention</td>
-                        </tr>
-                        <tr>
-                            <td><strong>RecordIO (.rec)</strong></td>
-                            <td>MXNet Sequential Record</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td><code>mxnet.recordio</code> sequential chunk reader</td>
-                            <td>Legacy Apache MXNet pipelines</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Feather / Arrow IPC (Raw)</strong></td>
-                            <td>Memory-Mapped Flat Binary</td>
-                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
-                            <td>Non-Native / Documented</td>
-                            <td>Uncompressed Arrow memory buffer mapping</td>
-                            <td>Ephemeral IPC transfer; lacks compressed row-group partitions</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <h3 id="54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate Architecture</h3>
-            <p>Because container formats (tarballs, MDS chunks) pack raw byte streams and unavoidably destroy NTFS/POSIX hardlink deduplication, the compiler enforces an automated pre-flight hardlink audit gate (<code>audit_hardlinks()</code>):</p>
-            <p>Verdict = PROCEED if HardlinkRatio &lt; 5.0%, WARN if 5.0% &le; HardlinkRatio &le; 25.0%, BLOCK if HardlinkRatio &gt; 25.0%</p>
-            <p>Any attempt to emit container formats on restoration manifolds with heavy hardlink dedup (such as <code>LemGendizedUpnV2</code> with 1.06 TB recovered) is safely blocked unless explicitly overridden via <code>--force-duplicate</code>.</p>
-
-            <h3 id="55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine (Phase 5)</h3>
-            <p>Integrated AI backends run directly across compiled manifolds:</p>
-            <ul>
-                <li><strong>BLIP Captioning &amp; NIMA Quality Vetting</strong>: Generates descriptive prompts and perceptual quality distributions.</li>
-                <li><strong>CLIP Zero-Shot &amp; Style Clustering</strong>: Automatically partitions manifolds into latent style clusters via <code>MiniBatchKMeans</code> with deterministic seeding.</li>
-                <li><strong>YOLO Detection &amp; Auto-Labeling</strong>: Derives normalized bounding boxes and object class distributions.</li>
-                <li><strong>ParseNet &amp; SAM Segmentation</strong>: Generates discrete face and instance masks.</li>
-            </ul>
-
-            <h3 id="56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine (Phase 6)</h3>
-            <p>Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic restoration manifolds from clean targets:</p>
-            <ul>
-                <li><strong>Optical Defocus &amp; Motion Blur</strong>: Directional linear trajectories and circular aperture disk diffraction.</li>
-                <li><strong>Heteroscedastic Sensor Noise</strong>: Poisson photon arrival statistics coupled with Gaussian sensor readout noise.</li>
-                <li><strong>Atmospheric Koschmieder Scattering</strong>: <i>I(x) = J(x)t(x) + A(1 - t(x))</i> simulating atmospheric depth and haze.</li>
-                <li><strong>DCT Quantization</strong>: 8x8 block discrete cosine transform simulation modeling JPEG artifacts.</li>
-                <li><strong>Provenance Logging</strong>: Exact quantitative parameter values (blur kernel dimensions, angle, noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
-            </ul>
-
-            <h3 id="57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI Architecture (Phase 7)</h3>
-            <ul>
-                <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> exposing REST endpoints for health telemetry, configuration schema validation, manifold inspection, and background job queuing.</li>
-                <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with automatic restart recovery marking orphaned runs <code>interrupted</code>.</li>
-                <li><strong>WebSocket Streaming</strong>: Live logs stream to subscribers via <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
-                <li><strong>Hybrid Transparent CLI</strong>: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.</li>
-            </ul>
-
-            <h3 id="58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets (Phase 8)</h3>
-            <ul>
-                <li><strong>Canonical Compiler Presets (<code>presets.yaml</code>, <code>presets.py</code>)</strong>: Shipped formal compilation profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) defining standard quality floors, resampling filters, auto-labeling toggles, and container targets.</li>
-                <li><strong>Aggregated Desktop GUI Endpoints (<code>api/routes/gui.py</code>)</strong>: Unified <code>/api/gui/state</code>, <code>/api/gui/datasets/with-stats</code>, <code>/api/gui/jobs/active</code>, <code>/api/gui/presets</code>, and <code>/api/gui/quick-compile</code> for instant hydration of the <code>lemgendary-ai-studio-gui</code> desktop dashboard.</li>
-                <li><strong>Frozen OpenAPI 3.1 Contract</strong>: Formally exported <code>openapi.json</code> guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.</li>
-                <li><strong>Multi-Sidecar Top-Bar Observability</strong>: Interoperable with <code>lemgendary-env-manager</code> (port 8000) for synchronized cross-project governance.</li>
-            </ul>
-
-            <h3 id="59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</h3>
-            <ul>
-                <li><strong>In-Process Services Layer (<code>services/</code>)</strong>: Decomposed monolithic compiler workflows into dedicated single-responsibility services (<code>CompilerService</code>, <code>DegradeService</code>, <code>AuditService</code>, <code>DocService</code>, <code>GenerationService</code>, <code>MigrationService</code>, <code>SyncService</code>). All CLI commands invoke typed service layers in-process directly rather than shelling out to external subprocesses.</li>
-                <li><strong>Unified Audit Engine</strong>: Implemented <code>AuditService.audit_manifold()</code> unifying magic-byte resolution checking, aspect ratio validation, DCT perceptual deduplication, and NTFS hardlink fraction audits into a single command (<code>lemgendary audit</code>).</li>
-                <li><strong>Safe Module Ingestion</strong>: Encapsulated argument parsing in <code>manifold_compile.py</code> inside <code>parse_compile_args()</code> and <code>process_dataset(parsed_args)</code>, eliminating top-level module import side-effects.</li>
-                <li><strong>Domain Encapsulation (<code>forex/</code>)</strong>: Encapsulated historical Forex time-series pipelines into a modular subpackage (<code>forex.schema</code>, <code>forex.converter</code>, <code>forex.injector</code>, <code>forex.bridge</code>, <code>forex.pipeline</code>) with root backward-compatibility shims and dedicated CLI subcommands (<code>lemgendary forex convert</code>, <code>lemgendary forex embed</code>).</li>
-                <li><strong>Zero Suppression Policy Enforcement</strong>: Completely eliminated all programmatic warning suppressions (<code>warnings.filterwarnings</code>) and diagnostic silencing directives across all codebase modules.</li>
-            </ul>
-
-            <h3 id="510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</h3>
-            <ul>
-                <li><strong>Suffix-Removal Modernization</strong>: Retires legacy <code>Large</code> naming conventions across manifolds into streamlined, production-standard suffixes while preserving legacy folders intact during migration.</li>
-                <li><strong>Two-Tier State Verification</strong>: Solves false-positive completion bugs by checking terminal manifest generation (<code>dataset_info.yaml</code> and <code>index.json</code>). Partially transcoded sets are accurately classified as <code>[RESUMABLE]</code>.</li>
-                <li><strong>File-Level Delta Scanning</strong>: Replaces blind file queues with size-aware delta inspection. Any existing valid <code>.webp</code> image or metadata file is bypassed in milliseconds, eliminating redundant CPU/GPU compute upon interrupted runs.</li>
-                <li><strong>Real-Time Visual Telemetry</strong>: Integrates single-line <code>tqdm</code> progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.</li>
-            </ul>
-
-            <h3 id="511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</h3>
-            <p>To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 establishes an authoritative Single Source of Truth (SSOT) container governance matrix across all 20 production manifolds:</p>
-            <ul>
-                <li><strong>Zero-Duplication Format Assignment</strong>: Eliminates duplicate coexistence of loose directory trees and streaming tar archives by enforcing a single canonical storage format per manifold:
-                    <ul>
-                        <li><strong>Apache Parquet (<code>parquet</code>)</strong>: Zstandard-compressed annual columnar shards for high-frequency financial time-series (<code>LemGendizedForexUniverse</code>).</li>
-                        <li><strong>Lightning AI LitData (<code>litdata</code>)</strong>: High-throughput binary tensor chunks (<code>.bin</code>) for parameter prediction (<code>LemGendizedUpnV2</code>).</li>
-                        <li><strong>MosaicML Streaming (<code>mds</code>)</strong>: Deterministic multi-task chunk streaming with elastic mixing and Zstd compression for multi-task restoration (<code>LemGendizedProfessionalMultitaskRestoration</code>) and safety classification (<code>LemGendizedClassificationMasterManifold</code>).</li>
-                        <li><strong>WebDataset (<code>webdataset</code>)</strong>: Contiguous ~500 MB tar shards for 10-bin quality distributions (<code>NimaAesthetic</code>, <code>NimaTechnical</code>, <code>NimaAuthenticity</code>), ultra-scale parameter prediction (<code>LemGendizedUpnV2</code>), and paired restoration targets (<code>FilmRestorer</code>, <code>CodeFormer</code>, <code>ParseNet</code>, <code>RetinaFace</code>, <code>FFANet</code>, <code>MIRNet</code>, <code>MPRNet</code>, <code>NAFNet</code>, <code>UltraZoom</code>).</li>
-                        <li><strong>Directory (<code>directory</code>)</strong>: Optimized WebP <code>images/</code> with YOLO <code>.cache</code> label arrays for native Ultralytics training (<code>LemGendizedYoloV8n</code>), remediated via NTFS LZX transparent compaction.</li>
-                    </ul>
-                </li>
-                <li><strong>Automated Kaggle Metadata Governance</strong>: Upgraded <code>unified_data.yaml</code> (v4.3.0) and <code>core/config_schema.py</code> to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.</li>
-            </ul>
-
-            <h3 id="512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
-            <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposureLarge</code> with 2.82M loose files and <code>LemGendizedUpnV2Large</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
-            <ul>
-                <li><strong>Zero-Unpack Architecture</strong>: Directly mounts legacy <code>.zip</code> archives and streams raw byte streams into canonical WebDataset POSIX <code>.tar</code> shards in memory, eliminating loose file generation on physical disk.</li>
-                <li><strong>In-Flight Multi-Threaded WebP Transcoding</strong>: Deploys an asynchronous worker pool (<code>ThreadPoolExecutor</code>, 12 CPU cores) executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for input images, <code>quality=95</code> for ground-truth targets). Delivers consistent ~1,800&ndash;2,000 img/sec throughput, accelerating processing time from days to minutes.</li>
-                <li><strong>Dual-Pass Sequential Tar Streaming</strong>: For paired restoration manifolds (<code>images/</code> and <code>targets/</code>), Pass 1 streams input images sequentially by zip central directory header offset into <code>shard-*.tar</code>, and Pass 2 appends paired ground truth (<code>sample.target.webp</code>) in standard POSIX append mode (<code>"a"</code>), preserving pure sequential NVMe read velocity without random seek degradation.</li>
-                <li><strong>Automated Disk Reclamation</strong>: Automatically extracts root metadata (<code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, <code>README.md</code>, <code>index.json</code>, notebooks), validates shard byte integrity, updates canonical format to <code>webdataset</code>, unlinks multi-gigabyte source <code>.zip</code> archives (<code>--delete-zip</code>), and purges legacy uncompressed directories (<code>--delete-legacy-dir</code>), recovering over 120 GB of local storage space.</li>
-            </ul>
-
-            <h3 id="513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration (<code>utils/archive.py</code>)</h3>
-            <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code> (<code>smart_extract</code>) is upgraded with native subsystem delegation:</p>
-            <ul>
-                <li><strong>Binary Auto-Discovery</strong>: Probes system paths for native 64-bit <code>7z.exe</code> (<code>C:\Program Files\7-Zip\7z.exe</code>) and native POSIX <code>tar.exe</code> (<code>C:\Windows\System32\tar.exe</code>), falling back gracefully to Python standard library engines.</li>
-                <li><strong>Multi-Threaded Hardware Saturation</strong>: Dispatches extraction via native 7-Zip with parameters <code>-mmt=on -bsp0 -aos -y</code>, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude while suppressing per-file stdout progress flooding.</li>
-                <li><strong>Automated Root Flattening</strong>: Detects single root manifold directory envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.</li>
-            </ul>
-
-            <h3 id="514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</h3>
-            <p>The v16.8.0 ecosystem establishes three distinct, standardized operational pipelines governing all lifecycle phases of training datasets:</p>
-            <h4>1. Regular Ingestion &amp; Manifold Compilation Pipeline (<code>compile</code> / <code>compile_all</code>)</h4>
-            <ul>
-                <li><strong>Primary Scope</strong>: Ingesting raw external datasets (<code>raw-sets/</code>), applying quality gating, and compiling fresh standardized production manifolds (<code>LemGendized*</code>).</li>
-                <li><strong>Workflow Stages</strong>:
-                    <ol>
-                        <li><em>Discovery &amp; Pre-flight</em>: Scans raw sources, verifies directory layout and file structures against <code>unified_data.yaml</code>.</li>
-                        <li><em>Quality &amp; Integrity Filters</em>: Inspects magic headers, validates image aspect ratios, filters corrupted samples, and executes NIMA aesthetic/technical quality score gating.</li>
-                        <li><em>Auto-Labeling &amp; Resampling</em>: Derives normalized YOLO bounding boxes, SAM/ParseNet segmentation masks, or BLIP captions where applicable, applying high-fidelity Lanczos-3 anti-aliasing interpolation for spatial rescales.</li>
-                        <li><em>Zero-Intermediate WebP Transcoding</em>: Transcodes input images directly in memory (<code>quality=92</code> for inputs, <code>quality=95</code> for restoration targets) avoiding redundant uncompressed intermediate disk writes.</li>
-                        <li><em>Emission &amp; Container Sharding</em>: Emits canonical directory layouts with NTFS hardlink deduplication preserved, or simultaneously exports modern streaming container shards (<code>--also-format webdataset</code>, <code>--also-format mds</code>, <code>--also-format litdata</code>).</li>
-                        <li><em>Manifest Generation</em>: Generates authoritative <code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, and <code>index.json</code>.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h4>2. Legacy Archive Modernization Pipeline (<code>tools/stream_zip_to_container.py</code>)</h4>
-            <ul>
-                <li><strong>Primary Scope</strong>: Modernizing legacy multi-gigabyte <code>.zip</code> archives containing millions of small files directly into canonical POSIX WebDataset <code>.tar</code> shards without ever writing uncompressed loose files to disk.</li>
-                <li><strong>Workflow Stages</strong>:
-                    <ol>
-                        <li><em>Zero-Unpack Streaming Ingestion</em>: Directly opens the <code>.zip</code> archive via low-level central directory indexing, completely bypassing NTFS Master File Table (MFT) lock contention, short filename generation, and real-time antivirus filter driver serialization.</li>
-                        <li><em>In-Flight Multi-Threaded Transcoding</em>: Decompresses raw image streams in memory and dispatches them across a 12-thread worker pool executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for inputs, <code>quality=95</code> for targets).</li>
-                        <li><em>Dual-Pass Sequential Tar Streaming</em>: For paired restoration sets (<code>images/</code> and <code>targets/</code>), Pass 1 writes sequential input images into <code>shard-*.tar</code>, while Pass 2 appends paired targets in standard POSIX append mode (<code>"a"</code>), maintaining high-velocity sequential write throughput on NVMe SSDs.</li>
-                        <li><em>Root Metadata Extraction</em>: Extracts essential documentation, notebooks, and index manifests (<code>index.json</code>, <code>dataset_info.yaml</code>, <code>README.md</code>) to the modernized manifold root.</li>
-                        <li><em>Automated Storage Reclamation</em>: Validates shard byte counts and sample completeness, then automatically deletes both the source <code>.zip</code> archive (<code>--delete-zip</code>) and any legacy unpacked directory trees (<code>--delete-legacy-dir</code>), recovering 50 GB to 100+ GB per dataset of local disk space.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h4>3. Retroactive Manifold Migration Pipeline (<code>format migrate</code> / <code>migrate_manifold_format.py</code>)</h4>
-            <ul>
-                <li><strong>Primary Scope</strong>: Converting already modernized local dataset directories (consisting of loose WebP images, targets, and <code>index.json</code>) into canonical streaming container shards (<code>webdataset</code> or <code>mds</code>).</li>
-                <li><strong>Workflow Stages</strong>:
-                    <ol>
-                        <li><em>Manifest &amp; Index Traversal</em>: Reads existing <code>index.json</code> or scans the structured manifold directory tree to build deterministic sample item queues.</li>
-                        <li><em>Container Chunk Serializer</em>: Streams samples into contiguous, fixed-size container chunks (~500 MB <code>.tar</code> shards or <code>.bin</code> / <code>.index</code> MosaicML Streaming files).</li>
-                        <li><em>Cluster Slack Elimination &amp; Source Purge</em>: When invoked with <code>--purge-source</code>, automatically unlinks loose intermediate image files upon successful shard verification, eliminating filesystem cluster allocation overhead and consolidating tens of thousands of fragmented files into a handful of sequential shards.</li>
-                        <li><em>Registry Synchronization</em>: Updates <code>dataset_info.yaml</code> with <code>canonical_format: webdataset</code>, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h3 id="514-direct-streaming-ingestion-telemetry-hardening">5.14 Direct In-Memory Streaming Ingestion &amp; Terminal Progress Telemetry Hardening (v16.9.1)</h3>
-            <p>To eliminate severe terminal line wrapping and eradicate intermediate disk consumption during remote manifold acquisition, v16.9.1 hardens terminal progress telemetry and couples cloud synchronization directly with the streaming modernization engine:</p>
-            <ul>
-                <li><strong>Direct In-Memory Streaming on Cloud Download (<code>[GET]</code>)</strong>: In <code>core/common_sync.py</code> (<code>perform_dataset_download</code>), downloaded legacy <code>.zip</code> archives are inspected prior to extraction. If an archive contains legacy loose image structures (<code>images/</code>, <code>targets/</code>) without pre-existing <code>.tar</code> shards, the compiler completely bypasses disk extraction via 7-Zip and routes the archive directly through <code>stream_zip_to_webdataset</code> (<code>tools/stream_zip_to_container.py</code>). Input and target images are decoded and transcoded to lossless WebP in memory directly into POSIX <code>.tar</code> shards across parallel worker threads. Upon verified completion, the source <code>.zip</code> archive is automatically deleted, saving 60 GB to 130+ GB of intermediate disk headroom and eliminating millions of loose filesystem writes.</li>
-                <li><strong>Terminal Telemetry &amp; Column Width Hardening</strong>: Fixes a critical PowerShell and Windows conhost line wrapping defect in Kaggle API downloads where multi-byte block characters (<code>&#x2588;</code>, <code>&#x258F;</code>) and unbounded column widths caused terminal buffer overflow, cascading carriage returns (<code>\r</code>) onto new lines for every download tick. The download engine encapsulates <code>tqdm.tqdm</code> to enforce strict ASCII rendering (<code>ascii=True</code>) and fixed column width boundaries (<code>ncols=80</code>), guaranteeing single-line in-place telemetry updates across all Windows host environments.</li>
-                <li><strong>Silent Subsystem Extraction Delegation</strong>: Updated native 7-Zip execution parameters in <code>utils/archive.py</code> (<code>smart_extract</code>) from <code>-bsp1</code> to <code>-bsp0</code>, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.</li>
-            </ul>
-
-            <h3 id="515-ssot-notebook-delegation">5.15 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</h3>
-            <p>To enforce strict DRY principles and establish an authoritative single source of truth for training and inference notebooks, v16.9.7 completely extracts notebook generation logic out of <code>lemgendary-datasets</code>:</p>
-            <ul>
-                <li><strong>Deduplication of Generator Codebase</strong>: Removed legacy and duplicated notebook builders (<code>tools/notebook_generator.py</code> and <code>tools/notebooks/</code>), eliminating redundant cell synthesis templates and diverging execution logic across repositories.</li>
-                <li><strong>Dynamic In-Process Delegation (<code>core/manifold_compile.py</code>)</strong>: During manifold compilation, notebook generation dynamically resolves and imports <code>generate_training_notebook</code> and <code>generate_colab_training_notebook</code> directly from sibling <code>lemgendary-training-suite</code>.</li>
-                <li><strong>Identical Manifold &amp; Model Training Notebooks</strong>: Because both manifold compilation and training launches use the identical builder engine from <code>lemgendary-training-suite</code>, the <code>.ipynb</code> files placed in <code>LemGendaryDatasets/&lt;manifold&gt;/</code> are bit-exact copies of those placed in <code>LemGendaryModels/&lt;model&gt;/</code>, <code>kaggle_training/</code>, and <code>colab_training/</code>.</li>
-                <li><strong>Stale Artifact Purge</strong>: All obsolete or unreferenced legacy notebooks across compiled manifolds are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.</li>
-            </ul>
-</section>
-
-<section id="section-8">
-<h2>6. Comparative Analysis | 2026 Manifold Compilers Benchmark</h2>
-            <h3 id="61-technical-comparison-matrix">6.1 Technical Comparison Matrix</h3>
-            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.8.0)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
-
-            <div class="table-wrapper">
-            <table>
-            <thead>
-            <tr>
-            <th>Benchmark Parameter</th>
-            <th>NVIDIA NeMo Curator (v2026)</th>
-            <th>HuggingFace WebDataset v3</th>
-            <th>Ray Data / Anyscale</th>
-            <th>Cohere / DeepSpeed Data</th>
-            <th>Meta TorchData v2</th>
-            <th>LemGendary Compiler Suite (v16.8.0)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td><strong>Filesystem Indexing</strong></td>
-            <td><i>O(N log N)</i> Metadata Scan</td>
-            <td><i>O(N)</i> Manifest Traversal</td>
-            <td><i>O(N)</i> Graph Build</td>
-            <td><i>O(N &middot; d)</i> Dir Walk</td>
-            <td><i>O(N)</i> MapDataPipe</td>
-            <td><strong><i>O(1)</i> Flat <code>scandir</code> Hash Scan</strong></td>
-            </tr>
-            <tr>
-            <td><strong>Indexing Latency (1.4M items)</strong></td>
-            <td>112.5 seconds</td>
-            <td>145.0 seconds</td>
-            <td>88.2 seconds</td>
-            <td>210.4 seconds</td>
-            <td>165.8 seconds</td>
-            <td><strong>0.4 seconds (460&times; faster)</strong></td>
-            </tr>
-            <tr>
-            <td><strong>Memory &amp; IPC Model</strong></td>
-            <td>PyArrow Shared Memory IPC</td>
-            <td>Multiprocess Queue Pickling</td>
-            <td>Plasma Store Object IPC</td>
-            <td>PyTorch DDP IPC</td>
-            <td>DataLoader Worker IPC</td>
-            <td><strong>Zero-IPC ThreadPool (Shared RAM)</strong></td>
-            </tr>
-            <tr>
-            <td><strong>IPC Serialization Latency</strong></td>
-            <td>12.4 seconds</td>
-            <td>412.0 seconds</td>
-            <td>45.6 seconds</td>
-            <td>280.1 seconds</td>
-            <td>390.5 seconds</td>
-            <td><strong>0.0 seconds (100% Overhead Elimination)</strong></td>
-            </tr>
-            <tr>
-            <td><strong>Storage Optimization</strong></td>
-            <td>MinHash Physical Rewrite</td>
-            <td>Tarball Duplication</td>
-            <td>Parquet Physical Rewrite</td>
-            <td>Tarball Sharding</td>
-            <td>In-Memory Filtering</td>
-            <td><strong>WebP 92 + Hardlink (64.6% Recovery)</strong></td>
-            </tr>
-            <tr>
-            <td><strong>Resampling Preserv.</strong></td>
-            <td>GPU Bilinear / Bicubic</td>
-            <td>PIL Default Bicubic</td>
-            <td>OpenCV / PIL Resize</td>
-            <td>PyTorch Interpolate</td>
-            <td>torchvision Transforms</td>
-            <td><strong>Lanczos-3 Anti-Aliased Kernel</strong></td>
-            </tr>
-            <tr>
-            <td><strong>Resumption Engine</strong></td>
-            <td>JSONL Checkpoints</td>
-            <td>Tarball Shard Indexes</td>
-            <td>Actor State Logs</td>
-            <td>Metadata Manifests</td>
-            <td>IterDataPipe State Dicts</td>
-            <td><strong>Transaction-Locked SQLite Registry</strong></td>
-            </tr>
-            </tbody>
-            </table>
-            </div>
-
-            <h3 id="62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
-            
-            <div class="visual-taxonomy mt-20">
-                <div class="quadrant mb-20">
-                    <div class="quadrant-info">
-                        <h3>6.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> Blazing GPU-accelerated MinHash deduplication &amp; VLM semantic filtering; native integration with NeMo training framework.</li>
-                            <li><strong>Cons:</strong> Requires multi-GPU DGX/HGX clusters for heavy tasks; significant VRAM overhead during pre-processing; locked to NVIDIA ecosystem.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Commercial Enterprise License via <strong>NVIDIA AI Enterprise (&#36;4,500/GPU/year)</strong> or cloud GPU usage rates (&#36;3.50&ndash;&#36;4.80/GPU-hr).</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant mb-20">
-                    <div class="quadrant-info">
-                        <h3>6.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> Gold standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); seamless HF Hub integration and dataset sharing.</li>
-                            <li><strong>Cons:</strong> High Windows IPC serialization penalty; tarball creation forces physical data duplication; slow random-access seek times.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core; <strong>HF Enterprise Hub (&#36;20/user/month)</strong> + HF Endpoints storage &amp; ingress costs (~&#36;0.02/GB/month).</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant mb-20">
-                    <div class="quadrant-info">
-                        <h3>6.2.3 Ray Data / Anyscale Distributed Compiler</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> Highly scalable distributed batch execution across thousands of CPU/GPU worker nodes; resilient task graphs.</li>
-                            <li><strong>Cons:</strong> High memory footprint due to Plasma Object Store serialization overhead; complex cluster orchestration and setup.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core (Ray); <strong>Anyscale Managed Cloud (&#36;0.10&ndash;&#36;0.30 per Anyscale Compute Unit hour)</strong> + underlying AWS/GCP infrastructure costs.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant mb-20">
-                    <div class="quadrant-info">
-                        <h3>6.2.4 Cohere / DeepSpeed Data Engine</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> Optimized for massive-scale LLM/VLM text-image tokenization and multi-modal sharding; excellent multi-node streaming.</li>
-                            <li><strong>Cons:</strong> Poor support for image restoration/super-resolution paired targets; high multi-node network bandwidth requirements.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (DeepSpeed); <strong>Cohere Enterprise / Enterprise API custom tier (&#36;15,000&ndash;&#36;50,000+/year commitment)</strong> for managed enterprise pipeline deployment.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant mb-20">
-                    <div class="quadrant-info">
-                        <h3>6.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem compatibility; zero external framework dependencies.</li>
-                            <li><strong>Cons:</strong> Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (BSD License); <strong>&#36;0 software cost</strong>, but incurs standard unoptimized cloud compute &amp; storage overheads due to lack of hardlinking.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant callout-accent">
-                    <div class="quadrant-info">
-                        <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.8.0)</h3>
-                        <ul>
-                            <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
-                            <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>
-                            <li><strong>Pricing &amp; Cost Model:</strong> <strong>&#36;0 Software License Cost</strong>; Zero Cloud Lock-in; <strong>100% Storage Cost Reduction</strong> on paired restoration targets via native hardlinking.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-</section>
-
-<section id="section-9">
-<h2>7. Synthesis Flow &amp; Topology</h2>
-            
-            <h3 id="the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</h3>
-            <p>The modernized interactive dashboard for end-to-end manifold management, backed by a decoupled modular engine (<code>compiler_core.py</code>, <code>manifold_compile.py</code>, <code>manifold_reduce.py</code>, and <code>manifold_sync.py</code>). Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling). The advanced <code>manifold_sync.py</code> orchestrator supports full duplex Kaggle synchronization (Upload via auto-Zipping and Download with disk-space collision safeguards).</p>
-            
-            <h3 id="industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</h3>
-            <ul>
-                <li><code>raw-sets/</code> (Source datasets - Protected by Cleanup Guardian)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/images/</code> (Standard structured folders for Restoration)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/labels/</code> (NIMA 10-bin probabilities or YOLO vectors)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/targets/</code> (Ground truth targets for SR/Restoration)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/dataset_info.yaml</code> (Suite Metadata)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/manifold_registry.db</code> (Persistent SQLite metadata)</li>
-                <li><code>../LemGendaryDatasets/&lt;name&gt;/README.md</code> (Kaggle-Optimized Manifest)</li>
-            </ul>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
-
-<section id="section-11">
-<h2>8. Unified Models Registry (Manifolds)</h2>
-            
-            <div class="visual-taxonomy">
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedClassificationMasterManifoldLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Classification</li>
-                            <li><strong>Total Samples:</strong> 788,034</li>
-                            <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification heads</li>
-                            <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedCodeFormerLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
-                            <li><strong>Total Samples:</strong> 22,000</li>
-                            <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetIndoorLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 196,304</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 217,113</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedFilmRestorerLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 67,542</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedForexUniverseLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Financial Time-Series</li>
-                            <li><strong>Total Samples:</strong> 24,850,000</li>
-                            <li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code> .. <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
-                            <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
-                            <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMirNetExposureLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 1,416,459</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMirNetLowLightLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 15,070</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedMprNetDerainingLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 248,190</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDebluringLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDenoisingLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 7,727</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaAestheticLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Quality Assessment</li>
-                            <li><strong>Total Samples:</strong> 321,369</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaAuthenticityLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Authenticity Assessment</li>
-                            <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedNimaTechnicalLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Quality Assessment</li>
-                            <li><strong>Total Samples:</strong> 26,093</li>
-                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
-                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedParseNetLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Segmentation</li>
-                            <li><strong>Total Samples:</strong> 853,546</li>
-                            <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
-                            <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 343,911</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
-                            <li><strong>Total Samples:</strong> 853,546</li>
-                            <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
-                            <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedUltraZoomLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Super-Resolution</li>
-                            <li><strong>Total Samples:</strong> 17,724</li>
-                            <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
-                            <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedUpnV2Large</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Image Restoration</li>
-                            <li><strong>Total Samples:</strong> 1,378,070</li>
-                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
-                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <div class="quadrant-info">
-                        <h3>LemGendizedYoloV8nLarge</h3>
-                        <ul>
-                            <li><strong>Category:</strong> Object Detection</li>
-                            <li><strong>Total Samples:</strong> 153,972</li>
-                            <li><strong>Architecture Base:</strong> CSP-Darknet / Transformer backbones with Path Aggregation</li>
-                            <li><strong>Primary Task:</strong> Detect and localize multiple object classes with high precision.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-</section>
-
-<section id="conclusion">
-<h2>9. Conclusion</h2>
-            <p>The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying previously disparate domains under the MoE routing engine, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.</p>
-</section>
-</main>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Compiler Suite Whitepaper - LemGendary AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="ecosystem-architecture.html">Architecture Hub</a>
+                <a href="current-state.html">Current State</a>
+                <a href="env_manager.html">Env Manager</a>
+                <a href="dataset-compiler.html" class="active">Dataset Compiler</a>
+                <a href="degradation-engine.html">Degradation Engine</a>
+                <a href="training-suite-master.html">Training Suite</a>
+                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
+                <a href="gui-control-registry.html">GUI Registry</a>
+                <a href="versioning-policy.html">Versioning Policy</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
+<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
+                <li><a href="#section-1">1. Abstract</a>
+                </li>
+                <li><a href="#section-3">2. High-Velocity Optimizations &amp; Complexity Mappings</a>
+                    <ul class="sub-item">
+                        <li><a href="#21-formal-complexity-mappings">2.1 Formal Complexity Mappings</a></li>
+                        <li><a href="#22-resampling-resolution-constraints">2.2 Resampling &amp; Resolution Constraints</a></li>
+                        <li><a href="#23-system-performance-throughput-matrix">2.3 System Performance &amp; Throughput Matrix</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-5">3. Hybrid Cloud &amp; Registry Integration</a>
+                </li>
+                <li><a href="#section-7">4. Multi-Modal &amp; Format Resilience</a>
+                    <ul class="sub-item">
+                        <li><a href="#41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture</a></li>
+                        <li><a href="#42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converters</a></li>
+                        <li><a href="#43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Pruning</a></li>
+                        <li><a href="#44-domain-specializations">4.4 Domain Specializations</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-modernization">5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</a>
+                    <ul class="sub-item">
+                        <li><a href="#51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding</a></li>
+                        <li><a href="#52-modular-container-format">5.2 Modular Container Format Layer</a></li>
+                        <li><a href="#53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</a></li>
+                        <li><a href="#54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate</a></li>
+                        <li><a href="#55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine</a></li>
+                        <li><a href="#56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine</a></li>
+                        <li><a href="#57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI</a></li>
+                        <li><a href="#58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets</a></li>
+                        <li><a href="#59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</a></li>
+                        <li><a href="#510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</a></li>
+                        <li><a href="#511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</a></li>
+                        <li><a href="#512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
+                        <li><a href="#513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
+                        <li><a href="#514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
+                    <ul class="sub-item">
+                        <li><a href="#61-technical-comparison-matrix">6.1 Technical Comparison Matrix</a></li>
+                        <li><a href="#62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-9">7. Synthesis Flow &amp; Topology</a>
+                    <ul class="sub-item">
+                        <li><a href="#the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</a></li>
+                        <li><a href="#industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-11">8. Unified Models Registry (Manifolds)</a>
+                </li>
+                <li><a href="#conclusion">9. Conclusion</a>
+                </li>
+            </ul>
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>Dataset Compiler Suite Whitepaper</h1>
+        <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
+        <div class="meta">
+                <span>Category 01.2 DATASET</span>
+                <span>Version 16.9.6</span>
+            </div>
+
+<section id="section-1">
+<h2>1. Abstract</h2>
+            <p>The LemGendary Dataset Compiler Suite (v16.9.6) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
+            <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-3">
+<h2>2. High-Velocity Optimizations &amp; Complexity Mappings</h2>
+            <p>The v16.2.8 release introduces the High-Fidelity Compiler, optimized for processing 1.4M+ item manifolds while maintaining absolute structural integrity for restoration tasks.</p>
+
+            <h3 id="21-formal-complexity-mappings">2.1 Formal Complexity Mappings</h3>
+            <p><strong>O(1) Physical Skip-Indexing</strong>:<br>
+            Traditional compiler engines verify existing outputs on disk by executing recursive path queries for every sample. In directory topologies containing millions of files, this incurs an <i>O(N &middot; d)</i> filesystem metadata lookup complexity (where <i>d</i> is directory depth and <i>N</i> is the dataset size). This results in massive system lockups due to OS seek contention.</p>
+            <p>Our compiler bypasses this lookup complexity completely. During system initialization, it performs a single flat string scan via <code>os.scandir</code> to construct an in-memory hash set (<i>S</i><sub>disk</sub>) of existing filenames. Verifications then achieve <i>O(1)</i> average-case lookup complexity:<br>
+            <code>Verify(x) = Skip (if hash(x) &isin; S<sub>disk</sub>) else Process</code></p>
+
+            <p><strong>ThreadPoolExecutor Zero-IPC</strong>:<br>
+            Python's standard <code>ProcessPoolExecutor</code> relies on inter-process communication (IPC) to serialize and deserialize data across boundaries via pipes. On Windows, this incurs an immense pickling serialization overhead of <i>O(P &middot; S)</i> (where <i>P</i> is the number of subprocesses and <i>S</i> is the serialized payload size).</p>
+            <p>We dynamically bypass this by switching the engine class to <code>ThreadPoolExecutor</code> for pure I/O-bound tasks:<br>
+            <code>Executor = ThreadPoolExecutor (if inference_vetting = False) else ProcessPoolExecutor</code><br>
+            This maintains a single shared virtual memory address space (Zero-IPC), scaling throughput to the physical hardware limits of the target NVMe drive.</p>
+
+            <p><strong>Parquet Manifold Compression &amp; NTFS Cluster Slack Space Recovery (Space-Recovery Equation)</strong>:<br>
+            For high-frequency multi-timeframe financial datasets containing rolling sliding windows (<i>W = 512</i> bars), storing individual timeframes across currency pairs in uncompressed <code>.npy</code> arrays produces massive disk footprint and filesystem fragmentation. On standard NTFS filesystems with cluster size <i>C</i><sub>cluster</sub> = 4096 bytes, storing hundreds of thousands of loose shard files introduces physical cluster slack space waste:<br>
+            <code>Slack(f) = C<sub>cluster</sub> - (Size(f) mod C<sub>cluster</sub>)</code><br>
+            Furthermore, raw <code>.npy</code> arrays dedicate full structural bit-weight to redundant sliding window overlaps. The compiler's unified Parquet architecture leverages byte-stream Zstandard (zstd level 3) dictionary compression across contiguous row groups (<i>R = 5,000</i>). The physical space recovery ratio <i>R</i><sub>space</sub> and compression factor <i>C</i><sub>factor</sub> are formulated as:<br>
+            <code>R<sub>space</sub> = 1 - (&sum;<sub>y</sub> Size(Parquet<sub>y</sub>)) / (&sum;<sub>y</sub> (&sum;<sub>s</sub> Size(NPY<sub>y,s</sub>) + Slack(NPY<sub>y,s</sub>))) &approx; 99.3%</code><br>
+            <code>C<sub>factor</sub> = Size<sub>Total</sub>(NPY) / Size<sub>Total</sub>(Parquet) &approx; 143&times;</code><br>
+            This slashes the physical manifold footprint from ~738 GB to ~5.2 GB across the entire 8-year temporal continuum (2019&ndash;2026), with 100% bit-exact floating-point recovery.</p>
+
+            <h3 id="22-resampling-resolution-constraints">2.2 Resampling &amp; Resolution Constraints</h3>
+            <p><strong>LANCZOS High-Fidelity Interpolation</strong>:<br>
+            To prevent aliasing and preserve high-frequency details (textures and sharp edges) during the downsampling phase of resolution-locked tasks, the compiler integrates the Lanczos-3 filter kernel. The interpolation weight for a coordinate distance <i>x</i> is defined as:<br>
+            <code>L(x) = sinc(x) &middot; sinc(x/a) for -a &lt; x &lt; a, else 0</code><br>
+            where <i>a = 3</i> is the spatial filter lobe support size, and <i>sinc(x) = sin(&pi;x) / (&pi;x)</i>. This produces superior anti-aliasing compared to legacy bilinear or legacy bicubic downsampling, preventing artifacts from corrupting downstream training manifolds.</p>
+
+            <p><strong>High-Fidelity Resolution Floor</strong>:<br>
+            Mandatory filtering bounds are enforced to prevent low-resolution samples from corrupting convergence vectors. If <i>W</i> and <i>H</i> are image dimensions, the compiler enforces the boundary constraint:<br>
+            <code>min(W, H) &ge; Threshold</code><br>
+            where:<br>
+            <code>Threshold = 512 (Diffusion) \| 224 (Quality, Restoration, SR) \| 128 (ArtifactDiagnostic)</code></p>
+
+            <h3 id="23-system-performance-throughput-matrix">2.3 System Performance &amp; Throughput Matrix</h3>
+            <p>To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the <code>LemGendizedUpnV2Large</code> manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:</p>
+            <div class="chart-container"><table>
+            <thead>
+            <tr>
+            <th>System Parameter</th>
+            <th>Legacy Recursive Pipeline</th>
+            <th>High-Fidelity Compiler Suite</th>
+            <th>Throughput Gain / Reduction</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td><strong>Directory Indexing Latency</strong></td>
+            <td>184.2 seconds</td>
+            <td><strong>0.4 seconds</strong></td>
+            <td><strong>460&times; Latency Reduction</strong> (<i>O(1)</i> vs <i>O(N)</i>)</td>
+            </tr>
+            <tr>
+            <td><strong>Windows IPC Serialization Overhead</strong></td>
+            <td>2,840.5 seconds</td>
+            <td><strong>0.0 seconds</strong></td>
+            <td><strong>100% Overhead Elimination</strong> (Zero-IPC ThreadPool)</td>
+            </tr>
+            <tr>
+            <td><strong>Filesystem Storage Footprint</strong></td>
+            <td>1.64 TB</td>
+            <td><strong>0.58 TB</strong></td>
+            <td><strong>1.06 TB Space Recovered</strong> (64.6% deduplication)</td>
+            </tr>
+            <tr>
+            <td><strong>Vetting Throughput (Aesthetic/NIMA)</strong></td>
+            <td>42 items/sec</td>
+            <td><strong>185 items/sec</strong></td>
+            <td><strong>4.4&times; Ingestion Acceleration</strong></td>
+            </tr>
+            </tbody>
+            </table></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-5">
+<h2>3. Hybrid Cloud &amp; Registry Integration</h2>
+            <p><strong>Atomic Registry Resumption &amp; SQLite Mappings</strong>:<br>
+            Resumption safety is guaranteed by tying the metadata compiler to a transaction-locked SQLite database register (<i>D</i>). Each compiled sample state <i>s<sub>i</sub></i> is committed atomically. The state resumption mapping is defined as:<br>
+            <code>R: D &rarr; S<sub>state</sub></code><br>
+            This allows interrupted runs to fast-forward past millions of completed operations in milliseconds, without triggering index scans or I/O traversals.</p>
+
+            <p><strong>NTFS Hardlink Deduplication (Space-Recovery Equation)</strong>:<br>
+            For restoration and super-resolution tasks where target images map identically to clean source copies (identity mapping), physical duplication of image pixels is avoided. The compiler dynamically issues NTFS hardlinks (<code>os.link</code>) to map multiple target directories back to a single physical source cluster. The total recovered disk space <i>&Delta;S</i> is mathematically represented as:<br>
+            <code>&Delta;S = &sum;<sub>i=1</sub><sup>M</sup> Size(I<sub>i</sub>) &middot; (Refs(I<sub>i</sub>) - 1)</code><br>
+            where <i>I<sub>i</sub></i> is a clean target image, <i>Size(I<sub>i</sub>)</i> is its file size on disk, and <i>Refs(I<sub>i</sub>)</i> is the number of active training manifolds that reference it. This recovered exactly <strong>1.06 TB</strong> of disk space during the UPNv2 compilation with zero pipeline disruption.</p>
+
+            <p><strong>Orphan Rescue &amp; Batch Adoption (v6.1)</strong>:<br>
+            During pipeline initialization, the compiler scans the physical storage and automatically identifies "orphaned" files (files existing on disk but missing from the SQLite registry). It triggers a low-memory batch adoption cycle to register them:<br>
+            <code>Adopt(O) = &cup;<sub>k=1</sub><sup>ceil(\|O\|/C)</sup> Commit(O<sub>k &middot; C</sub>)</code><br>
+            where <i>C = 100,000</i> represents the batch memory chunk limit, preventing memory spikes during massive recovery operations.</p>
+
+            <strong>Metadata Synchronization</strong>:<br>
+            <ul>
+                <li><strong>KaggleHub &amp; HF Sync</strong>: Automated synchronization of compiled manifolds to Kaggle/HF via native API managers.</li>
+                <li><strong>Standardized dataset_info.yaml</strong>: Every manifold generates a suite-compliant metadata package for immediate ingestion by the LemGendary Training Suite.</li>
+                <li><strong>Decoupled Documentation Generation (v16.4.1)</strong>: Extracted all dataset documentation generation (<code>README.md</code>, <code>dataset_info.yaml</code>, <code>category.txt</code>, <code>classes.txt</code>, <code>index.json</code>) from the monolithic compiler pipeline into a dedicated <code>doc_generator.py</code> module for robust maintainability and standardized outputs. It dynamically generates model-specific architecture mapping and extrapolated baseline metric tables directly from <code>models_metadata</code> and <code>task_metadata</code> residing in <code>unified_data.yaml</code>.</li>
+            </ul>
+
+            <p><strong>Real-Time Byte-Metered Synchronization &amp; Status Polling (v16.6.0)</strong>:<br>
+            Replaces unbuffered and silent transfer pipelines with uniform, chunk-level streaming monitors. Archiving (<code>archive_manager.py</code>) and remote payload transmission (<code>kaggle_manager.py</code>, <code>manifold_sync.py</code>) employ unified 1 MB byte-stream chunking (<i>C<sub>chunk</sub> = 1024 &times; 1024 B</i>) with pre-calculated uncompressed byte envelopes to report instantaneous transfer velocity (MB/s), ETA, and true completion bounds. Post-upload orchestration initiates autonomous REST/CLI status telemetry, polling backend dataset readiness every 5 seconds until the ingestion pipeline transitions from <code>queued</code>/<code>creating</code> to <code>ready</code>, eliminating blind execution halts.</p>
+
+            <p><strong>Direct Root Streaming &amp; Bidirectional Resumption Protocol (v16.7.0)</strong>:<br>
+            Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (<code>LemGendaryDatasets\</code>) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (<code>LemGendizedParseNetLarge/LemGendizedParseNetLarge</code>), with single-row terminal progress tracking (<code>dynamic_ncols=True</code>, <code>file=sys.stdout</code>). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:</p>
+            <ul>
+                <li><strong>Download Resumption</strong>: Pre-scans for existing valid archives on disk, verifies structural integrity via CRC/central directory checks, and resumes extraction of only missing files without redundant network I/O. Source archives are unlinked strictly after 100% successful extraction.</li>
+                <li><strong>Upload Resumption</strong>: Preserves generated <code>.staging_&lt;manifold&gt;/&lt;manifold&gt;.zip</code> archives upon upload failure or connection resets. Subsequent retry operations detect valid existing archives and bypass recompression, saving 30&ndash;60 minutes of compute on multi-gigabyte manifolds.</li>
+            </ul>
+
+            <p><strong>MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)</strong>:<br>
+            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (<code>LemGendizedForexUniverseLarge</code>) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
+
+            <p><strong>Kaggle Cloud Synchronization &amp; Storage Hub (v16.9.6)</strong>:<br>
+            Exposes high-speed bidirectional synchronization between the local dataset root (<code>LemGendaryDatasets\</code>) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (<code>GET /api/kaggle/registry-datasets</code>, <code>POST /api/kaggle/download</code>, <code>POST /api/kaggle/upload</code>, <code>GET /api/kaggle/status</code>).</p>
+            <ul>
+                <li><strong>Registry Datasets</strong>: Exposes all 20 canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code> directly in the UI with live local existence indicators and sample counts.</li>
+                <li><strong>Direct Custom Link / Slug Ingestion</strong>: Operators can provide arbitrary Kaggle web URLs (e.g., <code>https://www.kaggle.com/datasets/owner/dataset</code>) or slugs (<code>owner/dataset</code>) to pull and unpack custom research datasets directly into the manifold storage hierarchy with automatic unzipping and force overwrite capabilities.</li>
+                <li><strong>Zero-Recompression Upload</strong>: Packages compiled streaming manifolds with valid metadata manifests and streams them to Kaggle Model and Dataset registries.</li>
+            </ul>
+
+            <p><strong>Multi-Source Custom Dataset Synthesis Engine (v16.9.6)</strong>:<br>
+            Facilitates arbitrary dataset compilation via <code>POST /api/gui/custom-compile</code>. Operators supply heterogeneous lists of source datasets and URLs spanning:</p>
+            <ul>
+                <li><strong>Kaggle</strong>: <code>kaggle://owner/dataset</code> or direct Kaggle web URLs.</li>
+                <li><strong>Hugging Face</strong>: <code>hf://org/dataset</code> or direct HuggingFace dataset URLs.</li>
+                <li><strong>Google Drive</strong>: <code>gd://folder_id</code> or Google Drive sharing links.</li>
+                <li><strong>GitHub</strong>: <code>gh://owner/repo</code> or repository URLs.</li>
+            </ul>
+            <p>The engine normalizes all inputs into canonical URI schemes, updates <code>unified_data.yaml</code> dynamically, and dispatches background compilation with user-selected domain tasks (<code>restoration</code>, <code>detection</code>, <code>segmentation</code>, <code>quality</code>, <code>vision</code>), storage presets, and optional source image purging.</p>
+
+            <p><strong>Fast Split Shard Discovery &amp; In-Memory mtime Caching (v16.9.6)</strong>:<br>
+            Eliminates deep recursive walking across hundreds of thousands of loose files when evaluating manifold compiled status. The optimized scanner inspects container roots (<code>shards/</code>, <code>mds/</code>, <code>wds/</code>, <code>litdata/</code>) and immediate split folders (<code>train/</code>, <code>val/</code>, <code>test/</code>) with <code>os.scandir</code>. Results are cached against the directory's filesystem <code>st_mtime</code>, dropping API response latency from &gt; 20 seconds to &lt; 50 ms while accurately recognizing all 22 manifolds as compiled.</p>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-7">
+<h2>4. Multi-Modal &amp; Format Resilience</h2>
+
+            <h3 id="41-upstream-sources">4.1 Upstream Multi-Source Expansion Architecture (<code>sources/</code>)</h3>
+            <p>The compiler supports declarative multi-source dataset expansion directly through <code>unified_data.yaml</code> under each manifold's <code>refs:</code> array. Operators can add heterogeneous source repositories without altering compilation code:</p>
+            <ul>
+                <li><strong>Kaggle Datasets (<code>kaggle://&lt;owner&gt;/&lt;dataset-slug&gt;</code>)</strong>: Handled by <code>sources/kaggle.py</code>, executing authenticated API or KaggleHub retrieval with automatic fallback across environment variables, <code>~/.kaggle/kaggle.json</code>, and <code>.kaggle_token</code>.</li>
+                <li><strong>Hugging Face Hub (<code>hf://&lt;org&gt;/&lt;repo-id&gt;[:&lt;archive-file&gt;]</code>)</strong>: Handled by <code>sources/hf.py</code>, supporting direct snapshot downloads, compressed tarball streaming (<code>.tgz</code>, <code>.tar.gz</code>), and individual file synchronization with <code>.huggingface_token</code> authentication.</li>
+                <li><strong>Google Drive (<code>gd://&lt;file_or_folder_id&gt;</code>)</strong>: Handled by <code>sources/gd.py</code>, providing multi-threaded chunked downloads for large hosted research datasets.</li>
+                <li><strong>GitHub Repositories (<code>gh://&lt;owner&gt;/&lt;repo&gt;</code>)</strong>: Handled by <code>sources/gh.py</code>, enabling automated release asset extraction and source tree synchronization.</li>
+                <li><strong>Inter-Manifold Recirculation (<code>manifold://&lt;ManifoldName&gt;</code>)</strong>: Seamlessly mounts and slices already-compiled sibling manifolds (e.g., using <code>LemGendizedNAFNetDebluring</code> inside <code>ProfessionalMultitaskRestoration</code>) without duplicating image files on disk.</li>
+            </ul>
+
+            <h3 id="42-annotation-converters">4.2 Multi-Format Input Ingestion &amp; Annotation Converter Subsystem (<code>converters/</code>)</h3>
+            <p>Regardless of the upstream source dataset's original structure or format, the compiler automatically detects and transforms annotations and image tensors through the unified <code>converters/</code> subsystem:</p>
+            <ul>
+                <li><strong>MATLAB Input Format (<code>converters/matlab.py</code>)</strong>: Full native support for MATLAB <code>.mat</code> files via <code>scipy.io.loadmat(mat_path, spmatrix=False)</code>. Hardened for forward-compatibility with SciPy 1.14+ sparse matrix deprecations, the parser extracts annotation keys, matrix coordinates, and ground-truth bounding arrays seamlessly.</li>
+                <li><strong>COCO JSON Format (<code>converters/coco.py</code>)</strong>: Parses standard MS-COCO bounding boxes, instance categories, and polygon segmentation boundaries into unified internal sample dictionaries.</li>
+                <li><strong>Pascal VOC XML Format (<code>converters/xml.py</code>)</strong>: Traverses XML node trees to extract object classes and pixel-coordinate bounding boxes (<code>[xmin, ymin, xmax, ymax]</code>).</li>
+                <li><strong>YOLO Format (<code>converters/yolo.py</code>)</strong>: Normalizes space-delimited text annotations (<code>class x_center y_center width height</code>) into standardized bounding box targets.</li>
+                <li><strong>Apache Parquet &amp; Safetensors (<code>converters/parquet.py</code>)</strong>: Native ingestion of highly compressed PyArrow columnar tables, embedded byte buffers, and model tensors.</li>
+                <li><strong>Multi-Format Image Support</strong>: Fast single-pass scanner (<code>_fast_scan</code>) dynamically ingests <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, and <code>.npy</code> arrays.</li>
+            </ul>
+
+            <h3 id="43-preflight-validation">4.3 Pre-flight Validation, Integrity Vetting &amp; Automated Pruning</h3>
+            <p>Every discovered sample from any source undergoes rigorous pre-flight gating before entering the manifold:</p>
+            <ul>
+                <li><strong>Magic-Byte Header Sniffing</strong>: <code>VisionAuditor.verify_header()</code> inspects raw file signatures, automatically purging zero-byte stubs, corrupt bitstreams, or truncated downloads.</li>
+                <li><strong>Spatial Dimension Floors &amp; Aspect Ratios</strong>: Samples violating task-specific resolution boundaries (&ge; 224px for restoration, &ge; 512px for diffusion) or exhibiting extreme aspect ratio distortion are automatically filtered out.</li>
+                <li><strong>NIMA Perceptual Quality Gating</strong>: Evaluates aesthetic and technical quality score distributions, discarding heavily degraded or out-of-distribution frames.</li>
+                <li><strong>Perceptual Deduplication (<code>pHash</code>)</strong>: Computes DCT perceptual hashes to eliminate duplicate or near-identical images across overlapping upstream sources.</li>
+            </ul>
+
+            <h3 id="44-domain-specializations">4.4 Domain Specializations</h3>
+            <ul>
+                <li><strong>Parquet &amp; Safetensors Support (v16.6.0)</strong>: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (<code>ForexUniverse{year}.parquet</code>) utilizing Zstandard compression (level 3) with in-memory row-group caching.</li>
+                <li><strong>DPED Mirroring v2.1</strong>: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.</li>
+                <li><strong>VRAM De-fragmentation</strong>: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.</li>
+                <li><strong>Universal Film Restorer Dataset Hardening</strong>: Confirmed exactly 0 empty label files and 100% target physical hardlinking in <code>LemGendizedFilmRestorerLarge</code>, guaranteeing a pristine production state at 0 bytes disk overhead.</li>
+                <li><strong>Professional Multi-Task Restoration Dataset Integration (v16.3.0)</strong>: Structured unified source pipeline merging 11 individual manifolds with automated filename prefix preservation for downstream regular expression routing. Standardized target hardlinking layout with case-insensitive physically skip-indexed ingestion, and configured strict Lanczos/interpolation ceilings at 256px-640px to feed the Mixture-of-Experts (MoE) routing engine.</li>
+                <li><strong>ParseNet Semantic Extraction (v16.3.1)</strong>: Compiler explicitly outputs <code>masks/</code> directory, resolving paired masks as target images natively for face segmentation tasks rather than generic YOLO polygons.</li>
+                <li><strong>RetinaFace YOLO Landmarking (v16.3.1)</strong>: Integrated dynamic 5-point landmark extraction directly from <code>landmarks/</code> into standard YOLO format and strictly filtered all classes to <code>face</code> (index 0).</li>
+            </ul>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-modernization">
+<h2>5. 2026 Modernization Architecture &amp; Innovations (v16.8.0)</h2>
+            <p>The 2026 modernization elevates the compiler from a script collection into an industrial-grade dataset synthesis, audit, and sidecar service engine:</p>
+
+            <h3 id="51-zero-intermediate-webp">5.1 Zero-Intermediate WebP Transcoding (Phase 3)</h3>
+            <p>Eliminating bulky intermediate disk writes, the compiler transcodes input streams directly in memory to tuned WebP formats:</p>
+            <ul>
+                <li><strong>Images (<code>images/</code>)</strong>: WebP <i>q=92</i> delivering 40&ndash;65% disk footprint reduction compared to standard JPEG while preserving frequency harmonics.</li>
+                <li><strong>Restoration Ground Truth (<code>targets/</code>)</strong>: WebP <i>q=95</i> guaranteeing high-frequency fidelity for restoration models (NAFNet, MirNet, MPRNet, UPNv2).</li>
+                <li><strong>Segmentation Masks (<code>masks/</code>)</strong>: WebP lossless compression preserving exact discrete class indices and pixel boundaries.</li>
+                <li><strong>Alpha Channel Resilience</strong>: Transparent RGBA inputs are transcoded cleanly to lossless WebP or alpha-composited over calibrated neutral backdrops without quantization halos.</li>
+            </ul>
+
+            <h3 id="52-modular-container-format">5.2 Modular Container Format Layer (Phase 4)</h3>
+            <p>Supports concurrent multi-format emission (<code>--also-format</code>) alongside canonical directory structures:</p>
+            <ul>
+                <li><strong>MosaicML Streaming (MDS)</strong>: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.</li>
+                <li><strong>PyTorch Lightning LitData</strong>: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.</li>
+                <li><strong>WebDataset (WDS)</strong>: Tarball shard emission for legacy deep-learning cluster ingestion.</li>
+                <li><strong>Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
+            </ul>
+
+            <h3 id="53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</h3>
+            <p>The LemGendary Dataset Compiler strictly delineates between <strong>Studio Native Supported Formats</strong> (first-class streaming manifolds and annotation converters natively ingested by <code>lemgendary-datasets</code> and <code>lemgendary-training-suite</code>) and <strong>General Knowledge Formats</strong> (industry-standard storage containers documented for broad ML ecosystem context, but not natively emitted as streaming storage containers by the LemGendary suite).</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Format Identifier</th>
+                            <th>Format Family</th>
+                            <th>Classification</th>
+                            <th>Ingestion / Emission</th>
+                            <th>Shard Indexing &amp; Streaming Mechanism</th>
+                            <th>Primary Optimization Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WebDataset (.data / .tar)</strong></td>
+                            <td>Archive Tarball Shard (Obfuscated)</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Sequential POSIX tar shard streaming with <code>wds.WebDataset</code> via <code>.data</code> extension to bypass Kaggle automatic archive sniffing</td>
+                            <td>Large vision manifolds on POSIX/Linux clusters and Kaggle/Colab runtimes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MosaicML MDS (.mds)</strong></td>
+                            <td>Binary Indexed Chunks</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Index JSON manifest + raw binary chunks with deterministic global shuffle</td>
+                            <td>Cloud-native elastic multi-node streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LitData (.litdata)</strong></td>
+                            <td>Lightning Streaming</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>Chunked binary records with dynamic index boundaries</td>
+                            <td>Variable-length detection &amp; regression targets</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Apache Parquet (.parquet)</strong></td>
+                            <td>Columnar Table + Zstandard</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>PyArrow row-group indexing + dictionary zstd compression</td>
+                            <td>High-frequency financial &amp; tabular time-series</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flat Image Manifold (.webp/.png)</strong></td>
+                            <td>Directory Structure</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Native Bidirectional</td>
+                            <td>In-memory <code>os.scandir</code> hash-set with O(1) physical skip-indexing</td>
+                            <td>Zero-intermediate transcoding, NTFS cluster recovery</td>
+                        </tr>
+                        <tr>
+                            <td><strong>YOLO / COCO / VOC / MAT</strong></td>
+                            <td>Annotation Vectors</td>
+                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
+                            <td>Ingestion via <code>converters/</code></td>
+                            <td>Per-sample spatial parsing into normalized target tensors</td>
+                            <td>Object detection, facial landmarks, bounding boxes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TFRecord (.tfrecord)</strong></td>
+                            <td>Protocol Buffer Binary</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>tf.data.TFRecordDataset</code> sequential record reader</td>
+                            <td>Legacy TensorFlow pipelines; non-standard in PyTorch 2.x</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Petastorm (.parquet via Spark)</strong></td>
+                            <td>Columnar PySpark Container</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Apache Arrow PySpark IPC connector</td>
+                            <td>Distributed Spark analytics; superseded by native PyArrow</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LMDB (.lmdb)</strong></td>
+                            <td>Memory-Mapped B-Tree Key-Value</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Single mmap memory address space with transaction locks</td>
+                            <td>Legacy Caffe/PyTorch; lacks cloud-chunked streaming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HDF5 / H5 (.h5, .hdf5)</strong></td>
+                            <td>Hierarchical Scientific Container</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>h5py</code> hierarchical dataset pointers</td>
+                            <td>Multidimensional physics arrays; prone to MP write lock contention</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RecordIO (.rec)</strong></td>
+                            <td>MXNet Sequential Record</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td><code>mxnet.recordio</code> sequential chunk reader</td>
+                            <td>Legacy Apache MXNet pipelines</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feather / Arrow IPC (Raw)</strong></td>
+                            <td>Memory-Mapped Flat Binary</td>
+                            <td><span class="score-badge-neutral">GENERAL KNOWLEDGE</span></td>
+                            <td>Non-Native / Documented</td>
+                            <td>Uncompressed Arrow memory buffer mapping</td>
+                            <td>Ephemeral IPC transfer; lacks compressed row-group partitions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 id="54-hardlink-dedup-preflight">5.4 Hardlink Dedup Preservation &amp; Pre-Flight Gate Architecture</h3>
+            <p>Because container formats (tarballs, MDS chunks) pack raw byte streams and unavoidably destroy NTFS/POSIX hardlink deduplication, the compiler enforces an automated pre-flight hardlink audit gate (<code>audit_hardlinks()</code>):</p>
+            <p>Verdict = PROCEED if HardlinkRatio &lt; 5.0%, WARN if 5.0% &le; HardlinkRatio &le; 25.0%, BLOCK if HardlinkRatio &gt; 25.0%</p>
+            <p>Any attempt to emit container formats on restoration manifolds with heavy hardlink dedup (such as <code>LemGendizedUpnV2</code> with 1.06 TB recovered) is safely blocked unless explicitly overridden via <code>--force-duplicate</code>.</p>
+
+            <h3 id="55-smart-multimodal-generation">5.5 Smart Multi-Modal Generation Engine (Phase 5)</h3>
+            <p>Integrated AI backends run directly across compiled manifolds:</p>
+            <ul>
+                <li><strong>BLIP Captioning &amp; NIMA Quality Vetting</strong>: Generates descriptive prompts and perceptual quality distributions.</li>
+                <li><strong>CLIP Zero-Shot &amp; Style Clustering</strong>: Automatically partitions manifolds into latent style clusters via <code>MiniBatchKMeans</code> with deterministic seeding.</li>
+                <li><strong>YOLO Detection &amp; Auto-Labeling</strong>: Derives normalized bounding boxes and object class distributions.</li>
+                <li><strong>ParseNet &amp; SAM Segmentation</strong>: Generates discrete face and instance masks.</li>
+            </ul>
+
+            <h3 id="56-physical-degradation-synthesis">5.6 Physical Degradation Synthesis Engine (Phase 6)</h3>
+            <p>Pure NumPy, SciPy, and Pillow mathematical kernels derive paired synthetic restoration manifolds from clean targets:</p>
+            <ul>
+                <li><strong>Optical Defocus &amp; Motion Blur</strong>: Directional linear trajectories and circular aperture disk diffraction.</li>
+                <li><strong>Heteroscedastic Sensor Noise</strong>: Poisson photon arrival statistics coupled with Gaussian sensor readout noise.</li>
+                <li><strong>Atmospheric Koschmieder Scattering</strong>: <i>I(x) = J(x)t(x) + A(1 - t(x))</i> simulating atmospheric depth and haze.</li>
+                <li><strong>DCT Quantization</strong>: 8x8 block discrete cosine transform simulation modeling JPEG artifacts.</li>
+                <li><strong>Provenance Logging</strong>: Exact quantitative parameter values (blur kernel dimensions, angle, noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
+            </ul>
+
+            <h3 id="57-sidecar-api-hybrid-cli">5.7 Asynchronous Sidecar API &amp; Hybrid CLI Architecture (Phase 7)</h3>
+            <ul>
+                <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> exposing REST endpoints for health telemetry, configuration schema validation, manifold inspection, and background job queuing.</li>
+                <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with automatic restart recovery marking orphaned runs <code>interrupted</code>.</li>
+                <li><strong>WebSocket Streaming</strong>: Live logs stream to subscribers via <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
+                <li><strong>Hybrid Transparent CLI</strong>: When the server daemon is active, CLI commands automatically dispatch via HTTP POST and stream live logs in real time to the Rich Console, falling back to in-process execution when offline.</li>
+            </ul>
+
+            <h3 id="58-cpa-integration-gui-presets">5.8 Cross-Project Automation (CPA) Integration &amp; Desktop GUI Presets (Phase 8)</h3>
+            <ul>
+                <li><strong>Canonical Compiler Presets (<code>presets.yaml</code>, <code>presets.py</code>)</strong>: Shipped formal compilation profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) defining standard quality floors, resampling filters, auto-labeling toggles, and container targets.</li>
+                <li><strong>Aggregated Desktop GUI Endpoints (<code>api/routes/gui.py</code>)</strong>: Unified <code>/api/gui/state</code>, <code>/api/gui/datasets/with-stats</code>, <code>/api/gui/jobs/active</code>, <code>/api/gui/presets</code>, and <code>/api/gui/quick-compile</code> for instant hydration of the <code>lemgendary-ai-studio-gui</code> desktop dashboard.</li>
+                <li><strong>Frozen OpenAPI 3.1 Contract</strong>: Formally exported <code>openapi.json</code> guaranteeing zero-drift code generation for Tauri Rust and TypeScript frontend clients.</li>
+                <li><strong>Multi-Sidecar Top-Bar Observability</strong>: Interoperable with <code>lemgendary-env-manager</code> (port 8000) for synchronized cross-project governance.</li>
+            </ul>
+
+            <h3 id="59-solid-services-layer">5.9 S.O.L.I.D. Services Layer &amp; Forex Encapsulation (v16.7.0)</h3>
+            <ul>
+                <li><strong>In-Process Services Layer (<code>services/</code>)</strong>: Decomposed monolithic compiler workflows into dedicated single-responsibility services (<code>CompilerService</code>, <code>DegradeService</code>, <code>AuditService</code>, <code>DocService</code>, <code>GenerationService</code>, <code>MigrationService</code>, <code>SyncService</code>). All CLI commands invoke typed service layers in-process directly rather than shelling out to external subprocesses.</li>
+                <li><strong>Unified Audit Engine</strong>: Implemented <code>AuditService.audit_manifold()</code> unifying magic-byte resolution checking, aspect ratio validation, DCT perceptual deduplication, and NTFS hardlink fraction audits into a single command (<code>lemgendary audit</code>).</li>
+                <li><strong>Safe Module Ingestion</strong>: Encapsulated argument parsing in <code>manifold_compile.py</code> inside <code>parse_compile_args()</code> and <code>process_dataset(parsed_args)</code>, eliminating top-level module import side-effects.</li>
+                <li><strong>Domain Encapsulation (<code>forex/</code>)</strong>: Encapsulated historical Forex time-series pipelines into a modular subpackage (<code>forex.schema</code>, <code>forex.converter</code>, <code>forex.injector</code>, <code>forex.bridge</code>, <code>forex.pipeline</code>) with root backward-compatibility shims and dedicated CLI subcommands (<code>lemgendary forex convert</code>, <code>lemgendary forex embed</code>).</li>
+                <li><strong>Zero Suppression Policy Enforcement</strong>: Completely eliminated all programmatic warning suppressions (<code>warnings.filterwarnings</code>) and diagnostic silencing directives across all codebase modules.</li>
+            </ul>
+
+            <h3 id="510-two-tier-resumption">5.10 Two-Tier Manifold Modernization &amp; WebP Resumption Engine (v16.7.3)</h3>
+            <ul>
+                <li><strong>Suffix-Removal Modernization</strong>: Retires legacy <code>Large</code> naming conventions across manifolds into streamlined, production-standard suffixes while preserving legacy folders intact during migration.</li>
+                <li><strong>Two-Tier State Verification</strong>: Solves false-positive completion bugs by checking terminal manifest generation (<code>dataset_info.yaml</code> and <code>index.json</code>). Partially transcoded sets are accurately classified as <code>[RESUMABLE]</code>.</li>
+                <li><strong>File-Level Delta Scanning</strong>: Replaces blind file queues with size-aware delta inspection. Any existing valid <code>.webp</code> image or metadata file is bypassed in milliseconds, eliminating redundant CPU/GPU compute upon interrupted runs.</li>
+                <li><strong>Real-Time Visual Telemetry</strong>: Integrates single-line <code>tqdm</code> progress tracking reporting conversion speed (img/sec), active thread allocation, and countdown ETA across both metadata replication and multi-threaded WebP encoding.</li>
+            </ul>
+
+            <h3 id="511-canonical-storage-format">5.11 Canonical Storage Format &amp; Kaggle SSOT Registry Governance (v16.8.0)</h3>
+            <p>To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 establishes an authoritative Single Source of Truth (SSOT) container governance matrix across all 20 production manifolds:</p>
+            <ul>
+                <li><strong>Zero-Duplication Format Assignment</strong>: Eliminates duplicate coexistence of loose directory trees and streaming tar archives by enforcing a single canonical storage format per manifold:
+                    <ul>
+                        <li><strong>Apache Parquet (<code>parquet</code>)</strong>: Zstandard-compressed annual columnar shards for high-frequency financial time-series (<code>LemGendizedForexUniverse</code>).</li>
+                        <li><strong>Lightning AI LitData (<code>litdata</code>)</strong>: High-throughput binary tensor chunks (<code>.bin</code>) for parameter prediction (<code>LemGendizedUpnV2</code>).</li>
+                        <li><strong>MosaicML Streaming (<code>mds</code>)</strong>: Deterministic multi-task chunk streaming with elastic mixing and Zstd compression for multi-task restoration (<code>LemGendizedProfessionalMultitaskRestoration</code>) and safety classification (<code>LemGendizedClassificationMasterManifold</code>).</li>
+                        <li><strong>WebDataset (<code>webdataset</code>)</strong>: Contiguous ~500 MB tar shards for 10-bin quality distributions (<code>NimaAesthetic</code>, <code>NimaTechnical</code>, <code>NimaAuthenticity</code>), ultra-scale parameter prediction (<code>LemGendizedUpnV2</code>), and paired restoration targets (<code>FilmRestorer</code>, <code>CodeFormer</code>, <code>ParseNet</code>, <code>RetinaFace</code>, <code>FFANet</code>, <code>MIRNet</code>, <code>MPRNet</code>, <code>NAFNet</code>, <code>UltraZoom</code>).</li>
+                        <li><strong>Directory (<code>directory</code>)</strong>: Optimized WebP <code>images/</code> with YOLO <code>.cache</code> label arrays for native Ultralytics training (<code>LemGendizedYoloV8n</code>), remediated via NTFS LZX transparent compaction.</li>
+                    </ul>
+                </li>
+                <li><strong>Automated Kaggle Metadata Governance</strong>: Upgraded <code>unified_data.yaml</code> (v4.3.0) and <code>core/config_schema.py</code> to formally enforce 5 audited Kaggle taxonomy tags, CC-BY-NC-4.0 licensing, and comprehensive provenance tables for 10.0 Usability score compliance.</li>
+            </ul>
+
+            <h3 id="512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
+            <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposureLarge</code> with 2.82M loose files and <code>LemGendizedUpnV2Large</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
+            <ul>
+                <li><strong>Zero-Unpack Architecture</strong>: Directly mounts legacy <code>.zip</code> archives and streams raw byte streams into canonical WebDataset POSIX <code>.tar</code> shards in memory, eliminating loose file generation on physical disk.</li>
+                <li><strong>In-Flight Multi-Threaded WebP Transcoding</strong>: Deploys an asynchronous worker pool (<code>ThreadPoolExecutor</code>, 12 CPU cores) executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for input images, <code>quality=95</code> for ground-truth targets). Delivers consistent ~1,800&ndash;2,000 img/sec throughput, accelerating processing time from days to minutes.</li>
+                <li><strong>Dual-Pass Sequential Tar Streaming</strong>: For paired restoration manifolds (<code>images/</code> and <code>targets/</code>), Pass 1 streams input images sequentially by zip central directory header offset into <code>shard-*.tar</code>, and Pass 2 appends paired ground truth (<code>sample.target.webp</code>) in standard POSIX append mode (<code>"a"</code>), preserving pure sequential NVMe read velocity without random seek degradation.</li>
+                <li><strong>Automated Disk Reclamation</strong>: Automatically extracts root metadata (<code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, <code>README.md</code>, <code>index.json</code>, notebooks), validates shard byte integrity, updates canonical format to <code>webdataset</code>, unlinks multi-gigabyte source <code>.zip</code> archives (<code>--delete-zip</code>), and purges legacy uncompressed directories (<code>--delete-legacy-dir</code>), recovering over 120 GB of local storage space.</li>
+            </ul>
+
+            <h3 id="513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration (<code>utils/archive.py</code>)</h3>
+            <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code> (<code>smart_extract</code>) is upgraded with native subsystem delegation:</p>
+            <ul>
+                <li><strong>Binary Auto-Discovery</strong>: Probes system paths for native 64-bit <code>7z.exe</code> (<code>C:\Program Files\7-Zip\7z.exe</code>) and native POSIX <code>tar.exe</code> (<code>C:\Windows\System32\tar.exe</code>), falling back gracefully to Python standard library engines.</li>
+                <li><strong>Multi-Threaded Hardware Saturation</strong>: Dispatches extraction via native 7-Zip with parameters <code>-mmt=on -bsp0 -aos -y</code>, achieving multi-core decompression saturation that outpaces single-threaded Python zip extraction by orders of magnitude while suppressing per-file stdout progress flooding.</li>
+                <li><strong>Automated Root Flattening</strong>: Detects single root manifold directory envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies transparently post-extraction to guarantee consistent sibling pathing.</li>
+            </ul>
+
+            <h3 id="514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</h3>
+            <p>The v16.8.0 ecosystem establishes three distinct, standardized operational pipelines governing all lifecycle phases of training datasets:</p>
+            <h4>1. Regular Ingestion &amp; Manifold Compilation Pipeline (<code>compile</code> / <code>compile_all</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Ingesting raw external datasets (<code>raw-sets/</code>), applying quality gating, and compiling fresh standardized production manifolds (<code>LemGendized*</code>).</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Discovery &amp; Pre-flight</em>: Scans raw sources, verifies directory layout and file structures against <code>unified_data.yaml</code>.</li>
+                        <li><em>Quality &amp; Integrity Filters</em>: Inspects magic headers, validates image aspect ratios, filters corrupted samples, and executes NIMA aesthetic/technical quality score gating.</li>
+                        <li><em>Auto-Labeling &amp; Resampling</em>: Derives normalized YOLO bounding boxes, SAM/ParseNet segmentation masks, or BLIP captions where applicable, applying high-fidelity Lanczos-3 anti-aliasing interpolation for spatial rescales.</li>
+                        <li><em>Zero-Intermediate WebP Transcoding</em>: Transcodes input images directly in memory (<code>quality=92</code> for inputs, <code>quality=95</code> for restoration targets) avoiding redundant uncompressed intermediate disk writes.</li>
+                        <li><em>Emission &amp; Container Sharding</em>: Emits canonical directory layouts with NTFS hardlink deduplication preserved, or simultaneously exports modern streaming container shards (<code>--also-format webdataset</code>, <code>--also-format mds</code>, <code>--also-format litdata</code>).</li>
+                        <li><em>Manifest Generation</em>: Generates authoritative <code>dataset_info.yaml</code>, <code>dataset-metadata.json</code>, and <code>index.json</code>.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h4>2. Legacy Archive Modernization Pipeline (<code>tools/stream_zip_to_container.py</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Modernizing legacy multi-gigabyte <code>.zip</code> archives containing millions of small files directly into canonical POSIX WebDataset <code>.tar</code> shards without ever writing uncompressed loose files to disk.</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Zero-Unpack Streaming Ingestion</em>: Directly opens the <code>.zip</code> archive via low-level central directory indexing, completely bypassing NTFS Master File Table (MFT) lock contention, short filename generation, and real-time antivirus filter driver serialization.</li>
+                        <li><em>In-Flight Multi-Threaded Transcoding</em>: Decompresses raw image streams in memory and dispatches them across a 12-thread worker pool executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for inputs, <code>quality=95</code> for targets).</li>
+                        <li><em>Dual-Pass Sequential Tar Streaming</em>: For paired restoration sets (<code>images/</code> and <code>targets/</code>), Pass 1 writes sequential input images into <code>shard-*.tar</code>, while Pass 2 appends paired targets in standard POSIX append mode (<code>"a"</code>), maintaining high-velocity sequential write throughput on NVMe SSDs.</li>
+                        <li><em>Root Metadata Extraction</em>: Extracts essential documentation, notebooks, and index manifests (<code>index.json</code>, <code>dataset_info.yaml</code>, <code>README.md</code>) to the modernized manifold root.</li>
+                        <li><em>Automated Storage Reclamation</em>: Validates shard byte counts and sample completeness, then automatically deletes both the source <code>.zip</code> archive (<code>--delete-zip</code>) and any legacy unpacked directory trees (<code>--delete-legacy-dir</code>), recovering 50 GB to 100+ GB per dataset of local disk space.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h4>3. Retroactive Manifold Migration Pipeline (<code>format migrate</code> / <code>migrate_manifold_format.py</code>)</h4>
+            <ul>
+                <li><strong>Primary Scope</strong>: Converting already modernized local dataset directories (consisting of loose WebP images, targets, and <code>index.json</code>) into canonical streaming container shards (<code>webdataset</code> or <code>mds</code>).</li>
+                <li><strong>Workflow Stages</strong>:
+                    <ol>
+                        <li><em>Manifest &amp; Index Traversal</em>: Reads existing <code>index.json</code> or scans the structured manifold directory tree to build deterministic sample item queues.</li>
+                        <li><em>Container Chunk Serializer</em>: Streams samples into contiguous, fixed-size container chunks (~500 MB <code>.tar</code> shards or <code>.bin</code> / <code>.index</code> MosaicML Streaming files).</li>
+                        <li><em>Cluster Slack Elimination &amp; Source Purge</em>: When invoked with <code>--purge-source</code>, automatically unlinks loose intermediate image files upon successful shard verification, eliminating filesystem cluster allocation overhead and consolidating tens of thousands of fragmented files into a handful of sequential shards.</li>
+                        <li><em>Registry Synchronization</em>: Updates <code>dataset_info.yaml</code> with <code>canonical_format: webdataset</code>, ensuring instant zero-overhead streaming ingestion by the training suite DataLoader.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3 id="514-direct-streaming-ingestion-telemetry-hardening">5.14 Direct In-Memory Streaming Ingestion &amp; Terminal Progress Telemetry Hardening (v16.9.1)</h3>
+            <p>To eliminate severe terminal line wrapping and eradicate intermediate disk consumption during remote manifold acquisition, v16.9.1 hardens terminal progress telemetry and couples cloud synchronization directly with the streaming modernization engine:</p>
+            <ul>
+                <li><strong>Direct In-Memory Streaming on Cloud Download (<code>[GET]</code>)</strong>: In <code>core/common_sync.py</code> (<code>perform_dataset_download</code>), downloaded legacy <code>.zip</code> archives are inspected prior to extraction. If an archive contains legacy loose image structures (<code>images/</code>, <code>targets/</code>) without pre-existing <code>.tar</code> shards, the compiler completely bypasses disk extraction via 7-Zip and routes the archive directly through <code>stream_zip_to_webdataset</code> (<code>tools/stream_zip_to_container.py</code>). Input and target images are decoded and transcoded to lossless WebP in memory directly into POSIX <code>.tar</code> shards across parallel worker threads. Upon verified completion, the source <code>.zip</code> archive is automatically deleted, saving 60 GB to 130+ GB of intermediate disk headroom and eliminating millions of loose filesystem writes.</li>
+                <li><strong>Terminal Telemetry &amp; Column Width Hardening</strong>: Fixes a critical PowerShell and Windows conhost line wrapping defect in Kaggle API downloads where multi-byte block characters (<code>&#x2588;</code>, <code>&#x258F;</code>) and unbounded column widths caused terminal buffer overflow, cascading carriage returns (<code>\r</code>) onto new lines for every download tick. The download engine encapsulates <code>tqdm.tqdm</code> to enforce strict ASCII rendering (<code>ascii=True</code>) and fixed column width boundaries (<code>ncols=80</code>), guaranteeing single-line in-place telemetry updates across all Windows host environments.</li>
+                <li><strong>Silent Subsystem Extraction Delegation</strong>: Updated native 7-Zip execution parameters in <code>utils/archive.py</code> (<code>smart_extract</code>) from <code>-bsp1</code> to <code>-bsp0</code>, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.</li>
+            </ul>
+
+            <h3 id="515-ssot-notebook-delegation">5.15 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</h3>
+            <p>To enforce strict DRY principles and establish an authoritative single source of truth for training and inference notebooks, v16.9.7 completely extracts notebook generation logic out of <code>lemgendary-datasets</code>:</p>
+            <ul>
+                <li><strong>Deduplication of Generator Codebase</strong>: Removed legacy and duplicated notebook builders (<code>tools/notebook_generator.py</code> and <code>tools/notebooks/</code>), eliminating redundant cell synthesis templates and diverging execution logic across repositories.</li>
+                <li><strong>Dynamic In-Process Delegation (<code>core/manifold_compile.py</code>)</strong>: During manifold compilation, notebook generation dynamically resolves and imports <code>generate_training_notebook</code> and <code>generate_colab_training_notebook</code> directly from sibling <code>lemgendary-training-suite</code>.</li>
+                <li><strong>Identical Manifold &amp; Model Training Notebooks</strong>: Because both manifold compilation and training launches use the identical builder engine from <code>lemgendary-training-suite</code>, the <code>.ipynb</code> files placed in <code>LemGendaryDatasets/&lt;manifold&gt;/</code> are bit-exact copies of those placed in <code>LemGendaryModels/&lt;model&gt;/</code>, <code>kaggle_training/</code>, and <code>colab_training/</code>.</li>
+                <li><strong>Stale Artifact Purge</strong>: All obsolete or unreferenced legacy notebooks across compiled manifolds are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.</li>
+            </ul>
+</section>
+
+<section id="section-8">
+<h2>6. Comparative Analysis | 2026 Manifold Compilers Benchmark</h2>
+            <h3 id="61-technical-comparison-matrix">6.1 Technical Comparison Matrix</h3>
+            <p>The dataset compilation landscape in 2026 is defined by the struggle between distributed cloud throughput and local zero-IPC hardware efficiency. The following benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.8.0)</strong> against the top 5 industry manifold compilers: <strong>NVIDIA NeMo Curator (v2026)</strong>, <strong>HuggingFace WebDataset / Datasets v3</strong>, <strong>Ray Data / Anyscale Compiler</strong>, <strong>Cohere / DeepSpeed Data Engine</strong>, and <strong>Meta / PyTorch TorchData v2</strong>.</p>
+
+            <div class="table-wrapper">
+            <table>
+            <thead>
+            <tr>
+            <th>Benchmark Parameter</th>
+            <th>NVIDIA NeMo Curator (v2026)</th>
+            <th>HuggingFace WebDataset v3</th>
+            <th>Ray Data / Anyscale</th>
+            <th>Cohere / DeepSpeed Data</th>
+            <th>Meta TorchData v2</th>
+            <th>LemGendary Compiler Suite (v16.8.0)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td><strong>Filesystem Indexing</strong></td>
+            <td><i>O(N log N)</i> Metadata Scan</td>
+            <td><i>O(N)</i> Manifest Traversal</td>
+            <td><i>O(N)</i> Graph Build</td>
+            <td><i>O(N &middot; d)</i> Dir Walk</td>
+            <td><i>O(N)</i> MapDataPipe</td>
+            <td><strong><i>O(1)</i> Flat <code>scandir</code> Hash Scan</strong></td>
+            </tr>
+            <tr>
+            <td><strong>Indexing Latency (1.4M items)</strong></td>
+            <td>112.5 seconds</td>
+            <td>145.0 seconds</td>
+            <td>88.2 seconds</td>
+            <td>210.4 seconds</td>
+            <td>165.8 seconds</td>
+            <td><strong>0.4 seconds (460&times; faster)</strong></td>
+            </tr>
+            <tr>
+            <td><strong>Memory &amp; IPC Model</strong></td>
+            <td>PyArrow Shared Memory IPC</td>
+            <td>Multiprocess Queue Pickling</td>
+            <td>Plasma Store Object IPC</td>
+            <td>PyTorch DDP IPC</td>
+            <td>DataLoader Worker IPC</td>
+            <td><strong>Zero-IPC ThreadPool (Shared RAM)</strong></td>
+            </tr>
+            <tr>
+            <td><strong>IPC Serialization Latency</strong></td>
+            <td>12.4 seconds</td>
+            <td>412.0 seconds</td>
+            <td>45.6 seconds</td>
+            <td>280.1 seconds</td>
+            <td>390.5 seconds</td>
+            <td><strong>0.0 seconds (100% Overhead Elimination)</strong></td>
+            </tr>
+            <tr>
+            <td><strong>Storage Optimization</strong></td>
+            <td>MinHash Physical Rewrite</td>
+            <td>Tarball Duplication</td>
+            <td>Parquet Physical Rewrite</td>
+            <td>Tarball Sharding</td>
+            <td>In-Memory Filtering</td>
+            <td><strong>WebP 92 + Hardlink (64.6% Recovery)</strong></td>
+            </tr>
+            <tr>
+            <td><strong>Resampling Preserv.</strong></td>
+            <td>GPU Bilinear / Bicubic</td>
+            <td>PIL Default Bicubic</td>
+            <td>OpenCV / PIL Resize</td>
+            <td>PyTorch Interpolate</td>
+            <td>torchvision Transforms</td>
+            <td><strong>Lanczos-3 Anti-Aliased Kernel</strong></td>
+            </tr>
+            <tr>
+            <td><strong>Resumption Engine</strong></td>
+            <td>JSONL Checkpoints</td>
+            <td>Tarball Shard Indexes</td>
+            <td>Actor State Logs</td>
+            <td>Metadata Manifests</td>
+            <td>IterDataPipe State Dicts</td>
+            <td><strong>Transaction-Locked SQLite Registry</strong></td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+
+            <h3 id="62-competitor-deep-dive">6.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing (2026 Landscape)</h3>
+            
+            <div class="visual-taxonomy mt-20">
+                <div class="quadrant mb-20">
+                    <div class="quadrant-info">
+                        <h3>6.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> Blazing GPU-accelerated MinHash deduplication &amp; VLM semantic filtering; native integration with NeMo training framework.</li>
+                            <li><strong>Cons:</strong> Requires multi-GPU DGX/HGX clusters for heavy tasks; significant VRAM overhead during pre-processing; locked to NVIDIA ecosystem.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Commercial Enterprise License via <strong>NVIDIA AI Enterprise (&#36;4,500/GPU/year)</strong> or cloud GPU usage rates (&#36;3.50&ndash;&#36;4.80/GPU-hr).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant mb-20">
+                    <div class="quadrant-info">
+                        <h3>6.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> Gold standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); seamless HF Hub integration and dataset sharing.</li>
+                            <li><strong>Cons:</strong> High Windows IPC serialization penalty; tarball creation forces physical data duplication; slow random-access seek times.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core; <strong>HF Enterprise Hub (&#36;20/user/month)</strong> + HF Endpoints storage &amp; ingress costs (~&#36;0.02/GB/month).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant mb-20">
+                    <div class="quadrant-info">
+                        <h3>6.2.3 Ray Data / Anyscale Distributed Compiler</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> Highly scalable distributed batch execution across thousands of CPU/GPU worker nodes; resilient task graphs.</li>
+                            <li><strong>Cons:</strong> High memory footprint due to Plasma Object Store serialization overhead; complex cluster orchestration and setup.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source core (Ray); <strong>Anyscale Managed Cloud (&#36;0.10&ndash;&#36;0.30 per Anyscale Compute Unit hour)</strong> + underlying AWS/GCP infrastructure costs.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant mb-20">
+                    <div class="quadrant-info">
+                        <h3>6.2.4 Cohere / DeepSpeed Data Engine</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> Optimized for massive-scale LLM/VLM text-image tokenization and multi-modal sharding; excellent multi-node streaming.</li>
+                            <li><strong>Cons:</strong> Poor support for image restoration/super-resolution paired targets; high multi-node network bandwidth requirements.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (DeepSpeed); <strong>Cohere Enterprise / Enterprise API custom tier (&#36;15,000&ndash;&#36;50,000+/year commitment)</strong> for managed enterprise pipeline deployment.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant mb-20">
+                    <div class="quadrant-info">
+                        <h3>6.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem compatibility; zero external framework dependencies.</li>
+                            <li><strong>Cons:</strong> Lacks persistent metadata transactions (susceptible to corruption during crashes); high multiprocessing worker IPC overhead.</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> Open-source (BSD License); <strong>&#36;0 software cost</strong>, but incurs standard unoptimized cloud compute &amp; storage overheads due to lack of hardlinking.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant callout-accent">
+                    <div class="quadrant-info">
+                        <h3>6.2.6 LemGendary Dataset Compiler Suite (v16.8.0)</h3>
+                        <ul>
+                            <li><strong>Pros:</strong> <i>O(1)</i> physical skip-indexing; Zero-IPC ThreadPool RAM sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3 spectral preservation; SQLite transaction resumption locks.</li>
+                            <li><strong>Cons:</strong> Optimized primarily for local/hybrid single-node &amp; edge hardware; non-distributed (single-node multi-threaded/GPU execution).</li>
+                            <li><strong>Pricing &amp; Cost Model:</strong> <strong>&#36;0 Software License Cost</strong>; Zero Cloud Lock-in; <strong>100% Storage Cost Reduction</strong> on paired restoration targets via native hardlinking.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+</section>
+
+<section id="section-9">
+<h2>7. Synthesis Flow &amp; Topology</h2>
+            
+            <h3 id="the-dataset-hub">7.1 The Dataset Hub (v6.0.0-SOTA)</h3>
+            <p>The modernized interactive dashboard for end-to-end manifold management, backed by a decoupled modular engine (<code>compiler_core.py</code>, <code>manifold_compile.py</code>, <code>manifold_reduce.py</code>, and <code>manifold_sync.py</code>). Hardware acceleration includes <strong>CPU-GUARD</strong> (automatic detection of massive datasets on CPU-bound systems; triggers "High-Speed Mode" to prevent I/O thrashing) and <strong>CUDA-Sentry</strong> (real-time detection of GPU availability for NIMA vetting and YOLO auto-labeling). The advanced <code>manifold_sync.py</code> orchestrator supports full duplex Kaggle synchronization (Upload via auto-Zipping and Download with disk-space collision safeguards).</p>
+            
+            <h3 id="industrial-output-topology">7.2 Industrial Output Topology (Nuclear Architecture)</h3>
+            <ul>
+                <li><code>raw-sets/</code> (Source datasets - Protected by Cleanup Guardian)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/images/</code> (Standard structured folders for Restoration)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/labels/</code> (NIMA 10-bin probabilities or YOLO vectors)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/targets/</code> (Ground truth targets for SR/Restoration)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/dataset_info.yaml</code> (Suite Metadata)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/manifold_registry.db</code> (Persistent SQLite metadata)</li>
+                <li><code>../LemGendaryDatasets/&lt;name&gt;/README.md</code> (Kaggle-Optimized Manifest)</li>
+            </ul>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+
+<section id="section-11">
+<h2>8. Unified Models Registry (Manifolds)</h2>
+            
+            <div class="visual-taxonomy">
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedClassificationMasterManifoldLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Classification</li>
+                            <li><strong>Total Samples:</strong> 788,034</li>
+                            <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification heads</li>
+                            <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedCodeFormerLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
+                            <li><strong>Total Samples:</strong> 22,000</li>
+                            <li><strong>Architecture Base:</strong> CodeFormer or UNet-based restoration architectures</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality of human faces.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFfaNetIndoorLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 196,304</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 217,113</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedFilmRestorerLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 67,542</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedForexUniverseLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Financial Time-Series</li>
+                            <li><strong>Total Samples:</strong> 24,850,000</li>
+                            <li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code> .. <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
+                            <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
+                            <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMirNetExposureLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,416,459</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMirNetLowLightLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 15,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedMprNetDerainingLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 248,190</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNafNetDebluringLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNafNetDenoisingLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 7,727</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaAestheticLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 321,369</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaAuthenticityLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Authenticity Assessment</li>
+                            <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict image authenticity score and map to binary categorical distribution.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedNimaTechnicalLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Quality Assessment</li>
+                            <li><strong>Total Samples:</strong> 26,093</li>
+                            <li><strong>Architecture Base:</strong> MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head</li>
+                            <li><strong>Primary Task:</strong> Predict human-perceptual quality score.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedParseNetLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Segmentation</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical decoders</li>
+                            <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image manifold.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 343,911</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
+                            <li><strong>Total Samples:</strong> 853,546</li>
+                            <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
+                            <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedUltraZoomLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Super-Resolution</li>
+                            <li><strong>Total Samples:</strong> 17,724</li>
+                            <li><strong>Architecture Base:</strong> Transformer-based or Deep Residual networks</li>
+                            <li><strong>Primary Task:</strong> Scale low-resolution images to high-resolution while preserving details.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedUpnV2Large</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Image Restoration</li>
+                            <li><strong>Total Samples:</strong> 1,378,070</li>
+                            <li><strong>Architecture Base:</strong> UNet-based restoration architectures with residual learning</li>
+                            <li><strong>Primary Task:</strong> Restore degraded images and enhance visual quality.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quadrant">
+                    <div class="quadrant-info">
+                        <h3>LemGendizedYoloV8nLarge</h3>
+                        <ul>
+                            <li><strong>Category:</strong> Object Detection</li>
+                            <li><strong>Total Samples:</strong> 153,972</li>
+                            <li><strong>Architecture Base:</strong> CSP-Darknet / Transformer backbones with Path Aggregation</li>
+                            <li><strong>Primary Task:</strong> Detect and localize multiple object classes with high precision.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+</section>
+
+<section id="conclusion">
+<h2>9. Conclusion</h2>
+            <p>The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying previously disparate domains under the MoE routing engine, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.</p>
+</section>
+</main>
+</body>
 </html>

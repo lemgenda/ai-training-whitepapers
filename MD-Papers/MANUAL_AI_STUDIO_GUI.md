@@ -14,6 +14,7 @@
 - [2. Interface Topology & Visual Navigation Matrix](#2-interface-topology--visual-navigation-matrix)
   - [2.1 Workspace Global Shell Elements & Numbered Navigation Guide](#21-workspace-global-shell-elements--numbered-navigation-guide)
   - [2.5 Tripartite Sidecar Process Control & Auto-Start](#25-tripartite-sidecar-process-control--auto-start)
+  - [2.6 Centralized State Architecture (Zustand) & Modular Micro-Components](#26-centralized-state-architecture-zustand--modular-micro-components)
 - [3. Universal Configuration & Secrets Vault](#3-universal-configuration--secrets-vault)
   - [3.1 Central Manifest Registry Editor](#31-central-manifest-registry-editor)
   - [3.2 Secrets & Cloud Tokens Vault](#32-secrets--cloud-tokens-vault)
@@ -22,31 +23,28 @@
   - [4.2 Individual Pipeline Step Execution Cards](#42-individual-pipeline-step-execution-cards)
   - [4.3 Hardware Acceleration Sentinel Card](#43-hardware-acceleration-sentinel-card)
   - [4.4 Managed Workspace Projects Health Cards](#44-managed-workspace-projects-health-cards)
-- [5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync](#5-dataset-compilation-pipeline-modernization-custom-multi-source-ingestion--kaggle-sync)
-  - [5.1 Dataset Compiler & Storage Modernization Control Card](#51-dataset-compiler--storage-modernization-control-card)
-    - [5.1.1 Standard Manifold Compilation](#511-standard-manifold-compilation)
-    - [5.1.2 Custom Multi-Source Compilation](#512-custom-multi-source-compilation)
-  - [5.2 Kaggle Cloud Synchronization & Storage Hub](#52-kaggle-cloud-synchronization--storage-hub)
-    - [5.2.1 Download from Kaggle](#521-download-from-kaggle)
-    - [5.2.2 Upload to Kaggle](#522-upload-to-kaggle)
-    - [5.2.3 Update Metadata Only](#523-update-metadata-only)
-  - [5.3 Production Manifolds Catalog & Format Breakdown](#53-production-manifolds-catalog--format-breakdown)
+- [5. Dataset Compilation Pipeline: Modernization, Direct Kaggle Ingestion & Streaming Manifolds](#5-dataset-compilation-pipeline-modernization-direct-kaggle-ingestion--streaming-manifolds)
+  - [5.1 Dataset Compiler & Modernization Control Card](#51-dataset-compiler--modernization-control-card)
+  - [5.2 Production Manifolds Catalog, Upstream Lineage & One-Click Cloud Sync](#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync)
+  - [5.3 Modernization Queue & Scale Reduction Workflows](#53-modernization-queue--scale-reduction-workflows)
+  - [5.4 Embedded Dataset Telemetry Console](#54-embedded-dataset-telemetry-console)
 - [6. Model Training Pipeline: Architectures, Ladders & Sawtooth Governor](#6-model-training-pipeline-architectures-ladders--sawtooth-governor)
-  - [6.1 LemGendary Model Training Suite & Model Orchestration Card](#61-lemgendary-model-training-suite--model-orchestration-card)
+  - [6.1 Model Training Suite & Model Orchestration Toolbar](#61-model-training-suite--model-orchestration-toolbar)
   - [6.2 Registered Architectures & Checkpoint Telemetry Grid](#62-registered-architectures--checkpoint-telemetry-grid)
   - [6.3 Interactive Cloud Training Modal](#63-interactive-cloud-training-modal)
-  - [6.4 Real-Time Telemetry Stream & Responsive Cancellation](#64-real-time-telemetry-stream--responsive-cancellation)
-  - [6.5 Revamped 1/4 - 3/4 Training Dashboard Topology & Interactive SOTA Inspection](#65-revamped-14---34-training-dashboard-topology--interactive-sota-inspection)
+  - [6.4 Three-Tab Real-Time Telemetry Stream & Responsive Cancellation](#64-three-tab-real-time-telemetry-stream--responsive-cancellation)
+  - [6.5 Revamped Training Dashboard Topology & Interactive SOTA Inspection](#65-revamped-training-dashboard-topology--interactive-sota-inspection)
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
 - [8. Health Matrix & Cross-Project Version Drift Analytics](#8-health-matrix--cross-project-version-drift-analytics)
-  - [8.1 Toolchain Prerequisites & Version Drift Matrix](#81-toolchain-prerequisites--version-drift-matrix)
+  - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM Packages](#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages)
   - [8.2 Ecosystem Maintenance & Governance Controls](#82-ecosystem-maintenance--governance-controls)
-- [9. Real-Time Telemetry & Monospace Event Diagnostics](#9-real-time-telemetry--monospace-event-diagnostics)
-  - [9.1 Telemetry Terminal Numbered Reference](#91-telemetry-terminal-numbered-reference)
-- [10. Contextual UX Help & Interactive Hover Guidance System](#10-contextual-ux-help--interactive-hover-guidance-system)
-- [11. Permanent Offline Documentation Hub & Online Synchronization](#11-permanent-offline-documentation-hub--online-synchronization)
-- [12. Tripartite Multi-Sidecar Network Architecture](#12-tripartite-multi-sidecar-network-architecture)
-- [13. Automated Testing & Ecosystem Quality Assurance](#13-automated-testing--ecosystem-quality-assurance)
+- [9. Contextual UX Help & Interactive Hover Guidance System](#9-contextual-ux-help--interactive-hover-guidance-system)
+  - [9.1 Interactive Hover Popovers & Safety Diagnostics](#91-interactive-hover-popovers--safety-diagnostics)
+- [10. Permanent Offline Documentation Hub & Online Synchronization](#10-permanent-offline-documentation-hub--online-synchronization)
+  - [10.1 Local Static Offline Documentation Server](#101-local-static-offline-documentation-server)
+  - [10.2 Live GitHub Pages Online Synchronization](#102-live-github-pages-online-synchronization)
+- [11. Tripartite Multi-Sidecar Network Architecture](#11-tripartite-multi-sidecar-network-architecture)
+- [12. Automated Testing & Ecosystem Quality Assurance](#12-automated-testing--ecosystem-quality-assurance)
 
 ---
 
@@ -78,37 +76,33 @@ The AI Studio interface is organized into persistent visual regions designed for
 
 ### 2.1 Workspace Global Shell Elements & Numbered Navigation Guide
 
-The live screen capture above displays the complete primary application frame including header, persistent sidebar navigation, active dashboard viewport, and status footer:
+The live screen capture above displays the complete primary application frame including header, persistent sidebar navigation, active dashboard viewport, and the sticky status footer:
 
-1. **Brand Title & Brand Icon**: Displays `LemGendary AI Studio` alongside the official vector icon (`lemgenda-icon.svg`). Clicking the header identity opens the official portal `https://www.lemgenda.hr/`.
+1. **Brand Title & Brand Icon**: Displays `LemGendary AI` alongside the official vector icon (`lemgenda-icon.svg`). Clicking the header identity opens the official portal `https://www.lemgenda.hr/`.
 2. **Config & Secrets Header Action Button**: Opens the Universal Configuration, Registry Editor & Secrets Vault Modal for editing YAML manifests and managing Kaggle, Google Drive, GitHub, and MT5 API tokens directly from the top navigation bar.
-3. **Docs Hub (Offline) Action Button**: Launches the local offline Documentation Hub served by the LemGendary Environment Manager sidecar at `http://127.0.0.1:8000/documentation-hub/index.html`. Guarantees full offline documentation access during field deployments.
+3. **Docs Hub (Offline) Action Button**: Launches the local offline Documentation Hub served by the desktop client and Environment Manager sidecar at `http://localhost:1420/documentation-hub/index.html`. Guarantees full offline documentation access during field deployments.
 4. **Refresh Audit Telemetry Button**: Triggers an instantaneous asynchronous background scan across physical accelerators, GPU VRAM, system memory, project virtual environments, and manifest version drift.
 5. **Dashboard Tab Selector**: Switches primary viewport to the main system dashboard, rendering hardware sentinel cards, sidecar process tiles, project health cards, and the real-time event console.
-6. **Dataset Compiler Tab Selector**: Switches primary viewport to the LemGendary Dataset Compiler Suite (`.\lemgendary-datasets\`), streaming manifold compiler, custom multi-source ingestion interface, Kaggle synchronization hub, and verified manifold catalog.
-7. **Training Suite Tab Selector**: Switches primary viewport to the LemGendary Model Training Suite (`.\lemgendary-training-suite\`), neural architecture matrix, Sawtooth Governor VRAM controls, progressive spatial ladders, and training dispatch orchestrator.
+6. **Dataset Compiler Tab Selector**: Switches primary viewport to the LemGendary Dataset Compiler Suite (`.\lemgendary-datasets\`), streaming manifold compiler, direct Kaggle ingestion interface, Kaggle synchronization hub, and verified manifold catalog.
+7. **Model Training Tab Selector**: Switches primary viewport to the LemGendary Model Training Suite (`.\lemgendary-training-suite\`), neural architecture matrix, Sawtooth Governor VRAM controls, progressive spatial ladders, and training dispatch orchestrator.
 8. **Clean Install Pipeline Tab Selector**: Switches primary viewport to the dedicated 7-stage deterministic environment provisioning and toolchain verification sequence.
-9. **Project Environments Tab Selector**: Switches primary viewport to dedicated sub-repository cards (`lemgendary-env-manager`, `lemgendary-datasets`, `lemgendary-training-suite`, `lemgendary-ai-studio-gui`, `lemgendary-docs`) with package counts and reconciliation controls, displaying clean relative paths without absolute filesystem exposure.
-10. **Health & Version Drift Tab Selector**: Switches primary viewport to host prerequisite audits and cross-project package version comparison matrices.
-11. **Real-time Telemetry Tab Selector**: Switches primary viewport to the high-throughput monospace console streaming real-time status packets over local WebSockets.
-12. **LemGenda Brand Logo Sidebar Footer**: Anchors the persistent sidebar with the official vector brand signature (`lemgenda-logo.svg`), providing a direct link to `https://www.lemgenda.hr/`.
-13. **System Status Bar Indicator**: Live footer status indicator reporting real-time connectivity across all active sidecar services.
+9. **Health & Version Drift Tab Selector**: Switches primary viewport to host prerequisite audits, Python cross-project version drift comparison matrix, Desktop GUI Project Packages (NPM) audit, and ecosystem maintenance actions.
+10. **Brand Signature Logo Sidebar Footer**: Anchors the persistent sidebar with the official vector brand signature (`lemgenda-logo.svg`), providing a direct link to `https://www.lemgenda.hr/`.
+11. **System Status Bar Indicator**: Live sticky footer status indicator permanently visible at the bottom of the viewport, reporting real-time connectivity and operational health across all active sidecar services.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Brand Title & Icon | Navigation Link | `window.open('https://www.lemgenda.hr/')` | Displays official brand icon and title; links to web home. |
 | **2** | Config & Secrets | Header Action Button | `setIsConfigEditorOpen(true)` | Launches modal dialog for manifest editing and secret management. |
-| **3** | Docs Hub (Offline) | Action Button | `window.open('/documentation-hub/')` | Opens browser window to local offline documentation server on port 8000. |
+| **3** | Docs Hub (Offline) | Action Button | `window.open('/documentation-hub/')` | Opens browser window to local offline documentation server. |
 | **4** | Refresh Audit | Action Button | `POST /api/audit` | Queries all three sidecars to refresh hardware metrics and venv health. |
-| **5** | Dashboard Tab | Navigation Button | `setCurrentTab("dashboard")` | Navigates to central system overview and launcher tiles. |
-| **6** | Dataset Compiler Tab | Navigation Button | `setCurrentTab("datasets")` | Navigates to LemGendary Dataset Compiler Suite. |
-| **7** | Training Suite Tab | Navigation Button | `setCurrentTab("training")` | Navigates to LemGendary Model Training Suite. |
+| **5** | Dashboard Tab | Navigation Button | `setCurrentTab("dashboard")` | Navigates to central system overview, hardware sentinel, and launcher tiles. |
+| **6** | Dataset Compiler Tab | Navigation Button | `setCurrentTab("datasets")` | Navigates to LemGendary Dataset Compiler Suite and manifold catalog. |
+| **7** | Model Training Tab | Navigation Button | `setCurrentTab("training")` | Navigates to LemGendary Model Training Suite and model orchestration grid. |
 | **8** | Clean Install Tab | Navigation Button | `setCurrentTab("pipeline")` | Navigates to the automated 7-step clean install pipeline. |
-| **9** | Projects Tab | Navigation Button | `setCurrentTab("projects")` | Navigates to repository cards and individual venv status. |
-| **10** | Health & Drift Tab | Navigation Button | `setCurrentTab("health")` | Navigates to package version divergence matrix. |
-| **11** | Telemetry Logs Tab | Navigation Button | `setCurrentTab("logs")` | Navigates to monospace WebSocket log terminal. |
-| **12** | Brand Signature Logo | Navigation Link | `window.open('https://www.lemgenda.hr/')` | Persistent sidebar brand signature linking to corporate portal. |
-| **13** | System Status Bar | Status Indicator | Real-time WebSocket Heartbeat | Displays global operational health and network readiness. |
+| **9** | Health & Drift Tab | Navigation Button | `setCurrentTab("health")` | Navigates to Python drift matrix, Desktop GUI NPM packages, and maintenance. |
+| **10** | Brand Signature Logo | Navigation Link | `window.open('https://www.lemgenda.hr/')` | Persistent sidebar brand signature linking to corporate portal. |
+| **11** | System Status Bar | Status Indicator | Real-time WebSocket Heartbeat | Sticky footer reporting global operational health and network readiness. |
 
 ---
 
@@ -124,29 +118,31 @@ The Ecosystem Sidecar Services grid permanently monitors and coordinates the thr
 
 #### Ecosystem Sidecar Cards Numbered Reference
 
-1. **Ecosystem Sidecar Services Section Header**: Overview header accompanied by contextual help tooltip explaining tripartite microservice architecture.
-2. **Environment Manager Card Title**: Identifies port 8000 governance daemon governing virtual environments and hardware discovery.
-3. **Environment Manager Status Badge**: Real-time indicator displaying green `ONLINE` or red `OFFLINE`.
-4. **Run Full System Audit Button**: Triggers deterministic hardware, dependency, and manifest inspection across all workspace projects.
-5. **Dataset Compiler Suite Card Title**: Identifies port 8100 service managing WebDataset, Parquet, and MDS manifolds.
-6. **Dataset Compiler Status Badge**: Real-time indicator displaying green `ONLINE` or red `OFFLINE`.
-7. **Open Dataset Compiler Button**: Navigation shortcut directly switching the active viewport to the Dataset Compiler tab.
-8. **Model Training Suite Card Title**: Identifies port 8200 service managing PyTorch neural architectures and Sawtooth Governor VRAM safeguards.
-9. **Model Training Suite Status Badge**: Real-time indicator displaying green `ONLINE` or red `OFFLINE`.
-10. **Open Training Suite Button**: Navigation shortcut directly switching the active viewport to the Training Suite tab.
+1. **Environment Manager Service Card**: Identifies the primary port 8000 governance daemon governing virtual environments, hardware discovery, and registry validation (`ONLINE`, PID, uptime, active endpoints).
+2. **Dataset Compiler Suite Service Card**: Identifies the port 8100 service managing WebDataset, Parquet, and MDS manifolds (`ONLINE`, PID, uptime, direct navigation button).
+3. **Model Training Suite Service Card**: Identifies the port 8200 service managing PyTorch neural architectures, Sawtooth Governor VRAM safeguards, and training ladders (`ONLINE`, PID, uptime, direct navigation button).
+4. **Run Full System Audit Action Button**: Dispatches deterministic hardware, dependency, and manifest inspection across all workspace projects (`POST /api/audit`).
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Sidecars Header | Section Heading | None | Explains process lifecycle across local background daemons. |
-| **2** | Env Manager Title | Card Heading | None | Labels port 8000 primary governance daemon. |
-| **3** | Env Manager Status | Status Badge | `GET http://127.0.0.1:8000/health` | Shows connection readiness. Probed automatically every 4 seconds. |
-| **4** | Run Full System Audit | Action Button | `POST http://127.0.0.1:8000/api/audit` | Dispatches non-blocking complete audit of all four repositories. |
-| **5** | Compiler Title | Card Heading | None | Labels port 8100 streaming dataset compilation daemon. |
-| **6** | Compiler Status | Status Badge | `GET http://127.0.0.1:8100/health` | Shows compiler daemon readiness. |
-| **7** | Open Dataset Compiler | Action Button | `setCurrentTab("datasets")` | Switches operator viewport to manifold synthesis controls. |
-| **8** | Training Suite Title | Card Heading | None | Labels port 8200 PyTorch neural training daemon. |
-| **9** | Training Status | Status Badge | `GET http://127.0.0.1:8200/health` | Shows training suite readiness. |
-| **10** | Open Training Suite | Action Button | `setCurrentTab("training")` | Switches operator viewport to model orchestration matrix. |
+| **1** | Env Manager Card | Service Tile | `GET http://127.0.0.1:8000/health` | Shows connection readiness, PID, and uptime. Probed every 4 seconds. |
+| **2** | Compiler Suite Card | Service Tile | `GET http://127.0.0.1:8100/health` | Shows compiler daemon readiness with direct navigation button. |
+| **3** | Training Suite Card | Service Tile | `GET http://127.0.0.1:8200/health` | Shows training daemon readiness with direct navigation button. |
+| **4** | Run Full System Audit | Action Button | `POST http://127.0.0.1:8000/api/audit` | Dispatches non-blocking complete audit across all workspace repositories. |
+
+---
+
+### 2.6 Centralized State Architecture (Zustand) & Modular Micro-Components
+
+To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent race conditions when streaming high-frequency training metrics, the application state is managed by a centralized Zustand store (`src/store/useStudioStore.ts`):
+
+1. **Ecosystem Mesh Health**: Persists real-time connection status across the tripartite sidecars (Ports 8000, 8100, 8200) with automatic re-poll triggers.
+2. **Global Telemetry Ring Buffer**: Maintains high-throughput terminal events with ANSI color parsing, regex filtering, and clipboard synchronization.
+3. **Hardware Accelerators**: Caches GPU VRAM profiles, temperature sensors, and compute utilization matrices.
+4. **Active Job Management**: Coordinates running training and compilation processes with instant stop signals.
+5. **Shared Micro-Components**:
+   - `ValidationBanner.tsx`: Centralized banner component with auto-detected severity (`info`, `success`, `warning`, `error`), dismiss handlers, and full accessibility semantics.
+   - `HoverPinPopover.tsx`: High-performance CSS hover and native semantic `<button>` pin popovers for SOTA targets and upstream sources.
 
 ---
 
@@ -276,35 +272,29 @@ In addition to running the full automated sequence, operators can execute indivi
 
 ### 4.3 Hardware Acceleration Sentinel Card
 
+The Hardware Acceleration Sentinel Card is permanently visible on the central Dashboard, delivering an un-truncated live readout of physical compute capabilities:
+
 ![System & Hardware Architecture Sentinel Card](../assets/gui/gui_hardware_card.png)
 
 #### Hardware Architecture Card Numbered Reference
 
-1. **System & Hardware Architecture Title**: Heading indicating live results from host platform probing.
-2. **Primary Accelerator Backend Badge**: Highlights active execution engine (`CUDA`, `DIRECTML`, `ROCM`, or `CPU`).
-3. **Host Operating System & Kernel Metric**: Confirms operating system release and processor architecture (e.g. `Windows (11, AMD64)`).
-4. **Host Python Runtime Version**: Displays active host Python interpreter binary (e.g. `3.12.10`).
-5. **CPU Cores Allocation**: Displays logical execution threads versus physical CPU cores (e.g. `12 / 6`).
-6. **System RAM Capacity**: Displays total physical memory capacity in megabytes (e.g. `32,486 MB`).
-7. **Recommended PyTorch Wheel Index**: Authoritative binary index link for CUDA hardware acceleration.
-8. **Detected Accelerators & VRAM Readout**: Displays GPU device model, driver revision, and total video memory capacity.
+1. **Primary Accelerator Backend Badge**: Highlights active execution engine (`CUDA`, `DIRECTML`, `ROCM`, or `CPU`) alongside the `System & Hardware Architecture` section header.
+2. **Host Operating System & Python Runtime**: Confirms operating system release (`Windows 11, AMD64`) and active Python interpreter binary (`3.12.10`).
+3. **Host Memory Allocation & Recommended PyTorch Index**: Displays physical host RAM capacity (`32,486 MB`), CPU core allocation (`12 / 6 Cores`), and the authoritative PyTorch CUDA 12.6 binary wheel index link.
+4. **Detected Physical Accelerators & Dedicated VRAM**: Displays GPU device model (`NVIDIA GeForce RTX 3060 Laptop GPU`), installed driver revision (`576.88`), and dedicated video memory capacity (`6,144 MB`).
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Architecture Title | Section Heading | None | Live probe executed by `env_manager.system_probe`. |
-| **2** | Accelerator Badge | Status Pill | None | Shows hardware compute provider utilized by neural runtimes. |
-| **3** | Operating System | Metric Value | `os.uname()` / `platform.platform()` | Confirms OS compatibility for binary wheels. |
-| **4** | Python Runtime | Metric Value | `sys.version` | Verifies Python 3.10+ requirement compliance. |
-| **5** | CPU Cores | Metric Value | `psutil.cpu_count()` | Guides dataloader multi-threading worker allocation. |
-| **6** | System RAM | Metric Value | `psutil.virtual_memory()` | Ensures adequate host memory for in-memory image batching. |
-| **7** | Recommended Torch | Metric Value | Pre-flight probe | Displays official PyTorch wheel repository URL. |
-| **8** | GPU & VRAM | Device Metric | CUDA / DirectML probe | Details physical GPU model, driver level, and dedicated memory. |
+| **1** | Accelerator Badge | Status Pill | `env_manager.system_probe` | Displays primary execution backend and sentinel header. |
+| **2** | OS & Python Runtime | Metric Row | `platform.platform()` / `sys.version` | Verifies operating system and Python 3.10+ requirement compliance. |
+| **3** | RAM & PyTorch Index | Metric Row | `psutil.virtual_memory()` | Displays host memory capacity and official PyTorch CUDA index link. |
+| **4** | GPU & Dedicated VRAM | Device Metric | CUDA / DirectML hardware probe | Details physical GPU model, driver level, and dedicated video memory. |
 
 ---
 
 ### 4.4 Managed Workspace Projects Health Cards
 
-The Project Environments workspace displays dedicated cards for each sub-project in the ecosystem. All cards display clean relative paths without exposing sensitive host absolute paths:
+The Project Environments overview on the Dashboard displays dedicated cards for each sub-project in the ecosystem. All cards display clean relative paths without exposing sensitive host absolute paths:
 
 ![Managed Workspace Projects Health Grid](../assets/gui/gui_managed_projects.png)
 
@@ -324,191 +314,83 @@ The Project Environments workspace displays dedicated cards for each sub-project
 
 ---
 
-## 5. Dataset Compilation Pipeline: Modernization, Custom Multi-Source Ingestion & Kaggle Sync
+## 5. Dataset Compilation Pipeline: Modernization, Direct Kaggle Ingestion & Streaming Manifolds
 
-High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images. The LemGendary Dataset Compiler tab provides a complete visual control center for dataset synthesis and cloud storage synchronization.
+High-velocity deep learning requires converting raw, loose image files into modern streaming containers. Traditional loose-image folders cause OS filesystem freezes when training models on hundreds of thousands of images. The LemGendary Dataset Compiler tab provides a complete visual control center for dataset synthesis, direct cloud ingestion, and bidirectional Kaggle synchronization.
 
-### 5.1 Dataset Compiler & Storage Modernization Control Card
+### 5.1 Dataset Compiler & Modernization Control Card
 
-#### 5.1.1 Standard Manifold Compilation
+The top card of the Dataset Compiler tab governs manifold synthesis and streaming storage conversion:
 
 ![Dataset Compiler & Storage Modernization Card](../assets/gui/gui_dataset_compiler.png)
 
-##### Standard Compilation Numbered Reference
+#### Dataset Compiler Control Card Numbered Reference
 
-1. **Target Manifold Dropdown Selector**: Selects dataset to modernize from registered definitions in `unified_data.yaml`.
-2. **Storage Format Preset Dropdown**: Selects container architecture (`Streaming WebDataset Shards`, `Columnar Parquet`, `MosaicML MDS`, `LitData`).
-3. **Samples Per Shard Input Field**: Configures container partition size (default: `5,000` samples per shard, yielding optimal 300MB–400MB archives).
-4. **Purge Loose Images Checkbox**: When checked, deletes redundant uncompressed source images post-sharding to reclaim disk space.
-5. **Compile Manifold Primary Button**: Dispatches multi-threaded parallel workers with in-flight 12-thread WebP transcoding.
-6. **Compilation Mode Switcher**: Toggles between `Standard Manifold Compilation` and `Custom Multi-Source Compilation`.
+1. **Dataset Compiler & Storage Modernization Title & Help Glyph**: Header detailing streaming container synthesis alongside the interactive hover guidance tooltip (`?`).
+2. **Compilation Mode Switcher**: Toggles between `Standard Manifold Presets` (compiling registered manifests) and `Direct Kaggle Ingestion` (pulling external Kaggle datasets directly into streaming containers).
+3. **Target Manifold Dropdown Selector**: Selects dataset to modernize from registered definitions in `unified_data.yaml` (e.g. `LemGendized Super-Resolution Master`).
+4. **Storage Preset & Partition Parameters**: Selects container architecture (`Streaming WebDataset Shards`, `Columnar Parquet`, `MosaicML MDS`, `LitData`), `Samples Per Shard` (default: `5,000` samples per shard yielding 300MB–400MB archives), and the `Purge Loose Images` toggle.
+5. **Compile Manifold Primary Action Button**: Dispatches multi-threaded background workers (`POST /api/gui/quick-compile`) executing in-flight 12-thread WebP transcoding and container partition writing.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Target Manifold | Select Dropdown | `setSelectedManifold(e.target.value)` | Chooses dataset registered in `unified_data.yaml`. |
-| **2** | Storage Preset | Select Dropdown | `setSelectedPreset(e.target.value)` | Selects container format: WebDataset (.tar), Parquet, MDS, or LitData. |
-| **3** | Samples Per Shard | Number Input | `setShardSize(Number(e.target.value))` | Sets chunk capacity. Range: 100 to 50,000 samples per archive. |
-| **4** | Purge Loose Images | Checkbox Toggle | `setPurgeLooseImages(e.target.checked)` | Deletes loose raw images after verified container compilation. |
+| **1** | Compiler Title & Help | Section Heading | None | Contextual heading explaining streaming container compilation. |
+| **2** | Compilation Mode Switcher | Segmented Control | `setCompileMode("standard" \| "kaggle")` | Toggles between registered preset compilation and direct Kaggle ingestion. |
+| **3** | Target Manifold | Select Dropdown | `setSelectedManifold(e.target.value)` | Chooses dataset registered in `unified_data.yaml`. |
+| **4** | Preset & Parameters | Form Group | `setSelectedPreset()` / `setShardSize()` | Configures container architecture, chunk size, and raw purge safety. |
 | **5** | Compile Manifold | Primary Button | `POST http://127.0.0.1:8100/api/gui/quick-compile` | Initiates parallel container compilation and WebP transcoding. |
-| **6** | Mode Switcher | Segmented Control | `setCompileMode("standard" \| "custom")` | Toggles between existing manifold sharding and multi-source URL ingestion. |
+
+#### Direct Kaggle Ingestion Mode
+
+When switching the Compilation Mode Switcher to `Direct Kaggle Ingestion`, the form dynamically reveals a direct Kaggle URL / slug input (`https://kaggle.com/datasets/owner/slug` or `owner/slug`). Operators can ingest remote cloud datasets directly into local WebDataset shards in a single click, automatically appending the verified manifold entry to `unified_data.yaml`.
 
 ---
 
-#### 5.1.2 Custom Multi-Source Compilation
+### 5.2 Production Manifolds Catalog, Upstream Lineage & One-Click Cloud Sync
 
-Activated by switching the **Compilation Mode Switcher** (Callout 6 above) to `Custom Multi-Source Compilation`. This mode ingests datasets from external cloud platforms — Kaggle, HuggingFace, Google Drive, or GitHub — into a brand-new named manifold.
-
-![Custom Multi-Source Compilation Panel](../assets/gui/gui_custom_compilation.png)
-
-##### Custom Compilation Numbered Reference
-
-1. **Custom Manifold Identifier / Key Text Input**: Unique canonical name for the new compiled manifold (e.g. `SuperResMaster`, `AnimeDiffusion`, `FaceRestorationPro`). Used as the storage folder name and registry key.
-2. **Custom Format & Compression Preset Dropdown**: Container architecture and compression profile for the custom manifold (`Streaming WebDataset Shards`, `Columnar Parquet`, `MosaicML MDS`, `LitData`).
-3. **Dataset Source URL / Path Ingestion Input Field**: Accepts Kaggle slugs (`kaggle://owner/slug` or `https://kaggle.com/datasets/...`), HuggingFace repos (`hf://dataset-name` or `https://huggingface.co/datasets/...`), Google Drive links (`gd://file-id`), or GitHub repos (`gh://owner/repo`).
-4. **Register in Manifest Checkbox**: When checked, automatically registers the newly compiled manifold in `unified_data.yaml`.
-5. **Compile Multi-Source Manifold Primary Button**: Ingests the remote data sources and compiles them into the selected container format with WebP transcoding and integrity vetting.
-
-| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
-| :--- | :--- | :--- | :--- | :--- |
-| **1** | Manifold Key | Text Input | `setCustomManifoldId(e.target.value)` | Canonical name for new dataset. Lowercase, no spaces recommended. |
-| **2** | Format Preset | Select Dropdown | `setCustomFormat(e.target.value)` | Container architecture: WebDataset for streaming, MDS for random access. |
-| **3** | Source URL / Path | Text Input | `setCustomSourceUrl(e.target.value)` | Accepts Kaggle, HuggingFace, Google Drive, or GitHub URL/slug. |
-| **4** | Register in Manifest | Checkbox Toggle | `setPersistToManifest(e.target.checked)` | Appends verified dataset specification to `unified_data.yaml`. |
-| **5** | Compile Multi-Source | Primary Button | `POST http://127.0.0.1:8100/api/gui/custom-compile` | Runs full multi-source compilation pipeline: dedupe, vetting, WebP, sharding. |
-
----
-
-### 5.2 Kaggle Cloud Synchronization & Storage Hub
-
-The Kaggle hub provides bidirectional cloud synchronization with three distinct operating modes accessible via the subtab navigation row.
-
-#### 5.2.1 Download from Kaggle
-
-![Kaggle Cloud Synchronization — Download Tab](../assets/gui/gui_kaggle_cloud_hub.png)
-
-##### Download from Kaggle Numbered Reference
-
-1. **Cloud Action Subtabs (Download Active)**: Toggles between `Download from Kaggle`, `Upload to Kaggle`, and `Update Metadata Only` workflows.
-2. **Select Registry Dataset Dropdown**: Lists all canonical Kaggle-linked manifolds from `unified_data.yaml` with local availability tags (`Present Locally` vs `Not Downloaded`).
-3. **Custom Kaggle Link / Slug Input Field**: Accepts a direct Kaggle URL (`https://www.kaggle.com/datasets/username/dataset-name`) or repository slug (`owner/dataset-name`).
-4. **Target Destination Folder Name Input**: Optional local storage destination subfolder inside `LemGendaryDatasets/`. Defaults to the manifest folder name.
-5. **Force Redownload Checkbox**: When enabled, re-downloads all shards even if files exist locally — bypasses local caching for bit-for-bit cloud refresh.
-6. **Download from Kaggle Primary Button**: Initiates authenticated multi-threaded download via the official Kaggle API. Requires valid credentials in the Secrets Vault.
-
-| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
-| :--- | :--- | :--- | :--- | :--- |
-| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("download")` | Switches between cloud pulling, manifold publishing, and metadata-only sync. |
-| **2** | Registry Dataset | Select Dropdown | `setSelectedRegistryKey(e.target.value)` | Picks verified dataset manifold linked in `unified_data.yaml`. |
-| **3** | Custom URL / Slug | Text Input | `setCustomKaggleRef(e.target.value)` | Direct Kaggle link or owner/slug identifier. |
-| **4** | Target Folder | Text Input | `setDownloadTargetFolder(e.target.value)` | Customizes local destination path inside dataset directory. Optional. |
-| **5** | Force Redownload | Checkbox Toggle | `setDownloadForce(e.target.checked)` | Bypasses local caching to perform bit-for-bit cloud refresh. |
-| **6** | Download from Kaggle | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/download` | Dispatches background downloader streaming from Kaggle API. |
-
----
-
-#### 5.2.2 Upload to Kaggle
-
-Activated by clicking the `Upload to Kaggle` subtab. Packages a locally compiled manifold and publishes it to Kaggle Datasets cloud storage.
-
-![Upload to Kaggle Tab](../assets/gui/gui_kaggle_upload_hub.png)
-
-##### Upload to Kaggle Numbered Reference
-
-1. **Cloud Action Subtabs (Upload Active)**: The `Upload to Kaggle` subtab is highlighted active.
-2. **Local Compiled Manifold Selector Dropdown**: Dropdown listing all locally compiled manifolds in `LemGendary Compiled Manifolds Repo` (`./LemGendaryDatasets/`). Selecting one populates upload parameters.
-3. **Dataset Title Input Field**: Human-readable title for the dataset on Kaggle (e.g. `LemGendized Super-Resolution Master`).
-4. **Target Kaggle Repository Slug Input**: Kaggle repository identifier in `owner/dataset-slug` format. If left blank, auto-resolved from `unified_data.yaml`.
-5. **Private Dataset Checkbox**: When checked, creates the dataset with private visibility; unchecked publishes as public.
-6. **Upload to Kaggle Primary Button**: Packages the selected manifold into a Kaggle dataset archive and initiates upload via the official Kaggle API.
-
-| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
-| :--- | :--- | :--- | :--- | :--- |
-| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("upload")` | Sets the active Kaggle operation mode to cloud publishing. |
-| **2** | Local Manifold | Select Dropdown | `setUploadManifold(e.target.value)` | Picks the compiled local dataset to package and upload. |
-| **3** | Dataset Title | Text Input | `setUploadTitle(e.target.value)` | Sets dataset display title on Kaggle. |
-| **4** | Target Kaggle Slug | Text Input | `setUploadKaggleRef(e.target.value)` | Kaggle repo ID (`owner/slug`). Leave blank for auto-resolution from registry. |
-| **5** | Private Dataset | Checkbox Toggle | `setIsPrivate(e.target.checked)` | Sets access permissions on cloud repository. |
-| **6** | Upload to Kaggle | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/upload` | Initiates multi-part dataset upload to Kaggle cloud storage. |
-
----
-
-#### 5.2.3 Update Metadata Only
-
-Activated by clicking the `Update Metadata Only` subtab. Pushes `dataset-metadata.json` records (title, description, license, column descriptors) to Kaggle without re-uploading data files.
-
-![Update Metadata Only Tab](../assets/gui/gui_kaggle_metadata_hub.png)
-
-##### Update Metadata Only Numbered Reference
-
-1. **Cloud Action Subtabs (Metadata Active)**: The `Update Metadata Only` subtab is highlighted active.
-2. **Local Compiled Manifold Selector Dropdown**: Selects which manifold's metadata file to push to Kaggle.
-3. **Metadata Title Override Input**: Custom title for the metadata record update.
-4. **Metadata Description Input Field**: Extended markdown description for the Kaggle dataset overview page.
-5. **Update Metadata on Kaggle Primary Button**: Triggers the metadata push. Only metadata records (JSON fields) are updated via the Kaggle API — zero data transfer.
-
-| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
-| :--- | :--- | :--- | :--- | :--- |
-| **1** | Action Subtabs | Subtab Navigation | `setKaggleActiveTab("metadata")` | Sets the active Kaggle operation mode to metadata-only sync. |
-| **2** | Local Manifold | Select Dropdown | `setMetaUpdateManifold(e.target.value)` | Selects which manifold's metadata file to push. |
-| **3** | Title Override | Text Input | `setMetaUpdateTitle(e.target.value)` | Custom title for cloud dataset listing. |
-| **4** | Description Input | Textarea Input | `setMetaUpdateDesc(e.target.value)` | Markdown description updated on Kaggle overview. |
-| **5** | Update Metadata | Primary Button | `POST http://127.0.0.1:8100/api/kaggle/update-metadata` | Pushes metadata JSON records to Kaggle. Zero data bytes transferred. |
-
----
-
-### 5.3 Production Manifolds Catalog & Format Breakdown
-
-The Production Manifolds section presents all verified datasets within the **LemGendary Compiled Manifolds Repo** (`./LemGendaryDatasets/`), organized under three dedicated sub-tabs:
-
-#### 5.3.1 Section 2 Top Toolbar Actions
-
-The toolbar header provides global batch operations across all manifolds:
-
-1. **Update All Kaggle Metadata Button**: Triggers `POST /api/kaggle/update-metadata` with `all_datasets: true`, synchronizing dataset descriptions, titles, and schema metadata across all 20 canonical Kaggle datasets in a single non-blocking call.
-2. **Regenerate Manifolds Index Button**: Triggers `POST /api/modernize/regenerate-manifolds`, rescanning on-disk datasets and refreshing `manifolds.json` and `dataset-metadata.json` across the entire ecosystem.
-
-#### 5.3.2 Manifolds Catalog Tab
+The Production Manifolds section catalogs all verified streaming datasets inside `./LemGendaryDatasets/`, providing instant access to upstream lineage and integrated card-level Kaggle synchronization:
 
 ![Production Manifolds Catalog Grid](../assets/gui/gui_production_manifolds.png)
 
-##### Production Manifolds Catalog Numbered Reference
+#### Production Manifolds Catalog Numbered Reference
 
-1. **Compiled Manifold Card Title**: Displays canonical manifold identifier (e.g. `LemGendized Classification Master`).
-2. **Compiled Status Badge**: Displays green `COMPILED` reflecting verified on-disk container archives.
-3. **Storage Format Architecture Metric**: Identifies binary container format (e.g. `webdataset` or `mds`).
-4. **Total Verified Sample Counter**: Exact count of image/target pairs packaged within the manifold (e.g. `788,034`).
-5. **Disk Storage Footprint Metric**: Physical volume occupied on local disk in gigabytes (e.g. `67.6 GB`).
-6. **Container Shards Counter**: Number of container shards partitioned across disk.
-7. **Format Breakdown Stats & Cloud Actions**: Real-time counter of samples formatted as WebP, JPG, or PNG, paired with one-click Kaggle Cloud synchronization buttons.
+1. **Production Manifolds Section Header & Counter**: Displays section title alongside total verified dataset count (`Production Manifolds (20 Verified Datasets)`).
+2. **Sub-Tab Navigation Switcher**: Selects between `Manifolds Catalog`, `Modernization Queue (0)`, and `Scale Reduction` workflows.
+3. **Global Header Action Buttons**:
+   - `Update All Kaggle Metadata`: Synchronizes titles, descriptions, and column schemas across all 20 Kaggle datasets in a single non-blocking call (`POST /api/kaggle/update-metadata` with `all_datasets: true`).
+   - `Regenerate Manifolds Index`: Rescans on-disk datasets and refreshes `manifolds.json` and `dataset-metadata.json` (`POST /api/modernize/regenerate-manifolds`).
+4. **Manifold Search & Task Domain Filter Bar**: Real-time search filter (`Search 20 manifolds...`) paired with domain dropdown (`All Domains`, `restoration`, `detection`, `classification`, `segmentation`, `forex`).
+5. **Verified Manifold Card Identity & Metrics**: Displays canonical dataset title, green `COMPILED` status badge, container format (`webdataset`), total sample count (`788,034`), disk footprint (`67.6 GB`), and shard partition count (`158`).
+6. **Upstream Sources & Lineage Popover**: Interactive hover/pinned popover detailing raw upstream dataset provenance, original licenses, and source archives.
+7. **Card-Level Kaggle Cloud Actions**: Every manifold card integrates dedicated one-click action buttons:
+   - `Update Metadata`: Pushes JSON schema updates to Kaggle without data re-upload.
+   - `Download from Kaggle`: Pulls remote shards with checksum verification.
+   - `Upload to Kaggle`: Packages and publishes local compiled shards to Kaggle Datasets.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Manifold Heading | Card Heading | None | Identifies dataset name and task domain. |
-| **2** | Compiled Badge | Status Pill | On-disk validation | Green badge indicates streaming archive is fully built and ready for training. |
-| **3** | Format Architecture | Metric Readout | Sourced from `unified_data.yaml` | Displays container protocol: WebDataset, Parquet, or MDS. |
-| **4** | Total Samples | Metric Readout | Shard header inspection | Shows exact quantity of training sample pairs available. |
-| **5** | Disk Footprint | Metric Readout | `os.stat` recursive sum | Displays disk volume occupied by compressed shards. |
-| **6** | Container Shards | Metric Readout | Shard count verification | Confirms number of container files written to local storage. |
-| **7** | Format Breakdown | Encoding Stats | Metadata inspection | Quantifies WebP, JPEG, and PNG image components. |
+| **1** | Manifolds Header | Section Heading | None | Labels verified manifold inventory and total dataset count. |
+| **2** | Sub-Tabs Switcher | Tab Switcher | `setActiveTab()` | Toggles catalog, transcode modernization queue, and scale reduction. |
+| **3** | Global Sync Actions | Action Buttons | `POST /api/kaggle/update-metadata` | Triggers batch cloud metadata synchronization across all datasets. |
+| **4** | Search & Domain Filter | Input & Select | Client-side filter | Filters manifolds in real time by key, title, or task domain. |
+| **5** | Manifold Identity Card | Card Element | Sourced from `manifolds.json` | Displays verified samples, disk storage footprint, format, and shards. |
+| **6** | Upstream Sources | Popover Pin | `HoverPinPopover.tsx` | Displays upstream provenance, licensing, and raw data lineage. |
+| **7** | Card Cloud Actions | Action Buttons | `POST /api/kaggle/{action}` | One-click Download, Upload, or Update Metadata directly per dataset. |
 
-#### 5.3.3 Modernization Queue & Transcode Tab
+---
 
-The Modernization Queue sub-tab inspects manifolds for legacy image formats and orchestrates parallel WebP transcoding:
+### 5.3 Modernization Queue & Scale Reduction Workflows
 
-1. **Scan Modernization Queue Button**: Fetches `GET /api/modernize/queue` to detect datasets containing legacy PNG/JPEG images that need transcoding to modern WebP format.
-2. **Batch Modernize All Button**: Initiates `POST /api/modernize/run` background worker pool.
-3. **Parallel Workers Slider**: Adjusts worker thread pool count (1 to 16, default 8).
-4. **Push to Kaggle Checkbox**: Automatically uploads updated manifold to Kaggle upon completion.
-5. **Dry Run Checkbox**: Simulates transcoding without writing changes.
-6. **Force Re-Transcode Checkbox**: Overwrites existing WebP files.
+The additional sub-tabs in the Production Manifolds section provide advanced dataset operations:
 
-#### 5.3.4 Scale Reduction (Downsample) Tab
+1. **Modernization Queue & Transcode Tab**: Detects datasets containing legacy PNG/JPEG images that need transcoding to modern WebP format. Operators can adjust the parallel worker thread pool count (1 to 16, default 8), run a simulated dry run, or batch transcode all datasets with optional automated push to Kaggle.
+2. **Scale Reduction (Downsample) Tab**: Derives spatially downscaled and sample-reduced dataset variants for rapid experimentation (`10% Preview`, `25% Fast Test`, `50% Balanced`, `75% High Res`) using Lanczos-3 spatial downsampling.
 
-The Scale Reduction sub-tab derives spatially downscaled and sample-reduced dataset variants for rapid experimentation:
+---
 
-1. **Target Manifold Dropdown**: Selects source manifold from local inventory.
-2. **Scale Factor Buttons**: One-click downsampling targets: `10% Preview`, `25% Fast Test`, `50% Balanced`, `75% High Res`.
-3. **Dispatch Reduction Button**: Initiates `POST /api/modernize/reduce` with Lanczos-3 spatial downsampling and class-balanced subsampling.
+### 5.4 Embedded Dataset Telemetry Console
+
+The Dataset Compiler panel features a dedicated live streaming telemetry console docked directly at the bottom of the viewport. When compilation or Kaggle transfer jobs are launched, operators can monitor real-time WebP conversion speeds, shard partition writes, checksum audits, and transfer bandwidth without navigating away from the compiler controls.
 
 ---
 
@@ -516,75 +398,53 @@ The Scale Reduction sub-tab derives spatially downscaled and sample-reduced data
 
 Once your dataset is compiled, you are ready to train a production-grade neural network. The LemGendary Model Training Suite (`.\lemgendary-training-suite\`) provides dynamic hyperparameter management and nuclear memory safeguards.
 
-### 6.1 LemGendary Model Training Suite & Model Orchestration Card
+### 6.1 Model Training Suite & Model Orchestration Toolbar
 
-![LemGendary Model Training Suite & Model Orchestration Card](../assets/gui/gui_training_orchestrator.png)
+The top toolbar of the Model Training panel provides high-level search, domain filtering, and global batch automation across all 22 registered neural architectures:
 
-#### Training Orchestrator Numbered Reference
+![Model Training Suite & Model Orchestration Toolbar](../assets/gui/gui_training_orchestrator.png)
 
-1. **Model Name Search & Filter Input Field**: Real-time search filter allowing instant narrowing of the registered architecture catalog by model key or architecture name.
-2. **Machine Learning Task Domain Filter Dropdown**: Domain filter selector (`All Domains`, `restoration`, `detection`, `classification`, `segmentation`, `forex`).
-3. **Run 1-Epoch Diagnostic (All 22 Models) Button**: Global toolbar button submitting an asynchronous background job (`POST /api/training/unit-test-all`) executing a 1-epoch test sequentially across all 22 models via `tools/train_all.py`.
-4. **Generate All Notebooks Button**: Global toolbar button (`POST /api/notebooks/generate-all`) batch regenerating and synchronizing training, inference, and usage notebooks across all 22 models.
-5. **Model Architecture Card Title**: Primary heading identifying the model architecture (e.g. `LemGendary CodeFormer Face Restoration`).
-6. **Three-Pillar Training Status Badge**: Authoritative status badge evaluating training completion (`FULLY TRAINED`, `PARTIALLY TRAINED`, or `WEIGHTS READY`).
-7. **Start Training Dynamic Action Button**: Launches local training dispatch (`POST /api/gui/quick-train`) and automatically focuses the live telemetry stream.
-8. **Cloud Training Modal Trigger Button**: Opens the interactive Cloud Training modal (`btn-cloud`) for deploying training jobs to Kaggle or Colab GPU clusters.
-9. **Evaluate Model Action Button**: Launches in-process deterministic evaluation under `torch.no_grad()` (`POST /api/training/evaluate`) computing PSNR, SSIM, mAP50, or SRCC metrics.
-10. **Export Binaries Action Button**: Launches multi-target binary compiler (`POST /api/training/export`) producing FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, and MT5 formats.
-11. **Push Weights to Cloud Action Button**: Packages current best checkpoints and uploads them to cloud storage repositories.
-12. **Pull Weights from Cloud Action Button**: Downloads remote checkpoint weights from cloud mirrors to the local **LemGendary Trained Models Repo** (`.\LemGendaryModels\`).
-13. **Training Notebook Regeneration Action Button**: One-click regeneration and synchronization of Kaggle and Colab training notebooks across model folders, workspace staging directories, and dataset manifolds.
-14. **Usage Notebook Regeneration Action Button**: One-click regeneration of standalone Kaggle and Colab model usage guide notebooks.
+#### Training Orchestrator Toolbar Numbered Reference
+
+1. **Model Name Search & Filter Input Field**: Real-time search filter allowing instant narrowing of the registered architecture catalog by model key or architecture name (`Search 22 models...`).
+2. **Machine Learning Task Domain & Ladder Filters**: Multi-level dropdown selectors (`All Domains`, `restoration`, `detection`, `classification`, `segmentation`, `forex`) and spatial ladder selectors (`All Ladders`).
+3. **Global Batch Operations Toolbar Buttons**:
+   - `Run 1-Epoch Diagnostic (All 22 Models)`: Submits an asynchronous background job (`POST /api/training/unit-test-all`) executing a rapid 1-epoch smoke test sequentially across all 22 models via `tools/train_all.py`.
+   - `Generate All Notebooks`: Batch regenerates and synchronizes Jupyter training, inference, and usage notebooks across all 22 models (`POST /api/notebooks/generate-all`).
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Model Search Filter | Text Input | Client-side filter | Filters architecture catalog in real time by name or keyword. |
-| **2** | Domain Filter | Select Dropdown | Client-side filter | Restricts catalog display to specific ML task domains. |
-| **3** | Run 1-Epoch Diagnostic | Toolbar Button | `POST /api/training/unit-test-all` | Dispatches rapid 1-epoch smoke test across all 22 models. |
-| **4** | Generate All Notebooks | Toolbar Button | `POST /api/notebooks/generate-all` | Batch regenerates Jupyter notebooks for all registered architectures. |
-| **5** | Model Title | Card Heading | None | Labels neural architecture name and specialization. |
-| **6** | 3-Pillar Status Badge | Status Badge | Multi-pillar verification | Certified status reflecting training completion and checkpoint readiness. |
-| **7** | Start Training | Dynamic Action Button | `POST /api/gui/quick-train` | Dispatches local training execution and focuses telemetry console. |
-| **8** | Cloud Training | Modal Trigger Button | `setIsCloudModalOpen(true)` | Opens the interactive Cloud Training modal. |
-| **9** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Evaluates checkpoint against validation benchmark criteria. |
-| **10** | Export Binaries | Action Button | `POST /api/training/export` | Compiles checkpoint into deployable production formats. |
-| **11** | Push Weights | Action Button | `POST /api/training/kaggle/train` | Packages and pushes checkpoints to Cloud Vault. |
-| **12** | Pull Weights | Action Button | `POST /api/training/kaggle/pull` | Fetches verified remote checkpoints to `LemGendaryModels/`. |
-| **13** | Training Notebook | Action Button | `POST /api/notebooks/generate` (`training`) | Regenerates training notebooks across model, staging, and manifold folders. |
-| **14** | Usage Notebook | Action Button | `POST /api/notebooks/generate` (`usage`) | Regenerates standalone usage guide notebooks in model directory. |
+| **2** | Domain & Ladder Filter | Select Dropdowns | Client-side filter | Restricts catalog display to specific ML task domains and ladders. |
+| **3** | Batch Toolbar Buttons | Action Buttons | `POST /api/training/...` | Dispatches 1-epoch smoke tests or batch notebook generation. |
 
 ---
 
 ### 6.2 Registered Architectures & Checkpoint Telemetry Grid
 
-Clicking any architecture card reveals detailed telemetry metrics and persistent SOTA evaluation targets:
+Each registered model card provides comprehensive telemetry, binary export readiness, and interactive SOTA target inspection:
 
-![Registered Neural Architectures Catalog Grid](../assets/gui/gui_architecture_telemetry.png)
+![Registered Neural Architectures Telemetry Card](../assets/gui/gui_architecture_telemetry.png)
 
-#### Architecture Telemetry Grid Numbered Reference
+#### Architecture Telemetry Card Numbered Reference
 
-1. **Primary Model Architecture Title**: Displays model name (`LemGendary CodeFormer Face Restoration`).
-2. **Three-Pillar Training Status Badge**: Certified status indicator (`FULLY TRAINED`, `PARTIALLY TRAINED`, or `WEIGHTS READY`).
-3. **Neural Backbone Architecture Metric**: Displays deep learning backbone type (`CodeFormer (Transformer-Based Face Restoration)`).
-4. **Trainable Parameter Counter**: Volume of trainable weights in millions of parameters (e.g. `38.6 M`).
-5. **Best Validation Benchmark Metric**: Top academic evaluation score recorded (e.g. PSNR in dB, mAP50, SRCC).
-6. **Progressive Resolution / Confluence Ladder Indicator**: Current training resolution or timeframe stage (e.g. `Full (512px)`).
-7. **Pinned SOTA Targets & Convergence Tooltip Readout**: Interactive tooltip displaying all target convergence benchmarks, current best scores, and evaluation thresholds.
-8. **Start Training Action Button**: Local training execution trigger.
-9. **Cloud Training Action Button**: Opens cloud dispatch modal for remote GPU execution.
+1. **Model Identity, Task Domain & 3-Pillar Training Status**: Displays canonical model title (e.g. `LemGendary UPN v2 Parameter Predictor`), domain badge (`forex`), and verified training completion status (`FULLY TRAINED`).
+2. **Spatial Ladder Progress Meter**: Visual meter displaying active spatial ladder stage and training completion percentage (`Full (120 epochs)` / `100%`).
+3. **Binary Format Variations**: Visual indicators confirming compiled formats ready for inference (`PT`, `ONNX FP32`, `ONNX FP16`).
+4. **Neural Backbone & Pinned SOTA Targets**: Displays network architecture type (`UPN v2`), trainable parameter count (`14.2 M Params`), and the interactive SOTA targets popover displaying target convergence metrics, current best scores, and evaluation baselines.
+5. **Primary Training Dispatch Controls**:
+   - `Start Training`: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream.
+   - `Cloud Training`: Opens the interactive Cloud Training modal for deploying jobs to Kaggle or Colab GPU clusters.
+6. **Secondary Model Action Buttons**: Granular controls including `Evaluate` (`POST /api/training/evaluate`), `Export` (`POST /api/training/export`), `Push Weights`, `Pull Weights`, `Regenerate Training Notebook`, and `Usage Notebook`.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Model Card Header | Card Title | None | Labels neural architecture name and specialization. |
-| **2** | 3-Pillar Status Badge | Status Badge | Multi-pillar verification | Certified status reflecting training completion and checkpoint readiness. |
-| **3** | Neural Architecture | Metric Readout | Sourced from `unified_models_v2.yaml` | Specifies network layer topology and block design. |
-| **4** | Parameter Counter | Metric Readout | Weight tensor count | Quantifies parameter count to guide hardware VRAM requirements. |
-| **5** | Best Metric | Metric Readout | Validation pass output | Records benchmark evaluation score against academic baselines. |
-| **6** | Resolution Ladder | Metric Readout | Progressive curriculum | Displays active multi-scale spatial ladder stage. |
-| **7** | SOTA Tooltip | Interactive Tooltip | Hover / Click Pin | Displays benchmark metrics, targets, and convergence ratios. |
-| **8** | Start Training | Primary Button | `POST /api/gui/quick-train` | Dispatches local training loop. |
-| **9** | Cloud Training | Cloud Button | `setIsCloudModalOpen(true)` | Launches remote cloud training configuration modal. |
+| **1** | Model Identity & Status | Card Header | Multi-pillar verification | Labels architecture name, task domain, and verified training status. |
+| **2** | Ladder Progress Meter | Visual Meter | Sourced from checkpoint | Displays active spatial ladder stage and completion percentage. |
+| **3** | Format Variations | Status Badges | On-disk binary scan | Confirms PyTorch, ONNX FP32, and ONNX FP16 artifact readiness. |
+| **4** | Backbone & SOTA Popover | Metric Readout | `HoverPinPopover.tsx` | Details network topology, parameter count, and pinned SOTA metrics. |
+| **5** | Primary Dispatch | Action Buttons | `quick-train` / `btn-cloud` | Triggers local training execution or opens cloud training modal. |
+| **6** | Secondary Actions | Action Buttons | `POST /api/training/...` | Evaluates models, exports binaries, pushes/pulls weights, and builds notebooks. |
 
 ---
 
@@ -599,7 +459,12 @@ The Cloud Training modal enables zero-friction dispatch of intensive neural trai
 1. **Cloud Training Modal Header**: Displays modal title and active model name selected for remote dispatch.
 2. **Kaggle GPU Kernel Option Card**: Selects Kaggle compute environment supporting Dual-T4 (`nvidia-tesla-t4-x2`) and P100 (`nvidia-tesla-p100`) accelerators with automatic manifold attaching and checkpoint syncing.
 3. **Google Colab Enterprise Option Card**: Selects Google Colab runtime with Google Drive checkpoint mirroring and GPU acceleration.
-4. **Upload Checkpoints Tab**: Stages and uploads trained model weights directly to Kaggle Models (`lemtrain sync push` / API dispatch) with progress tracking.
+4. **Upload Checkpoints Tab (`VariationIsolationChecker.tsx`)**: Stages, validates, and uploads trained model weights directly to Kaggle Models (`lemtrain sync push` / API dispatch) with progress tracking:
+   - **Multi-Variation Checklist**: Inspects readiness for PyTorch (`pytorch`), standard ONNX (`onnx_fp32`), and edge ONNX (`onnx_fp16`).
+   - **Strict Isolation Gate**: Automatically verifies that each variation folder contains strictly its expected binary types with zero cross-contamination.
+   - **Stage Model Variations Button**: Dispatches `POST /api/training/models/{key}/stage-variations` to prepare isolated binary directories.
+   - **Regenerate Documentation Button**: Dispatches `POST /api/training/models/{key}/generate-docs` to update model README cards with SOTA metrics and bibtex citations.
+   - **Dry-Run Validation Toggle**: Runs local verification rules without making network calls to Kaggle.
 5. **Dispatch Cloud Training Primary Button**: Authenticates using active Secrets Vault credentials, compiles remote launch manifest, and dispatches the cloud training kernel.
 6. **Close Modal Action Button**: Dismisses the cloud training dialog without dispatching remote workloads.
 
@@ -608,32 +473,48 @@ The Cloud Training modal enables zero-friction dispatch of intensive neural trai
 | **1** | Modal Header | Modal Title | None | Confirms model selection and target deployment workflow. |
 | **2** | Kaggle Option Card | Selection Card | `setSelectedCloudProvider("kaggle")` | Configures Kaggle GPU cluster deployment. |
 | **3** | Colab Option Card | Selection Card | `setSelectedCloudProvider("colab")` | Configures Google Colab enterprise runtime deployment. |
-| **4** | Upload Checkpoints | Subtab Navigation | `setSelectedCloudProvider("upload")` | Stages and publishes model weights to Kaggle Models repository. |
+| **4** | Upload Checkpoints | Subtab Navigation | `setSelectedCloudProvider("upload")` | Stages, verifies isolation, and publishes model weights to Kaggle Models repository. |
 | **5** | Dispatch Cloud Run | Primary Button | `POST /api/training/cloud/dispatch` | Dispatches authenticated cloud training job. |
 | **6** | Close Dialog | Action Button | `setIsCloudModalOpen(false)` | Dismisses modal safely. |
 
 ---
 
-### 6.4 Real-Time Telemetry Stream & Responsive Cancellation
+### 6.4 Three-Tab Real-Time Telemetry Stream & Responsive Cancellation
 
-To ensure optimal situational awareness, the **Real-time Telemetry & Pipeline Stream** console is embedded directly below the Training Orchestration controls and immediately above the Registered Architectures catalog:
+The redesigned Live Telemetry Console is embedded directly on the Model Training panel, providing a tabbed terminal interface for complete observability across local training, remote cloud execution, and ecosystem mesh daemons:
 
-1. **Top-of-Fold Workflow Alignment**: Operators can initiate training and immediately inspect live gradient streaming, validation progress bars, and resolution ladder rungs without scrolling past 20 architecture cards.
-2. **Sub-Second Minibatch Cancellation**: Clicking the red `Stop Training` button sends an immediate abort signal to the sidecar daemon (`POST /api/jobs/{id}/cancel`). The training engine hooks into inner minibatch iterations (via `on_train_batch_end`), setting `trainer.stop = True` within milliseconds, freeing GPU VRAM instantly without runaway execution.
-3. **Dual-Path Checkpoint Synchronization**: On every completed epoch and ladder transition, the governor mirrors intermediate weights (`best.pt`, `last.pt`, `progress.pth`) to `checkpoints/` and `LemGendaryModels/<model>/checkpoints/`, ensuring live checkpoint telemetry cards reflect up-to-the-minute weights.
+![Redesigned Three-Tab Real-Time Telemetry Console](../assets/gui/gui_telemetry_console.png)
+
+#### Telemetry Console Numbered Reference
+
+1. **Local Training Telemetry Subtab**: Focuses the local training worker log stream, displaying minibatch loss, learning rate decay, gradient norms, and spatial ladder transitions.
+2. **Remote Cloud Telemetry Subtab**: Focuses the remote cloud execution log stream, relaying stdout/stderr from dispatched Kaggle GPU kernels or Colab notebooks.
+3. **Ecosystem Mesh Logs Subtab**: Focuses cross-daemon JSON-RPC events, HTTP health probes, and audit logs between Ports 8000, 8100, and 8200.
+4. **Monospace Terminal Output Stream**: High-performance scrolling container with full ANSI color parsing, rendering timestamps, log levels, and progress bars.
+5. **Stream Action Controls**:
+   - `Copy Log`: Copies the entire terminal buffer to system clipboard.
+   - `Clear Terminal`: Flushes the terminal display without disrupting background jobs.
+   - `Stop Training` Dynamic Action Button: Sends an immediate abort signal (`POST /api/jobs/{id}/cancel`). The training engine hooks into inner minibatch iterations (via `on_train_batch_end`), setting `trainer.stop = True` within milliseconds, freeing GPU VRAM instantly without runaway execution.
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Local Training Tab | Subtab Switcher | `setActiveStreamTab("local")` | Streams local GPU worker logs, loss values, and ladder rungs. |
+| **2** | Remote Cloud Tab | Subtab Switcher | `setActiveStreamTab("cloud")` | Streams stdout/stderr from Kaggle and Colab cloud training jobs. |
+| **3** | Ecosystem Mesh Tab | Subtab Switcher | `setActiveStreamTab("mesh")` | Streams cross-daemon RPC events and health telemetry. |
+| **4** | Monospace Terminal | Log Container | Real-time WebSocket buffer | High-performance terminal container auto-scrolling to newest events. |
+| **5** | Stream Controls | Action Buttons | Buffer sync / Job cancel | Copies log, clears screen, or issues sub-second training cancellation. |
 
 ---
 
-### 6.5 Revamped 1/4 - 3/4 Training Dashboard Topology & Interactive SOTA Inspection
+### 6.5 Revamped Training Dashboard Topology & Interactive SOTA Inspection
 
-The modern Training Panel employs a high-productivity 1/4 - 3/4 split layout:
+The modern Training Panel employs a high-productivity split topology:
 
-1. **Left 1/4 Sidebar (Global Orchestrator)**: Houses high-level configuration controls, including Global Training Presets (`quick-sota`, `forex-production`, `vision-standard`), runtime hyperparameters, VRAM safety limits, and one-click Sidecar Services management.
-2. **Right 3/4 Workspace (Model Catalog & Telemetry)**: Displays the active Model Card Grid with top-level metric filters and the interactive bottom-docked Telemetry Console.
-3. **Full-Width Model Card Header**: Every architecture card features a full-width header bar displaying the model title, domain badges, parameter count, and an inline progress bar showing the active spatial ladder progress or SOTA target completion.
-4. **Interactive Pinned/Persisted SOTA Tooltip**: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.
-5. **Dual Local vs. Cloud Execution Triggers**: Card action buttons provide **"Start Training"** (local dispatch) and **"Cloud Training"** (opens the interactive Cloud Training modal). Both triggers automatically scroll down to focus the bottom Telemetry console.
-6. **Interactive Cloud Training Modal**: Dedicated dialog allowing users to choose target cloud notebooks (`Kaggle`, `Colab`, `SageMaker`), verify manifold bindings, review required secrets (`SUITE_PAT`, `KAGGLE_KEY`), and launch cloud runs with zero manual setup.
+1. **Global Orchestrator Toolbar**: Houses high-level configuration controls, including real-time search, domain filtering, and global batch execution triggers.
+2. **Model Card Grid**: Displays the active Model Card Grid with format variation badges, parameter counts, and inline ladder progress meters.
+3. **Interactive Pinned/Persisted SOTA Tooltip**: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.
+4. **Dual Local vs. Cloud Execution Triggers**: Card action buttons provide **"Start Training"** (local dispatch) and **"Cloud Training"** (opens the interactive Cloud Training modal). Both triggers automatically scroll down to focus the bottom Telemetry console.
+5. **Interactive Cloud Training Modal**: Dedicated dialog allowing users to choose target cloud notebooks (`Kaggle`, `Colab`), verify manifold bindings, review required secrets (`SUITE_PAT`, `KAGGLE_KEY`), and launch cloud runs with zero manual setup.
 
 ---
 
@@ -666,35 +547,27 @@ Click `Publish Model Package` in the GUI:
 
 ## 8. Health Matrix & Cross-Project Version Drift Analytics
 
-In modern multi-project software suites, one project updating a shared library (like `torch` or `numpy`) while another stays on an older version causes insidious bugs. The LemGendary AI Studio provides continuous real-time cross-project dependency audits.
+In modern multi-project software suites, one project updating a shared library (like `torch` or `numpy`) while another stays on an older version causes insidious bugs. The LemGendary AI Studio provides continuous real-time cross-project dependency audits covering Python virtual environments and frontend desktop GUI NPM packages.
 
-![Toolchain Prerequisites & Version Drift Matrix](../assets/gui/gui_health_drift_matrix.png)
+![Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM Packages](../assets/gui/gui_health_drift_matrix.png)
 
-### 8.1 Toolchain Prerequisites & Version Drift Matrix
+### 8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM Packages
 
-#### Prerequisites & Drift Matrix Numbered Reference
+#### Health Matrix Numbered Reference
 
-1. **Toolchain Prerequisites Section Header**: Overview header inspecting host developer environment prerequisites.
-2. **All Prerequisites Verified Status Badge**: Certified green status badge confirming all prerequisites meet system standards (`ALL PREREQUISITES VERIFIED`).
-3. **Global Python Binary Audit Metric**: Validates host Python interpreter release (`Verified (3.12.10)`).
-4. **Git SCM Version Control Engine Metric**: Confirms operational Git binary for automated repository synchronization.
-5. **Node / NPM Runtime Engine Metric**: Validates Node.js execution runtime for the Tauri desktop GUI.
-6. **Cross-Project Package Version Drift Matrix Header**: Table heading comparing installed package versions across all projects.
-7. **Package Dependency Name Column Header**: Alphabetical index of shared ecosystem Python libraries (`fastapi`, `torch`, `numpy`, etc.).
-8. **Target Workspace Environments Column Header**: Identifies virtual environments across `lemgendary-env-manager`, `lemgendary-datasets`, and `lemgendary-training-suite`.
-9. **Package Drift Status & Synchronization Pill**: Real-time status indicator showing synchronized versions or highlighting version divergences.
+1. **Toolchain Prerequisites Section Header & Status**: Overview header inspecting host developer environment prerequisites with green `ALL PREREQUISITES VERIFIED` badge (Python 3.12.10, Git 2.47.1, Node 22.12.0).
+2. **Cross-Project Python Version Drift Matrix**: Authoritative synchronization table comparing installed package versions across `lemgendary-env-manager`, `lemgendary-datasets`, and `lemgendary-training-suite`. Displays package names, target environments, and synchronization status pills (100% synchronized, zero version drift).
+3. **Desktop GUI Project Packages (NPM) Card**: Dedicated audit card inspecting frontend dependencies of the Tauri/React desktop application (`lemgendary-ai-studio-gui`), verifying core packages such as `@tauri-apps/api`, `lucide-react`, `react`, `react-dom`, `recharts`, and `zustand`.
+4. **Ecosystem Maintenance & Governance Controls**: Nuclear-hardened maintenance action buttons dispatched to port 8000 for safe package upgrades, cache purging, git hook synchronization, and multi-gate ecosystem validation.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Toolchains Heading | Section Heading | None | Details host prerequisite validation. |
-| **2** | Prerequisite Badge | Status Pill | Platform audit | Flags whether all developer toolchains meet minimum versions. |
-| **3** | Python Audit | Metric Readout | `python --version` | Ensures host runs Python 3.10 or higher. |
-| **4** | Git SCM Audit | Metric Readout | `git --version` | Ensures Git is present in system PATH. |
-| **5** | Node / NPM Audit | Metric Readout | `node --version` | Validates Node engine for GUI frontend development. |
-| **6** | Drift Matrix Title | Table Heading | None | Labels cross-project dependency comparison matrix. |
-| **7** | Package Name | Table Column | Manifest inspection | Lists library identifier across ecosystem projects. |
-| **8** | Target Environments | Table Column | Manifest inspection | Compares installed releases across active project virtual environments. |
-| **9** | Drift Status Pill | Status Indicator | Automated comparison | Flags synchronized packages or highlights version drift. |
+| **1** | Toolchains Header | Section Heading | Platform audit | Flags whether all developer toolchains (Python, Git, Node) meet requirements. |
+| **2** | Python Drift Matrix | Comparison Table | Manifest scan | Compares Python library versions across all backend sub-repositories. |
+| **3** | Desktop GUI NPM Card | Package Table | `package.json` audit | Displays installed NPM package versions for the desktop GUI frontend. |
+| **4** | Maintenance Controls | Action Buttons | `POST /api/...` | One-click maintenance buttons for upgrades, cache purge, and validation. |
+
+---
 
 ### 8.2 Ecosystem Maintenance & Governance Controls
 
@@ -703,7 +576,7 @@ The Health and Maintenance view provides nuclear-hardened ecosystem maintenance 
 1. **Safe Package Upgrade Button**: Dispatches `POST /api/update` (`dry_run: false`), applying dependency upgrades in dependency-safe reverse topological order with automated rollback if `pip check` fails.
 2. **Upgrade Dry Run Button**: Dispatches `POST /api/update` (`dry_run: true`), computing the safe upgrade plan and highlighting potential reverse dependency blockers without touching installed packages.
 3. **Deep Cache Purge Button**: Dispatches `POST /api/clean`, recursively purging `__pycache__`, temporary files, build residues, and staging directories across all ecosystem repositories, reporting total bytes reclaimed.
-4. **Install Git Hooks Button**: Dispatches `POST /api/hooks/install`, ensuring pre-commit hooks are active across all 7 repositories to prevent commits that fail zero-emoji, compilation, or linting gates.
+4. **Install Git Hooks Button**: Dispatches `POST /api/hooks/install`, ensuring pre-commit hooks are active across all repositories to prevent commits that fail zero-emoji, compilation, or linting gates.
 5. **Run Ecosystem Validation Button**: Dispatches `POST /api/validate`, executing the full multi-gate validation suite across all repositories and reporting per-project gate status.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
@@ -716,61 +589,71 @@ The Health and Maintenance view provides nuclear-hardened ecosystem maintenance 
 
 ---
 
-## 9. Real-Time Telemetry & Monospace Event Diagnostics
+## 9. Contextual UX Help & Interactive Hover Guidance System
 
-For power operators who want to monitor raw execution logs, the Real-Time Telemetry console provides a live, non-blocking log stream.
+Every single visual control across the AI Studio Desktop GUI features contextual interactive hover guidance engineered according to the Gardening Model Rule:
 
-![Real-Time Telemetry Stream Monospace Terminal Card](../assets/gui/gui_log_panel.png)
+![Contextual UX Help & Interactive Hover Guidance Popover](../assets/gui/gui_contextual_help_popover.png)
 
-### 9.1 Telemetry Terminal Numbered Reference
+### 9.1 Interactive Hover Popovers & Safety Diagnostics
 
-1. **Real-time Telemetry & Pipeline Stream Heading**: Header explaining WebSocket log stream reception.
-2. **Live WebSocket Connection Badge**: Real-time connection sentinel displaying green `WS CONNECTED`.
-3. **Clear Terminal Buffer Action Button**: Flushes terminal buffer memory to isolate a fresh training run or audit pass.
-4. **Monospace Terminal Console Viewport**: High-performance scrolling container streaming live JSON-RPC packets and process stdout.
+#### Contextual Help Numbered Reference
+
+1. **Contextual Help Trigger Icon (`?`)**: Subtle, non-intrusive icon button positioned adjacent to card headers, input selectors, and action triggers. Focusing or hovering this trigger instantly opens the contextual guidance card.
+2. **Interactive Floating Tooltip Bubble**: High-elevation guidance card detailing:
+   - What the action does in plain English with zero jargon.
+   - The underlying API endpoint or CLI script executed (`POST /api/...` or `python tools/...`).
+   - Memory, disk, and hardware considerations (e.g. temporary staging requirements, VRAM allocation).
+   - Practical recommendations and safety boundaries for non-technical users.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
-| **1** | Telemetry Title | Card Heading | None | Explains live background telemetry capture. |
-| **2** | WebSocket Badge | Connection Pill | `ws://127.0.0.1:8000/ws/log` | Displays socket connection state. Reconnects automatically if interrupted. |
-| **3** | Clear Stream | Action Button | Buffer purge | Clears visible terminal lines without affecting background processes. |
-| **4** | Console Viewport | Monospace Terminal | Real-time DOM stream | Monospace log stream auto-scrolling to newest events. |
+| **1** | Help Trigger Icon | Action Button | `onMouseEnter` / `onFocus` | Subtle `?` icon button triggering contextual explanation card. |
+| **2** | Floating Guidance Bubble | Popover Card | `HelpTooltip.tsx` | Displays plain-English explanation, endpoints, and safety rules. |
 
 ---
 
-## 10. Contextual UX Help & Interactive Hover Guidance System
-
-Every single visual control across the AI Studio Desktop GUI features contextual interactive hover guidance:
-
-- **Universal Help Badges**: Interactive elements are paired with a subtle, non-intrusive `?` glyph.
-- **Instantaneous Explanations**: Hovering or focusing the badge displays an elevated card detailing:
-  1. What the action does in plain English.
-  2. The underlying API endpoint or CLI script executed (`/api/...` or `python ...`).
-  3. Memory and disk considerations (e.g. temporary storage requirements, VRAM allocation).
-  4. Best-practice recommendations for non-technical users.
-
----
-
-## 11. Permanent Offline Documentation Hub & Online Synchronization
+## 10. Permanent Offline Documentation Hub & Online Synchronization
 
 Reliability requires that complete engineering documentation is accessible at all times including on isolated workstations, offline air-gapped lab servers, or during broadband outages.
 
-### 11.1 The Local Offline Documentation Server
+![Permanent Offline Documentation Hub Interface](../assets/gui/gui_docs_hub_offline.png)
 
-- The Environment Manager daemon (`port 8000`) permanently mounts the entire `lemgendary-docs` directory as a static file server at `/documentation-hub/`.
-- Clicking the **Docs Hub (Offline)** button in the header opens:
-  `http://127.0.0.1:8000/documentation-hub/index.html`
-- The offline hub contains all 46 scientific whitepapers, operator manuals, CLI guides, and API specifications. All stylesheets, SVG vector diagrams, and assets are bundled locally, requiring **zero external network requests**.
+### 10.1 Local Static Offline Documentation Server
 
-### 11.2 The Live GitHub Pages Hub
+The Documentation Hub is bundled directly with the desktop client and permanently served locally at:
 
-- Clicking the **Docs (Web)** button opens the live GitHub Pages site:
-  `https://lemgenda.github.io/ai-training-whitepapers/index.html`
-- The web portal provides identical content for remote sharing, mobile reading, and external research collaboration.
+`http://localhost:1420/documentation-hub/index.html` (and mirrored by port 8000 at `http://127.0.0.1:8000/documentation-hub/index.html`)
+
+#### Documentation Hub Interface Numbered Reference
+
+1. **Documentation Hub Header & Brand Identity**: Displays the official `LemGendary AI Documentation Hub` header and verified local status pill.
+2. **Live Client-Side Search Bar**: Instantaneous client-side search input filtering documents in real time across titles, descriptions, and categories (`Search documentation...`).
+3. **Category Navigation Filters**: Segmented filter buttons enabling one-click category filtering across `All Documents`, `Whitepapers`, `Manuals`, `Architecture`, `Standards`, and `Guides`.
+4. **Document Article Cards**: Rich documentation cards displaying canonical document titles, category tags, word counts, estimated reading times, and direct reading action links.
+5. **Local Server Status & Network Indicators**: Verifies offline local serving readiness (`OFFLINE VERIFIED`), guaranteeing zero external network dependencies.
+
+| Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | Hub Header | Header Title | None | Displays official documentation hub identity and offline badge. |
+| **2** | Live Search Bar | Search Input | Client-side filter | Filters all 46 scientific documents and manuals in real time. |
+| **3** | Category Filters | Filter Buttons | `setCategoryFilter()` | Restricts article display by document category. |
+| **4** | Document Cards | Article Card | Direct Link | Rich cards linking to full-text papers and operator manuals. |
+| **5** | Offline Status Indicator | Status Pill | Local server health | Confirms 100% offline document availability with zero external assets. |
 
 ---
 
-## 12. Tripartite Multi-Sidecar Network Architecture
+### 10.2 Live GitHub Pages Online Synchronization
+
+For external collaboration, mobile reading, and research sharing, the Documentation Hub is synchronized with GitHub Pages:
+
+`https://lemgenda.github.io/ai-training-whitepapers/index.html`
+
+Both local and web documentation portals share identical CSS styling, SVG typography, and structural content, ensuring total parity across offline and online environments.
+
+---
+
+## 11. Tripartite Multi-Sidecar Network Architecture
 
 The AI Studio GUI operates as a unified visual client communicating across three specialized local background microservices:
 
@@ -796,9 +679,24 @@ The frontend client (`src/api/client.ts`) automatically multiplexes API calls ac
 
 ---
 
-## 13. Automated Testing & Ecosystem Quality Assurance
+## 12. Automated Testing & Ecosystem Quality Assurance
 
-To guarantee system stability, the LemGendary ecosystem includes extensive automated test batteries across all projects. You can verify the health of the entire suite at any time using the unified CLI:
+To guarantee system stability, the LemGendary ecosystem includes extensive automated test batteries across all projects. You can verify the health of the entire suite at any time:
+
+### Desktop GUI Test Battery
+
+The Desktop GUI includes dedicated Vitest unit and integration test suites:
+
+```bash
+cd lemgendary-ai-studio-gui
+npm test
+```
+
+Verifies that the Centralized Zustand Store, Sidecar Service Probes, Telemetry Stream Buffers, and Navigation Matrix execute with zero failures.
+
+### Python Ecosystem Quality Assurance
+
+You can run automated validation across all backend projects using the unified CLI:
 
 ```bash
 # Validate individual projects
@@ -812,4 +710,12 @@ lem-env validate --project lemgendary-docs
 lem-env validate --all
 ```
 
-Every test verifies strict code compliance, dependency lockfile validity, and the absolute absence of emojis across all codebases and documentation.
+### Documentation & Whitepaper Integrity Verification
+
+The documentation test suite executes 36 automated validation gates:
+
+```bash
+pytest lemgendary-docs/tests/test_documentation.py
+```
+
+Every test verifies strict code compliance, dependency lockfile validity, markdown link integrity, LaTeX formula rendering, and the absolute absence of emojis across all codebases and documentation.

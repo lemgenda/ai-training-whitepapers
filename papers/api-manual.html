@@ -1,1417 +1,1545 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master API Reference Manual - LemGendary AI Ecosystem</title>
-    <meta name="description"
-        content="Authoritative Master Application Programming Interface Reference Manual for the LemGendary AI Ecosystem REST, WebSocket, and IPC services.">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-</head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="manuals-hub.html">Manuals Hub</a>
-                <a href="ai-studio-manual.html">AI Studio GUI Manual</a>
-                <a href="cli-manual.html">Master CLI Manual</a>
-                <a href="api-manual.html" class="active">Master API Manual</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
-</div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
-<ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="../index.html" class="toc-link-accent">Back
-                        to Index</a></li>
-                <li><a href="#section-1">1. Executive Overview</a></li>
-                <li><a href="#section-2">2. Environment Manager REST API</a>
-                    <ul class="sub-item">
-                        <li><a href="#section-2-1">2.1 Server Configuration &amp; Startup</a></li>
-                        <li><a href="#section-2-2">2.2 Interactive OpenAPI Documentation</a></li>
-                        <li><a href="#section-2-3">2.3 Health &amp; System Discovery Endpoints</a></li>
-                        <li><a href="#section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</a></li>
-                        <li><a href="#section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</a></li>
-                        <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry</a></li>
-                        <li><a href="#section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
-                <li><a href="#section-4">4. Training Suite Sidecar Daemon &amp; Python Engine</a>
-                    <ul class="sub-item">
-                        <li><a href="#section-4-1">4.1 Server Architecture &amp; Startup</a></li>
-                        <li><a href="#section-4-2">4.2 Security &amp; Authentication</a></li>
-                        <li><a href="#section-4-3">4.3 Endpoint Reference Matrix</a></li>
-                        <li><a href="#section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</a></li>
-                        <li><a href="#section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</a></li>
-                        <li><a href="#section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</a></li>
-                        <li><a href="#section-4-7">4.7 Python In-Process Engine &amp; Governance API</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-5">5. Datasets Compilation &amp; Stream Pipeline API</a></li>
-                <li><a href="#section-6">6. Error Handling, Status Codes &amp; Resilience</a></li>
-                <li><a href="#companion-documentation">Companion Documentation</a></li>
-            </ul>
-</nav>
-<main id="content" class="toc-fixed-content">
-        <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
-        <p class="subtitle">Authoritative REST, WebSocket, and IPC Interface Reference for Machine Integration</p>
-        <div class="meta">
-                <span>Category 03 MANUALS</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Component: Ecosystem API Surface</span>
-            </div>
-
-
-            <section id="section-1">
-                <h2>1. Executive Overview</h2>
-                <p>
-                    The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine
-                    integration,
-                    desktop UI orchestration, and automated pipeline execution.
-                    Central to the ecosystem is the authoritative FastAPI daemon running in
-                    <code>lemgendary-env-manager</code>, providing both
-                    high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
-                </p>
-                <p>
-                    All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to
-                    Pydantic models,
-                    and maintain zero extraneous metadata.
-                </p>
-            </section>
-
-            <section id="section-2">
-                <h2>2. Environment Manager REST API</h2>
-                <p>
-                    The Environment Manager server runs locally or inside CI environments to expose hardware discovery,
-                    ecosystem audits,
-                    package synchronization, and multi-gate validations over HTTP.
-                </p>
-
-                <h3 id="section-2-1">2.1 Server Configuration &amp; Startup</h3>
-                <p>
-                    The server is launched via the <code>lem-env</code> command or PowerShell management console:
-                </p>
-                <pre><code># Default binding: http://127.0.0.1:8000
-lem-env serve --host 127.0.0.1 --port 8000</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Configuration Parameter</th>
-                            <th>Default Value</th>
-                            <th>CLI Flag</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Host Interface</td>
-                            <td><code>127.0.0.1</code></td>
-                            <td><code>--host</code></td>
-                            <td>Network IP address to bind HTTP and WebSocket listener</td>
-                        </tr>
-                        <tr>
-                            <td>TCP Port</td>
-                            <td><code>8000</code></td>
-                            <td><code>--port</code></td>
-                            <td>Local listening port for incoming requests</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>The server's lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler. A
-                    background asyncio task drains the WebSocket event queue for the lifetime of the server and is
-                    cancelled cleanly on shutdown.</p>
-
-                <h3 id="section-2-2">2.2 Interactive OpenAPI Documentation</h3>
-                <p>When the server is active, auto-generated interactive OpenAPI specifications are served at:</p>
-                <ul>
-                    <li>Swagger UI: <code>http://127.0.0.1:8000/docs</code></li>
-                    <li>ReDoc UI: <code>http://127.0.0.1:8000/redoc</code></li>
-                    <li>Raw OpenAPI JSON: <code>http://127.0.0.1:8000/openapi.json</code></li>
-                </ul>
-
-                <h3 id="section-2-3">2.3 Health &amp; System Discovery Endpoints</h3>
-
-                <h4><code>GET /api/health</code></h4>
-                <p>Returns the complete ecosystem health audit. This is the largest response body in the API, containing
-                    bootstrap status, hardware profile, project environments, version drift entries, manifest coverage,
-                    single-manifest inventory, and npm status.</p>
-                <p>Query parameters:</p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>include_safety</code></td>
-                            <td>Boolean</td>
-                            <td><code>false</code></td>
-                            <td>When true, runs per-project pip safety dry-runs to classify each outdated package as
-                                safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>Response structure (top-level keys):</p>
-                <pre><code>{
-  "bootstrap": { "python_valid": true, "python_version": "3.12.10" },
-  "hardware": { "os_name": "Windows", "primary_backend": "cuda" },
-  "projects": [
-    {
-      "name": "lemgendary-datasets",
-      "venv_exists": true,
-      "total_required": 36,
-      "total_installed": 105,
-      "missing_packages": [],
-      "is_healthy": true
-    }
-  ],
-  "version_drift": [
-    {
-      "package_name": "numpy",
-      "versions": { "lemgendary-datasets": "2.5.3", "lemgendary-training-suite": "2.5.3" },
-      "pins": { "lemgendary-datasets": { "pin_type": "range", "specifier": "&gt;=2.2.6,&lt;2.6" } },
-      "upgrades": { "lemgendary-datasets": { "current": "2.5.3", "latest": null, "safe": false } },
-      "has_drift": false,
-      "has_pin_mismatch": false,
-      "projects_declared": 2
-    }
-  ],
-  "manifest_coverage": [
-    {
-      "project_name": "lemgendary-datasets",
-      "declared_count": 36,
-      "installed_count": 105,
-      "missing": [],
-      "extra": ["setuptools"],
-      "platform_skipped": []
-    }
-  ],
-  "single_manifest_packages": [
-    {
-      "package_name": "mediapipe",
-      "project": "lemgendary-datasets",
-      "installed_version": "1.0.1",
-      "pin_type": "exact",
-      "specifier": "==1.0.1"
-    }
-  ],
-  "npm_packages": [],
-  "npm_drift": [],
-  "overall_healthy": true
-}</code></pre>
-
-                <h4><code>GET /api/drift</code></h4>
-                <p>Compact alternative to <code>/api/health</code> that returns only the drift-related data. Useful for
-                    GUI dashboards that only need the matrix view.</p>
-                <p>Query parameters:</p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>include_safety</code></td>
-                            <td>Boolean</td>
-                            <td><code>false</code></td>
-                            <td>Same semantics as <code>/api/health?include_safety</code>.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>Response structure:</p>
-                <pre><code>{
-  "python": [],
-  "coverage": [],
-  "single_manifest": [],
-  "npm": [],
-  "include_safety": false
-}</code></pre>
-                <p><code>python</code> entries are drift rows (packages declared in two or more manifests).
-                    <code>coverage</code> entries reconcile each manifest's declared set against its installed set.
-                    <code>single_manifest</code> lists packages declared in exactly one manifest. <code>npm</code>
-                    entries track version drift across npm workspaces.
-                </p>
-
-                <h4><code>GET /api/hardware</code></h4>
-                <p>Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU devices, primary
-                    backend, recommended PyTorch index, and MetaTrader 5 info.</p>
-                <p>Example response:</p>
-                <pre><code>{
-  "os_name": "Windows",
-  "os_release": "11",
-  "architecture": "AMD64",
-  "cpu_count_logical": 16,
-  "cpu_count_physical": 8,
-  "total_ram_mb": 32768,
-  "primary_backend": "cuda",
-  "recommended_torch_index": "https://download.pytorch.org/whl/cu121",
-  "accelerators": [
-    {
-      "name": "NVIDIA GeForce GTX 1650",
-      "backend": "cuda",
-      "total_memory_mb": 4096,
-      "index": 0,
-      "driver_version": "552.22"
-    }
-  ],
-  "metatrader5": {
-    "installed": true,
-    "version": "5.0.0.6182",
-    "install_path": "C:\\Program Files\\MetaTrader 5"
-  }
-}</code></pre>
-                <p>The <code>metatrader5.version</code> field is populated from <code>terminal64.exe</code>'s
-                    <code>FileVersion</code> metadata via PowerShell's <code>VersionInfo</code> property. This is
-                    authoritative even when winget has no record of the MT5 installation.
-                </p>
-
-                <h4><code>GET /api/projects</code></h4>
-                <p>Enumerates all discovered ecosystem repositories with their virtual environment status, installed
-                    package count, and health indicators.</p>
-                <pre><code>[
-  {
-    "name": "lemgendary-env-manager",
-    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
-    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
-    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
-    "is_valid": true,
-    "python_version": "Python 3.12.10",
-    "installed_packages_count": 45,
-    "is_node_project": false,
-    "node_modules_present": false
-  }
-]</code></pre>
-
-                <h4><code>GET /api/npm</code></h4>
-                <p>Returns Node.js workspace status and the npm package dependency matrix for every workspace containing
-                    <code>package.json</code>.
-                </p>
-
-                <h3 id="section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</h3>
-
-                <h4><code>GET /api/pipeline/status</code></h4>
-                <p>Returns the execution state of the background pipeline orchestrator together with the last 50
-                    telemetry events.</p>
-                <pre><code>{
-  "is_running": false,
-  "last_status": "success",
-  "last_run_timestamp": "2026-09-15T00:15:00Z",
-  "recent_events": []
-}</code></pre>
-
-                <h4><code>GET /api/manifests</code></h4>
-                <p>Lists every centralized requirements manifest with its raw contents.</p>
-                <pre><code>{
-  "manifests": {
-    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
-    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
-    "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
-  }
-}</code></pre>
-
-                <h3 id="section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</h3>
-
-                <h4><code>POST /api/pipeline/run</code></h4>
-                <p>Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket
-                    connections.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "target_project": null
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "accepted",
-  "message": "Pipeline initiated."
-}</code></pre>
-                <p>If a pipeline is already running, returns:</p>
-                <pre><code>{
-  "status": "error",
-  "message": "Pipeline is already running."
-}</code></pre>
-
-                <h4><code>POST /api/update</code></h4>
-                <p>Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "project": null,
-  "dry_run": false
-}</code></pre>
-                <p>When <code>dry_run=true</code>, returns the plan without applying:</p>
-                <pre><code>{
-  "status": "dry_run",
-  "plan": {
-    "total_outdated": 34,
-    "total_safe": 24,
-    "total_blocked": 10,
-    "cuda_detected": true,
-    "cuda_index_url": "https://download.pytorch.org/whl/cu121",
-    "projects": []
-  }
-}</code></pre>
-                <p>When <code>dry_run=false</code>, applies the plan and returns the collected events:</p>
-                <pre><code>{
-  "status": "success",
-  "events": [
-    {
-      "project": "lemgendary-datasets",
-      "package": "pandas-ta-classic",
-      "old_version": "0.6.52",
-      "new_version": "0.8.32",
-      "status": "upgraded",
-      "message": "Upgraded 0.6.52 -&gt; 0.8.32."
-    }
-  ]
-}</code></pre>
-                <p>Event status values:</p>
-                <ul>
-                    <li><code>upgraded</code>: package was successfully upgraded.</li>
-                    <li><code>blocked</code>: upgrade blocked by reverse dependency; <code>message</code> contains the
-                        reason.</li>
-                    <li><code>verified</code>: environment verified as healthy without a version change
-                        (<code>pip check</code>, <code>torch-cuda-verify</code>, or torch-family no-op).</li>
-                    <li><code>failed</code>: batch or rollback failure.</li>
-                    <li><code>skipped</code>: nothing to do.</li>
-                </ul>
-
-                <h4><code>POST /api/validate</code></h4>
-                <p>Executes the multi-gate validation suite across all projects or a single project.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "project": null
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "success",
-  "all_passed": true,
-  "projects": {
-    "lemgendary-datasets": {
-      "project_name": "lemgendary-datasets",
-      "compiled_files_count": 24,
-      "compile_errors": [],
-      "emoji_violations": [],
-      "yaml_errors": [],
-      "json_errors": [],
-      "lint_errors": [],
-      "html_errors": [],
-      "wcag_violations": [],
-      "domain_errors": [],
-      "passed": true
-    }
-  }
-}</code></pre>
-
-                <h4><code>POST /api/manifests/sync</code></h4>
-                <p>One-way copy of centralized manifests to project directories. Returns per-project sync status.</p>
-                <pre><code>{
-  "status": "success",
-  "results": {
-    "lemgendary-training-suite": {
-      "success": true,
-      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
-    },
-    "lemgendary-datasets": {
-      "success": true,
-      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
-    }
-  }
-}</code></pre>
-
-                <h4><code>GET /api/manifests/registry</code></h4>
-                <p>Enumerates all manageable ecosystem manifests across all repositories, including file existence, size in bytes, and resolved disk paths.</p>
-                <p>Response:</p>
-                <pre><code>{
-  "manifests": [
-    {
-      "name": "unified_data.yaml",
-      "project": "lemgendary-datasets",
-      "format": "yaml",
-      "description": "Authoritative dataset and source repository registry.",
-      "exists": true,
-      "size_bytes": 10240,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
-    },
-    {
-      "name": "unified_models_v2.yaml",
-      "project": "lemgendary-training-suite",
-      "format": "yaml",
-      "description": "Neural architecture registry and training hyperparameters.",
-      "exists": true,
-      "size_bytes": 16384,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
-    }
-  ]
-}</code></pre>
-
-                <h4><code>GET /api/manifests/read</code></h4>
-                <p>Retrieves the raw text content, format, and resolved path of a designated registered manifest.</p>
-                <p>Query Parameters:</p>
-                <ul>
-                    <li><code>name</code> (string, required): Registered manifest name (e.g., <code>unified_models_v2.yaml</code>, <code>runtime_env.yaml</code>, <code>config.yaml</code>).</li>
-                </ul>
-                <p>Response:</p>
-                <pre><code>{
-  "name": "unified_models_v2.yaml",
-  "format": "yaml",
-  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
-  "content": "version: '2.0.0'\nmodels:\n  ..."
-}</code></pre>
-
-                <h4><code>POST /api/manifests/validate</code></h4>
-                <p>Performs strict syntax and structure validation on arbitrary manifest content prior to disk persistence. Supports YAML, JSON, and text formats.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "name": "unified_models_v2.yaml",
-  "content": "version: '2.0.0'\n..."
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "valid": true,
-  "error": null
-}</code></pre>
-
-                <h4><code>POST /api/manifests/save</code></h4>
-                <p>Safely writes updated manifest content to disk with automatic pre-validation and generation of a <code>.bak</code> backup file before atomic replacement.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "name": "unified_models_v2.yaml",
-  "content": "version: '2.0.0'\n..."
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "success",
-  "name": "unified_models_v2.yaml",
-  "bytes_written": 16420
-}</code></pre>
-
-                <h4><code>GET /api/secrets</code></h4>
-                <p>Retrieves all stored ecosystem secrets from <code>.secrets.yaml</code>. Automatically seeds defaults from existing credential files (<code>.kaggle_users</code>, <code>.GOOGLE_DRIVE</code>, <code>.GITHUB_PAT</code>, <code>.huggingface_token</code>, <code>.mt5_credentials</code>, <code>.SATURN_PAT</code>) if <code>.secrets.yaml</code> does not yet exist.</p>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "success",
-  "secrets": [
-    {
-      "id": "kaggle-primary",
-      "service": "kaggle",
-      "label": "Kaggle API Token",
-      "username": "lemtreursi",
-      "secret_value": "9f8e7d...",
-      "server": null,
-      "is_default": true
-    }
-  ]
-}</code></pre>
-
-                <h4><code>POST /api/secrets</code></h4>
-                <p>Atomically writes the ecosystem secrets registry to <code>.secrets.yaml</code> and propagates mandatory authentication credentials (such as Kaggle tokens) across dependent projects (<code>lemgendary-datasets</code>, <code>lemgendary-training-suite</code>, and <code>lemgendary-env-manager</code>).</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "secrets": [
-    {
-      "id": "kaggle-primary",
-      "service": "kaggle",
-      "label": "Kaggle API Token",
-      "username": "lemtreursi",
-      "secret_value": "9f8e7d...",
-      "server": null,
-      "is_default": true
-    }
-  ]
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "success",
-  "count": 1,
-  "message": "Secrets securely persisted and propagated across repositories."
-}</code></pre>
-
-                <h4><code>GET /api/docs/status</code></h4>
-                <p>Reports availability of the local offline documentation hub mounted at <code>/documentation-hub</code> and provides the canonical GitHub Pages URL.</p>
-                <p>Response:</p>
-                <pre><code>{
-  "offline_available": true,
-  "local_url": "http://127.0.0.1:8000/documentation-hub/index.html",
-  "online_url": "https://lemgenda.github.io/ai-training-whitepapers/index.html"
-}</code></pre>
-
-                <h4><code>POST /api/clean</code></h4>
-                <p>Purges orphaned bytecode caches and temporary build artifacts.</p>
-                <p>Request body:</p>
-                <pre><code>{
-  "project": null
-}</code></pre>
-                <p>Response:</p>
-                <pre><code>{
-  "status": "success",
-  "cleaned_count": 42,
-  "reclaimed_bytes": 1258291,
-  "reclaimed_mb": 1.2
-}</code></pre>
-
-                <h3 id="section-2-6">2.6 WebSocket Real-Time Telemetry</h3>
-                <p>Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a
-                    persistent WebSocket connection:</p>
-                <pre><code>ws://127.0.0.1:8000/ws/log
-ws://127.0.0.1:8000/ws/logs</code></pre>
-                <p>Both paths are aliases for the same handler. On connect, the client receives the last 20 buffered
-                    events, then continues to receive new events as they are emitted by the pipeline.</p>
-                <p>Telemetry Event Schema (<code>PipelineEvent</code>):</p>
-                <pre><code>{
-  "timestamp": "2026-09-15T00:15:02.123456Z",
-  "step_number": 3,
-  "total_steps": 7,
-  "step_name": "Virtual Environments",
-  "status": "info",
-  "message": "Creating fresh virtual environment for lemgendary-datasets...",
-  "data": {
-    "project": "lemgendary-datasets",
-    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
-  }
-}</code></pre>
-                <p>Event Status Values:</p>
-                <ul>
-                    <li><code>info</code>: Informational milestone during pipeline processing.</li>
-                    <li><code>success</code>: Step completed cleanly without warnings.</li>
-                    <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
-                    <li><code>error</code>: Fatal error encountered in step execution.</li>
-                </ul>
-                <p>Thread-safe dispatch is guaranteed via <code>asyncio.run_coroutine_threadsafe()</code>, which allows
-                    the background pipeline thread to broadcast events on the server's running event loop without
-                    blocking.</p>
-
-                <h3 id="section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</h3>
-                <p>The Environment Manager provides specialized endpoints for high-velocity hydration in <code>lemgendary-ai-studio-gui</code>:</p>
-                <h4><code>GET /api/gui/state</code> (Environment Manager)</h4>
-                <p>Returns a consolidated snapshot containing service identity, hardware profile (<code>probe_hardware()</code>), discovered projects summary (<code>discover_projects()</code>), and pipeline execution status (<code>orchestrator.is_running</code>) in a single non-blocking payload.</p>
-                <p>Example response:</p>
-                <pre><code>{
-  "service": {
-    "name": "lemgendary-env-manager",
-    "version": "2.0.0",
-    "port": 8000,
-    "status": "online"
-  },
-  "hardware": {
-    "os_name": "Windows",
-    "primary_backend": "cuda"
-  },
-  "projects": [],
-  "pipeline": {
-    "is_running": false,
-    "last_status": "success",
-    "last_run_timestamp": "2026-09-17T20:00:00Z"
-  }
-}</code></pre>
-                <h4><code>GET /api/gui/ecosystem</code></h4>
-                <p>Monitors health and connectivity across local ecosystem sidecars by actively probing <code>http://127.0.0.1:8100/api/health</code> and <code>http://127.0.0.1:8200/api/health</code> with a non-blocking timeout. Powers the desktop GUI top-bar status indicator and service mesh dashboard tiles:</p>
-                <pre><code>{
-  "env_manager": {
-    "service": "lemgendary-env-manager",
-    "port": 8000,
-    "status": "online",
-    "reachable": true
-  },
-  "dataset_compiler": {
-    "service": "lemgendary-datasets",
-    "port": 8100,
-    "status": "online",
-    "reachable": true,
-    "data": {
-      "status": "ok",
-      "service": "LemGendary Dataset Compiler API"
-    }
-  },
-  "training_suite": {
-    "service": "lemgendary-training-suite",
-    "port": 8200,
-    "status": "online",
-    "reachable": true,
-    "data": {
-      "status": "ok",
-      "service": "lemgendary-training-suite"
-    }
-  }
-}</code></pre>
-                <h4><code>POST /api/services/{service_id}/start</code></h4>
-                <p>Spawns the background daemon process for the designated sidecar service (<code>dataset-compiler</code>, <code>training-suite</code>, or <code>env-manager</code>). Automatically resolves the target virtual environment Python executable, executing completely headless without creating console or terminal windows (<code>pythonw.exe</code> and <code>CREATE_NO_WINDOW</code> on Windows; <code>start_new_session=True</code> on Linux/macOS). Redirects standard streams (<code>stdin=subprocess.DEVNULL</code>, <code>stdout</code>/<code>stderr</code> to diagnostic log files) and polls the service health endpoint with an extended 20-second timeout to accommodate PyTorch and CUDA runtime initialization. Includes <code>is_port_in_use()</code> collision protection to prevent duplicate process spawning.</p>
-                <pre><code>{
-  "status": "started",
-  "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",
-  "port": 8100,
-  "pid": 26024
-}</code></pre>
-                <h4><code>POST /api/services/{service_id}/stop</code></h4>
-                <p>Gracefully terminates the specified sidecar daemon process by reading its recorded PID file or querying the active socket connection on the assigned port.</p>
-                <pre><code>{
-  "status": "stopped",
-  "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
-  "port": 8100
-}</code></pre>
-                <h4><code>POST /api/services/start-all</code></h4>
-                <p>Orchestrates sequential startup across all offline ecosystem sidecars (<code>dataset-compiler</code> and <code>training-suite</code>).</p>
-                <pre><code>{
-  "results": {
-    "dataset-compiler": {
-      "status": "already_running",
-      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
-      "port": 8100
-    },
-    "training-suite": {
-      "status": "started",
-      "message": "LemGendary Model Training Suite started successfully on port 8200.",
-      "port": 8200,
-      "pid": 18612
-    }
-  }
-}</code></pre>
-            </section>
-
-            <section id="section-3">
-                <h2>3. Desktop GUI Tauri IPC API Contracts</h2>
-                <p>
-                    The desktop frontend <code>lemgendary-ai-studio-gui</code> communicates with the native Rust backend
-                    via Tauri v2 IPC invocations.
-                </p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>IPC Command</th>
-                            <th>Arguments</th>
-                            <th>Return Type</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>run_system_probe</code></td>
-                            <td>None</td>
-                            <td><code>SystemProbeResult</code></td>
-                            <td>Triggers hardware discovery from native desktop thread</td>
-                        </tr>
-                        <tr>
-                            <td><code>get_ecosystem_status</code></td>
-                            <td>None</td>
-                            <td><code>EcosystemReport</code></td>
-                            <td>Queries active environment manager daemon for health metrics</td>
-                        </tr>
-                        <tr>
-                            <td><code>trigger_clean_install</code></td>
-                            <td><code>project: Option&lt;String&gt;</code></td>
-                            <td><code>PipelineLaunchResult</code></td>
-                            <td>Starts environment provisioning pipeline</td>
-                        </tr>
-                        <tr>
-                            <td><code>execute_validation</code></td>
-                            <td><code>project: Option&lt;String&gt;</code></td>
-                            <td><code>ValidationResult</code></td>
-                            <td>Runs multi-gate verification suite</td>
-                        </tr>
-                        <tr>
-                            <td><code>connect_telemetry_stream</code></td>
-                            <td>None</td>
-                            <td><code>WebSocketHandle</code></td>
-                            <td>Subscribes frontend to <code>/ws/log</code> channel</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="section-4">
-                <h2>4. Training Suite Sidecar Daemon &amp; Python Engine</h2>
-                <p>
-                    The <code>lemgendary-training-suite</code> repository provides both a background FastAPI sidecar service on <code>127.0.0.1:8200</code> and high-performance Python engine classes for in-process training, SOTA validation, and WebGPU optimization.
-                </p>
-
-                <h3 id="section-4-1">4.1 Server Architecture &amp; Startup</h3>
-                <p>
-                    The sidecar service daemon coordinates background training pipelines, asynchronous job execution, real-time log streaming, and model compilation. It is launched via the <code>lemtrain</code> CLI:
-                </p>
-                <pre><code># Launch server daemon as a background service on port 8200
-python cli.py server start --daemon --host 127.0.0.1 --port 8200
-
-# Inspect server status, port, and PID
-python cli.py server status
-
-# Export OpenAPI 3.1 schema specification
-python cli.py server openapi --output openapi.json
-
-# Gracefully terminate daemon
-python cli.py server stop</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Bind Host</td>
-                            <td><code>127.0.0.1</code></td>
-                            <td>Local loopback interface</td>
-                        </tr>
-                        <tr>
-                            <td>Bind Port</td>
-                            <td><code>8200</code></td>
-                            <td>Dedicated training suite sidecar port</td>
-                        </tr>
-                        <tr>
-                            <td>Interactive Docs</td>
-                            <td><code>/docs</code></td>
-                            <td>OpenAPI Swagger UI</td>
-                        </tr>
-                        <tr>
-                            <td>Schema Spec</td>
-                            <td><code>/openapi.json</code></td>
-                            <td>OpenAPI 3.1.0 JSON specification</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3 id="section-4-2">4.2 Security &amp; Authentication</h3>
-                <p>
-                    Operational endpoints under <code>/api</code> requiring modification or system access enforce token authentication:
-                </p>
-                <ul>
-                    <li>Provide the token via HTTP header <code>X-LemTrain-Token: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
-                    <li>Token resolution: checked from the <code>LEMTRAIN_API_TOKEN</code> environment variable, or read from <code>.lemtrain_server/token</code>.</li>
-                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/docs</code>, <code>/openapi.json</code>, <code>/redoc</code>) and WebSocket streams (<code>/api/ws/*</code>) are open for non-blocking monitoring.</li>
-                </ul>
-
-                <h3 id="section-4-3">4.3 Endpoint Reference Matrix</h3>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Method</th>
-                            <th>Endpoint</th>
-                            <th>Auth</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/health</code></td>
-                            <td>None</td>
-                            <td>Basic liveness, uptime, accelerator device, and version v16.9.16-STABLE (illustrative example payload)</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/config</code></td>
-                            <td>Required</td>
-                            <td>Active configuration parameters and loaded training configurations</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/presets</code></td>
-                            <td>Required</td>
-                            <td>Canonical training presets list and hyperparameter definitions</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/presets/{name}</code></td>
-                            <td>Required</td>
-                            <td>Detailed hyperparameter parameters for a specific preset</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs</code></td>
-                            <td>Required</td>
-                            <td>List background jobs with pagination and status filtering</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/jobs</code></td>
-                            <td>Required</td>
-                            <td>Submit asynchronous background job (train, eval, export, audit, sync)</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs/{id}</code></td>
-                            <td>Required</td>
-                            <td>Query job state, progress metrics, exit code, and timestamps</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs/{id}/logs</code></td>
-                            <td>Required</td>
-                            <td>Retrieve execution log text slice or tail lines for a job</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/jobs/{id}/cancel</code></td>
-                            <td>Required</td>
-                            <td>Gracefully cancel a running background job</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/models</code></td>
-                            <td>Required</td>
-                            <td>Enumerate registered neural architectures and target domains</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/models/{name}</code></td>
-                            <td>Required</td>
-                            <td>Retrieve model specifications and default hyperparameters</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/models/{name}/audit</code></td>
-                            <td>Required</td>
-                            <td>Detailed model audit: parameter counts, layer topology, memory</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/training/train</code></td>
-                            <td>Required</td>
-                            <td>In-process training initiation with hardware discovery</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/training/evaluate</code></td>
-                            <td>Required</td>
-                            <td>In-process checkpoint evaluation under torch.no_grad()</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/training/export</code></td>
-                            <td>Required</td>
-                            <td>In-process multi-format model compilation and export</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/notebooks/models</code></td>
-                            <td>Required</td>
-                            <td>Enumerate registered architectures available for notebook generation</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/notebooks/generate</code></td>
-                            <td>Required</td>
-                            <td>Generate Jupyter training, inference, or usage notebooks for a model</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/notebooks/refresh-all</code></td>
-                            <td>Required</td>
-                            <td>Batch regenerate and synchronize notebooks across all registered models</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/datasets</code></td>
-                            <td>Required</td>
-                            <td>Discover available compiled datasets and dataset manifolds</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/env/telemetry</code></td>
-                            <td>Required</td>
-                            <td>System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/state</code></td>
-                            <td>Required</td>
-                            <td>Consolidated GUI snapshot: daemon, hardware, active jobs, models</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/models/with-stats</code></td>
-                            <td>Required</td>
-                            <td>Model cards hydrated with checkpoint and export disk stats</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/gui/quick-train</code></td>
-                            <td>Required</td>
-                            <td>High-velocity one-click preset training dispatch</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3 id="section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</h3>
-                <p>
-                    Persistent WebSocket streams provide low-latency log and telemetry feeds for connected user interfaces:
-                </p>
-                <ul>
-                    <li><code>ws://127.0.0.1:8200/api/ws/jobs/{id}/logs</code> — Streams real-time line-buffered log output for an active background job.</li>
-                    <li><code>ws://127.0.0.1:8200/api/ws/logs</code> — Global server execution and orchestration log stream.</li>
-                </ul>
-
-                <h3 id="section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</h3>
-                <p>
-                    All asynchronous jobs are persisted in <code>.lemtrain_server/jobs.db</code> using SQLite Write-Ahead Logging (WAL) mode:
-                </p>
-                <ul>
-                    <li>Immediate ACID recording of job metadata, parameters, start time, and state transitions (<code>queued</code>, <code>running</code>, <code>completed</code>, <code>failed</code>, <code>cancelled</code>).</li>
-                    <li>Crash recovery: when the sidecar daemon restarts, any jobs found in <code>running</code> or <code>queued</code> state from an ungraceful host shutdown are automatically transitioned to <code>failed</code> with diagnostic recovery logs.</li>
-                </ul>
-
-                <h3 id="section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</h3>
-                <p>
-                    To eliminate waterfall roundtrips from <code>lemgendary-ai-studio-gui</code>, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
-                </p>
-                <ul>
-                    <li><code>GET /api/gui/state</code>: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.</li>
-                    <li><code>GET /api/gui/models/with-stats</code>: Enriches each registered model with discovered <code>.pth</code> checkpoints, file sizes, timestamps, resolution ladder status, 100% data fraction completion, and multi-metric SOTA target evaluation.</li>
-                </ul>
-
-                <h4>Schema: <code>GET /api/gui/models/with-stats</code> Response Model</h4>
-                <pre><code>[
-  {
-    "model_key": "nafnet_debluring",
-    "display_name": "NAFNet Deblurring (GoPro)",
-    "architecture": "NAFNet (Nonlinear Activation Free)",
-    "task_type": "restoration",
-    "parameters_m": 16.9,
-    "spatial_ladder": [256, 384, 512],
-    "ladder_type": "spatial",
-    "is_forex": false,
-    "ladder_passed": true,
-    "max_res_completed": 512,
-    "target_res": 512,
-    "data_fraction_completed": 1.0,
-    "data_fraction_passed": true,
-    "epochs_completed": 79,
-    "best_metric": 33.91,
-    "metric_name": "PSNR (dB)",
-    "sota_target": 33.9,
-    "sota_targets_total": 4,
-    "sota_targets_met": 4,
-    "sota_all_met": true,
-    "sota_details": [
-      { "key": "psnr", "label": "PSNR (dB)", "target": 33.9, "achieved": 33.9157, "lower_is_better": false, "passed": true },
-      { "key": "ssim", "label": "SSIM", "target": 0.97, "achieved": 0.9753, "lower_is_better": false, "passed": true },
-      { "key": "lpips", "label": "LPIPS", "target": 0.04, "achieved": 0.0381, "lower_is_better": true, "passed": true },
-      { "key": "fid", "label": "FID", "target": 6.0, "achieved": 1.0532, "lower_is_better": true, "passed": true }
-    ],
-    "sota_reached": true,
-    "training_status": "fully_trained"
-  }
-]</code></pre>
-
-                <h5>Field Definitions</h5>
-                <ul>
-                    <li><code>training_status</code> (<code>"fully_trained" | "partially_trained" | "weights_ready" | "initializing"</code>): Strictly evaluates to <code>"fully_trained"</code> if and only if <code>sota_all_met === true &amp;&amp; ladder_passed === true &amp;&amp; data_fraction_passed === true</code>. Evaluates to <code>"partially_trained"</code> if <code>epochs_completed &gt; 0</code> but any pillar remains incomplete.</li>
-                    <li><code>ladder_type</code> (<code>"spatial" | "timeframe"</code>): Declares whether the ladder represents spatial pixel dimensions or temporal MetaTrader 5 candle resolutions (<code>[1, 5, 15, 60, 240, 1440]</code>).</li>
-                    <li><code>sota_details</code>: Exhaustive list of target metrics evaluated against their directional thresholds.</li>
-                    <li><code>data_fraction_completed</code>: Floating-point fraction of training data manifold completed (0.0 to 1.0).</li>
-                    <li><code>data_fraction_passed</code>: True if &ge; 0.99 (100% dataset variety).</li>
-                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300, "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640, "enable_sawtooth": true }</code> and queues a training pipeline instantly with validated parameters. Supports Ultralytics native trainer delegation for YOLOv8n and automatic fallback resolving <code>task_type: forex</code> for financial models.</li>
-                </ul>
-
-                <h3 id="section-4-7">4.7 Python In-Process Engine &amp; Governance API</h3>
-                <p>
-                    The training suite provides foundational Python engine classes for standalone execution and notebook integration:
-                </p>
-                <pre><code>from training.core.orchestrator import TrainingOrchestrator
-from training.governance.sentinel import SentinelGuard
-from training.governance.governor import DynamicGovernor
-from training.models.registry import ModelRegistry
-
-# Discover registered architectures
-registry = ModelRegistry()
-model_meta = registry.get_model("mirnet_exposure")
-
-# Initialize safety sentinel guard
-sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
-
-# Create training orchestrator with dynamic loss governor
-orchestrator = TrainingOrchestrator(
-    model_name="mirnet_exposure",
-    sentinel=sentinel,
-    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
-)</code></pre>
-            </section>
-
-            <section id="section-5">
-                <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
-                <p>
-                    The <code>lemgendary-datasets</code> repository provides a high-throughput sidecar API service running on <code>127.0.0.1:8100</code> (<code>api/</code>). It provides REST endpoints for hardware inspection, configuration validation, dataset and raw-source querying, and background execution of compilation and degradation tasks, with bidirectional WebSocket streaming for live logs and global telemetry.
-                </p>
-
-                <h3>5.1 Server Architecture &amp; Discovery</h3>
-                <pre><code># Launch server daemon
-python cli.py server start --background --host 127.0.0.1 --port 8100
-
-# Probe status and hardware sensors
-python cli.py server status
-
-# Terminate server daemon
-python cli.py server stop</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Bind Host</td>
-                            <td><code>127.0.0.1</code></td>
-                            <td>Local loopback interface</td>
-                        </tr>
-                        <tr>
-                            <td>Bind Port</td>
-                            <td><code>8100</code></td>
-                            <td>Dedicated compiler service port (distinct from <code>lem-env</code> on 8000)</td>
-                        </tr>
-                        <tr>
-                            <td>Interactive Docs</td>
-                            <td><code>/docs</code></td>
-                            <td>OpenAPI Swagger UI</td>
-                        </tr>
-                        <tr>
-                            <td>Schema Spec</td>
-                            <td><code>/openapi.json</code></td>
-                            <td>OpenAPI 3.1.0 JSON specification</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>5.2 Security &amp; Authentication</h3>
-                <p>
-                    All operational endpoints under <code>/api</code> requiring modification privileges enforce token authentication:
-                </p>
-                <ul>
-                    <li>Provide the token via HTTP header <code>X-API-Key: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
-                    <li>Master token resolution: checked from <code>LEMGENDARY_API_TOKEN</code> environment variable, or automatically loaded/generated in <code>.lgd_server/token</code>.</li>
-                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>; invalid tokens return <code>403 Forbidden</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/api/datasets</code>, <code>/api/sources</code>, <code>/api/gates</code>) and WebSocket streams are open.</li>
-                </ul>
-
-                <h3>5.3 Endpoint Reference Matrix</h3>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Method</th>
-                            <th>Endpoint</th>
-                            <th>Auth</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/health</code></td>
-                            <td>None</td>
-                            <td>Basic liveness check, uptime, version, and active job count</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/health/full</code></td>
-                            <td>None</td>
-                            <td>Detailed telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/config</code></td>
-                            <td>Required</td>
-                            <td>Retrieves parsed <code>unified_data.yaml</code> structure</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/config/validate</code></td>
-                            <td>Required</td>
-                            <td>Validates configuration against Pydantic schema</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs</code></td>
-                            <td>Required</td>
-                            <td>List historical and active jobs with pagination (<code>limit</code>, <code>offset</code>, <code>state</code>, <code>job_type</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs/{id}</code></td>
-                            <td>Required</td>
-                            <td>Fetch state, timestamps, exit code, and error details for a single job</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/jobs/{id}/logs</code></td>
-                            <td>Required</td>
-                            <td>Retrieve buffered execution log text or tail lines</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/jobs/compile</code></td>
-                            <td>Required</td>
-                            <td>Queue a manifold compilation task</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/jobs/degrade</code></td>
-                            <td>Required</td>
-                            <td>Queue a synthetic degradation derivation task</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/jobs/{id}/cancel</code></td>
-                            <td>Required</td>
-                            <td>Terminate an active job subprocess</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/datasets</code></td>
-                            <td>None</td>
-                            <td>Catalog compiled manifolds with size, sample counts, and container formats</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/datasets/{name}</code></td>
-                            <td>None</td>
-                            <td>Retrieve <code>dataset_info.yaml</code> and class lists for a specific manifold</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/sources</code></td>
-                            <td>None</td>
-                            <td>Catalog local <code>raw-sets</code> and configured upstream datasets</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/kaggle/status</code></td>
-                            <td>None</td>
-                            <td>Check Kaggle credentials (<code>.kaggle_token</code>, <code>~/.kaggle/kaggle.json</code>, env)</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/kaggle/sync</code></td>
-                            <td>Required</td>
-                            <td>Queue a Kaggle push/pull metadata synchronization job</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gates/hardlinks</code></td>
-                            <td>None</td>
-                            <td>Audit NTFS/POSIX hardlink fractions and evaluate container safety</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/state</code></td>
-                            <td>None</td>
-                            <td>Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/datasets/with-stats</code></td>
-                            <td>None</td>
-                            <td>Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/jobs/active</code></td>
-                            <td>None</td>
-                            <td>Real-time execution telemetry for active compiler background tasks</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/gui/presets</code></td>
-                            <td>None</td>
-                            <td>Canonical compiler preset parameter definitions and descriptions</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/gui/quick-compile</code></td>
-                            <td>Required</td>
-                            <td>Fast-dispatch compilation using a predefined compiler preset profile</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/gui/custom-compile</code></td>
-                            <td>Required</td>
-                            <td>Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH)</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/kaggle/registry-datasets</code></td>
-                            <td>None</td>
-                            <td>Catalog canonical Kaggle production manifolds with local presence flags</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/kaggle/download</code></td>
-                            <td>Required</td>
-                            <td>Asynchronous Kaggle dataset archive pull and shard decompression</td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/kaggle/upload</code></td>
-                            <td>Required</td>
-                            <td>Package and upload local compiled manifold to Kaggle Datasets Hub</td>
-                        </tr>
-                        <tr>
-                            <td><code>GET</code></td>
-                            <td><code>/api/env/status</code></td>
-                            <td>Required</td>
-                            <td>Passthrough delegating to <code>lem-env audit --fast</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>POST</code></td>
-                            <td><code>/api/env/validate</code></td>
-                            <td>Required</td>
-                            <td>Passthrough delegating to <code>lem-env validate --project lemgendary-datasets</code></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>5.4 WebSocket Real-Time Log Streaming</h3>
-                <p>
-                    Clients connect to real-time log channels to monitor long-running compiler and degradation tasks without polling:
-                </p>
-                <pre><code>ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs</code></pre>
-                <p>
-                    On connection, the server automatically replays any existing backlog text buffered on disk, then streams incremental stdout/stderr chunks in real time as emitted by the subprocess.
-                </p>
-                <p>Message Payload Format:</p>
-                <pre><code>{
-  "job_id": "735bfe51-007d-4405-adf0-53ff34985668",
-  "type": "log",
-  "chunk": "[DEGRADE] Processing sample 1500/50000 (3.0%)...\n"
-}</code></pre>
-                <p>
-                    When execution concludes, a terminal chunk <code>[PROCESS_TERMINATED] Job &lt;id&gt; COMPLETED (Exit Code: 0)</code> is emitted before socket closing.
-                </p>
-
-                <h3>5.5 SQLite Job Persistence &amp; Restart Recovery</h3>
-                <p>
-                    All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in <code>.lgd_server/jobs.db</code> via SQLite.
-                    If the API server or host reboots while jobs are in <code>running</code> or <code>pending</code> state, an automated recovery pass on boot transitions orphaned jobs to <code>interrupted</code>, preventing zombie job tracking and providing clean diagnostic records.
-                </p>
-
-                <h3 id="section-5-6">5.6 Desktop GUI Aggregated Endpoints &amp; Presets (Phase 8)</h3>
-                <p>
-                    The Dataset Compiler API exposes specialized endpoints tailored for <code>lemgendary-ai-studio-gui</code> desktop integration and Cross-Project Automation (CPA):
-                </p>
-                <h4><code>GET /api/gui/state</code> (Dataset Compiler)</h4>
-                <p>
-                    Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
-                </p>
-                <h4><code>GET /api/gui/datasets/with-stats</code></h4>
-                <p>
-                    Returns comprehensive manifold storage and format statistics, including file distribution counts across formats (<code>webp</code>, <code>jpg</code>, <code>png</code>, <code>parquet</code>), total byte footprint, and physical NTFS hardlink deduplication ratios.
-                </p>
-                <h4><code>GET /api/gui/jobs/active</code></h4>
-                <p>
-                    Streams execution progress telemetry for currently running compilation and degradation tasks, including percentage complete, current sample index, elapsed duration, and processing frames-per-second (<code>fps</code>).
-                </p>
-                <h4><code>GET /api/gui/presets</code></h4>
-                <p>
-                    Catalogs canonical compiler preset profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) loaded from <code>presets.yaml</code>. Each entry documents target image formats, quality floors, NIMA vetting thresholds, YOLO auto-labeling flags, and container targets.
-                </p>
-                <h4><code>POST /api/gui/quick-compile</code></h4>
-                <p>
-                    Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
-                </p>
-                <h4><code>POST /api/gui/custom-compile</code></h4>
-                <p>
-                    Custom multi-source compilation endpoint accepting user-defined manifold names, domain task types (<code>restoration</code>, <code>detection</code>, <code>quality</code>, <code>vision</code>), storage presets, container architectures (<code>webdataset</code>, <code>parquet</code>, <code>mds</code>, <code>litdata</code>), shard sizes, loose file cleanup toggles, and heterogeneous source repository links spanning Kaggle (<code>kaggle://</code>), HuggingFace (<code>hf://</code>), Google Drive (<code>gd://</code>), and GitHub (<code>gh://</code>). Normalizes links to standard URI schemes, dynamically updates <code>unified_data.yaml</code>, and dispatches background compilation.
-                </p>
-                <h4><code>GET /api/kaggle/registry-datasets</code></h4>
-                <p>
-                    Returns an array of all canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code>. Each entry includes manifold key, human-readable title, repository slug, container format, sample count, and local presence flags.
-                </p>
-                <h4><code>POST /api/kaggle/download</code></h4>
-                <p>
-                    Initiates an asynchronous download job from Kaggle for a registry manifold or custom repository reference. Unpacks and organizes shards directly into the dataset root.
-                </p>
-                <h4><code>POST /api/kaggle/upload</code></h4>
-                <p>
-                    Packages and uploads a local compiled manifold to Kaggle Datasets Hub with automatic directory discovery, manifest generation, and streaming upload.
-                </p>
-            </section>
-
-            <section id="section-6">
-                <h2>6. Error Handling, Status Codes &amp; Resilience</h2>
-                <p>
-                    All ecosystem APIs implement strict error resilience:
-                </p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>HTTP Status</th>
-                            <th>Code String</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>200 OK</code></td>
-                            <td><code>SUCCESS</code></td>
-                            <td>Request processed successfully</td>
-                        </tr>
-                        <tr>
-                            <td><code>400 Bad Request</code></td>
-                            <td><code>VALIDATION_ERROR</code></td>
-                            <td>Request body or query parameters failed schema validation</td>
-                        </tr>
-                        <tr>
-                            <td><code>404 Not Found</code></td>
-                            <td><code>PROJECT_NOT_FOUND</code></td>
-                            <td>Specified target repository does not exist in workspace</td>
-                        </tr>
-                        <tr>
-                            <td><code>409 Conflict</code></td>
-                            <td><code>PIPELINE_ACTIVE</code></td>
-                            <td>An install or update pipeline is currently executing</td>
-                        </tr>
-                        <tr>
-                            <td><code>500 Server Error</code></td>
-                            <td><code>INTERNAL_FAILURE</code></td>
-                            <td>Unhandled internal exception occurred during toolchain execution</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>Error Response Format:</p>
-                <pre><code>{
-  "detail": "Project 'unknown-suite' was not found in ecosystem registry",
-  "error_code": "PROJECT_NOT_FOUND",
-  "timestamp": "2026-09-15T00:00:00Z"
-}</code></pre>
-                <p>Additional resilience features:</p>
-                <ul>
-                    <li><strong>Automatic cache recovery</strong>: <code>run_pip_with_recovery</code> detects corruption
-                        signatures in pip's output (<code>access violation</code>, hash mismatch, truncated download)
-                        and purges the HTTP cache before retrying once with <code>--no-cache-dir</code>.</li>
-                    <li><strong>Reverse-dependency safety</strong>: No upgrade is applied if it would violate an
-                        installed package's requirement. The blocked reason is returned in the event stream.</li>
-                    <li><strong>Snapshot rollback</strong>: Every package batch is snapshotted via
-                        <code>pip freeze</code> before apply. If <code>pip check</code> fails afterward, the batch is
-                        rolled back automatically.
-                    </li>
-                    <li><strong>Graceful WebSocket shutdown</strong>: The event drain task is cancelled cleanly by the
-                        FastAPI lifespan handler on server shutdown, so no
-                        <code>Task was destroyed but it is pending!</code> warnings appear in the log.
-                    </li>
-                </ul>
-            </section>
-
-            <section id="companion-documentation">
-                <h2>Companion Documentation</h2>
-                <ul>
-                    <li><a href="env_manager.html">Technical Whitepaper (HTML)</a></li>
-                    <li><a href="cli-manual.html">Master CLI Operations Manual (HTML)</a></li>
-                </ul>
-            </section>
-        
-</main>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master API Reference Manual - LemGendary AI Ecosystem</title>
+    <meta name="description"
+        content="Authoritative Master Application Programming Interface Reference Manual for the LemGendary AI Ecosystem REST, WebSocket, and IPC services.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="toc-fixed-layout">
+<div id="tabs-top" class="tabs-top-bar">
+  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
+  <a href="manuals-hub.html">Manuals Hub</a>
+                <a href="ai-studio-manual.html">AI Studio GUI Manual</a>
+                <a href="cli-manual.html">Master CLI Manual</a>
+                <a href="api-manual.html" class="active">Master API Manual</a>
+  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+</div>
+<nav id="toc" class="toc-fixed-bar">
+<h2>Contents</h2>
+<ul>
+                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+                <li><a href="../index.html" class="toc-link-accent">Back
+                        to Index</a></li>
+                <li><a href="#section-1">1. Executive Overview</a></li>
+                <li><a href="#section-2">2. Environment Manager REST API</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-2-1">2.1 Server Configuration &amp; Startup</a></li>
+                        <li><a href="#section-2-2">2.2 Interactive OpenAPI Documentation</a></li>
+                        <li><a href="#section-2-3">2.3 Health &amp; System Discovery Endpoints</a></li>
+                        <li><a href="#section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</a></li>
+                        <li><a href="#section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</a></li>
+                        <li><a href="#section-2-6">2.6 WebSocket Real-Time Telemetry</a></li>
+                        <li><a href="#section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-3">3. Desktop GUI Tauri IPC API Contracts</a></li>
+                <li><a href="#section-4">4. Training Suite Sidecar Daemon &amp; Python Engine</a>
+                    <ul class="sub-item">
+                        <li><a href="#section-4-1">4.1 Server Architecture &amp; Startup</a></li>
+                        <li><a href="#section-4-2">4.2 Security &amp; Authentication</a></li>
+                        <li><a href="#section-4-3">4.3 Endpoint Reference Matrix</a></li>
+                        <li><a href="#section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</a></li>
+                        <li><a href="#section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</a></li>
+                        <li><a href="#section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</a></li>
+                        <li><a href="#section-4-7">4.7 Python In-Process Engine &amp; Governance API</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section-5">5. Datasets Compilation &amp; Stream Pipeline API</a></li>
+                <li><a href="#section-6">6. Error Handling, Status Codes &amp; Resilience</a></li>
+                <li><a href="#companion-documentation">Companion Documentation</a></li>
+            </ul>
+</nav>
+<main id="content" class="toc-fixed-content">
+        <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
+        <p class="subtitle">Authoritative REST, WebSocket, and IPC Interface Reference for Machine Integration</p>
+        <div class="meta">
+                <span>Category 03 MANUALS</span>
+                <span>Version 16.9.16-STABLE</span>
+                <span>Component: Ecosystem API Surface</span>
+            </div>
+
+
+            <section id="section-1">
+                <h2>1. Executive Overview</h2>
+                <p>
+                    The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine
+                    integration,
+                    desktop UI orchestration, and automated pipeline execution.
+                    Central to the ecosystem is the authoritative FastAPI daemon running in
+                    <code>lemgendary-env-manager</code>, providing both
+                    high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
+                </p>
+                <p>
+                    All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to
+                    Pydantic models,
+                    and maintain zero extraneous metadata.
+                </p>
+            </section>
+
+            <section id="section-2">
+                <h2>2. Environment Manager REST API</h2>
+                <p>
+                    The Environment Manager server runs locally or inside CI environments to expose hardware discovery,
+                    ecosystem audits,
+                    package synchronization, and multi-gate validations over HTTP.
+                </p>
+
+                <h3 id="section-2-1">2.1 Server Configuration &amp; Startup</h3>
+                <p>
+                    The server is launched via the <code>lem-env</code> command or PowerShell management console:
+                </p>
+                <pre><code># Default binding: http://127.0.0.1:8000
+lem-env serve --host 127.0.0.1 --port 8000</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Configuration Parameter</th>
+                            <th>Default Value</th>
+                            <th>CLI Flag</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Host Interface</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td><code>--host</code></td>
+                            <td>Network IP address to bind HTTP and WebSocket listener</td>
+                        </tr>
+                        <tr>
+                            <td>TCP Port</td>
+                            <td><code>8000</code></td>
+                            <td><code>--port</code></td>
+                            <td>Local listening port for incoming requests</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>The server's lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler. A
+                    background asyncio task drains the WebSocket event queue for the lifetime of the server and is
+                    cancelled cleanly on shutdown.</p>
+
+                <h3 id="section-2-2">2.2 Interactive OpenAPI Documentation</h3>
+                <p>When the server is active, auto-generated interactive OpenAPI specifications are served at:</p>
+                <ul>
+                    <li>Swagger UI: <code>http://127.0.0.1:8000/docs</code></li>
+                    <li>ReDoc UI: <code>http://127.0.0.1:8000/redoc</code></li>
+                    <li>Raw OpenAPI JSON: <code>http://127.0.0.1:8000/openapi.json</code></li>
+                </ul>
+
+                <h3 id="section-2-3">2.3 Health &amp; System Discovery Endpoints</h3>
+
+                <h4><code>GET /api/health</code></h4>
+                <p>Returns the complete ecosystem health audit. This is the largest response body in the API, containing
+                    bootstrap status, hardware profile, project environments, version drift entries, manifest coverage,
+                    single-manifest inventory, and npm status.</p>
+                <p>Query parameters:</p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>include_safety</code></td>
+                            <td>Boolean</td>
+                            <td><code>false</code></td>
+                            <td>When true, runs per-project pip safety dry-runs to classify each outdated package as
+                                safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Response structure (top-level keys):</p>
+                <pre><code>{
+  "bootstrap": { "python_valid": true, "python_version": "3.12.10" },
+  "hardware": { "os_name": "Windows", "primary_backend": "cuda" },
+  "projects": [
+    {
+      "name": "lemgendary-datasets",
+      "venv_exists": true,
+      "total_required": 36,
+      "total_installed": 105,
+      "missing_packages": [],
+      "is_healthy": true
+    }
+  ],
+  "version_drift": [
+    {
+      "package_name": "numpy",
+      "versions": { "lemgendary-datasets": "2.5.3", "lemgendary-training-suite": "2.5.3" },
+      "pins": { "lemgendary-datasets": { "pin_type": "range", "specifier": "&gt;=2.2.6,&lt;2.6" } },
+      "upgrades": { "lemgendary-datasets": { "current": "2.5.3", "latest": null, "safe": false } },
+      "has_drift": false,
+      "has_pin_mismatch": false,
+      "projects_declared": 2
+    }
+  ],
+  "manifest_coverage": [
+    {
+      "project_name": "lemgendary-datasets",
+      "declared_count": 36,
+      "installed_count": 105,
+      "missing": [],
+      "extra": ["setuptools"],
+      "platform_skipped": []
+    }
+  ],
+  "single_manifest_packages": [
+    {
+      "package_name": "mediapipe",
+      "project": "lemgendary-datasets",
+      "installed_version": "1.0.1",
+      "pin_type": "exact",
+      "specifier": "==1.0.1"
+    }
+  ],
+  "npm_packages": [],
+  "npm_drift": [],
+  "overall_healthy": true
+}</code></pre>
+
+                <h4><code>GET /api/drift</code></h4>
+                <p>Compact alternative to <code>/api/health</code> that returns only the drift-related data. Useful for
+                    GUI dashboards that only need the matrix view.</p>
+                <p>Query parameters:</p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>include_safety</code></td>
+                            <td>Boolean</td>
+                            <td><code>false</code></td>
+                            <td>Same semantics as <code>/api/health?include_safety</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Response structure:</p>
+                <pre><code>{
+  "python": [],
+  "coverage": [],
+  "single_manifest": [],
+  "npm": [],
+  "include_safety": false
+}</code></pre>
+                <p><code>python</code> entries are drift rows (packages declared in two or more manifests).
+                    <code>coverage</code> entries reconcile each manifest's declared set against its installed set.
+                    <code>single_manifest</code> lists packages declared in exactly one manifest. <code>npm</code>
+                    entries track version drift across npm workspaces.
+                </p>
+
+                <h4><code>GET /api/hardware</code></h4>
+                <p>Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU devices, primary
+                    backend, recommended PyTorch index, and MetaTrader 5 info.</p>
+                <p>Example response:</p>
+                <pre><code>{
+  "os_name": "Windows",
+  "os_release": "11",
+  "architecture": "AMD64",
+  "cpu_count_logical": 16,
+  "cpu_count_physical": 8,
+  "total_ram_mb": 32768,
+  "primary_backend": "cuda",
+  "recommended_torch_index": "https://download.pytorch.org/whl/cu121",
+  "accelerators": [
+    {
+      "name": "NVIDIA GeForce GTX 1650",
+      "backend": "cuda",
+      "total_memory_mb": 4096,
+      "index": 0,
+      "driver_version": "552.22"
+    }
+  ],
+  "metatrader5": {
+    "installed": true,
+    "version": "5.0.0.6182",
+    "install_path": "C:\\Program Files\\MetaTrader 5"
+  }
+}</code></pre>
+                <p>The <code>metatrader5.version</code> field is populated from <code>terminal64.exe</code>'s
+                    <code>FileVersion</code> metadata via PowerShell's <code>VersionInfo</code> property. This is
+                    authoritative even when winget has no record of the MT5 installation.
+                </p>
+
+                <h4><code>GET /api/projects</code></h4>
+                <p>Enumerates all discovered ecosystem repositories with their virtual environment status, installed
+                    package count, and health indicators.</p>
+                <pre><code>[
+  {
+    "name": "lemgendary-env-manager",
+    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
+    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
+    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
+    "is_valid": true,
+    "python_version": "Python 3.12.10",
+    "installed_packages_count": 45,
+    "is_node_project": false,
+    "node_modules_present": false
+  }
+]</code></pre>
+
+                <h4><code>GET /api/npm</code></h4>
+                <p>Returns Node.js workspace status and the npm package dependency matrix for every workspace containing
+                    <code>package.json</code>.
+                </p>
+
+                <h3 id="section-2-4">2.4 Projects &amp; Ecosystem Audit Endpoints</h3>
+
+                <h4><code>GET /api/pipeline/status</code></h4>
+                <p>Returns the execution state of the background pipeline orchestrator together with the last 50
+                    telemetry events.</p>
+                <pre><code>{
+  "is_running": false,
+  "last_status": "success",
+  "last_run_timestamp": "2026-09-15T00:15:00Z",
+  "recent_events": []
+}</code></pre>
+
+                <h4><code>GET /api/manifests</code></h4>
+                <p>Lists every centralized requirements manifest with its raw contents.</p>
+                <pre><code>{
+  "manifests": {
+    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
+  }
+}</code></pre>
+
+                <h3 id="section-2-5">2.5 Orchestration &amp; Lifecycle Action Endpoints</h3>
+
+                <h4><code>POST /api/pipeline/run</code></h4>
+                <p>Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket
+                    connections.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "target_project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "accepted",
+  "message": "Pipeline initiated."
+}</code></pre>
+                <p>If a pipeline is already running, returns:</p>
+                <pre><code>{
+  "status": "error",
+  "message": "Pipeline is already running."
+}</code></pre>
+
+                <h4><code>POST /api/update</code></h4>
+                <p>Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null,
+  "dry_run": false
+}</code></pre>
+                <p>When <code>dry_run=true</code>, returns the plan without applying:</p>
+                <pre><code>{
+  "status": "dry_run",
+  "plan": {
+    "total_outdated": 34,
+    "total_safe": 24,
+    "total_blocked": 10,
+    "cuda_detected": true,
+    "cuda_index_url": "https://download.pytorch.org/whl/cu121",
+    "projects": []
+  }
+}</code></pre>
+                <p>When <code>dry_run=false</code>, applies the plan and returns the collected events:</p>
+                <pre><code>{
+  "status": "success",
+  "events": [
+    {
+      "project": "lemgendary-datasets",
+      "package": "pandas-ta-classic",
+      "old_version": "0.6.52",
+      "new_version": "0.8.32",
+      "status": "upgraded",
+      "message": "Upgraded 0.6.52 -&gt; 0.8.32."
+    }
+  ]
+}</code></pre>
+                <p>Event status values:</p>
+                <ul>
+                    <li><code>upgraded</code>: package was successfully upgraded.</li>
+                    <li><code>blocked</code>: upgrade blocked by reverse dependency; <code>message</code> contains the
+                        reason.</li>
+                    <li><code>verified</code>: environment verified as healthy without a version change
+                        (<code>pip check</code>, <code>torch-cuda-verify</code>, or torch-family no-op).</li>
+                    <li><code>failed</code>: batch or rollback failure.</li>
+                    <li><code>skipped</code>: nothing to do.</li>
+                </ul>
+
+                <h4><code>POST /api/validate</code></h4>
+                <p>Executes the multi-gate validation suite across all projects or a single project.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "all_passed": true,
+  "projects": {
+    "lemgendary-datasets": {
+      "project_name": "lemgendary-datasets",
+      "compiled_files_count": 24,
+      "compile_errors": [],
+      "emoji_violations": [],
+      "yaml_errors": [],
+      "json_errors": [],
+      "lint_errors": [],
+      "html_errors": [],
+      "wcag_violations": [],
+      "domain_errors": [],
+      "passed": true
+    }
+  }
+}</code></pre>
+
+                <h4><code>POST /api/manifests/sync</code></h4>
+                <p>One-way copy of centralized manifests to project directories. Returns per-project sync status.</p>
+                <pre><code>{
+  "status": "success",
+  "results": {
+    "lemgendary-training-suite": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
+    },
+    "lemgendary-datasets": {
+      "success": true,
+      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
+    }
+  }
+}</code></pre>
+
+                <h4><code>GET /api/manifests/registry</code></h4>
+                <p>Enumerates all manageable ecosystem manifests across all repositories, including file existence, size in bytes, and resolved disk paths.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "manifests": [
+    {
+      "name": "unified_data.yaml",
+      "project": "lemgendary-datasets",
+      "format": "yaml",
+      "description": "Authoritative dataset and source repository registry.",
+      "exists": true,
+      "size_bytes": 10240,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
+    },
+    {
+      "name": "unified_models_v2.yaml",
+      "project": "lemgendary-training-suite",
+      "format": "yaml",
+      "description": "Neural architecture registry and training hyperparameters.",
+      "exists": true,
+      "size_bytes": 16384,
+      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
+    }
+  ]
+}</code></pre>
+
+                <h4><code>GET /api/manifests/read</code></h4>
+                <p>Retrieves the raw text content, format, and resolved path of a designated registered manifest.</p>
+                <p>Query Parameters:</p>
+                <ul>
+                    <li><code>name</code> (string, required): Registered manifest name (e.g., <code>unified_models_v2.yaml</code>, <code>runtime_env.yaml</code>, <code>config.yaml</code>).</li>
+                </ul>
+                <p>Response:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "format": "yaml",
+  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
+  "content": "version: '2.0.0'\nmodels:\n  ..."
+}</code></pre>
+
+                <h4><code>POST /api/manifests/validate</code></h4>
+                <p>Performs strict syntax and structure validation on arbitrary manifest content prior to disk persistence. Supports YAML, JSON, and text formats.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "valid": true,
+  "error": null
+}</code></pre>
+
+                <h4><code>POST /api/manifests/save</code></h4>
+                <p>Safely writes updated manifest content to disk with automatic pre-validation and generation of a <code>.bak</code> backup file before atomic replacement.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "name": "unified_models_v2.yaml",
+  "content": "version: '2.0.0'\n..."
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "name": "unified_models_v2.yaml",
+  "bytes_written": 16420
+}</code></pre>
+
+                <h4><code>GET /api/secrets</code></h4>
+                <p>Retrieves all stored ecosystem secrets from <code>.secrets.yaml</code>. Automatically seeds defaults from existing credential files (<code>.kaggle_users</code>, <code>.GOOGLE_DRIVE</code>, <code>.GITHUB_PAT</code>, <code>.huggingface_token</code>, <code>.mt5_credentials</code>, <code>.SATURN_PAT</code>) if <code>.secrets.yaml</code> does not yet exist.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}</code></pre>
+
+                <h4><code>POST /api/secrets</code></h4>
+                <p>Atomically writes the ecosystem secrets registry to <code>.secrets.yaml</code> and propagates mandatory authentication credentials (such as Kaggle tokens) across dependent projects (<code>lemgendary-datasets</code>, <code>lemgendary-training-suite</code>, and <code>lemgendary-env-manager</code>).</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "secrets": [
+    {
+      "id": "kaggle-primary",
+      "service": "kaggle",
+      "label": "Kaggle API Token",
+      "username": "lemtreursi",
+      "secret_value": "9f8e7d...",
+      "server": null,
+      "is_default": true
+    }
+  ]
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "count": 1,
+  "message": "Secrets securely persisted and propagated across repositories."
+}</code></pre>
+
+                <h4><code>GET /api/docs/status</code></h4>
+                <p>Reports availability of the local offline documentation hub mounted at <code>/documentation-hub</code> and provides the canonical GitHub Pages URL.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "offline_available": true,
+  "local_url": "http://127.0.0.1:8000/documentation-hub/index.html",
+  "online_url": "https://lemgenda.github.io/ai-training-whitepapers/index.html"
+}</code></pre>
+
+                <h4><code>POST /api/clean</code></h4>
+                <p>Purges orphaned bytecode caches and temporary build artifacts.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "project": null
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "cleaned_count": 42,
+  "reclaimed_bytes": 1258291,
+  "reclaimed_mb": 1.2
+}</code></pre>
+
+                <h3 id="section-2-6">2.6 WebSocket Real-Time Telemetry</h3>
+                <p>Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a
+                    persistent WebSocket connection:</p>
+                <pre><code>ws://127.0.0.1:8000/ws/log
+ws://127.0.0.1:8000/ws/logs</code></pre>
+                <p>Both paths are aliases for the same handler. On connect, the client receives the last 20 buffered
+                    events, then continues to receive new events as they are emitted by the pipeline.</p>
+                <p>Telemetry Event Schema (<code>PipelineEvent</code>):</p>
+                <pre><code>{
+  "timestamp": "2026-09-15T00:15:02.123456Z",
+  "step_number": 3,
+  "total_steps": 7,
+  "step_name": "Virtual Environments",
+  "status": "info",
+  "message": "Creating fresh virtual environment for lemgendary-datasets...",
+  "data": {
+    "project": "lemgendary-datasets",
+    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
+  }
+}</code></pre>
+                <p>Event Status Values:</p>
+                <ul>
+                    <li><code>info</code>: Informational milestone during pipeline processing.</li>
+                    <li><code>success</code>: Step completed cleanly without warnings.</li>
+                    <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
+                    <li><code>error</code>: Fatal error encountered in step execution.</li>
+                </ul>
+                <p>Thread-safe dispatch is guaranteed via <code>asyncio.run_coroutine_threadsafe()</code>, which allows
+                    the background pipeline thread to broadcast events on the server's running event loop without
+                    blocking.</p>
+
+                <h3 id="section-2-7">2.7 Desktop GUI Aggregation &amp; Multi-Sidecar Ecosystem Endpoints</h3>
+                <p>The Environment Manager provides specialized endpoints for high-velocity hydration in <code>lemgendary-ai-studio-gui</code>:</p>
+                <h4><code>GET /api/gui/state</code> (Environment Manager)</h4>
+                <p>Returns a consolidated snapshot containing service identity, hardware profile (<code>probe_hardware()</code>), discovered projects summary (<code>discover_projects()</code>), and pipeline execution status (<code>orchestrator.is_running</code>) in a single non-blocking payload.</p>
+                <p>Example response:</p>
+                <pre><code>{
+  "service": {
+    "name": "lemgendary-env-manager",
+    "version": "2.0.0",
+    "port": 8000,
+    "status": "online"
+  },
+  "hardware": {
+    "os_name": "Windows",
+    "primary_backend": "cuda"
+  },
+  "projects": [],
+  "pipeline": {
+    "is_running": false,
+    "last_status": "success",
+    "last_run_timestamp": "2026-09-17T20:00:00Z"
+  }
+}</code></pre>
+                <h4><code>GET /api/gui/ecosystem</code></h4>
+                <p>Monitors health and connectivity across local ecosystem sidecars by actively probing <code>http://127.0.0.1:8100/api/health</code> and <code>http://127.0.0.1:8200/api/health</code> with a non-blocking timeout. Powers the desktop GUI top-bar status indicator and service mesh dashboard tiles:</p>
+                <pre><code>{
+  "env_manager": {
+    "service": "lemgendary-env-manager",
+    "port": 8000,
+    "status": "online",
+    "reachable": true
+  },
+  "dataset_compiler": {
+    "service": "lemgendary-datasets",
+    "port": 8100,
+    "status": "online",
+    "reachable": true,
+    "data": {
+      "status": "ok",
+      "service": "LemGendary Dataset Compiler API"
+    }
+  },
+  "training_suite": {
+    "service": "lemgendary-training-suite",
+    "port": 8200,
+    "status": "online",
+    "reachable": true,
+    "data": {
+      "status": "ok",
+      "service": "lemgendary-training-suite"
+    }
+  }
+}</code></pre>
+                <h4><code>POST /api/services/{service_id}/start</code></h4>
+                <p>Spawns the background daemon process for the designated sidecar service (<code>dataset-compiler</code>, <code>training-suite</code>, or <code>env-manager</code>). Automatically resolves the target virtual environment Python executable, executing completely headless without creating console or terminal windows (<code>pythonw.exe</code> and <code>CREATE_NO_WINDOW</code> on Windows; <code>start_new_session=True</code> on Linux/macOS). Redirects standard streams (<code>stdin=subprocess.DEVNULL</code>, <code>stdout</code>/<code>stderr</code> to diagnostic log files) and polls the service health endpoint with an extended 20-second timeout to accommodate PyTorch and CUDA runtime initialization. Includes <code>is_port_in_use()</code> collision protection to prevent duplicate process spawning.</p>
+                <pre><code>{
+  "status": "started",
+  "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",
+  "port": 8100,
+  "pid": 26024
+}</code></pre>
+                <h4><code>POST /api/services/{service_id}/stop</code></h4>
+                <p>Gracefully terminates the specified sidecar daemon process by reading its recorded PID file or querying the active socket connection on the assigned port.</p>
+                <pre><code>{
+  "status": "stopped",
+  "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
+  "port": 8100
+}</code></pre>
+                <h4><code>POST /api/services/start-all</code></h4>
+                <p>Orchestrates sequential startup across all offline ecosystem sidecars (<code>dataset-compiler</code> and <code>training-suite</code>).</p>
+                <pre><code>{
+  "results": {
+    "dataset-compiler": {
+      "status": "already_running",
+      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
+      "port": 8100
+    },
+    "training-suite": {
+      "status": "started",
+      "message": "LemGendary Model Training Suite started successfully on port 8200.",
+      "port": 8200,
+      "pid": 18612
+    }
+  }
+}</code></pre>
+            </section>
+
+            <section id="section-3">
+                <h2>3. Desktop GUI Tauri IPC API Contracts</h2>
+                <p>
+                    The desktop frontend <code>lemgendary-ai-studio-gui</code> communicates with the native Rust backend
+                    via Tauri v2 IPC invocations.
+                </p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>IPC Command</th>
+                            <th>Arguments</th>
+                            <th>Return Type</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>run_system_probe</code></td>
+                            <td>None</td>
+                            <td><code>SystemProbeResult</code></td>
+                            <td>Triggers hardware discovery from native desktop thread</td>
+                        </tr>
+                        <tr>
+                            <td><code>get_ecosystem_status</code></td>
+                            <td>None</td>
+                            <td><code>EcosystemReport</code></td>
+                            <td>Queries active environment manager daemon for health metrics</td>
+                        </tr>
+                        <tr>
+                            <td><code>trigger_clean_install</code></td>
+                            <td><code>project: Option&lt;String&gt;</code></td>
+                            <td><code>PipelineLaunchResult</code></td>
+                            <td>Starts environment provisioning pipeline</td>
+                        </tr>
+                        <tr>
+                            <td><code>execute_validation</code></td>
+                            <td><code>project: Option&lt;String&gt;</code></td>
+                            <td><code>ValidationResult</code></td>
+                            <td>Runs multi-gate verification suite</td>
+                        </tr>
+                        <tr>
+                            <td><code>connect_telemetry_stream</code></td>
+                            <td>None</td>
+                            <td><code>WebSocketHandle</code></td>
+                            <td>Subscribes frontend to <code>/ws/log</code> channel</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="section-4">
+                <h2>4. Training Suite Sidecar Daemon &amp; Python Engine</h2>
+                <p>
+                    The <code>lemgendary-training-suite</code> repository provides both a background FastAPI sidecar service on <code>127.0.0.1:8200</code> and high-performance Python engine classes for in-process training, SOTA validation, and WebGPU optimization.
+                </p>
+
+                <h3 id="section-4-1">4.1 Server Architecture &amp; Startup</h3>
+                <p>
+                    The sidecar service daemon coordinates background training pipelines, asynchronous job execution, real-time log streaming, and model compilation. It is launched via the <code>lemtrain</code> CLI:
+                </p>
+                <pre><code># Launch server daemon as a background service on port 8200
+python cli.py server start --daemon --host 127.0.0.1 --port 8200
+
+# Inspect server status, port, and PID
+python cli.py server status
+
+# Export OpenAPI 3.1 schema specification
+python cli.py server openapi --output openapi.json
+
+# Gracefully terminate daemon
+python cli.py server stop</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bind Host</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td>Local loopback interface</td>
+                        </tr>
+                        <tr>
+                            <td>Bind Port</td>
+                            <td><code>8200</code></td>
+                            <td>Dedicated training suite sidecar port</td>
+                        </tr>
+                        <tr>
+                            <td>Interactive Docs</td>
+                            <td><code>/docs</code></td>
+                            <td>OpenAPI Swagger UI</td>
+                        </tr>
+                        <tr>
+                            <td>Schema Spec</td>
+                            <td><code>/openapi.json</code></td>
+                            <td>OpenAPI 3.1.0 JSON specification</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 id="section-4-2">4.2 Security &amp; Authentication</h3>
+                <p>
+                    Operational endpoints under <code>/api</code> requiring modification or system access enforce token authentication:
+                </p>
+                <ul>
+                    <li>Provide the token via HTTP header <code>X-LemTrain-Token: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+                    <li>Token resolution: checked from the <code>LEMTRAIN_API_TOKEN</code> environment variable, or read from <code>.lemtrain_server/token</code>.</li>
+                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/docs</code>, <code>/openapi.json</code>, <code>/redoc</code>) and WebSocket streams (<code>/api/ws/*</code>) are open for non-blocking monitoring.</li>
+                </ul>
+
+                <h3 id="section-4-3">4.3 Endpoint Reference Matrix</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Auth</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health</code></td>
+                            <td>None</td>
+                            <td>Basic liveness, uptime, accelerator device, and version v16.9.16-STABLE (illustrative example payload)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/config</code></td>
+                            <td>Required</td>
+                            <td>Active configuration parameters and loaded training configurations</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/presets</code></td>
+                            <td>Required</td>
+                            <td>Canonical training presets list and hyperparameter definitions</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/presets/{name}</code></td>
+                            <td>Required</td>
+                            <td>Detailed hyperparameter parameters for a specific preset</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>List background jobs with pagination and status filtering</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>Submit asynchronous background job (train, eval, export, audit, sync)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}</code></td>
+                            <td>Required</td>
+                            <td>Query job state, progress metrics, exit code, and timestamps</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}/logs</code></td>
+                            <td>Required</td>
+                            <td>Retrieve execution log text slice or tail lines for a job</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/{id}/cancel</code></td>
+                            <td>Required</td>
+                            <td>Gracefully cancel a running background job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models</code></td>
+                            <td>Required</td>
+                            <td>Enumerate registered neural architectures and target domains</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models/{name}</code></td>
+                            <td>Required</td>
+                            <td>Retrieve model specifications and default hyperparameters</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/models/{name}/audit</code></td>
+                            <td>Required</td>
+                            <td>Detailed model audit: parameter counts, layer topology, memory</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/train</code></td>
+                            <td>Required</td>
+                            <td>In-process training initiation with hardware discovery</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/evaluate</code></td>
+                            <td>Required</td>
+                            <td>In-process checkpoint evaluation under torch.no_grad()</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/export</code></td>
+                            <td>Required</td>
+                            <td>In-process multi-format model compilation and export</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/models/{model_key}/docs/generate</code></td>
+                            <td>Required</td>
+                            <td>Regenerate model card README and Kaggle model-metadata.json</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/models/{model_key}/export/stage</code></td>
+                            <td>Required</td>
+                            <td>Stage exported model binaries into canonical isolated Kaggle variation subdirectories</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/training/models/{model_key}/variations/validate</code></td>
+                            <td>Required</td>
+                            <td>Validate strict binary isolation across all Kaggle variation directories</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/kaggle/push-model</code></td>
+                            <td>Required</td>
+                            <td>Publish validated isolated model variation(s) to Kaggle Models Hub</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/llm/train</code></td>
+                            <td>Required</td>
+                            <td>Enqueue background QLoRA instruction tuning job for assistant LLM</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/unit-test-all</code></td>
+                            <td>Required</td>
+                            <td>Queue 1-epoch diagnostic smoke test across all 22 registered models</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/notebooks/models</code></td>
+                            <td>Required</td>
+                            <td>Enumerate registered architectures available for notebook generation</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/notebooks/generate</code></td>
+                            <td>Required</td>
+                            <td>Generate Jupyter training, inference, or usage notebooks for a model</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/notebooks/refresh-all</code></td>
+                            <td>Required</td>
+                            <td>Batch regenerate and synchronize notebooks across all registered models</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets</code></td>
+                            <td>Required</td>
+                            <td>Discover available compiled datasets and dataset manifolds</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/env/telemetry</code></td>
+                            <td>Required</td>
+                            <td>System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/state</code></td>
+                            <td>Required</td>
+                            <td>Consolidated GUI snapshot: daemon, hardware, active jobs, models</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/models/with-stats</code></td>
+                            <td>Required</td>
+                            <td>Model cards hydrated with checkpoint and export disk stats</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/quick-train</code></td>
+                            <td>Required</td>
+                            <td>High-velocity one-click preset training dispatch</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 id="section-4-3-1">Kaggle Models Hub &amp; Variation Isolation Endpoints</h4>
+
+                <h5><code>POST /api/training/models/{model_key}/docs/generate</code></h5>
+                <p>Regenerates the model card (<code>README.md</code>) with live SOTA targets and Kaggle Models manifest (<code>model-metadata.json</code>) directly into <code>LemGendaryModels/&lt;model_key&gt;/</code>.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "model_key": "yolov8n",
+  "readme_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\README.md",
+  "metadata_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\model-metadata.json",
+  "message": "Documentation and Kaggle metadata regenerated for yolov8n"
+}</code></pre>
+
+                <h5><code>POST /api/training/models/{model_key}/export/stage</code></h5>
+                <p>Stages exported model binaries into canonical isolated Kaggle variation subdirectories (<code>dist/kaggle/pytorch/</code>, <code>dist/kaggle/onnx_fp32/</code>, <code>dist/kaggle/onnx_fp16/</code>).</p>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "model_key": "yolov8n",
+  "staged_files": {
+    "pytorch": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
+    "onnx_fp32": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
+    "onnx_fp16": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
+  },
+  "is_valid": true,
+  "errors": [],
+  "message": "Staged variations for yolov8n"
+}</code></pre>
+
+                <h5><code>GET /api/training/models/{model_key}/variations/validate</code></h5>
+                <p>Validates strict binary isolation across all Kaggle variation directories for the specified model key, verifying zero cross-contamination.</p>
+                <p>Response:</p>
+                <pre><code>{
+  "model_key": "yolov8n",
+  "is_valid": true,
+  "variations": {
+    "pytorch": { "variation": "pytorch", "is_valid": true, "errors": [] },
+    "onnx_fp32": { "variation": "onnx_fp32", "is_valid": true, "errors": [] },
+    "onnx_fp16": { "variation": "onnx_fp16", "is_valid": true, "errors": [] }
+  },
+  "summary": "Validation Report for yolov8n: 3 valid, 0 invalid"
+}</code></pre>
+
+                <h5><code>POST /api/training/kaggle/push-model</code></h5>
+                <p>Publishes validated isolated model variation(s) to Kaggle Models Hub using the Kaggle API.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "model": "yolov8n",
+  "variation": "all",
+  "version_notes": "Production release with strict 3-variation isolation",
+  "dry_run": false
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "model_key": "yolov8n",
+  "success": true,
+  "results": {
+    "pytorch": { "success": true, "version": 1 },
+    "onnx_fp32": { "success": true, "version": 1 },
+    "onnx_fp16": { "success": true, "version": 1 }
+  },
+  "dry_run": false
+}</code></pre>
+
+                <h4 id="section-4-3-2">LLM Instruction Tuning Endpoints</h4>
+
+                <h5><code>POST /api/training/llm/train</code></h5>
+                <p>Enqueues a background QLoRA instruction fine-tuning job for the Causal LLM assistant (<code>AIHelperLemGend</code>).</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "model": "ai_helper_lemgend",
+  "epochs": 3,
+  "batch_size": 2,
+  "lr": 0.0002,
+  "max_seq_length": 2048,
+  "env": "local"
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "job_id": "7f8b9c1d-2e3a-4b5c-6d7e-8f9a0b1c2d3e",
+  "status": "pending",
+  "message": "LLM instruction tuning job enqueued for ai_helper_lemgend",
+  "config": {
+    "model": "ai_helper_lemgend",
+    "epochs": 3,
+    "batch_size": 2,
+    "lr": 0.0002,
+    "max_seq_length": 2048,
+    "env": "local"
+  }
+}</code></pre>
+
+                <h3 id="section-4-4">4.4 WebSocket Real-Time Telemetry &amp; Log Streaming</h3>
+                <p>
+                    Persistent WebSocket streams provide low-latency log and telemetry feeds for connected user interfaces:
+                </p>
+                <ul>
+                    <li><code>ws://127.0.0.1:8200/api/ws/jobs/{id}/logs</code> — Streams real-time line-buffered log output for an active background job.</li>
+                    <li><code>ws://127.0.0.1:8200/api/ws/logs</code> — Global server execution and orchestration log stream.</li>
+                </ul>
+
+                <h3 id="section-4-5">4.5 SQLite WAL Job Persistence &amp; Crash Recovery</h3>
+                <p>
+                    All asynchronous jobs are persisted in <code>.lemtrain_server/jobs.db</code> using SQLite Write-Ahead Logging (WAL) mode:
+                </p>
+                <ul>
+                    <li>Immediate ACID recording of job metadata, parameters, start time, and state transitions (<code>queued</code>, <code>running</code>, <code>completed</code>, <code>failed</code>, <code>cancelled</code>).</li>
+                    <li>Crash recovery: when the sidecar daemon restarts, any jobs found in <code>running</code> or <code>queued</code> state from an ungraceful host shutdown are automatically transitioned to <code>failed</code> with diagnostic recovery logs.</li>
+                </ul>
+
+                <h3 id="section-4-6">4.6 Desktop GUI Dashboard Aggregation Endpoints</h3>
+                <p>
+                    To eliminate waterfall roundtrips from <code>lemgendary-ai-studio-gui</code>, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
+                </p>
+                <ul>
+                    <li><code>GET /api/gui/state</code>: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.</li>
+                    <li><code>GET /api/gui/models/with-stats</code>: Enriches each registered model with discovered <code>.pth</code> checkpoints, file sizes, timestamps, resolution ladder status, 100% data fraction completion, and multi-metric SOTA target evaluation.</li>
+                </ul>
+
+                <h4>Schema: <code>GET /api/gui/models/with-stats</code> Response Model</h4>
+                <pre><code>[
+  {
+    "model_key": "nafnet_debluring",
+    "display_name": "NAFNet Deblurring (GoPro)",
+    "architecture": "NAFNet (Nonlinear Activation Free)",
+    "task_type": "restoration",
+    "parameters_m": 16.9,
+    "spatial_ladder": [256, 384, 512],
+    "ladder_type": "spatial",
+    "is_forex": false,
+    "ladder_passed": true,
+    "max_res_completed": 512,
+    "target_res": 512,
+    "data_fraction_completed": 1.0,
+    "data_fraction_passed": true,
+    "epochs_completed": 79,
+    "best_metric": 33.91,
+    "metric_name": "PSNR (dB)",
+    "sota_target": 33.9,
+    "sota_targets_total": 4,
+    "sota_targets_met": 4,
+    "sota_all_met": true,
+    "sota_details": [
+      { "key": "psnr", "label": "PSNR (dB)", "target": 33.9, "achieved": 33.9157, "lower_is_better": false, "passed": true },
+      { "key": "ssim", "label": "SSIM", "target": 0.97, "achieved": 0.9753, "lower_is_better": false, "passed": true },
+      { "key": "lpips", "label": "LPIPS", "target": 0.04, "achieved": 0.0381, "lower_is_better": true, "passed": true },
+      { "key": "fid", "label": "FID", "target": 6.0, "achieved": 1.0532, "lower_is_better": true, "passed": true }
+    ],
+    "sota_reached": true,
+    "training_status": "fully_trained"
+  }
+]</code></pre>
+
+                <h5>Field Definitions</h5>
+                <ul>
+                    <li><code>training_status</code> (<code>"fully_trained" | "partially_trained" | "weights_ready" | "initializing"</code>): Strictly evaluates to <code>"fully_trained"</code> if and only if <code>sota_all_met === true &amp;&amp; ladder_passed === true &amp;&amp; data_fraction_passed === true</code>. Evaluates to <code>"partially_trained"</code> if <code>epochs_completed &gt; 0</code> but any pillar remains incomplete.</li>
+                    <li><code>ladder_type</code> (<code>"spatial" | "timeframe"</code>): Declares whether the ladder represents spatial pixel dimensions or temporal MetaTrader 5 candle resolutions (<code>[1, 5, 15, 60, 240, 1440]</code>).</li>
+                    <li><code>sota_details</code>: Exhaustive list of target metrics evaluated against their directional thresholds.</li>
+                    <li><code>data_fraction_completed</code>: Floating-point fraction of training data manifold completed (0.0 to 1.0).</li>
+                    <li><code>data_fraction_passed</code>: True if &ge; 0.99 (100% dataset variety).</li>
+                    <li><code>POST /api/gui/quick-train</code>: Accepts <code>{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300, "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640, "enable_sawtooth": true }</code> and queues a training pipeline instantly with validated parameters. Supports Ultralytics native trainer delegation for YOLOv8n and automatic fallback resolving <code>task_type: forex</code> for financial models.</li>
+                </ul>
+
+                <h3 id="section-4-7">4.7 Python In-Process Engine &amp; Governance API</h3>
+                <p>
+                    The training suite provides foundational Python engine classes for standalone execution and notebook integration:
+                </p>
+                <pre><code>from training.core.orchestrator import TrainingOrchestrator
+from training.governance.sentinel import SentinelGuard
+from training.governance.governor import DynamicGovernor
+from training.models.registry import ModelRegistry
+
+# Discover registered architectures
+registry = ModelRegistry()
+model_meta = registry.get_model("mirnet_exposure")
+
+# Initialize safety sentinel guard
+sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
+
+# Create training orchestrator with dynamic loss governor
+orchestrator = TrainingOrchestrator(
+    model_name="mirnet_exposure",
+    sentinel=sentinel,
+    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+)</code></pre>
+            </section>
+
+            <section id="section-5">
+                <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
+                <p>
+                    The <code>lemgendary-datasets</code> repository provides a high-throughput sidecar API service running on <code>127.0.0.1:8100</code> (<code>api/</code>). It provides REST endpoints for hardware inspection, configuration validation, dataset and raw-source querying, and background execution of compilation and degradation tasks, with bidirectional WebSocket streaming for live logs and global telemetry.
+                </p>
+
+                <h3>5.1 Server Architecture &amp; Discovery</h3>
+                <pre><code># Launch server daemon
+python cli.py server start --background --host 127.0.0.1 --port 8100
+
+# Probe status and hardware sensors
+python cli.py server status
+
+# Terminate server daemon
+python cli.py server stop</code></pre>
+
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Default</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bind Host</td>
+                            <td><code>127.0.0.1</code></td>
+                            <td>Local loopback interface</td>
+                        </tr>
+                        <tr>
+                            <td>Bind Port</td>
+                            <td><code>8100</code></td>
+                            <td>Dedicated compiler service port (distinct from <code>lem-env</code> on 8000)</td>
+                        </tr>
+                        <tr>
+                            <td>Interactive Docs</td>
+                            <td><code>/docs</code></td>
+                            <td>OpenAPI Swagger UI</td>
+                        </tr>
+                        <tr>
+                            <td>Schema Spec</td>
+                            <td><code>/openapi.json</code></td>
+                            <td>OpenAPI 3.1.0 JSON specification</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>5.2 Security &amp; Authentication</h3>
+                <p>
+                    All operational endpoints under <code>/api</code> requiring modification privileges enforce token authentication:
+                </p>
+                <ul>
+                    <li>Provide the token via HTTP header <code>X-API-Key: &lt;token&gt;</code> or <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+                    <li>Master token resolution: checked from <code>LEMGENDARY_API_TOKEN</code> environment variable, or automatically loaded/generated in <code>.lgd_server/token</code>.</li>
+                    <li>Unauthenticated requests to protected endpoints return <code>401 Unauthorized</code>; invalid tokens return <code>403 Forbidden</code>. Diagnostic endpoints (<code>/api/health</code>, <code>/api/datasets</code>, <code>/api/sources</code>, <code>/api/gates</code>) and WebSocket streams are open.</li>
+                </ul>
+
+                <h3>5.3 Endpoint Reference Matrix</h3>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Auth</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health</code></td>
+                            <td>None</td>
+                            <td>Basic liveness check, uptime, version, and active job count</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/health/full</code></td>
+                            <td>None</td>
+                            <td>Detailed telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/config</code></td>
+                            <td>Required</td>
+                            <td>Retrieves parsed <code>unified_data.yaml</code> structure</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/config/validate</code></td>
+                            <td>Required</td>
+                            <td>Validates configuration against Pydantic schema</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs</code></td>
+                            <td>Required</td>
+                            <td>List historical and active jobs with pagination (<code>limit</code>, <code>offset</code>, <code>state</code>, <code>job_type</code>)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}</code></td>
+                            <td>Required</td>
+                            <td>Fetch state, timestamps, exit code, and error details for a single job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/jobs/{id}/logs</code></td>
+                            <td>Required</td>
+                            <td>Retrieve buffered execution log text or tail lines</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/compile</code></td>
+                            <td>Required</td>
+                            <td>Queue a manifold compilation task</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/degrade</code></td>
+                            <td>Required</td>
+                            <td>Queue a synthetic degradation derivation task</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/jobs/{id}/cancel</code></td>
+                            <td>Required</td>
+                            <td>Terminate an active job subprocess</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets</code></td>
+                            <td>None</td>
+                            <td>Catalog compiled manifolds with size, sample counts, and container formats</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/datasets/{name}</code></td>
+                            <td>None</td>
+                            <td>Retrieve <code>dataset_info.yaml</code> and class lists for a specific manifold</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/sources</code></td>
+                            <td>None</td>
+                            <td>Catalog local <code>raw-sets</code> and configured upstream datasets</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/kaggle/status</code></td>
+                            <td>None</td>
+                            <td>Check Kaggle credentials (<code>.kaggle_token</code>, <code>~/.kaggle/kaggle.json</code>, env)</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/sync</code></td>
+                            <td>Required</td>
+                            <td>Queue a Kaggle push/pull metadata synchronization job</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gates/hardlinks</code></td>
+                            <td>None</td>
+                            <td>Audit NTFS/POSIX hardlink fractions and evaluate container safety</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/state</code></td>
+                            <td>None</td>
+                            <td>Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/datasets/with-stats</code></td>
+                            <td>None</td>
+                            <td>Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/jobs/active</code></td>
+                            <td>None</td>
+                            <td>Real-time execution telemetry for active compiler background tasks</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/gui/presets</code></td>
+                            <td>None</td>
+                            <td>Canonical compiler preset parameter definitions and descriptions</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/quick-compile</code></td>
+                            <td>Required</td>
+                            <td>Fast-dispatch compilation using a predefined compiler preset profile</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/gui/custom-compile</code></td>
+                            <td>Required</td>
+                            <td>Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH)</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/kaggle/registry-datasets</code></td>
+                            <td>None</td>
+                            <td>Catalog canonical Kaggle production manifolds with local presence flags</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/download</code></td>
+                            <td>Required</td>
+                            <td>Asynchronous Kaggle dataset archive pull and shard decompression</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/kaggle/upload</code></td>
+                            <td>Required</td>
+                            <td>Package and upload local compiled manifold to Kaggle Datasets Hub</td>
+                        </tr>
+                        <tr>
+                            <td><code>GET</code></td>
+                            <td><code>/api/env/status</code></td>
+                            <td>Required</td>
+                            <td>Passthrough delegating to <code>lem-env audit --fast</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/env/validate</code></td>
+                            <td>Required</td>
+                            <td>Passthrough delegating to <code>lem-env validate --project lemgendary-datasets</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>5.4 WebSocket Real-Time Log Streaming</h3>
+                <p>
+                    Clients connect to real-time log channels to monitor long-running compiler and degradation tasks without polling:
+                </p>
+                <pre><code>ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs</code></pre>
+                <p>
+                    On connection, the server automatically replays any existing backlog text buffered on disk, then streams incremental stdout/stderr chunks in real time as emitted by the subprocess.
+                </p>
+                <p>Message Payload Format:</p>
+                <pre><code>{
+  "job_id": "735bfe51-007d-4405-adf0-53ff34985668",
+  "type": "log",
+  "chunk": "[DEGRADE] Processing sample 1500/50000 (3.0%)...\n"
+}</code></pre>
+                <p>
+                    When execution concludes, a terminal chunk <code>[PROCESS_TERMINATED] Job &lt;id&gt; COMPLETED (Exit Code: 0)</code> is emitted before socket closing.
+                </p>
+
+                <h3>5.5 SQLite Job Persistence &amp; Restart Recovery</h3>
+                <p>
+                    All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in <code>.lgd_server/jobs.db</code> via SQLite.
+                    If the API server or host reboots while jobs are in <code>running</code> or <code>pending</code> state, an automated recovery pass on boot transitions orphaned jobs to <code>interrupted</code>, preventing zombie job tracking and providing clean diagnostic records.
+                </p>
+
+                <h3 id="section-5-6">5.6 Desktop GUI Aggregated Endpoints &amp; Presets (Phase 8)</h3>
+                <p>
+                    The Dataset Compiler API exposes specialized endpoints tailored for <code>lemgendary-ai-studio-gui</code> desktop integration and Cross-Project Automation (CPA):
+                </p>
+                <h4><code>GET /api/gui/state</code> (Dataset Compiler)</h4>
+                <p>
+                    Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
+                </p>
+                <h4><code>GET /api/gui/datasets/with-stats</code></h4>
+                <p>
+                    Returns comprehensive manifold storage and format statistics, including file distribution counts across formats (<code>webp</code>, <code>jpg</code>, <code>png</code>, <code>parquet</code>), total byte footprint, and physical NTFS hardlink deduplication ratios.
+                </p>
+                <h4><code>GET /api/gui/jobs/active</code></h4>
+                <p>
+                    Streams execution progress telemetry for currently running compilation and degradation tasks, including percentage complete, current sample index, elapsed duration, and processing frames-per-second (<code>fps</code>).
+                </p>
+                <h4><code>GET /api/gui/presets</code></h4>
+                <p>
+                    Catalogs canonical compiler preset profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>) loaded from <code>presets.yaml</code>. Each entry documents target image formats, quality floors, NIMA vetting thresholds, YOLO auto-labeling flags, and container targets.
+                </p>
+                <h4><code>POST /api/gui/quick-compile</code></h4>
+                <p>
+                    Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Requires authentication token.
+                </p>
+                <h4><code>POST /api/gui/custom-compile</code></h4>
+                <p>
+                    Custom multi-source compilation endpoint accepting user-defined manifold names, domain task types (<code>restoration</code>, <code>detection</code>, <code>quality</code>, <code>vision</code>), storage presets, container architectures (<code>webdataset</code>, <code>parquet</code>, <code>mds</code>, <code>litdata</code>), shard sizes, loose file cleanup toggles, and heterogeneous source repository links spanning Kaggle (<code>kaggle://</code>), HuggingFace (<code>hf://</code>), Google Drive (<code>gd://</code>), and GitHub (<code>gh://</code>). Normalizes links to standard URI schemes, dynamically updates <code>unified_data.yaml</code>, and dispatches background compilation.
+                </p>
+                <h4><code>GET /api/kaggle/registry-datasets</code></h4>
+                <p>
+                    Returns an array of all canonical Kaggle-bound production manifolds from <code>unified_data.yaml</code>. Each entry includes manifold key, human-readable title, repository slug, container format, sample count, and local presence flags.
+                </p>
+                <h4><code>POST /api/kaggle/download</code></h4>
+                <p>
+                    Initiates an asynchronous download job from Kaggle for a registry manifold or custom repository reference. Unpacks and organizes shards directly into the dataset root.
+                </p>
+                <h4><code>POST /api/kaggle/upload</code></h4>
+                <p>
+                    Packages and uploads a local compiled manifold to Kaggle Datasets Hub with automatic directory discovery, manifest generation, and streaming upload.
+                </p>
+            </section>
+
+            <section id="section-6">
+                <h2>6. Error Handling, Status Codes &amp; Resilience</h2>
+                <p>
+                    All ecosystem APIs implement strict error resilience:
+                </p>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>HTTP Status</th>
+                            <th>Code String</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>200 OK</code></td>
+                            <td><code>SUCCESS</code></td>
+                            <td>Request processed successfully</td>
+                        </tr>
+                        <tr>
+                            <td><code>400 Bad Request</code></td>
+                            <td><code>VALIDATION_ERROR</code></td>
+                            <td>Request body or query parameters failed schema validation</td>
+                        </tr>
+                        <tr>
+                            <td><code>404 Not Found</code></td>
+                            <td><code>PROJECT_NOT_FOUND</code></td>
+                            <td>Specified target repository does not exist in workspace</td>
+                        </tr>
+                        <tr>
+                            <td><code>409 Conflict</code></td>
+                            <td><code>PIPELINE_ACTIVE</code></td>
+                            <td>An install or update pipeline is currently executing</td>
+                        </tr>
+                        <tr>
+                            <td><code>500 Server Error</code></td>
+                            <td><code>INTERNAL_FAILURE</code></td>
+                            <td>Unhandled internal exception occurred during toolchain execution</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Error Response Format:</p>
+                <pre><code>{
+  "detail": "Project 'unknown-suite' was not found in ecosystem registry",
+  "error_code": "PROJECT_NOT_FOUND",
+  "timestamp": "2026-09-15T00:00:00Z"
+}</code></pre>
+                <p>Additional resilience features:</p>
+                <ul>
+                    <li><strong>Automatic cache recovery</strong>: <code>run_pip_with_recovery</code> detects corruption
+                        signatures in pip's output (<code>access violation</code>, hash mismatch, truncated download)
+                        and purges the HTTP cache before retrying once with <code>--no-cache-dir</code>.</li>
+                    <li><strong>Reverse-dependency safety</strong>: No upgrade is applied if it would violate an
+                        installed package's requirement. The blocked reason is returned in the event stream.</li>
+                    <li><strong>Snapshot rollback</strong>: Every package batch is snapshotted via
+                        <code>pip freeze</code> before apply. If <code>pip check</code> fails afterward, the batch is
+                        rolled back automatically.
+                    </li>
+                    <li><strong>Graceful WebSocket shutdown</strong>: The event drain task is cancelled cleanly by the
+                        FastAPI lifespan handler on server shutdown, so no
+                        <code>Task was destroyed but it is pending!</code> warnings appear in the log.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="companion-documentation">
+                <h2>Companion Documentation</h2>
+                <ul>
+                    <li><a href="env_manager.html">Technical Whitepaper (HTML)</a></li>
+                    <li><a href="cli-manual.html">Master CLI Operations Manual (HTML)</a></li>
+                </ul>
+            </section>
+        
+</main>
+</body>
 </html>

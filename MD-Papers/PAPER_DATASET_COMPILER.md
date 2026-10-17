@@ -182,7 +182,7 @@ Supports concurrent multi-format emission (`--also-format`) alongside canonical 
 
 * **MosaicML Streaming (MDS)**: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.
 * **PyTorch Lightning LitData**: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.
-* **WebDataset (WDS)**: Tarball shard emission for legacy deep-learning cluster ingestion.
+* **WebDataset (WDS)**: Obfuscated shard emission (`.data` binary blobs) preventing cloud archive sniffing and automated extraction freezes while streaming POSIX ustar streams.
 * **Parquet + Zstandard**: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.
 
 > **Dataset Compiler Format Ingestion Notice**: Formats such as **TFRecord**, **HDF5**, and **CSV** represent valid general machine learning dataset structures covered in General AI Training Knowledge. However, they are **not natively parsed** by the LemGendary Dataset Compiler engine. Prior to ingestion, users must convert them into supported representations (**MDS**, **LitData**, **WebDataset**, **Parquet**, **YOLO**, or **VOC**).
@@ -193,7 +193,7 @@ The LemGendary Dataset Compiler strictly delineates between **Studio Native Supp
 
 | Format Identifier | Format Family | Classification | Ingestion / Emission | Shard Indexing & Streaming Mechanism | Primary Optimization Target |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **WebDataset (.tar)** | Archive Tarball Shard | **STUDIO SUPPORTED** | Native Bidirectional | Sequential POSIX tar shard streaming with `wds.WebDataset` | Large vision manifolds on POSIX/Linux clusters |
+| **WebDataset (.data / .tar)** | Archive Tarball Shard (Obfuscated) | **STUDIO SUPPORTED** | Native Bidirectional | Sequential POSIX tar shard streaming with `wds.WebDataset` via `.data` extension to bypass Kaggle automatic archive sniffing | Large vision manifolds on POSIX/Linux clusters and Kaggle/Colab runtimes |
 | **MosaicML MDS (.mds)** | Binary Indexed Chunks | **STUDIO SUPPORTED** | Native Bidirectional | Index JSON manifest + raw binary chunks with deterministic global shuffle | Cloud-native elastic multi-node streaming |
 | **LitData (.litdata)** | Lightning Streaming | **STUDIO SUPPORTED** | Native Bidirectional | Chunked binary records with dynamic index boundaries | Variable-length detection & regression targets |
 | **Apache Parquet (.parquet)** | Columnar Table + Zstandard | **STUDIO SUPPORTED** | Native Bidirectional | PyArrow row-group indexing + dictionary zstd compression | High-frequency financial & tabular time-series |

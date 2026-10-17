@@ -132,20 +132,17 @@ To eliminate operator ambiguity across complex machine learning and compilation 
 
 The desktop interface integrates a dedicated visual control plane for the Dataset Compiler sidecar (`Port 8100`):
 
-- **Segmented Compilation Mode Switcher**:
-  - **Standard Manifold Compilation**: Rapid synthesis of registered production manifolds using predefined storage presets (`streaming-webdataset`, `columnar-parquet`, `mosaicml-mds`, `lightning-litdata`), customizable shard sample bounds, and automatic loose image reclamation.
-  - **Custom Multi-Source Dataset Compilation**: Autonomous pipeline synthesizing novel custom datasets from arbitrary collections of source repositories spanning Kaggle (`kaggle://`), Hugging Face (`hf://`), Google Drive (`gd://`), and GitHub (`gh://`). Automatically registers new manifold metadata in `unified_data.yaml` and launches background compilation.
-- **Kaggle Cloud Synchronization & Storage Hub**:
-  - **Live Authentication Telemetry**: Probes local credential files (`~/.kaggle/kaggle.json`, `.kaggle_token`) and environment variables to display immediate connection readiness.
-  - **Registry Datasets Ingestion**: Dropdown interface bound to all 20 Kaggle-linked manifolds in `unified_data.yaml`, indicating local presence or missing status with one-click download.
-  - **Custom Kaggle Link / Slug Ingestion**: Input field accepting direct Kaggle URLs or `owner/dataset` slugs for downloading and unzipping external research datasets directly into the local storage root.
-  - **Local Manifold Publishing**: Selects compiled local manifolds to package and upload directly to Kaggle.
-  - **Bulk Metadata Synchronization**: One-click bulk synchronization (`POST /api/kaggle/update-metadata` with `all_datasets: true`) pushing metadata records across all 20 canonical Kaggle datasets.
+- **Compilation Mode Switcher**:
+  - **Standard Manifold Presets**: Rapid synthesis of registered production manifolds using predefined storage presets (`streaming-webdataset`, `columnar-parquet`, `mosaicml-mds`, `lightning-litdata`), customizable shard sample bounds, and automatic loose image reclamation.
+  - **Direct Kaggle Ingestion**: Direct cloud ingestion pipeline pulling remote research datasets directly from Kaggle URLs (`https://kaggle.com/datasets/...`) or slugs (`owner/dataset`) straight into streaming WebDataset shards, automatically registering new manifold specifications into `unified_data.yaml`.
+- **Card-Level Kaggle Cloud Synchronization**:
+  - **Direct Manifold Actions**: Every manifold card in the catalog integrates direct one-click actions: `Update Metadata` (pushes JSON schema updates without data re-upload), `Download from Kaggle` (fetches remote shards with checksum verification), and `Upload to Kaggle` (packages and publishes compiled local shards).
+  - **Global Metadata & Index Synchronization**: Top toolbar provides global batch synchronization (`POST /api/kaggle/update-metadata` with `all_datasets: true`) pushing metadata records across all 20 canonical Kaggle datasets in a single non-blocking call, as well as on-disk index regeneration (`POST /api/modernize/regenerate-manifolds`).
 - **Production Manifolds Catalog, Modernization Queue & Scale Reduction**:
-  - Live inspection grid displaying all 21 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified `COMPILED` badges backed by in-memory filesystem caching.
+  - Live inspection grid displaying all 20 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), upstream source lineage popovers, and verified `COMPILED` badges backed by in-memory filesystem caching.
   - Modernization Queue sub-tab detecting legacy PNG/JPEG datasets, configuring worker threads, dry-run flags, and dispatching parallel WebP transcoding (`POST /api/modernize/run`).
   - Scale Reduction sub-tab deriving spatially downsampled dataset variants (10%, 25%, 50%, 75%) for rapid training iterations (`POST /api/modernize/reduce`).
-  - Master manifolds index regeneration (`POST /api/modernize/regenerate-manifolds`).
+- **Embedded Dataset Telemetry Console**: Real-time monospace terminal docked at the bottom of the compiler panel streaming shard creation progress, WebP compression rates, and Kaggle API transfer metrics.
 
 ### 6.5 Headless Windowless Service Lifecycle & Auto-Start on Launch
 
@@ -164,12 +161,48 @@ The GUI codebase is verified by an exhaustive automated testing battery:
 
 ### 6.7 Ecosystem Maintenance & Governance Controls
 
-The Health view embeds direct operational controls for repository governance backed by Environment Manager:
+The Health view embeds direct operational controls for repository governance backed by Environment Manager alongside a comprehensive dependency audit spanning Python virtual environments and frontend Desktop GUI NPM packages:
 
+- **Cross-Project Python Drift Matrix**: Continuously scans `unified_requirements.yaml` against installed wheels in `lemgendary-env-manager`, `lemgendary-datasets`, and `lemgendary-training-suite`, verifying zero version drift across all backend services.
+- **Desktop GUI Project Packages (NPM) Audit**: Directly inspects `package.json` and `node_modules` for `lemgendary-ai-studio-gui`, tracking versions of `@tauri-apps/api`, `lucide-react`, `react`, `react-dom`, `recharts`, and `zustand`.
 - **Safe Package Upgrades & Dry Runs**: Dispatches reverse topological upgrades with automated rollback on `pip check` failure (`POST /api/update`).
 - **Deep Cache Purges**: Recursively cleans `__pycache__`, build remnants, and staging residues with byte recovery feedback (`POST /api/clean`).
 - **Standardized Git Hooks**: Installs and validates pre-commit hooks enforcing zero-emoji and compilation gates (`POST /api/hooks/install`).
-- **Multi-Gate Ecosystem Validation**: Runs the 10-gate validation suite across all repositories directly from the UI (`POST /api/validate`).
+- **Multi-Gate Ecosystem Validation**: Runs the multi-gate validation suite across all repositories directly from the UI (`POST /api/validate`).
+
+### 6.8 Centralized State Architecture (Zustand) & S.O.L.I.D. Component Hierarchy
+
+To ensure deterministic state transitions and eliminate prop drilling across deeply nested views, the GUI integrates a centralized Zustand store (`src/store/useStudioStore.ts`):
+
+- **Unified Global State Store**: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.
+- **Single Responsibility Deconstruction**: Monolithic view components are deconstructed into focused, decoupled micro-components:
+  - `TrainingPanel.tsx`: Refactored into a lightweight coordinator delegating to `ModelManifoldCard.tsx`, `TelemetryConsole.tsx`, and `TrainingToolbar.tsx`.
+  - `CompilerPanel.tsx`: Refactored into a coordinator delegating to `DatasetManifoldCard.tsx`, `DatasetCompilationForm.tsx`, `ModernizationQueueTable.tsx`, `ScaleReductionView.tsx`, and `CompilerToolbar.tsx`.
+  - `ConfigEditorModal.tsx`: Deconstructed from 790 lines into `ManifestEditorTab.tsx` (YAML/JSON syntax validation, Monaco diff viewer) and `SecretsEditorTab.tsx` (encrypted credentials vault).
+  - `CloudTrainModal.tsx`: Extracted `VariationIsolationChecker.tsx` for multi-variation validation.
+- **Shared Micro-Components**:
+  - `ValidationBanner.tsx`: Centralized banner component with automatic message type deduction (`info`, `success`, `warning`, `error`), dismiss buttons, and full WAI-ARIA alert/status semantics.
+  - `HoverPinPopover.tsx`: Reusable CSS hover and native semantic `<button>` pin popover strictly compliant with `jsx-a11y` accessibility standards.
+
+### 6.9 Multi-Variation Kaggle Model Hub Staging & Strict Isolation Contract
+
+The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:
+
+- **Strict 3-Variation Isolation**: Enforces clean partition across isolated model directories:
+  - Variation 1 (`pytorch`): Canonical PyTorch checkpoint weights (`*.pt`).
+  - Variation 2 (`onnx_fp32`): High-precision standard ONNX exports (`*_FP32.onnx*`).
+  - Variation 3 (`onnx_fp16`): Edge-optimized half-precision ONNX exports (`*.onnx`).
+- **Pre-Upload Isolation Gate**: Built-in `StrictIsolationValidator` blocks non-compliant or cross-contaminated binaries before transmission.
+- **Dry-Run Staging**: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.
+
+### 6.10 Three-Tab Real-Time Telemetry Stream & Responsive Cancellation
+
+The redesigned live telemetry console is embedded directly within individual operational panels (including Model Training, Dataset Compiler, and Health), replacing monolithic standalone tabs with contextual log streams:
+
+- **Local Training Stream**: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.
+- **Remote Cloud Stream**: Relays real-time execution outputs from Kaggle GPU kernels or Colab notebooks.
+- **Ecosystem Mesh Stream**: Monitors JSON-RPC events, HTTP health probes, and audit logs across Ports 8000, 8100, and 8200.
+- **Responsive Sub-Second Abort**: Operators can trigger immediate job cancellation (`POST /api/jobs/{id}/cancel`), hooking into inner minibatch iterations (`trainer.stop = True`) within milliseconds, instantly releasing hardware GPU VRAM.
 
 ## 7. Unified Models Registry
 

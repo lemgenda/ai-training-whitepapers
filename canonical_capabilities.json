@@ -75,7 +75,15 @@
       "limitations": [
         "Inference sub-5ms target applies to compiled ONNX runtime; PyTorch eager latency is ~12-18ms.",
         "Requires continuous non-gapped M1-MN data."
-      ]
+      ],
+      "academic_reference": {
+        "title": "An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling",
+        "authors": "Shaojie Bai, J. Zico Kolter, Vladlen Koltun",
+        "year": 2018,
+        "venue": "arXiv preprint",
+        "link": "https://arxiv.org/abs/1803.01271",
+        "bibtex": "@article{bai2018empirical,\n  title={An empirical evaluation of generic convolutional and recurrent networks for sequence modeling},\n  author={Bai, Shaojie and Kolter, J Zico and Koltun, Vladlen},\n  journal={arXiv preprint arXiv:1803.01271},\n  year={2018}\n}"
+      }
     },
     {
       "id": "nima_aesthetic_mobile",
@@ -122,7 +130,15 @@
       },
       "limitations": [
         "Optimized for lightweight inference (10-class probability distribution)."
-      ]
+      ],
+      "academic_reference": {
+        "title": "NIMA: Neural Image Assessment",
+        "authors": "Hossein Talebi, Peyman Milanfar",
+        "year": 2018,
+        "venue": "IEEE Transactions on Image Processing (TIP)",
+        "link": "https://arxiv.org/abs/1709.05424",
+        "bibtex": "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
+      }
     },
     {
       "id": "nima_aesthetic_efficientnet",
@@ -169,7 +185,15 @@
       },
       "limitations": [
         "Higher FLOP count than Mobile variant; balanced for edge workstation scoring."
-      ]
+      ],
+      "academic_reference": {
+        "title": "NIMA: Neural Image Assessment",
+        "authors": "Hossein Talebi, Peyman Milanfar",
+        "year": 2018,
+        "venue": "IEEE Transactions on Image Processing (TIP)",
+        "link": "https://arxiv.org/abs/1709.05424",
+        "bibtex": "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
+      }
     },
     {
       "id": "nima_aesthetic_pro",
@@ -217,7 +241,15 @@
       },
       "limitations": [
         "Demands minimum 6GB VRAM for batch sizes greater than 16."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Swin Transformer V2: Using Larger Models and Images",
+        "authors": "Ze Liu, Han Hu, Yutong Lin, Zhuliang Yao, Zhenda Xie, Yixuan Wei, Jia Ning, Yue Cao, Zheng Zhang, Li Dong, Furu Wei, Baining Guo",
+        "year": 2022,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/2111.09883",
+        "bibtex": "@inproceedings{liu2022swin,\n  title={Swin transformer v2: Using larger models and images},\n  author={Liu, Ze and Hu, Han and Lin, Yutong and Yao, Zhuliang and Xie, Zhenda and Wei, Yixuan and Ning, Jia and Cao, Yue and Zhang, Zheng and Dong, Li and others},\n  booktitle={CVPR},\n  pages={12009--12019},\n  year={2022}\n}"
+      }
     },
     {
       "id": "nima_technical",
@@ -264,7 +296,15 @@
       },
       "limitations": [
         "Sensitive to JPEG block boundary artifacts."
-      ]
+      ],
+      "academic_reference": {
+        "title": "NIMA: Neural Image Assessment",
+        "authors": "Hossein Talebi, Peyman Milanfar",
+        "year": 2018,
+        "venue": "IEEE Transactions on Image Processing (TIP)",
+        "link": "https://arxiv.org/abs/1709.05424",
+        "bibtex": "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
+      }
     },
     {
       "id": "nima_authenticity",
@@ -311,7 +351,15 @@
       },
       "limitations": [
         "Requires uncompressed or high-quality WebP inputs; excessive downsampling destroys frequency signatures."
-      ]
+      ],
+      "academic_reference": {
+        "title": "CNN-Generated Images Are Surprisingly Easy to Spot... for Now",
+        "authors": "Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, Alexei A. Efros",
+        "year": 2020,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/1912.11035",
+        "bibtex": "@inproceedings{wang2020cnn,\n  title={CNN-generated images are surprisingly easy to spot... for now},\n  author={Wang, Sheng-Yu and Wang, Oliver and Zhang, Richard and Owens, Andrew and Efros, Alexei A},\n  booktitle={CVPR},\n  pages={8695--8704},\n  year={2020}\n}"
+      }
     },
     {
       "id": "upn_v2",
@@ -358,7 +406,15 @@
       },
       "limitations": [
         "Requires tiling for images exceeding 1920x1080 on 6GB VRAM."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Deep Photo Enhancer: Unpaired Learning for Image Enhancement from Photographs with GANs",
+        "authors": "Yu-Sheng Chen, Yu-Ching Wang, Man-Hsin Kao, Yung-Yu Chuang",
+        "year": 2018,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/1712.01021",
+        "bibtex": "@inproceedings{chen2018deep,\n  title={Deep photo enhancer: Unpaired learning for image enhancement from photographs with gans},\n  author={Chen, Yu-Sheng and Wang, Yu-Ching and Kao, Man-Hsin and Chuang, Yung-Yu},\n  booktitle={CVPR},\n  pages={6306--6314},\n  year={2018}\n}"
+      }
     },
     {
       "id": "film_restorer",
@@ -406,7 +462,15 @@
       },
       "limitations": [
         "High scratch density may require iterative 2-pass restoration."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Residual Dense Network for Image Restoration",
+        "authors": "Yulun Zhang, Yapeng Tian, Yu Kong, Bineng Zhong, Yun Fu",
+        "year": 2020,
+        "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)",
+        "link": "https://arxiv.org/abs/1802.08797",
+        "bibtex": "@article{zhang2020residual,\n  title={Residual dense network for image restoration},\n  author={Zhang, Yulun and Tian, Yapeng and Kong, Yu and Zhong, Bineng and Fu, Yun},\n  journal={IEEE TPAMI},\n  volume={43},\n  number={7},\n  pages={2482--2495},\n  year={2020}\n}"
+      }
     },
     {
       "id": "codeformer",
@@ -453,7 +517,15 @@
       },
       "limitations": [
         "Requires 512x512 aligned facial crops."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Towards Robust Blind Face Restoration with Codebook Lookup Transformer",
+        "authors": "Shangchen Zhou, Kelvin C.K. Chan, Chongyi Li, Chen Change Loy",
+        "year": 2022,
+        "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+        "link": "https://arxiv.org/abs/2206.11253",
+        "bibtex": "@inproceedings{zhou2022codeformer,\n  title={Towards Robust Blind Face Restoration with Codebook Lookup Transformer},\n  author={Zhou, Shangchen and Chan, Kelvin CK and Li, Chongyi and Loy, Chen Change},\n  booktitle={NeurIPS},\n  year={2022}\n}"
+      }
     },
     {
       "id": "parsenet",
@@ -500,7 +572,15 @@
       },
       "limitations": [
         "Generates 19 discrete facial semantic classes."
-      ]
+      ],
+      "academic_reference": {
+        "title": "MaskGAN: Towards Diverse and Interactive Facial Image Manipulation",
+        "authors": "Cheng-Han Lee, Ziwei Liu, Lingyun Wu, Ping Luo",
+        "year": 2020,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/1907.11922",
+        "bibtex": "@inproceedings{lee2020maskgan,\n  title={MaskGAN: Towards Diverse and Interactive Facial Image Manipulation},\n  author={Lee, Cheng-Han and Liu, Ziwei and Wu, Lingyun and Luo, Ping},\n  booktitle={CVPR},\n  year={2020}\n}"
+      }
     },
     {
       "id": "ffanet_indoor",
@@ -547,7 +627,15 @@
       },
       "limitations": [
         "Trained specifically on homogeneous indoor diffusion scatter."
-      ]
+      ],
+      "academic_reference": {
+        "title": "FFA-Net: Feature Fusion Attention Network for Single Image Dehazing",
+        "authors": "Xu Qin, Zhilin Wang, Yuanchao Bai, Xiaodong Xie, Huizhu Jia",
+        "year": 2020,
+        "venue": "AAAI Conference on Artificial Intelligence (AAAI)",
+        "link": "https://arxiv.org/abs/1911.07559",
+        "bibtex": "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention network for single image dehazing},\n  author={Qin, Xu and Wang, Zhilin and Bai, Yuanchao and Xie, Xiaodong and Jia, Huizhu},\n  booktitle={AAAI},\n  volume={34},\n  pages={11908--11915},\n  year={2020}\n}"
+      }
     },
     {
       "id": "ffanet_outdoor",
@@ -594,7 +682,15 @@
       },
       "limitations": [
         "Atmospheric haze depth maps require dynamic contrast bounds."
-      ]
+      ],
+      "academic_reference": {
+        "title": "FFA-Net: Feature Fusion Attention Network for Single Image Dehazing",
+        "authors": "Xu Qin, Zhilin Wang, Yuanchao Bai, Xiaodong Xie, Huizhu Jia",
+        "year": 2020,
+        "venue": "AAAI Conference on Artificial Intelligence (AAAI)",
+        "link": "https://arxiv.org/abs/1911.07559",
+        "bibtex": "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention network for single image dehazing},\n  author={Qin, Xu and Wang, Zhilin and Bai, Yuanchao and Xie, Xiaodong and Jia, Huizhu},\n  booktitle={AAAI},\n  volume={34},\n  pages={11908--11915},\n  year={2020}\n}"
+      }
     },
     {
       "id": "mirnet_lowlight",
@@ -642,7 +738,15 @@
       },
       "limitations": [
         "High memory footprint due to multi-resolution parallel branches; use gradient accumulation."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Learning Enriched Features for Fast Image Restoration and Enhancement",
+        "authors": "Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan Yang, Ling Shao",
+        "year": 2022,
+        "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)",
+        "link": "https://arxiv.org/abs/2003.06792",
+        "bibtex": "@article{zamir2022learning,\n  title={Learning enriched features for fast image restoration and enhancement},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n  year={2022}\n}"
+      }
     },
     {
       "id": "mirnet_exposure",
@@ -690,7 +794,15 @@
       },
       "limitations": [
         "Extreme clipping (>99% saturation) may show residual color tinting."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Learning Enriched Features for Fast Image Restoration and Enhancement",
+        "authors": "Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan Yang, Ling Shao",
+        "year": 2022,
+        "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)",
+        "link": "https://arxiv.org/abs/2003.06792",
+        "bibtex": "@article{zamir2022learning,\n  title={Learning enriched features for fast image restoration and enhancement},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n  year={2022}\n}"
+      }
     },
     {
       "id": "mprnet_deraining",
@@ -737,7 +849,15 @@
       },
       "limitations": [
         "Achieved 53.95 dB PSNR in Kaggle T4 dual runs; requires FP32 clamps on CSFF modules."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Multi-Stage Progressive Image Restoration",
+        "authors": "Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan Yang, Ling Shao",
+        "year": 2021,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/2102.02808",
+        "bibtex": "@inproceedings{zamir2021multi,\n  title={Multi-stage progressive image restoration},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  booktitle={CVPR},\n  pages={14821--14831},\n  year={2021}\n}"
+      }
     },
     {
       "id": "nafnet_debluring",
@@ -784,7 +904,15 @@
       },
       "limitations": [
         "SimpleGate layers must run in FP32 on specific legacy CUDA driver revisions to avoid NaN."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Simple Baselines for Image Restoration",
+        "authors": "Liangyu Chen, Xiaojie Chu, Xiangyu Zhang, Jian Sun",
+        "year": 2022,
+        "venue": "European Conference on Computer Vision (ECCV)",
+        "link": "https://arxiv.org/abs/2204.04676",
+        "bibtex": "@inproceedings{chen2022simple,\n  title={Simple baselines for image restoration},\n  author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu and Sun, Jian},\n  booktitle={ECCV},\n  pages={17--33},\n  year={2022}\n}"
+      }
     },
     {
       "id": "nafnet_denoising",
@@ -832,7 +960,15 @@
       },
       "limitations": [
         "Achieved 48.29 dB PSNR on 640px test sets; full FP32 clamps recommended."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Simple Baselines for Image Restoration",
+        "authors": "Liangyu Chen, Xiaojie Chu, Xiangyu Zhang, Jian Sun",
+        "year": 2022,
+        "venue": "European Conference on Computer Vision (ECCV)",
+        "link": "https://arxiv.org/abs/2204.04676",
+        "bibtex": "@inproceedings{chen2022simple,\n  title={Simple baselines for image restoration},\n  author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu and Sun, Jian},\n  booktitle={ECCV},\n  pages={17--33},\n  year={2022}\n}"
+      }
     },
     {
       "id": "yolov8n",
@@ -880,7 +1016,15 @@
       },
       "limitations": [
         "Export targets ONNX opset 17 for WebGPU zero-slice compliance."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Ultralytics YOLOv8: Real-Time Object Detection, Instance Segmentation, and Pose Estimation",
+        "authors": "Glenn Jocher, Ayush Chaurasia, Jing Qiu",
+        "year": 2023,
+        "venue": "Ultralytics Research",
+        "link": "https://github.com/ultralytics/ultralytics",
+        "bibtex": "@software{yolov8_ultralytics,\n  author = {Jocher, Glenn and Chaurasia, Ayush and Qiu, Jing},\n  title = {Ultralytics YOLOv8},\n  version = {8.0.0},\n  year = {2023},\n  url = {https://github.com/ultralytics/ultralytics}\n}"
+      }
     },
     {
       "id": "professional_multitask_restoration",
@@ -927,7 +1071,15 @@
       },
       "limitations": [
         "Demands dynamic gradient loss balancing (GradNorm) across competing task heads."
-      ]
+      ],
+      "academic_reference": {
+        "title": "All-in-One Image Restoration for Unknown Corruptions",
+        "authors": "Boyun Li, Xiao Liu, Peng Hu, Zitao Zhou, Shuangqing Zhao, Xi Peng",
+        "year": 2020,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/2004.11700",
+        "bibtex": "@inproceedings{li2020all,\n  title={All-in-one image restoration for unknown corruptions},\n  author={Li, Boyun and Liu, Xiao and Hu, Peng and Zhou, Zitao and Zhao, Shuangqing and Peng, Xi},\n  booktitle={CVPR},\n  pages={2190--2199},\n  year={2020}\n}"
+      }
     },
     {
       "id": "ultrazoom",
@@ -974,7 +1126,15 @@
       },
       "limitations": [
         "4x scale factor requires tiling on cards with <=6GB VRAM."
-      ]
+      ],
+      "academic_reference": {
+        "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
+        "authors": "Wenzhe Shi, Jose Caballero, Ferenc Husz\u00e1r, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang",
+        "year": 2016,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/1609.05158",
+        "bibtex": "@inproceedings{shi2016real,\n  title={Real-time single image and video super-resolution using an efficient sub-pixel convolutional neural network},\n  author={Shi, Wenzhe and Caballero, Jose and Husz{\\'a}r, Ferenc and Totz, Johannes and Aitken, Andrew P and Bishop, Rob and Rueckert, Daniel and Wang, Zehan},\n  booktitle={CVPR},\n  pages={1874--1883},\n  year={2016}\n}"
+      }
     },
     {
       "id": "universal_nsfw_classification",
@@ -1021,7 +1181,15 @@
       },
       "limitations": [
         "Outputs 5-class safety logits (Drawings, Hentai, Neutral, Porn, Sexy)."
-      ]
+      ],
+      "academic_reference": {
+        "title": "EfficientNetV2: Smaller Models and Faster Training",
+        "authors": "Mingxing Tan, Quoc V. Le",
+        "year": 2021,
+        "venue": "International Conference on Machine Learning (ICML)",
+        "link": "https://arxiv.org/abs/2104.00298",
+        "bibtex": "@inproceedings{tan2021efficientnetv2,\n  title={Efficientnetv2: Smaller models and faster training},\n  author={Tan, Mingxing and Le, Quoc},\n  booktitle={ICML},\n  pages={10096--10106},\n  year={2021}\n}"
+      }
     },
     {
       "id": "retinaface",
@@ -1068,7 +1236,69 @@
       },
       "limitations": [
         "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners)."
-      ]
+      ],
+      "academic_reference": {
+        "title": "RetinaFace: Single-Shot Multi-Level Face Localisation in the Wild",
+        "authors": "Jiankang Deng, Jia Guo, Evangelos Ververas, Irene Kotsia, Stefanos Zafeiriou",
+        "year": 2020,
+        "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+        "link": "https://arxiv.org/abs/1905.00641",
+        "bibtex": "@inproceedings{deng2020retinaface,\n  title={Retinaface: Single-shot multi-level face localisation in the wild},\n  author={Deng, Jiankang and Guo, Jia and Ververas, Evangelos and Kotsia, Irene and Zafeiriou, Stefanos},\n  booktitle={CVPR},\n  pages={5203--5212},\n  year={2020}\n}"
+      }
+    },
+    {
+      "id": "ai_helper_lemgend",
+      "name": "LemGendary AI Studio Assistant (Causal LLM)",
+      "category": "llm_assistant",
+      "domain": "technical_documentation_and_ecosystem_triage",
+      "general_ai_support": true,
+      "studio_implementation_status": "implemented",
+      "runtime_baseline": "v16.9.16-STABLE",
+      "codebase_path": "LemGendaryModels/ai_helper_lemgend/model.py",
+      "weights_path": "LemGendaryModels/ai_helper_lemgend/checkpoints/AIHelperLemGend_best.pth",
+      "architecture_type": "Causal Decoder Transformer (QLoRA Fine-Tuned)",
+      "supported_formats": {
+        "input": [
+          "jsonl",
+          "tokens"
+        ],
+        "manifold": "jsonl_stream"
+      },
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "element_id": "model-select-ai-helper-lemgend"
+        },
+        "cli": {
+          "available": true,
+          "command": "python -m training.core_loop --model ai_helper_lemgend"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/training/llm/train",
+          "port": 8000
+        }
+      },
+      "hardware_constraints": {
+        "min_vram_gb": 4.0,
+        "recommended_batch_size": 2,
+        "supports_amp": true
+      },
+      "evidence": {
+        "manifest_entry": "lemgendary-training-suite/unified_models_v2.yaml#ai_helper_lemgend",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_FOUNDATION_LLM.md"
+      },
+      "limitations": [
+        "Instruction fine-tuned strictly on authoritative LemGendary documentation invariants."
+      ],
+      "academic_reference": {
+        "title": "Qwen2.5 Technical Report",
+        "authors": "Qwen Team",
+        "year": 2024,
+        "venue": "arXiv preprint",
+        "link": "https://arxiv.org/abs/2412.15115",
+        "bibtex": "@article{qwen2024,\n  title={Qwen2.5 Technical Report},\n  author={Qwen Team},\n  journal={arXiv preprint arXiv:2412.15115},\n  year={2024}\n}"
+      }
     }
   ]
 }

@@ -781,6 +781,12 @@ python cli.py export mirnet_exposure --format all
 
 # Single-target export
 python cli.py export mirnet_exposure --format webgpu
+
+# Universal model export and automatic staging into canonical Kaggle variation subdirectories
+python -m training.export.universal_exporter --model yolov8n --stage-dist
+
+# Stage existing binaries into dist/kaggle/ without re-exporting
+python -m training.export.universal_exporter --model yolov8n --stage-only
 ```
 
 ### 6.5 Notebook Generation (`notebooks`)
@@ -866,8 +872,11 @@ python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset 
 Transfers checkpoints and artifacts between local storage and remote cloud providers:
 
 ```bash
-# Push model checkpoints and metadata to Kaggle Models
-lemtrain sync push mirnet_exposure
+# Push model checkpoints and metadata to Kaggle Models with strict 3-variation isolation verification
+lemtrain sync push yolov8n
+
+# Push with custom source directory or username override
+lemtrain sync push yolov8n --source-dir /custom/path --username lemlegendary
 
 # Sync checkpoint artifacts to Google Drive
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10
@@ -905,6 +914,15 @@ Validation and inspection:
 ```bash
 # Model validation is executed centrally via Environment Manager:
 lem-env validate --project LemGendaryModels
+
+# Regenerate all 23 model README cards and validate/stage variations
+python -m training.doc_generator --all --stage-variations
+
+# Regenerate single model README card
+python -m training.doc_generator --model yolov8n --stage-variations
+
+# Regenerate LemGendaryModels/README.md live SOTA matrix and canonical topology
+python -m training.hub_readme_generator
 
 # Check model checkpoint integrity directly
 python -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"

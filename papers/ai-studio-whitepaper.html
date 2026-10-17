@@ -44,7 +44,6 @@
                 <span>Version 16.9.16-STABLE</span>
             </div>
 
-<main>
             <section id="section-1">
                 <h2>1. Abstract</h2>
                 <p>The LemGendary AI Studio Desktop GUI establishes an authoritative, hardware-aware desktop orchestration system engineered to provide a low-latency, deterministic control plane for machine learning workflows. Addressing developer friction, process fragmentation, and high memory footprints inherent in traditional web wrappers, this architecture decouples native operating system integration from presentation logic using a high-throughput Rust sidecar boundary, a reactive React 18 frontend, and a local WebSocket telemetry channel. Through asynchronous process multiplexing, strict zero-copy IPC streaming, and native DirectML/CUDA accelerator probing, the system achieves sub-millisecond control loop responsiveness while minimizing memory overhead to under 45 megabytes.</p>
@@ -175,21 +174,26 @@
                 <h3>6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization Hub</h3>
                 <p>The desktop interface integrates a dedicated visual control plane for the Dataset Compiler sidecar (<code>Port 8100</code>):</p>
                 <ul>
-                    <li><strong>Segmented Compilation Mode Switcher</strong>:
+                    <li><strong>Compilation Mode Switcher</strong>:
                         <ul>
-                            <li><strong>Standard Manifold Compilation</strong>: Rapid synthesis of registered production manifolds using predefined storage presets (<code>streaming-webdataset</code>, <code>columnar-parquet</code>, <code>mosaicml-mds</code>, <code>lightning-litdata</code>), customizable shard sample bounds, and automatic loose image reclamation.</li>
-                            <li><strong>Custom Multi-Source Dataset Compilation</strong>: Autonomous pipeline synthesizing novel custom datasets from arbitrary collections of source repositories spanning Kaggle (<code>kaggle://</code>), Hugging Face (<code>hf://</code>), Google Drive (<code>gd://</code>), and GitHub (<code>gh://</code>). Automatically registers new manifold metadata in <code>unified_data.yaml</code> and launches background compilation.</li>
+                            <li><strong>Standard Manifold Presets</strong>: Rapid synthesis of registered production manifolds using predefined storage presets (<code>streaming-webdataset</code>, <code>columnar-parquet</code>, <code>mosaicml-mds</code>, <code>lightning-litdata</code>), customizable shard sample bounds, and automatic loose image reclamation.</li>
+                            <li><strong>Direct Kaggle Ingestion</strong>: Direct cloud ingestion pipeline pulling remote research datasets directly from Kaggle URLs (<code>https://kaggle.com/datasets/...</code>) or slugs (<code>owner/dataset</code>) straight into streaming WebDataset shards, automatically registering new manifold specifications into <code>unified_data.yaml</code>.</li>
                         </ul>
                     </li>
-                    <li><strong>Kaggle Cloud Synchronization &amp; Storage Hub</strong>:
+                    <li><strong>Card-Level Kaggle Cloud Synchronization</strong>:
                         <ul>
-                            <li><strong>Live Authentication Telemetry</strong>: Probes local credential files (<code>~/.kaggle/kaggle.json</code>, <code>.kaggle_token</code>) and environment variables to display immediate connection readiness.</li>
-                            <li><strong>Registry Datasets Ingestion</strong>: Dropdown interface bound to all 20 Kaggle-linked manifolds in <code>unified_data.yaml</code>, indicating local presence or missing status with one-click download.</li>
-                            <li><strong>Custom Kaggle Link / Slug Ingestion</strong>: Input field accepting direct Kaggle URLs or <code>owner/dataset</code> slugs for downloading and unzipping external research datasets directly into the local storage root.</li>
-                            <li><strong>Local Manifold Publishing</strong>: Selects compiled local manifolds to package and upload directly to Kaggle.</li>
+                            <li><strong>Direct Manifold Actions</strong>: Every manifold card in the catalog integrates direct one-click actions: <code>Update Metadata</code> (pushes JSON schema updates without data re-upload), <code>Download from Kaggle</code> (fetches remote shards with checksum verification), and <code>Upload to Kaggle</code> (packages and publishes compiled local shards).</li>
+                            <li><strong>Global Metadata &amp; Index Synchronization</strong>: Top toolbar provides global batch synchronization (<code>POST /api/kaggle/update-metadata</code> with <code>all_datasets: true</code>) pushing metadata records across all 20 canonical Kaggle datasets in a single non-blocking call, as well as on-disk index regeneration (<code>POST /api/modernize/regenerate-manifolds</code>).</li>
                         </ul>
                     </li>
-                    <li><strong>Production Manifolds Catalog &amp; Format Breakdown</strong>: Live inspection grid displaying all 22 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), and verified <code>COMPILED</code> badges backed by in-memory filesystem caching.</li>
+                    <li><strong>Production Manifolds Catalog, Modernization Queue &amp; Scale Reduction</strong>:
+                        <ul>
+                            <li>Live inspection grid displaying all 20 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), upstream source lineage popovers, and verified <code>COMPILED</code> badges backed by in-memory filesystem caching.</li>
+                            <li>Modernization Queue sub-tab detecting legacy PNG/JPEG datasets, configuring worker threads, dry-run flags, and dispatching parallel WebP transcoding (<code>POST /api/modernize/run</code>).</li>
+                            <li>Scale Reduction sub-tab deriving spatially downsampled dataset variants (10%, 25%, 50%, 75%) for rapid training iterations (<code>POST /api/modernize/reduce</code>).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Embedded Dataset Telemetry Console</strong>: Real-time monospace terminal docked at the bottom of the compiler panel streaming shard creation progress, WebP compression rates, and Kaggle API transfer metrics.</li>
                 </ul>
 
                 <h3>6.5 Headless Windowless Service Lifecycle &amp; Auto-Start on Launch</h3>
@@ -206,6 +210,60 @@
                     <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
                     <li><strong>Ecosystem Compliance</strong>: Enforced via <code>lem-env validate --project lemgendary-ai-studio-gui</code>, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.</li>
                 </ul>
+
+                <h3>6.7 Ecosystem Maintenance &amp; Governance Controls</h3>
+                <p>The Health view embeds direct operational controls for repository governance backed by Environment Manager alongside a comprehensive dependency audit spanning Python virtual environments and frontend Desktop GUI NPM packages:</p>
+                <ul>
+                    <li><strong>Cross-Project Python Drift Matrix</strong>: Continuously scans <code>unified_requirements.yaml</code> against installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>, and <code>lemgendary-training-suite</code>, verifying zero version drift across all backend services.</li>
+                    <li><strong>Desktop GUI Project Packages (NPM) Audit</strong>: Directly inspects <code>package.json</code> and <code>node_modules</code> for <code>lemgendary-ai-studio-gui</code>, tracking versions of <code>@tauri-apps/api</code>, <code>lucide-react</code>, <code>react</code>, <code>react-dom</code>, <code>recharts</code>, and <code>zustand</code>.</li>
+                    <li><strong>Safe Package Upgrades &amp; Dry Runs</strong>: Dispatches reverse topological upgrades with automated rollback on <code>pip check</code> failure (<code>POST /api/update</code>).</li>
+                    <li><strong>Deep Cache Purges</strong>: Recursively cleans <code>__pycache__</code>, build remnants, and staging residues with byte recovery feedback (<code>POST /api/clean</code>).</li>
+                    <li><strong>Standardized Git Hooks</strong>: Installs and validates pre-commit hooks enforcing zero-emoji and compilation gates (<code>POST /api/hooks/install</code>).</li>
+                    <li><strong>Multi-Gate Ecosystem Validation</strong>: Runs the multi-gate validation suite across all repositories directly from the UI (<code>POST /api/validate</code>).</li>
+                </ul>
+
+                <h3>6.8 Centralized State Architecture (Zustand) &amp; S.O.L.I.D. Component Hierarchy</h3>
+                <p>To ensure deterministic state transitions and eliminate prop drilling across deeply nested views, the GUI integrates a centralized Zustand store (<code>src/store/useStudioStore.ts</code>):</p>
+                <ul>
+                    <li><strong>Unified Global State Store</strong>: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.</li>
+                    <li><strong>Single Responsibility Deconstruction</strong>: Monolithic view components are deconstructed into focused, decoupled micro-components:
+                        <ul>
+                            <li><code>TrainingPanel.tsx</code>: Refactored into a lightweight coordinator delegating to <code>ModelManifoldCard.tsx</code>, <code>TelemetryConsole.tsx</code>, and <code>TrainingToolbar.tsx</code>.</li>
+                            <li><code>CompilerPanel.tsx</code>: Refactored into a coordinator delegating to <code>DatasetManifoldCard.tsx</code>, <code>DatasetCompilationForm.tsx</code>, <code>ModernizationQueueTable.tsx</code>, <code>ScaleReductionView.tsx</code>, and <code>CompilerToolbar.tsx</code>.</li>
+                            <li><code>ConfigEditorModal.tsx</code>: Deconstructed from 790 lines into <code>ManifestEditorTab.tsx</code> (YAML/JSON syntax validation, Monaco diff viewer) and <code>SecretsEditorTab.tsx</code> (encrypted credentials vault).</li>
+                            <li><code>CloudTrainModal.tsx</code>: Extracted <code>VariationIsolationChecker.tsx</code> for multi-variation validation.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Shared Micro-Components</strong>:
+                        <ul>
+                            <li><code>ValidationBanner.tsx</code>: Centralized banner component with automatic message type deduction (<code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>), dismiss buttons, and full WAI-ARIA alert/status semantics.</li>
+                            <li><code>HoverPinPopover.tsx</code>: Reusable CSS hover and native semantic <code>&lt;button&gt;</code> pin popover strictly compliant with <code>jsx-a11y</code> accessibility standards.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>6.9 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
+                <p>The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:</p>
+                <ul>
+                    <li><strong>Strict 3-Variation Isolation</strong>: Enforces clean partition across isolated model directories:
+                        <ul>
+                            <li>Variation 1 (<code>pytorch</code>): Canonical PyTorch checkpoint weights (<code>*.pt</code>).</li>
+                            <li>Variation 2 (<code>onnx_fp32</code>): High-precision standard ONNX exports (<code>*_FP32.onnx*</code>).</li>
+                            <li>Variation 3 (<code>onnx_fp16</code>): Edge-optimized half-precision ONNX exports (<code>*.onnx</code>).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pre-Upload Isolation Gate</strong>: Built-in <code>StrictIsolationValidator</code> blocks non-compliant or cross-contaminated binaries before transmission.</li>
+                    <li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.</li>
+                </ul>
+
+                <h3>6.10 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+                <p>The redesigned live telemetry console is embedded directly within individual operational panels (including Model Training, Dataset Compiler, and Health), replacing monolithic standalone tabs with contextual log streams:</p>
+                <ul>
+                    <li><strong>Local Training Stream</strong>: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.</li>
+                    <li><strong>Remote Cloud Stream</strong>: Relays real-time execution outputs from Kaggle GPU kernels or Colab notebooks.</li>
+                    <li><strong>Ecosystem Mesh Stream</strong>: Monitors JSON-RPC events, HTTP health probes, and audit logs across Ports 8000, 8100, and 8200.</li>
+                    <li><strong>Responsive Sub-Second Abort</strong>: Operators can trigger immediate job cancellation (<code>POST /api/jobs/{id}/cancel</code>), hooking into inner minibatch iterations (<code>trainer.stop = True</code>) within milliseconds, instantly releasing hardware GPU VRAM.</li>
+                </ul>
             </section>
 
             <section id="section-7">
@@ -221,6 +279,5 @@
                 <p>The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, tripartite multi-sidecar mesh, universal configuration editor, and contextual hover micro-documentation, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.</p>
             </section>
         </main>
-</main>
 </body>
 </html>

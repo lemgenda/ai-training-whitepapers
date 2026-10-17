@@ -36,6 +36,7 @@
                 <li><a href="#section-pathology">6. Standalone Diagnostic Specifications</a></li>
                 <li><a href="#section-freezing">7. Frozen Contract Guarantees (OpenAPI 3.1)</a></li>
                 <li><a href="#section-enforcement">8. Ecosystem Enforcement &amp; Audit Gating</a></li>
+                <li><a href="#section-isolation">9. Model Isolation &amp; Licensing Policy</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -173,6 +174,41 @@
                 <p>Version compliance is enforced at git commit time via the pre-commit compliance validator:</p>
                 <pre><code>lem-env validate --project lemgendary-training-suite,lemgendary-datasets,lemgendary-env-manager,lemgendary-docs</code></pre>
                 <p>Any attempt to introduce calendar versioning (<code>2026.*</code>), uncoordinated major version tags outside defined tracks, or mismatched package manifest strings is rejected by the pre-commit gate before touching version control.</p>
+            </section>
+
+            <section id="section-isolation">
+                <h2>9. Canonical Model Variation Isolation &amp; Licensing Policy</h2>
+                <p>To maintain deterministic cloud artifact distribution and strict legal compliance across public hubs (Kaggle Models Hub, Hugging Face, and edge deployment pipelines), all trained models in <code>LemGendaryModels/</code> adhere to two strict governance pillars:</p>
+
+                <h3>9.1 Canonical Repository Topology &amp; Isolation Contract</h3>
+                <p>Every model repository under <code>LemGendaryModels/&lt;model_key&gt;/</code> maintains an immutable directory structure separating checkpoints, serialized distributions, and evaluation records:</p>
+                <pre><code>LemGendaryModels/&lt;model_key&gt;/
+├── README.md               # Model Card &amp; SOTA benchmark targets
+├── metrics.csv             # Training and validation loss curves
+├── model-metadata.json     # Kaggle Models manifest (Public, CC BY-NC 4.0)
+├── checkpoints/            # Best and milestone checkpoint vaults (*.pth)
+├── notebooks/              # Standardized Kaggle &amp; Colab notebooks
+├── dist/                   # Isolated production distributions
+│   └── kaggle/
+│       ├── pytorch/        # Variation 1: Standalone PyTorch binary (*.pt)
+│       ├── onnx_fp32/      # Variation 2: ONNX FP32 with external data (*_FP32.onnx*)
+│       └── onnx_fp16/      # Variation 3: Edge-optimized ONNX FP16 (*.onnx)
+└── visualizations/         # Training curves, confusion matrices, and diagnostics</code></pre>
+
+                <p>All model binaries published to Kaggle Models Hub must satisfy strict binary isolation verified prior to deployment via <code>StrictIsolationValidator</code>:</p>
+                <ol>
+                    <li><strong>Variation 1 (<code>pytorch</code>)</strong>: Exclusively standalone PyTorch weights (<code>&lt;ModelStem&gt;.pt</code>).</li>
+                    <li><strong>Variation 2 (<code>onnx_fp32</code>)</strong>: Exclusively standard precision ONNX model (<code>&lt;ModelStem&gt;_FP32.onnx</code>) and sidecar tensor data (<code>&lt;ModelStem&gt;_FP32.onnx.data</code>).</li>
+                    <li><strong>Variation 3 (<code>onnx_fp16</code>)</strong>: Exclusively half-precision embedded ONNX model (<code>&lt;ModelStem&gt;.onnx</code>) with zero external tensor references.</li>
+                </ol>
+
+                <h3>9.2 Licensing &amp; Intellectual Property Governance</h3>
+                <p>All publicly distributed model checkpoints, model cards, manifests, and documentation hosted on Kaggle Models Hub are released under the <strong>Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)</strong> license.</p>
+                <ul>
+                    <li><strong>Non-Commercial Academic &amp; Research Use</strong>: Non-commercial evaluation, academic citation, reproducible benchmarking, and fine-tuning on custom datasets are explicitly permitted with proper attribution.</li>
+                    <li><strong>Commercial &amp; Enterprise Deployment</strong>: Commercial use, production deployment within closed proprietary software, or monetization of weight checkpoints requires an explicit enterprise commercial license from LemGendary AI.</li>
+                    <li><strong>Manifest Conformance</strong>: Every <code>model-metadata.json</code> must declare <code>is_private: false</code> and <code>license_name: "CC BY-NC 4.0"</code>.</li>
+                </ul>
             </section>
         
 </main>
