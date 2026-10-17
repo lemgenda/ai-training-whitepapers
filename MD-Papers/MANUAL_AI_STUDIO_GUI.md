@@ -741,7 +741,7 @@ Both local and web documentation portals share identical CSS styling, SVG typogr
 
 ## 11. Tripartite Multi-Sidecar Network Architecture
 
-The AI Studio GUI operates as a unified visual client communicating across three specialized local background microservices:
+The AI Studio GUI operates as a unified visual client communicating across three specialized background microservices. Endpoints are dynamically configured via a single source of truth registry (`src/api/config.ts`), supporting local execution, intranet microservices, or hosted cloud instances:
 
 ```text
 +-----------------------------------------------------------------------+
@@ -752,7 +752,7 @@ The AI Studio GUI operates as a unified visual client communicating across three
                     v                   v
 +-----------------------+   +-----------------------+   +-----------------------+
 |  Environment Manager  |   |    Dataset Compiler   |   |     Training Suite    |
-|     Port :8000        |   |      Port :8100       |   |       Port :8200      |
+|   (Default Port 8000) |   |  (Default Port 8100)  |   |  (Default Port 8200)  |
 +-----------------------+   +-----------------------+   +-----------------------+
 | * Hardware Probing    |   | * Manifold Synthesis  |   | * Architecture Models |
 | * Venv Provisioning   |   | * WebP Transcoding    |   | * Sawtooth Governor   |
@@ -761,7 +761,23 @@ The AI Studio GUI operates as a unified visual client communicating across three
 +-----------------------+   +-----------------------+   +-----------------------+
 ```
 
-The frontend client (`src/api/client.ts`) automatically multiplexes API calls across the three ports, providing unified error recovery, daemon health indicators, and transparent connection fallbacks.
+### 11.1 Dynamic Configuration & Environment Overrides
+
+Endpoint addresses and ports are completely decoupled from code literals. Production and remote environments can override service locations via standard environment variables:
+
+- `VITE_ENV_MANAGER_URL`: Base HTTP URL for the Environment Manager (default: `http://127.0.0.1:8000`).
+- `VITE_DATASET_COMPILER_URL`: Base HTTP URL for the Dataset Compiler Suite (default: `http://127.0.0.1:8100`).
+- `VITE_TRAINING_SUITE_URL`: Base HTTP URL for the Model Training Suite (default: `http://127.0.0.1:8200`).
+
+The `toWebSocketUrl()` utility parses HTTP/HTTPS URLs and maps them automatically to corresponding `ws://` or `wss://` protocols, providing seamless transition from local loopback ports to secure TLS cloud deployments.
+
+### 11.2 Semantic Origin Routing & Telemetry Stream Governance
+
+Telemetry event streams are classified using semantic origin routing rather than brittle port number or regex guessing:
+
+- Training Suite logs attach connection origin `training-suite` and route exclusively to the Model Training telemetry console.
+- Dataset Compiler logs attach connection origin `dataset-compiler` and route exclusively to the Compiler panel.
+- Consecutive rapid carriage-return progress ticks (`\r`) roll up in-place via `rollupTelemetryEvents()`, keeping the active progress state visible at the terminal cursor while preserving discrete loss metrics, learning rates, checkpoint saves, and milestone events in terminal history.
 
 ---
 

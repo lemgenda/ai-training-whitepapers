@@ -100,13 +100,13 @@ $$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$
 
 preventing UI race conditions and ensuring deterministic views during high-throughput training epochs.
 
-### 6.1 Multi-Sidecar Telemetry Routing
+### 6.1 Dynamic Mesh Configuration & Protocol-Agnostic Origin Routing
 
-The desktop frontend decouples communication through a dedicated tripartite client router:
+The desktop frontend decouples network addresses through a centralized Single Source of Truth configuration module (`src/api/config.ts`):
 
-- `client.env`: Routes hardware sensors, venv statuses, and drift matrices to `http://127.0.0.1:8000`.
-- `client.datasets`: Routes manifold catalogs, compiler presets, and format statistics to `http://127.0.0.1:8100`.
-- `client.training`: Routes active training runs, GPU profiles, and checkpoint exports to `http://127.0.0.1:8200`.
+- **Environment Overrides & Protocol Translation**: Configured via `VITE_ENV_MANAGER_URL`, `VITE_DATASET_COMPILER_URL`, and `VITE_TRAINING_SUITE_URL` with automatic HTTP/HTTPS to WS/WSS protocol mapping via `toWebSocketUrl()`.
+- **Semantic Origin Routing**: Message telemetry frames attach verified `origin` identifiers (`"env-manager"`, `"dataset-compiler"`, `"training-suite"`), rendering stream filtering strictly decoupled from local port numbers or cloud hosting domains.
+- **In-Place Telemetry Roll-Up**: The terminal event pipeline incorporates `rollupTelemetryEvents()`, coalescing transient carriage-return ticks (`\r`) in-place to prevent visual flickering and blank terminal frames while preserving all discrete training batch metrics (`[BATCH ...]`), loss statistics, learning rates, and milestones.
 
 ### 6.2 Universal Dynamic Configuration & Registry Editor
 

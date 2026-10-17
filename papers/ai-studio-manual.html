@@ -1926,7 +1926,7 @@
     <!-- SECTION 11 -->
     <section id="section-11">
         <h2>11. Tripartite Multi-Sidecar Network Architecture</h2>
-        <p>The AI Studio GUI operates as a unified visual client communicating across three specialized local background microservices:</p>
+        <p>The AI Studio GUI operates as a unified visual client communicating across three specialized background microservices. Endpoints are dynamically configured via a single source of truth registry (<code>src/api/config.ts</code>), supporting local execution, intranet microservices, or hosted cloud instances:</p>
 
         <pre><code>+-----------------------------------------------------------------------+
 |                 LemGendary AI Studio Desktop GUI                      |
@@ -1936,7 +1936,7 @@
                     v                   v
 +-----------------------+   +-----------------------+   +-----------------------+
 |  Environment Manager  |   |    Dataset Compiler   |   |     Training Suite    |
-|     Port :8000        |   |      Port :8100       |   |       Port :8200      |
+|   (Default Port 8000) |   |  (Default Port 8100)  |   |  (Default Port 8200)  |
 +-----------------------+   +-----------------------+   +-----------------------+
 | * Hardware Probing    |   | * Manifold Synthesis  |   | * Architecture Models |
 | * Venv Provisioning   |   | * WebP Transcoding    |   | * Sawtooth Governor   |
@@ -1944,7 +1944,22 @@
 | * Offline Docs Server |   | * Cloud Sync (Kaggle) |   | * Live Loss Curves    |
 +-----------------------+   +-----------------------+   +-----------------------+</code></pre>
 
-        <p>The frontend client (<code>src/api/client.ts</code>) automatically multiplexes API calls across the three ports, providing unified error recovery, daemon health indicators, and transparent connection fallbacks.</p>
+        <h3>11.1 Dynamic Configuration &amp; Environment Overrides</h3>
+        <p>Endpoint addresses and ports are completely decoupled from code literals. Production and remote environments can override service locations via standard environment variables:</p>
+        <ul>
+            <li><code>VITE_ENV_MANAGER_URL</code>: Base HTTP URL for the Environment Manager (default: <code>http://127.0.0.1:8000</code>).</li>
+            <li><code>VITE_DATASET_COMPILER_URL</code>: Base HTTP URL for the Dataset Compiler Suite (default: <code>http://127.0.0.1:8100</code>).</li>
+            <li><code>VITE_TRAINING_SUITE_URL</code>: Base HTTP URL for the Model Training Suite (default: <code>http://127.0.0.1:8200</code>).</li>
+        </ul>
+        <p>The <code>toWebSocketUrl()</code> utility parses HTTP/HTTPS URLs and maps them automatically to corresponding <code>ws://</code> or <code>wss://</code> protocols, providing seamless transition from local loopback ports to secure TLS cloud deployments.</p>
+
+        <h3>11.2 Semantic Origin Routing &amp; Telemetry Stream Governance</h3>
+        <p>Telemetry event streams are classified using semantic origin routing rather than brittle port number or regex guessing:</p>
+        <ul>
+            <li>Training Suite logs attach connection origin <code>training-suite</code> and route exclusively to the Model Training telemetry console.</li>
+            <li>Dataset Compiler logs attach connection origin <code>dataset-compiler</code> and route exclusively to the Compiler panel.</li>
+            <li>Consecutive rapid carriage-return progress ticks (<code>\r</code>) roll up in-place via <code>rollupTelemetryEvents()</code>, keeping the active progress state visible at the terminal cursor while preserving discrete loss metrics, learning rates, checkpoint saves, and milestone events in terminal history.</li>
+        </ul>
     </section>
 
     <!-- SECTION 12 -->
