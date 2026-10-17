@@ -644,10 +644,13 @@
 
         <h4>Hardware Architecture Card Numbered Reference</h4>
         <ol>
-            <li><strong>Primary Accelerator Backend Badge</strong>: Highlights active execution engine (<code>CUDA</code>, <code>DIRECTML</code>, <code>ROCM</code>, or <code>CPU</code>) alongside the <code>System &amp; Hardware Architecture</code> section header.</li>
-            <li><strong>Host Operating System &amp; Python Runtime</strong>: Confirms operating system release (<code>Windows 11, AMD64</code>) and active Python interpreter binary (<code>3.12.10</code>).</li>
-            <li><strong>Host Memory Allocation &amp; Recommended PyTorch Index</strong>: Displays physical host RAM capacity (<code>32,486 MB</code>), CPU core allocation (<code>12 / 6 Cores</code>), and the authoritative PyTorch CUDA 12.6 binary wheel index link.</li>
-            <li><strong>Detected Physical Accelerators &amp; Dedicated VRAM</strong>: Displays GPU device model (<code>NVIDIA GeForce RTX 3060 Laptop GPU</code>), installed driver revision (<code>576.88</code>), and dedicated video memory capacity (<code>6,144 MB</code>).</li>
+            <li><strong>Primary Accelerator Backend Badge &amp; Header</strong>: Highlights active execution engine (<code>CUDA</code>, <code>DIRECTML</code>, <code>ROCM</code>, or <code>CPU</code>) alongside the <code>System &amp; Hardware Architecture</code> section header and contextual probe guidance tooltip.</li>
+            <li><strong>Host Operating System Row</strong>: Confirms operating system release and kernel architecture (<code>Windows (11, AMD64)</code>).</li>
+            <li><strong>Python Runtime Row</strong>: Displays active Python interpreter revision (<code>3.12.10</code>), verifying compliance with the 3.10+ ecosystem baseline.</li>
+            <li><strong>CPU Cores Allocation Row</strong>: Reports available host processor allocation across logical threads and physical compute cores (<code>12 / 6</code>).</li>
+            <li><strong>System RAM Capacity Row</strong>: Displays physical host RAM capacity (<code>32,486 MB</code>) available for data streaming and dataset decompression.</li>
+            <li><strong>Recommended PyTorch Wheel Index Row</strong>: Authoritative repository link for CUDA 12.1 binary packages (<code>https://download.pytorch.org/whl/cu121</code>).</li>
+            <li><strong>Detected Accelerators &amp; Dedicated VRAM Row</strong>: Details physical GPU device model (<code>NVIDIA GeForce GTX 1650</code>), installed driver level (<code>610.74</code>), and dedicated video memory capacity (<code>4096 MB VRAM</code>).</li>
         </ol>
 
         <div class="table-scroll">
@@ -664,31 +667,52 @@
                 <tbody>
                     <tr>
                         <td><strong>1</strong></td>
-                        <td>Accelerator Badge</td>
-                        <td>Status Pill</td>
+                        <td>Accelerator Badge &amp; Header</td>
+                        <td>Status Pill &amp; Header</td>
                         <td><code>env_manager.system_probe</code></td>
                         <td>Displays primary execution backend and sentinel header.</td>
                     </tr>
                     <tr>
                         <td><strong>2</strong></td>
-                        <td>OS &amp; Python Runtime</td>
+                        <td>Operating System</td>
                         <td>Metric Row</td>
-                        <td><code>platform.platform()</code> / <code>sys.version</code></td>
-                        <td>Verifies operating system and Python 3.10+ requirement compliance.</td>
+                        <td><code>platform.platform()</code></td>
+                        <td>Confirms operating system version and kernel architecture.</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
-                        <td>RAM &amp; PyTorch Index</td>
+                        <td>Python Runtime</td>
                         <td>Metric Row</td>
-                        <td><code>psutil.virtual_memory()</code></td>
-                        <td>Displays host memory capacity and official PyTorch CUDA index link.</td>
+                        <td><code>sys.version</code></td>
+                        <td>Verifies Python 3.10+ interpreter compliance.</td>
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
-                        <td>GPU &amp; Dedicated VRAM</td>
-                        <td>Device Metric</td>
-                        <td>CUDA / DirectML hardware probe</td>
-                        <td>Details physical GPU model, driver level, and dedicated video memory.</td>
+                        <td>CPU Cores (Logical / Physical)</td>
+                        <td>Metric Row</td>
+                        <td><code>os.cpu_count()</code> / <code>psutil</code></td>
+                        <td>Reports available logical threads and physical cores.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>System RAM</td>
+                        <td>Metric Row</td>
+                        <td><code>psutil.virtual_memory()</code></td>
+                        <td>Displays host memory capacity for batch streaming.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Recommended Torch Index</td>
+                        <td>Metric Row</td>
+                        <td><code>env_manager.system_probe</code></td>
+                        <td>Official PyTorch binary wheel repository URL.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Detected Accelerators &amp; VRAM</td>
+                        <td>Device Metric Row</td>
+                        <td>NVML / CUDA probe</td>
+                        <td>Details physical GPU model, driver level, and dedicated VRAM.</td>
                     </tr>
                 </tbody>
             </table>
@@ -768,11 +792,14 @@
 
         <h4>Dataset Compiler Control Card Numbered Reference</h4>
         <ol>
-            <li><strong>Dataset Compiler &amp; Storage Modernization Title &amp; Help Glyph</strong>: Header detailing streaming container synthesis alongside the interactive hover guidance tooltip (<code>?</code>).</li>
-            <li><strong>Compilation Mode Switcher</strong>: Toggles between <code>Standard Manifold Presets</code> (compiling registered manifests) and <code>Direct Kaggle Ingestion</code> (pulling external Kaggle datasets directly into streaming containers).</li>
-            <li><strong>Target Manifold Dropdown Selector</strong>: Selects dataset to modernize from registered definitions in <code>unified_data.yaml</code> (e.g. <code>LemGendized Super-Resolution Master</code>).</li>
-            <li><strong>Storage Preset &amp; Partition Parameters</strong>: Selects container architecture (<code>Streaming WebDataset Shards</code>, <code>Columnar Parquet</code>, <code>MosaicML MDS</code>, <code>LitData</code>), <code>Samples Per Shard</code> (default: <code>5,000</code> samples per shard yielding 300MB–400MB archives), and the <code>Purge Loose Images</code> toggle.</li>
-            <li><strong>Compile Manifold Primary Action Button</strong>: Dispatches multi-threaded background workers (<code>POST /api/gui/quick-compile</code>) executing in-flight 12-thread WebP transcoding and container partition writing.</li>
+            <li><strong>Dataset Compilation Engine Title &amp; Help Glyph</strong>: Header detailing container synthesis alongside the contextual guidance tooltip (<code>?</code>).</li>
+            <li><strong>Standard Preset Mode Toggle Button</strong>: Switches to standard preset mode compiling pre-configured datasets registered in <code>unified_data.yaml</code>.</li>
+            <li><strong>Custom Multi-Source Mode Toggle Button</strong>: Switches to custom multi-source mode, enabling custom dataset naming, multi-directory aggregation, and format selection.</li>
+            <li><strong>Target Manifold Dropdown Selector</strong>: Selects source manifold to compile from registered definitions in <code>unified_data.yaml</code>.</li>
+            <li><strong>Compilation Preset Dropdown Selector</strong>: Selects target container architecture (<code>Streaming WebDataset (.data)</code>, <code>Columnar Parquet</code>, <code>MosaicML MDS</code>, <code>LitData</code>).</li>
+            <li><strong>Samples Per Shard Numeric Input Field</strong>: Specifies container partition size (default: <code>5,000</code> samples per shard partition).</li>
+            <li><strong>Purge Loose Images Checkbox</strong>: Toggles post-compilation purging of uncompressed source images to eliminate dual-storage disk amplification.</li>
+            <li><strong>Compile Manifold Primary Action Button</strong>: Dispatches multi-threaded background workers (<code>POST http://127.0.0.1:8100/api/gui/quick-compile</code>) executing parallel WebP transcoding and container partition writing.</li>
         </ol>
 
         <div class="table-scroll">
@@ -789,45 +816,63 @@
                 <tbody>
                     <tr>
                         <td><strong>1</strong></td>
-                        <td>Compiler Title &amp; Help</td>
+                        <td>Title &amp; Help Glyph</td>
                         <td>Section Heading</td>
                         <td>None</td>
                         <td>Contextual heading explaining streaming container compilation.</td>
                     </tr>
                     <tr>
                         <td><strong>2</strong></td>
-                        <td>Compilation Mode Switcher</td>
-                        <td>Segmented Control</td>
-                        <td><code>setCompileMode("standard" | "kaggle")</code></td>
-                        <td>Toggles between registered preset compilation and direct Kaggle ingestion.</td>
+                        <td>Standard Preset Button</td>
+                        <td>Mode Button</td>
+                        <td><code>onChangeCompileMode("standard")</code></td>
+                        <td>Sets compilation form to standard manifest preset workflow.</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
-                        <td>Target Manifold</td>
-                        <td>Select Dropdown</td>
-                        <td><code>setSelectedManifold(e.target.value)</code></td>
-                        <td>Chooses dataset registered in <code>unified_data.yaml</code>.</td>
+                        <td>Custom Multi-Source Button</td>
+                        <td>Mode Button</td>
+                        <td><code>onChangeCompileMode("custom")</code></td>
+                        <td>Reveals custom source aggregation and format customization fields.</td>
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
-                        <td>Preset &amp; Parameters</td>
-                        <td>Form Group</td>
-                        <td><code>setSelectedPreset()</code> / <code>setShardSize()</code></td>
-                        <td>Configures container architecture, chunk size, and raw purge safety.</td>
+                        <td>Target Manifold</td>
+                        <td>Select Dropdown</td>
+                        <td><code>onSelectManifold(e.target.value)</code></td>
+                        <td>Chooses dataset registered in <code>unified_data.yaml</code>.</td>
                     </tr>
                     <tr>
                         <td><strong>5</strong></td>
+                        <td>Compilation Preset</td>
+                        <td>Select Dropdown</td>
+                        <td><code>onSelectPreset(e.target.value)</code></td>
+                        <td>Selects container format: WebDataset, Parquet, MDS, or LitData.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td>Samples Per Shard</td>
+                        <td>Number Input</td>
+                        <td><code>onChangeShardSize(Number(e.target.value))</code></td>
+                        <td>Sets chunk partition size between 100 and 50,000 samples.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td>Purge Loose Images</td>
+                        <td>Checkbox Toggle</td>
+                        <td><code>onTogglePurgeLooseImages(e.target.checked)</code></td>
+                        <td>Deletes uncompressed raw files after verified shard creation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
                         <td>Compile Manifold</td>
                         <td>Primary Button</td>
-                        <td><code>POST http://127.0.0.1:8100/api/gui/quick-compile</code></td>
+                        <td><code>POST /api/gui/quick-compile</code></td>
                         <td>Initiates parallel container compilation and WebP transcoding.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-
-        <h4>Direct Kaggle Ingestion Mode</h4>
-        <p>When switching the Compilation Mode Switcher to <code>Direct Kaggle Ingestion</code>, the form dynamically reveals a direct Kaggle URL / slug input (<code>https://kaggle.com/datasets/owner/slug</code> or <code>owner/slug</code>). Operators can ingest remote cloud datasets directly into local WebDataset shards in a single click, automatically appending the verified manifold entry to <code>unified_data.yaml</code>.</p>
 
         <h3>5.2 Production Manifolds Catalog, Upstream Lineage &amp; One-Click Cloud Sync</h3>
         <p>The Production Manifolds section catalogs all verified streaming datasets inside <code>./LemGendaryDatasets/</code>, providing instant access to upstream lineage and integrated card-level Kaggle synchronization:</p>
@@ -838,24 +883,22 @@
 
         <h4>Production Manifolds Catalog Numbered Reference</h4>
         <ol>
-            <li><strong>Production Manifolds Section Header &amp; Counter</strong>: Displays section title alongside total verified dataset count (<code>Production Manifolds (20 Verified Datasets)</code>).</li>
-            <li><strong>Sub-Tab Navigation Switcher</strong>: Selects between <code>Manifolds Catalog</code>, <code>Modernization Queue (0)</code>, and <code>Scale Reduction</code> workflows.</li>
+            <li><strong>Production Manifolds Section Header &amp; Total Counter</strong>: Displays hub section title alongside active and total verified dataset count (<code>Dataset Compiler &amp; Manifold Hub (21 / 21)</code>).</li>
+            <li><strong>Sub-Tab Navigation Switcher Buttons</strong>: Three-way tab switcher selecting between <code>Manifolds Catalog</code>, <code>Modernization Queue</code>, and <code>Scale Reduction</code> views.</li>
             <li><strong>Global Header Action Buttons</strong>:
                 <ul>
-                    <li><code>Update All Kaggle Metadata</code>: Synchronizes titles, descriptions, and column schemas across all 20 Kaggle datasets in a single non-blocking call (<code>POST /api/kaggle/update-metadata</code> with <code>all_datasets: true</code>).</li>
-                    <li><code>Regenerate Manifolds Index</code>: Rescans on-disk datasets and refreshes <code>manifolds.json</code> and <code>dataset-metadata.json</code> (<code>POST /api/modernize/regenerate-manifolds</code>).</li>
+                    <li><code>Update All Kaggle Metadata</code>: Synchronizes descriptors across all registered datasets in Kaggle Cloud (<code>POST /api/kaggle/update-metadata</code> with <code>all_datasets: true</code>).</li>
+                    <li><code>Regen Index</code>: Rescans <code>./LemGendaryDatasets/</code> on disk and regenerates <code>unified_data.yaml</code> index.</li>
+                    <li><code>Refresh Catalog</code>: Polls port 8100 sidecar to detect local disk changes and remote cloud sync status.</li>
                 </ul>
             </li>
-            <li><strong>Manifold Search &amp; Task Domain Filter Bar</strong>: Real-time search filter (<code>Search 20 manifolds...</code>) paired with domain dropdown (<code>All Domains</code>, <code>restoration</code>, <code>detection</code>, <code>classification</code>, <code>segmentation</code>, <code>forex</code>).</li>
-            <li><strong>Verified Manifold Card Identity &amp; Metrics</strong>: Displays canonical dataset title, green <code>COMPILED</code> status badge, container format (<code>webdataset</code>), total sample count (<code>788,034</code>), disk footprint (<code>67.6 GB</code>), and shard partition count (<code>158</code>).</li>
-            <li><strong>Upstream Sources &amp; Lineage Popover</strong>: Interactive hover/pinned popover detailing raw upstream dataset provenance, original licenses, and source archives.</li>
-            <li><strong>Card-Level Kaggle Cloud Actions</strong>: Every manifold card integrates dedicated one-click action buttons:
-                <ul>
-                    <li><code>Update Metadata</code>: Pushes JSON schema updates to Kaggle without data re-upload.</li>
-                    <li><code>Download from Kaggle</code>: Pulls remote shards with checksum verification.</li>
-                    <li><code>Upload to Kaggle</code>: Packages and publishes local compiled shards to Kaggle Datasets.</li>
-                </ul>
-            </li>
+            <li><strong>Live Search Input &amp; Multi-Dimension Filter Dropdowns</strong>: Real-time manifold name search paired with <code>Status</code> (All, Compiled, Uncompiled), <code>Format</code> (All, WebDataset, Parquet, MDS), and <code>Task</code> (All, Restoration, Detection, Classification, Segmentation, Forex) dropdowns.</li>
+            <li><strong>Verified Manifold Card Identity &amp; Status Badge</strong>: Displays canonical dataset display name, green <code>COMPILED</code> status pill, storage format, sample count, and disk footprint.</li>
+            <li><strong>Upstream Sources &amp; Lineage Popover Button</strong>: Interactive popover trigger revealing raw source dataset provenance, sample contributions, licensing, and raw data lineage.</li>
+            <li><strong>Card Action Button (Update Metadata)</strong>: Dispatches <code>POST /api/kaggle/update-metadata</code> for the single selected manifold.</li>
+            <li><strong>Card Action Link Button (Audit Notebooks)</strong>: Direct external link opening Kaggle Registry Metadata Training audit notebook.</li>
+            <li><strong>Card Action Button (Download from Kaggle)</strong>: Pulls remote streaming shards from Kaggle Cloud Storage with hash validation.</li>
+            <li><strong>Card Action Button (Upload to Kaggle)</strong>: Packages and uploads local compiled shards directly to Kaggle Cloud Datasets.</li>
         </ol>
 
         <div class="table-scroll">
@@ -872,7 +915,7 @@
                 <tbody>
                     <tr>
                         <td><strong>1</strong></td>
-                        <td>Manifolds Header</td>
+                        <td>Hub Header &amp; Count</td>
                         <td>Section Heading</td>
                         <td>None</td>
                         <td>Labels verified manifold inventory and total dataset count.</td>
@@ -880,44 +923,65 @@
                     <tr>
                         <td><strong>2</strong></td>
                         <td>Sub-Tabs Switcher</td>
-                        <td>Tab Switcher</td>
-                        <td><code>setActiveTab()</code></td>
+                        <td>Tab Buttons</td>
+                        <td><code>onTabChange()</code></td>
                         <td>Toggles catalog, transcode modernization queue, and scale reduction.</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
-                        <td>Global Sync Actions</td>
+                        <td>Global Header Actions</td>
                         <td>Action Buttons</td>
-                        <td><code>POST /api/kaggle/update-metadata</code></td>
-                        <td>Triggers batch cloud metadata synchronization across all datasets.</td>
+                        <td><code>POST /api/kaggle/...</code></td>
+                        <td>Batch metadata update, index regeneration, and catalog refresh.</td>
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
-                        <td>Search &amp; Domain Filter</td>
-                        <td>Input &amp; Select</td>
+                        <td>Search &amp; Filter Dropdowns</td>
+                        <td>Input &amp; Selects</td>
                         <td>Client-side filter</td>
-                        <td>Filters manifolds in real time by key, title, or task domain.</td>
+                        <td>Filters manifolds by search query, compilation status, format, and task.</td>
                     </tr>
                     <tr>
                         <td><strong>5</strong></td>
-                        <td>Manifold Identity Card</td>
-                        <td>Card Element</td>
-                        <td>Sourced from <code>manifolds.json</code></td>
+                        <td>Manifold Identity &amp; Status</td>
+                        <td>Card Header</td>
+                        <td>Sourced from <code>unified_data.yaml</code></td>
                         <td>Displays verified samples, disk storage footprint, format, and shards.</td>
                     </tr>
                     <tr>
                         <td><strong>6</strong></td>
-                        <td>Upstream Sources</td>
-                        <td>Popover Pin</td>
+                        <td>Upstream Sources Popover</td>
+                        <td>Popover Trigger</td>
                         <td><code>HoverPinPopover.tsx</code></td>
                         <td>Displays upstream provenance, licensing, and raw data lineage.</td>
                     </tr>
                     <tr>
                         <td><strong>7</strong></td>
-                        <td>Card Cloud Actions</td>
-                        <td>Action Buttons</td>
-                        <td><code>POST /api/kaggle/{action}</code></td>
-                        <td>One-click Download, Upload, or Update Metadata directly per dataset.</td>
+                        <td>Update Metadata</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/kaggle/update-metadata</code></td>
+                        <td>Single-dataset Kaggle metadata update without binary re-upload.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td>Audit Notebooks</td>
+                        <td>Action Link</td>
+                        <td>Direct Kaggle Link</td>
+                        <td>Opens external Kaggle Registry Metadata training audit notebook.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>9</strong></td>
+                        <td>Download Manifold</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/kaggle/download</code></td>
+                        <td>Pulls verified container shards from Kaggle cloud storage.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10</strong></td>
+                        <td>Upload Manifold</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/kaggle/upload</code></td>
+                        <td>Packages and uploads local compiled shards to Kaggle Datasets.</td>
                     </tr>
                 </tbody>
             </table>
@@ -1004,17 +1068,23 @@
 
         <h4>Architecture Telemetry Card Numbered Reference</h4>
         <ol>
-            <li><strong>Model Identity, Task Domain &amp; 3-Pillar Training Status</strong>: Displays canonical model title (e.g. <code>LemGendary UPN v2 Parameter Predictor</code>), domain badge (<code>forex</code>), and verified training completion status (<code>FULLY TRAINED</code>).</li>
-            <li><strong>Spatial Ladder Progress Meter</strong>: Visual meter displaying active spatial ladder stage and training completion percentage (<code>Full (120 epochs)</code> / <code>100%</code>).</li>
-            <li><strong>Binary Format Variations</strong>: Visual indicators confirming compiled formats ready for inference (<code>PT</code>, <code>ONNX FP32</code>, <code>ONNX FP16</code>).</li>
-            <li><strong>Neural Backbone &amp; Pinned SOTA Targets</strong>: Displays network architecture type (<code>UPN v2</code>), trainable parameter count (<code>14.2 M Params</code>), and the interactive SOTA targets popover displaying target convergence metrics, current best scores, and evaluation baselines.</li>
-            <li><strong>Primary Training Dispatch Controls</strong>:
-                <ul>
-                    <li><code>Start Training</code>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream.</li>
-                    <li><code>Cloud Training</code>: Opens the interactive Cloud Training modal for deploying jobs to Kaggle or Colab GPU clusters.</li>
-                </ul>
-            </li>
-            <li><strong>Secondary Model Action Buttons</strong>: Granular controls including <code>Evaluate</code> (<code>POST /api/training/evaluate</code>), <code>Export</code> (<code>POST /api/training/export</code>), <code>Push Weights</code>, <code>Pull Weights</code>, <code>Regenerate Training Notebook</code>, and <code>Usage Notebook</code>.</li>
+            <li><strong>Model Identity, Help Glyph &amp; Target Pin</strong>: Displays canonical model title (<code>LemGendary Forex Predictor</code>), contextual help tooltip (<code>?</code>), and target pinning toggle button.</li>
+            <li><strong>Training Progress &amp; Checkpoint State Pill</strong>: Displays multi-pillar training status badge (<code>PARTIALLY TRAINED</code>, <code>FULLY TRAINED</code>, or <code>NOT STARTED</code>).</li>
+            <li><strong>Binary Format Variations Badges</strong>: Visual indicators confirming compiled formats ready for inference (<code>PyTorch (.pt)</code>, <code>ONNX FP32</code>, <code>ONNX FP16</code>).</li>
+            <li><strong>Neural Architecture Backbone &amp; Trainable Parameter Count</strong>: Displays network architecture type (<code>Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention)</code>) and parameter allocation (<code>2.75 M</code>).</li>
+            <li><strong>Target Metrics (SOTA) Interactive Popover</strong>: Interactive hover/pinned popover detailing target convergence metrics, current best scores, and evaluation baselines.</li>
+            <li><strong>Spatial / Confluence Ladder Progression &amp; Data Fraction</strong>: Displays active ladder stage (<code>Confluence Ladder: Partial Confluence</code>) and dataset scaling fraction (<code>Data Fraction: 85%</code>).</li>
+            <li><strong>Local Training Action Button</strong>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream below. When training is active, transforms into <strong>Stop Training</strong> abort trigger.</li>
+            <li><strong>Cloud Training Action Button</strong>: Opens the interactive Cloud &amp; Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.</li>
+            <li><strong>Push Checkpoint Action Button</strong>: Pushes latest model checkpoint to the encrypted cloud vault.</li>
+            <li><strong>Pull Checkpoint Action Button</strong>: Pulls latest checkpoint from remote model storage into local <code>LemGendaryModels/</code>.</li>
+            <li><strong>Training Notebook Action Button</strong>: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments.</li>
+            <li><strong>Usage Notebook Action Button</strong>: Generates standalone usage guide and inference walkthrough notebooks.</li>
+            <li><strong>Evaluate Model Action Button</strong>: Dispatches validation benchmark (<code>POST /api/training/evaluate</code>) across validation splits.</li>
+            <li><strong>Export Binaries Action Button</strong>: Compiles checkpoint into deployment binaries (<code>.onnx</code> FP32/FP16 and TorchScript).</li>
+            <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model-metadata.json</code>.</li>
+            <li><strong>Stage Variations Action Button</strong>: Stages isolated format variations into dedicated subdirectories (<code>dist/kaggle/</code>).</li>
+            <li><strong>Sync Kaggle Models Hub Action Button</strong>: Opens direct multi-variation staging and publishing workflow for Kaggle Models Hub.</li>
         </ol>
 
         <div class="table-scroll">
@@ -1031,17 +1101,17 @@
                 <tbody>
                     <tr>
                         <td><strong>1</strong></td>
-                        <td>Model Identity &amp; Status</td>
+                        <td>Model Identity &amp; Pin</td>
                         <td>Card Header</td>
-                        <td>Multi-pillar verification</td>
-                        <td>Labels architecture name, task domain, and verified training status.</td>
+                        <td><code>onToggleTargetPin()</code></td>
+                        <td>Labels architecture name, tooltip help, and pins active model target.</td>
                     </tr>
                     <tr>
                         <td><strong>2</strong></td>
-                        <td>Ladder Progress Meter</td>
-                        <td>Visual Meter</td>
-                        <td>Sourced from checkpoint</td>
-                        <td>Displays active spatial ladder stage and completion percentage.</td>
+                        <td>Training Progress</td>
+                        <td>Status Pill</td>
+                        <td>Multi-pillar verification</td>
+                        <td>Labels verified training completion and checkpoint readiness.</td>
                     </tr>
                     <tr>
                         <td><strong>3</strong></td>
@@ -1052,113 +1122,107 @@
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
-                        <td>Backbone &amp; SOTA Popover</td>
-                        <td>Metric Readout</td>
+                        <td>Backbone &amp; Parameters</td>
+                        <td>Metric Row</td>
+                        <td>Architecture SSOT</td>
+                        <td>Details network topology and total trainable parameter count.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>SOTA Popover</td>
+                        <td>Popover Trigger</td>
                         <td><code>HoverPinPopover.tsx</code></td>
-                        <td>Details network topology, parameter count, and pinned SOTA metrics.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>5</strong></td>
-                        <td>Primary Dispatch</td>
-                        <td>Action Buttons</td>
-                        <td><code>quick-train</code> / <code>btn-cloud</code></td>
-                        <td>Triggers local training execution or opens cloud training modal.</td>
+                        <td>Details convergence targets, actual best metrics, and baselines.</td>
                     </tr>
                     <tr>
                         <td><strong>6</strong></td>
-                        <td>Secondary Actions</td>
-                        <td>Action Buttons</td>
-                        <td><code>POST /api/training/...</code></td>
-                        <td>Evaluates models, exports binaries, pushes/pulls weights, and builds notebooks.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3>6.3 Interactive Cloud Training Modal</h3>
-        <p>The Cloud Training modal enables zero-friction dispatch of intensive neural training workloads to remote GPU compute clusters:</p>
-
-        <div class="figure-center">
-            <img src="../assets/gui/gui_cloud_train_modal.png" alt="Interactive Cloud Training Modal" class="img-paper">
-        </div>
-
-        <h4>Cloud Training Modal Numbered Reference</h4>
-        <ol>
-            <li><strong>Cloud Training Modal Header</strong>: Displays modal title and active model name selected for remote dispatch.</li>
-            <li><strong>Kaggle GPU Kernel Option Card</strong>: Selects Kaggle compute environment supporting Dual-T4 (<code>nvidia-tesla-t4-x2</code>) and P100 (<code>nvidia-tesla-p100</code>) accelerators with automatic manifold attaching and checkpoint syncing.</li>
-            <li><strong>Google Colab Enterprise Option Card</strong>: Selects Google Colab runtime with Google Drive checkpoint mirroring and GPU acceleration.</li>
-            <li><strong>Upload Checkpoints Tab (<code>VariationIsolationChecker.tsx</code>)</strong>: Stages, validates, and uploads trained model weights directly to Kaggle Models (<code>lemtrain sync push</code> / API dispatch) with progress tracking:
-                <ul>
-                    <li><strong>Multi-Variation Checklist</strong>: Inspects readiness for PyTorch (<code>pytorch</code>), standard ONNX (<code>onnx_fp32</code>), and edge ONNX (<code>onnx_fp16</code>).</li>
-                    <li><strong>Strict Isolation Gate</strong>: Automatically verifies that each variation folder contains strictly its expected binary types with zero cross-contamination.</li>
-                    <li><strong>Stage Model Variations Button</strong>: Dispatches <code>POST /api/training/models/{key}/stage-variations</code> to prepare isolated binary directories.</li>
-                    <li><strong>Regenerate Documentation Button</strong>: Dispatches <code>POST /api/training/models/{key}/generate-docs</code> to update model README cards with SOTA metrics and bibtex citations.</li>
-                    <li><strong>Dry-Run Validation Toggle</strong>: Runs local verification rules without making network calls to Kaggle.</li>
-                </ul>
-            </li>
-            <li><strong>Dispatch Cloud Training Primary Button</strong>: Authenticates using active Secrets Vault credentials, compiles remote launch manifest, and dispatches the cloud training kernel.</li>
-            <li><strong>Close Modal Action Button</strong>: Dismisses the cloud training dialog without dispatching remote workloads.</li>
-        </ol>
-
-        <div class="table-scroll">
-            <table class="table-dense">
-                <thead>
-                    <tr>
-                        <th>Callout #</th>
-                        <th>UI Element</th>
-                        <th>Control Type</th>
-                        <th>Triggered Endpoint / Action</th>
-                        <th>Operator Guide &amp; Behavioral Safeguards</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>1</strong></td>
-                        <td>Modal Header</td>
-                        <td>Modal Title</td>
-                        <td>None</td>
-                        <td>Confirms model selection and target deployment workflow.</td>
+                        <td>Ladder &amp; Data Fraction</td>
+                        <td>Progress Metric</td>
+                        <td>Checkpoint telemetry</td>
+                        <td>Displays active spatial ladder rung and dataset fraction.</td>
                     </tr>
                     <tr>
-                        <td><strong>2</strong></td>
-                        <td>Kaggle Option Card</td>
-                        <td>Selection Card</td>
-                        <td><code>setSelectedCloudProvider("kaggle")</code></td>
-                        <td>Configures Kaggle GPU cluster deployment.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>3</strong></td>
-                        <td>Colab Option Card</td>
-                        <td>Selection Card</td>
-                        <td><code>setSelectedCloudProvider("colab")</code></td>
-                        <td>Configures Google Colab enterprise runtime deployment.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>4</strong></td>
-                        <td>Upload Checkpoints</td>
-                        <td>Subtab Navigation</td>
-                        <td><code>setSelectedCloudProvider("upload")</code></td>
-                        <td>Stages, verifies isolation, and publishes model weights to Kaggle Models repository.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>5</strong></td>
-                        <td>Dispatch Cloud Run</td>
+                        <td><strong>7</strong></td>
+                        <td>Local Training</td>
                         <td>Primary Button</td>
-                        <td><code>POST /api/training/cloud/dispatch</code></td>
-                        <td>Dispatches authenticated cloud training job.</td>
+                        <td><code>POST /api/gui/quick-train</code></td>
+                        <td>Starts local GPU training pass and focuses telemetry terminal below.</td>
                     </tr>
                     <tr>
-                        <td><strong>6</strong></td>
-                        <td>Close Dialog</td>
+                        <td><strong>8</strong></td>
+                        <td>Cloud Training</td>
                         <td>Action Button</td>
-                        <td><code>setIsCloudModalOpen(false)</code></td>
-                        <td>Dismisses modal safely.</td>
+                        <td><code>onOpenCloudModal()</code></td>
+                        <td>Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>9</strong></td>
+                        <td>Push Checkpoint</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/push</code></td>
+                        <td>Uploads local checkpoint to cloud storage repository.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10</strong></td>
+                        <td>Pull Checkpoint</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/pull</code></td>
+                        <td>Downloads latest remote weights into local repository.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>11</strong></td>
+                        <td>Training Notebook</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/notebooks/generate</code></td>
+                        <td>Generates self-contained training notebooks for Kaggle and Colab.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>12</strong></td>
+                        <td>Usage Notebook</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/notebooks/usage</code></td>
+                        <td>Builds standalone usage guide and inference notebooks.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>13</strong></td>
+                        <td>Evaluate Model</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/evaluate</code></td>
+                        <td>Executes validation benchmark and streams evaluation metrics.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>14</strong></td>
+                        <td>Export Binaries</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/export</code></td>
+                        <td>Compiles checkpoint into ONNX FP32, FP16, and TorchScript formats.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>15</strong></td>
+                        <td>Docs &amp; Meta</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/generate-docs</code></td>
+                        <td>Regenerates README.md and model-metadata.json from SSOT.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>16</strong></td>
+                        <td>Stage Variations</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/stage</code></td>
+                        <td>Stages binaries into isolated Kaggle variation subdirectories.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>17</strong></td>
+                        <td>Sync Kaggle Models</td>
+                        <td>Action Button</td>
+                        <td><code>onOpenCloudModal()</code></td>
+                        <td>Opens Kaggle Models Hub multi-variation upload workflow.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <h3>6.4 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+        <h3>6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
         <p>The redesigned Live Telemetry Console is embedded directly on the Model Training panel, providing a tabbed terminal interface for complete observability across local training, remote cloud execution, and ecosystem mesh daemons:</p>
 
         <div class="figure-center">
@@ -1173,9 +1237,9 @@
             <li><strong>Monospace Terminal Output Stream</strong>: High-performance scrolling container with full ANSI color parsing, rendering timestamps, log levels, and progress bars.</li>
             <li><strong>Stream Action Controls</strong>:
                 <ul>
-                    <li><code>Copy Log</code>: Copies the entire terminal buffer to system clipboard.</li>
-                    <li><code>Clear Terminal</code>: Flushes the terminal display without disrupting background jobs.</li>
-                    <li><code>Stop Training</code> Dynamic Action Button: Sends an immediate abort signal (<code>POST /api/jobs/{id}/cancel</code>). The training engine hooks into inner minibatch iterations (via <code>on_train_batch_end</code>), setting <code>trainer.stop = True</code> within milliseconds, freeing GPU VRAM instantly without runaway execution.</li>
+                    <li><code>Copy Stream</code>: Copies the entire terminal buffer to system clipboard.</li>
+                    <li><code>Clear Stream</code>: Flushes the terminal display without disrupting background jobs.</li>
+                    <li><code>Halt Local Job</code> Dynamic Action Button: Sends an immediate abort signal (<code>POST /api/jobs/{id}/cancel</code>). The training engine hooks into inner minibatch iterations (via <code>on_train_batch_end</code>), setting <code>trainer.stop = True</code> within milliseconds, freeing GPU VRAM instantly without runaway execution.</li>
                 </ul>
             </li>
         </ol>
@@ -1203,7 +1267,7 @@
                         <td><strong>2</strong></td>
                         <td>Remote Cloud Tab</td>
                         <td>Subtab Switcher</td>
-                        <td><code>setActiveStreamTab("cloud")</code></td>
+                        <td><code>setActiveStreamTab("remote")</code></td>
                         <td>Streams stdout/stderr from Kaggle and Colab cloud training jobs.</td>
                     </tr>
                     <tr>
@@ -1231,15 +1295,64 @@
             </table>
         </div>
 
-        <h3>6.5 Revamped Training Dashboard Topology &amp; Interactive SOTA Inspection</h3>
+        <h3>6.4 Revamped Training Dashboard Topology &amp; Interactive SOTA Inspection</h3>
         <p>The modern Training Panel employs a high-productivity split topology:</p>
+
+        <div class="figure-center">
+            <img src="../assets/gui/gui_training_panel_overview.png" alt="Revamped Training Dashboard Topology &amp; Interactive SOTA Inspection" class="img-paper">
+        </div>
+
+        <h4>Training Dashboard Topology Numbered Reference</h4>
         <ol>
-            <li><strong>Global Orchestrator Toolbar</strong>: Houses high-level configuration controls, including real-time search, domain filtering, and global batch execution triggers.</li>
-            <li><strong>Model Card Grid</strong>: Displays the active Model Card Grid with format variation badges, parameter counts, and inline ladder progress meters.</li>
-            <li><strong>Interactive Pinned/Persisted SOTA Tooltip</strong>: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.</li>
-            <li><strong>Dual Local vs. Cloud Execution Triggers</strong>: Card action buttons provide <strong>"Start Training"</strong> (local dispatch) and <strong>"Cloud Training"</strong> (opens the interactive Cloud Training modal). Both triggers automatically scroll down to focus the bottom Telemetry console.</li>
-            <li><strong>Interactive Cloud Training Modal</strong>: Dedicated dialog allowing users to choose target cloud notebooks (<code>Kaggle</code>, <code>Colab</code>), verify manifold bindings, review required secrets (<code>SUITE_PAT</code>, <code>KAGGLE_KEY</code>), and launch cloud runs with zero manual setup.</li>
+            <li><strong>Global Orchestrator Toolbar</strong>: Houses high-level configuration controls, including real-time search, domain filtering, quick train presets, 1-epoch fleet diagnostic trigger, and batch notebook generation.</li>
+            <li><strong>Registered Neural Architecture Cards Grid</strong>: Displays the active Model Card Grid with format variation badges, parameter counts, and inline ladder progress meters.</li>
+            <li><strong>Interactive Pinned/Persisted SOTA Popover</strong>: Hovering over SOTA targets reveals all metrics, targets, and actual best scores; clicking pins the tooltip open for persistent comparison during training.</li>
+            <li><strong>Dual Local vs. Cloud Execution Triggers</strong>: Card action buttons provide <strong>"Local Training"</strong> (local dispatch) and <strong>"Cloud Training"</strong> (opens the interactive Cloud &amp; Registry Dispatch modal). Both triggers automatically focus the live telemetry stream below.</li>
         </ol>
+
+        <div class="table-scroll">
+            <table class="table-dense">
+                <thead>
+                    <tr>
+                        <th>Callout #</th>
+                        <th>UI Element</th>
+                        <th>Control Type</th>
+                        <th>Triggered Endpoint / Action</th>
+                        <th>Operator Guide &amp; Behavioral Safeguards</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Orchestrator Toolbar</td>
+                        <td>Toolbar Container</td>
+                        <td>Client-side filters &amp; batch triggers</td>
+                        <td>Controls fleet search, domain filtering, and batch automation.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Model Cards Grid</td>
+                        <td>Card Grid</td>
+                        <td><code>models_v2.json</code> scan</td>
+                        <td>Displays architecture telemetry, ladder meters, and action buttons.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Pinned SOTA Popover</td>
+                        <td>Popover Trigger</td>
+                        <td><code>HoverPinPopover.tsx</code></td>
+                        <td>Details convergence targets, current best scores, and baselines.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Execution Triggers</td>
+                        <td>Action Buttons</td>
+                        <td>Local training / Cloud dispatch</td>
+                        <td>Dispatches local GPU execution or opens remote cloud modal.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <!-- SECTION 7 -->
@@ -1261,13 +1374,72 @@
             <li><strong>Safetensors Weights</strong>: Saves cryptographic, zero-copy weights free of arbitrary code execution vulnerabilities.</li>
         </ul>
 
-        <h3>7.3 Publishing to Kaggle &amp; Google Drive</h3>
-        <p>Click <code>Publish Model Package</code> in the GUI:</p>
+        <h3>7.3 Publishing to Kaggle Models Hub &amp; Cloud Registry</h3>
+        <p>Clicking <code>Sync Kaggle Models Hub</code> on any registered architecture card opens the isolated multi-variation publishing workflow:</p>
+
+        <div class="figure-center">
+            <img src="../assets/gui/gui_model_export_publish.png" alt="Model Export, Binary Packaging &amp; Kaggle Models Hub Registry Dispatch" class="img-paper">
+        </div>
+
+        <h4>Cloud &amp; Registry Dispatch Numbered Reference</h4>
         <ol>
-            <li>Select target cloud repository (Kaggle Model Hub or Google Drive).</li>
-            <li>The studio automatically bundles the model weights, model card (<code>README.md</code>), evaluation metrics graphs (<code>metrics.csv</code>), and before-and-after visual demonstration images.</li>
-            <li>Authenticates using your active credentials from the Secrets Vault and uploads the package as a new release version into the <strong>LemGendary Trained Models Repo</strong> (<code>.\LemGendaryModels\</code>).</li>
+            <li><strong>Cloud &amp; Registry Dispatch Modal Header</strong>: Confirms active model target (<code>LemGendary Forex Predictor</code>) and guidance popover.</li>
+            <li><strong>Cloud Platform Switcher</strong>: Toggles between <code>Kaggle GPU Cloud</code> (remote compute execution), <code>Google Colab FUSE</code>, and <code>Kaggle Models Hub</code> (isolated artifact publishing).</li>
+            <li><strong>Model Variation Selector Dropdown</strong>: Selects binary target payload (<code>All Variations</code>, <code>PyTorch (.pt)</code>, <code>ONNX FP32</code>, or <code>ONNX FP16</code>).</li>
+            <li><strong>Stage Variations Action Button</strong>: Dispatches <code>POST /api/training/stage</code>, preparing isolated directory structures under <code>dist/kaggle/</code> free of cross-contamination.</li>
+            <li><strong>Push to Kaggle Models Primary Button</strong>: Authenticates with Kaggle API credentials from the Secrets Vault and publishes verified model release versions.</li>
         </ol>
+
+        <div class="table-scroll">
+            <table class="table-dense">
+                <thead>
+                    <tr>
+                        <th>Callout #</th>
+                        <th>UI Element</th>
+                        <th>Control Type</th>
+                        <th>Triggered Endpoint / Action</th>
+                        <th>Operator Guide &amp; Behavioral Safeguards</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Modal Header</td>
+                        <td>Dialog Header</td>
+                        <td>None</td>
+                        <td>Confirms model identity and target publishing parameters.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Platform Switcher</td>
+                        <td>Button Group</td>
+                        <td><code>setTargetPlatform()</code></td>
+                        <td>Switches between remote GPU cloud compute and registry publishing.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Variation Selector</td>
+                        <td>Select Dropdown</td>
+                        <td><code>setSelectedVariation()</code></td>
+                        <td>Selects target format variation: PyTorch, ONNX FP32, or ONNX FP16.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Stage Variations</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/stage</code></td>
+                        <td>Prepares isolated binary directory trees under <code>dist/kaggle/</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Push to Kaggle Models</td>
+                        <td>Primary Button</td>
+                        <td><code>POST /api/training/push</code></td>
+                        <td>Publishes validated multi-variation weights to Kaggle Models Hub.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <!-- SECTION 8 -->
