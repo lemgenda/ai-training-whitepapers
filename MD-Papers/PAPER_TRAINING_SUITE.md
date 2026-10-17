@@ -31,6 +31,7 @@
   - [2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing & Kaggle Models Checkpoint Publishing](#217-fleet-wide-1-epoch-diagnostic-smoke-testing--kaggle-models-checkpoint-publishing)
   - [2.18. Zero-Warning Tensor Memory Isolation & Telemetry Stream Segregation](#218-zero-warning-tensor-memory-isolation--telemetry-stream-segregation)
   - [2.19. Forex Parquet Locality Acceleration & Telemetry Progress Synchronization](#219-forex-parquet-locality-acceleration--telemetry-progress-synchronization)
+  - [2.20. Validation Batch Telemetry & Live Telemetry Progress Synchronization](#220-validation-batch-telemetry--live-telemetry-progress-synchronization)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -284,6 +285,25 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 
 - **GUI Telemetry Progress Parser & Radix UI Progress Tracker**:
   The Desktop GUI's `progressParser.ts` natively parses `[BATCH <current>/<total>]`, computes exact progress percentages, and updates `TelemetryProgressTracker.tsx`. For fractional percentages $<1\%$, the tracker renders two decimal places (`0.02%`) rather than truncating to 0%. Indeterminate states trigger a smooth animated gradient sweep across the track instead of rendering static 80% filled bars.
+
+### 2.20. Validation Batch Telemetry & Live Telemetry Progress Synchronization (v16.9.28)
+
+- **Validation Loop Real-Time Batch Telemetry (`training/training/validation.py`)**:
+  Evaluation passes under large validation splits (e.g. multi-thousand batch financial datasets or large image sets) previously operated without per-batch log emissions, causing the console and GUI to appear silent between 15-minute intra-epoch checkpoint intervals.
+  The engine modernizes `validate_one_epoch` to log telemetry matching the training loop cadence:
+  - Initial warmup batches (1, 2, 5, 10).
+  - Periodic batches (`step_count % log_interval == 0` or final batch).
+  - 8-second heartbeat timer during batch iteration.
+  Emits formatted records:
+
+  ```text
+  [VAL BATCH 125/2500] (5.00%) ValLoss: 0.2104 | AvgValLoss: 0.2215 | 1.05 it/s | ETA 37m42s | 119.0s
+  ```
+
+- **GUI Telemetry Validation Parser & Emerald Progress Tracker (`progressParser.ts`, `TelemetryProgressTracker.tsx`, `client.ts`)**:
+  - `client.ts` (`isProgressLine`): Recognizes `[VAL BATCH ...]` alongside `[BATCH ...]` to roll up consecutive ticks in-place without terminal history bloat.
+  - `progressParser.ts`: Parses `[VAL BATCH <current>/<total>]`, sets `operation = "VALIDATION"`, sets `target = "Val Batch <current>/<total>"`, and maps to source `"training"`.
+  - `TelemetryProgressTracker.tsx`: Dynamically renders an emerald green accent (`#00ff88`) and gradient for the `VALIDATION` operation, giving immediate high-contrast visual confirmation of the evaluation phase.
 
 ---
 
