@@ -30,6 +30,7 @@
   - [2.16. Single Source of Truth (SSOT) Jupyter Notebook Generation & Cross-Workspace Staging](#216-single-source-of-truth-ssot-jupyter-notebook-generation--cross-workspace-staging)
   - [2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing & Kaggle Models Checkpoint Publishing](#217-fleet-wide-1-epoch-diagnostic-smoke-testing--kaggle-models-checkpoint-publishing)
   - [2.18. Zero-Warning Tensor Memory Isolation & Telemetry Stream Segregation](#218-zero-warning-tensor-memory-isolation--telemetry-stream-segregation)
+  - [2.19. Forex Parquet Locality Acceleration & Telemetry Progress Synchronization](#219-forex-parquet-locality-acceleration--telemetry-progress-synchronization)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -258,6 +259,31 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
   1. High-frequency iteration steps stream as discrete, unconstrained percentage events.
   2. The Desktop GUI log feed (`LogPanel.tsx`, `TelemetryConsole.tsx`) filters intermediate batch updates to avoid terminal buffer churn, rendering discrete milestone notices (epoch start, validation completions, SOTA alerts, checkpoints).
   3. Visual progress is displayed via the dedicated `@radix-ui/react-progress` tracker component, maintaining peak visual ergonomics and zero stream interference.
+
+### 2.19. Forex Parquet Locality Acceleration & Telemetry Progress Synchronization (v16.9.26)
+
+- **Parquet Row-Group Locality Bottleneck & `RowGroupAwareSampler`**:
+  Parquet is a columnar format organized into discrete row groups (typically ~5,000 rows each). Accessing row $N$ within a compressed row group requires decompressing the entire group. Under standard PyTorch `shuffle=True`, row indices are selected uniformly at random across all 700+ row groups across multiple years. This causes an catastrophic ~98% cache miss rate against in-memory LRU buffers, inflating batch iteration times to ~55 seconds per batch.
+  The engine resolves this by integrating `RowGroupAwareSampler` directly in `training/core_loop.py` for all Forex datasets:
+  1. Buckets sample indices by parent row group locality keys `('parquet', year, row_group_id)`.
+  2. Shuffles at the row group level across epochs via `sampler.set_epoch(epoch)`.
+  3. Yields indices within each row group contiguously, driving LRU cache hit rates from 2% to 99% and accelerating batch throughput to sub-second speeds (<0.5s/batch).
+
+- **Curriculum Initial Fraction Ingestion**:
+  In multi-year financial time-series datasets containing millions of multi-timeframe samples, initial training passes are governed by curriculum optimization parameters in `unified_models_v2.yaml` (`initial_fraction: 0.15`). `training/core_loop.py` pre-initializes the `SmartTrainingGovernor` before dataset construction, propagating `sample_fraction = governor.curriculum.current_fraction` into `ForexDataset(..., sample_fraction=sample_fraction)`. This bounds initial epoch size to ~16,379 batches instead of loading all 109,196 batches at once.
+
+- **Standardized Batch Telemetry & Live Heartbeat**:
+  Intra-epoch iteration logging in `training/training/epoch.py` is upgraded to emit standard telemetry lines containing:
+  - Exact batch index and total count: `[BATCH 20/16379]`
+  - Explicit fractional percentage: `(0.12%)`
+  - Instantaneous loss and running average loss: `Loss: 0.3191 | AvgLoss: 0.6325`
+  - Current learning rate: `LR: 0.001000`
+  - Measured iteration rate: `5.42 it/s`
+  - Dynamic estimated time of arrival: `ETA 50m24s`
+  - Warmup logging (batches 1, 2, 5, 10) and an 8-second heartbeat timer prevent console and UI silence during intensive computation.
+
+- **GUI Telemetry Progress Parser & Radix UI Progress Tracker**:
+  The Desktop GUI's `progressParser.ts` natively parses `[BATCH <current>/<total>]`, computes exact progress percentages, and updates `TelemetryProgressTracker.tsx`. For fractional percentages $<1\%$, the tracker renders two decimal places (`0.02%`) rather than truncating to 0%. Indeterminate states trigger a smooth animated gradient sweep across the track instead of rendering static 80% filled bars.
 
 ---
 

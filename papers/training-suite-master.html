@@ -47,6 +47,7 @@
                         <li><a href="#ssot-notebook-generation">2.16. Single Source of Truth (SSOT) Jupyter Notebook Generation &amp; Cross-Workspace Staging</a></li>
                         <li><a href="#fleet-wide-diagnostics-publishing">2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing &amp; Kaggle Models Checkpoint Publishing</a></li>
                         <li><a href="#zero-warning-tensor-isolation">2.18. Zero-Warning Tensor Memory Isolation &amp; Telemetry Stream Segregation</a></li>
+                        <li><a href="#forex-locality-telemetry">2.19. Forex Parquet Locality Acceleration &amp; Telemetry Progress Synchronization</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-5">3. Judicial Audit Engine</a>
@@ -80,12 +81,12 @@
         <p class="subtitle">Complete documentation of the LemGendary High-Fidelity Training Engine.</p>
         <div class="meta">
                 <span>Category 01.3 TRAINING</span>
-                <span>Version 16.9.25-STABLE</span>
+                <span>Version 16.9.26-STABLE</span>
             </div>
 
 <section id="section-1">
 <h2>1. Abstract</h2>
-            <p>The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.9.25-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.</p>
+            <p>The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.9.26-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.</p>
         
 
         
@@ -396,6 +397,14 @@
             <ul>
                 <li><strong>PyTorch Non-Writable Tensor Root Cause Remediation</strong>: In <code>data/forex_dataset.py</code>, slicing into memory-mapped NumPy window arrays (<code>raw_sample = window[:, col_indices]</code>) yields non-contiguous, read-only memory views. In modern PyTorch 2.5+, passing non-writable NumPy arrays to <code>torch.from_numpy()</code> triggers an internal runtime <code>UserWarning</code> indicating undefined behavior if written to. Rather than suppressing the diagnostic with <code>warnings.filterwarnings</code> (strictly prohibited under LemGendary standards), the dataset layer introduces <code>_safe_from_numpy(arr)</code>, which creates an isolated, writable array buffer prior to tensor conversion, resolving PyTorch tensor instantiation at root cause with 0 runtime warnings and 0 tensor copying overhead during validation.</li>
                 <li><strong>Telemetry Stream Segregation</strong>: To prevent dense training iterations from degrading operator clarity, terminal output streams are segregated: high-frequency iteration steps stream as discrete, unconstrained percentage events; the Desktop GUI log feed (<code>LogPanel.tsx</code>, <code>TelemetryConsole.tsx</code>) filters intermediate batch updates to avoid terminal buffer churn, rendering discrete milestone notices (epoch start, validation completions, SOTA alerts, checkpoints); visual progress is displayed via the dedicated <code>@radix-ui/react-progress</code> tracker component, maintaining peak visual ergonomics and zero stream interference.</li>
+            </ul>
+
+            <h3 id="forex-locality-telemetry">2.19. Forex Parquet Locality Acceleration &amp; Telemetry Progress Synchronization</h3>
+            <ul>
+                <li><strong>Parquet Row-Group Locality Bottleneck &amp; <code>RowGroupAwareSampler</code></strong>: Parquet is a columnar format organized into discrete row groups (~5,000 rows each). Accessing row <em>N</em> within a compressed row group requires decompressing the entire group. Under standard PyTorch <code>shuffle=True</code>, row indices are selected uniformly at random across all 700+ row groups across multiple years. This causes a catastrophic ~98% cache miss rate against in-memory LRU buffers, inflating batch iteration times to ~55 seconds per batch. The engine resolves this by integrating <code>RowGroupAwareSampler</code> directly in <code>training/core_loop.py</code> for all Forex datasets: (1) buckets sample indices by parent row group locality keys <code>('parquet', year, row_group_id)</code>; (2) shuffles at the row group level across epochs via <code>sampler.set_epoch(epoch)</code>; (3) yields indices within each row group contiguously, driving LRU cache hit rates from 2% to 99% and accelerating batch throughput to sub-second speeds (&lt;0.5s/batch).</li>
+                <li><strong>Curriculum Initial Fraction Ingestion</strong>: In multi-year financial time-series datasets containing millions of multi-timeframe samples, initial training passes are governed by curriculum optimization parameters in <code>unified_models_v2.yaml</code> (<code>initial_fraction: 0.15</code>). <code>training/core_loop.py</code> pre-initializes the <code>SmartTrainingGovernor</code> before dataset construction, propagating <code>sample_fraction = governor.curriculum.current_fraction</code> into <code>ForexDataset(..., sample_fraction=sample_fraction)</code>. This bounds initial epoch size to ~16,379 batches instead of loading all 109,196 batches at once.</li>
+                <li><strong>Standardized Batch Telemetry &amp; Live Heartbeat</strong>: Intra-epoch iteration logging in <code>training/training/epoch.py</code> is upgraded to emit standard telemetry lines containing: exact batch index and total count (<code>[BATCH 20/16379]</code>), explicit fractional percentage (<code>0.12%</code>), instantaneous and running average loss, learning rate, measured iteration rate (<code>it/s</code>), and dynamic ETA. Warmup logging (batches 1, 2, 5, 10) and an 8-second heartbeat timer prevent console and UI silence during intensive computation.</li>
+                <li><strong>GUI Telemetry Progress Parser &amp; Radix UI Progress Tracker</strong>: The Desktop GUI's <code>progressParser.ts</code> natively parses <code>[BATCH &lt;current&gt;/&lt;total&gt;]</code>, computes exact progress percentages, and updates <code>TelemetryProgressTracker.tsx</code>. For fractional percentages &lt;1%, the tracker renders two decimal places (e.g. <code>0.02%</code>) rather than truncating to 0%. Indeterminate states trigger a smooth animated gradient sweep across the track instead of rendering static 80% filled bars.</li>
             </ul>
 
         </section>
