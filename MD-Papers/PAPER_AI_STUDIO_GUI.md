@@ -203,6 +203,8 @@ The redesigned live telemetry console is embedded directly within individual ope
 - **Local Training Stream**: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.
 - **Remote Cloud Stream**: Relays real-time execution outputs from Kaggle GPU kernels or Colab notebooks.
 - **Ecosystem Mesh Stream**: Monitors JSON-RPC events, HTTP health probes, and audit logs across Ports 8000, 8100, and 8200.
+- **Accessible Radix UI Progress Architecture**: Driven by `@radix-ui/react-progress`, operational progress is structured into an unconstrained numerical metrics header on Line 1 (operation, exact percentage, byte sizes, throughput speed, and ETA) and an isolated, hardware-accelerated glowing progress indicator on Line 2.
+- **In-Place Stream De-duplication**: Consecutive progress tick updates for active operations are rolled up in-place, eliminating scrolling clutter while preserving discrete step start, verification, and completion records.
 - **Responsive Sub-Second Abort**: Operators can trigger immediate job cancellation (`POST /api/jobs/{id}/cancel`), hooking into inner minibatch iterations (`trainer.stop = True`) within milliseconds, instantly releasing hardware GPU VRAM.
 
 ## 7. Unified Models Registry

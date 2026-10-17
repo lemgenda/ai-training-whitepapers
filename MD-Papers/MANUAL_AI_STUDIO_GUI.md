@@ -409,7 +409,11 @@ The additional sub-tabs in the Production Manifolds section provide advanced dat
 
 ### 5.4 Embedded Dataset Telemetry Console
 
-The Dataset Compiler panel features a dedicated live streaming telemetry console docked directly at the bottom of the viewport. When compilation or Kaggle transfer jobs are launched, operators can monitor real-time WebP conversion speeds, shard partition writes, checksum audits, and transfer bandwidth without navigating away from the compiler controls.
+The Dataset Compiler panel features a dedicated live streaming telemetry console docked directly at the bottom of the viewport. Integrated with the modern `@radix-ui/react-progress` engine (installed and governed via LemGendary Environment Manager), active operations feature an accessible, glowing two-line progress architecture:
+
+1. **Line 1 (Unconstrained Operational Metrics)**: Displays operation title, target dataset archive, exact percentage, transfer size / file counts, real-time bandwidth transfer rate, and dynamic ETA cleanly spaced without text clipping or truncation.
+2. **Line 2 (Visual Progress Bar Only)**: Full-width hardware-accelerated glowing progress indicator strictly isolating the visual progress bar on its own dedicated line.
+3. **In-Place Stream De-duplication**: Intermediate progress updates for in-flight archiving, extraction, and cloud synchronization are rolled up in-place, eliminating scrolling clutter while preserving discrete step start, verification, and completion records.
 
 ---
 
@@ -514,8 +518,9 @@ The redesigned Live Telemetry Console is embedded directly on the Model Training
 1. **Local Training Telemetry Subtab**: Focuses the local training worker log stream, displaying minibatch loss, learning rate decay, gradient norms, and spatial ladder transitions.
 2. **Remote Cloud Telemetry Subtab**: Focuses the remote cloud execution log stream, relaying stdout/stderr from dispatched Kaggle GPU kernels or Colab notebooks.
 3. **Ecosystem Mesh Logs Subtab**: Focuses cross-daemon JSON-RPC events, HTTP health probes, and audit logs between Ports 8000, 8100, and 8200.
-4. **Monospace Terminal Output Stream**: High-performance scrolling container with full ANSI color parsing, rendering timestamps, log levels, and progress bars.
-5. **Stream Action Controls**:
+4. **Accessible Radix UI Progress Engine**: Displays active epoch iterations, batch counts, transfer bandwidth, and ETAs using a two-line layout: Line 1 for unconstrained numerical metrics and Line 2 for the glowing progress bar indicator.
+5. **Monospace Terminal Output Stream**: High-performance scrolling container with full ANSI color parsing, in-place update roll-ups, rendering timestamps, log levels, and milestone records without redundant clutter.
+6. **Stream Action Controls**:
    - `Copy Stream`: Copies the entire terminal buffer to system clipboard.
    - `Clear Stream`: Flushes the terminal display without disrupting background jobs.
    - `Halt Local Job` Dynamic Action Button: Sends an immediate abort signal (`POST /api/jobs/{id}/cancel`). The training engine hooks into inner minibatch iterations (via `on_train_batch_end`), setting `trainer.stop = True` within milliseconds, freeing GPU VRAM instantly without runaway execution.
@@ -525,8 +530,9 @@ The redesigned Live Telemetry Console is embedded directly on the Model Training
 | **1** | Local Training Tab | Subtab Switcher | `setActiveStreamTab("local")` | Streams local GPU worker logs, loss values, and ladder rungs. |
 | **2** | Remote Cloud Tab | Subtab Switcher | `setActiveStreamTab("remote")` | Streams stdout/stderr from Kaggle and Colab cloud training jobs. |
 | **3** | Ecosystem Mesh Tab | Subtab Switcher | `setActiveStreamTab("mesh")` | Streams cross-daemon RPC events and health telemetry. |
-| **4** | Monospace Terminal | Log Container | Real-time WebSocket buffer | High-performance terminal container auto-scrolling to newest events. |
-| **5** | Stream Controls | Action Buttons | Buffer sync / Job cancel | Copies log, clears screen, or issues sub-second training cancellation. |
+| **4** | Radix UI Progress | Accessible Widget | `@radix-ui/react-progress` | Two-line visual progress bar with unconstrained operational metrics. |
+| **5** | Monospace Terminal | Log Container | Real-time WebSocket buffer | High-performance terminal container with in-place stream de-duplication. |
+| **6** | Stream Controls | Action Buttons | Buffer sync / Job cancel | Copies log, clears screen, or issues sub-second training cancellation. |
 
 ---
 

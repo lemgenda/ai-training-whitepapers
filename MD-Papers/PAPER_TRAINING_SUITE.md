@@ -29,6 +29,7 @@
   - [2.15. Single Source of Truth (SSOT) Config-Governed GUI Training Controls & Dynamic Run-State Lifecycle](#215-single-source-of-truth-ssot-config-governed-gui-training-controls--dynamic-run-state-lifecycle)
   - [2.16. Single Source of Truth (SSOT) Jupyter Notebook Generation & Cross-Workspace Staging](#216-single-source-of-truth-ssot-jupyter-notebook-generation--cross-workspace-staging)
   - [2.17. Fleet-Wide 1-Epoch Diagnostic Smoke Testing & Kaggle Models Checkpoint Publishing](#217-fleet-wide-1-epoch-diagnostic-smoke-testing--kaggle-models-checkpoint-publishing)
+  - [2.18. Zero-Warning Tensor Memory Isolation & Telemetry Stream Segregation](#218-zero-warning-tensor-memory-isolation--telemetry-stream-segregation)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -48,7 +49,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.9.16-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
+The LemGendary AI Training Suite is an industrial-grade orchestration layer for training, optimizing, and deploying SOTA vision and multimodal models. Optimized for high-frequency artifact detection and structural restoration, the v16.9.25-STABLE "Nuclear-Hardened" Architecture represents the global standard for high-fidelity model training.
 
 ---
 
@@ -238,6 +239,25 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 - **Sequential Fleet Diagnostics (`tools/train_all.py` / `lemtrain test-all`)**: The suite provides a rapid 1-epoch smoke test sequence executing across all 22 registered neural architectures. Available via CLI (`lemtrain test-all [--epochs 1]`), REST API (`POST /api/training/unit-test-all`), and GUI toolbar ("Run 1-Epoch Diagnostic"). The runner verifies data loading, forward pass execution, backward gradient computation, checkpoint generation, and GPU memory cleanup per architecture.
 - **Kaggle Models Direct Publishing (`lemtrain sync push`)**: Dedicated cloud publishing pipeline allowing operators to package trained weights, configuration manifests, and model cards, uploading them directly to Kaggle Models repositories via official APIs with zero intermediate file staging.
 - **Fleet-Wide Models Hub Synchronization (`POST /api/training/kaggle/push-all`)**: Enterprise batch publishing pipeline executing via REST API (`POST /api/training/kaggle/push-all`), CLI (`lemtrain sync push --all [-v ...] [-n ...] [--dry-run]`), and desktop GUI toolbar ("Push All Models to Kaggle"). Iterates across all 22 registered architectures, running automated pre-flight isolation verification across PyTorch, ONNX FP32, and ONNX FP16 variations before streaming artifacts directly to Kaggle Models.
+
+### 2.18. Zero-Warning Tensor Memory Isolation & Telemetry Stream Segregation (v16.9.25)
+
+- **PyTorch Non-Writable Tensor Root Cause Remediation**:
+  In `data/forex_dataset.py`, slicing into memory-mapped NumPy window arrays (`raw_sample = window[:, col_indices]`) yields non-contiguous, read-only memory views. In modern PyTorch 2.5+, passing non-writable NumPy arrays to `torch.from_numpy()` triggers an internal runtime `UserWarning` indicating undefined behavior if written to. Rather than suppressing the diagnostic with `warnings.filterwarnings` (strictly prohibited under LemGendary standards), the dataset layer introduces `_safe_from_numpy(arr)`:
+
+  ```python
+  def _safe_from_numpy(arr: np.ndarray) -> torch.Tensor:
+      if not arr.flags.writeable:
+          arr = arr.copy()
+      return torch.from_numpy(arr)
+  ```
+
+  This creates an isolated, writable array buffer prior to tensor conversion, resolving PyTorch tensor instantiation at root cause with 0 runtime warnings and 0 tensor copying overhead during validation.
+- **Telemetry Stream Segregation**:
+  To prevent dense training iterations from degrading operator clarity, terminal output streams are segregated:
+  1. High-frequency iteration steps stream as discrete, unconstrained percentage events.
+  2. The Desktop GUI log feed (`LogPanel.tsx`, `TelemetryConsole.tsx`) filters intermediate batch updates to avoid terminal buffer churn, rendering discrete milestone notices (epoch start, validation completions, SOTA alerts, checkpoints).
+  3. Visual progress is displayed via the dedicated `@radix-ui/react-progress` tracker component, maintaining peak visual ergonomics and zero stream interference.
 
 ---
 

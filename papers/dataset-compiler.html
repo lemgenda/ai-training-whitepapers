@@ -61,6 +61,9 @@
                         <li><a href="#512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</a></li>
                         <li><a href="#513-native-archive-acceleration">5.13 Native 7-Zip &amp; Tar Multi-Threaded Archive Acceleration</a></li>
                         <li><a href="#514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
+                        <li><a href="#514-direct-streaming-ingestion-telemetry-hardening">5.15 Direct In-Memory Streaming Ingestion &amp; Terminal Progress Telemetry Hardening (v16.9.1)</a></li>
+                        <li><a href="#515-ssot-notebook-delegation">5.16 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</a></li>
+                        <li><a href="#516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.13)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -86,12 +89,12 @@
         <p class="subtitle">Industrial Standard for Generative & Vision Data Synthesis</p>
         <div class="meta">
                 <span>Category 01.2 DATASET</span>
-                <span>Version 16.9.6</span>
+                <span>Version 16.9.13</span>
             </div>
 
 <section id="section-1">
 <h2>1. Abstract</h2>
-            <p>The LemGendary Dataset Compiler Suite (v16.9.6) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
+            <p>The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
             <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
         
 
@@ -777,13 +780,22 @@
                 <li><strong>Silent Subsystem Extraction Delegation</strong>: Updated native 7-Zip execution parameters in <code>utils/archive.py</code> (<code>smart_extract</code>) from <code>-bsp1</code> to <code>-bsp0</code>, silencing per-file stdout progress percentage emission and preventing terminal buffer pollution during fallback physical archive extractions.</li>
             </ul>
 
-            <h3 id="515-ssot-notebook-delegation">5.15 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</h3>
+            <h3 id="515-ssot-notebook-delegation">5.16 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</h3>
             <p>To enforce strict DRY principles and establish an authoritative single source of truth for training and inference notebooks, v16.9.7 completely extracts notebook generation logic out of <code>lemgendary-datasets</code>:</p>
             <ul>
                 <li><strong>Deduplication of Generator Codebase</strong>: Removed legacy and duplicated notebook builders (<code>tools/notebook_generator.py</code> and <code>tools/notebooks/</code>), eliminating redundant cell synthesis templates and diverging execution logic across repositories.</li>
                 <li><strong>Dynamic In-Process Delegation (<code>core/manifold_compile.py</code>)</strong>: During manifold compilation, notebook generation dynamically resolves and imports <code>generate_training_notebook</code> and <code>generate_colab_training_notebook</code> directly from sibling <code>lemgendary-training-suite</code>.</li>
                 <li><strong>Identical Manifold &amp; Model Training Notebooks</strong>: Because both manifold compilation and training launches use the identical builder engine from <code>lemgendary-training-suite</code>, the <code>.ipynb</code> files placed in <code>LemGendaryDatasets/&lt;manifold&gt;/</code> are bit-exact copies of those placed in <code>LemGendaryModels/&lt;model&gt;/</code>, <code>kaggle_training/</code>, and <code>colab_training/</code>.</li>
                 <li><strong>Stale Artifact Purge</strong>: All obsolete or unreferenced legacy notebooks across compiled manifolds are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.</li>
+            </ul>
+
+            <h3 id="516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.13)</h3>
+            <p>To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.13 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:</p>
+            <ul>
+                <li><strong>Elimination of ASCII Progress Bar Glyph Flooding</strong>: In <code>utils/progress.py</code>, the default progress format was migrated from multi-line visual bar graphics (<code>\n|{bar:50}|</code>) to a single-line unconstrained metric descriptor: <code>{desc} - {percentage:5.1f}% [{n_fmt}/{total_fmt}, {rate_fmt}{postfix}]</code>. This provides clean, parseable telemetry metrics without injecting visual glyph clutter into monospace terminals.</li>
+                <li><strong>WebSocket &amp; Sidecar Stream Sanitization</strong>: In <code>api/jobs.py</code> (<code>_read_stream</code>), incoming child process streams undergo automated regex sanitization to strip residual ANSI escape codes, carriage return overwrites (<code>\r</code>), and leftover terminal bar segments before lines are broadcast over WebSockets.</li>
+                <li><strong>Static Analysis Protocol Compliance</strong>: Refactored <code>utils/progress.py</code> (<code>track_progress</code>) to replace loose dynamic <code>hasattr(iterable, "__len__")</code> introspection with Python's formal <code>collections.abc.Sized</code> abstract base class protocol (<code>isinstance(iterable, Sized)</code>), enforcing static type narrowing in Pyright without suppression pragmas.</li>
+                <li><strong>Decoupled Visual Rendering</strong>: Visual progress rendering is strictly delegated to the desktop GUI layer (<code>@radix-ui/react-progress</code>), ensuring crisp animated progress bars, live transfer rate indicators, and ETA badges while keeping log feeds clean.</li>
             </ul>
 </section>
 

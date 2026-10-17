@@ -263,6 +263,8 @@
                     <li><strong>Local Training Stream</strong>: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.</li>
                     <li><strong>Remote Cloud Stream</strong>: Relays real-time execution outputs from Kaggle GPU kernels or Colab notebooks.</li>
                     <li><strong>Ecosystem Mesh Stream</strong>: Monitors JSON-RPC events, HTTP health probes, and audit logs across Ports 8000, 8100, and 8200.</li>
+                    <li><strong>Accessible Radix UI Progress Architecture</strong>: Driven by <code>@radix-ui/react-progress</code>, operational progress is structured into an unconstrained numerical metrics header on Line 1 (operation, exact percentage, byte sizes, throughput speed, and ETA) and an isolated, hardware-accelerated glowing progress indicator on Line 2.</li>
+                    <li><strong>In-Place Stream De-duplication</strong>: Consecutive progress tick updates for active operations are rolled up in-place, eliminating scrolling clutter while preserving discrete step start, verification, and completion records.</li>
                     <li><strong>Responsive Sub-Second Abort</strong>: Operators can trigger immediate job cancellation (<code>POST /api/jobs/{id}/cancel</code>), hooking into inner minibatch iterations (<code>trainer.stop = True</code>) within milliseconds, instantly releasing hardware GPU VRAM.</li>
                 </ul>
             </section>

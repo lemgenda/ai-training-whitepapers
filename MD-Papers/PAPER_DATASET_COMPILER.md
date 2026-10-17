@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (v16.9.6) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
+The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
 
 * **Project Repository**: [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 
@@ -22,13 +22,13 @@ The v16.2.8 release introduces the High-Fidelity Compiler, optimized for process
 
 * **O(1) Physical Skip-Indexing**:
   Traditional compiler engines verify existing outputs on disk by executing recursive path queries for every sample. In directory topologies containing millions of files, this incurs an $\mathcal{O}(N \cdot d)$ filesystem metadata lookup complexity (where $d$ is directory depth and $N$ is the dataset size). This results in massive system lockups due to OS seek contention.
-  
+
   Our compiler bypasses this lookup complexity completely. During system initialization, it performs a single flat string scan via `os.scandir` to construct an in-memory hash set ($\mathcal{S}_{\text{disk}}$) of existing filenames. Verifications then achieve $\mathcal{O}(1)$ average-case lookup complexity:
   $$\text{Verify}(x) = \begin{cases} \text{Skip} & \text{if } \text{hash}(x) \in \mathcal{S}_{\text{disk}} \\ \text{Process} & \text{otherwise} \end{cases}$$
 
 * **ThreadPoolExecutor Zero-IPC**:
   Python's standard `ProcessPoolExecutor` relies on inter-process communication (IPC) to serialize and deserialize data across boundaries via pipes. On Windows, this incurs an immense pickling serialization overhead of $\mathcal{O}(P \cdot S)$ (where $P$ is the number of subprocesses and $S$ is the serialized payload size).
-  
+
   We dynamically bypass this by switching the engine class to `ThreadPoolExecutor` for pure I/O-bound tasks:
   $$\text{Executor} = \begin{cases} \text{ProcessPoolExecutor} & \text{if } \text{inference\_vetting} = \text{True} \\ \text{ThreadPoolExecutor} & \text{otherwise} \end{cases}$$
   This maintains a single shared virtual memory address space (Zero-IPC), scaling throughput to the physical hardware limits of the target NVMe drive.
@@ -340,6 +340,25 @@ To enforce strict ecosystem DRY principles (Don't Repeat Yourself) and establish
 2. **Dynamic In-Process Delegation (`core/manifold_compile.py`)**: During manifold compilation, notebook generation dynamically resolves and imports `generate_training_notebook` and `generate_colab_training_notebook` directly from sibling `lemgendary-training-suite`. If the training suite is unavailable on the Python path, the compiler logs clear, actionable setup instructions rather than silently falling back to stale local templates.
 3. **Identical Manifold & Model Training Notebooks**: Because both manifold compilation and training launches use the identical builder engine from `lemgendary-training-suite`, the `.ipynb` files placed in `LemGendaryDatasets/<manifold>/` are bit-exact copies of those placed in `LemGendaryModels/<model>/`, `kaggle_training/`, and `colab_training/`.
 4. **Stale Artifact Purge**: All obsolete or unreferenced legacy notebooks across compiled manifolds (such as `classification_master_manifold_training.ipynb` or legacy detection artifacts) are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.
+
+### 5.16 Modern Telemetry Progress Architecture & Outdated Progress Bar Elimination (v16.9.13)
+
+To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.13 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:
+
+1. **Elimination of ASCII Progress Bar Glyph Flooding**:
+   In `utils/progress.py`, the default progress format was migrated from multi-line visual bar graphics (`\n|{bar:50}|`) to a single-line unconstrained metric descriptor:
+
+   ```python
+   STANDARD_BAR_FORMAT = "{desc} - {percentage:5.1f}% [{n_fmt}/{total_fmt}, {rate_fmt}{postfix}]"
+   ```
+
+   This format provides clean, parseable telemetry metrics (`percentage`, `n_fmt`, `total_fmt`, `rate_fmt`, and `eta`) without injecting character-based visual bars (`[====>]`, `|...|`, `█`) that clutter monospace terminals.
+2. **WebSocket & Sidecar Stream Sanitization**:
+   In `api/jobs.py` (`_read_stream`), incoming child process streams undergo automated regex sanitization to strip residual ANSI escape codes, carriage return overwrites (`\r`), and leftover terminal bar segments before lines are broadcast over WebSockets.
+3. **Static Analysis Protocol Compliance**:
+   Refactored `utils/progress.py` (`track_progress`) to replace loose dynamic `hasattr(iterable, "__len__")` introspection with Python's formal `collections.abc.Sized` abstract base class protocol (`isinstance(iterable, Sized)`). This enforces static type narrowing in Pyright and mypy without relying on suppression pragmas (`# type: ignore`), upholding the strict zero-warning policy.
+4. **Decoupled Visual Rendering**:
+   Visual progress rendering is strictly delegated to the desktop GUI layer (`@radix-ui/react-progress`), ensuring crisp animated progress bars, live transfer rate indicators, and ETA badges while keeping log feeds clean and focused on milestone events.
 
 ---
 

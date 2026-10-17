@@ -1025,7 +1025,12 @@
         </ol>
 
         <h3>5.4 Embedded Dataset Telemetry Console</h3>
-        <p>The Dataset Compiler panel features a dedicated live streaming telemetry console docked directly at the bottom of the viewport. When compilation or Kaggle transfer jobs are launched, operators can monitor real-time WebP conversion speeds, shard partition writes, checksum audits, and transfer bandwidth without navigating away from the compiler controls.</p>
+        <p>The Dataset Compiler panel features a dedicated live streaming telemetry console docked directly at the bottom of the viewport. Integrated with the modern <code>@radix-ui/react-progress</code> engine (installed and governed via LemGendary Environment Manager), active operations feature an accessible, glowing two-line progress architecture:</p>
+        <ol>
+            <li><strong>Line 1 (Unconstrained Operational Metrics)</strong>: Displays operation title, target dataset archive, exact percentage, transfer size / file counts, real-time bandwidth transfer rate, and dynamic ETA cleanly spaced without text clipping or truncation.</li>
+            <li><strong>Line 2 (Visual Progress Bar Only)</strong>: Full-width hardware-accelerated glowing progress indicator strictly isolating the visual progress bar on its own dedicated line.</li>
+            <li><strong>In-Place Stream De-duplication</strong>: Intermediate progress updates for in-flight archiving, extraction, and cloud synchronization are rolled up in-place, eliminating scrolling clutter while preserving discrete step start, verification, and completion records.</li>
+        </ol>
     </section>
 
     <!-- SECTION 6 -->
@@ -1331,7 +1336,8 @@
             <li><strong>Local Training Telemetry Subtab</strong>: Focuses the local training worker log stream, displaying minibatch loss, learning rate decay, gradient norms, and spatial ladder transitions.</li>
             <li><strong>Remote Cloud Telemetry Subtab</strong>: Focuses the remote cloud execution log stream, relaying stdout/stderr from dispatched Kaggle GPU kernels or Colab notebooks.</li>
             <li><strong>Ecosystem Mesh Logs Subtab</strong>: Focuses cross-daemon JSON-RPC events, HTTP health probes, and audit logs between Ports 8000, 8100, and 8200.</li>
-            <li><strong>Monospace Terminal Output Stream</strong>: High-performance scrolling container with full ANSI color parsing, rendering timestamps, log levels, and progress bars.</li>
+            <li><strong>Accessible Radix UI Progress Engine</strong>: Displays active epoch iterations, batch counts, transfer bandwidth, and ETAs using a two-line layout: Line 1 for unconstrained numerical metrics and Line 2 for the glowing progress bar indicator.</li>
+            <li><strong>Monospace Terminal Output Stream</strong>: High-performance scrolling container with full ANSI color parsing, in-place update roll-ups, rendering timestamps, log levels, and milestone records without redundant clutter.</li>
             <li><strong>Stream Action Controls</strong>:
                 <ul>
                     <li><code>Copy Stream</code>: Copies the entire terminal buffer to system clipboard.</li>
@@ -1376,13 +1382,20 @@
                     </tr>
                     <tr>
                         <td><strong>4</strong></td>
-                        <td>Monospace Terminal</td>
-                        <td>Log Container</td>
-                        <td>Real-time WebSocket buffer</td>
-                        <td>High-performance terminal container auto-scrolling to newest events.</td>
+                        <td>Radix UI Progress</td>
+                        <td>Accessible Widget</td>
+                        <td><code>@radix-ui/react-progress</code></td>
+                        <td>Two-line visual progress bar with unconstrained operational metrics.</td>
                     </tr>
                     <tr>
                         <td><strong>5</strong></td>
+                        <td>Monospace Terminal</td>
+                        <td>Log Container</td>
+                        <td>Real-time WebSocket buffer</td>
+                        <td>High-performance terminal container with in-place stream de-duplication.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
                         <td>Stream Controls</td>
                         <td>Action Buttons</td>
                         <td>Buffer sync / Job cancel</td>
