@@ -24,7 +24,7 @@
 * **Section 8.2 Ecosystem Maintenance Controls Screenshot** — Captured and integrated dedicated numbered screenshot (`gui_ecosystem_maintenance.png`) with 5 action button badges into Section 8.2 across HTML and Markdown manuals.
 * **Section 9 Contextual Help Popover Scaling** — Scaled contextual help popover screenshot (`gui_contextual_help_popover.png`) down by 50% (`.img-paper-50`, `max-width: 525px;`).
 * **API, CLI & Control Registry Synchronization** — Documented `POST /api/training/kaggle/push-all` across `MANUAL_API.md` and `api-manual.html`; documented `lemtrain sync push --all` across `MANUAL_CLI.md` and `cli-manual.html`; registered `training-toolbar-push-all-models-btn` in `GUI_CONTROL_REGISTRY.md` and `gui-control-registry.html`.
-* **Automated Integrity Verification** — All 36 automated documentation test gates in `tests/test_documentation.py` passing with zero warnings and 100% zero-emoji compliance.
+* **Automated Integrity Verification & Documentation Hub Audit Remediation** — All 38 automated documentation test gates in `tests/test_documentation.py` passing with zero warnings and 100% zero-emoji compliance. Established machine-readable `manifest/documents.json` pairing all 48 HTML publications 1-to-1 with Markdown companions; purged third-party external CDN fallback references; synchronized hub header, baseline manifests, and manuals to `v16.9.27-STABLE` reviewed 2026-10-17.
 
 ---
 

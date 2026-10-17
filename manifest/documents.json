@@ -1,0 +1,489 @@
+{
+  "schema_version": "1.0.0",
+  "document_baseline": "v16.9.27-STABLE",
+  "last_audited": "2026-10-17",
+  "total_publications": 48,
+  "author": "Lem Treursic",
+  "documents": [
+    {
+      "id": "ai-helper-troubleshooting-knowledge",
+      "title": "AI Helper Troubleshooting Knowledge Base",
+      "category": "Category 02 GUIDE",
+      "html_path": "papers/ai-helper-troubleshooting-knowledge.html",
+      "md_path": "MD-Papers/AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "ai-studio-manual",
+      "title": "AI Studio Desktop GUI Manual",
+      "category": "Category 03 MANUALS",
+      "html_path": "papers/ai-studio-manual.html",
+      "md_path": "MD-Papers/MANUAL_AI_STUDIO_GUI.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "ai-studio-whitepaper",
+      "title": "AI Studio GUI Architecture Whitepaper",
+      "category": "Category 01 ARCH",
+      "html_path": "papers/ai-studio-whitepaper.html",
+      "md_path": "MD-Papers/PAPER_AI_STUDIO_GUI.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "api-manual",
+      "title": "Master API Reference Manual",
+      "category": "Category 03 MANUALS",
+      "html_path": "papers/api-manual.html",
+      "md_path": "MD-Papers/MANUAL_API.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "classification-nsfw",
+      "title": "Universal NSFW Classifier Specification",
+      "category": "Category 09.1 SPECIFICATION",
+      "html_path": "papers/classification-nsfw.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_NSFW_CLASSIFIER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "cli-manual",
+      "title": "Master CLI Operations Manual",
+      "category": "Category 03 MANUALS",
+      "html_path": "papers/cli-manual.html",
+      "md_path": "MD-Papers/MANUAL_CLI.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "current-state",
+      "title": "Current State & Architectural Manifest",
+      "category": "Category 01.0 STATUS",
+      "html_path": "papers/current-state.html",
+      "md_path": "MD-Papers/LEMGENDARY_CURRENT_STATE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "dataset-compiler",
+      "title": "Dataset Compiler Whitepaper",
+      "category": "Category 01.1 COMPILER",
+      "html_path": "papers/dataset-compiler.html",
+      "md_path": "MD-Papers/PAPER_DATASET_COMPILER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "degradation-engine",
+      "title": "Degradation Engine Whitepaper",
+      "category": "Category 01.2 ENGINE",
+      "html_path": "papers/degradation-engine.html",
+      "md_path": "MD-Papers/PAPER_DEGRADATION_ENGINE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "detection-classification",
+      "title": "Real-Time Detection & Classification",
+      "category": "Category 09 VISION",
+      "html_path": "papers/detection-classification.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_DETECTION_CLASSIFICATION.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "detection-master",
+      "title": "Real-Time Detection & Moderation Suite Master",
+      "category": "Category 09 VISION",
+      "html_path": "papers/detection-master.html",
+      "md_path": "MD-Papers/PAPER_DETECTION_MASTER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "detection-yolov8n",
+      "title": "YOLOv8n Multi-Task Architecture Specification",
+      "category": "Category 09.2 SPECIFICATION",
+      "html_path": "papers/detection-yolov8n.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_YOLOV8N.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "ecosystem-architecture",
+      "title": "Master Ecosystem Architecture & Multi-Sidecar Topology",
+      "category": "Category 01 ARCH",
+      "html_path": "papers/ecosystem-architecture.html",
+      "md_path": "MD-Papers/ECOSYSTEM_ARCHITECTURE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "env_manager",
+      "title": "Environment Manager Whitepaper",
+      "category": "Category 01.4 ENV",
+      "html_path": "papers/env_manager.html",
+      "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "face-codeformer",
+      "title": "CodeFormer Face Restoration Specification",
+      "category": "Category 08.1 SPECIFICATION",
+      "html_path": "papers/face-codeformer.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_CODEFORMER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "face-parsenet",
+      "title": "ParseNet Anatomical Face Parsing Specification",
+      "category": "Category 08.2 SPECIFICATION",
+      "html_path": "papers/face-parsenet.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_PARSENET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "face-retinaface",
+      "title": "RetinaFace 5-Point Landmark Detection Specification",
+      "category": "Category 08.3 SPECIFICATION",
+      "html_path": "papers/face-retinaface.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "face-suite",
+      "title": "High-Fidelity Facial Vision Suite Master",
+      "category": "Category 08 FACE VISION",
+      "html_path": "papers/face-suite.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_FACE_SUITE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "ffanet",
+      "title": "FFANet Feature Fusion Dehazing Specification",
+      "category": "Category 04.4 SPECIFICATION",
+      "html_path": "papers/ffanet.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_FFANET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "forex_predictor",
+      "title": "Multi-Scale CNN-Transformer Forex & Commodities Specification",
+      "category": "Category 11 FOREX",
+      "html_path": "papers/forex_predictor.html",
+      "md_path": "MD-Papers/PAPER_FOREX_PREDICTOR.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "foundation-diffusion",
+      "title": "Latent Diffusion & Score-Based Synthesis Specification",
+      "category": "Category 10.1 SPECIFICATION",
+      "html_path": "papers/foundation-diffusion.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_DIFFUSION.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "foundation-image-to-text",
+      "title": "Image-to-Text Vision-Language Model Specification",
+      "category": "Category 10.2 SPECIFICATION",
+      "html_path": "papers/foundation-image-to-text.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_IMAGE_TO_TEXT.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "foundation-llm",
+      "title": "Large Language Model Architecture Specification",
+      "category": "Category 10.3 SPECIFICATION",
+      "html_path": "papers/foundation-llm.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_LLM.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "foundation-models-master",
+      "title": "Generative & Multimodal Foundation Models Master",
+      "category": "Category 10 FOUNDATION",
+      "html_path": "papers/foundation-models-master.html",
+      "md_path": "MD-Papers/PAPER_FOUNDATION_MODELS_MASTER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "general-ai-training-knowledge",
+      "title": "General AI Training Knowledge Base",
+      "category": "Category 00 KNOWLEDGE",
+      "html_path": "papers/general-ai-training-knowledge.html",
+      "md_path": "MD-Papers/GENERAL_AI_TRAINING_KNOWLEDGE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "glossary",
+      "title": "Canonical Glossary & Terminology",
+      "category": "Category 12 GLOSSARY",
+      "html_path": "papers/glossary.html",
+      "md_path": "MD-Papers/GLOSSARY.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "gui-control-registry",
+      "title": "AI Studio Desktop GUI Control Registry",
+      "category": "Category 03.4 CONTROLS",
+      "html_path": "papers/gui-control-registry.html",
+      "md_path": "MD-Papers/GUI_CONTROL_REGISTRY.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "hybrid-film-restorer",
+      "title": "Universal Film Restorer Specification",
+      "category": "Category 05.2 SPECIFICATION",
+      "html_path": "papers/hybrid-film-restorer.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_FILM_RESTORER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "hybrid-multitask",
+      "title": "MultiTask Restorer MoE Routing Specification",
+      "category": "Category 05.3 SPECIFICATION",
+      "html_path": "papers/hybrid-multitask.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_MULTITASK.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "hybrid-upn-v2",
+      "title": "UPN v2 Parameterized Space-Recovery Specification",
+      "category": "Category 05.1 SPECIFICATION",
+      "html_path": "papers/hybrid-upn-v2.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_UPN_V2.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "manuals-hub",
+      "title": "Master Operations Manuals Hub",
+      "category": "Category 03 MANUALS",
+      "html_path": "papers/manuals-hub.html",
+      "md_path": "MD-Papers/MANUALS_HUB.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "mirnet",
+      "title": "MIRNet v2 Multi-Stage Low-Light Restoration Specification",
+      "category": "Category 04.3 SPECIFICATION",
+      "html_path": "papers/mirnet.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_MIRNET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "mprnet",
+      "title": "MPRNet Multi-Stage Progressive Deraining Specification",
+      "category": "Category 04.2 SPECIFICATION",
+      "html_path": "papers/mprnet.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_MPRNET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nafnet",
+      "title": "NAFNet Nonlinear Activation-Free Deblurring Specification",
+      "category": "Category 04.1 SPECIFICATION",
+      "html_path": "papers/nafnet.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_NAFNET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-authenticity",
+      "title": "NIMA Generative Authenticity DeepFake Detection Specification",
+      "category": "Category 07.4 SPECIFICATION",
+      "html_path": "papers/nima-authenticity.html",
+      "md_path": "MD-Papers/PAPER_NIMA_AUTHENTICITY.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-efficientnet",
+      "title": "NIMA Aesthetic EfficientNetV2-S Specification",
+      "category": "Category 07.2 SPECIFICATION",
+      "html_path": "papers/nima-efficientnet.html",
+      "md_path": "MD-Papers/PAPER_NIMA_EFFICIENTNET.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-master",
+      "title": "Image Quality Assessment & Authenticity Master",
+      "category": "Category 07 QUALITY",
+      "html_path": "papers/nima-master.html",
+      "md_path": "MD-Papers/PAPER_NIMA_MASTER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-mobile",
+      "title": "NIMA Aesthetic MobileNetV3-Small Specification",
+      "category": "Category 07.1 SPECIFICATION",
+      "html_path": "papers/nima-mobile.html",
+      "md_path": "MD-Papers/PAPER_NIMA_MOBILE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-pro",
+      "title": "NIMA Aesthetic Pro Swin-v2-T Specification",
+      "category": "Category 07.3 SPECIFICATION",
+      "html_path": "papers/nima-pro.html",
+      "md_path": "MD-Papers/PAPER_NIMA_PRO.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-quality",
+      "title": "Universal NIMA Perceptual Quality Specification",
+      "category": "Category 07 QUALITY",
+      "html_path": "papers/nima-quality.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_NIMA.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "nima-technical",
+      "title": "NIMA Technical Quality Distortion Assessment Specification",
+      "category": "Category 07.5 SPECIFICATION",
+      "html_path": "papers/nima-technical.html",
+      "md_path": "MD-Papers/PAPER_NIMA_TECHNICAL.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "restoration-master",
+      "title": "Dedicated Image Restoration Suite Master",
+      "category": "Category 04 RESTORATION",
+      "html_path": "papers/restoration-master.html",
+      "md_path": "MD-Papers/PAPER_RESTORATION_MASTER.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "restoration-suite",
+      "title": "Classical Image Restoration Suite Overview",
+      "category": "Category 04 RESTORATION",
+      "html_path": "papers/restoration-suite.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_RESTORATION_SUITE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "training-pathology",
+      "title": "Training Pathology & Diagnostics Playbook",
+      "category": "Category 02 PATHOLOGY",
+      "html_path": "papers/training-pathology.html",
+      "md_path": "MD-Papers/PAPER_TRAINING_PATHOLOGY.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "training-suite-master",
+      "title": "Master Training Suite Guide",
+      "category": "Category 01.3 TRAINING",
+      "html_path": "papers/training-suite-master.html",
+      "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "ultrazoom",
+      "title": "UltraZoom Super-Resolution Suite Master",
+      "category": "Category 06 SUPER-RES",
+      "html_path": "papers/ultrazoom.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_ULTRAZOOM.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "universal-hybrid",
+      "title": "Universal Hybrid Restoration Suite Master",
+      "category": "Category 05 HYBRID",
+      "html_path": "papers/universal-hybrid.html",
+      "md_path": "MD-Papers/PAPER_LEMGENDARY_HYBRID.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    },
+    {
+      "id": "versioning-policy",
+      "title": "Document Authority Hierarchy & Unified Versioning Policy",
+      "category": "Category 01.5 POLICY",
+      "html_path": "papers/versioning-policy.html",
+      "md_path": "MD-Papers/VERSIONING_POLICY.md",
+      "baseline_version": "v16.9.27-STABLE",
+      "last_audited": "2026-10-17",
+      "status": "Canonical"
+    }
+  ]
+}

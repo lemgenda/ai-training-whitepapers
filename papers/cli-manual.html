@@ -985,6 +985,215 @@ python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --out
 
 # Embed column descriptions and metadata into Parquet tables
 python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet</code></pre>
+
+                <h3 id="section-5-13">5.13 Direct Streaming Zip-to-Container Engine (<code>stream_zip_to_container.py</code>)</h3>
+                <p>
+                    Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX WebDataset <code>.tar</code> shards with on-the-fly 12-thread WebP transcoding, eliminating NTFS MFT file allocation overhead and real-time antivirus filter driver slowdowns:
+                </p>
+                <pre><code># Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
+python tools/stream_zip_to_container.py \
+    --zip ../LemGendaryDatasets/lemgendizedmirnetexposurelarge.zip \
+    --target ../LemGendaryDatasets/LemGendizedMirNetExposure \
+    --shard-size 5000 \
+    --delete-zip \
+    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedMirNetExposureLarge
+
+# Stream split target dataset (UpnV2) with automatic metadata and index.json extraction
+python tools/stream_zip_to_container.py \
+    --zip ../LemGendaryDatasets/lemgendizedupnv2large.zip \
+    --target ../LemGendaryDatasets/LemGendizedUpnV2 \
+    --shard-size 5000 \
+    --delete-zip \
+    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedUpnV2Large</code></pre>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>--zip</code></td>
+                                <td>Path</td>
+                                <td>Required</td>
+                                <td>Path to the source multi-gigabyte <code>.zip</code> archive</td>
+                            </tr>
+                            <tr>
+                                <td><code>--target</code></td>
+                                <td>Path</td>
+                                <td>Required</td>
+                                <td>Destination modernized manifold directory</td>
+                            </tr>
+                            <tr>
+                                <td><code>--format</code></td>
+                                <td>Choice</td>
+                                <td><code>webdataset</code></td>
+                                <td>Target container format (<code>webdataset</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--shard-size</code></td>
+                                <td>Integer</td>
+                                <td><code>5000</code></td>
+                                <td>Number of samples per tar shard (~500 MB)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--no-webp</code></td>
+                                <td>Flag</td>
+                                <td><code>False</code></td>
+                                <td>Disable WebP transcoding (preserves original bytes)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--workers</code></td>
+                                <td>Integer</td>
+                                <td><code>None</code> (auto: 12)</td>
+                                <td>Number of worker threads for parallel transcoding</td>
+                            </tr>
+                            <tr>
+                                <td><code>--delete-zip</code></td>
+                                <td>Flag</td>
+                                <td><code>False</code></td>
+                                <td>Unlink source <code>.zip</code> archive upon verified completion</td>
+                            </tr>
+                            <tr>
+                                <td><code>--delete-legacy-dir</code></td>
+                                <td>Path</td>
+                                <td><code>None</code></td>
+                                <td>Path to legacy uncompressed folder to purge</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 id="section-5-14">5.14 Retroactive Container Migration (<code>format migrate</code> / <code>format write</code>)</h3>
+                <p>
+                    Converts already modernized datasets with loose WebP images and <code>index.json</code> into streaming container shards, with optional purging of loose files to eliminate cluster slack:
+                </p>
+                <pre><code># Convert existing directory to WebDataset shards and purge loose directory layout
+python cli.py format migrate \
+    --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
+    --to webdataset \
+    --accept-space-loss \
+    --purge-source
+
+# Equivalent direct script invocation:
+python tools/migrate_manifold_format.py \
+    --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
+    --to webdataset \
+    --accept-space-loss \
+    --purge-source</code></pre>
+
+                <h3 id="section-5-15">5.15 Upstream Dataset Expansion &amp; Multi-Format Ingestion Reference</h3>
+                <p>
+                    The dataset compiler allows expanding any manifold simply by appending new source references to <code>unified_data.yaml</code> under the target dataset's <code>refs:</code> array:
+                </p>
+                <pre><code>datasets:
+  nima_aesthetic:
+    name: NimaAesthetic
+    canonical_format: webdataset
+    val_split: 0.12
+    refs:
+      - ref: kaggle://nicolacarrassi/ava-aesthetic-visual-assessment
+      - ref: hf://chaofengc/IQA-PyTorch-Datasets:spaq.tgz
+      - ref: gd://1A2B3C4D5E6F7G8H9I0J
+      - ref: gh://owner/research-dataset
+      - ref: manifold://NafNetDebluring</code></pre>
+
+                <h4>Supported Upstream Source Protocols</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Protocol Prefix</th>
+                                <th>Handler Submodule</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>kaggle://&lt;owner&gt;/&lt;slug&gt;</code></td>
+                                <td><code>sources/kaggle.py</code></td>
+                                <td>Authenticated KaggleHub and Kaggle API dataset download with auto-unpack</td>
+                            </tr>
+                            <tr>
+                                <td><code>hf://&lt;org&gt;/&lt;repo&gt;[:&lt;file&gt;]</code></td>
+                                <td><code>sources/hf.py</code></td>
+                                <td>Hugging Face Hub snapshot or archive (<code>.tgz</code>, <code>.tar.gz</code>) download</td>
+                            </tr>
+                            <tr>
+                                <td><code>gd://&lt;id&gt;</code></td>
+                                <td><code>sources/gd.py</code></td>
+                                <td>Google Drive multi-threaded chunked download</td>
+                            </tr>
+                            <tr>
+                                <td><code>gh://&lt;owner&gt;/&lt;repo&gt;</code></td>
+                                <td><code>sources/gh.py</code></td>
+                                <td>GitHub repository archive or release asset synchronization</td>
+                            </tr>
+                            <tr>
+                                <td><code>manifold://&lt;Name&gt;</code></td>
+                                <td><code>core/manifold_compile.py</code></td>
+                                <td>Zero-copy sibling manifold recirculation without duplicating files</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Supported Input Annotation &amp; Image Formats</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Input Format</th>
+                                <th>Converter Submodule</th>
+                                <th>Parsing Engine &amp; Capabilities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>MATLAB (<code>.mat</code>)</strong></td>
+                                <td><code>converters/matlab.py</code></td>
+                                <td><code>scipy.io.loadmat(mat_path, spmatrix=False)</code> extracting structs, keys, and coordinate arrays</td>
+                            </tr>
+                            <tr>
+                                <td><strong>COCO JSON (<code>.json</code>)</strong></td>
+                                <td><code>converters/coco.py</code></td>
+                                <td>MS-COCO bounding boxes, categories, and polygon masks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pascal VOC (<code>.xml</code>)</strong></td>
+                                <td><code>converters/xml.py</code></td>
+                                <td>XML node traversal extracting class names and bounding coordinates</td>
+                            </tr>
+                            <tr>
+                                <td><strong>YOLO TXT (<code>.txt</code>)</strong></td>
+                                <td><code>converters/yolo.py</code></td>
+                                <td>Space-delimited bounding boxes (<code>class xc yc w h</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Apache Parquet (<code>.parquet</code>)</strong></td>
+                                <td><code>converters/parquet.py</code></td>
+                                <td>Columnar table schemas with embedded image bytes or URLs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Images</strong></td>
+                                <td><code>_fast_scan</code></td>
+                                <td><code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, <code>.npy</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>Compilation Trigger</h4>
+                <p>
+                    Once sources are added, run compilation to automatically download missing sets, prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly into modern WebP containers:
+                </p>
+                <pre><code># Ingest all configured sources, vet, and emit canonical modern container shards
+python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12</code></pre>
             </section>
 
             <section id="section-6">
@@ -1098,6 +1307,52 @@ lemtrain notebooks generate --all
 
 # Specify custom output export directory
 lemtrain notebooks generate --model nima_aesthetic_mobile --output-dir custom_notebooks/</code></pre>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>--model</code>, <code>-m</code></td>
+                                <td>String</td>
+                                <td><code>None</code></td>
+                                <td>Target neural architecture key (e.g., <code>forex_predictor</code>, <code>codeformer</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--all</code>, <code>-a</code></td>
+                                <td>Flag</td>
+                                <td><code>False</code></td>
+                                <td>Batch generate notebooks across all 22 registered model architectures</td>
+                            </tr>
+                            <tr>
+                                <td><code>--platform</code>, <code>-p</code></td>
+                                <td>Choice</td>
+                                <td><code>all</code></td>
+                                <td>Target cloud execution platform (<code>kaggle</code>, <code>colab</code>, <code>all</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--kind</code>, <code>-k</code></td>
+                                <td>List</td>
+                                <td><code>all</code></td>
+                                <td>Notebook kinds to generate (<code>training</code>, <code>inference</code>, <code>usage</code>)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--output-dir</code>, <code>-o</code></td>
+                                <td>Path</td>
+                                <td><code>LemGendaryModels</code></td>
+                                <td>Custom directory to persist generated <code>.ipynb</code> files</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <p>All generated notebooks are automatically distributed and mirrored across <code>LemGendaryModels/&lt;model_key&gt;/</code>, <code>LemGendaryDatasets/&lt;manifold&gt;/</code>, <code>kaggle_training/</code>, and <code>colab_training/</code>.</p>
 
                 <h3 id="section-6-6">6.6 Checkpoint Management (<code>checkpoints</code>)</h3>

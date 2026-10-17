@@ -28,12 +28,11 @@
 <h2>Contents</h2>
 <ul>
                 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#section-abstract">1. Abstract &amp; System Topology</a></li>
-                <li><a href="#section-diagram">2. Master Topology Diagram</a></li>
-                <li><a href="#section-sidecars">3. The Multi-Sidecar Daemon Topology</a></li>
-                <li><a href="#section-boundaries">4. Repository Boundaries &amp; Responsibilities</a></li>
-                <li><a href="#section-storage">5. Physical Storage Hierarchy</a></li>
-                <li><a href="#section-resumption">6. Fault Tolerance &amp; Resumption</a></li>
+                <li><a href="#section-abstract">1. Abstract &amp; High-Level System Topology</a></li>
+                <li><a href="#section-sidecars">2. The Multi-Sidecar Daemon Topology</a></li>
+                <li><a href="#section-boundaries">3. Repository Boundaries &amp; Subsystem Responsibilities</a></li>
+                <li><a href="#section-storage">4. Physical Storage Hierarchy</a></li>
+                <li><a href="#section-resumption">5. Fault Tolerance &amp; Resumption Guarantees</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -41,20 +40,16 @@
         <p class="subtitle">Master System Architecture, Microservice Communication Channels, and Subsystem Invariants</p>
         <div class="meta">
                 <span>Category 01 ARCH</span>
-                <span>Hub Version: v16.9.26-STABLE</span>
+                <span>Hub Version: v16.9.27-STABLE</span>
                 <span>Runtime Baseline: v16.9.16-STABLE</span>
-                <span>Reviewed: 2026-10-16</span>
+                <span>Reviewed: 2026-10-17</span>
                 <span>Status: Canonical</span>
             </div>
 
 
             <section id="section-abstract">
-                <h2>1. Abstract &amp; System Topology</h2>
+                <h2>1. Abstract &amp; High-Level System Topology</h2>
                 <p>The LemGendary AI Ecosystem is engineered as a decoupled, multi-tier distributed machine learning platform. It seamlessly binds local desktop operators, background sidecar services, high-velocity data synthesis engines, and nuclear-hardened training loops into a unified operational continuum.</p>
-            </section>
-
-            <section id="section-diagram">
-                <h2>2. Master Topology Diagram</h2>
                 <div class="mermaid">
 graph TD
     subgraph UI ["Desktop Presentation Tier"]
@@ -102,7 +97,7 @@ graph TD
             </section>
 
             <section id="section-sidecars">
-                <h2>3. The Multi-Sidecar Daemon Topology</h2>
+                <h2>2. The Multi-Sidecar Daemon Topology</h2>
                 <p>To allow desktop applications, external CLI scripts, and cloud orchestrators to control the ecosystem without blocking execution or encountering Python GIL contentions, the ecosystem deploys three specialized asynchronous sidecar daemons across standardized local ports (<code>8000</code>, <code>8100</code>, and <code>8200</code>):</p>
                 <ul>
                     <li><strong>Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</strong>: Real-time hardware discovery, virtual environment provisioning, package reconciliation, and ecosystem-wide pre-commit compliance gating. WebSocket stream at <code>ws://127.0.0.1:8000/ws/log</code>.</li>
@@ -112,7 +107,7 @@ graph TD
             </section>
 
             <section id="section-boundaries">
-                <h2>4. Repository Boundaries &amp; Responsibilities</h2>
+                <h2>3. Repository Boundaries &amp; Subsystem Responsibilities</h2>
                 <div class="table-wrapper">
                     <table>
                         <thead>
@@ -160,7 +155,7 @@ graph TD
             </section>
 
             <section id="section-storage">
-                <h2>5. Physical Storage Hierarchy</h2>
+                <h2>4. Physical Storage Hierarchy</h2>
                 <ul>
                     <li><code>raw-sets/</code>: Mutable upstream source archives (TAR, ZIP, Kaggle drops).</li>
                     <li><code>../LemGendaryDatasets/</code>: Deterministic training manifolds. Contains only suffix-free modernized datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and preserved legacy folders.</li>
@@ -170,7 +165,7 @@ graph TD
             </section>
 
             <section id="section-resumption">
-                <h2>6. Fault Tolerance &amp; Resumption</h2>
+                <h2>5. Fault Tolerance &amp; Resumption Guarantees</h2>
                 <ol>
                     <li><strong>Compilation Interruption</strong>: If a compilation job halts midway, the SQLite transaction register and <i>O(1)</i> skip-indexer allow immediate resumption without re-processing existing files.</li>
                     <li><strong>Modernization Interruption</strong>: <code>tools/modernize_manifold.py</code> validates terminal manifests and skips already-transcoded <code>.webp</code> images in seconds.</li>

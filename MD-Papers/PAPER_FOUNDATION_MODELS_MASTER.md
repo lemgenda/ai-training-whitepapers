@@ -1,9 +1,10 @@
 <!-- markdownlint-disable MD051 MD013 -->
 # Architecture of LemGendary AI: Generative & Multimodal Foundation Models
 
-**Author**: Lem Treursic
-**Version**: 16.7.3
-**Category**: Category 10 FOUNDATION
+**Author**: Lem Treursic  
+**Version**: `v16.9.27-STABLE`  
+**Last Reviewed**: 2026-10-17  
+**Category**: Category 10 FOUNDATION  
 **Target Hardware**: NVIDIA / Apple Silicon / Intel ARC / CPU
 
 ---
@@ -22,11 +23,11 @@
 
 ## 1. Abstract
 
-The **Generative & Multimodal Foundation Models Suite (Category 10)** establishes the scientific and systems engineering blueprint for three emerging generative architectures within the LemGendary AI Ecosystem: **Latent Diffusion Models**, **Image-to-Text Vision-Language Models**, and **Large Language Models** (Causal Decoder-only & MoE).
+The **Generative & Multimodal Foundation Models Suite (Category 10)** establishes the scientific and systems engineering blueprint for three emerging generative architectures within the LemGendary AI Ecosystem: **Latent Diffusion Models** (score-based continuous diffusion synthesis), **Image-to-Text Vision-Language Models** (multimodal visual encoders with cross-attention perceiver resamplers), and **Large Language Models** (causal decoder-only autoregressive transformers with sparse Mixture-of-Experts routing). This specification formalizes the loss objectives, spatial-temporal tokenization manifolds, and hardware governor boundaries preparing the infrastructure for upcoming foundation training cycles.
 
 ---
 
-## 2. Scaling Laws & Mathematical Foundations
+## 2. Foundation Scaling Laws & Compute Budgets
 
 ### 2.1 The Compute-Optimal Scaling Law (Chinchilla Derivation)
 
@@ -63,8 +64,6 @@ Multiplying across the token manifold $D$ gives $C \approx 6ND$.
 3. **Exclusion of Embedding Projections**: Vocabulary embedding and final un-embedding layers are excluded from $N$ to avoid distortion in small models with large vocabularies.
 4. **Mixture-of-Experts (MoE) Adjustment**: For sparse MoE architectures (e.g. 8-expert routing with top-2 active), $N$ must be replaced with $N_{\text{active}}$, representing only the parameters actively executed per token:
    $$C_{\text{MoE}} \approx 6 N_{\text{active}} D$$
-
----
 
 ### 2.2 First-Principles VRAM Allocation & Hardware Governors
 
@@ -115,8 +114,46 @@ CUDA driver contexts, PyTorch caching allocators, and temporary GEMM scratch buf
 
 ---
 
-## 3. Dedicated Whitepapers
+## 3. Latent Diffusion Models (LDM)
 
-* [Latent Diffusion Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_DIFFUSION.md)
-* [Image-to-Text Vision-Language Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_IMAGE_TO_TEXT.md)
-* [Large Language Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_LLM.md)
+Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $\beta_t$:
+
+$$q(\mathbf{z}_t \mid \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{\bar{\alpha}_t} \mathbf{z}_0, (1 - \bar{\alpha}_t) \mathbf{I}\right)$$
+
+The denoising network $\epsilon_\theta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:
+
+$$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_\theta(\mathbf{z}_t, t, c)\|^2 \right]$$
+
+Dedicated documentation: [Diffusion Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_DIFFUSION.md).
+
+---
+
+## 4. Image-to-Text Vision-Language Models
+
+Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition the language model through cross-attention:
+
+$$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{< i}, \mathbf{H}_v)$$
+
+Dedicated documentation: [Image-to-Text VLM Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_IMAGE_TO_TEXT.md).
+
+---
+
+## 5. Causal Decoder Transformers & MoE
+
+Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and top-$k$ sparse Mixture-of-Experts routing:
+
+$$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$
+
+Dedicated documentation: [Large Language Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_LLM.md).
+
+---
+
+## 6. Distributed Training Dynamics
+
+Foundation models utilize DeepSpeed ZeRO-3 parameter sharding, gradient checkpointing, and FlashAttention-2 kernels to achieve linear throughput scaling.
+
+---
+
+## 7. Conclusion
+
+Category 10 establishes the theoretical and operational blueprint for next-generation generative and multimodal systems.

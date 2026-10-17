@@ -1,11 +1,12 @@
 import glob
+import importlib
 import json
 import os
 import re
 import unittest
 from html.parser import HTMLParser
 
-import yaml
+yaml = importlib.import_module('yaml')
 
 
 class TestDocumentationIntegrity(unittest.TestCase):
@@ -25,8 +26,20 @@ class TestDocumentationIntegrity(unittest.TestCase):
         cls.manifest_path = os.path.join(cls.workspace_root, 'lemgendary-training-suite', 'unified_models_v2.yaml')
         if not os.path.exists(cls.manifest_path):
             cls.manifest_path = os.path.abspath('lemgendary-training-suite/unified_models_v2.yaml')
+        if not os.path.exists(cls.manifest_path):
+            candidate = os.path.join(cls.docs_root, 'canonical_capabilities.yaml')
+            if os.path.exists(candidate):
+                cls.manifest_path = candidate
+        if not os.path.exists(cls.manifest_path):
+            raise FileNotFoundError(
+                f"Model manifest not found at {cls.manifest_path}. Ensure unified_models_v2.yaml or canonical_capabilities.yaml exists."
+            )
         with open(cls.manifest_path, 'r', encoding='utf-8') as f:
-            cls.manifest = yaml.safe_load(f)
+            raw_manifest = yaml.safe_load(f)
+            if isinstance(raw_manifest, dict) and 'models' in raw_manifest and isinstance(raw_manifest['models'], list):
+                cls.manifest = {m['id']: m for m in raw_manifest['models'] if 'id' in m}
+            else:
+                cls.manifest = raw_manifest
 
     # ── 1. Zero Emoji Rule ───────────────────────────────────────────────────
     def test_zero_emojis(self):
@@ -495,7 +508,7 @@ class TestDocumentationIntegrity(unittest.TestCase):
         with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
             txt = f.read()
 
-        self.assertIn('Version v16.9.26-STABLE', txt, "index.html missing header version metadata")
+        self.assertIn('Version v16.9.27-STABLE', txt, "index.html missing header version metadata")
         self.assertIn('Last Reviewed:', txt, "index.html missing last-reviewed date metadata")
         self.assertIn('AUTHORITATIVE SSOT', txt, "index.html missing authoritative SSOT badge")
 
@@ -824,6 +837,99 @@ class TestDocumentationIntegrity(unittest.TestCase):
                 info_data.get('count'), len(train_ids) + len(val_ids),
                 "dataset_info.yaml total count mismatch"
             )
+
+    # ── 37. Hub Catalog & Asset Resilience ───────────────────────────────────
+    def test_hub_catalog_and_asset_resilience(self):
+        """Rule: Central index.html catalog cards must link to existing pages, expose unique
+        category numbers, and contain zero unvetted external asset references."""
+        with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
+            content = f.read()
+
+        card_hrefs = re.findall(r'href="([^"]+)"\s+class="hub-card"', content)
+        self.assertEqual(len(card_hrefs), 14, f"Expected 14 catalog cards, found {len(card_hrefs)}")
+        for href in card_hrefs:
+            target_path = os.path.join(self.docs_root, href.replace('/', os.sep))
+            self.assertTrue(os.path.exists(target_path), f"Catalog card href {href} does not exist at {target_path}")
+
+        cat_nums = re.findall(r'<span class="category-num">(CAT\.\s*\d+[^<]*)</span>', content)
+        self.assertEqual(len(cat_nums), 14, f"Expected 14 category badges, found {len(cat_nums)}")
+        self.assertEqual(len(set(cat_nums)), 14, f"Duplicate category badges found: {cat_nums}")
+
+        unvetted_cdns = ['iconscout.com', 'unsplash.com', 'placeholder.com']
+        failures = []
+        for path in self.html_files + self.md_files:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                txt = f.read()
+            for cdn in unvetted_cdns:
+                if cdn in txt:
+                    failures.append((os.path.basename(path), cdn))
+        self.assertEqual(len(failures), 0, f"Unvetted external CDN references found: {failures}")
+
+    # ── 38. HTML & Markdown Companion Parity ─────────────────────────────────
+    def test_html_markdown_companion_parity(self):
+        """Rule: All standalone HTML publications in papers/ must maintain a 1-to-1 synchronized
+        Markdown companion in MD-Papers/."""
+        html_files = [os.path.basename(p) for p in glob.glob(os.path.join(self.docs_root, 'papers', '*.html'))]
+        md_files = [os.path.basename(p) for p in glob.glob(os.path.join(self.docs_root, 'MD-Papers', '*.md'))]
+
+        canonical_map = {
+            'ai-helper-troubleshooting-knowledge.html': 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md',
+            'ai-studio-manual.html': 'MANUAL_AI_STUDIO_GUI.md',
+            'ai-studio-whitepaper.html': 'PAPER_AI_STUDIO_GUI.md',
+            'api-manual.html': 'MANUAL_API.md',
+            'classification-nsfw.html': 'PAPER_LEMGENDARY_NSFW_CLASSIFIER.md',
+            'cli-manual.html': 'MANUAL_CLI.md',
+            'current-state.html': 'LEMGENDARY_CURRENT_STATE.md',
+            'dataset-compiler.html': 'PAPER_DATASET_COMPILER.md',
+            'degradation-engine.html': 'PAPER_DEGRADATION_ENGINE.md',
+            'detection-classification.html': 'PAPER_LEMGENDARY_DETECTION_CLASSIFICATION.md',
+            'detection-master.html': 'PAPER_DETECTION_MASTER.md',
+            'detection-yolov8n.html': 'PAPER_LEMGENDARY_YOLOV8N.md',
+            'ecosystem-architecture.html': 'ECOSYSTEM_ARCHITECTURE.md',
+            'env_manager.html': 'PAPER_ENV_MANAGER.md',
+            'face-codeformer.html': 'PAPER_LEMGENDARY_CODEFORMER.md',
+            'face-parsenet.html': 'PAPER_LEMGENDARY_PARSENET.md',
+            'face-retinaface.html': 'PAPER_LEMGENDARY_RETINAFACE.md',
+            'face-suite.html': 'PAPER_LEMGENDARY_FACE_SUITE.md',
+            'ffanet.html': 'PAPER_LEMGENDARY_FFANET.md',
+            'forex_predictor.html': 'PAPER_FOREX_PREDICTOR.md',
+            'foundation-diffusion.html': 'PAPER_LEMGENDARY_DIFFUSION.md',
+            'foundation-image-to-text.html': 'PAPER_LEMGENDARY_IMAGE_TO_TEXT.md',
+            'foundation-llm.html': 'PAPER_LEMGENDARY_LLM.md',
+            'foundation-models-master.html': 'PAPER_FOUNDATION_MODELS_MASTER.md',
+            'general-ai-training-knowledge.html': 'GENERAL_AI_TRAINING_KNOWLEDGE.md',
+            'glossary.html': 'GLOSSARY.md',
+            'gui-control-registry.html': 'GUI_CONTROL_REGISTRY.md',
+            'hybrid-film-restorer.html': 'PAPER_LEMGENDARY_FILM_RESTORER.md',
+            'hybrid-multitask.html': 'PAPER_LEMGENDARY_MULTITASK.md',
+            'hybrid-upn-v2.html': 'PAPER_LEMGENDARY_UPN_V2.md',
+            'manuals-hub.html': 'MANUALS_HUB.md',
+            'mirnet.html': 'PAPER_LEMGENDARY_MIRNET.md',
+            'mprnet.html': 'PAPER_LEMGENDARY_MPRNET.md',
+            'nafnet.html': 'PAPER_LEMGENDARY_NAFNET.md',
+            'nima-authenticity.html': 'PAPER_NIMA_AUTHENTICITY.md',
+            'nima-efficientnet.html': 'PAPER_NIMA_EFFICIENTNET.md',
+            'nima-master.html': 'PAPER_NIMA_MASTER.md',
+            'nima-mobile.html': 'PAPER_NIMA_MOBILE.md',
+            'nima-pro.html': 'PAPER_NIMA_PRO.md',
+            'nima-quality.html': 'PAPER_LEMGENDARY_NIMA.md',
+            'nima-technical.html': 'PAPER_NIMA_TECHNICAL.md',
+            'restoration-master.html': 'PAPER_RESTORATION_MASTER.md',
+            'restoration-suite.html': 'PAPER_LEMGENDARY_RESTORATION_SUITE.md',
+            'training-pathology.html': 'PAPER_TRAINING_PATHOLOGY.md',
+            'training-suite-master.html': 'PAPER_TRAINING_SUITE.md',
+            'ultrazoom.html': 'PAPER_LEMGENDARY_ULTRAZOOM.md',
+            'universal-hybrid.html': 'PAPER_LEMGENDARY_HYBRID.md',
+            'versioning-policy.html': 'VERSIONING_POLICY.md',
+        }
+
+        self.assertEqual(len(html_files), len(canonical_map), "Mismatch in total HTML publication count")
+        missing_md = []
+        for h_name, m_name in canonical_map.items():
+            if m_name not in md_files:
+                missing_md.append((h_name, m_name))
+        self.assertEqual(len(missing_md), 0, f"Missing Markdown companion files: {missing_md}")
+
 
 if __name__ == '__main__':
     unittest.main()

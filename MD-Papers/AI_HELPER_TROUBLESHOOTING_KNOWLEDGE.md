@@ -2,9 +2,9 @@
 
 > Structured diagnostics, historical failure modes, root-cause analyses, and mitigation playbooks for the LemGendary AI ecosystem.
 
-**Hub Version**: `v16.9.26-STABLE`  
+**Hub Version**: `v16.9.27-STABLE`  
 **Runtime Baseline**: `v16.9.16-STABLE`  
-**Last Reviewed / Verified**: 2026-10-16  
+**Last Reviewed / Verified**: 2026-10-17  
 **Status**: Canonical  
 
 ---
@@ -164,13 +164,13 @@ If a requested behavior, obscure failure state, or ungrounded option is not esta
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
   * **Required Telemetry**: Check optimization.plateau_patience and optimization.absolute_patience in unified_models_v2.yaml.
   * **Ranked Candidate Causes**:
-    1. Lack of an absolute patience breaker (absolute_patience).
-    2. Metric delta threshold (min_delta: 0.001) too small relative to statistical metric noise.
+    1. Lack of an absolute patience breaker (`absolute_patience`) or plateau patience configured without a hard epoch termination bound.
+    2. Metric delta threshold (`min_delta: 0.001`) too small relative to statistical metric noise on small validation sets.
 * **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Verify plateau_patience is configured without absolute_patience.
-  1. Enforce hard absolute_patience: 15 in unified_models_v2.yaml. When exceeded, force-terminate training and restore best.pth.
-  2. Ensure validation set size for SRCC is >= 500 samples to ensure statistical significance.
-  3. Implement learning rate jolt multiplier: LR <- LR * 1.5 up to 2 times, followed by mandatory termination.
+  * *Prerequisite*: Verify `plateau_patience` is configured without an active `absolute_patience` guard in `unified_models_v2.yaml`.
+  1. Enforce hard dead-man switch `absolute_patience: 15` in `unified_models_v2.yaml`. The Training Governor automatically halts execution and preserves the authoritative `best.pth` checkpoint if global SOTA is not surpassed within 15 consecutive epochs.
+  2. Maintain validation set size for rank correlation metrics (SRCC/PLCC) at >= 500 samples as an empirical heuristic to prevent stochastic validation jitter from resetting patience counters.
+  3. Implement learning rate jolt multiplier: `LR <- LR * 1.5` up to 2 times, followed by mandatory governor loop termination.
 
 ---
 
@@ -210,8 +210,8 @@ If a requested behavior, obscure failure state, or ungrounded option is not esta
     1. Non-atomic file write interrupted by power disruption, leaving a 0 KB or incomplete archive.
 * **`Stage 3: Bounded Remediation [CONFIRMED]`**:
   * *Prerequisite*: latest.pth confirmed corrupted while progress.pth or best.pth is intact.
-  1. Restore training from uncorrupted progress.pth (15-minute rolling buffer) or immutable best.pth.
-  2. Enforce atomic write protocol: write to checkpoint.tmp.pth, flush and sync, then rename atomically to latest.pth.
+  1. Restore training from uncorrupted progress.pth (intra-epoch rolling checkpoint) or immutable best.pth.
+  2. Enforce atomic write protocol: write to checkpoint.tmp.pth, flush and sync, then rename atomically to latest.pth (using resilient replacement with exponential backoff retry to prevent transient Windows OS Defender / Search Indexer file locks).
 
 ---
 

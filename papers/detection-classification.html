@@ -25,8 +25,7 @@
             <li><a href="#abstract">1. Abstract</a></li>
             <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
             <li><a href="#foundations">3. Shared Foundations</a></li>
-            <li><a href="#yolo">4.1 YOLOv8n</a></li>
-            <li><a href="#nsfw">4.2 NSFW Classifier</a></li>
+            <li><a href="#models">4. Model Deep-Dives</a></li>
             <li><a href="#challenges">5. Challenges & Resilience</a></li>
             <li><a href="#deployment">6. Deployment Strategy</a></li>
             <li><a href="#benchmarks">7. Performance Matrix</a></li>
@@ -58,20 +57,22 @@
                 <div class="math-block">$$\text{CIoU} = \text{IoU} - \left( \frac{\rho^2(b, b^{\text{gt}})}{c^2} + \alpha v \right), \quad \text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</div>
             </section>
 
-            <section id="yolo">
-                <h2>4.1 LemGendary YOLOv8n Multi-Task Model</h2>
-                <p><strong>Architecture:</strong> YOLOv8n (CSPDarknet53 + PANet).</p>
-                <p><strong>Status:</strong> Active Validation Checkpoint (mAP50: 0.698, mAP50-95: 0.582, Target Met).</p>
-                <p><strong>Manifold:</strong> <code>LemGendizedYoloV8n</code> (Ladder: [320, 480, 640]).</p>
-                <p><strong>SOTA Targets:</strong> mAP@0.5 &ge; 0.540, mAP@0.5:0.95 &ge; 0.390.</p>
-            </section>
-
-            <section id="nsfw">
-                <h2>4.2 LemGendary Universal NSFW &amp; Safety Classifier</h2>
-                <p><strong>Architecture:</strong> EfficientNetV2-S Categorical Vision Head.</p>
-                <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
-                <p><strong>Manifold:</strong> <code>LemGendizedClassificationMasterManifoldLarge</code> (Input: 224x224).</p>
-                <p><strong>SOTA Targets:</strong> Accuracy &ge; 0.980, Macro-F1 &ge; 0.975.</p>
+            <section id="models">
+                <h2>4. Model Deep-Dives</h2>
+                <div id="yolo">
+                    <h3>4.1 LemGendary YOLOv8n Multi-Task Model</h3>
+                    <p><strong>Architecture:</strong> YOLOv8n (CSPDarknet53 + PANet).</p>
+                    <p><strong>Status:</strong> Active Validation Checkpoint (mAP50: 0.698, mAP50-95: 0.582, Target Met).</p>
+                    <p><strong>Manifold:</strong> <code>LemGendizedYoloV8n</code> (Ladder: [320, 480, 640]).</p>
+                    <p><strong>SOTA Targets:</strong> mAP@0.5 &ge; 0.540, mAP@0.5:0.95 &ge; 0.390.</p>
+                </div>
+                <div id="nsfw">
+                    <h3>4.2 LemGendary Universal NSFW &amp; Safety Classifier</h3>
+                    <p><strong>Architecture:</strong> EfficientNetV2-S Categorical Vision Head.</p>
+                    <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
+                    <p><strong>Manifold:</strong> <code>LemGendizedClassificationMasterManifoldLarge</code> (Input: 224x224).</p>
+                    <p><strong>SOTA Targets:</strong> Accuracy &ge; 0.980, Macro-F1 &ge; 0.975.</p>
+                </div>
             </section>
 
             <section id="challenges">

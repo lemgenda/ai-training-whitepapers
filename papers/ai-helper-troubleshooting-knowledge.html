@@ -109,9 +109,9 @@
             <p class="subtitle">Structured diagnostics, historical failure modes, root-cause analyses, and mitigation playbooks for the LemGendary AI ecosystem.</p>
             <div class="meta" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
                 <span>Category 02 GUIDE</span>
-                <span>Hub Version: v16.9.26-STABLE</span>
+                <span>Hub Version: v16.9.27-STABLE</span>
                 <span>Runtime Baseline: v16.9.16-STABLE</span>
-                <span>Reviewed: 2026-10-16</span>
+                <span>Reviewed: 2026-10-17</span>
                 <span>Status: Canonical</span>
             </div>
         </div>
@@ -395,8 +395,8 @@
                         <p><strong>Required Telemetry:</strong> Check optimization.plateau_patience and optimization.absolute_patience in unified_models_v2.yaml.</p>
                         <p><strong>Ranked Candidate Causes:</strong></p>
                         <ol>
-                            <li>Lack of an absolute patience breaker (absolute_patience).</li>
-                            <li>Metric delta threshold (min_delta: 0.001) too small relative to statistical metric noise.</li>
+                            <li>Lack of an absolute patience breaker (<code>absolute_patience</code>) or plateau patience configured without a hard epoch termination bound.</li>
+                            <li>Metric delta threshold (<code>min_delta: 0.001</code>) too small relative to statistical metric noise on small validation sets.</li>
                         </ol>
                     </div>
                 </div>
@@ -404,11 +404,11 @@
                 <div class="stage-box">
                     <div class="stage-title">Stage 3: Bounded Remediation [PROBABLE]</div>
                     <div class="attr-content">
-                        <p><em>Prerequisite:</em> Verify plateau_patience is configured without absolute_patience.</p>
+                        <p><em>Prerequisite:</em> Verify <code>plateau_patience</code> is configured without an active <code>absolute_patience</code> guard in <code>unified_models_v2.yaml</code>.</p>
                         <ol>
-                            <li>Enforce hard absolute_patience: 15 in unified_models_v2.yaml. When exceeded, force-terminate training and restore best.pth.</li>
-                            <li>Ensure validation set size for SRCC is >= 500 samples to ensure statistical significance.</li>
-                            <li>Implement learning rate jolt multiplier: LR <- LR * 1.5 up to 2 times, followed by mandatory termination.</li>
+                            <li>Enforce hard dead-man switch <code>absolute_patience: 15</code> in <code>unified_models_v2.yaml</code>. The Training Governor automatically halts execution and preserves the authoritative <code>best.pth</code> checkpoint if global SOTA is not surpassed within 15 consecutive epochs.</li>
+                            <li>Maintain validation set size for rank correlation metrics (SRCC/PLCC) at &gt;= 500 samples as an empirical heuristic to prevent stochastic validation jitter from resetting patience counters.</li>
+                            <li>Implement learning rate jolt multiplier: <code>LR &lt;- LR * 1.5</code> up to 2 times, followed by mandatory governor loop termination.</li>
                         </ol>
                     </div>
                 </div>
@@ -500,8 +500,8 @@
                     <div class="attr-content">
                         <p><em>Prerequisite:</em> latest.pth confirmed corrupted while progress.pth or best.pth is intact.</p>
                         <ol>
-                            <li>Restore training from uncorrupted progress.pth (15-minute rolling buffer) or immutable best.pth.</li>
-                            <li>Enforce atomic write protocol: write to checkpoint.tmp.pth, flush and sync, then rename atomically to latest.pth.</li>
+                            <li>Restore training from uncorrupted progress.pth (intra-epoch rolling checkpoint) or immutable best.pth.</li>
+                            <li>Enforce atomic write protocol: write to checkpoint.tmp.pth, flush and sync, then rename atomically to latest.pth (using resilient replacement with exponential backoff retry to prevent transient Windows OS Defender / Search Indexer file locks).</li>
                         </ol>
                     </div>
                 </div>

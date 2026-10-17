@@ -3,9 +3,9 @@
 
 **Author**: Lem Treursic  
 **Category**: Category 03 MANUALS  
-**Hub Version**: `v16.9.26-STABLE`  
+**Hub Version**: `v16.9.27-STABLE`  
 **Runtime Baseline**: `v16.9.16-STABLE`  
-**Last Reviewed / Verified**: 2026-10-16  
+**Last Reviewed / Verified**: 2026-10-17  
 **Status**: Canonical  
 
 ---

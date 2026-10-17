@@ -56,9 +56,9 @@ Different subsystems within the LemGendary AI ecosystem serve different operatio
    - Covers `lemgendary-ai-studio-gui` (Tauri v2 + React 18 + Vite desktop cockpit) and the Operator Manual (`MANUAL_AI_STUDIO_GUI.md`).
    - Version `2.0.0` represents the second-generation Tauri v2 native desktop release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.26-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.27-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals, and foundational whitepapers.
-   - Reflects the active documentation release (`v16.9.26-STABLE`, reviewed 2026-10-16) while governing systems against the core runtime backend engine baseline (`v16.9.16-STABLE`) and desktop operator client (`v2.0.0`).
+   - Reflects the active documentation release (`v16.9.27-STABLE`, reviewed 2026-10-17) while governing systems against the core runtime backend engine baseline (`v16.9.16-STABLE`) and desktop operator client (`v2.0.0`).
 4. **Specialized Diagnostic & Clinical Specifications (`v1.x.y` / `v2.x.y`)**:
    - Covers clinical/diagnostic taxonomy standards such as `PAPER_TRAINING_PATHOLOGY.md` (`v1.4.0`) and algorithmic papers (`ForexPredictor v2.7.1`).
    - These versions reflect domain-specific taxonomy releases rather than software runtime build numbers.
@@ -75,7 +75,7 @@ The active canonical versions across all workspace components are synchronized a
 | **Dataset Compiler** | `lemgendary-datasets` | `v16.9.6` | `unified_data.yaml` | `python cli.py` / `lemgendary_datasets_hub.ps1` |
 | **Env Manager** | `lemgendary-env-manager` | `v16.9.3` | `pyproject.toml`, `package.json` | `lem-env` / `lemgendary_env_manager.ps1` |
 | **Desktop Operator GUI** | `lemgendary-ai-studio-gui` | `v2.0.0` (Client) | `package.json`, `src-tauri/tauri.conf.json` | Tauri v2 Desktop App / Ports 8000/8100/8200 |
-| **Documentation Hub** | `lemgendary-docs` | `v16.9.26-STABLE` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
+| **Documentation Hub** | `lemgendary-docs` | `v16.9.27-STABLE` | `MD-Papers/`, `papers/` | Documentation Hub (`index.html`) |
 | **Model Registry** | `LemGendaryModels` | `v16.9.16-STABLE` | `LemGendaryModels/*/README.md` | Authoritative Model Weights & SOTA Exports |
 
 ---

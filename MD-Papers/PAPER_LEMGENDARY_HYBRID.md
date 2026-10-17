@@ -31,6 +31,14 @@ The **LemGendary Training Suite** achieves absolute multi-modal restoration pari
 
 ## 2. Unified Hybrid Architectures
 
+Moving beyond dedicated single-task networks, modern restoration demands high generalizability. By combining modular structures with dynamically parameterized steering, these three engines comprise the primary SOTA hybrid restoration suite.
+
+| Architecture | Focus Domain | Architectural Mechanism | Visual Taxonomy Anchor |
+| :--- | :--- | :--- | :--- |
+| **UPN v2 Large** | Space-Recovery & Super-Res | High-resolution restoration and parameterized space-recovery modeling. | ![UPN v2 Large](../assets/aesthetic_masterpiece.png) |
+| **Universal Film Restorer** | Analog Degradation Recovery | Vintage film degradation synthesizer and recovery pipeline. | ![Universal Film Restorer](../assets/technical_compression.png) |
+| **Multi-Task Restorer** | Mixture-of-Experts MoE | Multiheaded task-routing restoration block. | ![Multi-Task Restorer](../assets/technical_noise.png) |
+
 ### 2.1 UPN v2 Large: Parameterized Space-Recovery
 
 The **UPN v2 Large** model represents our premier space-recovery and super-resolution engine. Built on top of residual channel-attention blocks, UPN v2 incorporates **Parameterized Steering Vectors** that allow real-time strength tuning during runtime execution.

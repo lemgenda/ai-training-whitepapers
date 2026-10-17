@@ -25,9 +25,7 @@
             <li><a href="#abstract">1. Abstract</a></li>
             <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
             <li><a href="#foundations">3. Shared Foundations</a></li>
-            <li><a href="#codeformer">4.1 CodeFormer</a></li>
-            <li><a href="#parsenet">4.2 ParseNet</a></li>
-            <li><a href="#retinaface">4.3 RetinaFace</a></li>
+            <li><a href="#models">4. Model Deep-Dives</a></li>
             <li><a href="#challenges">5. Challenges & Resilience</a></li>
             <li><a href="#deployment">6. Deployment Strategy</a></li>
             <li><a href="#benchmarks">7. Performance Matrix</a></li>
@@ -67,29 +65,30 @@
                 <p><em>Metric Calibration Rationale:</em> PSNR (higher is better) typically spans $20\text{--}35\text{ dB}$ in restoration tasks. SSIM (higher is better) and LPIPS (lower is better, measuring deep perceptual distance) are normalized indices bounded in $[0, 1]$. To prevent unit-scale distortion where a $0.05$ perceptual shift would be dwarfed by a $1.0\text{ dB}$ PSNR variation, a scaling factor of $20\times$ maps both SSIM and LPIPS to equivalent dynamic magnitudes ($\Delta = 1.0\text{ unit}$ per $0.05$ metric change), while the negative sign for LPIPS enforces consistent positive directionality for automated checkpoint selection.</p>
             </section>
 
-            <section id="codeformer">
-                <h2>4.1 LemGendary CodeFormer (Face Restoration)</h2>
-                <p><strong>Architecture:</strong> Transformer-Based VQ Codebook Lookup Network.</p>
-                <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryCodeFormer-FaceRestoration.pt</code>).</p>
-                <p><strong>Target Manifold:</strong> <code>LemGendizedCodeFormerLarge</code> (40,000 high-resolution pairs, 512x512 resolution).</p>
-                <p><strong>SOTA Targets:</strong> PSNR &ge; 30.5 dB, SSIM &ge; 0.930, LPIPS &le; 0.080, FID &le; 5.20.</p>
-            </section>
-
-            <section id="parsenet">
-                <h2>4.2 LemGendary ParseNet (Face Parsing &amp; Segmentation)</h2>
-                <p><strong>Architecture:</strong> Bilateral Semantic Segmentation Network (19 classes).</p>
-                <p><strong>Status:</strong> Training In-Progress / Pre-Training Architectural Specification.</p>
-                <p><strong>Target Manifold:</strong> <code>LemGendizedParseNetLarge</code> (512x512 resolution).</p>
-                <p><strong>SOTA Targets:</strong> mIoU &ge; 0.860, Pixel Accuracy &ge; 0.965.</p>
-                <div class="math-block">$$\mathcal{L}_{\text{ParseNet}} = \mathcal{L}_{\text{CE}} + \lambda_{\text{lovasz}} \mathcal{L}_{\text{Lovasz}} + \lambda_{\text{edge}} \mathcal{L}_{\text{Boundary}}$$</div>
-            </section>
-
-            <section id="retinaface">
-                <h2>4.3 LemGendary RetinaFace (Multi-Scale Face Detection)</h2>
-                <p><strong>Architecture:</strong> MobileNetV1-0.25 Feature Pyramid Network (FPN).</p>
-                <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
-                <p><strong>Target Manifold:</strong> <code>LemGendizedRetinaFaceMobileNetLarge</code> (640x640 resolution).</p>
-                <p><strong>SOTA Targets:</strong> mAP Easy &ge; 0.915, Medium &ge; 0.890, Hard &ge; 0.750.</p>
+            <section id="models">
+                <h2>4. Model Deep-Dives</h2>
+                <div id="codeformer">
+                    <h3>4.1 LemGendary CodeFormer (Face Restoration)</h3>
+                    <p><strong>Architecture:</strong> Transformer-Based VQ Codebook Lookup Network.</p>
+                    <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryCodeFormer-FaceRestoration.pt</code>).</p>
+                    <p><strong>Target Manifold:</strong> <code>LemGendizedCodeFormerLarge</code> (40,000 high-resolution pairs, 512x512 resolution).</p>
+                    <p><strong>SOTA Targets:</strong> PSNR &ge; 30.5 dB, SSIM &ge; 0.930, LPIPS &le; 0.080, FID &le; 5.20.</p>
+                </div>
+                <div id="parsenet">
+                    <h3>4.2 LemGendary ParseNet (Face Parsing &amp; Segmentation)</h3>
+                    <p><strong>Architecture:</strong> Bilateral Semantic Segmentation Network (19 classes).</p>
+                    <p><strong>Status:</strong> Training In-Progress / Pre-Training Architectural Specification.</p>
+                    <p><strong>Target Manifold:</strong> <code>LemGendizedParseNetLarge</code> (512x512 resolution).</p>
+                    <p><strong>SOTA Targets:</strong> mIoU &ge; 0.860, Pixel Accuracy &ge; 0.965.</p>
+                    <div class="math-block">$$\mathcal{L}_{\text{ParseNet}} = \mathcal{L}_{\text{CE}} + \lambda_{\text{lovasz}} \mathcal{L}_{\text{Lovasz}} + \lambda_{\text{edge}} \mathcal{L}_{\text{Boundary}}$$</div>
+                </div>
+                <div id="retinaface">
+                    <h3>4.3 LemGendary RetinaFace (Multi-Scale Face Detection)</h3>
+                    <p><strong>Architecture:</strong> MobileNetV1-0.25 Feature Pyramid Network (FPN).</p>
+                    <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
+                    <p><strong>Target Manifold:</strong> <code>LemGendizedRetinaFaceMobileNetLarge</code> (640x640 resolution).</p>
+                    <p><strong>SOTA Targets:</strong> mAP Easy &ge; 0.915, Medium &ge; 0.890, Hard &ge; 0.750.</p>
+                </div>
             </section>
 
             <section id="challenges">
