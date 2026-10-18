@@ -459,6 +459,76 @@
                                 <td><code>POST /api/validate</code> (8000)</td>
                                 <td>Runs full multi-gate ecosystem code validation suite.</td>
                             </tr>
+                            <tr>
+                                <td><code>pipe-step-progress-bar</code></td>
+                                <td>Step Progress Bar</td>
+                                <td><code>&lt;div role=progressbar&gt;</code></td>
+                                <td><code>WS /ws/log</code> (8000)</td>
+                                <td>Radix UI animated progress bar mounted by TelemetryProgressTracker.tsx during active step execution; unmounts upon receipt of any terminal event (success, warning, error).</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-step-status-badge</code></td>
+                                <td>Step Status Badge</td>
+                                <td><code>&lt;span&gt;</code></td>
+                                <td>&mdash;</td>
+                                <td>Displays RUNNING, PASSED, WARNING, or FAILED state; guarded by isLatestCompleted to prevent false RUNNING display after step completion.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-1</code></td>
+                                <td>Run Stage 1</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 1 (Hardware Discovery) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-2</code></td>
+                                <td>Run Stage 2</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 2 (Virtual Environment Setup) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-3</code></td>
+                                <td>Run Stage 3</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 3 (Requirements Sync) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-4</code></td>
+                                <td>Run Stage 4</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 4 (Package Installation) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-5</code></td>
+                                <td>Run Stage 5</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 5 (Dependency Audit) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-6</code></td>
+                                <td>Run Stage 6</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 6 (Codebase Verification) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-btn-run-step-7</code></td>
+                                <td>Run Stage 7</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/pipeline/run</code> (8000)</td>
+                                <td>Initiates Stage 7 (Health Matrix) as an isolated single-step run.</td>
+                            </tr>
+                            <tr>
+                                <td><code>pipe-stage-7-health</code></td>
+                                <td>Stage 7: Health Matrix</td>
+                                <td><code>&lt;li&gt;</code></td>
+                                <td><code>GET /api/health</code> (8000)</td>
+                                <td>Runs ecosystem-wide health audit across all 5 projects and reports overall_healthy.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -471,9 +541,42 @@
                     <li>Operator launches LemGendary AI Studio Desktop GUI.</li>
                     <li>Operator observes <code>dash-badge-sidecar-status</code> confirming emerald connection state.</li>
                     <li>Operator clicks <code>dash-btn-clean-install</code>.</li>
-                    <li>The GUI displays progressive completion across badges <code>pipe-stage-1-hardware</code> through <code>pipe-stage-7-health</code>.</li>
+                    <li>The GUI displays progressive completion across badges <code>pipe-stage-1-hardware</code> through <code>pipe-stage-7-health</code>, with <code>pipe-step-progress-bar</code> active on each running step.</li>
+                    <li>When the pipeline emits a terminal event (<code>success</code>, <code>warning</code>, or <code>error</code>), <code>App.tsx</code> fires <code>loadData()</code> immediately and a 1,500 ms safety poll against <code>/api/pipeline/status</code> resolves any race conditions. <code>pipe-step-status-badge</code> transitions to <code>PASSED</code> or <code>WARNING</code>.</li>
                     <li>Upon completion, <code>health-table-drift</code> updates, confirming 100% synchronized <code>[SYNC]</code> badges.</li>
                 </ol>
+
+                <h3>4.1.1 WebSocket Event Lifecycle Recovery</h3>
+                <p>The GUI intercepts the following terminal status values from the sidecar WebSocket stream and takes the corresponding actions:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>WebSocket <code>status</code> Value</th>
+                                <th>GUI Transition</th>
+                                <th>Controls Affected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>success</code></td>
+                                <td><code>isRunningPipeline</code> set to <code>false</code>; <code>loadData()</code> called</td>
+                                <td><code>pipe-step-status-badge</code> (<code>PASSED</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
+                            </tr>
+                            <tr>
+                                <td><code>warning</code></td>
+                                <td><code>isRunningPipeline</code> set to <code>false</code>; <code>loadData()</code> called</td>
+                                <td><code>pipe-step-status-badge</code> (<code>WARNING</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
+                            </tr>
+                            <tr>
+                                <td><code>error</code></td>
+                                <td><code>isRunningPipeline</code> set to <code>false</code>; error state surfaced</td>
+                                <td><code>pipe-step-status-badge</code> (<code>FAILED</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>A 1,500 ms safety polling reconciliation via <code>GET /api/pipeline/status</code> fires after every terminal event to handle late-arriving WebSocket messages and ensure UI state is always synchronized with backend reality.</p>
 
                 <h3>4.2 Workflow 2: Manifold Compilation with WebP Transcoding</h3>
                 <ol>

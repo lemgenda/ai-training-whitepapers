@@ -235,6 +235,16 @@ Before training an AI model, your computer must have the correct software librar
 | **3** | Progress Bar | Visual Meter | Real-time WebSocket updates | Displays active completion percentage across all steps. |
 | **4** | State Badge | Status Badge | `GET /api/pipeline/status` | Confirms whether pipeline workers are idle or running. |
 
+#### Real-Time Telemetry Progress Tracker & Installation Safeguards
+
+During Step 4 requirements and package synchronization, dependency installations can take several minutes to resolve and compile binary wheels. To provide continuous visual feedback and guarantee operators know the pipeline is actively working rather than stuck, an animated progress tracker (`TelemetryProgressTracker`) mounts directly above the monospace telemetry stream:
+
+- **Amber Pipeline Theme**: Highlights active pipeline operations with high-contrast amber styling (`var(--accent-amber, #ffd166)`) and a glowing gradient progress bar (`linear-gradient(90deg, #f59e0b 0%, #ffd166 60%, #00f0ff 100%)`).
+- **Real-Time Requirement Counts**: Live progress ratio metrics (e.g. `[12/28 requirements]`) show precisely how many dependencies have been processed.
+- **Wheel Download Metrics & ETA**: Displays active package names, download transfer speeds (e.g. `14.2 MB/s`), byte ratios, and estimated time remaining.
+- **Indeterminate In-Flight Indicators**: When dependencies are resolving or building wheels, the progress bar displays an animated in-flight pulse, assuring operators of active execution.
+- **Card-Level Progress Indicators**: Each running step card in the 7-stage grid displays an animated progress bar along its bottom edge while executing.
+
 ---
 
 ### 4.2 Individual Pipeline Step Execution Cards

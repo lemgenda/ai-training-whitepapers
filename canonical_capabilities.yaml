@@ -3,7 +3,7 @@ schema_version: 1.0.0
 document_baseline: v16.9.27-STABLE
 runtime_engine_baseline: v16.9.16-STABLE
 desktop_client_baseline: v2.0.0
-last_audited: '2026-10-17'
+last_audited: '2026-10-18'
 control_planes:
   gui:
     framework: Tauri v2 + React 18 + Vite

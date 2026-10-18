@@ -157,6 +157,8 @@ $$T_{\text{telemetry}} = \mathcal{O}(1) \quad \text{amortized broadcast}$$
 
 WebSocket workers dispatch typed `PipelineEvent` messages directly to connected frontend clients using `asyncio.run_coroutine_threadsafe()` for thread-safe event bridging, guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles. Server-side lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler, ensuring the background drain task is cancelled cleanly on shutdown.
 
+To eliminate unobservable blocking stalls during dependency installation, the execution subsystem deploys unbuffered real-time streaming generators (`stream_pip_with_recovery`, `stream_npm_install`, `stream_install_requirements`) that yield subprocess standard output line-by-line using `PYTHONUNBUFFERED="1"` and `--progress-bar on`. Streaming lines are parsed in real time to extract wheel download metrics (transfer bandwidth, byte ratios, and ETA countdowns), requirement progress ratios (`[k/N requirements]`), and discrete stage milestones, broadcasting typed progress events (`is_progress=True`) over the `/ws/log` WebSocket channel without terminal stream saturation.
+
 ### 7.2 Desktop GUI State Aggregation & Multi-Sidecar Ecosystem Observability
 
 To minimize HTTP handshake overhead in desktop graphical clients, the Environment Manager daemon exposes high-density aggregated endpoints:

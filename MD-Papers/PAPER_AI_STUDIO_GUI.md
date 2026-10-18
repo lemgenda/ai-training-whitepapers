@@ -106,7 +106,8 @@ The desktop frontend decouples network addresses through a centralized Single So
 
 - **Environment Overrides & Protocol Translation**: Configured via `VITE_ENV_MANAGER_URL`, `VITE_DATASET_COMPILER_URL`, and `VITE_TRAINING_SUITE_URL` with automatic HTTP/HTTPS to WS/WSS protocol mapping via `toWebSocketUrl()`.
 - **Semantic Origin Routing**: Message telemetry frames attach verified `origin` identifiers (`"env-manager"`, `"dataset-compiler"`, `"training-suite"`), rendering stream filtering strictly decoupled from local port numbers or cloud hosting domains.
-- **In-Place Telemetry Roll-Up**: The terminal event pipeline incorporates `rollupTelemetryEvents()`, coalescing transient carriage-return ticks (`\r`) in-place to prevent visual flickering and blank terminal frames while preserving all discrete training batch metrics (`[BATCH ...]`), loss statistics, learning rates, and milestones.
+- **In-Place Telemetry Roll-Up**: The terminal event pipeline incorporates `rollupTelemetryEvents()`, coalescing transient carriage-return ticks (`\r`) as well as live requirement installation progression ticks (`INSTALLING:`, `DOWNLOADING:`, `RESOLVING:`, `Collecting`, `Requirement already satisfied:`) in-place. This eliminates terminal clutter and screen flickering while preserving discrete batch metrics, loss statistics, learning rates, and milestone records.
+- **Accessible Pipeline Telemetry Progress Engine**: Positioned directly above the monospace terminal stream, `TelemetryProgressTracker` visualizes live operations via high-contrast styling tokens. For Step 4 package installation, a dedicated amber pipeline theme (`var(--accent-amber, #ffd166)`) renders real-time requirement indexes, package names, wheel download transfer bandwidth, ETA countdowns, and indeterminate in-flight progress bars during resolution phases.
 
 ### 6.2 Universal Dynamic Configuration & Registry Editor
 

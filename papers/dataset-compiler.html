@@ -517,10 +517,10 @@
             <h3 id="52-modular-container-format">5.2 Modular Container Format Layer (Phase 4)</h3>
             <p>Supports concurrent multi-format emission (<code>--also-format</code>) alongside canonical directory structures:</p>
             <ul>
-                <li><strong>MosaicML Streaming (MDS)</strong>: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.</li>
+                <li><strong>WebDataset (WDS)</strong>: Obfuscated shard emission (<code>.data</code> binary blobs) preventing cloud archive sniffing and automated extraction freezes while streaming POSIX ustar streams. Canonical container format for all vision manifolds.</li>
                 <li><strong>PyTorch Lightning LitData</strong>: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.</li>
-                <li><strong>WebDataset (WDS)</strong>: Tarball shard emission for legacy deep-learning cluster ingestion.</li>
-                <li><strong>Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
+                <li><strong>Apache Parquet + Zstandard</strong>: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.</li>
+                <li><strong>MosaicML Streaming (MDS) [Deprecated]</strong>: Legacy format superseded by WebDataset (<code>.data</code>) and LitData. All existing 110.9 GB <code>.mds.zstd</code> shards (<code>LemGendizedClassificationMaster</code> and <code>LemGendizedMultitaskRestorationPro</code>) have been physically transcoded to native WebDataset (<code>.data</code>) shards via <code>modernization_queue.py</code>. New emissions standardize strictly on WebDataset and LitData.</li>
             </ul>
 
             <h3 id="53-studio-supported-format-matrix">5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix</h3>
@@ -550,10 +550,10 @@
                         <tr>
                             <td><strong>MosaicML MDS (.mds)</strong></td>
                             <td>Binary Indexed Chunks</td>
-                            <td><span class="score-badge-green">STUDIO SUPPORTED</span></td>
-                            <td>Native Bidirectional</td>
-                            <td>Index JSON manifest + raw binary chunks with deterministic global shuffle</td>
-                            <td>Cloud-native elastic multi-node streaming</td>
+                            <td><span class="score-badge-amber">DEPRECATED (MIGRATED)</span></td>
+                            <td>Legacy Ingestion / Transcoding</td>
+                            <td>Index JSON manifest + raw binary chunks; transcoded to WebDataset <code>.data</code> via <code>modernization_queue.py</code></td>
+                            <td>Cloud-native multi-node streaming (superseded by WebDataset and LitData)</td>
                         </tr>
                         <tr>
                             <td><strong>LitData (.litdata)</strong></td>

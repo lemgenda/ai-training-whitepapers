@@ -12,6 +12,15 @@
 * **`roadmaps/`** — Strategic planning and implementation roadmap documents.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.28 — Real-Time Requirements Progress Bar & Subprocess Telemetry Whitepaper Synchronization
+
+* **Environment Manager Whitepaper (`PAPER_ENV_MANAGER.md`, `env_manager.html`)** — Documented unbuffered real-time stdout streaming via `stream_pip_with_recovery`, `stream_npm_install`, and `stream_install_requirements` using `PYTHONUNBUFFERED="1"` and `--progress-bar on`. Documented real-time regex parsing of wheel download metrics, requirement progress ratios (`[k/N requirements]`), and typed progress event emissions (`is_progress=True`) in Section 7.1.
+* **AI Studio GUI Whitepaper (`PAPER_AI_STUDIO_GUI.md`, `ai-studio-whitepaper.html`)** — Documented in-place terminal event roll-up (`rollupTelemetryEvents`, `isProgressLine`) extended to package installation lines and the accessible `TelemetryProgressTracker` with amber pipeline theme in Section 6.1.
+* **AI Studio GUI Operator Manual (`MANUAL_AI_STUDIO_GUI.md`, `ai-studio-manual.html`)** — Added dedicated Section 4.1 subsection documenting the real-time requirements progress bar, package download speeds, ETA countdowns, and card-level animated progress bars on executing pipeline steps.
+* **Automated Integrity Verification** — Re-validated all documentation integrity gates in `tests/test_documentation.py` passing with zero warnings and strict zero-emoji compliance.
+
+---
+
 ### v16.9.27 — AI Studio Manual Visual Formatting, Badging & Screenshot Precision Audit
 
 * **Section 4.2 Individual Pipeline Step Cards Audit** — Captured complete 7-stage cards grid (`gui_pipeline_step_cards.png`) badging all 7 stages with 14 distinct callouts (card titles and isolated run buttons). Documented Step 5 (Dependency Audit & Upgrades), Step 6 (Codebase Verification), and Step 7 (Health Matrix) in both HTML and Markdown manuals.

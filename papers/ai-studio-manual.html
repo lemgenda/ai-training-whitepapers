@@ -543,6 +543,16 @@
             </table>
         </div>
 
+        <h4>Real-Time Telemetry Progress Tracker &amp; Installation Safeguards</h4>
+        <p>During Step 4 requirements and package synchronization, dependency installations can take several minutes to resolve and compile binary wheels. To provide continuous visual feedback and guarantee operators know the pipeline is actively working rather than stuck, an animated progress tracker (<code>TelemetryProgressTracker</code>) mounts directly above the monospace telemetry stream:</p>
+        <ul>
+            <li><strong>Amber Pipeline Theme</strong>: Highlights active pipeline operations with high-contrast amber styling (<code>var(--accent-amber, #ffd166)</code>) and a glowing gradient progress bar (<code>linear-gradient(90deg, #f59e0b 0%, #ffd166 60%, #00f0ff 100%)</code>).</li>
+            <li><strong>Real-Time Requirement Counts</strong>: Live progress ratio metrics (e.g. <code>[12/28 requirements]</code>) show precisely how many dependencies have been processed.</li>
+            <li><strong>Wheel Download Metrics &amp; ETA</strong>: Displays active package names, download transfer speeds (e.g. <code>14.2 MB/s</code>), byte ratios, and estimated time remaining.</li>
+            <li><strong>Indeterminate In-Flight Indicators</strong>: When dependencies are resolving or building wheels, the progress bar displays an animated in-flight pulse, assuring operators of active execution.</li>
+            <li><strong>Card-Level Progress Indicators</strong>: Each running step card in the 7-stage grid displays an animated progress bar along its bottom edge while executing.</li>
+        </ul>
+
         <h3>4.2 Individual Pipeline Step Execution Cards</h3>
         <p>In addition to running the full automated sequence, operators can execute individual stages in isolation for granular troubleshooting, inspection, and rapid re-verification:</p>
 

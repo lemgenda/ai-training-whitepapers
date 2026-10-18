@@ -2,7 +2,7 @@
 
 ## Category 01.0 STATUS | Authoritative Workspace State Manifest
 
-**Last Reviewed / Verified**: 2026-10-17  
+**Last Reviewed / Verified**: 2026-10-18  
 **Documentation Hub Version**: `v16.9.27-STABLE`  
 **Master Architectural Baseline**: `v16.9.16-STABLE`  
 **Status**: Canonical  
@@ -36,6 +36,11 @@ The ecosystem has achieved full **Post-Modernization S.O.L.I.D. Architectural Ma
 - **Presentation Layer**: Native cross-platform desktop cockpit built with Tauri v2, React 18, and Vite (`v2.0.0`).
 - **Nuclear Stability**: Automated Sawtooth VRAM Governor, continuous first-principles memory batch sizing, non-blocking sub-second minibatch cancellation, and multi-rung checkpoint resumption across 22 production neural architectures.
 - **Bi-Directional Cloud Sync**: Real-time Kaggle and Google Drive synchronization with automatic 403 Forbidden prevention (auto-creation of repository placeholders before metadata updates).
+- **Zero-Hang Pipeline Lifecycle**: GUI pipeline completion lifecycle recovers from all terminal statuses (`success`, `warning`, `error`). A 1,500 ms safety reconciliation poll against `/api/pipeline/status` and an `isLatestCompleted` guard in `PipelineStepCards.tsx` guarantee that no step card remains stuck in `RUNNING` after pipeline completion. Verified by 28 Vitest tests.
+- **OpenCV Variant Equivalence**: `health_checker.py` recognizes all four OpenCV distribution variants (`opencv-python`, `opencv-contrib-python`, and their `-headless` counterparts) as mutually satisfying, eliminating false `missing_packages` reports. Ecosystem health is `overall_healthy: True` across all 5 projects with 0 missing packages.
+- **Toolchain Modernization**: `mosaicml-streaming` eliminated across all three project requirements files. **Lightning AI LitData** and **WebDataset** are the sole canonical streaming primitives. **Ruff** (`>=0.9.0`) replaces Pylint and astroid with sub-150 ms linting and full Python 3.12 coverage across `E`, `F`, `W`, `I`, `B`, `C4`, `UP`, `PL`, and `RUF` rule sets.
+- **Physical MDS Transcoding**: 110.9 GB of legacy `.mds.zstd` shards transcoded to WebDataset `.data` archives: `LemGendizedClassificationMaster` (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and `LemGendizedMultitaskRestorationPro` (42.2 GB, 54 shards; 232,464 train + 31,742 val samples). Legacy `mds/` directories safely purged. Both manifolds report `CONTAINERIZED` with `Shards ready`.
+- **cu126 PyTorch Stack**: `torch 2.14.1+cu126`, `torchvision 0.29.1+cu126`, `torchaudio 2.11.0+cu126`, `transformers 5.20.1`, `sympy 1.14.0`, and `numpy 2.1.3` promoted across `lemgendary-training-suite` and `lemgendary-datasets`. Dynamic CUDA index selection (`select_cuda_torch_index()`) in `system_probe.py` chooses the newest supported build index based on driver capabilities.
 
 ---
 
@@ -121,7 +126,8 @@ $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m
 ## 6. Manifold Ingestion & Container Modernization
 
 - **Storage Location**: `LemGendaryDatasets/` (suffix-free directory topology).
-- **Container Formats**: WebDataset (`.tar`), MosaicML (`.mds`), Lightning AI LitData (`.bin`), Apache Parquet (`.parquet`), Directory (`.webp`).
+- **Container Formats**: WebDataset (`.data`/`.tar`), Lightning AI LitData (`.bin`), Apache Parquet (`.parquet`), Directory (`.webp`).
+  - **Deprecated**: MosaicML MDS (`.mds`). All legacy `.mds.zstd` shards have been physically transcoded to WebDataset `.data` archives. The `.data` extension is canonical across the ecosystem, bypassing Kaggle backend archive-sniffing heuristics that would otherwise expand multi-gigabyte containers into loose files.
 - **Transcoding Standard**: In-flight 12-thread WebP zero-intermediate compression:
   - Input/Degraded: WebP Lossy ($q=92$).
   - Ground Truth Target: WebP High-Fidelity ($q=95$).
@@ -143,6 +149,7 @@ $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m
 ## 8. Hardware Sentinels & Physical Execution Constraints
 
 - **GTX 1650 (4GB VRAM) Edge Baseline**: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (empirically measured $12.5\times$ batch retrieval acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence manifolds on Windows enforce `num_workers=0`).
+- **CUDA 12.6 Verified (cu126)**: NVIDIA GeForce GTX 1650 (Turing, `sm_75`, Driver 610.74) verified with `torch 2.14.1+cu126`. Hardware gates confirmed: FP32 matmul, FP16 autocast, Conv2D forward/backward, `torch.compile` eager fallback, ONNX Dynamo export (max diff 1.78e-07), Transformers 5.20.1 BERT/GPT2 CUDA inference, and Torchvision CUDA NMS. BF16 is unsupported on Turing as expected and is not selected.
 - **Continuous Memory Formula**: Dynamic batch calculation scales continuously with available VRAM:
   $$B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot \text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})} \right\rfloor$$
 - **Sawtooth VRAM Governor**: Dynamically halves batch sizes when memory pressure exceeds 90% and scales up when headroom exceeds 40%.

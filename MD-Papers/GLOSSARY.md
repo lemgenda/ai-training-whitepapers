@@ -63,6 +63,14 @@ A format constraint requiring all segmentation masks (`masks/`) to be encoded st
 
 An architectural design in `tools/modernize_manifold.py` combining high-level manifest validation (`dataset_info.yaml` + `index.json`) with file-level delta verification. Interrupted modernization runs bypass already-transcoded `.webp` images and metadata in seconds, resuming only uncompleted files.
 
+### 3.7 WebDataset `.data` Shard Convention
+
+The canonical shard file extension for all WebDataset archives in the LemGendary ecosystem. Shards are valid POSIX `ustar` tar archives internally, but use `.data` instead of `.tar` to bypass Kaggle backend archive-sniffing heuristics that would otherwise recursively expand multi-gigabyte containers into millions of loose files, causing inode exhaustion and attachment latency measured in hours. The training suite discovers and decodes `.data` and `.tar` shards transparently via POSIX magic byte inspection.
+
+### 3.8 Dynamic CUDA Index Selection
+
+A runtime algorithm implemented in `env_manager.system_probe.select_cuda_torch_index()` that reads the driver-reported maximum supported CUDA version from `nvidia-smi` and returns the newest compatible PyTorch wheel index (`cu130`, `cu128`, `cu126`, then `cu121`). Eliminates hard-coded CUDA index pins and ensures the correct build is installed regardless of driver version.
+
 ---
 
 ## 4. Master Training Suite & Optimization
@@ -109,7 +117,7 @@ An unrecoverable parameter destabilization typically caused by exploding gradien
 
 ### 6.1 Deterministic Environment Reconciliation
 
-The automated synchronization of local `.venv` packages against central manifests (`requirements-*.txt`), identifying version drifts and resolving transitive dependencies without global Python pollution.
+The automated synchronization of local `.venv` packages against central manifests (`requirements-*.txt`), identifying version drifts and resolving transitive dependencies without global Python pollution. Code compliance validation runs via **Ruff** (`ruff>=0.9.0`), replacing the former Pylint and astroid toolchain with sub-150 ms execution and full Python 3.12 rule coverage.
 
 ### 6.2 Sidecar REST Daemon
 
@@ -123,7 +131,7 @@ An asynchronous FastAPI service operating on dedicated local ports (`8000` for E
 | :--- | :--- | :--- |
 | **Dataset** | **Manifold** | Datasets are raw, mutable, heterogeneous source drops; Manifolds are compiled, deterministic, immutable, hardware-aligned training topologies. |
 | **Reconciliation** | **Clean Install** | Reconciliation inspects and patches delta package drifts in-place; Clean Install nukes `.venv` and rebuilds the toolchain from stage 1 hardware probing. |
-| **Container Format** | **Directory Layout** | Container formats (MDS, LitData, WebDataset) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication. |
+| **Container Format** | **Directory Layout** | Container formats (LitData, WebDataset `.data`) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication. MosaicML MDS is deprecated; all production shards are WebDataset `.data` archives. |
 | **Hardlink Deduplication** | **Perceptual Deduplication** | Hardlink dedup maps identical target files to the exact same physical NTFS cluster; Perceptual dedup flags visually similar images via pHash/dHash hamming distances. |
 | **Image Transcoding** | **Synthetic Degradation** | Transcoding converts image file encodings (e.g. PNG $\to$ WebP $q=92$) preserving visual fidelity; Degradation mathematically corrupts images with blur/noise/haze kernels to generate paired training pairs. |
 | **Sidecar API** | **CLI Tool** | Sidecar is an active background daemon streaming WebSocket events to GUI/remote clients; CLI is a direct local command executing in-process or delegating to the sidecar. |

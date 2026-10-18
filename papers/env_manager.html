@@ -351,6 +351,7 @@
                     guaranteeing zero UI blocking during prolonged package compilation and bytecode verification cycles.
                     Server-side lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler,
                     ensuring the background drain task is cancelled cleanly on shutdown.</p>
+                <p>To eliminate unobservable blocking stalls during dependency installation, the execution subsystem deploys unbuffered real-time streaming generators (<code>stream_pip_with_recovery</code>, <code>stream_npm_install</code>, <code>stream_install_requirements</code>) that yield subprocess standard output line-by-line using <code>PYTHONUNBUFFERED="1"</code> and <code>--progress-bar on</code>. Streaming lines are parsed in real time to extract wheel download metrics (transfer bandwidth, byte ratios, and ETA countdowns), requirement progress ratios (<code>[k/N requirements]</code>), and discrete stage milestones, broadcasting typed progress events (<code>is_progress=True</code>) over the <code>/ws/log</code> WebSocket channel without terminal stream saturation.</p>
 
                 <h3 id="section-7-2">7.2 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem Observability</h3>
                 <p>To minimize HTTP handshake overhead in desktop graphical clients, the Environment Manager daemon exposes high-density aggregated endpoints:</p>

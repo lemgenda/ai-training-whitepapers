@@ -13,7 +13,7 @@
 
 **Hub Version**: `v16.9.27-STABLE`
 **Runtime Baseline**: `v16.9.16-STABLE`
-**Last Reviewed / Verified**: 2026-10-17
+**Last Reviewed / Verified**: 2026-10-18
 **Status**: Canonical
 
 ---
@@ -105,11 +105,11 @@ To allow desktop applications, external CLI scripts, and cloud orchestrators to 
 
 | Subsystem | Primary Repository | Architecture Role | Key Invariants |
 | :--- | :--- | :--- | :--- |
-| **Presentation** | `lemgendary-ai-studio-gui` | Desktop operator cockpit (Tauri / TS). | Bound to frozen `openapi.json` contracts. Zero business logic in frontend. |
-| **Toolchain & Env** | `lemgendary-env-manager` | Foundation manager (`v16.8.0-STABLE`). | Strict isolation: Python 3.12+ required. Enforces zero-emoji & zero-suppression rules. |
-| **Data Compiler** | `lemgendary-datasets` | Synthesis & ingestion engine (`v16.8.0-STABLE`). | $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, SSOT canonical formats (MDS, LitData, WebDataset, Parquet, Directory). |
-| **Training Suite** | `lemgendary-training-suite` | Model training engine (`v16.8.0-STABLE`). | Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. |
-| **Documentation** | `lemgendary-docs` | Documentation hub & whitepapers (`v16.8.0-STABLE`). | WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning. |
+| **Presentation** | `lemgendary-ai-studio-gui` | Desktop operator cockpit (Tauri / TS). | Bound to frozen `openapi.json` contracts. Zero business logic in frontend. WebSocket lifecycle recovery guarantees no step card remains in `RUNNING` after pipeline completion (`success`, `warning`, or `error`). |
+| **Toolchain & Env** | `lemgendary-env-manager` | Foundation manager. | Strict isolation: Python 3.12+ required. Enforces zero-emoji and zero-suppression rules. Linting via Ruff (`>=0.9.0`); Pylint and astroid eliminated. OpenCV variant equivalence in health auditor. Dynamic CUDA index selection (`select_cuda_torch_index()`) for driver-aware PyTorch wheel resolution. |
+| **Data Compiler** | `lemgendary-datasets` | Synthesis and ingestion engine. | $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, SSOT canonical formats: WebDataset (`.data`/`.tar`), LitData (`.bin`), Parquet, Directory. MosaicML MDS deprecated and fully transcoded. |
+| **Training Suite** | `lemgendary-training-suite` | Model training engine. | Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. `torch 2.14.1+cu126`, `transformers 5.20.1`, CUDA 12.6 verified on GTX 1650 (`sm_75`). |
+| **Documentation** | `lemgendary-docs` | Documentation hub and whitepapers. | WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning. |
 
 ---
 

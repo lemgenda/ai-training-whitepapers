@@ -111,7 +111,7 @@
                 <span>Category 02 GUIDE</span>
                 <span>Hub Version: v16.9.27-STABLE</span>
                 <span>Runtime Baseline: v16.9.16-STABLE</span>
-                <span>Reviewed: 2026-10-17</span>
+                <span>Reviewed: 2026-10-18</span>
                 <span>Status: Canonical</span>
             </div>
         </div>
@@ -689,6 +689,197 @@
                             <li>If gradient norm < 1e-4: Gradient vanishing diagnosed; adjust residual scaling or learning rate multiplier.</li>
                             <li>If training loss is dropping while validation loss creeps up: Overfitting diagnosed; trigger Overfitting Rescue Protocol (force-expand dataset fraction by +15%).</li>
                             <li>If validation subset is noisy: Auto-expand validation shard to 100% full dataset evaluation before declaring a false plateau.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3><span>Scenario 12: Pipeline Step 7 Visual Hang in RUNNING State</span> <span class="badge-confirmed">[CONFIRMED]</span></h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Step 7 ("Health Matrix") card in desktop GUI displays RUNNING badge indefinitely with active telemetry progress bar, even after sidecar logs indicate pipeline completion.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Tool: LemGendary AI Studio Desktop GUI (lemgendary-ai-studio-gui)</li>
+                        <li>Component: Pipeline Execution View (App.tsx, PipelineStepCards.tsx)</li>
+                        <li>Precondition: Pipeline completes with warnings (status="warning") or errors (status="error")</li>
+                    </ul>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 1: Initial Triage (Safe Checks)</div>
+                    <div class="attr-content">
+                        <ol>
+                            <li>Inspect terminal and sidecar logs at http://127.0.0.1:8000/api/pipeline/status to confirm backend execution has halted.</li>
+                            <li>Check browser developer console for unhandled WebSocket event exceptions.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 2: Targeted Diagnosis (Telemetry Verification)</div>
+                    <div class="attr-content">
+                        <p><strong>Required Telemetry:</strong> Query GET /api/pipeline/status to confirm is_running: false and verify whether the last WebSocket event payload had status="warning" or status="error".</p>
+                        <p><strong>Ranked Candidate Causes:</strong></p>
+                        <ol>
+                            <li>Frontend WebSocket handler only triggered pipeline cleanup (loadData(), setIsRunningPipeline(false)) when status === "success". When health checks emitted a warning or error, cleanup never executed and isRunningPipeline remained true.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 3: Bounded Remediation [CONFIRMED]</div>
+                    <div class="attr-content">
+                        <p><em>Prerequisite:</em> Backend reports is_running: false while GUI card displays RUNNING.</p>
+                        <ol>
+                            <li>Intercept all terminal statuses ("success", "warning", "error") in src/App.tsx WebSocket listener.</li>
+                            <li>Guard isStepRunning evaluation in src/components/PipelineStepCards.tsx with isLatestCompleted check.</li>
+                            <li>Enforce a 1,500 ms safety polling reconciliation via GET /api/pipeline/status to guarantee recovery from missed WebSocket frames.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3><span>Scenario 13: OpenCV Package Collision &amp; Health Check False Alarms</span> <span class="badge-confirmed">[CONFIRMED]</span></h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Pipeline Step 7 reports Ecosystem healthy status: False and lists opencv-python as a missing package for lemgendary-datasets, even though opencv-contrib-python is installed.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Tool: LemGendary Environment Manager (lemgendary-env-manager)</li>
+                        <li>Subsystem: Health Checker (env_manager/health_checker.py)</li>
+                        <li>Trigger: Step 4 package normalization uninstalls redundant OpenCV variants</li>
+                    </ul>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 1: Initial Triage (Safe Checks)</div>
+                    <div class="attr-content">
+                        <ol>
+                            <li>Run python -m pip list in the affected virtual environment (lemgendary-datasets/.venv).</li>
+                            <li>Check if opencv-contrib-python or opencv-python is present in the installed package list.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 2: Targeted Diagnosis (Telemetry Verification)</div>
+                    <div class="attr-content">
+                        <p><strong>Required Telemetry:</strong> Inspect requirements-datasets.txt and health_checker.py audit output.</p>
+                        <p><strong>Ranked Candidate Causes:</strong></p>
+                        <ol>
+                            <li>Dual declaration: requirements-datasets.txt declared both opencv-contrib-python and opencv-python. Normalization removed opencv-python to prevent cv2 binary collision, causing health_checker.py exact-match comparison to report missing_packages: ['opencv-python'].</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 3: Bounded Remediation [CONFIRMED]</div>
+                    <div class="attr-content">
+                        <p><em>Prerequisite:</em> Virtual environment has opencv-contrib-python installed.</p>
+                        <ol>
+                            <li>Remove redundant opencv-python declaration from all requirements*.txt files, retaining opencv-contrib-python as the single canonical OpenCV distribution.</li>
+                            <li>Implement _OPENCV_VARIANTS_NORMALIZED equivalence set in health_checker.py so any installed OpenCV variant satisfies requirements for any other variant.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3><span>Scenario 14: mosaicml-streaming Cloud SDK Dependency Locks</span> <span class="badge-confirmed">[CONFIRMED]</span></h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">Pip audit reports 7+ blocked package updates in lemgendary-datasets, locking numpy&lt;2.2.0, transformers&lt;5.0.0, google-cloud-storage&lt;3.3.0, paramiko&lt;4, and xxhash&lt;4.</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Tool: LemGendary Environment Manager &amp; Dataset Compiler</li>
+                        <li>Component: Dependency Resolver (env_manager/dependency_resolver.py)</li>
+                        <li>Root Package: mosaicml-streaming v0.13.0</li>
+                    </ul>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 1: Initial Triage (Safe Checks)</div>
+                    <div class="attr-content">
+                        <ol>
+                            <li>Run pip show streaming to inspect metadata constraints.</li>
+                            <li>Review install_requires in streaming wheel for hardcoded upper bounds.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 2: Targeted Diagnosis (Telemetry Verification)</div>
+                    <div class="attr-content">
+                        <p><strong>Required Telemetry:</strong> Verify whether active manifolds strictly require MDS format or can read native WebDataset / LitData containers.</p>
+                        <p><strong>Ranked Candidate Causes:</strong></p>
+                        <ol>
+                            <li>mosaicml-streaming bundles legacy cloud SDKs (oci, azure-storage-blob, google-cloud-storage) into its mandatory dependencies, imposing ecosystem-wide version locks on NumPy and Transformers.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 3: Bounded Remediation [CONFIRMED]</div>
+                    <div class="attr-content">
+                        <p><em>Prerequisite:</em> Datasets can be served via WebDataset or LitData streaming engines.</p>
+                        <ol>
+                            <li>Uninstall mosaicml-streaming and remove it from all requirements*.txt manifests.</li>
+                            <li>Standardize on Lightning AI LitData (litdata&gt;=0.2.0) and WebDataset (webdataset==1.0.2) as canonical streaming primitives.</li>
+                            <li>Re-run dependency audit (lem-env audit) to confirm blocked package count drops.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario-card">
+                <h3><span>Scenario 15: MDS Manifold Migration &amp; Queue Source Status</span> <span class="badge-confirmed">[CONFIRMED]</span></h3>
+                <div class="attr-label">Symptom</div>
+                <div class="attr-content"><span class="badge-symptom">python tools/modernization_queue.py --list reports MISSING SOURCE for manifolds whose source data exists exclusively in legacy .mds.zstd shards (mds/train/, mds/val/).</span></div>
+
+                <div class="attr-label">Context</div>
+                <div class="attr-content">
+                    <ul>
+                        <li>Tool: LemGendary Dataset Compiler Modernization Queue (tools/modernization_queue.py)</li>
+                        <li>Target Manifolds: LemGendizedClassificationMaster, LemGendizedMultitaskRestorationPro</li>
+                        <li>Format Transition: MDS (.mds.zstd) to WebDataset (.data)</li>
+                    </ul>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 1: Initial Triage (Safe Checks)</div>
+                    <div class="attr-content">
+                        <ol>
+                            <li>Check disk contents of target manifold folder with dir /s /b mds or ls -l mds/.</li>
+                            <li>Confirm presence of index.json and shard.*.mds.zstd files in split directories.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 2: Targeted Diagnosis (Telemetry Verification)</div>
+                    <div class="attr-content">
+                        <p><strong>Required Telemetry:</strong> Verify whether shards/ or raw image folders exist alongside mds/.</p>
+                        <p><strong>Ranked Candidate Causes:</strong></p>
+                        <ol>
+                            <li>modernization_queue.py only inspected raw directories (images/) and zip archives (*.zip) when evaluating source availability. Manifolds containing only mds/ were flagged as MISSING SOURCE despite containing valid shard assets.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stage 3: Bounded Remediation [CONFIRMED]</div>
+                    <div class="attr-content">
+                        <p><em>Prerequisite:</em> Manifold directory contains mds/ with valid index.json.</p>
+                        <ol>
+                            <li>Extend load_queue_manifest() in modernization_queue.py to identify has_mds_flag and designate status as MDS MIGRATION READY.</li>
+                            <li>Implement transcode_mds_to_webdataset() using streaming zstandard decompression to slice row records into WebDataset .data archives.</li>
+                            <li>Validate output shard sample count against index.json before purging legacy mds/ files.</li>
                         </ol>
                     </div>
                 </div>

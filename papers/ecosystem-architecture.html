@@ -42,7 +42,7 @@
                 <span>Category 01 ARCH</span>
                 <span>Hub Version: v16.9.27-STABLE</span>
                 <span>Runtime Baseline: v16.9.16-STABLE</span>
-                <span>Reviewed: 2026-10-17</span>
+                <span>Reviewed: 2026-10-18</span>
                 <span>Status: Canonical</span>
             </div>
 
@@ -123,30 +123,30 @@ graph TD
                                 <td><strong>Presentation</strong></td>
                                 <td><code>lemgendary-ai-studio-gui</code></td>
                                 <td>Desktop operator cockpit (Tauri / TS).</td>
-                                <td>Bound to frozen <code>openapi.json</code> contracts. Zero business logic in frontend.</td>
+                                <td>Bound to frozen <code>openapi.json</code> contracts. Zero business logic in frontend. WebSocket lifecycle recovery guarantees no step card remains in <code>RUNNING</code> after pipeline completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</td>
                             </tr>
                             <tr>
                                 <td><strong>Toolchain &amp; Env</strong></td>
                                 <td><code>lemgendary-env-manager</code></td>
-                                <td>Foundation manager (<code>v16.8.0-STABLE</code>).</td>
-                                <td>Strict isolation: Python 3.12+ required. Enforces zero-emoji &amp; zero-suppression rules.</td>
+                                <td>Foundation manager.</td>
+                                <td>Strict isolation: Python 3.12+ required. Enforces zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>); Pylint and astroid eliminated. OpenCV variant equivalence in health auditor. Dynamic CUDA index selection (<code>select_cuda_torch_index()</code>) for driver-aware PyTorch wheel resolution.</td>
                             </tr>
                             <tr>
                                 <td><strong>Data Compiler</strong></td>
                                 <td><code>lemgendary-datasets</code></td>
-                                <td>Synthesis &amp; ingestion engine (<code>v16.8.0-STABLE</code>).</td>
-                                <td><i>O(1)</i> skip-indexing, WebP <i>q</i>=92/95, SSOT canonical formats (MDS, LitData, WebDataset, Parquet, Directory).</td>
+                                <td>Synthesis and ingestion engine.</td>
+                                <td><i>O(1)</i> skip-indexing, WebP <i>q</i>=92/95, SSOT canonical formats: WebDataset (<code>.data</code>/<code>.tar</code>), LitData (<code>.bin</code>), Parquet, Directory. MosaicML MDS deprecated and fully transcoded.</td>
                             </tr>
                             <tr>
                                 <td><strong>Training Suite</strong></td>
                                 <td><code>lemgendary-training-suite</code></td>
-                                <td>Model training engine (<code>v16.8.0-STABLE</code>).</td>
-                                <td>Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints.</td>
+                                <td>Model training engine.</td>
+                                <td>Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. <code>torch 2.14.1+cu126</code>, <code>transformers 5.20.1</code>, CUDA 12.6 verified on GTX 1650 (<code>sm_75</code>).</td>
                             </tr>
                             <tr>
                                 <td><strong>Documentation</strong></td>
                                 <td><code>lemgendary-docs</code></td>
-                                <td>Documentation hub &amp; whitepapers (<code>v16.8.0-STABLE</code>).</td>
+                                <td>Documentation hub and whitepapers.</td>
                                 <td>WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning.</td>
                             </tr>
                         </tbody>

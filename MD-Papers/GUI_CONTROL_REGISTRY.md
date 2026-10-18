@@ -82,6 +82,16 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | `health-btn-deep-clean` | "Deep Cache Purge" | `<button>` | `POST /api/clean` (8000) | Purges build caches, **pycache**, and staging residues. |
 | `health-btn-install-hooks` | "Install Git Hooks" | `<button>` | `POST /api/hooks/install` (8000) | Installs or repairs standardized pre-commit validation hooks. |
 | `health-btn-validate-ecosystem` | "Run Ecosystem Validation" | `<button>` | `POST /api/validate` (8000) | Runs full multi-gate ecosystem code validation suite. |
+| `pipe-step-progress-bar` | Step Progress Bar | `<div role=progressbar>` | `WS /ws/log` (8000) | Radix UI animated progress bar mounted by `TelemetryProgressTracker.tsx` during active step execution; unmounts upon receipt of any terminal event (`success`, `warning`, `error`). |
+| `pipe-step-status-badge` | Step Status Badge | `<span>` | — | Displays `RUNNING`, `PASSED`, `WARNING`, or `FAILED` state; guarded by `isLatestCompleted` to prevent false `RUNNING` display after step completion. |
+| `pipe-btn-run-step-1` | "Run Stage 1" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 1 (Hardware Discovery) as an isolated single-step run. |
+| `pipe-btn-run-step-2` | "Run Stage 2" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 2 (Virtual Environment Setup) as an isolated single-step run. |
+| `pipe-btn-run-step-3` | "Run Stage 3" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 3 (Requirements Sync) as an isolated single-step run. |
+| `pipe-btn-run-step-4` | "Run Stage 4" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 4 (Package Installation) as an isolated single-step run. |
+| `pipe-btn-run-step-5` | "Run Stage 5" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 5 (Dependency Audit) as an isolated single-step run. |
+| `pipe-btn-run-step-6` | "Run Stage 6" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 6 (Codebase Verification) as an isolated single-step run. |
+| `pipe-btn-run-step-7` | "Run Stage 7" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 7 (Health Matrix) as an isolated single-step run. |
+| `pipe-stage-7-health` | Stage 7: Health Matrix | `<li>` | `GET /api/health` (8000) | Runs ecosystem-wide health audit across all 5 projects and reports `overall_healthy`. |
 
 ---
 
@@ -92,8 +102,21 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 1. Operator launches LemGendary AI Studio Desktop GUI.
 2. Operator observes `dash-badge-sidecar-status` confirming emerald connection state.
 3. Operator clicks `dash-btn-clean-install`.
-4. The GUI displays progressive completion across badges `pipe-stage-1-hardware` through `pipe-stage-7-health`.
-5. Upon completion, `health-table-drift` updates, confirming 100% synchronized `[SYNC]` badges.
+4. The GUI displays progressive completion across badges `pipe-stage-1-hardware` through `pipe-stage-7-health`, with `pipe-step-progress-bar` active on each running step.
+5. When the pipeline emits a terminal event (`success`, `warning`, or `error`), `App.tsx` fires `loadData()` immediately and a 1,500 ms safety poll against `/api/pipeline/status` resolves any race conditions. `pipe-step-status-badge` transitions to `PASSED` or `WARNING`.
+6. Upon completion, `health-table-drift` updates, confirming 100% synchronized `[SYNC]` badges.
+
+### 4.1.1 WebSocket Event Lifecycle Recovery
+
+The GUI intercepts the following terminal status values from the sidecar WebSocket stream and takes the corresponding actions:
+
+| WebSocket `status` Value | GUI Transition | Controls Affected |
+| :--- | :--- | :--- |
+| `success` | `isRunningPipeline` set to `false`; `loadData()` called | `pipe-step-status-badge` (`PASSED`), `pipe-step-progress-bar` (unmounted) |
+| `warning` | `isRunningPipeline` set to `false`; `loadData()` called | `pipe-step-status-badge` (`WARNING`), `pipe-step-progress-bar` (unmounted) |
+| `error` | `isRunningPipeline` set to `false`; error state surfaced | `pipe-step-status-badge` (`FAILED`), `pipe-step-progress-bar` (unmounted) |
+
+A 1,500 ms safety polling reconciliation via `GET /api/pipeline/status` fires after every terminal event to handle late-arriving WebSocket messages and ensure UI state is always synchronized with backend reality.
 
 ### 4.2 Workflow 2: Manifold Compilation with WebP Transcoding
 

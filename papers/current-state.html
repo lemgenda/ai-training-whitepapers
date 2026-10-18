@@ -47,7 +47,7 @@
                 <span>Category 01.0 STATUS</span>
                 <span>Version 16.9.27-STABLE</span>
                 <span>Component: Authoritative Workspace State</span>
-                <span>Reviewed: 2026-10-17</span>
+                <span>Reviewed: 2026-10-18</span>
                 <span>Status: Canonical</span>
             </div>
 
@@ -62,6 +62,11 @@
                     <li><strong>Presentation Layer</strong>: Native cross-platform desktop cockpit built with Tauri v2, React 18, and Vite (<code>v2.0.0</code>).</li>
                     <li><strong>Nuclear Stability</strong>: Automated Sawtooth VRAM Governor, continuous first-principles memory batch sizing, non-blocking sub-second minibatch cancellation, and multi-rung checkpoint resumption across 22 production neural architectures.</li>
                     <li><strong>Bi-Directional Cloud Sync</strong>: Real-time Kaggle and Google Drive synchronization with automatic 403 Forbidden prevention (auto-creation of repository placeholders before metadata updates).</li>
+                    <li><strong>Zero-Hang Pipeline Lifecycle</strong>: GUI pipeline completion lifecycle recovers from all terminal statuses (<code>success</code>, <code>warning</code>, <code>error</code>). A 1,500 ms safety reconciliation poll against <code>/api/pipeline/status</code> and an <code>isLatestCompleted</code> guard in <code>PipelineStepCards.tsx</code> guarantee that no step card remains stuck in <code>RUNNING</code> after pipeline completion. Verified by 28 Vitest tests.</li>
+                    <li><strong>OpenCV Variant Equivalence</strong>: <code>health_checker.py</code> recognizes all four OpenCV distribution variants (<code>opencv-python</code>, <code>opencv-contrib-python</code>, and their <code>-headless</code> counterparts) as mutually satisfying, eliminating false <code>missing_packages</code> reports. Ecosystem health is <code>overall_healthy: True</code> across all 5 projects with 0 missing packages.</li>
+                    <li><strong>Toolchain Modernization</strong>: <code>mosaicml-streaming</code> eliminated across all three project requirements files. <strong>Lightning AI LitData</strong> and <strong>WebDataset</strong> are the sole canonical streaming primitives. <strong>Ruff</strong> (<code>&gt;=0.9.0</code>) replaces Pylint and astroid with sub-150 ms linting and full Python 3.12 coverage across <code>E</code>, <code>F</code>, <code>W</code>, <code>I</code>, <code>B</code>, <code>C4</code>, <code>UP</code>, <code>PL</code>, and <code>RUF</code> rule sets.</li>
+                    <li><strong>Physical MDS Transcoding</strong>: 110.9 GB of legacy <code>.mds.zstd</code> shards transcoded to WebDataset <code>.data</code> archives: <code>LemGendizedClassificationMaster</code> (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and <code>LemGendizedMultitaskRestorationPro</code> (42.2 GB, 54 shards; 232,464 train + 31,742 val samples). Legacy <code>mds/</code> directories safely purged. Both manifolds report <code>CONTAINERIZED</code> with <code>Shards ready</code>.</li>
+                    <li><strong>cu126 PyTorch Stack</strong>: <code>torch 2.14.1+cu126</code>, <code>torchvision 0.29.1+cu126</code>, <code>torchaudio 2.11.0+cu126</code>, <code>transformers 5.20.1</code>, <code>sympy 1.14.0</code>, and <code>numpy 2.1.3</code> promoted across <code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>. Dynamic CUDA index selection (<code>select_cuda_torch_index()</code>) in <code>system_probe.py</code> chooses the newest supported build index based on driver capabilities.</li>
                 </ul>
             </section>
 
@@ -236,7 +241,11 @@
                 <h2>6. Manifold Ingestion &amp; Container Modernization</h2>
                 <ul>
                     <li><strong>Storage Location</strong>: <code>LemGendaryDatasets/</code> (suffix-free directory topology).</li>
-                    <li><strong>Container Formats</strong>: WebDataset (<code>.tar</code>), MosaicML (<code>.mds</code>), Lightning AI LitData (<code>.bin</code>), Apache Parquet (<code>.parquet</code>), Directory (<code>.webp</code>).</li>
+                    <li><strong>Container Formats</strong>: WebDataset (<code>.data</code>/<code>.tar</code>), Lightning AI LitData (<code>.bin</code>), Apache Parquet (<code>.parquet</code>), Directory (<code>.webp</code>).
+                        <ul>
+                            <li><strong>Deprecated</strong>: MosaicML MDS (<code>.mds</code>). All legacy <code>.mds.zstd</code> shards have been physically transcoded to WebDataset <code>.data</code> archives. The <code>.data</code> extension is canonical across the ecosystem, bypassing Kaggle backend archive-sniffing heuristics that would otherwise expand multi-gigabyte containers into loose files.</li>
+                        </ul>
+                    </li>
                     <li><strong>Transcoding Standard</strong>: In-flight 12-thread WebP zero-intermediate compression:
                         <ul>
                             <li>Input / Degraded: WebP Lossy (\(q=92\)).</li>
@@ -266,6 +275,7 @@
                 <h2>8. Hardware Sentinels &amp; Physical Execution Constraints</h2>
                 <ul>
                     <li><strong>GTX 1650 (4GB VRAM) Edge Baseline</strong>: Sub-nuclear 4GB lockdown enforces Serial-Only Mode upon memory saturation, eliminating Windows System RAM pagefile thrashing (empirically measured \(12.5\times\) batch retrieval acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence manifolds on Windows enforce <code>num_workers=0</code>).</li>
+                    <li><strong>CUDA 12.6 Verified (cu126)</strong>: NVIDIA GeForce GTX 1650 (Turing, <code>sm_75</code>, Driver 610.74) verified with <code>torch 2.14.1+cu126</code>. Hardware gates confirmed: FP32 matmul, FP16 autocast, Conv2D forward/backward, <code>torch.compile</code> eager fallback, ONNX Dynamo export (max diff 1.78e-07), Transformers 5.20.1 BERT/GPT2 CUDA inference, and Torchvision CUDA NMS. BF16 is unsupported on Turing as expected and is not selected.</li>
                     <li><strong>Continuous Memory Formula</strong>: Dynamic batch calculation scales continuously with available VRAM:
                         $$B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot \text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})} \right\rfloor$$
                     </li>

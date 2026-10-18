@@ -83,6 +83,8 @@
                     <li><strong>Hardlink Deduplication (Identity Mapping)</strong>: An optimization for image restoration where the clean ground-truth target matches the degraded input. Instead of duplicating multi-megabyte image bytes across directories, the compiler issues NTFS hardlinks referencing identical physical disk clusters, saving hundreds of gigabytes per manifold.</li>
                     <li><strong>Lossless Mask Transcoding</strong>: A format constraint requiring all segmentation masks (<code>masks/</code>) to be encoded strictly via WebP lossless compression. Lossy compression introduces subtle edge-quantization artifacts that corrupt discrete integer class labels.</li>
                     <li><strong>Two-Tier Modernization Resumption</strong>: An architectural design in <code>tools/modernize_manifold.py</code> combining high-level manifest validation (<code>dataset_info.yaml</code> + <code>index.json</code>) with file-level delta verification. Interrupted modernization runs bypass already-transcoded <code>.webp</code> images and metadata in seconds, resuming only uncompleted files.</li>
+                    <li><strong>WebDataset <code>.data</code> Shard Convention</strong>: The canonical shard file extension for all WebDataset archives in the LemGendary ecosystem. Shards are valid POSIX <code>ustar</code> tar archives internally, but use <code>.data</code> instead of <code>.tar</code> to bypass Kaggle backend archive-sniffing heuristics that would otherwise recursively expand multi-gigabyte containers into millions of loose files, causing inode exhaustion and attachment latency measured in hours. The training suite discovers and decodes <code>.data</code> and <code>.tar</code> shards transparently via POSIX magic byte inspection.</li>
+                    <li><strong>Dynamic CUDA Index Selection</strong>: A runtime algorithm implemented in <code>env_manager.system_probe.select_cuda_torch_index()</code> that reads the driver-reported maximum supported CUDA version from <code>nvidia-smi</code> and returns the newest compatible PyTorch wheel index (<code>cu130</code>, <code>cu128</code>, <code>cu126</code>, then <code>cu121</code>). Eliminates hard-coded CUDA index pins and ensures the correct build is installed regardless of driver version.</li>
                 </ul>
             </section>
 
@@ -112,7 +114,7 @@
             <section id="section-env">
                 <h2>6. Environment &amp; Infrastructure</h2>
                 <ul>
-                    <li><strong>Deterministic Environment Reconciliation</strong>: The automated synchronization of local <code>.venv</code> packages against central manifests (<code>requirements-*.txt</code>), identifying version drifts and resolving transitive dependencies without global Python pollution.</li>
+                    <li><strong>Deterministic Environment Reconciliation</strong>: The automated synchronization of local <code>.venv</code> packages against central manifests (<code>requirements-*.txt</code>), identifying version drifts and resolving transitive dependencies without global Python pollution. Code compliance validation runs via <strong>Ruff</strong> (<code>ruff&gt;=0.9.0</code>), replacing the former Pylint and astroid toolchain with sub-150 ms execution and full Python 3.12 rule coverage.</li>
                     <li><strong>Sidecar REST Daemon</strong>: An asynchronous FastAPI service operating on dedicated local ports (<code>8000</code> for Environment Manager, <code>8100</code> for Dataset Compiler, and <code>8200</code> for Master Training Suite) that provides headless API access, hardware health telemetry, and WebSocket log broadcasting.</li>
                 </ul>
             </section>
@@ -142,7 +144,7 @@
                             <tr>
                                 <td><strong>Container Format</strong></td>
                                 <td><strong>Directory Layout</strong></td>
-                                <td>Container formats (MDS, LitData, WebDataset) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication.</td>
+                                <td>Container formats (LitData, WebDataset <code>.data</code>) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication. MosaicML MDS is deprecated; all production shards are WebDataset <code>.data</code> archives.</td>
                             </tr>
                             <tr>
                                 <td><strong>Hardlink Deduplication</strong></td>

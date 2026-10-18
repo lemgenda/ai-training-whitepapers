@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
+The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (WebDataset, LitData, Parquet; MosaicML MDS deprecated and transcoded to WebDataset), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
 
 * **Project Repository**: [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 
@@ -180,12 +180,12 @@ Eliminating bulky intermediate disk writes, the compiler transcodes input stream
 
 Supports concurrent multi-format emission (`--also-format`) alongside canonical directory structures:
 
-* **MosaicML Streaming (MDS)**: Fast cloud-native streaming with deterministic global pseudo-random shuffling and instant mid-epoch resumption.
+* **WebDataset (WDS)**: Obfuscated shard emission (`.data` binary blobs) preventing cloud archive sniffing and automated extraction freezes while streaming POSIX ustar streams. Canonical container format for all vision manifolds.
 * **PyTorch Lightning LitData**: Optimized streaming format for variable-length detection bounding boxes and landmark regressed targets.
-* **WebDataset (WDS)**: Obfuscated shard emission (`.data` binary blobs) preventing cloud archive sniffing and automated extraction freezes while streaming POSIX ustar streams.
-* **Parquet + Zstandard**: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.
+* **Apache Parquet + Zstandard**: Contiguous columnar storage with level 3 compression for financial and tabular time-series manifolds.
+* **MosaicML Streaming (MDS) [Deprecated]**: Legacy format superseded by WebDataset (`.data`) and LitData. All existing 110.9 GB `.mds.zstd` shards (`LemGendizedClassificationMaster` and `LemGendizedMultitaskRestorationPro`) have been physically transcoded to native WebDataset (`.data`) shards via `modernization_queue.py`. New emissions standardize strictly on WebDataset and LitData.
 
-> **Dataset Compiler Format Ingestion Notice**: Formats such as **TFRecord**, **HDF5**, and **CSV** represent valid general machine learning dataset structures covered in General AI Training Knowledge. However, they are **not natively parsed** by the LemGendary Dataset Compiler engine. Prior to ingestion, users must convert them into supported representations (**MDS**, **LitData**, **WebDataset**, **Parquet**, **YOLO**, or **VOC**).
+> **Dataset Compiler Format Ingestion Notice**: Formats such as **TFRecord**, **HDF5**, and **CSV** represent valid general machine learning dataset structures covered in General AI Training Knowledge. However, they are **not natively parsed** by the LemGendary Dataset Compiler engine. Prior to ingestion, users must convert them into supported representations (**LitData**, **WebDataset**, **Parquet**, **YOLO**, or **VOC**). MosaicML MDS (`.mds`) is legacy; automatic transcoding to WebDataset (`.data`) is available via `modernization_queue.py`.
 
 ### 5.3 Studio-Supported vs. General Knowledge Format Comparative Matrix
 
@@ -194,7 +194,7 @@ The LemGendary Dataset Compiler strictly delineates between **Studio Native Supp
 | Format Identifier | Format Family | Classification | Ingestion / Emission | Shard Indexing & Streaming Mechanism | Primary Optimization Target |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **WebDataset (.data / .tar)** | Archive Tarball Shard (Obfuscated) | **STUDIO SUPPORTED** | Native Bidirectional | Sequential POSIX tar shard streaming with `wds.WebDataset` via `.data` extension to bypass Kaggle automatic archive sniffing | Large vision manifolds on POSIX/Linux clusters and Kaggle/Colab runtimes |
-| **MosaicML MDS (.mds)** | Binary Indexed Chunks | **STUDIO SUPPORTED** | Native Bidirectional | Index JSON manifest + raw binary chunks with deterministic global shuffle | Cloud-native elastic multi-node streaming |
+| **MosaicML MDS (.mds)** | Binary Indexed Chunks | **DEPRECATED (MIGRATED)** | Legacy Ingestion / Transcoding | Index JSON manifest + raw binary chunks; transcoded to WebDataset `.data` via `modernization_queue.py` | Cloud-native multi-node streaming (superseded by WebDataset and LitData) |
 | **LitData (.litdata)** | Lightning Streaming | **STUDIO SUPPORTED** | Native Bidirectional | Chunked binary records with dynamic index boundaries | Variable-length detection & regression targets |
 | **Apache Parquet (.parquet)** | Columnar Table + Zstandard | **STUDIO SUPPORTED** | Native Bidirectional | PyArrow row-group indexing + dictionary zstd compression | High-frequency financial & tabular time-series |
 | **Flat Image Manifold (.webp/.png)** | Directory Structure | **STUDIO SUPPORTED** | Native Bidirectional | In-memory `os.scandir` hash-set with O(1) physical skip-indexing | Zero-intermediate transcoding, NTFS cluster recovery |
