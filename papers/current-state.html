@@ -37,6 +37,7 @@
                 <li><a href="#section-cloud">7. Cloud Training &amp; Remote Sync</a></li>
                 <li><a href="#section-hardware">8. Hardware Sentinels &amp; Constraints</a></li>
                 <li><a href="#section-compliance">9. Zero-Suppression Policy Compliance</a></li>
+                <li><a href="#section-lifecycle">10. Background Process Lifecycle Governance &amp; Zombie Elimination</a></li>
             </ul>
 </nav>
 <main id="content" class="toc-fixed-content">
@@ -275,14 +276,23 @@
 
             <section id="section-compliance">
                 <h2>9. Zero-Suppression Policy Compliance</h2>
-                <p>The codebase strictly adheres to 100% zero-suppression error telemetry:</p>
+                <p>The codebase strictly adheres to 100% zero-suppression error telemetry across all languages:</p>
                 <ul>
-                    <li><code>0</code> instances of <code># type: ignore</code></li>
-                    <li><code>0</code> instances of <code># noqa</code></li>
-                    <li><code>0</code> instances of <code># pylint: disable</code></li>
-                    <li>Zero programmatic <code>warnings.filterwarnings</code> suppressions.</li>
+                    <li><strong>Python</strong>: <code>0</code> instances of <code># type: ignore</code>, <code>0</code> instances of <code># noqa</code>, <code>0</code> instances of <code># pylint: disable</code>, and zero programmatic <code>warnings.filterwarnings</code> suppressions.</li>
+                    <li><strong>TypeScript &amp; JavaScript</strong>: <code>0</code> instances of <code>@ts-ignore</code>, <code>0</code> instances of <code>@ts-expect-error</code>, <code>0</code> instances of <code>/* eslint-disable */</code>, and zero configuration diagnostic suppressions (<code>warnOnUnsupportedTypeScriptVersion: false</code> banned; <code>@typescript-eslint</code> upgraded to v8 with official TypeScript 5.9+ support).</li>
+                    <li><strong>Zero Silent Crashes</strong>: Bare <code>except: pass</code> and empty <code>catch {}</code> blocks are strictly forbidden. All errors must be explicitly typed, logged, or surfaced to operators.</li>
+                    <li><strong>Root-Cause Resolution</strong>: All warnings, type checks, and dependency vulnerabilities are resolved through rigorous static type annotations, Pydantic schema validation, safe package upgrades, and defensive programming.</li>
                 </ul>
-                <p>All warnings and type checks are resolved through rigorous static type annotations, Pydantic schema validation, and defensive programming.</p>
+            </section>
+
+            <section id="section-lifecycle">
+                <h2>10. Background Process Lifecycle Governance &amp; Zombie Elimination</h2>
+                <p>The ecosystem enforces deterministic process lifecycle management to prevent orphaned child processes and CPU/VRAM resource leaks:</p>
+                <ul>
+                    <li><strong>Recursive Process Tree Elimination</strong>: Sidecar shutdown (<code>service_manager.stop_service</code>) and job cancellation (<code>jobs.py</code>) execute recursive tree termination (<code>taskkill /F /T /PID</code> on Windows, recursive signal propagation on POSIX), terminating both parent orchestrators and all spawned worker subprocesses simultaneously.</li>
+                    <li><strong>Guaranteed Cleanup Handlers</strong>: Registration of <code>atexit</code> child process sentinels prevents detached PyTorch training loops, Uvicorn workers, or compilation scripts from persisting after cancellation or abnormal exit.</li>
+                    <li><strong>Telemetry &amp; Unzip Progress Synchronization</strong>: Real-time Kaggle dataset decompression streaming (<code>kaggle_importer.py</code>) and multi-stream telemetry tracking (<code>TelemetryProgressTracker.tsx</code>) guarantee that operator progress bars reflect true physical disk and training state without desynchronization.</li>
+                </ul>
             </section>
         
 </main>

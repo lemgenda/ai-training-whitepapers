@@ -21,6 +21,7 @@
 - [7. Cloud Training & Remote Synchronization Pipeline](#7-cloud-training--remote-synchronization-pipeline)
 - [8. Hardware Sentinels & Physical Execution Constraints](#8-hardware-sentinels--physical-execution-constraints)
 - [9. Zero-Suppression Policy Compliance](#9-zero-suppression-policy-compliance)
+- [10. Background Process Lifecycle Governance & Zombie Elimination](#10-background-process-lifecycle-governance--zombie-elimination)
 
 ---
 
@@ -151,11 +152,19 @@ $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m
 
 ## 9. Zero-Suppression Policy Compliance
 
-The codebase strictly adheres to 100% zero-suppression error telemetry:
+The codebase strictly adheres to 100% zero-suppression error telemetry across all languages:
 
-- `0` instances of `# type: ignore`
-- `0` instances of `# noqa`
-- `0` instances of `# pylint: disable`
-- Zero programmatic `warnings.filterwarnings` suppressions.
+- **Python**: `0` instances of `# type: ignore`, `0` instances of `# noqa`, `0` instances of `# pylint: disable`, and zero programmatic `warnings.filterwarnings` suppressions.
+- **TypeScript & JavaScript**: `0` instances of `@ts-ignore`, `0` instances of `@ts-expect-error`, `0` instances of `/* eslint-disable */`, and zero configuration diagnostic suppressions (`warnOnUnsupportedTypeScriptVersion: false` banned; `@typescript-eslint` upgraded to v8 with official TypeScript 5.9+ support).
+- **Zero Silent Crashes**: Bare `except: pass` and empty `catch {}` blocks are strictly forbidden. All errors must be explicitly typed, logged, or surfaced to operators.
+- **Root-Cause Resolution**: All warnings, type checks, and dependency vulnerabilities are resolved through rigorous static type annotations, Pydantic schema validation, safe package upgrades, and defensive programming.
 
-All warnings and type checks are resolved through rigorous static type annotations, Pydantic schema validation, and defensive programming.
+---
+
+## 10. Background Process Lifecycle Governance & Zombie Elimination
+
+The ecosystem enforces deterministic process lifecycle management to prevent orphaned child processes and CPU/VRAM resource leaks:
+
+- **Recursive Process Tree Elimination**: Sidecar shutdown (`service_manager.stop_service`) and job cancellation (`jobs.py`) execute recursive tree termination (`taskkill /F /T /PID` on Windows, recursive signal propagation on POSIX), terminating both parent orchestrators and all spawned worker subprocesses simultaneously.
+- **Guaranteed Cleanup Handlers**: Registration of `atexit` child process sentinels prevents detached PyTorch training loops, Uvicorn workers, or compilation scripts from persisting after cancellation or abnormal exit.
+- **Telemetry & Unzip Progress Synchronization**: Real-time Kaggle dataset decompression streaming (`kaggle_importer.py`) and multi-stream telemetry tracking (`TelemetryProgressTracker.tsx`) guarantee that operator progress bars reflect true physical disk and training state without desynchronization.
