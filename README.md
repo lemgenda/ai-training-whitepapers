@@ -6,11 +6,20 @@
 
 ## Directory Overview
 
-* **`papers/`** — W3C-compliant standalone HTML versions of all 46 technical whitepapers, manuals, and architectural specifications.
+* **`papers/`** — W3C-compliant standalone HTML versions of all 48 technical whitepapers, manuals, and architectural specifications.
 * **`MD-Papers/`** — Markdown sources synchronized 1-to-1 with the HTML publications, formatted to strict markdownlint compliance.
 * **`assets/`** — Static imagery, training loss curves, architectural flowcharts, and before/after perceptual visual demonstrations.
-* **`roadmaps/`** — Strategic planning and implementation roadmap documents.
+* **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
+* **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.29 — Documentation Hub Inventory Alignment (48 Publications) & Directory Overview Reconciliation
+
+* **Publication Inventory Reconciliation (`README.md`)** — Updated directory overview count from 46 to 48 W3C-compliant standalone HTML/Markdown publications, exactly matching `manifest/documents.json`.
+* **Directory Structure Alignment (`README.md`)** — Replaced non-existent roadmap directory reference with active `manifest/` (machine-readable 1-to-1 document pairing catalog) and `tests/` (automated 38-rule documentation verification suite).
+* **Automated Integrity Verification** — All 38 automated test gates in `tests/test_documentation.py` passing with zero warnings and strict zero-emoji compliance.
+
+---
 
 ### v16.9.28 — Real-Time Requirements Progress Bar & Subprocess Telemetry Whitepaper Synchronization
 
