@@ -180,15 +180,16 @@
                 <li><strong>SOTA Verification</strong>: Verifies SOTA targets on 100% of training data at final resolution before permitting export.</li>
             </ul>
 
-            <h4>2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant</h4>
+            <h4>2.3.1. Authoritative 4-Pillar Fully-Trained Verification Invariant</h4>
             <p>The training engine and GUI telemetry enforce an absolute, non-negotiable invariant before designating any model as <strong><code>FULLY TRAINED</code></strong>:</p>
             <p class="callout-highlight">
-                FullyTrained = (&and;<sub>m &isin; Targets</sub> Passed(m, T<sub>m</sub>)) &and; (LadderPassed) &and; (DataFraction &ge; 1.0)
+                FullyTrained = (&and;<sub>m &isin; Targets</sub> Passed(m, T<sub>m</sub>)) &and; (LadderPassed) &and; (DataFraction &ge; 1.0) &and; (Epochs &ge; 30)
             </p>
             <ol>
                 <li><strong>Pillar 1: Multi-Metric SOTA Target Satisfaction (100%)</strong>: The engine validates every single metric defined in the model's <code>sota_targets</code> dictionary within <code>unified_models_v2.yaml</code>. Directionality is strictly enforced: higher-is-better metrics (PSNR, SSIM, SRCC, PLCC, Accuracy, mAP50, DirAcc, WinRate, Sharpe, Sortino) must satisfy Achieved &ge; Target; lower-is-better metrics (LPIPS, FID, MAE, MaxDD, TP_MAE, SL_MAE, Rank_Margin) must satisfy Achieved &le; Target. If even one defined metric fails, SOTA is not achieved.</li>
                 <li><strong>Pillar 2: Complete Resolution / Confluence Ladder Traversal</strong>: Vision models must complete training through the highest rung (max_res &ge; target_res, e.g. 512px / 640px). Forex models must complete all 6 curriculum folds or train through the macro Daily confluence horizon (Fold &ge; 6 or Horizon &ge; 1440m).</li>
                 <li><strong>Pillar 3: 100% Dataset Variety (1.00 Data Fraction)</strong>: The model must have completed its epoch on 100% of the training dataset manifold (Data &ge; 0.99). Models trained on sub-unitary fractions (15%, 35%, 75%) are strictly designated as <code>PARTIALLY TRAINED</code>.</li>
+                <li><strong>Pillar 4: Minimum Epoch Convergence Threshold (Epochs &ge; 30)</strong>: The model must have trained for at least 30 epochs (completed_epochs &ge; 30). Rapid early convergence spikes or premature training termination before 30 epochs strictly prohibit declaring training complete.</li>
             </ol>
 
             <h3 id="checkpoint-resumption">2.4. Checkpoint Resumption &amp; Singularity Hardening</h3>

@@ -14,7 +14,7 @@
   - [2.1. Dynamic Memory-Sentinel (Batch Decoupling)](#21-dynamic-memory-sentinel-batch-decoupling)
   - [2.2. Intelligent Curriculum & Sawtooth Governance](#22-intelligent-curriculum--sawtooth-governance)
   - [2.3. Hardened Resolution Ladders & SOTA Guards](#23-hardened-resolution-ladders--sota-guards)
-    - [2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant](#231-authoritative-3-pillar-fully-trained-verification-invariant)
+    - [2.3.1. Authoritative 4-Pillar Fully-Trained Verification Invariant](#231-authoritative-4-pillar-fully-trained-verification-invariant)
   - [2.4. Checkpoint Resumption & Singularity Hardening](#24-checkpoint-resumption--singularity-hardening)
   - [2.5. Mixture-of-Experts (MoE) 11-Manifold Architecture](#25-mixture-of-experts-moe-11-manifold-architecture)
   - [2.6. Multi-Scale Forex Trading Architecture (`ForexPredictor`)](#26-multi-scale-forex-trading-architecture-forexpredictor)
@@ -86,11 +86,11 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 - **Overfitting Rescue Protocol**: Overrides tactical recoils and cooldown locks when trend-based overfitting is diagnosed, force-expanding the dataset fraction (+15% data) to break the overfitting attractor.
 - **SOTA Verification**: Verifies SOTA targets on 100% of training data at final resolution before permitting export.
 
-#### 2.3.1. Authoritative 3-Pillar Fully-Trained Verification Invariant
+#### 2.3.1. Authoritative 4-Pillar Fully-Trained Verification Invariant
 
 The training engine and GUI telemetry enforce an absolute, non-negotiable invariant before designating any model as **`FULLY TRAINED`**:
 
-$$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \text{Passed}(m, T_m)\right) \land (\text{LadderPassed}) \land (\text{DataFraction} \ge 1.0)$$
+$$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \text{Passed}(m, T_m)\right) \land (\text{LadderPassed}) \land (\text{DataFraction} \ge 1.0) \land (\text{Epochs} \ge 30)$$
 
 1. **Pillar 1: Multi-Metric SOTA Target Satisfaction ($100\%$)**:
    - The engine validates **every single metric** defined in the model's `sota_targets` dictionary within `unified_models_v2.yaml`.
@@ -101,6 +101,8 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
    - **Forex Models**: Model must have completed all 6 walk-forward curriculum folds or trained through the macro daily confluence horizon ($\text{Fold} \ge 6 \lor \text{Horizon} \ge 1440\text{m}$).
 3. **Pillar 3: 100% Dataset Variety ($1.00$ Data Fraction)**:
    - The model must have completed its epoch on $100\%$ of the training dataset manifold ($\text{Data} \ge 0.99$). Models trained on sub-unitary fractions ($15\%$, $35\%$, $75\%$) are strictly designated as `PARTIALLY TRAINED`.
+4. **Pillar 4: Minimum Epoch Convergence Threshold ($\text{Epochs} \ge 30$)**:
+   - The model must have trained for at least 30 epochs ($\text{completed\_epochs} \ge 30$). Rapid early convergence spikes or premature training termination before 30 epochs strictly prohibit declaring training complete.
 
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
