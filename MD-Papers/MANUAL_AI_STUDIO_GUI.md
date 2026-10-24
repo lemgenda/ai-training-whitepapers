@@ -528,7 +528,7 @@ The redesigned Live Telemetry Console is embedded directly on the Model Training
 1. **Local Training Telemetry Subtab**: Focuses the local training worker log stream, displaying minibatch loss, learning rate decay, gradient norms, and spatial ladder transitions.
 2. **Remote Cloud Telemetry Subtab**: Focuses the remote cloud execution log stream, relaying stdout/stderr from dispatched Kaggle GPU kernels or Colab notebooks.
 3. **Ecosystem Mesh Logs Subtab**: Focuses cross-daemon JSON-RPC events, HTTP health probes, and audit logs between Ports 8000, 8100, and 8200.
-4. **Accessible Radix UI Progress Engine**: Displays active epoch iterations, batch counts, transfer bandwidth, and ETAs using a two-line layout: Line 1 for unconstrained numerical metrics and Line 2 for the glowing progress bar indicator.
+4. **Accessible Radix UI Progress Engine**: Displays active epoch iterations, batch counts, transfer bandwidth, and dynamic ETAs using a two-line layout: Line 1 for unconstrained numerical metrics and Line 2 for the glowing progress bar indicator. Extended with native tqdm and Ultralytics console pattern parsing (`elapsed<remaining`, e.g., `<01:29:22`), automatically stripping leading log timestamp prefixes to maintain clean `TRAINING` status classification and real-time remaining countdowns for YOLO and vision workflows.
 5. **Monospace Terminal Output Stream**: High-performance scrolling container with full ANSI color parsing, in-place update roll-ups, rendering timestamps, log levels, and milestone records without redundant clutter.
 6. **Stream Action Controls**:
    - `Copy Stream`: Copies the entire terminal buffer to system clipboard.
