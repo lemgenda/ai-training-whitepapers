@@ -174,7 +174,9 @@
 
             <h3 id="resolution-ladders">2.3. Hardened Resolution Ladders &amp; SOTA Guards</h3>
             <ul>
-                <li><strong>Ladder-Aware Progression</strong>: Reaching SOTA targets at sub-maximal resolutions triggers a <strong>Forced Spatial Jump</strong> to the next rung (e.g., 256px &rarr; 384px).</li>
+                <li><strong>Universal 15% Initial Manifold Fraction</strong>: All model training pipelines initiate training from 15% dataset fraction (<code>0.15</code>) on the lowest ladder rung (<code>res_ladder[0]</code>), progressing through gradual intra-resolution expansion (15% &rarr; 35% &rarr; 55% &rarr; 75% &rarr; 100%) governed by performance plateau and overfitting indicators.</li>
+                <li><strong>Open-Ended Convergence Horizon</strong>: Training is not bounded by a static epoch limit. If the initial configured epoch count is reached before achieving SOTA criteria across the full manifold, the governor dynamically extends the runway in 10-epoch blocks until SOTA convergence is achieved.</li>
+                <li><strong>Ladder-Aware Progression</strong>: Reaching SOTA targets at sub-maximal resolutions triggers a <strong>Forced Spatial Jump</strong> to the next rung (e.g., 256px &rarr; 384px), where dataset fraction starts afresh from 15%.</li>
                 <li><strong>SOTA Hardening Guard</strong>: Enforces a mandatory <strong>2-epoch "Hardening Period"</strong> for every resolution rung to solidify weights.</li>
                 <li><strong>Overfitting Rescue Protocol</strong>: Overrides tactical recoils and cooldown locks when trend-based overfitting is diagnosed, force-expanding the dataset fraction (+15% data) to break the overfitting attractor.</li>
                 <li><strong>SOTA Verification</strong>: Verifies SOTA targets on 100% of training data at final resolution before permitting export.</li>
@@ -194,6 +196,7 @@
 
             <h3 id="checkpoint-resumption">2.4. Checkpoint Resumption &amp; Singularity Hardening</h3>
             <ul>
+                <li><strong>Recovered Governor Topology Synchronization</strong>: When restoring from a checkpoint, the engine (<code>training/core_loop.py</code>) directly reconfigures the active dataset strategy (<code>train_ds.update_strategy</code> / <code>sample_fraction</code>) and rebuilds the active DataLoader worker processes (<code>rebuild_train_loader</code>) to match the exact recovered ladder rung and dataset fraction.</li>
                 <li><strong>Unified Hub Checkpoints</strong>: Completely obsoletes volatile local checkpoint directories. All models, whether training locally or on Kaggle, directly sync <code>_latest</code>, <code>_best</code>, <code>_progress</code>, and <code>_vault_</code> checkpoints exclusively to their respective <code>LemGendaryModels/&lt;model_name&gt;/checkpoints</code> vault.</li>
                 <li><strong>Safe Non-Destructive Export Instantiation</strong>: Replaced legacy <code>shutil.rmtree</code> overarching folder wipes with precise, non-destructive <code>os.makedirs(exist_ok=True)</code> logic, structurally preventing catastrophic deletion of trained physical model checkpoints across projects.</li>
                 <li><strong>The Scheduler Shield</strong>: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.</li>

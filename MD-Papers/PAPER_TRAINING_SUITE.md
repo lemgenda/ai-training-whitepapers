@@ -81,7 +81,9 @@ The suite enforces a strict high-fidelity baseline to ensure models learn comple
 
 ### 2.3. Hardened Resolution Ladders & SOTA Guards
 
-- **Ladder-Aware Progression**: Reaching SOTA targets at sub-maximal resolutions triggers a **Forced Spatial Jump** to the next rung (e.g., 256px → 384px).
+- **Universal 15% Initial Manifold Fraction**: All model training pipelines initiate training from 15% dataset fraction ($0.15$) on the lowest ladder rung (`res_ladder[0]`), progressing through gradual intra-resolution expansion ($15\% \to 35\% \to 55\% \to 75\% \to 100\%$) governed by performance plateau and overfitting indicators.
+- **Open-Ended Convergence Horizon**: Training is not bounded by a static epoch limit. If the initial configured epoch count is reached before achieving SOTA criteria across the full manifold, the governor dynamically extends the runway in 10-epoch blocks until SOTA convergence is achieved.
+- **Ladder-Aware Progression**: Reaching SOTA targets at sub-maximal resolutions triggers a **Forced Spatial Jump** to the next rung (e.g., 256px → 384px), where dataset fraction starts afresh from 15%.
 - **SOTA Hardening Guard**: Enforces a mandatory **2-epoch "Hardening Period"** for every resolution rung to solidify weights.
 - **Overfitting Rescue Protocol**: Overrides tactical recoils and cooldown locks when trend-based overfitting is diagnosed, force-expanding the dataset fraction (+15% data) to break the overfitting attractor.
 - **SOTA Verification**: Verifies SOTA targets on 100% of training data at final resolution before permitting export.
@@ -106,6 +108,7 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
+- **Recovered Governor Topology Synchronization**: When restoring from a checkpoint, the engine (`training/core_loop.py`) directly reconfigures the active dataset strategy (`train_ds.update_strategy` / `sample_fraction`) and rebuilds the active DataLoader worker processes (`rebuild_train_loader`) to match the exact recovered ladder rung and dataset fraction.
 - **Unified Hub Checkpoints**: Completely obsoletes volatile local checkpoint directories. All models, whether training locally or on Kaggle, directly sync `_latest`, `_best`, `_progress`, and `_vault_` checkpoints exclusively to their respective `LemGendaryModels/<model_name>/checkpoints` vault.
 - **Safe Non-Destructive Export Instantiation**: Replaced legacy `shutil.rmtree` overarching folder wipes with precise, non-destructive `os.makedirs(exist_ok=True)` logic, structurally preventing catastrophic deletion of trained physical model checkpoints across projects.
 - **The Scheduler Shield**: Dynamically inspects candidate checkpoints for poisoned/advanced step counts. If detected, it overrides and re-anchors the loaded scheduler steps back to actual epoch progress.
