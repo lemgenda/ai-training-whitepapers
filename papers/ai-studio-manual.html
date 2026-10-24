@@ -203,6 +203,7 @@
             <li><strong>Dataset Compiler Suite Service Card</strong>: Identifies the port 8100 service managing WebDataset, Parquet, and MDS manifolds (<code>ONLINE</code>, PID, uptime, direct navigation button).</li>
             <li><strong>Model Training Suite Service Card</strong>: Identifies the port 8200 service managing PyTorch neural architectures, Sawtooth Governor VRAM safeguards, and training ladders (<code>ONLINE</code>, PID, uptime, direct navigation button).</li>
             <li><strong>Run Full System Audit Action Button</strong>: Dispatches deterministic hardware, dependency, and manifest inspection across all workspace projects (<code>POST /api/audit</code>).</li>
+            <li><strong>Bidirectional Sidecar Controls (Start / Stop Service)</strong>: Each card provides contextual daemon lifecycle management: offline cards render primary "Start Service" buttons, while active (<code>ONLINE</code>) cards render danger "Stop Service" (<code>.btn-danger</code>) buttons, terminating sidecar background daemons cleanly (<code>POST /api/services/{id}/stop</code>) without requiring shell or taskkill commands.</li>
         </ol>
 
         <div class="table-scroll">
@@ -244,6 +245,13 @@
                         <td>Action Button</td>
                         <td><code>POST http://127.0.0.1:8000/api/audit</code></td>
                         <td>Dispatches non-blocking complete audit across all workspace repositories.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td>Start / Stop Service</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/services/{id}/start</code> or <code>/stop</code></td>
+                        <td>Contextual lifecycle trigger to launch or safely terminate individual sidecars directly from UI.</td>
                     </tr>
                 </tbody>
             </table>

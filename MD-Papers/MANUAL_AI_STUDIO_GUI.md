@@ -121,6 +121,7 @@ The Ecosystem Sidecar Services grid permanently monitors and coordinates the thr
 2. **Dataset Compiler Suite Service Card**: Identifies the port 8100 service managing WebDataset, Parquet, and MDS manifolds (`ONLINE`, PID, uptime, direct navigation button).
 3. **Model Training Suite Service Card**: Identifies the port 8200 service managing PyTorch neural architectures, Sawtooth Governor VRAM safeguards, and training ladders (`ONLINE`, PID, uptime, direct navigation button).
 4. **Run Full System Audit Action Button**: Dispatches deterministic hardware, dependency, and manifest inspection across all workspace projects (`POST /api/audit`).
+5. **Bidirectional Sidecar Controls (Start / Stop Service)**: Each card provides contextual daemon lifecycle management: offline cards render primary "Start Service" buttons, while active (`ONLINE`) cards render danger "Stop Service" (`.btn-danger`) buttons, terminating sidecar background daemons cleanly (`POST /api/services/{id}/stop`) without requiring shell or taskkill commands.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
@@ -128,6 +129,7 @@ The Ecosystem Sidecar Services grid permanently monitors and coordinates the thr
 | **2** | Compiler Suite Card | Service Tile | `GET http://127.0.0.1:8100/health` | Shows compiler daemon readiness with direct navigation button. |
 | **3** | Training Suite Card | Service Tile | `GET http://127.0.0.1:8200/health` | Shows training daemon readiness with direct navigation button. |
 | **4** | Run Full System Audit | Action Button | `POST http://127.0.0.1:8000/api/audit` | Dispatches non-blocking complete audit across all workspace repositories. |
+| **5** | Start / Stop Service | Action Button | `POST /api/services/{id}/start` or `/stop` | Contextual lifecycle trigger to launch or safely terminate individual sidecars directly from UI. |
 
 ---
 
