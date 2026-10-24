@@ -481,13 +481,13 @@ Each registered model card provides comprehensive telemetry, binary export readi
 10. **Dataset Scaling Fraction Row**: Displays active training dataset sampling fraction (`Data Fraction: 85%`).
 11. **Local Training Action Button**: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream below. When training is active, transforms into **Stop Training** abort trigger.
 12. **Cloud Training Action Button**: Opens the interactive Cloud & Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.
-13. **Push Checkpoint Action Button**: Pushes latest model checkpoint to the encrypted cloud vault (`POST /api/training/push`).
-14. **Pull Checkpoint Action Button**: Pulls latest checkpoint from remote model storage into local `LemGendaryModels/` (`POST /api/training/pull`).
+13. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`).
+14. **Pull Model Action Button**: Downloads all 4 canonical model variations from Kaggle Models Hub into local `LemGendaryModels/` (`POST /api/training/kaggle/pull`).
 15. **Training Notebook Action Button**: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (`POST /api/notebooks/generate`).
 16. **Usage Notebook Action Button**: Builds standalone usage guide and inference walkthrough notebooks (`POST /api/notebooks/usage`).
 17. **Evaluate Model Action Button**: Dispatches validation benchmark (`POST /api/training/evaluate`) across test splits.
 18. **Export Binaries Action Button**: Compiles checkpoint into deployment binaries (`.onnx` FP32/FP16 and TorchScript) via `POST /api/training/export`.
-19. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model-metadata.json` (`POST /api/training/generate-docs`).
+19. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model_metadata.yaml` (`POST /api/training/generate-docs`).
 20. **Stage Variations Action Button**: Stages isolated format variations into dedicated subdirectories under `dist/kaggle/` (`POST /api/training/stage`).
 21. **Sync Kaggle Models Hub Action Button**: Opens direct multi-variation staging and publishing workflow for Kaggle Models Hub registry.
 
@@ -505,8 +505,8 @@ Each registered model card provides comprehensive telemetry, binary export readi
 | **10** | Data Fraction | Progress Metric | Checkpoint telemetry | Reports active dataset sampling percentage. |
 | **11** | Local Training | Primary Button | `POST /api/gui/quick-train` | Starts local GPU training pass and focuses telemetry terminal below. |
 | **12** | Cloud Training | Action Button | `onOpenCloudModal()` | Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch. |
-| **13** | Push Checkpoint | Action Button | `POST /api/training/push` | Uploads local checkpoint to cloud storage repository. |
-| **14** | Pull Checkpoint | Action Button | `POST /api/training/pull` | Downloads latest remote weights into local repository. |
+| **13** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all 4 variations and metadata to Kaggle Models. |
+| **14** | Pull Model | Action Button | `POST /api/training/kaggle/pull` | Downloads 4 canonical variations from Kaggle into local model directory. |
 | **15** | Training Notebook | Action Button | `POST /api/notebooks/generate` | Generates self-contained training notebooks for Kaggle and Colab. |
 | **16** | Usage Notebook | Action Button | `POST /api/notebooks/usage` | Builds standalone usage guide and inference notebooks. |
 | **17** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Executes validation benchmark and streams evaluation metrics. |
@@ -631,9 +631,9 @@ Clicking `Sync Kaggle Models Hub` on any registered architecture card opens the 
 | **14** | Kaggle Notebook Link | External Link | Opens browser URL | Direct link opening remote Kaggle training notebook. |
 | **15** | Kaggle Models Hub Link | External Link | Opens browser URL | Direct link opening model repository on Kaggle Models Hub. |
 | **16** | Cancel Action Button | Secondary Button | `onCloseModal()` | Closes dialog cleanly without altering local or remote state. |
-| **17** | Push to Kaggle / Validate | Primary Button | `POST /api/training/push` | Publishes multi-variation release weights to Kaggle Models Hub. |
+| **17** | Push to Kaggle / Validate | Primary Button | `POST /api/training/kaggle/push` | Publishes multi-variation release weights to Kaggle Models Hub. |
 
-**Fleet Synchronization Note:** In addition to publishing individual model variations through the Cloud & Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 22 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (`lemtrain sync push --all`).
+**Fleet Synchronization Note:** In addition to publishing individual model variations through the Cloud & Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 23 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (`lemtrain sync push --all`).
 
 ---
 

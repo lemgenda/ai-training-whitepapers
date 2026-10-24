@@ -137,8 +137,12 @@ $$\text{Status} = \text{FULLY\_TRAINED} \iff \left(\bigwedge_{m} \text{Passed}(m
 
 ## 7. Cloud Training & Remote Synchronization Pipeline
 
-- **Kaggle Pipelines (`kaggle_training/`)**: 22 standalone notebooks consuming attached input datasets directly from `/kaggle/input/` with zero redundant cloud downloads.
-- **Google Colab Pipelines (`colab_training/`)**: 22 automated training pipelines synchronized idempotently to Google Drive via `push_to_drive.py`.
+- **Kaggle Pipelines (`kaggle_training/`)**: 23 standalone notebooks consuming attached input datasets directly from `/kaggle/input/` with zero redundant cloud downloads.
+- **Google Colab Pipelines (`colab_training/`)**: 23 automated training pipelines synchronized idempotently to Google Drive via `push_to_drive.py`.
+- **Kaggle Models Hub 4-Variation Publishing (`lemtrain sync push`)**:
+  - Publishes 4 strictly isolated variations per model: `pytorch/default` (checkpoints and metrics), `pytorch/fp32` (native `.pt`), `onnx/fp16` (half-precision graph), and `onnx/fp32` (full-precision graph with `.data` sidecar).
+  - Single Source of Truth metadata driven by `LemGendaryModels/<key>/model_metadata.yaml`, synchronized directly to the Kaggle REST API with resolved owner credentials.
+  - Full fleet synchronization (`lemtrain sync push --all`) sequences all 23 registered neural models with per-model progress telemetry routed cleanly to the Local Telemetry tab.
 - **Bidirectional Metadata Sync**:
   - `push_kaggle_dataset_metadata` automatically verifies remote repository existence via `ensure_kaggle_dataset_exists`.
   - If a target dataset slug does not exist on Kaggle, the synchronizer auto-creates a minimal public placeholder dataset containing `README.md` first, permanently eliminating `403 Forbidden` errors during metadata updates.

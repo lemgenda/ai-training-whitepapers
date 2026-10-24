@@ -377,7 +377,7 @@
                             </tr>
                             <tr>
                                 <td><code>train-btn-unit-test-all</code></td>
-                                <td>Run 1-Epoch Diagnostic (All 22 Models)</td>
+                                <td>Run 1-Epoch Diagnostic (All 23 Models)</td>
                                 <td><code>&lt;button&gt;</code></td>
                                 <td><code>POST /api/training/unit-test-all</code> (8200)</td>
                                 <td>Dispatches 1-epoch diagnostic smoke test across all models.</td>
@@ -387,7 +387,7 @@
                                 <td>Generate All Notebooks</td>
                                 <td><code>&lt;button&gt;</code></td>
                                 <td><code>POST /api/notebooks/generate-all</code> (8200)</td>
-                                <td>Batch generates notebooks across all 22 registered architectures.</td>
+                                <td>Batch generates notebooks across all 23 registered architectures.</td>
                             </tr>
                             <tr>
                                 <td><code>training-toolbar-push-all-models-btn</code></td>
@@ -395,6 +395,20 @@
                                 <td><code>&lt;button&gt;</code></td>
                                 <td><code>POST /api/training/kaggle/push-all</code> (8200)</td>
                                 <td>Stages and publishes all registered model checkpoints, variations, and metadata to Kaggle Models Hub.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-card-btn-push</code></td>
+                                <td>Push Model</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/kaggle/push</code> (8200)</td>
+                                <td>Stages isolated variations and publishes model weights and YAML metadata to Kaggle Models Hub.</td>
+                            </tr>
+                            <tr>
+                                <td><code>train-card-btn-pull</code></td>
+                                <td>Pull Model</td>
+                                <td><code>&lt;button&gt;</code></td>
+                                <td><code>POST /api/training/kaggle/pull</code> (8200)</td>
+                                <td>Downloads 4 canonical isolated variations from Kaggle Models Hub into local model directories.</td>
                             </tr>
                             <tr>
                                 <td><code>train-btn-refresh-models</code></td>

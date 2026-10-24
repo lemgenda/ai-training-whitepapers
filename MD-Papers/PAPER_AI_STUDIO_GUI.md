@@ -189,11 +189,13 @@ To ensure deterministic state transitions and eliminate prop drilling across dee
 
 The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:
 
-- **Strict 3-Variation Isolation**: Enforces clean partition across isolated model directories:
-  - Variation 1 (`pytorch`): Canonical PyTorch checkpoint weights (`*.pt`).
-  - Variation 2 (`onnx_fp32`): High-precision standard ONNX exports (`*_FP32.onnx*`).
-  - Variation 3 (`onnx_fp16`): Edge-optimized half-precision ONNX exports (`*.onnx`).
-- **Fleet-Wide Kaggle Models Hub Push**: One-click "Push All Models to Kaggle" toolbar action triggering `POST /api/training/kaggle/push-all` to stage, validate, and publish all 22 registered neural architectures and their multi-format variations with pre-flight isolation verification.
+- **Strict 4-Variation Isolation**: Enforces clean partition across isolated model directories:
+  - Variation 1 (`pytorch/default`): Canonical PyTorch checkpoints (`checkpoints/` containing `best.pth`, `latest.pth`) alongside model cards and training metrics (`metrics.csv`).
+  - Variation 2 (`pytorch/fp32`): Native full-precision PyTorch weights (`[Model].pt`).
+  - Variation 3 (`onnx/fp16`): Edge-optimized half-precision ONNX computational graph (`[Model].onnx`).
+  - Variation 4 (`onnx/fp32`): High-precision standard ONNX exports (`[Model]_FP32.onnx` and `.data` sidecar).
+- **Single Source of Truth Metadata (`model_metadata.yaml`)**: Model documentation, licensing, fine-tunability, tags, and variation usage examples are managed in `model_metadata.yaml` and applied dynamically via the Kaggle REST API, eliminating embedded metadata clutter.
+- **Fleet-Wide Kaggle Models Hub Push**: One-click "Push All Models to Kaggle" toolbar action triggering `POST /api/training/kaggle/push-all` to stage, validate, and publish all 23 registered neural architectures and their multi-format variations with pre-flight isolation verification.
 - **Pre-Upload Isolation Gate**: Built-in `StrictIsolationValidator` blocks non-compliant or cross-contaminated binaries before transmission.
 - **Dry-Run Staging**: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.
 

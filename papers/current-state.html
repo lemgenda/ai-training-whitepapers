@@ -259,8 +259,15 @@
             <section id="section-cloud">
                 <h2>7. Cloud Training &amp; Remote Synchronization Pipeline</h2>
                 <ul>
-                    <li><strong>Kaggle Pipelines (<code>kaggle_training/</code>)</strong>: 22 standalone notebooks consuming attached input datasets directly from <code>/kaggle/input/</code> with zero redundant cloud downloads.</li>
-                    <li><strong>Google Colab Pipelines (<code>colab_training/</code>)</strong>: 22 automated training pipelines synchronized idempotently to Google Drive via <code>push_to_drive.py</code>.</li>
+                    <li><strong>Kaggle Pipelines (<code>kaggle_training/</code>)</strong>: 23 standalone notebooks consuming attached input datasets directly from <code>/kaggle/input/</code> with zero redundant cloud downloads.</li>
+                    <li><strong>Google Colab Pipelines (<code>colab_training/</code>)</strong>: 23 automated training pipelines synchronized idempotently to Google Drive via <code>push_to_drive.py</code>.</li>
+                    <li><strong>Kaggle Models Hub 4-Variation Publishing (<code>lemtrain sync push</code>)</strong>:
+                        <ul>
+                            <li>Publishes 4 strictly isolated variations per model: <code>pytorch/default</code> (checkpoints and metrics), <code>pytorch/fp32</code> (native <code>.pt</code>), <code>onnx/fp16</code> (half-precision graph), and <code>onnx/fp32</code> (full-precision graph with <code>.data</code> sidecar).</li>
+                            <li>Single Source of Truth metadata driven by <code>LemGendaryModels/&lt;key&gt;/model_metadata.yaml</code>, synchronized directly to the Kaggle REST API with resolved owner credentials.</li>
+                            <li>Full fleet synchronization (<code>lemtrain sync push --all</code>) sequences all 23 registered neural models with per-model progress telemetry routed cleanly to the Local Telemetry tab.</li>
+                        </ul>
+                    </li>
                     <li><strong>Bidirectional Metadata Sync</strong>:
                         <ul>
                             <li><code>push_kaggle_dataset_metadata</code> automatically verifies remote repository existence via <code>ensure_kaggle_dataset_exists</code>.</li>

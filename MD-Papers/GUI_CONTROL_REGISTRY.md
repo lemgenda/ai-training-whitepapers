@@ -70,9 +70,11 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | `comp-btn-dispatch-reduce` | "Dispatch Reduction" | `<button>` | `POST /api/modernize/reduce` (8100) | Initiates downsampling derivation job for selected manifold. |
 | `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/gui/models/with-stats` (8200) | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
 | `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/gui/quick-train` (8200) | Dispatches training worker with spatial resolution ladder. |
-| `train-btn-unit-test-all` | "Run 1-Epoch Diagnostic (All 22 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test across all models. |
-| `train-btn-generate-all-notebooks` | "Generate All Notebooks" | `<button>` | `POST /api/notebooks/generate-all` (8200) | Batch generates notebooks across all 22 registered architectures. |
+| `train-btn-unit-test-all` | "Run 1-Epoch Diagnostic (All 23 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test across all models. |
+| `train-btn-generate-all-notebooks` | "Generate All Notebooks" | `<button>` | `POST /api/notebooks/generate-all` (8200) | Batch generates notebooks across all 23 registered architectures. |
 | `training-toolbar-push-all-models-btn` | "Push All Models to Kaggle" | `<button>` | `POST /api/training/kaggle/push-all` (8200) | Stages and publishes all registered model checkpoints, variations, and metadata to Kaggle Models Hub. |
+| `train-card-btn-push` | "Push Model" | `<button>` | `POST /api/training/kaggle/push` (8200) | Stages isolated variations and publishes model weights and YAML metadata to Kaggle Models Hub. |
+| `train-card-btn-pull` | "Pull Model" | `<button>` | `POST /api/training/kaggle/pull` (8200) | Downloads 4 canonical isolated variations from Kaggle Models Hub into local model directories. |
 | `train-btn-refresh-models` | "Refresh Models" | `<button>` | `GET /api/gui/models/with-stats` (8200) | Polls sidecar to synchronize model weights status and metrics. |
 | `train-card-btn-eval` | "Evaluate Model" | `<button>` | `POST /api/training/evaluate` (8200) | Evaluates checkpoint against validation benchmark criteria. |
 | `train-card-btn-export` | "Export Binaries" | `<button>` | `POST /api/training/export` (8200) | Compiles model to ONNX, PyTorch, and WebGPU binary formats. |

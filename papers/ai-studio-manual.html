@@ -1160,13 +1160,13 @@
             <li><strong>Dataset Scaling Fraction Row</strong>: Displays active training dataset sampling fraction (<code>Data Fraction: 85%</code>).</li>
             <li><strong>Local Training Action Button</strong>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream below. When training is active, transforms into <strong>Stop Training</strong> abort trigger.</li>
             <li><strong>Cloud Training Action Button</strong>: Opens the interactive Cloud &amp; Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.</li>
-            <li><strong>Push Checkpoint Action Button</strong>: Pushes latest model checkpoint to the encrypted cloud vault (<code>POST /api/training/push</code>).</li>
-            <li><strong>Pull Checkpoint Action Button</strong>: Pulls latest checkpoint from remote model storage into local <code>LemGendaryModels/</code> (<code>POST /api/training/pull</code>).</li>
+            <li><strong>Push Model Action Button</strong>: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (<code>POST /api/training/kaggle/push</code>).</li>
+            <li><strong>Pull Model Action Button</strong>: Downloads all 4 canonical model variations from Kaggle Models Hub into local <code>LemGendaryModels/</code> (<code>POST /api/training/kaggle/pull</code>).</li>
             <li><strong>Training Notebook Action Button</strong>: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (<code>POST /api/notebooks/generate</code>).</li>
             <li><strong>Usage Notebook Action Button</strong>: Builds standalone usage guide and inference walkthrough notebooks (<code>POST /api/notebooks/usage</code>).</li>
             <li><strong>Evaluate Model Action Button</strong>: Dispatches validation benchmark (<code>POST /api/training/evaluate</code>) across test splits.</li>
             <li><strong>Export Binaries Action Button</strong>: Compiles checkpoint into deployment binaries (<code>.onnx</code> FP32/FP16 and TorchScript) via <code>POST /api/training/export</code>.</li>
-            <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model-metadata.json</code> (<code>POST /api/training/generate-docs</code>).</li>
+            <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model_metadata.yaml</code> (<code>POST /api/training/generate-docs</code>).</li>
             <li><strong>Stage Variations Action Button</strong>: Stages isolated format variations into dedicated subdirectories under <code>dist/kaggle/</code> (<code>POST /api/training/stage</code>).</li>
             <li><strong>Sync Kaggle Models Hub Action Button</strong>: Opens direct multi-variation staging and publishing workflow for Kaggle Models Hub registry.</li>
         </ol>
@@ -1269,17 +1269,17 @@
                     </tr>
                     <tr>
                         <td><strong>13</strong></td>
-                        <td>Push Checkpoint</td>
+                        <td>Push Model</td>
                         <td>Action Button</td>
-                        <td><code>POST /api/training/push</code></td>
-                        <td>Uploads local checkpoint to cloud storage repository.</td>
+                        <td><code>POST /api/training/kaggle/push</code></td>
+                        <td>Stages and publishes all 4 variations and metadata to Kaggle Models.</td>
                     </tr>
                     <tr>
                         <td><strong>14</strong></td>
-                        <td>Pull Checkpoint</td>
+                        <td>Pull Model</td>
                         <td>Action Button</td>
-                        <td><code>POST /api/training/pull</code></td>
-                        <td>Downloads latest remote weights into local repository.</td>
+                        <td><code>POST /api/training/kaggle/pull</code></td>
+                        <td>Downloads 4 canonical variations from Kaggle into local model directory.</td>
                     </tr>
                     <tr>
                         <td><strong>15</strong></td>
@@ -1658,14 +1658,14 @@
                         <td><strong>17</strong></td>
                         <td>Push to Kaggle / Validate</td>
                         <td>Primary Button</td>
-                        <td><code>POST /api/training/push</code></td>
+                        <td><code>POST /api/training/kaggle/push</code></td>
                         <td>Publishes multi-variation release weights to Kaggle Models Hub.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <p><strong>Fleet Synchronization Note:</strong> In addition to publishing individual model variations through the Cloud &amp; Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 22 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
+        <p><strong>Fleet Synchronization Note:</strong> In addition to publishing individual model variations through the Cloud &amp; Registry Dispatch dialog, operators can execute fleet-wide synchronization to stage, validate, and publish all 23 registered neural models and checkpoints to Kaggle Models Hub simultaneously using the <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
     </section>
 
     <!-- SECTION 8 -->

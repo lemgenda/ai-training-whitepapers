@@ -246,14 +246,16 @@
                 <h3>6.9 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
                 <p>The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:</p>
                 <ul>
-                    <li><strong>Strict 3-Variation Isolation</strong>: Enforces clean partition across isolated model directories:
+                    <li><strong>Strict 4-Variation Isolation</strong>: Enforces clean partition across isolated model directories:
                         <ul>
-                            <li>Variation 1 (<code>pytorch</code>): Canonical PyTorch checkpoint weights (<code>*.pt</code>).</li>
-                            <li>Variation 2 (<code>onnx_fp32</code>): High-precision standard ONNX exports (<code>*_FP32.onnx*</code>).</li>
-                            <li>Variation 3 (<code>onnx_fp16</code>): Edge-optimized half-precision ONNX exports (<code>*.onnx</code>).</li>
+                            <li>Variation 1 (<code>pytorch/default</code>): Canonical PyTorch checkpoints (<code>checkpoints/</code> containing <code>best.pth</code>, <code>latest.pth</code>) alongside model cards and training metrics (<code>metrics.csv</code>).</li>
+                            <li>Variation 2 (<code>pytorch/fp32</code>): Native full-precision PyTorch weights (<code>[Model].pt</code>).</li>
+                            <li>Variation 3 (<code>onnx/fp16</code>): Edge-optimized half-precision ONNX computational graph (<code>[Model].onnx</code>).</li>
+                            <li>Variation 4 (<code>onnx/fp32</code>): High-precision standard ONNX exports (<code>[Model]_FP32.onnx</code> and <code>.data</code> sidecar).</li>
                         </ul>
                     </li>
-                    <li><strong>Fleet-Wide Kaggle Models Hub Push</strong>: One-click &quot;Push All Models to Kaggle&quot; toolbar action triggering <code>POST /api/training/kaggle/push-all</code> to stage, validate, and publish all 22 registered neural architectures and their multi-format variations with pre-flight isolation verification.</li>
+                    <li><strong>Single Source of Truth Metadata (<code>model_metadata.yaml</code>)</strong>: Model documentation, licensing, fine-tunability, tags, and variation usage examples are managed in <code>model_metadata.yaml</code> and applied dynamically via the Kaggle REST API, eliminating embedded metadata clutter.</li>
+                    <li><strong>Fleet-Wide Kaggle Models Hub Push</strong>: One-click &quot;Push All Models to Kaggle&quot; toolbar action triggering <code>POST /api/training/kaggle/push-all</code> to stage, validate, and publish all 23 registered neural architectures and their multi-format variations with pre-flight isolation verification.</li>
                     <li><strong>Pre-Upload Isolation Gate</strong>: Built-in <code>StrictIsolationValidator</code> blocks non-compliant or cross-contaminated binaries before transmission.</li>
                     <li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.</li>
                 </ul>
