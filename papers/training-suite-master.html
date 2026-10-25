@@ -50,6 +50,7 @@
                         <li><a href="#forex-locality-telemetry">2.19. Forex Parquet Locality Acceleration &amp; Telemetry Progress Synchronization</a></li>
                         <li><a href="#validation-batch-telemetry">2.20. Validation Batch Telemetry &amp; Live Telemetry Progress Synchronization</a></li>
                         <li><a href="#pytorch-cu126-transformers-v5">2.21. Modernized PyTorch cu126 &amp; Transformers v5 Stack Integration</a></li>
+                        <li><a href="#turing-cudnn-nan-remediation">2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-5">3. Judicial Audit Engine</a>
@@ -430,6 +431,10 @@
                 <li><strong>Driver-Aware Dynamic CUDA Selection</strong>: The training pipeline integrates <code>system_probe.select_cuda_torch_index()</code>, querying host NVIDIA driver capabilities dynamically via <code>nvidia-smi</code> and choosing the latest compatible PyTorch wheel index (<code>cu130</code>, <code>cu128</code>, <code>cu126</code>, or fallback <code>cu121</code>).</li>
                 <li><strong>Physical Hardware Verification (GTX 1650, Driver 610.74)</strong>: All 9 physical execution gates confirmed passing on local edge hardware: FP32 matmul, FP16 autocast, and Conv2D forward/backward execution verified on CUDA; Turing architecture detection correctly skips unsupported BF16 formats and enforces FP16/FP32 precision paths; <code>torch.compile</code> eager fallback validated on Windows; ONNX Dynamo export validated via <code>onnxscript</code> and <code>onnxruntime</code> (max diff 1.78e-07); offline Transformers v5 smoke test (tokenizer, BERT forward pass, GPT-2 generation, safetensors serialization) validated on GPU; and Torchvision CUDA NMS and bilinear interpolation confirmed operational.</li>
             </ul>
+
+            <h3 id="turing-cudnn-nan-remediation">2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation</h3>
+            <p>NVIDIA GeForce GTX 16xx series GPUs (TU116 / TU117 Turing architectures lacking Tensor Cores, such as the GTX 1650, GTX 1660, and GTX 1630) exhibit a hardware/driver accumulator overflow bug in cuDNN when evaluating spatial 2D convolutions under <code>torch.float16</code> autocast with batched tensors (<code>batch_size &ge; 2</code> at 512&times;512 resolution). While single-sample training passes (<code>batch_size = 1</code>) compute without error, batched validation passes produce immediate <code>NaN</code> values, cascading into <code>ValLoss: nan</code> and corrupted running averages.</p>
+            <p>The hardware policy engine (<code>training/hardware/policy.py</code>) automatically detects Turing non-Tensor-Core GPU architectures and forces full Float32 precision (<code>amp_enabled = False</code>), permanently eliminating numerical corruption while preserving full evaluation fidelity.</p>
 
         </section>
         <section id="section-5">

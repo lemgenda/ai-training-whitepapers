@@ -33,6 +33,7 @@
   - [2.19. Forex Parquet Locality Acceleration & Telemetry Progress Synchronization](#219-forex-parquet-locality-acceleration--telemetry-progress-synchronization)
   - [2.20. Validation Batch Telemetry & Live Telemetry Progress Synchronization](#220-validation-batch-telemetry--live-telemetry-progress-synchronization)
   - [2.21. Modernized PyTorch cu126 & Transformers v5 Stack Integration](#221-modernized-pytorch-cu126--transformers-v5-stack-integration)
+  - [2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation](#222-turing-non-tensor-core-hardware-cudnn-bug-remediation)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -331,6 +332,12 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
   - ONNX Dynamo export validated via `onnxscript` and `onnxruntime` (max diff 1.78e-07).
   - Offline Transformers v5 smoke test (tokenizer, BERT forward pass, GPT-2 generation, safetensors serialization) validated on GPU.
   - Torchvision CUDA NMS and bilinear interpolation confirmed operational.
+
+### 2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation
+
+NVIDIA GeForce GTX 16xx series GPUs (TU116 / TU117 Turing architectures without Tensor Cores, such as GTX 1650, GTX 1660, and GTX 1630) exhibit a hardware/driver accumulator overflow bug in cuDNN when evaluating spatial 2D convolutions under `torch.float16` autocast with batched tensors ($\text{batch\_size} \ge 2$, e.g. at $512\text{px}$). While single-sample training passes ($\text{batch\_size} = 1$) compute cleanly, validation batches produce immediate `NaN` values, cascading into $\text{ValLoss} = \text{NaN}$.
+
+The hardware policy engine (`training/hardware/policy.py`) automatically detects Turing non-Tensor-Core GPU architectures and forces full Float32 precision (`amp_enabled = False`), permanently eliminating numerical corruption while preserving full evaluation fidelity.
 
 ---
 
