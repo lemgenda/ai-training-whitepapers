@@ -480,7 +480,7 @@ Each registered model card provides comprehensive telemetry, binary export readi
 7. **Completed Epochs Counter Row**: Reports cumulative trained epochs recorded in checkpoint metadata (`42`).
 8. **Target Metrics (SOTA) Interactive Popover Trigger**: Interactive popover button (`(Click to pin) Pending`) detailing target convergence metrics, current best scores, and evaluation baselines.
 9. **Spatial / Confluence Ladder Progression Row**: Displays active ladder rung (`Confluence Ladder: Partial Confluence`).
-10. **Dataset Scaling Fraction Row**: Displays active training dataset sampling fraction (`Data Fraction: 85%`).
+10. **Dataset Scaling Fraction / Walk-Forward Fold Row**: Displays active training dataset sampling fraction (`Data Fraction: 100%`) for vision models, or dynamic Walk-Forward fold progression (`Walk-Forward Fold: Fold 1 / 6 (2019-2020 -> 2021)`) for quantitative financial models.
 11. **Local Training Action Button**: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream below. When training is active, transforms into **Stop Training** abort trigger.
 12. **Cloud Training Action Button**: Opens the interactive Cloud & Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.
 13. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`).
@@ -504,7 +504,7 @@ Each registered model card provides comprehensive telemetry, binary export readi
 | **7** | Completed Epochs | Metric Row | Checkpoint telemetry | Displays verified training iterations completed. |
 | **8** | Target Metrics (SOTA) | Popover Trigger | `HoverPinPopover.tsx` | Details convergence targets, current best scores, and baselines. |
 | **9** | Confluence Ladder | Progress Metric | Checkpoint telemetry | Displays active spatial ladder rung and resolution tier. |
-| **10** | Data Fraction | Progress Metric | Checkpoint telemetry | Reports active dataset sampling percentage. |
+| **10** | Data Fraction / Walk-Forward Fold | Progress Metric | Checkpoint telemetry | Reports active dataset sampling percentage (vision) or Walk-Forward fold status (forex). |
 | **11** | Local Training | Primary Button | `POST /api/gui/quick-train` | Starts local GPU training pass and focuses telemetry terminal below. |
 | **12** | Cloud Training | Action Button | `onOpenCloudModal()` | Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch. |
 | **13** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all 4 variations and metadata to Kaggle Models. |

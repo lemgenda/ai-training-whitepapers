@@ -1165,7 +1165,7 @@
             <li><strong>Completed Epochs Counter Row</strong>: Reports cumulative trained epochs recorded in checkpoint metadata (<code>42</code>).</li>
             <li><strong>Target Metrics (SOTA) Interactive Popover Trigger</strong>: Interactive popover button (<code>(Click to pin) Pending</code>) detailing target convergence metrics, current best scores, and evaluation baselines.</li>
             <li><strong>Spatial / Confluence Ladder Progression Row</strong>: Displays active ladder rung (<code>Confluence Ladder: Partial Confluence</code>).</li>
-            <li><strong>Dataset Scaling Fraction Row</strong>: Displays active training dataset sampling fraction (<code>Data Fraction: 85%</code>).</li>
+            <li><strong>Dataset Scaling Fraction / Walk-Forward Fold Row</strong>: Displays active training dataset sampling fraction (<code>Data Fraction: 100%</code>) for vision models, or dynamic Walk-Forward fold progression (<code>Walk-Forward Fold: Fold 1 / 6 (2019-2020 -> 2021)</code>) for quantitative financial models.</li>
             <li><strong>Local Training Action Button</strong>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream below. When training is active, transforms into <strong>Stop Training</strong> abort trigger.</li>
             <li><strong>Cloud Training Action Button</strong>: Opens the interactive Cloud &amp; Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.</li>
             <li><strong>Push Model Action Button</strong>: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (<code>POST /api/training/kaggle/push</code>).</li>
@@ -1256,10 +1256,10 @@
                     </tr>
                     <tr>
                         <td><strong>10</strong></td>
-                        <td>Data Fraction</td>
+                        <td>Data Fraction / Walk-Forward Fold</td>
                         <td>Progress Metric</td>
                         <td>Checkpoint telemetry</td>
-                        <td>Reports active dataset sampling percentage.</td>
+                        <td>Reports active dataset sampling percentage (vision) or Walk-Forward fold status (forex).</td>
                     </tr>
                     <tr>
                         <td><strong>11</strong></td>
