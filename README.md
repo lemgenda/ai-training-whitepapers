@@ -13,6 +13,14 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.36 — 20-Epoch Minimum Convergence Floor Calibration & LLM Context Window Specialization
+
+* **Master Training Suite Whitepaper & HTML Synchronization (`PAPER_TRAINING_SUITE.md`, `training-suite-master.html`)** — Calibrated the authoritative Pillar 4 convergence floor from 30 epochs down to 20 epochs across Section 2.3.1 and Section 2.14. Specialized Pillar 2 (Complete Resolution / Confluence / Context Ladder Traversal) to mandate full target sequence length ($\text{seq\_length} \ge 2048\text{ tokens}$) for Causal LLM assistants, and Pillar 3 to mandate full instruction tuning manifold traversal without spatial cropping constraints.
+* **AI Studio GUI Operator Manual & HTML Synchronization (`MANUAL_AI_STUDIO_GUI.md`, `ai-studio-manual.html`)** — Documented the domain-specific telemetry row specialization in Section 6.2 (Architecture Telemetry Card): updated Row 9 to document `Context Window: 2048 tokens (Full)` for causal LLMs alongside spatial and timeframe confluence ladders, and Row 10 to document `Training Dataset: LemGendizedAIHelperLemGend` alongside fractional vision samplers and walk-forward forex folds.
+* **Automated Documentation Integrity Verification** — All 38 documentation validation gates passing in `tests/test_documentation.py` with 100% W3C HTML compliance, zero markdownlint errors, zero broken links, and zero emojis.
+
+---
+
 ### v16.9.35 — Dynamic Horizon Runway Extension & Telemetry 1-Indexed Epoch Synchronization
 
 * **Master Training Suite Whitepaper & HTML Synchronization (`PAPER_TRAINING_SUITE.md`, `training-suite-master.html`)** — Documented dynamic horizon runway extension (`stage_total_epochs = max(total_epochs, stage_start_epoch + 100)`), strict historical checkpoint-to-telemetry anchor parity (`max(stage_start_epoch, csv_epochs)`), and telemetry 1-indexed epoch serialization in Section 2.4 (Checkpoint Resumption & Singularity Hardening).

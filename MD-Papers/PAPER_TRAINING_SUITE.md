@@ -34,6 +34,7 @@
   - [2.20. Validation Batch Telemetry & Live Telemetry Progress Synchronization](#220-validation-batch-telemetry--live-telemetry-progress-synchronization)
   - [2.21. Modernized PyTorch cu126 & Transformers v5 Stack Integration](#221-modernized-pytorch-cu126--transformers-v5-stack-integration)
   - [2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation](#222-turing-non-tensor-core-hardware-cudnn-bug-remediation)
+  - [2.23. Multi-Task SOTA Metric Ingestion & Perceptual Telemetry Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -99,11 +100,13 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
    - The engine validates **every single metric** defined in the model's `sota_targets` dictionary within `unified_models_v2.yaml`.
    - Directionality is strictly enforced: higher-is-better metrics ($\text{PSNR}$, $\text{SSIM}$, $\text{SRCC}$, $\text{PLCC}$, $\text{Accuracy}$, $\text{mAP50}$, $\text{DirAcc}$, $\text{WinRate}$, $\text{Sharpe}$, $\text{Sortino}$) must satisfy $\text{Achieved} \ge \text{Target}$; lower-is-better metrics ($\text{LPIPS}$, $\text{FID}$, $\text{MAE}$, $\text{MaxDD}$, $\text{TP\_MAE}$, $\text{SL\_MAE}$, $\text{Rank\_Margin}$) must satisfy $\text{Achieved} \le \text{Target}$.
    - If even one defined metric fails to meet its target, SOTA is not achieved ($\text{sota\_targets\_met} < \text{sota\_targets\_total}$).
-2. **Pillar 2: Complete Resolution / Confluence Ladder Traversal**:
+2. **Pillar 2: Complete Resolution / Confluence / Context Ladder Traversal**:
    - **Vision Models**: Model must have completed training at or above the highest rung in `res_ladder` ($\text{max\_res} \ge \text{target\_res}$, typically $512\text{px}$ or $640\text{px}$). Reaching SOTA at $256\text{px}$ does not qualify as fully trained.
    - **Forex Models**: Model must have completed all 6 walk-forward curriculum folds or trained through the macro daily confluence horizon ($\text{Fold} \ge 6 \lor \text{Horizon} \ge 1440\text{m}$).
-3. **Pillar 3: 100% Dataset Variety ($1.00$ Data Fraction)**:
-   - The model must have completed its epoch on $100\%$ of the training dataset manifold ($\text{Data} \ge 0.99$). Models trained on sub-unitary fractions ($15\%$, $35\%$, $75\%$) are strictly designated as `PARTIALLY TRAINED`.
+   - **Causal LLM Assistants**: Model must operate on its maximum target context token window ($\text{seq\_length} \ge 2048\text{ tokens}$).
+3. **Pillar 3: 100% Dataset Variety ($1.00$ Data Fraction / Full Corpus)**:
+   - **Vision Models**: The model must have completed its epoch on $100\%$ of the training dataset manifold ($\text{Data} \ge 0.99$). Models trained on sub-unitary fractions ($15\%$, $35\%$, $75\%$) are strictly designated as `PARTIALLY TRAINED`.
+   - **Causal LLM Assistants**: Model must have trained across the complete instruction tuning manifold without loose image sampling fraction constraints.
 4. **Pillar 4: Minimum Epoch Convergence Threshold ($\text{Epochs} \ge 20$)**:
    - The model must have trained for at least 20 epochs ($\text{completed\_epochs} \ge 20$). Rapid early convergence spikes or premature training termination before 20 epochs strictly prohibit declaring training complete.
 
@@ -340,6 +343,24 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
 NVIDIA GeForce GTX 16xx series GPUs (TU116 / TU117 Turing architectures without Tensor Cores, such as GTX 1650, GTX 1660, and GTX 1630) exhibit a hardware/driver accumulator overflow bug in cuDNN when evaluating spatial 2D convolutions under `torch.float16` autocast with batched tensors ($\text{batch\_size} \ge 2$, e.g. at $512\text{px}$). While single-sample training passes ($\text{batch\_size} = 1$) compute cleanly, validation batches produce immediate `NaN` values, cascading into $\text{ValLoss} = \text{NaN}$.
 
 The hardware policy engine (`training/hardware/policy.py`) automatically detects Turing non-Tensor-Core GPU architectures and forces full Float32 precision (`amp_enabled = False`), permanently eliminating numerical corruption while preserving full evaluation fidelity.
+
+### 2.23. Multi-Task SOTA Metric Ingestion & Perceptual Telemetry Synchronization
+
+- **Perceptual LPIPS FP32 Guard (`training/training/validation.py`)**:
+  In `training/training/validation.py`, evaluating TorchMetrics VGG feature extractors under mixed precision / autocast on edge Turing hardware threw runtime exceptions inside try/except blocks. Because errors were swallowed, `lpips_count` remained 0, causing `0.0000` to be written to `metrics.csv`. The evaluation pass now enforces explicit Float32 tensors (`p_scaled.float()`, `t_scaled.float()`) evaluated outside half-precision autocast blocks with detailed diagnostics logging.
+- **Dynamic Frechet Inception Distance (FID) Feature Accumulation (`training/training/validation.py`)**:
+  Integrated `torchmetrics.image.fid.FrechetInceptionDistance(feature=64)` into the validation pass for all 11 restoration and super-resolution architectures defining `fid` in `sota_targets` (`mirnet_lowlight`, `mirnet_exposure`, `film_restorer`, `codeformer`, `ffanet_indoor`, `ffanet_outdoor`, `mprnet_deraining`, `nafnet_debluring`, `nafnet_denoising`, `professional_multitask_restoration`, `ultrazoom`). Accumulates real and reconstructed validation feature distributions across batches and calculates final FID at the validation epoch boundary into `results["fid"]`.
+- **Fleet-Wide SOTA Metric Parity Across All 23 Architectures**:
+  Validation passes now automatically evaluate and record the corresponding SOTA targets for all model paradigms:
+  - **Vision Restoration**: PSNR, SSIM, LPIPS, and FID.
+  - **Aesthetic Quality (NIMA)**: PLCC, SRCC, and Rank Margin.
+  - **Forex Time-Series**: Direction Accuracy, Win Rate, Profit Factor, Sharpe Ratio, Sortino Ratio, Max Drawdown, TP MAE, SL MAE, and Direction Entropy.
+  - **Semantic Segmentation (ParseNet)**: Mean Intersection over Union (mIoU).
+  - **Object & Face Detection (RetinaFace, YOLOv8n)**: mAP50, mAP50-95, and mAP difficulty scores.
+  - **Classification (NSFW, Authenticity)**: Categorical Accuracy.
+  - **Parameter Prediction (UPN v2)**: Mean Absolute Error (MAE).
+- **Unified Telemetry Logging & Epoch Summaries (`training/training/engine.py`)**:
+  Integrated LPIPS, FID, and PLCC metrics into canonical epoch completion summaries in `training/training/engine.py`, guaranteeing synchronized reporting across terminal logs, `metrics.csv`, and the Desktop GUI.
 
 ---
 
