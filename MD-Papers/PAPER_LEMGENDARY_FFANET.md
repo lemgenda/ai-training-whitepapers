@@ -168,12 +168,13 @@ The **LemGendary FFANet Outdoor** handles unpredictable spatial reconstruction a
 
 #### 4.2.4 Performance Metrics
 
-- **Current Training Epochs:** 1
-- **Best PSNR:** 33.93 dB
-- **Best SSIM:** 0.9326
-- **Best LPIPS:** 0.1612
-- **Best FID:** 12.4061
-- **Current Learning Rate:** 0.00000240
+- **Current Training Epochs:** 6
+- **Best PSNR:** 42.85 dB
+- **Best SSIM:** 0.9871
+- **Best LPIPS:** 0.0335
+- **Best FID:** 2.3120
+- **Best Quality Score:** 604.38
+- **Current Learning Rate:** 0.00100000
 
 #### 4.2.5 Training Curve
 
@@ -188,10 +189,11 @@ Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the d
 
 | Metric | Current Reality (Mid-Training) | Target SOTA `[TARGET]` Baseline | Gap |
 | :--- | :--- | :--- | :--- |
-| **PSNR** | 33.93 dB | 33.70 dB | +0.23 dB |
-| **SSIM** | 0.9326 | 0.9860 | -0.0534 |
-| **LPIPS** | 0.1612 | 0.0800 | -0.0812 |
-| **FID** | 12.4061 | 12.0000 | -0.4061 |
+| **PSNR** | 42.85 dB | 33.70 dB | +9.15 dB |
+| **SSIM** | 0.9871 | 0.9860 | +0.0011 |
+| **LPIPS** | 0.0335 | 0.0800 | +0.0465 |
+| **FID** | 2.3120 | 12.0000 | +9.6880 |
+| **Quality Score** | 604.38 | 501.24 | +103.14 |
 
 ## 5. Challenges & Resilience Architecture
 
