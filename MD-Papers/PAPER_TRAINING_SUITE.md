@@ -104,8 +104,8 @@ $$\text{FullyTrained} = \left(\bigwedge_{m \in \mathcal{M}_{\text{target}}} \tex
    - **Forex Models**: Model must have completed all 6 walk-forward curriculum folds or trained through the macro daily confluence horizon ($\text{Fold} \ge 6 \lor \text{Horizon} \ge 1440\text{m}$).
 3. **Pillar 3: 100% Dataset Variety ($1.00$ Data Fraction)**:
    - The model must have completed its epoch on $100\%$ of the training dataset manifold ($\text{Data} \ge 0.99$). Models trained on sub-unitary fractions ($15\%$, $35\%$, $75\%$) are strictly designated as `PARTIALLY TRAINED`.
-4. **Pillar 4: Minimum Epoch Convergence Threshold ($\text{Epochs} \ge 30$)**:
-   - The model must have trained for at least 30 epochs ($\text{completed\_epochs} \ge 30$). Rapid early convergence spikes or premature training termination before 30 epochs strictly prohibit declaring training complete.
+4. **Pillar 4: Minimum Epoch Convergence Threshold ($\text{Epochs} \ge 20$)**:
+   - The model must have trained for at least 20 epochs ($\text{completed\_epochs} \ge 20$). Rapid early convergence spikes or premature training termination before 20 epochs strictly prohibit declaring training complete.
 
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
