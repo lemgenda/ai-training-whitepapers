@@ -63,7 +63,7 @@
                         <li><a href="#514-three-pipelines">5.14 Unified Three-Pipeline Ingestion, Modernization &amp; Conversion Architecture</a></li>
                         <li><a href="#514-direct-streaming-ingestion-telemetry-hardening">5.15 Direct In-Memory Streaming Ingestion &amp; Terminal Progress Telemetry Hardening (v16.9.1)</a></li>
                         <li><a href="#515-ssot-notebook-delegation">5.16 Single Source of Truth (SSOT) Notebook Delegation &amp; Deduplication (v16.9.7)</a></li>
-                        <li><a href="#516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.13)</a></li>
+                        <li><a href="#516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.19)</a></li>
                     </ul>
                 </li>
                 <li><a href="#section-8">6. Comparative Analysis | 2026 Manifold Compilers Benchmark</a>
@@ -94,7 +94,7 @@
 
 <section id="section-1">
 <h2>1. Abstract</h2>
-            <p>The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
+            <p>The LemGendary Dataset Compiler Suite (v16.9.19) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (MDS, LitData, WebDataset, Parquet), deterministic degradation kernels, a high-throughput FastAPI/WebSocket REST sidecar daemon (<code>api/</code>), and unified hybrid CLI orchestration.</p>
             <p><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-datasets" target="_blank">lemgendary-datasets</a></p>
         
 
@@ -190,7 +190,7 @@
             <code>Threshold = 512 (Diffusion) \| 224 (Quality, Restoration, SR) \| 128 (ArtifactDiagnostic)</code></p>
 
             <h3 id="23-system-performance-throughput-matrix">2.3 System Performance &amp; Throughput Matrix</h3>
-            <p>To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the <code>LemGendizedUpnV2Large</code> manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:</p>
+            <p>To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the <code>LemGendizedUpnV2</code> manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:</p>
             <div class="chart-container"><table>
             <thead>
             <tr>
@@ -313,14 +313,14 @@
             Replaces unbuffered and silent transfer pipelines with uniform, chunk-level streaming monitors. Archiving (<code>archive_manager.py</code>) and remote payload transmission (<code>kaggle_manager.py</code>, <code>manifold_sync.py</code>) employ unified 1 MB byte-stream chunking (<i>C<sub>chunk</sub> = 1024 &times; 1024 B</i>) with pre-calculated uncompressed byte envelopes to report instantaneous transfer velocity (MB/s), ETA, and true completion bounds. Post-upload orchestration initiates autonomous REST/CLI status telemetry, polling backend dataset readiness every 5 seconds until the ingestion pipeline transitions from <code>queued</code>/<code>creating</code> to <code>ready</code>, eliminating blind execution halts.</p>
 
             <p><strong>Direct Root Streaming &amp; Bidirectional Resumption Protocol (v16.7.0)</strong>:<br>
-            Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (<code>LemGendaryDatasets\</code>) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (<code>LemGendizedParseNetLarge/LemGendizedParseNetLarge</code>), with single-row terminal progress tracking (<code>dynamic_ncols=True</code>, <code>file=sys.stdout</code>). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:</p>
+            Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (<code>LemGendaryDatasets\</code>) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (<code>LemGendizedParseNet/LemGendizedParseNet</code>), with single-row terminal progress tracking (<code>dynamic_ncols=True</code>, <code>file=sys.stdout</code>). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:</p>
             <ul>
                 <li><strong>Download Resumption</strong>: Pre-scans for existing valid archives on disk, verifies structural integrity via CRC/central directory checks, and resumes extraction of only missing files without redundant network I/O. Source archives are unlinked strictly after 100% successful extraction.</li>
                 <li><strong>Upload Resumption</strong>: Preserves generated <code>.staging_&lt;manifold&gt;/&lt;manifold&gt;.zip</code> archives upon upload failure or connection resets. Subsequent retry operations detect valid existing archives and bypass recompression, saving 30&ndash;60 minutes of compute on multi-gigabyte manifolds.</li>
             </ul>
 
             <p><strong>MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)</strong>:<br>
-            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (<code>LemGendizedForexUniverseLarge</code>) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
+            For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the <code>mt5_pipeline</code>, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (<code>LemGendizedForexUniverse</code>) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.</p>
 
             <p><strong>Kaggle Cloud Synchronization &amp; Storage Hub (v16.9.6)</strong>:<br>
             Exposes high-speed bidirectional synchronization between the local dataset root (<code>LemGendaryDatasets\</code>) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (<code>GET /api/kaggle/registry-datasets</code>, <code>POST /api/kaggle/download</code>, <code>POST /api/kaggle/upload</code>, <code>GET /api/kaggle/status</code>).</p>
@@ -438,7 +438,7 @@
                 <li><strong>Parquet &amp; Safetensors Support (v16.6.0)</strong>: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (<code>ForexUniverse{year}.parquet</code>) utilizing Zstandard compression (level 3) with in-memory row-group caching.</li>
                 <li><strong>DPED Mirroring v2.1</strong>: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.</li>
                 <li><strong>VRAM De-fragmentation</strong>: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.</li>
-                <li><strong>Universal Film Restorer Dataset Hardening</strong>: Confirmed exactly 0 empty label files and 100% target physical hardlinking in <code>LemGendizedFilmRestorerLarge</code>, guaranteeing a pristine production state at 0 bytes disk overhead.</li>
+                <li><strong>Universal Film Restorer Dataset Hardening</strong>: Confirmed exactly 0 empty label files and 100% target physical hardlinking in <code>LemGendizedFilmRestorer</code>, guaranteeing a pristine production state at 0 bytes disk overhead.</li>
                 <li><strong>Professional Multi-Task Restoration Dataset Integration (v16.3.0)</strong>: Structured unified source pipeline merging 11 individual manifolds with automated filename prefix preservation for downstream regular expression routing. Standardized target hardlinking layout with case-insensitive physically skip-indexed ingestion, and configured strict Lanczos/interpolation ceilings at 256px-640px to feed the Mixture-of-Experts (MoE) routing engine.</li>
                 <li><strong>ParseNet Semantic Extraction (v16.3.1)</strong>: Compiler explicitly outputs <code>masks/</code> directory, resolving paired masks as target images natively for face segmentation tasks rather than generic YOLO polygons.</li>
                 <li><strong>RetinaFace YOLO Landmarking (v16.3.1)</strong>: Integrated dynamic 5-point landmark extraction directly from <code>landmarks/</code> into standard YOLO format and strictly filtered all classes to <code>face</code> (index 0).</li>
@@ -712,7 +712,7 @@
             </ul>
 
             <h3 id="512-streaming-zip-container">5.12 Direct Streaming Zip-to-Container &amp; In-Flight WebP Transcoding Engine (v16.8.0)</h3>
-            <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposureLarge</code> with 2.82M loose files and <code>LemGendizedUpnV2Large</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
+            <p>To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., <code>LemGendizedMirNetExposure</code> with 2.82M loose files and <code>LemGendizedUpnV2</code> with 1.42M files), v16.8.0 introduces the <strong>Direct Streaming Zip-to-Container Engine</strong> (<code>tools/stream_zip_to_container.py</code>):</p>
             <ul>
                 <li><strong>Zero-Unpack Architecture</strong>: Directly mounts legacy <code>.zip</code> archives and streams raw byte streams into canonical WebDataset POSIX <code>.tar</code> shards in memory, eliminating loose file generation on physical disk.</li>
                 <li><strong>In-Flight Multi-Threaded WebP Transcoding</strong>: Deploys an asynchronous worker pool (<code>ThreadPoolExecutor</code>, 12 CPU cores) executing Pillow WebP encoding (<code>method=2</code>, <code>quality=92</code> for input images, <code>quality=95</code> for ground-truth targets). Delivers consistent ~1,800&ndash;2,000 img/sec throughput, accelerating processing time from days to minutes.</li>
@@ -789,8 +789,8 @@
                 <li><strong>Stale Artifact Purge</strong>: All obsolete or unreferenced legacy notebooks across compiled manifolds are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.</li>
             </ul>
 
-            <h3 id="516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.13)</h3>
-            <p>To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.13 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:</p>
+            <h3 id="516-modern-telemetry-progress-architecture">5.17 Modern Telemetry Progress Architecture &amp; Outdated Progress Bar Elimination (v16.9.19)</h3>
+            <p>To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.19 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:</p>
             <ul>
                 <li><strong>Elimination of ASCII Progress Bar Glyph Flooding</strong>: In <code>utils/progress.py</code>, the default progress format was migrated from multi-line visual bar graphics (<code>\n|{bar:50}|</code>) to a single-line unconstrained metric descriptor: <code>{desc} - {percentage:5.1f}% [{n_fmt}/{total_fmt}, {rate_fmt}{postfix}]</code>. This provides clean, parseable telemetry metrics without injecting visual glyph clutter into monospace terminals.</li>
                 <li><strong>WebSocket &amp; Sidecar Stream Sanitization</strong>: In <code>api/jobs.py</code> (<code>_read_stream</code>), incoming child process streams undergo automated regex sanitization to strip residual ANSI escape codes, carriage return overwrites (<code>\r</code>), and leftover terminal bar segments before lines are broadcast over WebSockets.</li>
@@ -1031,7 +1031,7 @@
             <div class="visual-taxonomy">
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedClassificationMasterManifoldLarge</h3>
+                        <h3>LemGendizedClassificationMaster</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Classification</li>
                             <li><strong>Total Samples:</strong> 788,034</li>
@@ -1042,7 +1042,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedCodeFormerLarge</h3>
+                        <h3>LemGendizedCodeFormer</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration / Face Enhancement</li>
                             <li><strong>Total Samples:</strong> 22,000</li>
@@ -1053,7 +1053,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetIndoorLarge</h3>
+                        <h3>LemGendizedFfaNetIndoor</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 196,304</li>
@@ -1064,7 +1064,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedFfaNetOutdoorLarge</h3>
+                        <h3>LemGendizedFfaNetOutdoor</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 217,113</li>
@@ -1075,7 +1075,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedFilmRestorerLarge</h3>
+                        <h3>LemGendizedFilmRestorer</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 67,542</li>
@@ -1086,7 +1086,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedForexUniverseLarge</h3>
+                        <h3>LemGendizedForexUniverse</h3>
                         <ul>
                             <li><strong>Category:</strong> Financial Time-Series</li>
                             <li><strong>Total Samples:</strong> 24,850,000</li>
@@ -1098,7 +1098,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedMirNetExposureLarge</h3>
+                        <h3>LemGendizedMirNetExposure</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 1,416,459</li>
@@ -1109,7 +1109,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedMirNetLowLightLarge</h3>
+                        <h3>LemGendizedMirNetLowLight</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 15,070</li>
@@ -1120,7 +1120,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedMprNetDerainingLarge</h3>
+                        <h3>LemGendizedMprNetDeraining</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 248,190</li>
@@ -1131,7 +1131,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDebluringLarge</h3>
+                        <h3>LemGendizedNafNetDebluring</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
@@ -1142,7 +1142,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedNafNetDenoisingLarge</h3>
+                        <h3>LemGendizedNafNetDenoising</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 7,727</li>
@@ -1153,7 +1153,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedNimaAestheticLarge</h3>
+                        <h3>LemGendizedNimaAesthetic</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 321,369</li>
@@ -1164,7 +1164,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedNimaAuthenticityLarge</h3>
+                        <h3>LemGendizedNimaAuthenticity</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Authenticity Assessment</li>
                             <li><strong>Total Samples:</strong> 209,196 (189 corrupt samples were filtered during the latest manifold build)</li>
@@ -1175,7 +1175,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedNimaTechnicalLarge</h3>
+                        <h3>LemGendizedNimaTechnical</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Quality Assessment</li>
                             <li><strong>Total Samples:</strong> 26,093</li>
@@ -1186,7 +1186,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedParseNetLarge</h3>
+                        <h3>LemGendizedParseNet</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Segmentation</li>
                             <li><strong>Total Samples:</strong> 853,546</li>
@@ -1197,7 +1197,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedProfessionalMultitaskRestorationLarge</h3>
+                        <h3>LemGendizedProfessionalMultitaskRestoration</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 343,911</li>
@@ -1208,7 +1208,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedRetinaFaceMobileNetLarge</h3>
+                        <h3>LemGendizedRetinaFaceMobileNet</h3>
                         <ul>
                             <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
                             <li><strong>Total Samples:</strong> 853,546</li>
@@ -1219,7 +1219,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedUltraZoomLarge</h3>
+                        <h3>LemGendizedUltraZoom</h3>
                         <ul>
                             <li><strong>Category:</strong> Super-Resolution</li>
                             <li><strong>Total Samples:</strong> 17,724</li>
@@ -1230,7 +1230,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedUpnV2Large</h3>
+                        <h3>LemGendizedUpnV2</h3>
                         <ul>
                             <li><strong>Category:</strong> Image Restoration</li>
                             <li><strong>Total Samples:</strong> 1,378,070</li>
@@ -1241,7 +1241,7 @@
                 </div>
                 <div class="quadrant">
                     <div class="quadrant-info">
-                        <h3>LemGendizedYoloV8nLarge</h3>
+                        <h3>LemGendizedYoloV8n</h3>
                         <ul>
                             <li><strong>Category:</strong> Object Detection</li>
                             <li><strong>Total Samples:</strong> 153,972</li>

@@ -8,7 +8,7 @@
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (v16.9.13) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (WebDataset, LitData, Parquet; MosaicML MDS deprecated and transcoded to WebDataset), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
+The LemGendary Dataset Compiler Suite (v16.9.19) is the industrial standard for Generative, Vision, and Time-Series Data Synthesis. It elevates static sharding to a Self-Optimizing Generative Manifold, orchestrating massive-scale Diffusion, Restoration, Detection, and Market datasets with WebP zero-intermediate transcoding, pluggable container formats (WebDataset, LitData, Parquet; MosaicML MDS deprecated and transcoded to WebDataset), deterministic degradation kernels, bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a high-throughput FastAPI/WebSocket REST sidecar daemon (`api/`), and unified hybrid CLI orchestration across 22 production manifolds.
 
 * **Project Repository**: [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 
@@ -56,7 +56,7 @@ The v16.2.8 release introduces the High-Fidelity Compiler, optimized for process
 
 ### 2.3 System Performance & Throughput Matrix
 
-To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the `LemGendizedUpnV2Large` manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:
+To empirically validate these system-level optimizations, execution profiles were collected during the compilation of the `LemGendizedUpnV2` manifold (1.37M samples, 1024px targets) on high-speed PCIe Gen4 NVMe hardware:
 
 | System Parameter | Legacy Recursive Pipeline | High-Fidelity Compiler Suite | Throughput Gain / Reduction |
 | :--- | :--- | :--- | :--- |
@@ -93,12 +93,12 @@ To empirically validate these system-level optimizations, execution profiles wer
   Replaces unbuffered and silent transfer pipelines with uniform, chunk-level streaming monitors. Archiving (`archive_manager.py`) and remote payload transmission (`kaggle_manager.py`, `manifold_sync.py`) employ unified 1 MB byte-stream chunking ($\mathcal{C}_{\text{chunk}} = 1024 \times 1024\text{ B}$) with pre-calculated uncompressed byte envelopes to report instantaneous transfer velocity ($\text{MB/s}$), ETA, and true completion bounds. Post-upload orchestration initiates autonomous REST/CLI status telemetry, polling backend dataset readiness every 5 seconds until the ingestion pipeline transitions from `queued`/`creating` to `ready`, eliminating blind execution halts.
 
 * **Direct Root Streaming & Bidirectional Resumption Protocol (v16.7.0)**:
-  Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (`LemGendaryDatasets\`) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (`LemGendizedParseNetLarge/LemGendizedParseNetLarge`), with single-row terminal progress tracking (`dynamic_ncols=True`, `file=sys.stdout`). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:
+  Eliminates the legacy intermediate extraction cache and secondary byte-copy bottleneck ("FINALIZING" phase). Ingestion streams remote archives directly to the datasets root directory (`LemGendaryDatasets\`) via Kaggle API binary chunking. Smart single-level extraction automatically identifies root manifold folders to prevent double-nesting (`LemGendizedParseNet/LemGendizedParseNet`), with single-row terminal progress tracking (`dynamic_ncols=True`, `file=sys.stdout`). The bidirectional resumption protocol preserves archives upon transfer or extraction interruptions:
   * **Download Resumption**: Pre-scans for existing valid archives on disk, verifies structural integrity via CRC/central directory checks, and resumes extraction of only missing files without redundant network I/O. Source archives are unlinked strictly after 100% successful extraction.
   * **Upload Resumption**: Preserves generated `.staging_<manifold>/<manifold>.zip` archives upon upload failure or connection resets. Subsequent retry operations detect valid existing archives and bypass recompression, saving 30–60 minutes of compute on multi-gigabyte manifolds.
 
 * **MetaTrader 5 (MT5) Auto-Acquisition (v16.5.0)**:
-  For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (`LemGendizedForexUniverseLarge`) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.
+  For financial time-series and forex manifolds, the compiler intelligence bypasses raw tarball downloads entirely. It seamlessly bridges into the `mt5_pipeline`, instantiating a live connection to a local MetaTrader 5 terminal. It intelligently fetches missing currency pair shards via MT5 into the unified 16-symbol financial foundation manifold (`LemGendizedForexUniverse`) to ensure pristine modularity. The compiler builds a strict 1-Year Progressive Chronological Walk-Forward matrix (Fold 1: 2019-2020, Folds 2-6: 1-Year subsequent blocks) to eliminate physical temporal data duplication, computing 14 high-fidelity quantitative features and synchronizing shards end-to-end for dynamic stacking in the Training Suite.
 
 * **Kaggle Cloud Synchronization & Storage Hub (v16.9.6)**:
   Exposes high-speed bidirectional synchronization between the local dataset root (`LemGendaryDatasets\`) and Kaggle Cloud Storage via dedicated REST sidecar endpoints (`GET /api/kaggle/registry-datasets`, `POST /api/kaggle/download`, `POST /api/kaggle/upload`, `GET /api/kaggle/status`).
@@ -156,7 +156,7 @@ Every discovered sample from any source undergoes rigorous pre-flight gating bef
 * **Parquet & Safetensors Support (v16.6.0)**: Native ingestion of highly compressed pyarrow binaries, Safetensors model weights, and unified annual financial manifolds (`ForexUniverse{year}.parquet`) utilizing Zstandard compression (level 3) with in-memory row-group caching.
 * **DPED Mirroring v2.1**: Automated alignment of synthetic and real-world restoration pairs (Smartphone vs. Canon) using the specialized DPED cache.
 * **VRAM De-fragmentation**: Proactive memory purging during NIMA/YOLO vetting to prevent OOM on 4GB-8GB local hardware.
-* **Universal Film Restorer Dataset Hardening**: Confirmed exactly 0 empty label files and 100% target physical hardlinking in `LemGendizedFilmRestorerLarge`, guaranteeing a pristine production state at 0 bytes disk overhead.
+* **Universal Film Restorer Dataset Hardening**: Confirmed exactly 0 empty label files and 100% target physical hardlinking in `LemGendizedFilmRestorer`, guaranteeing a pristine production state at 0 bytes disk overhead.
 * **Professional Multi-Task Restoration Dataset Integration (v16.3.0)**: Structured unified source pipeline merging 11 individual manifolds with automated filename prefix preservation for downstream regular expression routing. Standardized target hardlinking layout with case-insensitive physically skip-indexed ingestion, and configured strict Lanczos/interpolation ceilings at 256px-640px to feed the Mixture-of-Experts (MoE) routing engine.
 * **ParseNet Semantic Extraction (v16.3.1)**: Compiler explicitly outputs `masks/` directory, resolving paired masks as target images natively for face segmentation tasks rather than generic YOLO polygons.
 * **RetinaFace YOLO Landmarking (v16.3.1)**: Integrated dynamic 5-point landmark extraction directly from `landmarks/` into standard YOLO format and strictly filtered all classes to `face` (index 0).
@@ -275,7 +275,7 @@ To eliminate dual-storage waste and filesystem allocation overhead, v16.8.0 esta
 
 ### 5.11 Direct Streaming Zip-to-Container & In-Flight WebP Transcoding Engine (v16.8.0)
 
-To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (`WdFilter.sys`) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., `LemGendizedMirNetExposureLarge` with 2.82M loose files and `LemGendizedUpnV2Large` with 1.42M files), v16.8.0 introduces the **Direct Streaming Zip-to-Container Engine** (`tools/stream_zip_to_container.py`):
+To resolve severe Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name collision overhead, and antivirus real-time filter driver (`WdFilter.sys`) serialization when unpacking multi-gigabyte legacy archives containing millions of small images (e.g., `LemGendizedMirNetExposure` with 2.82M loose files and `LemGendizedUpnV2` with 1.42M files), v16.8.0 introduces the **Direct Streaming Zip-to-Container Engine** (`tools/stream_zip_to_container.py`):
 
 1. **Zero-Unpack Architecture**: Directly mounts legacy `.zip` archives and streams raw byte streams into canonical WebDataset POSIX `.tar` shards in memory, eliminating loose file generation on physical disk.
 2. **In-Flight Multi-Threaded WebP Transcoding**: Deploys an asynchronous worker pool (`ThreadPoolExecutor`, 12 CPU cores) executing Pillow WebP encoding (`method=2`, `quality=92` for input images, `quality=95` for ground-truth targets). Delivers consistent $\sim 1,800\text{--}2,000\text{ img/sec}$ throughput, accelerating processing time from days to minutes.
@@ -341,9 +341,9 @@ To enforce strict ecosystem DRY principles (Don't Repeat Yourself) and establish
 3. **Identical Manifold & Model Training Notebooks**: Because both manifold compilation and training launches use the identical builder engine from `lemgendary-training-suite`, the `.ipynb` files placed in `LemGendaryDatasets/<manifold>/` are bit-exact copies of those placed in `LemGendaryModels/<model>/`, `kaggle_training/`, and `colab_training/`.
 4. **Stale Artifact Purge**: All obsolete or unreferenced legacy notebooks across compiled manifolds (such as `classification_master_manifold_training.ipynb` or legacy detection artifacts) are safely purged during compilation cycles and replaced with freshly generated, validated notebooks.
 
-### 5.16 Modern Telemetry Progress Architecture & Outdated Progress Bar Elimination (v16.9.13)
+### 5.16 Modern Telemetry Progress Architecture & Outdated Progress Bar Elimination (v16.9.19)
 
-To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.13 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:
+To modernize operator ergonomics and align with commercial desktop telemetry standards, v16.9.19 deprecates legacy ASCII terminal progress bars in favor of modern, unconstrained metric streams natively digested by the frontend UI:
 
 1. **Elimination of ASCII Progress Bar Glyph Flooding**:
    In `utils/progress.py`, the default progress format was migrated from multi-line visual bar graphics (`\n|{bar:50}|`) to a single-line unconstrained metric descriptor:
@@ -440,42 +440,42 @@ The modernized interactive dashboard for end-to-end manifold management, backed 
 
 ## 8. Unified Models Registry (Manifolds)
 
-### LemGendizedClassificationMasterManifoldLarge
+### LemGendizedClassificationMaster
 
 * **Category:** Image Classification
 * **Total Samples:** 788,034
 * **Architecture Base:** Lightweight convolutional backbones with classification heads
 * **Primary Task:** Predict categorical classes and safety content labels.
 
-### LemGendizedCodeFormerLarge
+### LemGendizedCodeFormer
 
 * **Category:** Image Restoration / Face Enhancement
 * **Total Samples:** 22,000
 * **Architecture Base:** CodeFormer or UNet-based restoration architectures
 * **Primary Task:** Restore degraded images and enhance visual quality of human faces.
 
-### LemGendizedFfaNetIndoorLarge
+### LemGendizedFfaNetIndoor
 
 * **Category:** Image Restoration
 * **Total Samples:** 196,304
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedFfaNetOutdoorLarge
+### LemGendizedFfaNetOutdoor
 
 * **Category:** Image Restoration
 * **Total Samples:** 217,113
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedFilmRestorerLarge
+### LemGendizedFilmRestorer
 
 * **Category:** Image Restoration
 * **Total Samples:** 67,542
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedForexUniverseLarge
+### LemGendizedForexUniverse
 
 * **Category:** Financial Time-Series
 * **Total Samples:** 24,850,000
@@ -483,98 +483,98 @@ The modernized interactive dashboard for end-to-end manifold management, backed 
 * **Architecture Base:** Multi-Scale CNN-Transformer (TCN + CT-MHA)
 * **Primary Task:** Predict directional probability and Pip-Magnitude Boundaries for 16 major currency pairs and commodities across 6 timeframes.
 
-### LemGendizedMirNetExposureLarge
+### LemGendizedMirNetExposure
 
 * **Category:** Image Restoration
 * **Total Samples:** 1,416,459
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedMirNetLowLightLarge
+### LemGendizedMirNetLowLight
 
 * **Category:** Image Restoration
 * **Total Samples:** 15,070
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedMprNetDerainingLarge
+### LemGendizedMprNetDeraining
 
 * **Category:** Image Restoration
 * **Total Samples:** 248,190
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedNafNetDebluringLarge
+### LemGendizedNafNetDebluring
 
 * **Category:** Image Restoration
 * **Total Samples:** 26,093
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedNafNetDenoisingLarge
+### LemGendizedNafNetDenoising
 
 * **Category:** Image Restoration
 * **Total Samples:** 7,727
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedNimaAestheticLarge
+### LemGendizedNimaAesthetic
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 321,369
 * **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
-### LemGendizedNimaAuthenticityLarge
+### LemGendizedNimaAuthenticity
 
 * **Category:** Image Authenticity Assessment
 * **Total Samples:** 209,196 (189 corrupt samples were filtered during the latest manifold build)
 * **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict image authenticity score and map to binary categorical distribution.
 
-### LemGendizedNimaTechnicalLarge
+### LemGendizedNimaTechnical
 
 * **Category:** Image Quality Assessment
 * **Total Samples:** 26,093
 * **Architecture Base:** MobileNetV3-Small / EfficientNetV2 / SwinV2 backbone with 10-bin distribution head
 * **Primary Task:** Predict human-perceptual quality score.
 
-### LemGendizedParseNetLarge
+### LemGendizedParseNet
 
 * **Category:** Image Segmentation
 * **Total Samples:** 853,546
 * **Architecture Base:** Vision Transformer (ViT) backbones with hierarchical decoders
 * **Primary Task:** Assign categorical labels to every pixel in the image manifold.
 
-### LemGendizedProfessionalMultitaskRestorationLarge
+### LemGendizedProfessionalMultitaskRestoration
 
 * **Category:** Image Restoration
 * **Total Samples:** 343,911
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedRetinaFaceMobileNetLarge
+### LemGendizedRetinaFaceMobileNet
 
 * **Category:** Pose Estimation / Face Landmarks
 * **Total Samples:** 853,546
 * **Architecture Base:** High-Resolution Net (HRNet) or ViT backbones
 * **Primary Task:** Regress exact coordinate points for biological landmarks.
 
-### LemGendizedUltraZoomLarge
+### LemGendizedUltraZoom
 
 * **Category:** Super-Resolution
 * **Total Samples:** 17,724
 * **Architecture Base:** Transformer-based or Deep Residual networks
 * **Primary Task:** Scale low-resolution images to high-resolution while preserving details.
 
-### LemGendizedUpnV2Large
+### LemGendizedUpnV2
 
 * **Category:** Image Restoration
 * **Total Samples:** 1,378,070
 * **Architecture Base:** UNet-based restoration architectures with residual learning
 * **Primary Task:** Restore degraded images and enhance visual quality.
 
-### LemGendizedYoloV8nLarge
+### LemGendizedYoloV8n
 
 * **Category:** Object Detection
 * **Total Samples:** 153,972

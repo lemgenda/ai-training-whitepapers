@@ -1,17 +1,17 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.27-STABLE",
-  "runtime_engine_baseline": "v16.9.16-STABLE",
-  "desktop_client_baseline": "v2.0.0",
-  "last_audited": "2026-10-18",
+  "document_baseline": "v16.9.44-STABLE",
+  "runtime_engine_baseline": "v16.9.44-STABLE",
+  "desktop_client_baseline": "v2.10.2",
+  "last_audited": "2026-10-28",
   "control_planes": {
     "gui": {
       "framework": "Tauri v2 + React 18 + Vite",
-      "version": "v2.0.0",
+      "version": "v2.10.2",
       "ports": {
-        "training_sidecar": 8000,
+        "environment_manager_sidecar": 8000,
         "dataset_compiler_sidecar": 8100,
-        "hardware_environment_sidecar": 8200
+        "training_sidecar": 8200
       }
     },
     "cli": {
@@ -1129,7 +1129,7 @@
       ],
       "academic_reference": {
         "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
-        "authors": "Wenzhe Shi, Jose Caballero, Ferenc Husz\u00e1r, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang",
+        "authors": "Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang",
         "year": 2016,
         "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
         "link": "https://arxiv.org/abs/1609.05158",
@@ -1300,5 +1300,6 @@
         "bibtex": "@article{qwen2024,\n  title={Qwen2.5 Technical Report},\n  author={Qwen Team},\n  journal={arXiv preprint arXiv:2412.15115},\n  year={2024}\n}"
       }
     }
-  ]
+  ],
+  "dataset_compiler_baseline": "v16.9.19-STABLE"
 }

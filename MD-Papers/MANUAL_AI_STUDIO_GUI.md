@@ -135,15 +135,18 @@ The Ecosystem Sidecar Services grid permanently monitors and coordinates the thr
 
 ### 2.6 Centralized State Architecture (Zustand) & Modular Micro-Components
 
-To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent race conditions when streaming high-frequency training metrics, the application state is managed by a centralized Zustand store (`src/store/useStudioStore.ts`):
+To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent race conditions when streaming high-frequency training metrics, the application state is governed by a unified Single Source of Truth (SSOT) Zustand store (`src/store/useStudioStore.ts`):
 
-1. **Ecosystem Mesh Health**: Persists real-time connection status across the tripartite sidecars (Ports 8000, 8100, 8200) with automatic re-poll triggers.
-2. **Global Telemetry Ring Buffer**: Maintains high-throughput terminal events with ANSI color parsing, regex filtering, and clipboard synchronization.
-3. **Hardware Accelerators**: Caches GPU VRAM profiles, temperature sensors, and compute utilization matrices.
-4. **Active Job Management**: Coordinates running training and compilation processes with instant stop signals.
-5. **Shared Micro-Components**:
+1. **Ecosystem Mesh Health**: Persists real-time connection status across the tripartite sidecars (Ports 8000, 8100, 8200) with automatic re-poll triggers and autonomous cold boot controls.
+2. **Global Telemetry Ring Buffer**: Maintains high-throughput terminal events with ANSI color parsing, regex filtering, and asynchronous clipboard export.
+3. **Hardware Accelerators**: Caches GPU VRAM profiles, temperature sensors, compute utilization matrices, and Sawtooth Governor headroom telemetry.
+4. **Active Job Management**: Coordinates running training and compilation processes with instant stop signals and sub-second minibatch abort.
+5. **Modular Offline Fallback Hydration (`src/data/fallbackModels.ts`, `src/data/fallbackDatasets.ts`)**: Decouples static fallback data from the central store into standalone, typed modules representing all 19 production model architectures and 20 verified dataset manifolds, ensuring deterministic offline cockpit rendering when backend daemons are unreachable.
+6. **Canonical DOM Test Control Registry Alignment**: Every interactive tab, input, button, and modal element is explicitly bound to authoritative DOM IDs defined in `lemgendary-docs/GUI_CONTROL_REGISTRY.md` (e.g. `id="dashboard-tab-btn"`, `id="datasets-tab-btn"`, `id="training-tab-btn"`, `id="install-tab-btn"`, `id="health-tab-btn"`, `id="theme-toggle-btn"`), guaranteeing flawless Vitest, Playwright, and Tauri E2E automation.
+7. **Shared Micro-Components & Utilities**:
    - `ValidationBanner.tsx`: Centralized banner component with auto-detected severity (`info`, `success`, `warning`, `error`), dismiss handlers, and full accessibility semantics.
    - `HoverPinPopover.tsx`: High-performance CSS hover and native semantic `<button>` pin popovers for SOTA targets and upstream sources.
+   - `src/utils/clipboard.ts`: Dedicated zero-loss clipboard export utility supporting modern asynchronous `navigator.clipboard.writeText` with legacy fallback for sandboxed webviews.
 
 ---
 
@@ -481,17 +484,17 @@ Each registered model card provides comprehensive telemetry, binary export readi
 8. **Target Metrics (SOTA) Interactive Popover Trigger**: Interactive popover button (`(Click to pin) Pending` or `0 / 3 Met`) detailing target convergence metrics, current best scores, and evaluation baselines.
 9. **Spatial / Confluence / Context Window Progression Row**: Displays active ladder rung (`Resolution Ladder: Full (512px)` for vision, `Confluence Ladder: Partial Confluence` for forex, or `Context Window: 2048 tokens (Full)` for causal LLM architectures).
 10. **Dataset Scaling Fraction / Walk-Forward Fold / Training Corpus Row**: Displays active training dataset sampling fraction (`Data Fraction: 100%`) for vision models, dynamic Walk-Forward fold progression (`Walk-Forward Fold: Fold 1 / 6 (2019-2020 -> 2021)`) for quantitative financial models, or instruction dataset manifold (`Training Dataset: LemGendizedAIHelperLemGend`) for causal LLM assistants.
-11. **Local Training Action Button**: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream below. When training is active, transforms into **Stop Training** abort trigger.
-12. **Cloud Training Action Button**: Opens the interactive Cloud & Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.
-13. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`).
-14. **Pull Model Action Button**: Downloads all 4 canonical model variations from Kaggle Models Hub into local `LemGendaryModels/` (`POST /api/training/kaggle/pull`).
-15. **Training Notebook Action Button**: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (`POST /api/notebooks/generate`).
-16. **Usage Notebook Action Button**: Builds standalone usage guide and inference walkthrough notebooks (`POST /api/notebooks/usage`).
-17. **Evaluate Model Action Button**: Dispatches validation benchmark (`POST /api/training/evaluate`) across test splits.
-18. **Export Binaries Action Button**: Compiles checkpoint into deployment binaries (`.onnx` FP32/FP16 and TorchScript) via `POST /api/training/export`.
-19. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model_metadata.yaml` (`POST /api/training/generate-docs`).
-20. **Stage Variations Action Button**: Stages isolated format variations into dedicated subdirectories under `dist/kaggle/` (`POST /api/training/stage`).
-21. **Sync Kaggle Models Hub Action Button**: Opens direct multi-variation staging and publishing workflow for Kaggle Models Hub registry.
+11. **Batch Size Selector**: Dropdown selector configuring mini-batch dimension (8, 16, 32, 64, 128, 256, 512, 1024) optimized for available GPU VRAM headroom (`Batch Size: 256`).
+12. **Local Training Action Button**: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream below. When training is active, transforms into **Stop Training** abort trigger.
+13. **Cloud Training Action Button**: Opens the interactive Cloud & Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.
+14. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`).
+15. **Pull Model Action Button**: Downloads all 4 canonical model variations from Kaggle Models Hub into local `LemGendaryModels/` (`POST /api/training/kaggle/pull`).
+16. **Training Notebook Action Button**: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (`POST /api/notebooks/generate`).
+17. **Usage Notebook Action Button**: Builds standalone usage guide and inference walkthrough notebooks (`POST /api/notebooks/usage`).
+18. **Evaluate Model Action Button**: Dispatches validation benchmark (`POST /api/training/evaluate`) across test splits.
+19. **Export Binaries Action Button**: Compiles checkpoint into deployment binaries (`.onnx` FP32/FP16 and TorchScript) via `POST /api/training/export`.
+20. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model_metadata.yaml` (`POST /api/training/generate-docs`).
+21. **Stage Variations Action Button**: Stages isolated format variations into dedicated subdirectories under `dist/kaggle/` (`POST /api/training/stage`).
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
@@ -505,17 +508,62 @@ Each registered model card provides comprehensive telemetry, binary export readi
 | **8** | Target Metrics (SOTA) | Popover Trigger | `HoverPinPopover.tsx` | Details convergence targets, current best scores, and baselines. |
 | **9** | Spatial / Confluence / Context Ladder | Progress Metric | Checkpoint telemetry | Displays active spatial ladder rung (vision), timeframe confluence (forex), or context window token limit (LLM). |
 | **10** | Data Fraction / Walk-Forward Fold / Corpus | Progress Metric | Checkpoint telemetry | Reports active dataset sampling percentage (vision), Walk-Forward fold status (forex), or instruction manifold name (LLM). |
-| **11** | Local Training | Primary Button | `POST /api/gui/quick-train` | Starts local GPU training pass and focuses telemetry terminal below. |
-| **12** | Cloud Training | Action Button | `onOpenCloudModal()` | Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch. |
-| **13** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all 4 variations and metadata to Kaggle Models. |
-| **14** | Pull Model | Action Button | `POST /api/training/kaggle/pull` | Downloads 4 canonical variations from Kaggle into local model directory. |
-| **15** | Training Notebook | Action Button | `POST /api/notebooks/generate` | Generates self-contained training notebooks for Kaggle and Colab. |
-| **16** | Usage Notebook | Action Button | `POST /api/notebooks/usage` | Builds standalone usage guide and inference notebooks. |
-| **17** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Executes validation benchmark and streams evaluation metrics. |
-| **18** | Export Binaries | Action Button | `POST /api/training/export` | Compiles checkpoint into ONNX FP32, FP16, and TorchScript formats. |
-| **19** | Docs & Meta | Action Button | `POST /api/training/generate-docs` | Regenerates README.md and model-metadata.json from SSOT. |
-| **20** | Stage Variations | Action Button | `POST /api/training/stage` | Stages binaries into isolated Kaggle variation subdirectories. |
-| **21** | Sync Kaggle Models Hub | Action Button | `onOpenCloudModal()` | Opens Kaggle Models Hub multi-variation upload workflow. |
+| **11** | Batch Size Selector | Dropdown Select | Local State | Selects mini-batch dimension (8 to 1024) matched to GPU VRAM capacity. |
+| **12** | Local Training | Primary Button | `POST /api/gui/quick-train` | Starts local GPU training pass and focuses telemetry terminal below. |
+| **13** | Cloud Training | Action Button | `onOpenCloudModal()` | Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch. |
+| **14** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all variations and metadata to Kaggle Models. |
+| **15** | Pull Model | Action Button | `POST /api/training/kaggle/pull` | Downloads canonical variations from Kaggle into local model directory. |
+| **16** | Training Notebook | Action Button | `POST /api/notebooks/generate` | Generates self-contained training notebooks for Kaggle and Colab. |
+| **17** | Usage Notebook | Action Button | `POST /api/notebooks/usage` | Builds standalone usage guide and inference notebooks. |
+| **18** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Executes validation benchmark and streams evaluation metrics. |
+| **19** | Export Binaries | Action Button | `POST /api/training/export` | Compiles checkpoint into ONNX FP32, FP16, and TorchScript formats. |
+| **20** | Docs & Meta | Action Button | `POST /api/training/generate-docs` | Regenerates README.md and model-metadata.json from SSOT. |
+| **21** | Stage Variations | Action Button | `POST /api/training/stage` | Stages binaries into isolated Kaggle variation subdirectories. |
+
+---
+
+### 6.2.1 Domain-Specific Neural Architecture Model Cards
+
+To provide precise guidance across distinct ML task categories, the AI Studio GUI renders domain-tailored card rows dynamically:
+
+#### 1. Quantitative Finance (Forex) Card
+
+- **Confluence Ladder**: Displays multi-timeframe consensus progression (`Partial Confluence` or `Full Confluence (D1)` across M1, M5, M15, H1, H4, D1).
+- **Walk-Forward Fold**: Tracks financial validation cross-folds (`Fold 1 / 6 (2019-2020 -> 2021)`) rather than traditional data sampling fractions.
+- **SOTA Convergence**: Evaluates multi-objective targets including Directional Accuracy (%), Profit Factor, Sharpe Ratio, Sortino Ratio, and Drawdown.
+
+#### 2. Computer Vision & Super-Resolution Card (`UPN v2`, `CodeFormer`, `MIRNet`)
+
+![Vision & Super-Resolution Model Card](../assets/gui/gui_card_vision.png)
+
+- **Resolution Ladder**: Visualizes spatial rung stepping (`Stage 1: 256px / 512px` or `Full (512px)`).
+- **Data Fraction**: Tracks data scale ramp-up (`100% (Passed)` or staged percentages).
+- **Convergence Baselines**: Tracks PSNR (dB) and SSIM restoration fidelity baselines.
+
+#### 3. Object Detection & Spatial Perception Card (`YOLOv8n Multi-Task`)
+
+![Object Detection Multi-Task Model Card](../assets/gui/gui_card_yolo.png)
+
+- **Input Resolution**: Dynamically scales spatial inputs (`640px` multi-scale anchor grids).
+- **Multi-Task Metrics**: Simultaneously monitors box mAP50-95, classification accuracy, and mask loss.
+
+#### 4. Large Language Model & Conversational Agent Card (`AI Studio Assistant - Causal LLM`)
+
+![Causal LLM Model Card](../assets/gui/gui_card_llm.png)
+
+- **QLoRA Instruction Tuning Matrix**: Dedicated matrix displaying context tokens (`2048 tokens`), adapter rank (`LoRA r=16, alpha=32`), loss function (`Cross-Entropy`), and base weights (`Qwen2.5-Coder-1.5B`).
+- **Context Window**: Displays active token attention window (`2048 tokens (Full)`).
+- **Training Dataset**: References the domain instruction corpus (`LemGendizedAIHelperLemGend`).
+
+---
+
+### 6.2.2 Interactive SOTA Target Pinning & Metric Inspection
+
+Clicking the **Target Metrics (SOTA)** header on any active card pins the metric inspection popover in place:
+
+![Interactive SOTA Target Pinning Popover](../assets/gui/gui_sota_popover.png)
+
+The pinned popover details all convergence parameters, goal thresholds, achieved validation scores, and real-time pass/fail indicators.
 
 ---
 

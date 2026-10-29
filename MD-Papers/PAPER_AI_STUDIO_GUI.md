@@ -182,9 +182,12 @@ To ensure deterministic state transitions and eliminate prop drilling across dee
   - `CompilerPanel.tsx`: Refactored into a coordinator delegating to `DatasetManifoldCard.tsx`, `DatasetCompilationForm.tsx`, `ModernizationQueueTable.tsx`, `ScaleReductionView.tsx`, and `CompilerToolbar.tsx`.
   - `ConfigEditorModal.tsx`: Deconstructed from 790 lines into `ManifestEditorTab.tsx` (YAML/JSON syntax validation, Monaco diff viewer) and `SecretsEditorTab.tsx` (encrypted credentials vault).
   - `CloudTrainModal.tsx`: Extracted `VariationIsolationChecker.tsx` for multi-variation validation.
-- **Shared Micro-Components**:
+- **Modular Offline Fallback Hydration (`src/data/fallbackModels.ts`, `src/data/fallbackDatasets.ts`)**: Decouples static fallback data from the store into strongly-typed modules representing 19 model specifications and 20 production manifolds, enabling instantaneous UI hydration without sidecar dependencies.
+- **Canonical DOM Test Control Registry (`src/data/guiControlRegistry.ts`)**: Standardizes all 32 interactive UI elements with canonical DOM IDs defined in `GUI_CONTROL_REGISTRY.md` for deterministic test automation.
+- **Shared Micro-Components & Utilities**:
   - `ValidationBanner.tsx`: Centralized banner component with automatic message type deduction (`info`, `success`, `warning`, `error`), dismiss buttons, and full WAI-ARIA alert/status semantics.
   - `HoverPinPopover.tsx`: Reusable CSS hover and native semantic `<button>` pin popover strictly compliant with `jsx-a11y` accessibility standards.
+  - `src/utils/clipboard.ts`: Dedicated zero-loss clipboard export utility supporting asynchronous `navigator.clipboard.writeText` with legacy fallback for sandboxed webviews.
 
 ### 6.9 Multi-Variation Kaggle Model Hub Staging & Strict Isolation Contract
 

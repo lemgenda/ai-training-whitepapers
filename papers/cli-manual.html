@@ -992,19 +992,17 @@ python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_
                 </p>
                 <pre><code># Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
 python tools/stream_zip_to_container.py \
-    --zip ../LemGendaryDatasets/lemgendizedmirnetexposurelarge.zip \
+    --zip ../LemGendaryDatasets/lemgendizedmirnetexposure.zip \
     --target ../LemGendaryDatasets/LemGendizedMirNetExposure \
     --shard-size 5000 \
-    --delete-zip \
-    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedMirNetExposureLarge
+    --delete-zip
 
 # Stream split target dataset (UpnV2) with automatic metadata and index.json extraction
 python tools/stream_zip_to_container.py \
-    --zip ../LemGendaryDatasets/lemgendizedupnv2large.zip \
+    --zip ../LemGendaryDatasets/lemgendizedupnv2.zip \
     --target ../LemGendaryDatasets/LemGendizedUpnV2 \
     --shard-size 5000 \
-    --delete-zip \
-    --delete-legacy-dir ../LemGendaryDatasets/LemGendizedUpnV2Large</code></pre>
+    --delete-zip</code></pre>
 
                 <div class="table-container">
                     <table>

@@ -236,10 +236,13 @@
                             <li><code>CloudTrainModal.tsx</code>: Extracted <code>VariationIsolationChecker.tsx</code> for multi-variation validation.</li>
                         </ul>
                     </li>
-                    <li><strong>Shared Micro-Components</strong>:
+                    <li><strong>Modular Offline Fallback Hydration (<code>src/data/fallbackModels.ts</code>, <code>src/data/fallbackDatasets.ts</code>)</strong>: Decouples static fallback data from the store into strongly-typed modules representing 19 model specifications and 20 production manifolds, enabling instantaneous UI hydration without sidecar dependencies.</li>
+                    <li><strong>Canonical DOM Test Control Registry (<code>src/data/guiControlRegistry.ts</code>)</strong>: Standardizes all 32 interactive UI elements with canonical DOM IDs defined in <code>GUI_CONTROL_REGISTRY.md</code> for deterministic test automation.</li>
+                    <li><strong>Shared Micro-Components &amp; Utilities</strong>:
                         <ul>
                             <li><code>ValidationBanner.tsx</code>: Centralized banner component with automatic message type deduction (<code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>), dismiss buttons, and full WAI-ARIA alert/status semantics.</li>
                             <li><code>HoverPinPopover.tsx</code>: Reusable CSS hover and native semantic <code>&lt;button&gt;</code> pin popover strictly compliant with <code>jsx-a11y</code> accessibility standards.</li>
+                            <li><code>src/utils/clipboard.ts</code>: Dedicated zero-loss clipboard export utility supporting asynchronous <code>navigator.clipboard.writeText</code> with legacy fallback for sandboxed webviews.</li>
                         </ul>
                     </li>
                 </ul>

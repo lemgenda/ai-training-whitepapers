@@ -1520,13 +1520,13 @@ from tools.stream_zip_to_container import ZipToContainerStreamer
 
 # 1. Direct streaming of multi-gigabyte zip archive to WebDataset shards
 streamer = ZipToContainerStreamer(
-    zip_path=Path("LemGendaryDatasets/lemgendizedmirnetexposurelarge.zip"),
+    zip_path=Path("LemGendaryDatasets/lemgendizedmirnetexposure.zip"),
     target_dir=Path("LemGendaryDatasets/LemGendizedMirNetExposure"),
     shard_size=5000,
     transcode_webp=True,
     workers=12,
     delete_zip_on_success=True,
-    legacy_dir_to_delete=Path("LemGendaryDatasets/LemGendizedMirNetExposureLarge"),
+    legacy_dir_to_delete=None,
 )
 success = streamer.stream()
 

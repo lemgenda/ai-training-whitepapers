@@ -13,6 +13,21 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.44 — Physical GUI Screenshot Capture Suite, Tripartite Sidecar Port Realignment & Complete 6-Pair Synchronization
+
+* **Authoritative GUI Figures Integrity Verification (`assets/gui/`)** — Verified all 19 official figures against the live desktop application topology, guaranteeing full card bounding, online hardware telemetry, cross-project drift matrix data, and numbered circular callout badges (1–11) matching `MANUAL_AI_STUDIO_GUI.md` and `ai-studio-manual.html` references.
+* **Bijective Markdown & HTML Manual/Whitepaper 6-Pair Synchronization** — Synchronized all 6 primary manual and whitepaper pairs 1-to-1:
+  * `MANUAL_AI_STUDIO_GUI.md` <-> `ai-studio-manual.html`
+  * `MANUAL_API.md` <-> `api-manual.html` (Added Section 5.7 Ingestion Pipelines and Section 5.8 Python Services)
+  * `MANUAL_CLI.md` <-> `cli-manual.html` (Standardized canonical `LemGendizedMirNetExposure` and `LemGendizedUpnV2` paths)
+  * `PAPER_AI_STUDIO_GUI.md` <-> `ai-studio-whitepaper.html`
+  * `PAPER_DATASET_COMPILER.md` <-> `dataset-compiler.html`
+  * `PAPER_TRAINING_SUITE.md` <-> `training-suite-master.html`
+* **Canonical Capabilities & Manifest Alignment (`canonical_capabilities.json`, `canonical_capabilities.yaml`, `manifest/documents.json`)** — Updated `last_audited` to `2026-10-28`, set `document_baseline` and `runtime_engine_baseline` to `v16.9.44-STABLE`, set `desktop_client_baseline` to `v2.10.2`, and aligned tripartite sidecar ports: Environment Manager (`8000`), Dataset Compiler (`8100`), and Training Suite (`8200`).
+* **Automated Documentation Integrity Verification** — All 48 document pairs verified on disk with 0 broken links, 100% W3C HTML compliance, zero suppressions, and zero emojis.
+
+---
+
 ### v16.9.43 — Universal Curriculum Data Fraction Progression & Checkpoint Resumption Fidelity
 
 * **Master Training Suite Whitepaper & HTML Synchronization (`PAPER_TRAINING_SUITE.md`, `training-suite-master.html`)** — Synchronized Section 2.3 (Hardened Resolution Ladders & SOTA Guards) and Section 2.4 (Checkpoint Resumption & Singularity Hardening) to document steady-improvement soak propulsion (`fraction_soak_complete` and `deepening_ready` across 3-epoch `manifold_maturity` windows), pre-guard `epoch_count` restoration in `SmartTrainingGovernor.load_state()`, `metrics.csv` curriculum reconciliation on resume, post-audit checkpoint persistence in `run_training`, and in-memory manifold slicing (`random.Random(42)`) across `MultiTaskDataset` and `InstructionDataset`.

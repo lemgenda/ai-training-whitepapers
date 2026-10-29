@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.27-STABLE",
-  "last_audited": "2026-10-18",
+  "document_baseline": "v16.9.44-STABLE",
+  "last_audited": "2026-10-28",
   "total_publications": 48,
   "author": "Lem Treursic",
   "documents": [
@@ -21,8 +21,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/ai-studio-manual.html",
       "md_path": "MD-Papers/MANUAL_AI_STUDIO_GUI.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v2.10.2",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {
@@ -31,8 +31,8 @@
       "category": "Category 01 ARCH",
       "html_path": "papers/ai-studio-whitepaper.html",
       "md_path": "MD-Papers/PAPER_AI_STUDIO_GUI.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v2.10.2",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {
@@ -41,8 +41,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/api-manual.html",
       "md_path": "MD-Papers/MANUAL_API.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.44-STABLE",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {
@@ -61,8 +61,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/cli-manual.html",
       "md_path": "MD-Papers/MANUAL_CLI.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.44-STABLE",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {
@@ -81,8 +81,8 @@
       "category": "Category 01.1 COMPILER",
       "html_path": "papers/dataset-compiler.html",
       "md_path": "MD-Papers/PAPER_DATASET_COMPILER.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.19-STABLE",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {
@@ -451,8 +451,8 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.44-STABLE",
+      "last_audited": "2026-10-28",
       "status": "Canonical"
     },
     {

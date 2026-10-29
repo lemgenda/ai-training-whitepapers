@@ -258,16 +258,19 @@
         </div>
 
         <h3>2.6 Centralized State Architecture (Zustand) &amp; Modular Micro-Components</h3>
-        <p>To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent race conditions when streaming high-frequency training metrics, the application state is managed by a centralized Zustand store (<code>src/store/useStudioStore.ts</code>):</p>
+        <p>To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent race conditions when streaming high-frequency training metrics, the application state is governed by a unified Single Source of Truth (SSOT) Zustand store (<code>src/store/useStudioStore.ts</code>):</p>
         <ol>
-            <li><strong>Ecosystem Mesh Health</strong>: Persists real-time connection status across the tripartite sidecars (Ports 8000, 8100, 8200) with automatic re-poll triggers.</li>
-            <li><strong>Global Telemetry Ring Buffer</strong>: Maintains high-throughput terminal events with ANSI color parsing, regex filtering, and clipboard synchronization.</li>
-            <li><strong>Hardware Accelerators</strong>: Caches GPU VRAM profiles, temperature sensors, and compute utilization matrices.</li>
-            <li><strong>Active Job Management</strong>: Coordinates running training and compilation processes with instant stop signals.</li>
-            <li><strong>Shared Micro-Components</strong>:
+            <li><strong>Ecosystem Mesh Health</strong>: Persists real-time connection status across the tripartite sidecars (Ports 8000, 8100, 8200) with automatic re-poll triggers and autonomous cold boot controls.</li>
+            <li><strong>Global Telemetry Ring Buffer</strong>: Maintains high-throughput terminal events with ANSI color parsing, regex filtering, and asynchronous clipboard export.</li>
+            <li><strong>Hardware Accelerators</strong>: Caches GPU VRAM profiles, temperature sensors, compute utilization matrices, and Sawtooth Governor headroom telemetry.</li>
+            <li><strong>Active Job Management</strong>: Coordinates running training and compilation processes with instant stop signals and sub-second minibatch abort.</li>
+            <li><strong>Modular Offline Fallback Hydration (<code>src/data/fallbackModels.ts</code>, <code>src/data/fallbackDatasets.ts</code>)</strong>: Decouples static fallback data from the central store into standalone, typed modules representing all 19 production model architectures and 20 verified dataset manifolds, ensuring deterministic offline cockpit rendering when backend daemons are unreachable.</li>
+            <li><strong>Canonical DOM Test Control Registry Alignment</strong>: Every interactive tab, input, button, and modal element is explicitly bound to authoritative DOM IDs defined in <code>lemgendary-docs/GUI_CONTROL_REGISTRY.md</code> (e.g. <code>id="dashboard-tab-btn"</code>, <code>id="datasets-tab-btn"</code>, <code>id="training-tab-btn"</code>, <code>id="install-tab-btn"</code>, <code>id="health-tab-btn"</code>, <code>id="theme-toggle-btn"</code>), guaranteeing flawless Vitest, Playwright, and Tauri E2E automation.</li>
+            <li><strong>Shared Micro-Components &amp; Utilities</strong>:
                 <ul>
                     <li><code>ValidationBanner.tsx</code>: Centralized banner component with auto-detected severity (<code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>), dismiss handlers, and full accessibility semantics.</li>
                     <li><code>HoverPinPopover.tsx</code>: High-performance CSS hover and native semantic <code>&lt;button&gt;</code> pin popovers for SOTA targets and upstream sources.</li>
+                    <li><code>src/utils/clipboard.ts</code>: Dedicated zero-loss clipboard export utility supporting modern asynchronous <code>navigator.clipboard.writeText</code> with legacy fallback for sandboxed webviews.</li>
                 </ul>
             </li>
         </ol>
@@ -1166,6 +1169,7 @@
             <li><strong>Target Metrics (SOTA) Interactive Popover Trigger</strong>: Interactive popover button (<code>(Click to pin) Pending</code> or <code>0 / 3 Met</code>) detailing target convergence metrics, current best scores, and evaluation baselines.</li>
             <li><strong>Spatial / Confluence / Context Window Progression Row</strong>: Displays active ladder rung (<code>Resolution Ladder: Full (512px)</code> for vision, <code>Confluence Ladder: Partial Confluence</code> for forex, or <code>Context Window: 2048 tokens (Full)</code> for causal LLM architectures).</li>
             <li><strong>Dataset Scaling Fraction / Walk-Forward Fold / Training Corpus Row</strong>: Displays active training dataset sampling fraction (<code>Data Fraction: 100%</code>) for vision models, dynamic Walk-Forward fold progression (<code>Walk-Forward Fold: Fold 1 / 6 (2019-2020 -&gt; 2021)</code>) for quantitative financial models, or instruction dataset manifold (<code>Training Dataset: LemGendizedAIHelperLemGend</code>) for causal LLM assistants.</li>
+            <li><strong>Batch Size Selector</strong>: Dropdown selector configuring mini-batch dimension (8, 16, 32, 64, 128, 256, 512, 1024) optimized for available GPU VRAM headroom (<code>Batch Size: 256</code>).</li>
             <li><strong>Local Training Action Button</strong>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream below. When training is active, transforms into <strong>Stop Training</strong> abort trigger.</li>
             <li><strong>Cloud Training Action Button</strong>: Opens the interactive Cloud &amp; Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.</li>
             <li><strong>Push Model Action Button</strong>: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (<code>POST /api/training/kaggle/push</code>).</li>
@@ -1176,7 +1180,6 @@
             <li><strong>Export Binaries Action Button</strong>: Compiles checkpoint into deployment binaries (<code>.onnx</code> FP32/FP16 and TorchScript) via <code>POST /api/training/export</code>.</li>
             <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model_metadata.yaml</code> (<code>POST /api/training/generate-docs</code>).</li>
             <li><strong>Stage Variations Action Button</strong>: Stages isolated format variations into dedicated subdirectories under <code>dist/kaggle/</code> (<code>POST /api/training/stage</code>).</li>
-            <li><strong>Sync Kaggle Models Hub Action Button</strong>: Opens direct multi-variation staging and publishing workflow for Kaggle Models Hub registry.</li>
         </ol>
 
         <div class="table-scroll">
@@ -1263,84 +1266,130 @@
                     </tr>
                     <tr>
                         <td><strong>11</strong></td>
+                        <td>Batch Size Selector</td>
+                        <td>Dropdown Select</td>
+                        <td>Local State</td>
+                        <td>Selects mini-batch dimension (8 to 1024) matched to GPU VRAM capacity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>12</strong></td>
                         <td>Local Training</td>
                         <td>Primary Button</td>
                         <td><code>POST /api/gui/quick-train</code></td>
                         <td>Starts local GPU training pass and focuses telemetry terminal below.</td>
                     </tr>
                     <tr>
-                        <td><strong>12</strong></td>
+                        <td><strong>13</strong></td>
                         <td>Cloud Training</td>
                         <td>Action Button</td>
                         <td><code>onOpenCloudModal()</code></td>
                         <td>Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch.</td>
                     </tr>
                     <tr>
-                        <td><strong>13</strong></td>
+                        <td><strong>14</strong></td>
                         <td>Push Model</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/kaggle/push</code></td>
-                        <td>Stages and publishes all 4 variations and metadata to Kaggle Models.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>14</strong></td>
-                        <td>Pull Model</td>
-                        <td>Action Button</td>
-                        <td><code>POST /api/training/kaggle/pull</code></td>
-                        <td>Downloads 4 canonical variations from Kaggle into local model directory.</td>
+                        <td>Stages and publishes all variations and metadata to Kaggle Models.</td>
                     </tr>
                     <tr>
                         <td><strong>15</strong></td>
+                        <td>Pull Model</td>
+                        <td>Action Button</td>
+                        <td><code>POST /api/training/kaggle/pull</code></td>
+                        <td>Downloads canonical variations from Kaggle into local model directory.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>16</strong></td>
                         <td>Training Notebook</td>
                         <td>Action Button</td>
                         <td><code>POST /api/notebooks/generate</code></td>
                         <td>Generates self-contained training notebooks for Kaggle and Colab.</td>
                     </tr>
                     <tr>
-                        <td><strong>16</strong></td>
+                        <td><strong>17</strong></td>
                         <td>Usage Notebook</td>
                         <td>Action Button</td>
                         <td><code>POST /api/notebooks/usage</code></td>
                         <td>Builds standalone usage guide and inference notebooks.</td>
                     </tr>
                     <tr>
-                        <td><strong>17</strong></td>
+                        <td><strong>18</strong></td>
                         <td>Evaluate Model</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/evaluate</code></td>
                         <td>Executes validation benchmark and streams evaluation metrics.</td>
                     </tr>
                     <tr>
-                        <td><strong>18</strong></td>
+                        <td><strong>19</strong></td>
                         <td>Export Binaries</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/export</code></td>
                         <td>Compiles checkpoint into ONNX FP32, FP16, and TorchScript formats.</td>
                     </tr>
                     <tr>
-                        <td><strong>19</strong></td>
+                        <td><strong>20</strong></td>
                         <td>Docs &amp; Meta</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/generate-docs</code></td>
                         <td>Regenerates README.md and model-metadata.json from SSOT.</td>
                     </tr>
                     <tr>
-                        <td><strong>20</strong></td>
+                        <td><strong>21</strong></td>
                         <td>Stage Variations</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/stage</code></td>
                         <td>Stages binaries into isolated Kaggle variation subdirectories.</td>
                     </tr>
-                    <tr>
-                        <td><strong>21</strong></td>
-                        <td>Sync Kaggle Models Hub</td>
-                        <td>Action Button</td>
-                        <td><code>onOpenCloudModal()</code></td>
-                        <td>Opens Kaggle Models Hub multi-variation upload workflow.</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
+
+        <h3>6.2.1 Domain-Specific Neural Architecture Model Cards</h3>
+        <p>To provide precise guidance across distinct ML task categories, the AI Studio GUI renders domain-tailored card rows dynamically:</p>
+
+        <h4>1. Quantitative Finance (Forex) Card</h4>
+        <ul>
+            <li><strong>Confluence Ladder</strong>: Displays multi-timeframe consensus progression (<code>Partial Confluence</code> or <code>Full Confluence (D1)</code> across M1, M5, M15, H1, H4, D1).</li>
+            <li><strong>Walk-Forward Fold</strong>: Tracks financial validation cross-folds (<code>Fold 1 / 6 (2019-2020 -&gt; 2021)</code>) rather than traditional data sampling fractions.</li>
+            <li><strong>SOTA Convergence</strong>: Evaluates multi-objective targets including Directional Accuracy (%), Profit Factor, Sharpe Ratio, Sortino Ratio, and Drawdown.</li>
+        </ul>
+
+        <h4>2. Computer Vision &amp; Super-Resolution Card (<code>UPN v2</code>, <code>CodeFormer</code>, <code>MIRNet</code>)</h4>
+        <div class="figure-center">
+            <img src="../assets/gui/gui_card_vision.png" alt="Vision &amp; Super-Resolution Model Card" class="img-paper img-paper-50" style="max-width: 525px;">
+        </div>
+        <ul>
+            <li><strong>Resolution Ladder</strong>: Visualizes spatial rung stepping (<code>Stage 1: 256px / 512px</code> or <code>Full (512px)</code>).</li>
+            <li><strong>Data Fraction</strong>: Tracks data scale ramp-up (<code>100% (Passed)</code> or staged percentages).</li>
+            <li><strong>Convergence Baselines</strong>: Tracks PSNR (dB) and SSIM restoration fidelity baselines.</li>
+        </ul>
+
+        <h4>3. Object Detection &amp; Spatial Perception Card (<code>YOLOv8n Multi-Task</code>)</h4>
+        <div class="figure-center">
+            <img src="../assets/gui/gui_card_yolo.png" alt="Object Detection Multi-Task Model Card" class="img-paper img-paper-50" style="max-width: 525px;">
+        </div>
+        <ul>
+            <li><strong>Input Resolution</strong>: Dynamically scales spatial inputs (<code>640px</code> multi-scale anchor grids).</li>
+            <li><strong>Multi-Task Metrics</strong>: Simultaneously monitors box mAP50-95, classification accuracy, and mask loss.</li>
+        </ul>
+
+        <h4>4. Large Language Model &amp; Conversational Agent Card (<code>AI Studio Assistant - Causal LLM</code>)</h4>
+        <div class="figure-center">
+            <img src="../assets/gui/gui_card_llm.png" alt="Causal LLM Model Card" class="img-paper img-paper-50" style="max-width: 525px;">
+        </div>
+        <ul>
+            <li><strong>QLoRA Instruction Tuning Matrix</strong>: Dedicated matrix displaying context tokens (<code>2048 tokens</code>), adapter rank (<code>LoRA r=16, alpha=32</code>), loss function (<code>Cross-Entropy</code>), and base weights (<code>Qwen2.5-Coder-1.5B</code>).</li>
+            <li><strong>Context Window</strong>: Displays active token attention window (<code>2048 tokens (Full)</code>).</li>
+            <li><strong>Training Dataset</strong>: References the domain instruction corpus (<code>LemGendizedAIHelperLemGend</code>).</li>
+        </ul>
+
+        <h3>6.2.2 Interactive SOTA Target Pinning &amp; Metric Inspection</h3>
+        <p>Clicking the <strong>Target Metrics (SOTA)</strong> header on any active card pins the metric inspection popover in place:</p>
+        <div class="figure-center">
+            <img src="../assets/gui/gui_sota_popover.png" alt="Interactive SOTA Target Pinning Popover" class="img-paper img-paper-50" style="max-width: 525px;">
+        </div>
+        <p>The pinned popover details all convergence parameters, goal thresholds, achieved validation scores, and real-time pass/fail indicators.</p>
 
         <h3>6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
         <p>The redesigned Live Telemetry Console is embedded directly on the Model Training panel, providing a tabbed terminal interface for complete observability across local training, remote cloud execution, and ecosystem mesh daemons:</p>
