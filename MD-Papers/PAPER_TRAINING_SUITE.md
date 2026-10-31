@@ -366,7 +366,7 @@ The hardware policy engine (`training/hardware/policy.py`) automatically detects
 - **Unified Telemetry Logging & Epoch Summaries (`training/training/engine.py`)**:
   Integrated LPIPS, FID, and PLCC metrics into canonical epoch completion summaries in `training/training/engine.py`, guaranteeing synchronized reporting across terminal logs, `metrics.csv`, and the Desktop GUI.
 
-### 2.24. Automated Kaggle Models Hub Metadata Synchronization & Technical Whitepaper Citations (v16.9.45)
+### 2.24. Automated Kaggle Models Hub Metadata Synchronization & Technical Whitepaper Citations (v16.9.46)
 
 - **Automated Ecosystem Architecture Whitepaper Linking**:
   The cloud publishing layer (`training/cloud/metadata_generator.py`) programmatically resolves each model's authoritative technical whitepaper URL from the ecosystem documentation hub (`https://lemgenda.github.io/ai-training-whitepapers/papers/{doc}.html`) via `lemgendary-docs/canonical_capabilities.yaml` and `manifest/documents.json`. Whitepaper links are embedded directly into `provenance_sources` and formatted under a dedicated `### Citations & Technical Documentation` markdown block in Kaggle Models Hub instance metadata (`model-metadata.json`).
@@ -378,6 +378,8 @@ The hardware policy engine (`training/hardware/policy.py`) automatically detects
   - `ONNX (Float32)`: Full-precision graph (`{model_key}.onnx`) and external tensor payload (`{model_key}.onnx.data`) for CPU, OpenVINO, DirectML, and WebGPU deployment.
 - **Bi-Directional Documentation & Metadata Command Parity**:
   Both the automated model publishing pipeline (`Push Model`) and the standalone documentation generator (`Docs & Meta` / `POST /api/models/{model_key}/generate_docs`) invoke the unified `KaggleMetadataService.build()` pipeline. Staging local documentation concurrently regenerates and aligns Kaggle metadata schemas, ensuring total parity between local repositories, GitHub Pages whitepapers, and remote Kaggle Models Hub registries.
+- **Kaggle API Schema String Provenance & Token Alignment**:
+  Kaggle's REST API (`kagglesdk.models.types.model_api_service`) enforces strict string typing on `provenance_sources`, throwing a runtime `TypeError` when passed list payloads. The generator formats provenance sources into comma-separated strings matching the schema. In addition, the authentication layer (`training/cloud/credentials.py`) binds active Personal Access Tokens (`KGAT_...`) from `~/.kaggle/access_token` directly to `KAGGLE_API_TOKEN` in the environment, guaranteeing clean automated publication of the full Model Card (Title, Subtitle, Description, Citations, and Provenance).
 
 ---
 
