@@ -35,6 +35,7 @@
   - [2.21. Modernized PyTorch cu126 & Transformers v5 Stack Integration](#221-modernized-pytorch-cu126--transformers-v5-stack-integration)
   - [2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation](#222-turing-non-tensor-core-hardware-cudnn-bug-remediation)
   - [2.23. Multi-Task SOTA Metric Ingestion & Perceptual Telemetry Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization)
+  - [2.24. Automated Kaggle Models Hub Metadata Synchronization & Technical Whitepaper Citations](#224-automated-kaggle-models-hub-metadata-synchronization--technical-whitepaper-citations)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -364,6 +365,19 @@ The hardware policy engine (`training/hardware/policy.py`) automatically detects
   - **Parameter Prediction (UPN v2)**: Mean Absolute Error (MAE).
 - **Unified Telemetry Logging & Epoch Summaries (`training/training/engine.py`)**:
   Integrated LPIPS, FID, and PLCC metrics into canonical epoch completion summaries in `training/training/engine.py`, guaranteeing synchronized reporting across terminal logs, `metrics.csv`, and the Desktop GUI.
+
+### 2.24. Automated Kaggle Models Hub Metadata Synchronization & Technical Whitepaper Citations (v16.9.45)
+
+- **Automated Ecosystem Architecture Whitepaper Linking**:
+  The cloud publishing layer (`training/cloud/metadata_generator.py`) programmatically resolves each model's authoritative technical whitepaper URL from the ecosystem documentation hub (`https://lemgenda.github.io/ai-training-whitepapers/papers/{doc}.html`) via `lemgendary-docs/canonical_capabilities.yaml` and `manifest/documents.json`. Whitepaper links are embedded directly into `provenance_sources` and formatted under a dedicated `### Citations & Technical Documentation` markdown block in Kaggle Models Hub instance metadata (`model-metadata.json`).
+- **Standardized Multi-Format Variation File Descriptions**:
+  Kaggle model instances stage four standardized runtime variations (`PyTorch Default`, `PyTorch FP32`, `ONNX FP16`, and `ONNX FP32`). The metadata generator synthesizes comprehensive, machine-readable file descriptions for every staged variation artifact:
+  - `PyTorch Default`: Canonical checkpoints (`best.pth`, `latest.pth`), performance logs (`metrics.csv`), and ecosystem documentation (`README.md`).
+  - `PyTorch (Float32)`: Standalone full-precision TorchScript / tracing weights file (`{model_key}.pt`) with input shape and tensor specification.
+  - `ONNX (Float16)`: Half-precision graph (`{model_key}_fp16.onnx`) optimized for GPU execution and TensorRT conversion.
+  - `ONNX (Float32)`: Full-precision graph (`{model_key}.onnx`) and external tensor payload (`{model_key}.onnx.data`) for CPU, OpenVINO, DirectML, and WebGPU deployment.
+- **Bi-Directional Documentation & Metadata Command Parity**:
+  Both the automated model publishing pipeline (`Push Model`) and the standalone documentation generator (`Docs & Meta` / `POST /api/models/{model_key}/generate_docs`) invoke the unified `KaggleMetadataService.build()` pipeline. Staging local documentation concurrently regenerates and aligns Kaggle metadata schemas, ensuring total parity between local repositories, GitHub Pages whitepapers, and remote Kaggle Models Hub registries.
 
 ---
 

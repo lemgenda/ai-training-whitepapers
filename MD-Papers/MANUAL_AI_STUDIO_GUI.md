@@ -487,13 +487,13 @@ Each registered model card provides comprehensive telemetry, binary export readi
 11. **Batch Size Selector**: Dropdown selector configuring mini-batch dimension (8, 16, 32, 64, 128, 256, 512, 1024) optimized for available GPU VRAM headroom (`Batch Size: 256`).
 12. **Local Training Action Button**: Dispatches local training loop (`POST /api/gui/quick-train`) and focuses the live telemetry stream below. When training is active, transforms into **Stop Training** abort trigger.
 13. **Cloud Training Action Button**: Opens the interactive Cloud & Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.
-14. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`).
+14. **Push Model Action Button**: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (`POST /api/training/kaggle/push`). Automatically enriches model metadata with the official architecture whitepaper citation on GitHub Pages and file descriptions across all 4 variations. Runs in an isolated background thread without clobbering active local GPU training sessions.
 15. **Pull Model Action Button**: Downloads all 4 canonical model variations from Kaggle Models Hub into local `LemGendaryModels/` (`POST /api/training/kaggle/pull`).
 16. **Training Notebook Action Button**: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (`POST /api/notebooks/generate`).
 17. **Usage Notebook Action Button**: Builds standalone usage guide and inference walkthrough notebooks (`POST /api/notebooks/usage`).
 18. **Evaluate Model Action Button**: Dispatches validation benchmark (`POST /api/training/evaluate`) across test splits.
 19. **Export Binaries Action Button**: Compiles checkpoint into deployment binaries (`.onnx` FP32/FP16 and TorchScript) via `POST /api/training/export`.
-20. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model_metadata.yaml` (`POST /api/training/generate-docs`).
+20. **Docs & Meta Action Button**: Regenerates Markdown Model Card (`README.md`) and Kaggle `model_metadata.yaml` / `model-metadata.json` (`POST /api/training/generate-docs`). Populates the Citations & Technical Documentation section with live links to the GitHub Pages whitepaper, academic literature references, and complete variation file manifests.
 21. **Stage Variations Action Button**: Stages isolated format variations into dedicated subdirectories under `dist/kaggle/` (`POST /api/training/stage`).
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
@@ -511,13 +511,13 @@ Each registered model card provides comprehensive telemetry, binary export readi
 | **11** | Batch Size Selector | Dropdown Select | Local State | Selects mini-batch dimension (8 to 1024) matched to GPU VRAM capacity. |
 | **12** | Local Training | Primary Button | `POST /api/gui/quick-train` | Starts local GPU training pass and focuses telemetry terminal below. |
 | **13** | Cloud Training | Action Button | `onOpenCloudModal()` | Opens Cloud Training dialog for Kaggle/Colab GPU cluster dispatch. |
-| **14** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all variations and metadata to Kaggle Models. |
+| **14** | Push Model | Action Button | `POST /api/training/kaggle/push` | Stages and publishes all variations and metadata (with whitepaper citations) to Kaggle Models in background. |
 | **15** | Pull Model | Action Button | `POST /api/training/kaggle/pull` | Downloads canonical variations from Kaggle into local model directory. |
 | **16** | Training Notebook | Action Button | `POST /api/notebooks/generate` | Generates self-contained training notebooks for Kaggle and Colab. |
 | **17** | Usage Notebook | Action Button | `POST /api/notebooks/usage` | Builds standalone usage guide and inference notebooks. |
 | **18** | Evaluate Model | Action Button | `POST /api/training/evaluate` | Executes validation benchmark and streams evaluation metrics. |
 | **19** | Export Binaries | Action Button | `POST /api/training/export` | Compiles checkpoint into ONNX FP32, FP16, and TorchScript formats. |
-| **20** | Docs & Meta | Action Button | `POST /api/training/generate-docs` | Regenerates README.md and model-metadata.json from SSOT. |
+| **20** | Docs & Meta | Action Button | `POST /api/training/generate-docs` | Regenerates README.md and model_metadata.yaml with citations and file manifests. |
 | **21** | Stage Variations | Action Button | `POST /api/training/stage` | Stages binaries into isolated Kaggle variation subdirectories. |
 
 ---

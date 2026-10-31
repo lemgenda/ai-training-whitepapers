@@ -1172,13 +1172,13 @@
             <li><strong>Batch Size Selector</strong>: Dropdown selector configuring mini-batch dimension (8, 16, 32, 64, 128, 256, 512, 1024) optimized for available GPU VRAM headroom (<code>Batch Size: 256</code>).</li>
             <li><strong>Local Training Action Button</strong>: Dispatches local training loop (<code>POST /api/gui/quick-train</code>) and focuses the live telemetry stream below. When training is active, transforms into <strong>Stop Training</strong> abort trigger.</li>
             <li><strong>Cloud Training Action Button</strong>: Opens the interactive Cloud &amp; Registry Dispatch dialog to deploy workloads to Kaggle GPU clusters.</li>
-            <li><strong>Push Model Action Button</strong>: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (<code>POST /api/training/kaggle/push</code>).</li>
+            <li><strong>Push Model Action Button</strong>: Stages isolated variations and publishes the model (PyTorch default/fp32, ONNX fp16/fp32) and YAML metadata to Kaggle Models Hub (<code>POST /api/training/kaggle/push</code>). Automatically enriches model metadata with the official architecture whitepaper citation on GitHub Pages and file descriptions across all 4 variations. Runs in an isolated background thread without clobbering active local GPU training sessions.</li>
             <li><strong>Pull Model Action Button</strong>: Downloads all 4 canonical model variations from Kaggle Models Hub into local <code>LemGendaryModels/</code> (<code>POST /api/training/kaggle/pull</code>).</li>
             <li><strong>Training Notebook Action Button</strong>: Regenerates self-contained Jupyter training notebooks for Colab and Kaggle environments (<code>POST /api/notebooks/generate</code>).</li>
             <li><strong>Usage Notebook Action Button</strong>: Builds standalone usage guide and inference walkthrough notebooks (<code>POST /api/notebooks/usage</code>).</li>
             <li><strong>Evaluate Model Action Button</strong>: Dispatches validation benchmark (<code>POST /api/training/evaluate</code>) across test splits.</li>
             <li><strong>Export Binaries Action Button</strong>: Compiles checkpoint into deployment binaries (<code>.onnx</code> FP32/FP16 and TorchScript) via <code>POST /api/training/export</code>.</li>
-            <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model_metadata.yaml</code> (<code>POST /api/training/generate-docs</code>).</li>
+            <li><strong>Docs &amp; Meta Action Button</strong>: Regenerates Markdown Model Card (<code>README.md</code>) and Kaggle <code>model_metadata.yaml</code> / <code>model-metadata.json</code> (<code>POST /api/training/generate-docs</code>). Populates the Citations &amp; Technical Documentation section with live links to the GitHub Pages whitepaper, academic literature references, and complete variation file manifests.</li>
             <li><strong>Stage Variations Action Button</strong>: Stages isolated format variations into dedicated subdirectories under <code>dist/kaggle/</code> (<code>POST /api/training/stage</code>).</li>
         </ol>
 
@@ -1290,7 +1290,7 @@
                         <td>Push Model</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/kaggle/push</code></td>
-                        <td>Stages and publishes all variations and metadata to Kaggle Models.</td>
+                        <td>Stages and publishes all variations and metadata (with whitepaper citations) to Kaggle Models in background.</td>
                     </tr>
                     <tr>
                         <td><strong>15</strong></td>
@@ -1332,7 +1332,7 @@
                         <td>Docs &amp; Meta</td>
                         <td>Action Button</td>
                         <td><code>POST /api/training/generate-docs</code></td>
-                        <td>Regenerates README.md and model-metadata.json from SSOT.</td>
+                        <td>Regenerates README.md and model_metadata.yaml with citations and file manifests.</td>
                     </tr>
                     <tr>
                         <td><strong>21</strong></td>
