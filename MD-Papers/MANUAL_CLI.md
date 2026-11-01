@@ -825,7 +825,7 @@ All generated notebooks are automatically distributed and mirrored across:
 
 ### 6.6 Checkpoint Management (`checkpoints`)
 
-Manages checkpoint storage, inspections, and disk pruning:
+Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup blending:
 
 ```bash
 # List discovered checkpoints with size and epoch metadata
@@ -836,6 +836,9 @@ python cli.py checkpoints inspect checkpoints/mirnet_exposure/best.pth
 
 # Prune older checkpoints keeping the top N
 python cli.py checkpoints prune mirnet_exposure --keep 3
+
+# Blend specialized vault checkpoints using Pareto Model Soup
+python cli.py soup codeformer --weights 0.6,0.4 --output checkpoints/codeformer/best_soup.pth
 ```
 
 ### 6.7 Canonical Presets (`presets`)

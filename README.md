@@ -13,6 +13,14 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.59 - SOTA Training Ecosystem Hardening, Pareto Model Soup & Multi-Manual Parity
+
+* **Pareto Model Soup Documentation Parity** - Updated MANUAL_CLI.md, cli-manual.html, MANUAL_API.md, api-manual.html, MANUAL_AI_STUDIO_GUI.md, and ai-studio-manual.html with complete specifications for CLI soup, REST endpoint POST /api/models/{model_key}/soup, and GUI client method blendModelSoup(modelKey).
+* **Training Suite Whitepaper Master Synchronization** - Updated PAPER_TRAINING_SUITE.md and companion publication training-suite-master.html reflecting realistic FID Inception-2048 calibration, OOM safeguard ratchets, Pareto Model Soup blending, dual Kaggle secret retrieval (GOOGLE_DRIVE + GOOGLE_DRIVE_JSON), and modular notebook architecture.
+* **Canonical Capabilities & Documents Registry Sync** - Synchronized canonical_capabilities.json, canonical_capabilities.yaml, and manifest/documents.json with updated audit dates and canonical version baselines.
+
+---
+
 ### v16.9.44 — Physical GUI Screenshot Capture Suite, Tripartite Sidecar Port Realignment & Complete 6-Pair Synchronization
 
 * **Authoritative GUI Figures Integrity Verification (`assets/gui/`)** — Verified all 19 official figures against the live desktop application topology, guaranteeing full card bounding, online hardware telemetry, cross-project drift matrix data, and numbered circular callout badges (1–11) matching `MANUAL_AI_STUDIO_GUI.md` and `ai-studio-manual.html` references.

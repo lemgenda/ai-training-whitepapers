@@ -22,7 +22,7 @@
       "html_path": "papers/ai-studio-manual.html",
       "md_path": "MD-Papers/MANUAL_AI_STUDIO_GUI.md",
       "baseline_version": "v2.10.2",
-      "last_audited": "2026-10-28",
+      "last_audited": "2026-11-02",
       "status": "Canonical"
     },
     {
@@ -42,7 +42,7 @@
       "html_path": "papers/api-manual.html",
       "md_path": "MD-Papers/MANUAL_API.md",
       "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-10-28",
+      "last_audited": "2026-11-02",
       "status": "Canonical"
     },
     {
@@ -152,7 +152,7 @@
       "html_path": "papers/face-codeformer.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_CODEFORMER.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-01",
       "status": "Canonical"
     },
     {
@@ -452,7 +452,7 @@
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
       "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-10-28",
+      "last_audited": "2026-11-01",
       "status": "Canonical"
     },
     {

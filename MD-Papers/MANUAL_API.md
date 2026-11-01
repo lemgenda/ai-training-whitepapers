@@ -1038,6 +1038,24 @@ Response:
 }
 ```
 
+##### `POST /api/models/{model_key}/soup`
+
+Blends specialized vault checkpoints (`vault_psnr.pth`, `vault_lpips.pth`, `vault_plcc.pth`, `vault_srcc.pth`, etc.) using linear Pareto Model Soup weight averaging into `checkpoints/{model_key}/best_soup.pth`.
+
+Request parameters:
+
+- `model_key`: URL path parameter identifying target architecture (e.g. `codeformer`, `mirnet_exposure`).
+
+Response payload:
+
+```json
+{
+  "model_key": "codeformer",
+  "success": true,
+  "soup_checkpoint": "C:\\Development\\python\\model-training\\LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
+}
+```
+
 ##### `GET /api/training/models/{model_key}/variations/validate`
 
 Validates strict binary isolation across all Kaggle variation directories for the specified model key, verifying zero cross-contamination.

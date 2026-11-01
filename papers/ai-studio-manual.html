@@ -2029,7 +2029,21 @@
         </ul>
     </section>
 
-    <!-- SECTION 12 -->
+
+        <h3>11.3 Typed API Client Contracts (<code>src/api/client.ts</code>)</h3>
+        <p>The desktop application interfaces with background sidecars through strongly typed asynchronous TypeScript functions. For specialized multi-objective optimization, the client provides direct access to the Pareto Model Soup engine on the Training Suite daemon:</p>
+        <pre><code class="language-typescript">export async function blendModelSoup(modelKey: string): Promise&lt;{ model_key: string; success: boolean; soup_checkpoint: string | null }&gt; {
+  const res = await fetch(`${TRAINING_BASE}/api/models/${modelKey}/soup`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to blend model soup: ${res.statusText}`);
+  }
+  return res.json();
+}</code></pre>
+        <p>This client call triggers linear weight interpolation across specialized vault checkpoints (<code>vault_psnr.pth</code>, <code>vault_lpips.pth</code>, <code>vault_plcc.pth</code>, <code>vault_srcc.pth</code>, etc.) directly on disk without requiring full retraining cycles or manual shell execution.</p>
+
+        <!-- SECTION 12 -->
     <section id="section-12">
         <h2>12. Automated Testing &amp; Ecosystem Quality Assurance</h2>
         <p>To guarantee system stability, the LemGendary ecosystem includes extensive automated test batteries across all projects. You can verify the health of the entire suite at any time:</p>

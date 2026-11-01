@@ -113,6 +113,8 @@ Severe blind face restoration presents complex edge cases:
 
 * **Extreme Occlusion & Eyeglasses**: Unconstrained continuous models hallucinate warped eyes behind heavy frames. CodeFormer's 9-layer Transformer predicts global contextual indices, utilizing unoccluded facial symmetry to anchor the discrete lookup.
 * **Identity Drift vs. Detail Enhancement**: Sliding scalar $\alpha$ dynamically prevents synthetic over-sharpening from altering recognizable biometric facial features.
+* **Publication-Grade FID 2048 & Memory Safety**: Validation computes Fréchet Inception Distance at standard feature dimension 2048 with micro-chunking (=2$), guaranteeing benchmark comparability against academic baselines while bounding evaluation VRAM to $< 280$ MB.
+* **Monotonic Curriculum Ratchet & Dynamic Degradation**: Training strictly enforces monotonic data fraction expansion (\%$ strides) with on-the-fly degradation synthesis for containerized WebDatasets, preventing curriculum retreat and gradient starvation.
 * **Sensor Readout Noise & JPEG Ringing**: Pre-flight degradation gating in the Dataset Compiler enforces high-fidelity Lanczos-3 rescales, training the codebook against realistic heteroscedastic noise distributions.
 
 ---

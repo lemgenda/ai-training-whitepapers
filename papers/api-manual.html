@@ -877,6 +877,12 @@ python cli.py server stop</code></pre>
                         </tr>
                         <tr>
                             <td><code>POST</code></td>
+                            <td><code>/api/models/{model_key}/soup</code></td>
+                            <td>Required</td>
+                            <td>Blend specialized vault checkpoints using Pareto Model Soup</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
                             <td><code>/api/training/train</code></td>
                             <td>Required</td>
                             <td>In-process training initiation with hardware discovery</td>
@@ -1013,6 +1019,19 @@ python cli.py server stop</code></pre>
   "is_valid": true,
   "errors": [],
   "message": "Staged variations for yolov8n"
+}</code></pre>
+
+                <h5><code>POST /api/models/{model_key}/soup</code></h5>
+                <p>Blends specialized vault checkpoints (<code>vault_psnr.pth</code>, <code>vault_lpips.pth</code>, <code>vault_plcc.pth</code>, <code>vault_srcc.pth</code>, etc.) using linear Pareto Model Soup weight averaging into <code>checkpoints/{model_key}/best_soup.pth</code>.</p>
+                <p>Request parameters:</p>
+                <ul>
+                    <li><code>model_key</code>: URL path parameter identifying target architecture (e.g. <code>codeformer</code>, <code>mirnet_exposure</code>).</li>
+                </ul>
+                <p>Response payload:</p>
+                <pre><code>{
+  "model_key": "codeformer",
+  "success": true,
+  "soup_checkpoint": "C:\\Development\\python\\model-training\\LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
 }</code></pre>
 
                 <h5><code>GET /api/training/models/{model_key}/variations/validate</code></h5>

@@ -1364,7 +1364,10 @@ python cli.py checkpoints list mirnet_exposure
 python cli.py checkpoints inspect checkpoints/mirnet_exposure/best.pth
 
 # Prune older checkpoints keeping the top N
-python cli.py checkpoints prune mirnet_exposure --keep 3</code></pre>
+python cli.py checkpoints prune mirnet_exposure --keep 3
+
+# Blend specialized vault checkpoints using Pareto Model Soup
+python cli.py soup codeformer --weights 0.6,0.4 --output checkpoints/codeformer/best_soup.pth</code></pre>
 
                 <h3 id="section-6-7">6.7 Canonical Presets (<code>presets</code>)</h3>
                 <p>

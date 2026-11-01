@@ -839,6 +839,24 @@ Telemetry event streams are classified using semantic origin routing rather than
 - Dataset Compiler logs attach connection origin `dataset-compiler` and route exclusively to the Compiler panel.
 - Consecutive rapid carriage-return progress ticks (`\r`) roll up in-place via `rollupTelemetryEvents()`, keeping the active progress state visible at the terminal cursor while preserving discrete loss metrics, learning rates, checkpoint saves, and milestone events in terminal history.
 
+### 11.3 Typed API Client Contracts (`src/api/client.ts`)
+
+The desktop application interfaces with background sidecars through strongly typed asynchronous TypeScript functions. For specialized multi-objective optimization, the client provides direct access to the Pareto Model Soup engine on the Training Suite daemon:
+
+```typescript
+export async function blendModelSoup(modelKey: string): Promise<{ model_key: string; success: boolean; soup_checkpoint: string | null }> {
+  const res = await fetch(`${TRAINING_BASE}/api/models/${modelKey}/soup`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to blend model soup: ${res.statusText}`);
+  }
+  return res.json();
+}
+```
+
+This client call triggers linear weight interpolation across specialized vault checkpoints (`vault_psnr.pth`, `vault_lpips.pth`, `vault_plcc.pth`, `vault_srcc.pth`, etc.) directly on disk without requiring full retraining cycles or manual shell execution.
+
 ---
 
 ## 12. Automated Testing & Ecosystem Quality Assurance
