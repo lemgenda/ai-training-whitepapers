@@ -284,9 +284,9 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
                 <pre><code>[
   {
     "name": "lemgendary-env-manager",
-    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
-    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
-    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
+    "project_dir": "./lemgendary-env-manager",
+    "venv_dir": "./lemgendary-env-manager\\.venv",
+    "python_path": "./lemgendary-env-manager\\.venv\\Scripts\\python.exe",
     "is_valid": true,
     "python_version": "Python 3.12.10",
     "installed_packages_count": 45,
@@ -420,11 +420,11 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
   "results": {
     "lemgendary-training-suite": {
       "success": true,
-      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
+      "message": "Synchronized sanitized requirements-training.txt to ./lemgendary-training-suite\\requirements.txt."
     },
     "lemgendary-datasets": {
       "success": true,
-      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
+      "message": "Synchronized sanitized requirements-datasets.txt to ./lemgendary-datasets\\requirements.txt."
     }
   }
 }</code></pre>
@@ -441,7 +441,7 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
       "description": "Authoritative dataset and source repository registry.",
       "exists": true,
       "size_bytes": 10240,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
+      "path": "./lemgendary-datasets\\unified_data.yaml"
     },
     {
       "name": "unified_models_v2.yaml",
@@ -450,7 +450,7 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
       "description": "Neural architecture registry and training hyperparameters.",
       "exists": true,
       "size_bytes": 16384,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
+      "path": "./lemgendary-training-suite\\unified_models_v2.yaml"
     }
   ]
 }</code></pre>
@@ -465,7 +465,7 @@ lem-env serve --host 127.0.0.1 --port 8000</code></pre>
                 <pre><code>{
   "name": "unified_models_v2.yaml",
   "format": "yaml",
-  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
+  "path": "./lemgendary-training-suite\\unified_models_v2.yaml",
   "content": "version: '2.0.0'\nmodels:\n  ..."
 }</code></pre>
 
@@ -577,7 +577,7 @@ ws://127.0.0.1:8000/ws/logs</code></pre>
   "message": "Creating fresh virtual environment for lemgendary-datasets...",
   "data": {
     "project": "lemgendary-datasets",
-    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
+    "venv_path": "./lemgendary-datasets\\.venv"
   }
 }</code></pre>
                 <p>Event Status Values:</p>
@@ -1037,8 +1037,8 @@ python cli.py server stop</code></pre>
                 <pre><code>{
   "status": "success",
   "model_key": "yolov8n",
-  "readme_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\README.md",
-  "metadata_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\model-metadata.json",
+  "readme_path": "./LemGendaryModels\\yolov8n\\README.md",
+  "metadata_path": "./LemGendaryModels\\yolov8n\\model-metadata.json",
   "message": "Documentation and Kaggle metadata regenerated for yolov8n"
 }</code></pre>
 
@@ -1049,9 +1049,9 @@ python cli.py server stop</code></pre>
   "status": "success",
   "model_key": "yolov8n",
   "staged_files": {
-    "pytorch": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
-    "onnx_fp32": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
-    "onnx_fp16": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
+    "pytorch": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
+    "onnx_fp32": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
+    "onnx_fp16": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
   },
   "is_valid": true,
   "errors": [],
@@ -1068,7 +1068,7 @@ python cli.py server stop</code></pre>
                 <pre><code>{
   "model_key": "codeformer",
   "success": true,
-  "soup_checkpoint": "C:\\Development\\python\\model-training\\LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
+  "soup_checkpoint": "./LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
 }</code></pre>
 
                 <h5><code>GET /api/training/models/{model_key}/variations/validate</code></h5>

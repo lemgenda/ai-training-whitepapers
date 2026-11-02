@@ -55,13 +55,13 @@ $$\mathcal{L}_{\text{Resonance}} = \mathcal{L}_{\text{EMD}} + \lambda_{\text{ran
 | `nima_technical` | Optical Artifact Detection | EfficientNetV2-S | 384x384 | SRCC &ge; 0.750 |
 | `nima_authenticity` | AI vs. Real Classification | EfficientNetV2-S | 384x384 | Accuracy &ge; 0.940 |
 
-For full mathematical proofs, refer to [PAPER_LEMGENDARY_NIMA.md](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NIMA.md).
+For full mathematical proofs, refer to [PAPER_LEMGENDARY_NIMA.md](./PAPER_LEMGENDARY_NIMA.md).
 
 ---
 
 ## 5. SOTA Architectural Performance Matrix
 
-Comprehensive training curves, ablation studies, and architectural deep-dives are documented in the [Unified NIMA Technical Whitepaper](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NIMA.md).
+Comprehensive training curves, ablation studies, and architectural deep-dives are documented in the [Unified NIMA Technical Whitepaper](./PAPER_LEMGENDARY_NIMA.md).
 
 ---
 

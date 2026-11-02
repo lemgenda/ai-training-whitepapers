@@ -32,9 +32,9 @@ The LemGendary AI Ecosystem is governed by three interoperable control planes: t
 
 | Interface Plane | Primary Role | Target Protocol | Authoritative Manual |
 | :--- | :--- | :--- | :--- |
-| **Desktop GUI** | Visual orchestration, reactive monitoring | Tauri v2 IPC / WebSocket | [AI Studio GUI Operator Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md) |
-| **Master CLI** | Automated environment probing, headless training | Direct Python execution | [Master CLI Operations Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_CLI.md) |
-| **Master API** | Multi-sidecar background daemons, telemetry streaming | HTTP REST / WebSocket | [Master API Manual](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_API.md) |
+| **Desktop GUI** | Visual orchestration, reactive monitoring | Tauri v2 IPC / WebSocket | [AI Studio GUI Operator Manual](./MANUAL_AI_STUDIO_GUI.md) |
+| **Master CLI** | Automated environment probing, headless training | Direct Python execution | [Master CLI Operations Manual](./MANUAL_CLI.md) |
+| **Master API** | Multi-sidecar background daemons, telemetry streaming | HTTP REST / WebSocket | [Master API Manual](./MANUAL_API.md) |
 
 ---
 

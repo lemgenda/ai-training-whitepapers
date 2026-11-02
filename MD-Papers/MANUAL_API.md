@@ -213,9 +213,9 @@ Enumerates all discovered ecosystem repositories with their virtual environment 
 [
   {
     "name": "lemgendary-env-manager",
-    "project_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager",
-    "venv_dir": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv",
-    "python_path": "C:\\Development\\python\\model-training\\lemgendary-env-manager\\.venv\\Scripts\\python.exe",
+    "project_dir": "./lemgendary-env-manager",
+    "venv_dir": "./lemgendary-env-manager\\.venv",
+    "python_path": "./lemgendary-env-manager\\.venv\\Scripts\\python.exe",
     "is_valid": true,
     "python_version": "Python 3.12.10",
     "installed_packages_count": 45,
@@ -451,11 +451,11 @@ One-way copy of centralized manifests to project directories. Returns per-projec
   "results": {
     "lemgendary-training-suite": {
       "success": true,
-      "message": "Synchronized sanitized requirements-training.txt to C:\\Development\\python\\model-training\\lemgendary-training-suite\\requirements.txt."
+      "message": "Synchronized sanitized requirements-training.txt to ./lemgendary-training-suite\\requirements.txt."
     },
     "lemgendary-datasets": {
       "success": true,
-      "message": "Synchronized sanitized requirements-datasets.txt to C:\\Development\\python\\model-training\\lemgendary-datasets\\requirements.txt."
+      "message": "Synchronized sanitized requirements-datasets.txt to ./lemgendary-datasets\\requirements.txt."
     }
   }
 }
@@ -477,7 +477,7 @@ Response:
       "description": "Authoritative dataset and source repository registry.",
       "exists": true,
       "size_bytes": 10240,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\unified_data.yaml"
+      "path": "./lemgendary-datasets\\unified_data.yaml"
     },
     {
       "name": "unified_models_v2.yaml",
@@ -486,7 +486,7 @@ Response:
       "description": "Neural architecture registry and training hyperparameters.",
       "exists": true,
       "size_bytes": 16384,
-      "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml"
+      "path": "./lemgendary-training-suite\\unified_models_v2.yaml"
     }
   ]
 }
@@ -506,7 +506,7 @@ Response:
 {
   "name": "unified_models_v2.yaml",
   "format": "yaml",
-  "path": "C:\\Development\\python\\model-training\\lemgendary-training-suite\\unified_models_v2.yaml",
+  "path": "./lemgendary-training-suite\\unified_models_v2.yaml",
   "content": "version: '2.0.0'\nmodels:\n  ..."
 }
 ```
@@ -673,7 +673,7 @@ Telemetry Event Schema (`PipelineEvent`):
   "message": "Creating fresh virtual environment for lemgendary-datasets...",
   "data": {
     "project": "lemgendary-datasets",
-    "venv_path": "C:\\Development\\python\\model-training\\lemgendary-datasets\\.venv"
+    "venv_path": "./lemgendary-datasets\\.venv"
   }
 }
 ```
@@ -994,8 +994,8 @@ Response:
   "model_key": "forex_predictor",
   "platform": "all",
   "generated": {
-    "kaggle_training": "C:\\Development\\python\\model-training\\LemGendaryModels\\forex_predictor\\forex_predictor_training.ipynb",
-    "colab_training": "C:\\Development\\python\\model-training\\LemGendaryModels\\forex_predictor\\forex_predictor_colab_training.ipynb"
+    "kaggle_training": "./LemGendaryModels\\forex_predictor\\forex_predictor_training.ipynb",
+    "colab_training": "./LemGendaryModels\\forex_predictor\\forex_predictor_colab_training.ipynb"
   }
 }
 ```
@@ -1038,8 +1038,8 @@ Response:
 {
   "status": "success",
   "model_key": "yolov8n",
-  "readme_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\README.md",
-  "metadata_path": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\model-metadata.json",
+  "readme_path": "./LemGendaryModels\\yolov8n\\README.md",
+  "metadata_path": "./LemGendaryModels\\yolov8n\\model-metadata.json",
   "message": "Documentation and Kaggle metadata regenerated for yolov8n"
 }
 ```
@@ -1055,9 +1055,9 @@ Response:
   "status": "success",
   "model_key": "yolov8n",
   "staged_files": {
-    "pytorch": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
-    "onnx_fp32": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
-    "onnx_fp16": "C:\\Development\\python\\model-training\\LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
+    "pytorch": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\pytorch\\yolov8n.pt",
+    "onnx_fp32": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp32\\yolov8n_FP32.onnx",
+    "onnx_fp16": "./LemGendaryModels\\yolov8n\\dist\\kaggle\\onnx_fp16\\yolov8n.onnx"
   },
   "is_valid": true,
   "errors": [],
@@ -1079,7 +1079,7 @@ Response payload:
 {
   "model_key": "codeformer",
   "success": true,
-  "soup_checkpoint": "C:\\Development\\python\\model-training\\LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
+  "soup_checkpoint": "./LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
 }
 ```
 

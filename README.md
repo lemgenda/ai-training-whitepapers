@@ -13,6 +13,10 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.62 - Absolute Paths Elimination & Relative Link Governance
+
+* **Universal Relative Path Normalization** - Converted all legacy `file:///c:/...` absolute links across 34 Markdown whitepapers and `MANUAL_API.md` payload specifications into clean, portable relative paths (`./`, `../`).
+
 ### v16.9.61 - Pipeline Step 5 Safe Dependency Upgrade Execution Specification
 
 * **Pipeline Step 5 Active Safe Upgrade Specification** - Synchronized MANUAL_AI_STUDIO_GUI.md, ai-studio-manual.html, and GUI control documentation to reflect active bottom-up safe package upgrade execution in Pipeline Step 5.

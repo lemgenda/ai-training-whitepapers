@@ -2,7 +2,7 @@
 
 ## Category 01.4 | Subpage of Master Ecosystem Architecture
 
-**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
+**Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 
@@ -26,8 +26,8 @@ The LemGendary AI Studio Desktop GUI (Client Version `v2.0.0`, orchestrated with
 > [!NOTE]
 > **Dual Versioning Architecture**: The desktop application operates on two intentional versioning tracks:
 >
-> 1. **Client Desktop Cockpit (`v2.0.0`)**: Governs the Tauri v2 desktop application, React 18 frontend components, and the Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md)).
-> 2. **Backend Engine Ecosystem (`v16.9.16`)**: Governs the tripartite Python sidecar daemons (Environment Manager on Port 8000, Dataset Compiler on Port 8100, Master Training Suite on Port 8200) consumed via frozen OpenAPI 3.1 contracts. See the [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md) for formal track governance.
+> 1. **Client Desktop Cockpit (`v2.0.0`)**: Governs the Tauri v2 desktop application, React 18 frontend components, and the Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](./MANUAL_AI_STUDIO_GUI.md)).
+> 2. **Backend Engine Ecosystem (`v16.9.16`)**: Governs the tripartite Python sidecar daemons (Environment Manager on Port 8000, Dataset Compiler on Port 8100, Master Training Suite on Port 8200) consumed via frozen OpenAPI 3.1 contracts. See the [Document Authority Hierarchy & Versioning Policy](./VERSIONING_POLICY.md) for formal track governance.
 
 ## 2. High-Velocity Optimizations
 

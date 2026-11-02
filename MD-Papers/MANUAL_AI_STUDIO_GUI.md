@@ -4,7 +4,7 @@
 
 **Authoritative Desktop Client Release**: `v2.0.0` (Tauri v2 Native Desktop Cockpit)
 **Target Backend Ecosystem**: `v16.9.16-STABLE` (Tripartite Sidecar Topology: Ports 8000, 8100, 8200)
-**Parent Authority**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
+**Parent Authority**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](./VERSIONING_POLICY.md)
 
 ---
 

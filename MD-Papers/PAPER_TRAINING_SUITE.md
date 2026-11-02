@@ -3,7 +3,7 @@
 
 ## Category 01.3 | Subpage of Master Ecosystem Architecture
 
-**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
+**Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 

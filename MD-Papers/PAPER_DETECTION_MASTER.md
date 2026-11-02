@@ -37,7 +37,7 @@ The **Real-Time Detection & Moderation Suite (Category 09)** decouples real-time
 
 Operating on the CSPDarknet53 backbone with PANet feature fusion, YOLOv8n eliminates anchor box generation, predicting spatial bounding boxes via Distributed Focal Loss (DFL) and Complete IoU (CIoU) regression.
 
-Dedicated documentation: [YOLOv8n Multi-Task Whitepaper](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_YOLOV8N.md).
+Dedicated documentation: [YOLOv8n Multi-Task Whitepaper](./PAPER_LEMGENDARY_YOLOV8N.md).
 
 ---
 
@@ -45,7 +45,7 @@ Dedicated documentation: [YOLOv8n Multi-Task Whitepaper](file:///c:/Development/
 
 Built upon the EfficientNetV2-S backbone, the Universal NSFW Classifier uses categorical focal cross-entropy loss to achieve ultra-low false negative rates (< 0.5%) for sensitive content filtering.
 
-Dedicated documentation: [Universal NSFW Classifier Whitepaper](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NSFW_CLASSIFIER.md).
+Dedicated documentation: [Universal NSFW Classifier Whitepaper](./PAPER_LEMGENDARY_NSFW_CLASSIFIER.md).
 
 ---
 

@@ -6,7 +6,7 @@
 **Documentation Hub Version**: `v16.9.27-STABLE`  
 **Master Architectural Baseline**: `v16.9.16-STABLE`  
 **Status**: Canonical  
-**Parent Authority**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
+**Parent Authority**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document Authority Hierarchy & Versioning Policy](./VERSIONING_POLICY.md)
 
 ---
 

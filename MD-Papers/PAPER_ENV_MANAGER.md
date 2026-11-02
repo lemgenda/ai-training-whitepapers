@@ -2,7 +2,7 @@
 
 ## Category 01.1 | Subpage of Master Ecosystem Architecture
 
-**Parent Hub**: [Master Ecosystem Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)
+**Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
 ---
 
@@ -35,11 +35,11 @@ The LemGendary Environment Manager establishes an authoritative, cross-platform 
 
 The LemGendary Environment Manager provides a unified command line interface (`lem-env`) and background server for multi-repository Python and Node.js environments. All operations can be invoked directly from the terminal, through the interactive PowerShell menu, or via sibling launcher scripts.
 
-Detailed command recipes, operational procedures, and complete CLI syntax are documented in the [Master CLI Operations Manual](file:///C:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_CLI.md). Complete API route specifications and WebSocket schemas are available in the [Master REST & WebSocket API Specification](file:///C:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_API.md).
+Detailed command recipes, operational procedures, and complete CLI syntax are documented in the [Master CLI Operations Manual](./MANUAL_CLI.md). Complete API route specifications and WebSocket schemas are available in the [Master REST & WebSocket API Specification](./MANUAL_API.md).
 
 ```bash
 # Install Environment Manager in editable mode
-pip install -e c:\Development\python\model-training\lemgendary-env-manager
+pip install -e ./lemgendary-env-manager
 
 # Verify installation
 lem-env --help
@@ -190,7 +190,7 @@ The LemGendary Environment Manager eliminates environmental divergence across th
 
 Operational procedures, command-line reference, API specifications, and troubleshooting guides are maintained in separate documents to keep this whitepaper focused on architectural design and comparative analysis:
 
-- [Master CLI Operations Manual (Markdown)](file:///C:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_CLI.md)
-- [Master CLI Operations Manual (HTML)](file:///C:/Development/python/model-training/lemgendary-docs/papers/cli-manual.html)
-- [Master REST & WebSocket API Specification (Markdown)](file:///C:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_API.md)
-- [Master REST & WebSocket API Specification (HTML)](file:///C:/Development/python/model-training/lemgendary-docs/papers/api-manual.html)
+- [Master CLI Operations Manual (Markdown)](./MANUAL_CLI.md)
+- [Master CLI Operations Manual (HTML)](../papers/cli-manual.html)
+- [Master REST & WebSocket API Specification (Markdown)](./MANUAL_API.md)
+- [Master REST & WebSocket API Specification (HTML)](../papers/api-manual.html)

@@ -31,7 +31,7 @@ To guarantee reliable assistant behavior, source attribution, and deterministic 
 When resolving ambiguous or conflicting instructions, the AI Helper evaluates sources strictly in descending order of precedence:
 
 1. **Tier 1 (Supreme Ground Truth)**: Active in-process code manifests (`unified_models_v2.yaml`, `unified_data.yaml`) and sidecar OpenAPI specifications (`http://127.0.0.1:8000/openapi.json`, `http://127.0.0.1:8100/openapi.json`, `http://127.0.0.1:8200/openapi.json`).
-2. **Tier 2 (Operational Manuals)**: Master API Reference ([`MANUAL_API.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_API.md)), Master CLI Manual ([`MANUAL_CLI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_CLI.md)), Desktop GUI Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md)), and Ecosystem Architecture ([`ECOSYSTEM_ARCHITECTURE.md`](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md)).
+2. **Tier 2 (Operational Manuals)**: Master API Reference ([`MANUAL_API.md`](./MANUAL_API.md)), Master CLI Manual ([`MANUAL_CLI.md`](./MANUAL_CLI.md)), Desktop GUI Operator Manual ([`MANUAL_AI_STUDIO_GUI.md`](./MANUAL_AI_STUDIO_GUI.md)), and Ecosystem Architecture ([`ECOSYSTEM_ARCHITECTURE.md`](./ECOSYSTEM_ARCHITECTURE.md)).
 3. **Tier 3 (Architectural Whitepapers)**: Model whitepapers (`PAPER_LEMGENDARY_*.md`, `PAPER_NIMA_*.md`).
 4. **Tier 4 (Diagnostic Playbooks)**: Troubleshooting knowledge base (`AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md`).
 

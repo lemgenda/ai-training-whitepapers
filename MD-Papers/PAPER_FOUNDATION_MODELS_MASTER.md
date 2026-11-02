@@ -124,7 +124,7 @@ The denoising network $\epsilon_\theta(\mathbf{z}_t, t, c)$ minimizes the simpli
 
 $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_\theta(\mathbf{z}_t, t, c)\|^2 \right]$$
 
-Dedicated documentation: [Diffusion Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_DIFFUSION.md).
+Dedicated documentation: [Diffusion Models Specification](./PAPER_LEMGENDARY_DIFFUSION.md).
 
 ---
 
@@ -134,7 +134,7 @@ Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language 
 
 $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{< i}, \mathbf{H}_v)$$
 
-Dedicated documentation: [Image-to-Text VLM Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_IMAGE_TO_TEXT.md).
+Dedicated documentation: [Image-to-Text VLM Specification](./PAPER_LEMGENDARY_IMAGE_TO_TEXT.md).
 
 ---
 
@@ -144,7 +144,7 @@ Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and
 
 $$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$
 
-Dedicated documentation: [Large Language Models Specification](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_LLM.md).
+Dedicated documentation: [Large Language Models Specification](./PAPER_LEMGENDARY_LLM.md).
 
 ---
 

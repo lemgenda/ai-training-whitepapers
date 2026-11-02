@@ -4,12 +4,12 @@
 
 **Integrated Subpages**:
 
-* [Environment Manager](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_ENV_MANAGER.md)
-* [Dataset Compiler Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md)
-* [Physical Degradation Engine](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_DEGRADATION_ENGINE.md)
-* [Master Training Suite](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md)
-* [AI Studio Desktop GUI Architecture](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/PAPER_AI_STUDIO_GUI.md)
-* [Unified Versioning Policy](file:///c:/Development/python/model-training/lemgendary-docs/MD-Papers/VERSIONING_POLICY.md)
+* [Environment Manager](./PAPER_ENV_MANAGER.md)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md)
+* [Physical Degradation Engine](./PAPER_DEGRADATION_ENGINE.md)
+* [Master Training Suite](./PAPER_TRAINING_SUITE.md)
+* [AI Studio Desktop GUI Architecture](./PAPER_AI_STUDIO_GUI.md)
+* [Unified Versioning Policy](./VERSIONING_POLICY.md)
 
 **Hub Version**: `v16.9.27-STABLE`
 **Runtime Baseline**: `v16.9.16-STABLE`
