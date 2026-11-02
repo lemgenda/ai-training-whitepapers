@@ -307,8 +307,13 @@ class TestDocumentationIntegrity(unittest.TestCase):
             corpus_dir = os.path.abspath(
                 os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus')
             )
-        train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
-        val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
+        data_subdir = os.path.join(corpus_dir, 'data')
+        if os.path.exists(data_subdir):
+            train_path = os.path.join(data_subdir, 'ai_helper_train.jsonl')
+            val_path = os.path.join(data_subdir, 'ai_helper_val.jsonl')
+        else:
+            train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
+            val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
 
         self.assertTrue(os.path.exists(train_path), "ai_helper_train.jsonl missing")
         self.assertTrue(os.path.exists(val_path), "ai_helper_val.jsonl missing")
@@ -777,8 +782,13 @@ class TestDocumentationIntegrity(unittest.TestCase):
     def test_ai_helper_dataset_integrity(self):
         """Rule: ai_helper_train.jsonl and ai_helper_val.jsonl must have valid schemas, zero overlap, and 0 emojis."""
         dataset_dir = os.path.join(self.workspace_root, 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend')
-        train_path = os.path.join(dataset_dir, 'ai_helper_train.jsonl')
-        val_path = os.path.join(dataset_dir, 'ai_helper_val.jsonl')
+        data_subdir = os.path.join(dataset_dir, 'data')
+        if os.path.exists(data_subdir):
+            train_path = os.path.join(data_subdir, 'ai_helper_train.jsonl')
+            val_path = os.path.join(data_subdir, 'ai_helper_val.jsonl')
+        else:
+            train_path = os.path.join(dataset_dir, 'ai_helper_train.jsonl')
+            val_path = os.path.join(dataset_dir, 'ai_helper_val.jsonl')
 
         if not os.path.exists(train_path) or not os.path.exists(val_path):
             return  # Skip if dataset directory is not located at expected path
