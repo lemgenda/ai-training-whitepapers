@@ -36,6 +36,7 @@
   - [2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation](#222-turing-non-tensor-core-hardware-cudnn-bug-remediation)
   - [2.23. Multi-Task SOTA Metric Ingestion & Perceptual Telemetry Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization)
   - [2.24. Automated Kaggle Models Hub Metadata Synchronization & Technical Whitepaper Citations](#224-automated-kaggle-models-hub-metadata-synchronization--technical-whitepaper-citations)
+  - [2.25. Causal Language Model Instruction Tuning & Dynamic VRAM Probing](#225-causal-language-model-instruction-tuning--dynamic-vram-probing)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type Guards](#31-framework-agnosticism--type-guards)
   - [3.2. Fast-Path Correlator](#32-fast-path-correlator)
@@ -391,6 +392,15 @@ The hardware policy engine (`training/hardware/policy.py`) automatically detects
   Kaggle's REST API (`kagglesdk.models.types.model_api_service`) enforces strict string typing on `provenance_sources`, throwing a runtime `TypeError` when passed list payloads. The generator formats provenance sources into comma-separated strings matching the schema. In addition, the authentication layer (`training/cloud/credentials.py`) binds active Personal Access Tokens (`KGAT_...`) from `~/.kaggle/access_token` directly to `KAGGLE_API_TOKEN` in the environment, guaranteeing clean automated publication of the full Model Card (Title, Subtitle, Description, Citations, and Provenance).
 
 ---
+
+### 2.25. Causal Language Model Instruction Tuning & Dynamic VRAM Probing
+
+- **Dynamic Instruction Tuning Runtime (`GenericCausalLLM`)**:
+  Causal decoder models (e.g. `ai_helper_lemgend`, based on `Qwen2.5-Coder-1.5B-Instruct`) execute instruction tuning via native `train_step(batch)` and `eval_step(batch)` methods that accept collated dictionary structures (`input_ids`, `attention_mask`, `labels`).
+- **Dynamic VRAM Safety Probing & Gradient Accumulation Decoupling**:
+  Unlike vision models that scale resolution ladders, LLM execution is bounded by sequence length (context window) and KV-cache activation overhead. `audit_hardware_vram` dynamically computes maximum safe micro-batch sizes from real-time free GPU memory without hardcoded magic numbers, and `SmartTrainingGovernor` scales gradient accumulation steps ($K = \lfloor B_{\text{eff}} / B_{\text{phys}} \rfloor$) to preserve the target effective batch size ($B_{\text{eff}} = 24$) on consumer GPUs (e.g. GTX 1650 4GB).
+- **Universal LLM Milestone Vault Persistence**:
+  `CheckpointLifecycleManager` tracks LLM-specific SOTA target metrics (`eval_loss`, `perplexity`, `token_accuracy`) and persists isolated milestone checkpoints (`vault_eval_loss.pth`, `vault_perplexity.pth`, `vault_token_accuracy.pth`). These checkpoints feed directly into `ParetoModelSoup` for linear adapter weight blending.
 
 ## 3. Judicial Audit Engine
 

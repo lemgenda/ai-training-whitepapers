@@ -13,6 +13,12 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.64 - LLM Training Pathology, Dynamic Hardware Probing & Vault Milestone Whitepapers
+
+* **Training Pathology Master Guide (`PAPER_TRAINING_PATHOLOGY.md`)** - Documented Pathologies 26 through 30 covering variable-length validation collation collapse, CPU-bound accelerator starvation, vision-curriculum cross-contamination, symbolic tracing artifacts on dynamic causal masks, and disconnected LLM milestone vault tracking.
+* **Causal LLM Whitepaper Expansion (`PAPER_LEMGENDARY_LLM.md`)** - Added mathematical formulations for QLoRA dynamic quantization, hardware-aware gradient accumulation decoupling, autoregressive non-masked token accuracy, and Pareto milestone vault ensembling.
+* **Training Suite Master Guide (`PAPER_TRAINING_SUITE.md`)** - Added Section 2.25 formalizing causal language model instruction tuning, empirical VRAM safety boundaries, and vault milestone persistence.
+
 ### v16.9.63 - Tripartite Sidecar Termination & UI Control Alignment
 
 * **Tripartite Sidecar Lifecycle Documentation** - Updated system operations documentation to reflect bidirectional daemon control over all three sidecar ports (8000, 8100, 8200) directly from desktop GUI action tiles.

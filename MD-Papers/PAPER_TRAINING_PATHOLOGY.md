@@ -187,6 +187,36 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 - **Identification**: Resumption telemetry logs report `Source Fraction: 100.0%`, `New Length: 27300`, and `Iteration 1362/27300` despite configuration specifying `initial_fraction: 0.15`.
 - **Remedy**: **Curriculum Checkpoint Fraction Override**. In `SmartTrainingGovernor.load_state`, detect whether early-epoch training ($\text{epoch} \le 2$) is resuming with a legacy 100% fraction against an active fractional curriculum. Automatically override the legacy fraction with `initial_fraction: 0.15`, trigger `train_loader` re-instantiation, and proportionally scale resumption iterations to the actual loader length.
 
+### Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 26)
+
+- **The Issue**: Language model instruction datasets consist of heterogeneous user prompts and assistant completions with varying token sequence lengths (e.g. 294 tokens vs 367 tokens). While training data loaders utilize dynamic padding collators (`collate_instruction_batch`), validation data loaders initialized via canonical builder functions (`build_val_loader`) lacked explicit `collate_fn` propagation. PyTorch default collation (`default_collate`) defaulted to `torch.stack()`, crashing at the conclusion of Epoch 1 with `RuntimeError: stack expects each tensor to be equal size, but got [294] at entry 0 and [367] at entry 1`.
+- **Identification**: Training loop executes all training batches cleanly, but crashes immediately upon transition to validation with ragged 1D tensor stacking mismatch exceptions.
+- **Remedy**: **Universal Collation Signature Propagation**. Extend `build_val_loader` with an explicit `collate_fn: Any | None = None` parameter and propagate `collate_instruction_batch` whenever `task_type in ("text_instruction", "llm")`, padding token sequences dynamically to the longest sequence in each validation micro-batch.
+
+### CPU-Bound Execution & Silent Accelerator Starvation (Pathology 27)
+
+- **The Issue**: In environments where PyTorch is installed without pre-compiled CUDA binaries (CPU-only build, e.g. `torch==2.15.0+cpu` instead of `+cu126`), `torch.cuda.is_available()` returns `False`. The training suite falls back to CPU execution without throwing an exception. On a 1.5B parameter causal transformer with 2048 sequence length, CPU execution saturates all host threads (96% CPU utilization across 12 logical processors) while dedicated GPU memory sits idle at 0.8 / 4.0 GB and 0% GPU utilization. Batch execution latency explodes to 40-55s/batch (37+ minutes for a single validation pass).
+- **Identification**: Task Manager displays 96% CPU load, 0% GPU utilization, 0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.
+- **Remedy**: **Hardware Sentinel Pre-Flight Enforcement**. Hardware probe detects when a physical discrete GPU is present via OS hardware enumeration but PyTorch reports `CUDA available: False`. Alerts operator to install CUDA-enabled PyTorch wheels (`pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126`).
+
+### Vision-Curriculum Cross-Domain Contamination (Pathology 28)
+
+- **The Issue**: Progressive curriculum learning designed for vision models (resolution ladders: 256px -> 384px -> 512px; sample fraction ladders: 15% -> 30% -> 60% -> 100%) was unrestrictively applied to Causal LLMs. For language models, sequence length is a context boundary, not a spatial resolution, and instruction datasets (~1,000 conversational samples) require 100% data exposure from Epoch 1 to preserve multi-domain conversational coherence. Vision curriculum logic artificially truncated context to 15% (138 samples) and logged spurious pixel dimensions (`Res: 2048px`).
+- **Identification**: Logs emit `[CURRICULUM] Active training manifold: 138/923 samples (15% data fraction) | Res: 2048px`.
+- **Remedy**: **Domain-Segregated Curriculum Invariants**. For `category == "llm"` and `text_instruction` task types, disable spatial resolution ladder jumping, log context window in tokens (`Context: 2048 tokens`), and dynamically resolve data fraction and effective batch size directly from `unified_models_v2.yaml`.
+
+### Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 29)
+
+- **The Issue**: Exporting autoregressive causal transformers to ONNX via `torch.onnx.export` traces Python control flow into static compute graphs. In Hugging Face transformers, causal mask computation and KV-cache tracking evaluate dynamic sequence length conditions (e.g. `if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) > 0:` and `torch.tensor([], dtype=...)`). Tracing emits `TracerWarning: Converting a tensor to a Python boolean...` and `TracerWarning: torch.tensor results are registered as constants in the trace...`.
+- **Identification**: Export step logs multiple `TracerWarning` and `UserWarning: Exporting aten::index operator` messages during ONNX generation.
+- **Remedy**: **Explicit Static KV-Cache Disablement & Dynamic Axes Declaration**. Set `model.config.use_cache = False` prior to ONNX export to eliminate dynamic KV-cache state tracing. Declare dynamic axes on `input_ids`, `attention_mask`, and `logits` for both `batch` and `sequence` dimensions, avoiding warning suppression and preserving full pathology diagnostics.
+
+### Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 30)
+
+- **The Issue**: `CheckpointLifecycleManager` records Pareto milestone checkpoints (`vault_<metric>.pth`) based on SOTA target metrics configured in `unified_models_v2.yaml`. For LLMs, targets are `eval_loss`, `perplexity`, and `token_accuracy`. Discrepancies between validation metric keys (`val_loss` vs `eval_loss`), missing `token_accuracy` computation, and omitting `perplexity` from `LOWER_IS_BETTER_METRICS` caused the vault tracker to bypass saving LLM milestone weights.
+- **Identification**: The `checkpoints/` directory contains `best.pth` and `progress.pth`, but no `vault_eval_loss.pth`, `vault_perplexity.pth`, or `vault_token_accuracy.pth` files are generated.
+- **Remedy**: **Normalized LLM Vault Aliasing & Token-Level Accuracy Instrumentation**. Instrument `validation.py` to evaluate non-masked autoregressive `token_accuracy`, alias `eval_loss` and `val_loss` bidirectionally in `CANONICAL_METRIC_ALIASES`, register `perplexity` in `LOWER_IS_BETTER_METRICS`, and enable Pareto model soup blending across LLM adapter checkpoints.
+
 ---
 
 ## 5. High-Fidelity Strategy & Historical Evolution Taxonomy
