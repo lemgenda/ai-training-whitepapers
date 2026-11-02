@@ -13,6 +13,11 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.63 - Tripartite Sidecar Termination & UI Control Alignment
+
+* **Tripartite Sidecar Lifecycle Documentation** - Updated system operations documentation to reflect bidirectional daemon control over all three sidecar ports (8000, 8100, 8200) directly from desktop GUI action tiles.
+* **UI Test Control Streamlining** - Synchronized documentation specifications to reflect the removal of redundant header and toolbar test buttons in favor of dedicated panel workflows.
+
 ### v16.9.62 - Absolute Paths Elimination & Relative Link Governance
 
 * **Universal Relative Path Normalization** - Converted all legacy `file:///c:/...` absolute links across 34 Markdown whitepapers and `MANUAL_API.md` payload specifications into clean, portable relative paths (`./`, `../`).
