@@ -589,8 +589,8 @@
             <li><strong>Stage 3 Run Step Action Button</strong>: Dispatches isolated execution of Step 3 (<code>POST /api/pipeline/run-step?step=3</code>), recreating missing or corrupted <code>.venv</code> folders idempotently.</li>
             <li><strong>Stage 4 Card Title (Requirements Sync &amp; Install)</strong>: Propagates centralized dependencies from <code>unified_requirements.yaml</code>, installs binary wheels, and normalizes OpenCV.</li>
             <li><strong>Stage 4 Run Step Action Button</strong>: Dispatches isolated execution of Step 4 (<code>POST /api/pipeline/run-step?step=4</code>), synchronizing packages and installing missing dependencies.</li>
-            <li><strong>Stage 5 Card Title (Dependency Audit &amp; Upgrades)</strong>: Audits outdated packages, detects version drift, and executes dry-run dependency checks across workspaces.</li>
-            <li><strong>Stage 5 Run Step Action Button</strong>: Dispatches isolated execution of Step 5 (<code>POST /api/pipeline/run-step?step=5</code>), validating package upgrade paths without touching live installations.</li>
+            <li><strong>Stage 5 Card Title (Dependency Audit &amp; Upgrades)</strong>: Audits outdated packages, detects version drift, and applies safe non-breaking upgrades across workspaces.</li>
+            <li><strong>Stage 5 Run Step Action Button</strong>: Dispatches isolated execution of Step 5 (<code>POST /api/pipeline/run-step?step=5</code>), validating package upgrade paths and applying safe upgrades bottom-up.</li>
             <li><strong>Stage 6 Card Title (Codebase Verification)</strong>: Compiles Python bytecode across all repositories, verifies AST syntax, and enforces zero-emoji compliance.</li>
             <li><strong>Stage 6 Run Step Action Button</strong>: Dispatches isolated execution of Step 6 (<code>POST /api/pipeline/run-step?step=6</code>), running bytecode compilation and linting verification gates.</li>
             <li><strong>Stage 7 Card Title (Health Matrix)</strong>: Generates complete ecosystem health report, evaluates cross-project drift, and certifies overall system integrity.</li>
@@ -677,7 +677,7 @@
                         <td>Stage 5 Run Step</td>
                         <td>Action Button</td>
                         <td><code>POST /api/pipeline/run-step?step=5</code></td>
-                        <td>Executes dry-run dependency checks across workspaces.</td>
+                        <td>Applies verified safe dependency upgrades across workspaces.</td>
                     </tr>
                     <tr>
                         <td><strong>11</strong></td>

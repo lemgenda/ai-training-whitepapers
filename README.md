@@ -13,6 +13,10 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.61 - Pipeline Step 5 Safe Dependency Upgrade Execution Specification
+
+* **Pipeline Step 5 Active Safe Upgrade Specification** - Synchronized MANUAL_AI_STUDIO_GUI.md, ai-studio-manual.html, and GUI control documentation to reflect active bottom-up safe package upgrade execution in Pipeline Step 5.
+
 ### v16.9.60 - Generic LLM Architecture, In-Process Test Orchestrator & Multi-Publication Synchronization
 
 * **Generic LLM Compiler & Instruction Tuning Documentation Synchronization** - Synchronized PAPER_DATASET_COMPILER.md and dataset-compiler.html with Section 9 "Generic LLM Dataset Compiler Architecture & Multi-Source Knowledge Ingestion", and PAPER_TRAINING_SUITE.md and training-suite-master.html with Section 7 "Universal Instruction-Tuned Causal LLM Fine-Tuning & Dynamic Dataset Ingestion".

@@ -280,7 +280,7 @@ In addition to running the full automated sequence, operators can execute indivi
 6. **Stage 3 Run Step Action Button**: Dispatches isolated execution of Step 3 (`POST /api/pipeline/run-step?step=3`), recreating missing or corrupted `.venv` folders idempotently.
 7. **Stage 4 Card Title (Requirements Sync & Install)**: Propagates centralized dependencies from `unified_requirements.yaml`, installs binary wheels, and normalizes OpenCV.
 8. **Stage 4 Run Step Action Button**: Dispatches isolated execution of Step 4 (`POST /api/pipeline/run-step?step=4`), synchronizing packages and installing missing dependencies.
-9. **Stage 5 Card Title (Dependency Audit & Upgrades)**: Audits outdated packages, detects version drift, and executes dry-run dependency checks across workspaces.
+9. **Stage 5 Card Title (Dependency Audit & Upgrades)**: Audits outdated packages, detects version drift, and applies safe non-breaking upgrades across workspaces.
 10. **Stage 5 Run Step Action Button**: Dispatches isolated execution of Step 5 (`POST /api/pipeline/run-step?step=5`), validating package upgrade paths without touching live installations.
 11. **Stage 6 Card Title (Codebase Verification)**: Compiles Python bytecode across all repositories, verifies AST syntax, and enforces zero-emoji compliance.
 12. **Stage 6 Run Step Action Button**: Dispatches isolated execution of Step 6 (`POST /api/pipeline/run-step?step=6`), running bytecode compilation and linting verification gates.
