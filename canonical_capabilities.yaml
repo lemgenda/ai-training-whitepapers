@@ -1,13 +1,13 @@
 ---
 schema_version: 1.0.0
-document_baseline: v16.9.44-STABLE
-runtime_engine_baseline: v16.9.44-STABLE
-desktop_client_baseline: v2.10.2
+document_baseline: v16.9.60-STABLE
+runtime_engine_baseline: v16.9.60-STABLE
+desktop_client_baseline: v2.10.5
 last_audited: '2026-11-02'
 control_planes:
   gui:
     framework: Tauri v2 + React 18 + Vite
-    version: v2.10.2
+    version: v2.10.5
     ports:
       environment_manager_sidecar: 8000
       dataset_compiler_sidecar: 8100
@@ -29,7 +29,7 @@ models:
   domain: time_series_quantitative_finance
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/ForexPredictor/ForexPredictor.py
   weights_path: LemGendaryModels/ForexPredictor/ForexPredictorWeights_FP32.pth
   architecture_type: Causal TCN + Multi-Head Cross-Timeframe Attention
@@ -49,7 +49,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 128
@@ -78,7 +78,7 @@ models:
   domain: perceptual_aesthetic_scoring
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nima_aesthetic_mobile/model.py
   weights_path: LemGendaryModels/nima_aesthetic_mobile/weights.pth
   architecture_type: MobileNetV3-Small + Earth Mover's Distance Head
@@ -98,7 +98,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 2.0
     recommended_batch_size: 64
@@ -123,7 +123,7 @@ models:
   domain: perceptual_aesthetic_scoring
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nima_aesthetic_efficientnet/model.py
   weights_path: LemGendaryModels/nima_aesthetic_efficientnet/weights.pth
   architecture_type: EfficientNet-B0 Backbone + EMD Loss
@@ -143,7 +143,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 32
@@ -168,7 +168,7 @@ models:
   domain: perceptual_aesthetic_scoring
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nima_aesthetic_pro/model.py
   weights_path: LemGendaryModels/nima_aesthetic_pro/weights.pth
   architecture_type: DenseNet-201 / ConvNeXt-Tiny + Multi-Head EMD
@@ -189,7 +189,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 16
@@ -217,7 +217,7 @@ models:
   domain: technical_distortion_scoring
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nima_technical/model.py
   weights_path: LemGendaryModels/nima_technical/weights.pth
   architecture_type: MobileNetV3 Backbone + Multi-Distortion Classification Head
@@ -237,7 +237,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 3.0
     recommended_batch_size: 32
@@ -262,7 +262,7 @@ models:
   domain: synthetic_generation_authenticity
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nima_authenticity/model.py
   weights_path: LemGendaryModels/nima_authenticity/weights.pth
   architecture_type: Frequency-Aware High-Pass ResNet Backbone
@@ -282,7 +282,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 32
@@ -309,7 +309,7 @@ models:
   domain: vision_hybrid_restoration
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/upn_v2/model.py
   weights_path: LemGendaryModels/upn_v2/weights.pth
   architecture_type: Residual-in-Residual Dense Blocks with Spatial Attention
@@ -329,7 +329,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 8
@@ -356,7 +356,7 @@ models:
   domain: vintage_photographic_restoration
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/film_restorer/model.py
   weights_path: LemGendaryModels/film_restorer/weights.pth
   architecture_type: Dual-Branch Attention Network (Structure + Grain Decomposition)
@@ -377,7 +377,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 4
@@ -403,7 +403,7 @@ models:
   domain: blind_face_restoration
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/codeformer/model.py
   weights_path: LemGendaryModels/codeformer/weights.pth
   architecture_type: Learned Discrete Codebook Transformer with Fidelity Controllability
@@ -423,7 +423,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 4
@@ -449,7 +449,7 @@ models:
   domain: semantic_face_segmentation
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/parsenet/model.py
   weights_path: LemGendaryModels/parsenet/weights.pth
   architecture_type: BiSeNet-V2 with Spatial and Context Paths
@@ -469,7 +469,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 16
@@ -495,7 +495,7 @@ models:
   domain: feature_fusion_indoor_dehazing
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/ffanet_indoor/model.py
   weights_path: LemGendaryModels/ffanet_indoor/weights.pth
   architecture_type: Feature Fusion Attention Network (Channel + Pixel Attention)
@@ -515,7 +515,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 4
@@ -541,7 +541,7 @@ models:
   domain: feature_fusion_outdoor_dehazing
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/ffanet_outdoor/model.py
   weights_path: LemGendaryModels/ffanet_outdoor/weights.pth
   architecture_type: Feature Fusion Attention Network (Extended Depth Layers)
@@ -561,7 +561,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 4
@@ -587,7 +587,7 @@ models:
   domain: multi_scale_low_light_restoration
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/mirnet_lowlight/model.py
   weights_path: LemGendaryModels/mirnet_lowlight/weights.pth
   architecture_type: Multi-Scale Residual Block with Dual Attention Units
@@ -608,7 +608,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 2
@@ -637,7 +637,7 @@ models:
   domain: dual_exposure_over_under_correction
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/mirnet_exposure/model.py
   weights_path: LemGendaryModels/mirnet_exposure/weights.pth
   architecture_type: Multi-Scale Residual Block with Highlight Preservation
@@ -658,7 +658,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 2
@@ -686,7 +686,7 @@ models:
   domain: multi_stage_progressive_deraining
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/mprnet_deraining/model.py
   weights_path: LemGendaryModels/mprnet_deraining/weights.pth
   architecture_type: 3-Stage Progressive Architecture with Cross-Stage Feature Fusion
@@ -706,7 +706,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 2
@@ -733,7 +733,7 @@ models:
   domain: nonlinear_activation_free_deblurring
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nafnet_debluring/model.py
   weights_path: LemGendaryModels/nafnet_debluring/weights.pth
   architecture_type: Nonlinear Activation Free Network (SimpleGate + Simplified Channel
@@ -754,7 +754,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 4
@@ -780,7 +780,7 @@ models:
   domain: nonlinear_activation_free_denoising
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/nafnet_denoising/model.py
   weights_path: LemGendaryModels/nafnet_denoising/weights.pth
   architecture_type: Nonlinear Activation Free Network (36-Block Backbone)
@@ -801,7 +801,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 4
@@ -826,7 +826,7 @@ models:
   domain: realtime_object_detection
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/yolov8n/model.py
   weights_path: LemGendaryModels/yolov8n/weights.pth
   architecture_type: Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned
@@ -848,7 +848,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 16
@@ -874,7 +874,7 @@ models:
   domain: unified_multi_distortion_restoration
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/professional_multitask_restoration/model.py
   weights_path: LemGendaryModels/professional_multitask_restoration/weights.pth
   architecture_type: Dynamic Multi-Head Transformer with Task Prompt Embeddings
@@ -894,7 +894,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 8.0
     recommended_batch_size: 2
@@ -920,7 +920,7 @@ models:
   domain: perceptual_super_resolution
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/ultrazoom/model.py
   weights_path: LemGendaryModels/ultrazoom/weights.pth
   architecture_type: Cascaded Residual LapSRN + High-Frequency Edge Head
@@ -940,7 +940,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 6.0
     recommended_batch_size: 4
@@ -953,8 +953,8 @@ models:
   academic_reference:
     title: Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel
       Convolutional Neural Network
-    authors: "Wenzhe Shi, Jose Caballero, Ferenc Husz\xE1r, Johannes Totz, Andrew\
-      \ P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang"
+    authors: Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken,
+      Rob Bishop, Daniel Rueckert, Zehan Wang
     year: 2016
     venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
     link: https://arxiv.org/abs/1609.05158
@@ -969,7 +969,7 @@ models:
   domain: content_safety_classification
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/universal_nsfw_classification/model.py
   weights_path: LemGendaryModels/universal_nsfw_classification/weights.pth
   architecture_type: Vision Transformer (ViT-Small / EfficientNet-B2 Head)
@@ -989,7 +989,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 32
@@ -1014,7 +1014,7 @@ models:
   domain: dense_face_and_landmark_localization
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/retinaface/model.py
   weights_path: LemGendaryModels/retinaface/weights.pth
   architecture_type: Feature Pyramid Network with Context Modules and Multi-Task Loss
@@ -1034,7 +1034,7 @@ models:
     api:
       available: true
       route: POST /v16/train/start
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 8
@@ -1060,7 +1060,7 @@ models:
   domain: technical_documentation_and_ecosystem_triage
   general_ai_support: true
   studio_implementation_status: implemented
-  runtime_baseline: v16.9.16-STABLE
+  runtime_baseline: v16.9.60-STABLE
   codebase_path: LemGendaryModels/ai_helper_lemgend/model.py
   weights_path: LemGendaryModels/ai_helper_lemgend/checkpoints/AIHelperLemGend_best.pth
   architecture_type: Causal Decoder Transformer (QLoRA Fine-Tuned)
@@ -1079,14 +1079,14 @@ models:
     api:
       available: true
       route: POST /api/training/llm/train
-      port: 8000
+      port: 8200
   hardware_constraints:
     min_vram_gb: 4.0
     recommended_batch_size: 2
     supports_amp: true
   evidence:
     manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#ai_helper_lemgend
-    whitepaper: lemgendary-docs/MD-Papers/PAPER_FOUNDATION_LLM.md
+    whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_LLM.md
   limitations:
   - Instruction fine-tuned strictly on authoritative LemGendary documentation invariants.
   academic_reference:
@@ -1097,4 +1097,4 @@ models:
     link: https://arxiv.org/abs/2412.15115
     bibtex: "@article{qwen2024,\n  title={Qwen2.5 Technical Report},\n  author={Qwen\
       \ Team},\n  journal={arXiv preprint arXiv:2412.15115},\n  year={2024}\n}"
-dataset_compiler_baseline: v16.9.19-STABLE
+dataset_compiler_baseline: v16.9.21-STABLE

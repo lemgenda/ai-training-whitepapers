@@ -77,22 +77,24 @@ The AI Studio interface is organized into persistent visual regions designed for
 
 The live screen capture above displays the complete primary application frame including header, persistent sidebar navigation, active dashboard viewport, and the sticky status footer:
 
-1. **Brand Title & Brand Icon**: Displays `LemGendary AI` alongside the official vector icon (`lemgenda-icon.svg`). Clicking the header identity opens the official portal `https://www.lemgenda.hr/`.
-2. **Config & Secrets Header Action Button**: Opens the Universal Configuration, Registry Editor & Secrets Vault Modal for editing YAML manifests and managing Kaggle, Google Drive, GitHub, and MT5 API tokens directly from the top navigation bar.
-3. **Docs Hub (Offline) Action Button**: Launches the local offline Documentation Hub served by the desktop client and Environment Manager sidecar at `http://localhost:1420/documentation-hub/index.html`. Guarantees full offline documentation access during field deployments.
-4. **Refresh Audit Telemetry Button**: Triggers an instantaneous asynchronous background scan across physical accelerators, GPU VRAM, system memory, project virtual environments, and manifest version drift.
-5. **Dashboard Tab Selector**: Switches primary viewport to the main system dashboard, rendering hardware sentinel cards, sidecar process tiles, project health cards, and the real-time event console.
-6. **Dataset Compiler Tab Selector**: Switches primary viewport to the LemGendary Dataset Compiler Suite (`.\lemgendary-datasets\`), streaming manifold compiler, direct Kaggle ingestion interface, Kaggle synchronization hub, and verified manifold catalog.
-7. **Model Training Tab Selector**: Switches primary viewport to the LemGendary Model Training Suite (`.\lemgendary-training-suite\`), neural architecture matrix, Sawtooth Governor VRAM controls, progressive spatial ladders, and training dispatch orchestrator.
-8. **Clean Install Pipeline Tab Selector**: Switches primary viewport to the dedicated 7-stage deterministic environment provisioning and toolchain verification sequence.
-9. **Health & Version Drift Tab Selector**: Switches primary viewport to host prerequisite audits, Python cross-project version drift comparison matrix, Desktop GUI Project Packages (NPM) audit, and ecosystem maintenance actions.
-10. **Brand Signature Logo Sidebar Footer**: Anchors the persistent sidebar with the official vector brand signature (`lemgenda-logo.svg`), providing a direct link to `https://www.lemgenda.hr/`.
-11. **System Status Bar Indicator**: Live sticky footer status indicator permanently visible at the bottom of the viewport, reporting real-time connectivity and operational health across all active sidecar services.
+1. **Brand Title & Brand Icon**: Displays LemGendary AI alongside the official vector icon (lemgenda-icon.svg). Clicking the header identity opens the official portal <https://www.lemgenda.hr/>.
+2. **Run Tests Header Action Button**: Opens the Test & Diagnostic Orchestrator modal directly from the top navigation bar, enabling operators to launch 1-epoch fleet diagnostic smoke tests across all 23 neural architectures or run in-process unit test suites for Training and Datasets.
+3. **Config & Secrets Header Action Button**: Opens the Universal Configuration, Registry Editor & Secrets Vault Modal for editing YAML manifests and managing Kaggle, Google Drive, GitHub, and MT5 API tokens directly from the top navigation bar.
+4. **Docs Hub (Offline) Action Button**: Launches the local offline Documentation Hub served by the desktop client and Environment Manager sidecar at <http://localhost:1420/documentation-hub/index.html>. Guarantees full offline documentation access during field deployments.
+5. **Refresh Audit Telemetry Button**: Triggers an instantaneous asynchronous background scan across physical accelerators, GPU VRAM, system memory, project virtual environments, and manifest version drift.
+6. **Dashboard Tab Selector**: Switches primary viewport to the main system dashboard, rendering hardware sentinel cards, sidecar process tiles, project health cards, and the real-time event console.
+7. **Dataset Compiler Tab Selector**: Switches primary viewport to the LemGendary Dataset Compiler Suite (.\lemgendary-datasets\), streaming manifold compiler, direct Kaggle ingestion interface, Kaggle synchronization hub, and verified manifold catalog.
+8. **Model Training Tab Selector**: Switches primary viewport to the LemGendary Model Training Suite (.\lemgendary-training-suite\), neural architecture matrix, Sawtooth Governor VRAM controls, progressive spatial ladders, and training dispatch orchestrator.
+9. **Clean Install Pipeline Tab Selector**: Switches primary viewport to the dedicated 7-stage deterministic environment provisioning and toolchain verification sequence.
+10. **Health & Version Drift Tab Selector**: Switches primary viewport to host prerequisite audits, Python cross-project version drift comparison matrix, Desktop GUI Project Packages (NPM) audit, and ecosystem maintenance actions.
+11. **Brand Signature Logo Sidebar Footer**: Anchors the persistent sidebar with the official vector brand signature (lemgenda-logo.svg), providing a direct link to <https://www.lemgenda.hr/>.
+12. **System Status Bar Indicator**: Live sticky footer status indicator permanently visible at the bottom of the viewport, reporting real-time connectivity and operational health across all active sidecar services.
 
 | Callout # | UI Element | Control Type | Triggered Endpoint / Action | Operator Guide & Behavioral Safeguards |
 | :--- | :--- | :--- | :--- | :--- |
 | **1** | Brand Title & Icon | Navigation Link | `window.open('https://www.lemgenda.hr/')` | Displays official brand icon and title; links to web home. |
-| **2** | Config & Secrets | Header Action Button | `setIsConfigEditorOpen(true)` | Launches modal dialog for manifest editing and secret management. |
+| **2** | Run Tests | Header Action Button | `setIsTestModalOpen(true)` | Launches Test & Diagnostic Orchestrator modal for fleet and unit tests. |
+| **3** | Config & Secrets | Header Action Button | `setIsConfigEditorOpen(true)` | Launches modal dialog for manifest editing and secret management. |
 | **3** | Docs Hub (Offline) | Action Button | `window.open('/documentation-hub/')` | Opens browser window to local offline documentation server. |
 | **4** | Refresh Audit | Action Button | `POST /api/audit` | Queries all three sidecars to refresh hardware metrics and venv health. |
 | **5** | Dashboard Tab | Navigation Button | `setCurrentTab("dashboard")` | Navigates to central system overview, hardware sentinel, and launcher tiles. |
@@ -215,6 +217,16 @@ Deep learning workflows require interacting with external registries, storage ba
 | **8** | Account Username | Text Input | `setNewUsername(e.target.value)` | Service login or API user identifier. |
 | **9** | Secret Token | Password Input | `setNewSecret(e.target.value)` | Secret token or private key string. Masked in UI. |
 | **10** | Add Secret Submit | Primary Button | Form Submission | Appends verified credential to active profile staging area. |
+
+---
+
+### 3.4 Test & Diagnostic Orchestrator Modal
+
+Accessible via the `Run Tests` header button (`#header-btn-test-modal`), this modal allows engineers to trigger and inspect test workflows:
+
+1. **Fleet 1-Epoch Smoke Test**: Sequentially verifies tensor pipelines, memory sentinels, loss calculations, and binary exports across all 23 registered neural models (`POST /api/training/unit-test-all`).
+2. **Training Suite Unit Tests**: Executes in-process unit tests in `lemgendary-training-suite/tests/unit/` covering models, loss functions, SOTA tracking, and universal causal LLMs (`POST /api/training/unit-test-run`).
+3. **Dataset Compiler Tests**: Executes in-process unit tests in `lemgendary-datasets/tests/` covering knowledge ingestion, chunking, QualityValidator invariants, and manifold metadata generation (`POST /api/llm/test-suite`).
 
 ---
 

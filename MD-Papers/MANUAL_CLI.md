@@ -36,6 +36,7 @@
   - [5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
   - [5.14 Retroactive Container Migration (`format migrate` / `format write`)](#514-retroactive-container-migration-format-migrate--format-write)
   - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
+  - [5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)](#516-llm-dataset-compilation--quality-invariant-auditing-llm)
 - [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
   - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
   - [6.2 Model Training (`train`)](#62-model-training-train)
@@ -47,6 +48,7 @@
   - [6.8 Hardware & Architecture Audit (`audit`)](#68-hardware--architecture-audit-audit)
   - [6.9 Cloud Synchronization (`sync`)](#69-cloud-synchronization-sync)
   - [6.10 Sidecar Daemon Operations (`server`)](#610-sidecar-daemon-operations-server)
+  - [6.11 LLM Causal Instruction Tuning & Model Export (`llm`)](#611-llm-causal-instruction-tuning--model-export-llm)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
 - [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
@@ -558,6 +560,11 @@ Delegates environment lifecycle and code validation directly to `lem-env`:
 
 ```bash
 # Execute full multi-gate validation suite
+# Run dataset compiler unit tests
+python cli.py test
+python cli.py test --pattern test_llm*.py
+
+# Execute full multi-gate validation suite
 python cli.py env validate
 
 # Probe ecosystem health (fast mode)
@@ -706,6 +713,30 @@ Once sources are added, run compilation to automatically download missing sets, 
 # Ingest all configured sources, vet, and emit canonical modern container shards
 python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12
 ```
+
+---
+
+### 5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)
+
+The LLM compiler module (`tools.llm_helper`) provides high-velocity generic compilation and validation for instruction tuning datasets:
+
+```bash
+# Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
+python cli.py llm compile --dataset test_llm --no-server
+
+# Compile via local FastAPI sidecar daemon with live WebSocket log streaming
+python cli.py llm compile --dataset test_llm
+
+# Audit any JSONL dataset file against the 4 LemGendary Quality Invariants
+python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/test_llm_train.jsonl
+```
+
+#### Quality Invariant Checks Enforced
+
+1. **Zero-Emoji Rule**: Verifies total absence of Unicode emojis across all system, user, and assistant turns.
+2. **ChatML 3-Turn Schema**: Enforces strict `[system, user, assistant]` message structure with non-empty strings.
+3. **Epistemic Certainty Tags**: Enforces presence of `[CONFIRMED]`, `[PROBABLE]`, or `[ILLUSTRATIVE]` tags in diagnostic and troubleshooting outputs.
+4. **Duplicate Detection**: Identifies exact and fuzzy duplicate prompt collisions across the manifold.
 
 ---
 
@@ -921,6 +952,29 @@ python cli.py server openapi --output openapi.json
 # Terminate running daemon process
 python cli.py server stop
 ```
+
+---
+
+### 6.11 LLM Causal Instruction Tuning & Model Export (`llm`)
+
+Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM architectures registered in `unified_models_v2.yaml`:
+
+```bash
+# Fine-tune causal LLM on instruction dataset (in-process)
+python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 --lr 0.0002 --env local
+
+# Fine-tune generic LLM proof-of-concept manifold
+python cli.py llm train test_llm --epochs 1 --batch-size 2 --env local
+
+# Compile and export tri-format deployment binaries
+python cli.py llm export ai_helper_lemgend --target qlora_adapter --target merged_safetensors --target gguf_fp16
+```
+
+#### Tri-Format LLM Binary Specifications
+
+- **QLoRA Adapter**: Standalone Low-Rank Adaptation weights (adapter_model.safetensors, adapter_config.json).
+- **Merged Safetensors**: Full floating-point FP16 weights merged into base architecture for high-throughput vLLM and HuggingFace inference.
+- **GGUF / ONNX Quantized**: Integer-quantized format (q4_k_m.gguf or INT8 ONNX) optimized for edge deployment on consumer hardware.
 
 ---
 

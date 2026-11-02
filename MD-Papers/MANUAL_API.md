@@ -890,7 +890,9 @@ Operational endpoints under `/api` requiring modification or system access enfor
 | `POST` | `/api/training/kaggle/push-model` | Required | Publish validated isolated model variation(s) to Kaggle Models Hub |
 | `POST` | `/api/training/kaggle/push-all` | Required | Enqueue fleet synchronization staging and pushing all registered models to Kaggle Models Hub |
 | `POST` | `/api/training/llm/train` | Required | Enqueue background QLoRA instruction tuning job for assistant LLM |
-| `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 22 registered models |
+| `POST` | `/api/training/llm/export` | Required | Enqueue background tri-format export job for an LLM (adapter, merged safetensors, GGUF/ONNX) |
+| `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 23 registered models |
+| `POST` | `/api/training/unit-test-run` | Required | Execute in-process unit test suite across tests/unit matching pattern |
 | `GET` | `/api/notebooks/models` | Required | Enumerate registered architectures available for notebook generation |
 | `POST` | `/api/notebooks/generate` | Required | Generate Jupyter training, inference, or usage notebooks for a model |
 | `POST` | `/api/notebooks/refresh-all` | Required | Batch regenerate and synchronize notebooks across all registered models |
@@ -922,6 +924,31 @@ Response:
   "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
   "status": "pending",
   "message": "Enqueued 1-epoch diagnostic run for all models."
+}
+```
+
+##### `POST /api/training/unit-test-run`
+
+Executes in-process unit tests in `tests/unit` matching the specified file glob pattern (default: `test_*.py`) using Python's standard `unittest` test discovery engine, returning structured telemetry.
+
+Request body:
+
+```json
+{
+  "pattern": "test_*.py"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "tests_run": 164,
+  "failures_count": 0,
+  "errors_count": 0,
+  "failures": [],
+  "errors": []
 }
 ```
 
@@ -1323,6 +1350,9 @@ All operational endpoints under `/api` requiring modification privileges enforce
 | `GET` | `/api/modernize/queue` | None | Scans all manifolds and queues those requiring WebP modernization |
 | `POST` | `/api/modernize/run` | Required | Dispatches batch modernization and parallel WebP transcoding |
 | `POST` | `/api/modernize/reduce` | Required | Dispatches spatial or sample scale reduction (downsample) job |
+| `POST` | `/api/llm/compile` | Required | Queue or execute compilation of an LLM instruction manifold from unified_data.yaml |
+| `POST` | `/api/llm/validate` | None | Validate an LLM dataset JSONL file against the 4 LemGendary Quality Invariants |
+| `POST` | `/api/llm/test-suite` | None | Execute in-process dataset compiler unit tests matching pattern |
 | `POST` | `/api/modernize/regenerate-manifolds` | Required | Batch regenerates master manifolds.json and dataset-metadata.json |
 | `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
 | `GET` | `/api/gui/state` | None | Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets |

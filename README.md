@@ -13,6 +13,14 @@
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.60 - Generic LLM Architecture, In-Process Test Orchestrator & Multi-Publication Synchronization
+
+* **Generic LLM Compiler & Instruction Tuning Documentation Synchronization** - Synchronized PAPER_DATASET_COMPILER.md and dataset-compiler.html with Section 9 "Generic LLM Dataset Compiler Architecture & Multi-Source Knowledge Ingestion", and PAPER_TRAINING_SUITE.md and training-suite-master.html with Section 7 "Universal Instruction-Tuned Causal LLM Fine-Tuning & Dynamic Dataset Ingestion".
+* **Test & Diagnostic Orchestration Parity Across Entire Documentation Suite** - Updated MANUAL_CLI.md, cli-manual.html, MANUAL_API.md, api-manual.html, MANUAL_AI_STUDIO_GUI.md, ai-studio-manual.html, PAPER_AI_STUDIO_GUI.md, ai-studio-whitepaper.html, GUI_CONTROL_REGISTRY.md, and gui-control-registry.html with full specifications for in-process test discovery sweeps, fleet smoke tests, and the GUI TestModal.
+* **Bijective Document Manifest Baseline Audit** - Synchronized manifest/documents.json to document_baseline v16.9.60-STABLE, last_audited 2026-11-02 across all 48 authoritative publications with 100% heading and table parity.
+
+---
+
 ### v16.9.59 - SOTA Training Ecosystem Hardening, Pareto Model Soup & Multi-Manual Parity
 
 * **Pareto Model Soup Documentation Parity** - Updated MANUAL_CLI.md, cli-manual.html, MANUAL_API.md, api-manual.html, MANUAL_AI_STUDIO_GUI.md, and ai-studio-manual.html with complete specifications for CLI soup, REST endpoint POST /api/models/{model_key}/soup, and GUI client method blendModelSoup(modelKey).

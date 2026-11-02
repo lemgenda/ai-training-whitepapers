@@ -801,8 +801,69 @@
 
 </section>
 
+<section id="universal-causal-llm">
+<h2>7. Universal Instruction-Tuned Causal LLM Fine-Tuning &amp; Dynamic Dataset Ingestion</h2>
+<p>The LemGendary Model Training Suite (v16.9.19) integrates a universal fine-tuning backbone (<code>GenericCausalLLM</code> in <code>models/generic_causal_llm.py</code>) capable of ingesting arbitrary HuggingFace causal language models, executing memory-efficient quantized Low-Rank Adaptation (QLoRA), dynamically resolving dataset paths from unified manifests, and exporting tri-format deployment binaries.</p>
+
+<h3>7.1. GenericCausalLLM Architecture &amp; Dynamic HuggingFace Backbone Wrapping</h3>
+<p>The <code>GenericCausalLLM</code> neural wrapper eliminates bespoke model definitions by wrapping any open-weights causal architecture specified via <code>base_foundation_model</code> (e.g. Qwen2.5-Coder, Llama-3, Mistral, Gemma, DeepSeek):</p>
+<ul>
+    <li><strong>Dynamic HF Backbone Instantiation</strong>: Instantiates the underlying transformer backbone and tokenizer dynamically via <code>AutoModelForCausalLM</code> and <code>AutoTokenizer</code> using <code>trust_remote_code=True</code> and <code>padding_side="right"</code>.</li>
+    <li><strong>Automatic 4-bit Quantization Shielding</strong>: Leverages <code>BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)</code> to compress base model weights from 16-bit to 4-bit NormalFloat representations, drastically reducing VRAM footprint to allow fine-tuning on consumer GPUs.</li>
+    <li><strong>Lightweight Mock Verification Pathway</strong>: Implements a native mock pathway (<code>self.embed</code> + <code>self.lm_head</code>) activated automatically during headless smoke tests or environments without CUDA hardware, ensuring 100% deterministic unit test execution across CI/CD pipelines.</li>
+    <li><strong>Backward-Compatible Inheritance</strong>: The legacy assistant model class <code>AIHelperLemGend</code> directly subclasses <code>GenericCausalLLM</code>, ensuring backward compatibility across existing registry queries and checkpoint vaults.</li>
+</ul>
+
+<h3>7.2. QLoRA Parameterization via unified_models_v2.yaml &amp; PEFT Injection</h3>
+<p>All fine-tuning hyperparameters are declared authoritatively in <code>unified_models_v2.yaml</code> under the model specification:</p>
+<pre><code class="language-yaml">test_llm:
+  name: "LemGendizedTestLLM"
+  base_foundation_model: "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+  category: "Language Modeling"
+  dataset: "LemGendizedTestLLM"
+  target_hardware: "CUDA_RTX"
+  use_lora: true
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  load_in_4bit: true
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"</code></pre>
+<p>The model factory invokes <code>peft.prepare_model_for_kbit_training()</code> followed by <code>peft.get_peft_model()</code>, freezing the base weights while injecting trainable low-rank decomposition matrices ($A$ and $B$) into all attention projections and MLP feed-forward gates.</p>
+
+<h3>7.3. Dynamic Dataset Discovery for Arbitrary LLM Manifolds</h3>
+<p>The training engine (<code>training/engine.py</code>) decouples dataset ingestion from hardcoded repository paths:</p>
+<ul>
+    <li><strong>Manifest-Driven Path Resolution</strong>: Reads <code>model_info.dataset</code> from <code>unified_models_v2.yaml</code>, dynamically resolving the manifold directory <code>../LemGendaryDatasets/{dataset_folder}/data/</code>.</li>
+    <li><strong>Automatic Shard Discovery</strong>: Automatically detects <code>{key}_train.jsonl</code> and <code>{key}_val.jsonl</code> shards within the <code>data/</code> subfolder.</li>
+    <li><strong>Zero-Copy Streaming</strong>: Iterates over JSONL instruction turns with deterministic batch collation (<code>collate_fn</code>), eliminating memory spikes when processing extensive text corpuses.</li>
+</ul>
+
+<h3>7.4. Multi-Turn ChatML Loss Formulation &amp; Assistant-Only Prompt Masking</h3>
+<p>During instruction tuning, computing loss across system prompts and user inputs severely impairs model generalization by penalizing the model for memorizing input tokens. The training engine enforces strict assistant-only supervised loss masking:</p>
+<ol>
+    <li><strong>ChatML Serialization</strong>: Formats multi-turn conversations into standard ChatML sequences with <code>&lt;|im_start|&gt;system...&lt;|im_end|&gt;</code>, <code>&lt;|im_start|&gt;user...&lt;|im_end|&gt;</code>, and <code>&lt;|im_start|&gt;assistant...&lt;|im_end|&gt;</code>.</li>
+    <li><strong>Label Masking with -100 Ignored Index</strong>: Token targets corresponding to system and user prompts are assigned label <code>-100</code>. Only token targets within the assistant response retain their token IDs.</li>
+    <li><strong>CrossEntropy Loss &amp; Perplexity Tracking</strong>: PyTorch's <code>nn.CrossEntropyLoss(ignore_index=-100)</code> ignores masked prompt tokens during gradient backward passes. Real-time validation loss is converted to validation Perplexity ($\text{PPL} = \exp(\mathcal{L}_{\text{CE}})$).</li>
+</ol>
+
+<h3>7.5. Tri-Format Deployment Export: PyTorch, ONNX FP32/FP16 &amp; Edge Quantization</h3>
+<p>Upon achieving validation convergence, the export subsystem (<code>training/export/</code>) compiles universal deployment artifacts across three formats:</p>
+<ul>
+    <li><strong>QLoRA Adapter Weights</strong>: Standalone PEFT adapter checkpoint (<code>adapter_model.safetensors</code> and <code>adapter_config.json</code>) enabling zero-copy weight hot-swapping on shared inference servers.</li>
+    <li><strong>Merged FP16 Safetensors</strong>: Full-rank merged weights (<code>model.safetensors</code>) synthesized by fusing LoRA matrices into base weights, optimized for native vLLM and HuggingFace pipelines.</li>
+    <li><strong>GGUF / ONNX / WebGPU Quantization</strong>: Exported ONNX compute graphs (<code>model_fp32.onnx</code>, <code>model_fp16.onnx</code>) and quantized GGUF binaries (<code>q4_k_m.gguf</code>) for real-time edge inference on consumer CPUs, NPUs, and desktop runtimes.</li>
+</ul>
+</section>
+
 <section id="conclusion">
-<h2>7. Conclusion</h2>
+<h2>8. Conclusion</h2>
             <p>The Master Training Suite provides the critical nuclear-hardened infrastructure necessary to orchestrate, audit, and deploy high-fidelity generative models. By integrating dynamic memory management, SOTA verification gates, and multi-GPU distributed orchestration natively, LemGendary AI ensures maximum hardware efficiency and an unbroken trajectory toward optimal perceptual performance.</p>
 
             <h3>Omni-Metric Autonomous SOTA Adaptation &amp; MS-SWA </h3>

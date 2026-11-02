@@ -154,14 +154,22 @@ The desktop runtime enforces a strictly non-intrusive service lifecycle across W
 - **Automated Mesh Bootstrapping**: On GUI initialization, the runtime probes the tripartite mesh and autonomously bootstraps any offline sidecars in the background, continuously polling until the entire mesh reports healthy.
 - **Rapid Decoupled Probing**: Health status is queried within 90ms independently of heavy dependency audits, with a 4-second reactive background heartbeat loop.
 
-### 6.6 Comprehensive Testing & Ecosystem Verification Battery
+### 6.6 Test & Diagnostic Orchestrator Integration
+
+The GUI embeds a unified Test & Diagnostic Orchestrator modal (`src/components/TestModal.tsx`) directly accessible via the top navigation bar (`#header-btn-test-modal`), providing immediate operational access to:
+
+1. **Fleet 1-Epoch Smoke Test**: Sequentially exercises all 23 neural architectures across vision restoration, detection, aesthetic scoring, multi-scale forex forecasting, and causal assistant LLMs (`POST /api/training/unit-test-all`).
+2. **Training Suite Unit Battery**: Runs in-process unit test suites covering neural layers, loss formulations, SOTA governors, and tri-format export engines (`POST /api/training/unit-test-run`).
+3. **Dataset Compiler Unit Battery**: Runs in-process unit tests validating knowledge ingestion, chunking, zero-emoji invariant gates, and metadata generation (`POST /api/llm/test-suite`).
+
+### 6.7 Comprehensive Testing & Ecosystem Verification Battery
 
 The GUI codebase is verified by an exhaustive automated testing battery:
 
 - **Component & Integration Testing**: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.
 - **Ecosystem Compliance**: Enforced via `lem-env validate --project lemgendary-ai-studio-gui`, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.
 
-### 6.7 Ecosystem Maintenance & Governance Controls
+### 6.8 Ecosystem Maintenance & Governance Controls
 
 The Health view embeds direct operational controls for repository governance backed by Environment Manager alongside a comprehensive dependency audit spanning Python virtual environments and frontend Desktop GUI NPM packages:
 
@@ -172,7 +180,7 @@ The Health view embeds direct operational controls for repository governance bac
 - **Standardized Git Hooks**: Installs and validates pre-commit hooks enforcing zero-emoji and compilation gates (`POST /api/hooks/install`).
 - **Multi-Gate Ecosystem Validation**: Runs the multi-gate validation suite across all repositories directly from the UI (`POST /api/validate`).
 
-### 6.8 Centralized State Architecture (Zustand) & S.O.L.I.D. Component Hierarchy
+### 6.9 Centralized State Architecture (Zustand) & S.O.L.I.D. Component Hierarchy
 
 To ensure deterministic state transitions and eliminate prop drilling across deeply nested views, the GUI integrates a centralized Zustand store (`src/store/useStudioStore.ts`):
 
@@ -189,7 +197,7 @@ To ensure deterministic state transitions and eliminate prop drilling across dee
   - `HoverPinPopover.tsx`: Reusable CSS hover and native semantic `<button>` pin popover strictly compliant with `jsx-a11y` accessibility standards.
   - `src/utils/clipboard.ts`: Dedicated zero-loss clipboard export utility supporting asynchronous `navigator.clipboard.writeText` with legacy fallback for sandboxed webviews.
 
-### 6.9 Multi-Variation Kaggle Model Hub Staging & Strict Isolation Contract
+### 6.10 Multi-Variation Kaggle Model Hub Staging & Strict Isolation Contract
 
 The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:
 
@@ -203,7 +211,7 @@ The desktop application directly orchestrates the LemGendary multi-variation dis
 - **Pre-Upload Isolation Gate**: Built-in `StrictIsolationValidator` blocks non-compliant or cross-contaminated binaries before transmission.
 - **Dry-Run Staging**: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.
 
-### 6.10 Three-Tab Real-Time Telemetry Stream & Responsive Cancellation
+### 6.11 Three-Tab Real-Time Telemetry Stream & Responsive Cancellation
 
 The redesigned live telemetry console is embedded directly within individual operational panels (including Model Training, Dataset Compiler, and Health), replacing monolithic standalone tabs with contextual log streams:
 

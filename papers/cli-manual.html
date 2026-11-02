@@ -1192,6 +1192,25 @@ python tools/migrate_manifold_format.py \
                 </p>
                 <pre><code># Ingest all configured sources, vet, and emit canonical modern container shards
 python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12</code></pre>
+
+                <h3 id="section-5-16">5.16 LLM Dataset Compilation &amp; Quality Invariant Auditing (<code>llm</code>)</h3>
+                <p>The LLM compiler module (<code>tools.llm_helper</code>) provides high-velocity generic compilation and validation for instruction tuning datasets:</p>
+                <pre><code># Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
+python cli.py llm compile --dataset test_llm --no-server
+
+# Compile via local FastAPI sidecar daemon with live WebSocket log streaming
+python cli.py llm compile --dataset test_llm
+
+# Audit any JSONL dataset file against the 4 LemGendary Quality Invariants
+python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/test_llm_train.jsonl</code></pre>
+
+                <h4>Quality Invariant Checks Enforced</h4>
+                <ol>
+                    <li><strong>Zero-Emoji Rule</strong>: Verifies total absence of Unicode emojis across all system, user, and assistant turns.</li>
+                    <li><strong>ChatML 3-Turn Schema</strong>: Enforces strict <code>[system, user, assistant]</code> message structure with non-empty strings.</li>
+                    <li><strong>Epistemic Certainty Tags</strong>: Enforces presence of <code>[CONFIRMED]</code>, <code>[PROBABLE]</code>, or <code>[ILLUSTRATIVE]</code> tags in diagnostic and troubleshooting outputs.</li>
+                    <li><strong>Duplicate Detection</strong>: Identifies exact and fuzzy duplicate prompt collisions across the manifold.</li>
+                </ol>
             </section>
 
             <section id="section-6">
@@ -1441,6 +1460,32 @@ python cli.py server openapi --output openapi.json
 
 # Terminate running daemon process
 python cli.py server stop</code></pre>
+
+                <h3 id="section-6-11">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</h3>
+                <p>Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM architectures registered in <code>unified_models_v2.yaml</code>:</p>
+                <pre><code># Fine-tune causal LLM on instruction dataset (in-process)
+python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 --lr 0.0002 --env local
+
+# Fine-tune generic LLM proof-of-concept manifold
+python cli.py llm train test_llm --epochs 1 --batch-size 2 --env local
+
+# Compile and export tri-format deployment binaries
+python cli.py llm export ai_helper_lemgend --target qlora_adapter --target merged_safetensors --target gguf_fp16</code></pre>
+
+                <h4>Tri-Format LLM Binary Specifications</h4>
+                <ul>
+                    <li><strong>QLoRA Adapter</strong>: Standalone Low-Rank Adaptation weights (<code>adapter_model.safetensors</code>, <code>adapter_config.json</code>).</li>
+                    <li><strong>Merged Safetensors</strong>: Full floating-point FP16 weights merged into base architecture for high-throughput vLLM and HuggingFace inference.</li>
+                    <li><strong>GGUF / ONNX Quantized</strong>: Integer-quantized format (<code>q4_k_m.gguf</code> or INT8 ONNX) optimized for edge deployment on consumer hardware.</li>
+                </ul>
+
+                <h4>Fleet Diagnostic Smoke Test (<code>test-all</code>)</h4>
+                <p>Executes an automated diagnostic smoke pass across all 23 neural architectures:</p>
+                <pre><code># Run 1-epoch fleet diagnostic
+lemtrain test-all
+
+# Override test epochs
+lemtrain test-all --epochs 2</code></pre>
             </section>
 
             <section id="section-7">

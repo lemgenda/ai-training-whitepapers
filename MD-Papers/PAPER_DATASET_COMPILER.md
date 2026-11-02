@@ -583,6 +583,90 @@ The modernized interactive dashboard for end-to-end manifold management, backed 
 
 ---
 
-## 9. Conclusion
+## 9. Generic LLM Dataset Compiler Architecture & Multi-Source Knowledge Ingestion
 
-The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying previously disparate domains under the MoE routing engine, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.
+The LemGendary Dataset Compiler Suite incorporates a generic, declarative Large Language Model (LLM) instruction manifold compiler (`compiler/llm_compiler.py` and `tools/llm_helper/`). It eliminates ad-hoc scraping and manual JSONL formatting scripts by providing an enterprise-grade extraction, chunking, and validation pipeline driven strictly by declarations in `unified_data.yaml`.
+
+### 9.1 Declarative Configuration in unified_data.yaml
+
+Every instruction dataset manifold declares its compilation pipeline under the single source of truth manifest (`unified_data.yaml`):
+
+```yaml
+test_llm:
+  name: "LemGendizedTestLLM"
+  description: "Generic LLM instruction manifold proof of concept"
+  category: "Language Modeling"
+  canonical_format: "jsonl"
+  llm_pipeline:
+    format: "chatml"
+    chunk_size: 1024
+    chunk_overlap: 128
+    validation_mode: "strict"
+    system_prompt: "You are LemGendary AI Assistant, a deterministic, highly technical expert."
+  knowledge_sources:
+    - type: "markdown"
+      path: "lemgendary-docs/MD-Papers"
+      glob: "*.md"
+    - type: "yaml"
+      path: "unified_data.yaml"
+```
+
+The pipeline parses `llm_pipeline` parameters, validates source paths, and dispatches polymorphic loaders according to declared source types.
+
+### 9.2 Supported Multi-Format Loaders
+
+The knowledge ingestion engine (`KnowledgeIngestionEngine`) processes multi-format documentation and data sources into normalized textual corpus streams:
+
+* **Markdown (`.md`)**: Parses structured technical documentation, extracting headings, fenced code blocks, and markdown tables while preserving semantic document hierarchy.
+* **Plain Text (`.txt`)**: Reads raw log files, terminal transcripts, and unformatted system documentation.
+* **JSON / JSONL (`.json`, `.jsonl`)**: Ingests structured telemetry, conversational traces, and existing instruction pairs.
+* **YAML (`.yaml`, `.yml`)**: Parses ecosystem configuration manifests, registry schemas, and pipeline blueprints.
+* **CSV (`.csv`)**: Reads tabular data, metric logs, and parameter evaluation grids into readable Markdown tables.
+* **Web URLs**: Fetches remote web documentation, API references, and technical articles via robust HTTP fetchers with retry mechanisms.
+
+### 9.3 Chunking Algorithms, Provenance Lineage Tracing & Hash Verification
+
+To partition extensive documentation into token-bounded instruction units, the compiler implements a recursive character chunker (`RecursiveChunker`):
+
+* **Hierarchical Boundary Splitting**: Recursively decomposes text across natural semantic boundaries (newlines, paragraphs, periods, commas, and whitespace) to maximize context preservation within chunk_size limits (typically 1024 to 2048 characters).
+* **Contextual Sliding Window Overlap**: Applies a sliding window overlap (`chunk_overlap`, default: 128 characters) to guarantee cross-boundary continuity and eliminate truncation of multi-line code blocks or equations.
+* **Provenance Lineage Tracing**: Every extracted chunk is tagged with its source file path, relative workspace location, character start/end offsets, and extraction timestamp.
+* **Cryptographic Hash Verification**: Calculates deterministic SHA-256 digests (`content_sha256`) over raw chunk contents:
+  $$\mathcal{H}(c) = \text{SHA256}(\text{UTF8}(c))$$
+  This hash provides bit-exact deduplication and tamper verification throughout the training lifecycle.
+
+### 9.4 Standardized Filesystem Topology
+
+Compiled LLM datasets adhere strictly to the LemGendary standardized filesystem topology:
+
+```text
+LemGendaryDatasets/
+└── LemGendized{DatasetKey}/
+    ├── data/
+    │   ├── {dataset_key}_train.jsonl
+    │   └── {dataset_key}_val.jsonl
+    ├── dataset-metadata.json
+    ├── provenance.json
+    └── README.md
+```
+
+* **`data/` Subfolder**: Contains the physical train/val JSONL shards. Raw records are deterministically split (90% train, 10% validation) using seeded PRNG states.
+* **`dataset-metadata.json`**: Authoritative Kaggle and local dataset descriptor declaring sample counts, compression format, licensing, and schema invariants.
+* **`provenance.json`**: Complete audit log recording source URLs, file paths, chunk count distributions, and SHA-256 verification hashes.
+
+### 9.5 Quality Invariants: Zero-Emoji, 3-Stage Intake Protocol & Epistemic Tagging
+
+Every compiled LLM instruction record must pass through the `QualityValidator` gate enforcing three fundamental invariants:
+
+1. **Zero-Emoji Enforcement**: Absolute prohibition of Unicode emoji characters across system, user, and assistant turns. Catches surrogate pairs, pictographs, symbols, and dingbats.
+2. **3-Stage Diagnostic Intake Protocol**:
+   * *Stage 1 (Extraction)*: Validates source document existence, decodes UTF-8 encoding, and extracts structured text.
+   * *Stage 2 (Verification)*: Enforces 3-turn ChatML schema (`[system, user, assistant]`), minimum string lengths, and non-empty assistant turns.
+   * *Stage 3 (Quality Gate)*: Performs exact and fuzzy duplicate detection, ensuring no duplicate prompt collisions degrade generalization.
+3. **Epistemic Certainty Tagging**: Technical explanations and diagnostic outputs must incorporate explicit epistemic qualifiers (`[CONFIRMED]`, `[PROBABLE]`, `[ILLUSTRATIVE]`) to distinguish verified architectural facts from contextual examples.
+
+---
+
+## 10. Conclusion
+
+The Dataset Compiler Suite represents a foundational leap in how generative AI manifolds are structured, scaled, and digested. By fully automating the ingestion pipeline, enforcing high-fidelity structural integrity, and unifying vision, detection, market data, and causal LLM instruction manifolds under a common SSOT manifest, LemGendary AI ensures every downstream model trains on pristine, hardware-aligned data with zero disk overhead and absolute determinism.

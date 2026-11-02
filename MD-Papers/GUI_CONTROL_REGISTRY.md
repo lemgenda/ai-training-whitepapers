@@ -28,6 +28,14 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 | Control ID | UI Component / Label | Element Type | Bound Sidecar Endpoint | Expected Behavior |
 | :--- | :--- | :--- | :--- | :--- |
 | `dash-nav-sidebar` | Sidebar Navigation Container | `<nav>` | — | Houses top-level route switches. |
+| `header-btn-test-modal` | "Run Tests" | `<button>` | — | Opens the Test & Diagnostic Orchestrator modal for fleet smoke tests and unit test suites. |
+| `test-modal-tab-fleet` | "Fleet 1-Epoch Smoke Test" Tab | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test pass across all 23 neural architectures. |
+| `test-modal-tab-training` | "Training Suite Unit Tests" Tab | `<button>` | `POST /api/training/unit-test-run` (8200) | Executes in-process Training Suite unit tests. |
+| `test-modal-tab-dataset` | "Dataset Compiler Tests" Tab | `<button>` | `POST /api/llm/test-suite` (8100) | Executes in-process Dataset Compiler unit test suite. |
+| `test-modal-btn-run-fleet` | "Run Fleet Diagnostic (All 23 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Initiates fleet diagnostic run across all registered models. |
+| `test-modal-btn-run-training-unit` | "Run Training Unit Tests" | `<button>` | `POST /api/training/unit-test-run` (8200) | Runs Training Suite unit test discovery sweep. |
+| `test-modal-btn-run-dataset-unit` | "Run Dataset Compiler Tests" | `<button>` | `POST /api/llm/test-suite` (8100) | Runs Dataset Compiler unit test discovery sweep. |
+| `test-modal-output-console` | Test Output Console | `<pre>` | — | Displays live execution logs and test summary outcomes. |
 | `dash-btn-refresh-audit` | "Refresh Audit" | `<button>` | `GET /api/health` (8000) | Triggers asynchronous system probe and updates all status cards. |
 | `dash-badge-sidecar-status` | Connection Status Indicator | `<span>` | `WS /ws/telemetry` (8000) | Displays emerald glow for online or rose alert for offline. |
 | `dash-card-hardware` | System & Hardware Architecture | `<div>` | `GET /api/hardware` (8000) | Renders CPU core counts, total RAM, and detected GPU adapters. |

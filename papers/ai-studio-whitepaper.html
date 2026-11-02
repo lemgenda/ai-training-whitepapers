@@ -206,14 +206,22 @@
                     <li><strong>Rapid Decoupled Probing</strong>: Health status is queried within 90ms independently of heavy dependency audits, with a 4-second reactive background heartbeat loop.</li>
                 </ul>
 
-                <h3>6.6 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
+                <h3>6.6 Test &amp; Diagnostic Orchestrator Integration</h3>
+                <p>The GUI embeds a unified Test &amp; Diagnostic Orchestrator modal (<code>src/components/TestModal.tsx</code>) directly accessible via the top navigation bar (<code>#header-btn-test-modal</code>), providing immediate operational access to:</p>
+                <ol>
+                    <li><strong>Fleet 1-Epoch Smoke Test</strong>: Sequentially exercises all 23 neural architectures across vision restoration, detection, aesthetic scoring, multi-scale forex forecasting, and causal assistant LLMs (<code>POST /api/training/unit-test-all</code>).</li>
+                    <li><strong>Training Suite Unit Battery</strong>: Runs in-process unit test suites covering neural layers, loss formulations, SOTA governors, and tri-format export engines (<code>POST /api/training/unit-test-run</code>).</li>
+                    <li><strong>Dataset Compiler Unit Battery</strong>: Runs in-process unit tests validating knowledge ingestion, chunking, zero-emoji invariant gates, and metadata generation (<code>POST /api/llm/test-suite</code>).</li>
+                </ol>
+
+                <h3>6.7 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
                 <p>The GUI codebase is verified by an exhaustive automated testing battery:</p>
                 <ul>
                     <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
                     <li><strong>Ecosystem Compliance</strong>: Enforced via <code>lem-env validate --project lemgendary-ai-studio-gui</code>, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.</li>
                 </ul>
 
-                <h3>6.7 Ecosystem Maintenance &amp; Governance Controls</h3>
+                <h3>6.8 Ecosystem Maintenance &amp; Governance Controls</h3>
                 <p>The Health view embeds direct operational controls for repository governance backed by Environment Manager alongside a comprehensive dependency audit spanning Python virtual environments and frontend Desktop GUI NPM packages:</p>
                 <ul>
                     <li><strong>Cross-Project Python Drift Matrix</strong>: Continuously scans <code>unified_requirements.yaml</code> against installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>, and <code>lemgendary-training-suite</code>, verifying zero version drift across all backend services.</li>
@@ -224,7 +232,7 @@
                     <li><strong>Multi-Gate Ecosystem Validation</strong>: Runs the multi-gate validation suite across all repositories directly from the UI (<code>POST /api/validate</code>).</li>
                 </ul>
 
-                <h3>6.8 Centralized State Architecture (Zustand) &amp; S.O.L.I.D. Component Hierarchy</h3>
+                <h3>6.9 Centralized State Architecture (Zustand) &amp; S.O.L.I.D. Component Hierarchy</h3>
                 <p>To ensure deterministic state transitions and eliminate prop drilling across deeply nested views, the GUI integrates a centralized Zustand store (<code>src/store/useStudioStore.ts</code>):</p>
                 <ul>
                     <li><strong>Unified Global State Store</strong>: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.</li>
@@ -247,7 +255,7 @@
                     </li>
                 </ul>
 
-                <h3>6.9 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
+                <h3>6.10 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
                 <p>The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:</p>
                 <ul>
                     <li><strong>Strict 4-Variation Isolation</strong>: Enforces clean partition across isolated model directories:
@@ -264,7 +272,7 @@
                     <li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.</li>
                 </ul>
 
-                <h3>6.10 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+                <h3>6.11 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
                 <p>The redesigned live telemetry console is embedded directly within individual operational panels (including Model Training, Dataset Compiler, and Health), replacing monolithic standalone tabs with contextual log streams:</p>
                 <ul>
                     <li><strong>Local Training Stream</strong>: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.</li>

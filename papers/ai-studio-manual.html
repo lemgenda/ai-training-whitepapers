@@ -489,6 +489,14 @@
                     </tr>
                 </tbody>
             </table>
+
+            <h3 id="section-3-4">3.4 Test &amp; Diagnostic Orchestrator Modal</h3>
+            <p>Accessible via the <code>Run Tests</code> header button (<code>#header-btn-test-modal</code>), this modal allows engineers to trigger and inspect test workflows:</p>
+            <ol>
+                <li><strong>Fleet 1-Epoch Smoke Test</strong>: Sequentially verifies tensor pipelines, memory sentinels, loss calculations, and binary exports across all 23 neural models (<code>POST /api/training/unit-test-all</code>).</li>
+                <li><strong>Training Suite Unit Tests</strong>: Executes in-process unit tests in <code>lemgendary-training-suite/tests/unit/</code> covering models, loss functions, SOTA tracking, and universal causal LLMs (<code>POST /api/training/unit-test-run</code>).</li>
+                <li><strong>Dataset Compiler Tests</strong>: Executes in-process unit tests in <code>lemgendary-datasets/tests/</code> covering knowledge ingestion, chunking, QualityValidator invariants, and manifold metadata generation (<code>POST /api/llm/test-suite</code>).</li>
+            </ol>
         </div>
     </section>
 

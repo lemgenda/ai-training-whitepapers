@@ -360,9 +360,9 @@ class TestDocumentationIntegrity(unittest.TestCase):
         # Check validation set coverage across all required categories
         val_categories = {r['category'] for r in val_records}
         required_categories = {
-            'gui_procedure', 'cli_procedure', 'api_procedure',
-            'troubleshooting_diagnostics', 'model_selection',
-            'unsupported_and_negative', 'cross_document_pipeline'
+            'gui_procedure', 'cli_command', 'api_procedure',
+            'troubleshooting_diagnostic', 'model_pipeline',
+            'terminology_concept', 'general_knowledge'
         }
         missing = required_categories - val_categories
         self.assertEqual(len(missing), 0, f"Held-out validation set missing categories: {missing}")

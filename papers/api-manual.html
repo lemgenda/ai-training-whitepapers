@@ -939,7 +939,13 @@ python cli.py server stop</code></pre>
                             <td><code>POST</code></td>
                             <td><code>/api/training/unit-test-all</code></td>
                             <td>Required</td>
-                            <td>Queue 1-epoch diagnostic smoke test across all 22 registered models</td>
+                            <td>Queue 1-epoch diagnostic smoke test across all 23 registered models</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/training/unit-test-run</code></td>
+                            <td>Required</td>
+                            <td>Execute in-process unit test suite across tests/unit matching pattern</td>
                         </tr>
                         <tr>
                             <td><code>GET</code></td>
@@ -991,6 +997,37 @@ python cli.py server stop</code></pre>
                         </tr>
                     </tbody>
                 </table>
+
+                <h4>Diagnostic &amp; Unit Test Fleet Endpoints</h4>
+
+                <h5><code>POST /api/training/unit-test-all</code></h5>
+                <p>Submits an asynchronous background job executing a 1-epoch diagnostic smoke test across all 23 registered neural architectures via <code>tools/train_all.py</code>.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "epochs": 1
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+  "status": "pending",
+  "message": "Enqueued 1-epoch diagnostic run for all models."
+}</code></pre>
+
+                <h5><code>POST /api/training/unit-test-run</code></h5>
+                <p>Executes in-process unit tests in <code>tests/unit</code> matching the specified file glob pattern (default: <code>test_*.py</code>) using Python's standard <code>unittest</code> test discovery engine, returning structured telemetry.</p>
+                <p>Request body:</p>
+                <pre><code>{
+  "pattern": "test_*.py"
+}</code></pre>
+                <p>Response:</p>
+                <pre><code>{
+  "status": "success",
+  "tests_run": 164,
+  "failures_count": 0,
+  "errors_count": 0,
+  "failures": [],
+  "errors": []
+}</code></pre>
 
                 <h4 id="section-4-3-1">Kaggle Models Hub &amp; Variation Isolation Endpoints</h4>
 
@@ -1439,6 +1476,24 @@ python cli.py server stop</code></pre>
                             <td><code>/api/env/validate</code></td>
                             <td>Required</td>
                             <td>Passthrough delegating to <code>lem-env validate --project lemgendary-datasets</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/llm/compile</code></td>
+                            <td>Required</td>
+                            <td>Queue or execute compilation of an LLM instruction manifold from unified_data.yaml</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/llm/validate</code></td>
+                            <td>None</td>
+                            <td>Validate an LLM dataset JSONL file against the 4 LemGendary Quality Invariants</td>
+                        </tr>
+                        <tr>
+                            <td><code>POST</code></td>
+                            <td><code>/api/llm/test-suite</code></td>
+                            <td>None</td>
+                            <td>Execute in-process dataset compiler unit tests matching pattern</td>
                         </tr>
                     </tbody>
                 </table>
