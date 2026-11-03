@@ -1,10 +1,10 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: UltraZoom Super-Resolution Master Suite
+# UltraZoom Super-Resolution Master Suite
 
-**Author**: Lem Treursic
-**Version**: `v16.9.27-STABLE`
-**Category**: Category 06 SUPER-RES
-**Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
+## Category 06 SUPER-RES | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target `[TARGET]`
+Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC
+(XPU)
 
 ---
 
@@ -27,49 +27,82 @@
 
 ## 1. Abstract
 
-The **LemGendary UltraZoom Super-Resolution Suite** establishes an authoritative, hardware-aware deep learning framework for sub-pixel image upscaling across four distinct magnification factors: **x2, x3, x4, and x8**. Rather than relying on computationally heavy bicubic pre-upsampling that inflates intermediate feature maps in VRAM by $\mathcal{O}(r^2)$, UltraZoom operates entirely in the low-resolution latent space, projecting directly into high-resolution space at the final layer via Efficient Sub-Pixel Convolution (ESPCN) pixel-shuffling. This paper presents the mathematical foundations, spatial ladder progression schedules, loss dynamics, and WebGPU deployment specifications across the compiled manifold `LemGendizedUltraZoomLarge`.
+The **LemGendary UltraZoom Super-Resolution Suite** establishes an
+authoritative, hardware-aware deep learning framework for sub-pixel image
+upscaling across four distinct magnification factors: **x2, x3, x4, and x8**.
+Rather than relying on computationally heavy bicubic pre-upsampling that
+inflates intermediate feature maps in VRAM by $\mathcal{O}(r^2)$, UltraZoom
+operates entirely in the low-resolution latent space, projecting directly into
+high-resolution space at the final layer via Efficient Sub-Pixel Convolution
+(ESPCN) pixel-shuffling. This paper presents the mathematical foundations,
+spatial ladder progression schedules, loss dynamics, and WebGPU deployment
+specifications across the compiled manifold `LemGendizedUltraZoomLarge`.
 
 ---
 
 ## 1.1 What UltraZoom Does (In Plain English)
 
-When you pinch-to-zoom on a smartphone photo or crop into a distant object (like a bird in a tree or a flower in your garden), the image quickly becomes a blurry, pixelated checkerboard. **UltraZoom is like a high-powered digital microscope powered by AI**:
+When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
+a bird in a tree or a flower in your garden), the image quickly becomes a
+blurry, pixelated checkerboard. **UltraZoom is like a high-powered digital
+microscope powered by AI**:
 
-* **Intelligent Texture Synthesis:** Instead of simply stretching existing pixels, UltraZoom analyzes image patterns and reconstructs realistic fine textures (individual leaf veins, flower petals, and sharp text edges).
+* **Intelligent Texture Synthesis:** Instead of simply stretching existing
+  pixels, UltraZoom analyzes image patterns and reconstructs realistic fine
+  textures (individual leaf veins, flower petals, and sharp text edges).
 * **Four Specialized Scale Variants:**
-  * `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and real-time feeds (38.45 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and
+    real-time feeds (38.45 dB PSNR `[MEASURED]`).
   * `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR `[MEASURED]`).
-  * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K displays (32.15 dB PSNR `[MEASURED]`).
-  * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial surveillance (28.90 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K
+    displays (32.15 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial
+    surveillance (28.90 dB PSNR `[MEASURED]`).
 
 ### Visual Demonstration: 4x Detail Super-Resolution
 
-| Standard Bicubic Zoom (4x) | UltraZoom-x4 Output |
-| :---: | :---: |
-| ![Standard Bicubic Zoom](../assets/ultrazoom_before.png) | ![UltraZoom-x4 Output](../assets/ultrazoom_after.png) |
+* **Standard Bicubic Zoom (4x)**: ![Standard Bicubic
+  Zoom](../assets/ultrazoom_before.png)
+* **UltraZoom-x4 Output**: ![UltraZoom-x4 Output](../assets/ultrazoom_after.png)
 
 ![UltraZoom Scale Convergence & Benchmarks](../assets/ultrazoom_training.png)
 
 ## 2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`
 
-The `[CURRENT]` UltraZoom checkpoint provides multi-scale super-resolution, which requires learning distinct high-frequency hallucination priors across scale factors:
+The `[CURRENT]` UltraZoom checkpoint provides multi-scale super-resolution,
+which requires learning distinct high-frequency hallucination priors across
+scale factors:
 
-* **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration with minimal perceptual hallucination.
-* **UltraZoom-x3 Manifold**: Fractional scaling designed for irregular display resolution matching.
+* **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration
+  with minimal perceptual hallucination.
+* **UltraZoom-x3 Manifold**: Fractional scaling designed for irregular display
+  resolution matching.
 * **UltraZoom-x4 Manifold**: The core industrial standard for photo and graphic upscaling.
-* **UltraZoom-x8 Manifold**: Extreme super-resolution operating on highly compressed, microscopic source textures.
+* **UltraZoom-x8 Manifold**: Extreme super-resolution operating on highly
+  compressed, microscopic source textures.
 
 ---
 
 ## 3. Shared Foundations: Sub-Pixel Convolution & ESPCN
 
-The Efficient Sub-Pixel Convolution operator $\mathcal{PS}$ rearranges tensors of shape $(H, W, C \cdot r^2)$ into $(r H, r W, C)$:
+The Efficient Sub-Pixel Convolution operator $\mathcal{PS}$ rearranges tensors
+of shape $(H, W, C \cdot r^2)$ into $(r H, r W, C)$:
 
-$$\mathbf{I}_{\text{SR}} = \mathcal{PS}\left(\mathbf{W}_L * f_{L-1}(\mathbf{I}_{\text{LR}}) + \mathbf{b}_L\right)$$
+$$
+\mathbf{I}_{\text{SR}} = \mathcal{PS}\left(\mathbf{W}_L *
+f_{L-1}(\mathbf{I}_{\text{LR}}) + \mathbf{b}_L\right)
+$$
 
-The optimization objective balances Charbonnier pixel fidelity with Laplacian edge structure and perceptual distance:
+The optimization objective balances Charbonnier pixel fidelity with Laplacian
+edge structure and perceptual distance:
 
-$$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{\text{HR}}\|^2 + \epsilon^2} + \lambda_{\text{Lap}} \|\Delta \mathbf{I}_{\text{SR}} - \Delta \mathbf{I}_{\text{HR}}\|_1 + \lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{SR}}, \mathbf{I}_{\text{HR}})$$
+$$
+\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} -
+\mathbf{I}_{\text{HR}}\|^2 + \epsilon^2} + \lambda_{\text{Lap}} \|\Delta
+\mathbf{I}_{\text{SR}} - \Delta \mathbf{I}_{\text{HR}}\|_1 +
+\lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{SR}},
+\mathbf{I}_{\text{HR}})
+$$
 
 ---
 
@@ -90,7 +123,8 @@ $$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{
 ### 4.3 UltraZoom-x4 (High-Fidelity Detail)
 
 * **Architecture**: 16-block Residual Dense Network (RDN)
-* **Target PSNR**: &ge; 34.00 dB, **SSIM**: &ge; 0.950, **LPIPS**: &le; 0.040, **FID**: &le; 10.0
+* **Target PSNR**: &ge; 34.00 dB, **SSIM**: &ge; 0.950, **LPIPS**: &le; 0.040,
+  **FID**: &le; 10.0
 * **Latency**: 28ms on NVIDIA GeForce GTX 1650
 
 ### 4.4 UltraZoom-x8 (Extreme Hallucination)
@@ -113,28 +147,36 @@ $$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{
 
 ### 6.1 WebGPU & Zero-Copy Shader Pipeline
 
-Exported using ONNX Opset 17 with fixed tensor shapes, ensuring direct mapping to WebGPU compute shaders.
+Exported using ONNX Opset 17 with fixed tensor shapes, ensuring direct mapping
+to WebGPU compute shaders.
 
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
-| Variant | Scale Factor | Backbone | Target PSNR | Target SSIM | Target LPIPS | Latency (GTX 1650) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `UltraZoom-x2` | 2x | 8x ResBlock (64-ch) | 35.20 dB | 0.965 | 0.025 | 11 ms |
-| `UltraZoom-x3` | 3x | 12x RCAB (64-ch) | 33.10 dB | 0.945 | 0.038 | 18 ms |
-| `UltraZoom-x4` | 4x | 16x RDB (64-ch) | 34.00 dB | 0.950 | 0.040 | 28 ms |
-| `UltraZoom-x8` | 8x | Cascaded Two-Stage ESPCN | 28.50 dB | 0.885 | 0.085 | 44 ms |
+* **`UltraZoom-x2`**: Scale Factor: 2x; Backbone: 8x ResBlock (64-ch); Target
+  PSNR: 35.20 dB; Target SSIM: 0.965; Target LPIPS: 0.025; Latency (GTX 1650):
+  11 ms
+* **`UltraZoom-x3`**: Scale Factor: 3x; Backbone: 12x RCAB (64-ch); Target PSNR:
+  33.10 dB; Target SSIM: 0.945; Target LPIPS: 0.038; Latency (GTX 1650): 18 ms
+* **`UltraZoom-x4`**: Scale Factor: 4x; Backbone: 16x RDB (64-ch); Target PSNR:
+  34.00 dB; Target SSIM: 0.950; Target LPIPS: 0.040; Latency (GTX 1650): 28 ms
+* **`UltraZoom-x8`**: Scale Factor: 8x; Backbone: Cascaded Two-Stage ESPCN;
+  Target PSNR: 28.50 dB; Target SSIM: 0.885; Target LPIPS: 0.085; Latency (GTX
+  1650): 44 ms
 
 ---
 
 ## 8. Conclusion
 
-The UltraZoom Super-Resolution Suite provides high-throughput, multi-scale image upscaling engineered for real-time edge execution.
+The UltraZoom Super-Resolution Suite provides high-throughput, multi-scale image
+upscaling engineered for real-time edge execution.
 
 ### Related Ecosystem Documentation
 
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedUltraZoomLarge`)
-* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)

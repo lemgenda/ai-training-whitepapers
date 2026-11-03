@@ -4,33 +4,18 @@
     "heading-parity": [
       "ai-helper-troubleshooting-knowledge",
       "api-manual",
-      "cli-manual",
-      "manuals-hub",
-      "nima-master",
-      "restoration-master",
-      "ultrazoom",
-      "versioning-policy"
+      "cli-manual"
     ],
     "template": [
       "index.html",
       "papers/ai-helper-troubleshooting-knowledge.html",
       "papers/api-manual.html",
       "papers/cli-manual.html",
-      "papers/general-ai-training-knowledge.html",
-      "papers/manuals-hub.html",
-      "papers/nima-master.html",
-      "papers/restoration-master.html",
-      "papers/ultrazoom.html",
-      "papers/versioning-policy.html"
+      "papers/general-ai-training-knowledge.html"
     ],
     "text-similarity": [
       "api-manual",
-      "cli-manual",
-      "degradation-engine",
-      "manuals-hub",
-      "nima-master",
-      "restoration-master",
-      "ultrazoom"
+      "cli-manual"
     ]
   }
 }

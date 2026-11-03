@@ -137,9 +137,14 @@ def parse_markdown(source: str) -> ParsedDocument:
 
 
 class _HtmlCollector(HTMLParser):
-    """Collect headings, ids, link targets and visible text in one pass."""
+    """Collect headings, ids, link targets and visible text in one pass.
+
+    Display math (``div.math-block``) is left out of the prose, matching
+    ``markdown_content_lines``, which skips ``$$`` blocks in Markdown.
+    """
 
     _HIDDEN = frozenset({"script", "style", "head", "nav"})
+    _MATH_CLASS = "math-block"
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -147,6 +152,7 @@ class _HtmlCollector(HTMLParser):
         self._heading_level: int | None = None
         self._heading_text: list[str] = []
         self._hidden_depth = 0
+        self._div_hidden: list[bool] = []
         self._text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -161,6 +167,11 @@ class _HtmlCollector(HTMLParser):
                 self.doc.links.append((self.getpos()[0], html.unescape(values[name])))
         if tag in self._HIDDEN:
             self._hidden_depth += 1
+        if tag == "div":
+            is_math = self._MATH_CLASS in values.get("class", "").split()
+            self._div_hidden.append(is_math)
+            if is_math:
+                self._hidden_depth += 1
         if re.fullmatch(r"h[1-6]", tag):
             self._heading_level = int(tag[1])
             self._heading_text = []
@@ -172,6 +183,10 @@ class _HtmlCollector(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag in self._HIDDEN and self._hidden_depth:
             self._hidden_depth -= 1
+        if tag == "div" and self._div_hidden:
+            was_math = self._div_hidden.pop()
+            if was_math and self._hidden_depth:
+                self._hidden_depth -= 1
         if self._heading_level is not None and tag == f"h{self._heading_level}":
             text = normalize_text("".join(self._heading_text))
             self.doc.headings.append(Heading(self._heading_level, text))

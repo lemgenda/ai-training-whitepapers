@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.73`
+**Version**: `v16.9.74`
 
 ---
 
@@ -30,8 +30,8 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 25 entries (heading parity 8, template 10,
-  text similarity 7), scheduled for the Later Phase. Any other finding fails.
+  `scripts/parity_backlog.json`: 10 entries (heading parity 3, template 5,
+  text similarity 2), scheduled for the Later Phase. Any other finding fails.
 
 ---
 
@@ -50,6 +50,29 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.74 - Parity Backlog Batch 4: Suite Masters, Manuals Hub and Policy
+
+* **Approved Template** - `nima-master`, `restoration-master`, `ultrazoom`,
+  `versioning-policy` and `manuals-hub` regenerated from their Markdown
+  sources on the approved template with family tab bars; W3C (vnu) clean.
+  The Markdown stays the source of truth: HTML-only material in these pages
+  (older benchmark and latency figures in `ultrazoom.html`, longer prose in
+  the suite masters and the manuals hub) was not newer than the Markdown and
+  is replaced by the Markdown content.
+* **Markdown** - inline `markdownlint-disable` directives removed; prose
+  rewrapped at 80 columns, display math split into `$$` blocks, wide tables
+  rewritten as lists, headers on the approved layout. markdownlint 0 on the
+  five files without inline directives. No technical claims changed.
+* **Audit** - the HTML parser now leaves display math (`div.math-block`) out
+  of the compared prose, as the Markdown parser already skips `$$` blocks;
+  math-heavy pages such as `degradation-engine` no longer read as text drift.
+  New test `test_display_math_is_not_prose` (57 passed, 2 skipped).
+* **Parity Backlog** - 15 entries removed (25 to 10: heading parity 3,
+  template 5, text similarity 2).
+* **Version** - hub version v16.9.74 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.73 - Parity Backlog Batch 3: Model Specifications and Engine Paper
 
