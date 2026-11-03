@@ -2,7 +2,7 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.64`
+**Version**: `v16.9.65`
 
 ---
 
@@ -14,6 +14,28 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.65 - Environment Manager v16.9.18 and Ecosystem Architecture Sync
+
+* **Environment Manager Whitepaper** - `PAPER_ENV_MANAGER.md` and
+  `papers/env_manager.html` describe release v16.9.18: driver-aware PyTorch
+  index (`cu126`, `cu121`, `cu118`) instead of a fixed `cu121`, one-way manifest
+  sync with the downgrade guard instead of "bidirectional" mirroring (all six
+  central manifests listed), fail-closed pip parsing, non-destructive pipeline
+  with opt-in `--clean`, Step 5 routing by project metadata, Python 3.12 as the
+  effective minimum, validator and sidecar probe descriptions matching the code.
+  Sections renumbered to the framework ordering (8 sections); new 6.4
+  Background Update Jobs, 6.5 Security Model and 6.6 Bug Report Endpoint before
+  the Conclusion. Benchmark latencies marked as historical `v16.8.0` values.
+* **Ecosystem Architecture** - Section 1 is "1. Abstract"; table of contents,
+  component versions, sidecar responsibilities (`/api/ping`, update jobs,
+  masked secrets, bug report, optional training token), corrected invariants
+  (Python contract, `.pylintrc`, MosaicML status, `torch==2.15.0` on `cu126`,
+  pair-rule ratchet), new sections 6 Cross-Repository Security Contract, 7 Bug
+  Reporting Flow and 8 Conclusion.
+* **HTML Template** - Both pages regenerated from the Markdown with the approved
+  template; mermaid pinned to 10.9.1. W3C valid, markdownlint clean, MD and HTML
+  heading lists identical.
 
 ### v16.9.64 - LemGendary AI Studio GUI v2.10.19 Documentation Sync
 
