@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: Large Language Models & Mixture-of-Experts (MoE)
+# Large Language Models & Mixture-of-Experts (MoE)
 
-**Author**: Lem Treursic  
-**Version**: `v16.9.27-STABLE`  
-**Category**: Category 10 FOUNDATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 10 FOUNDATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -22,41 +21,66 @@
 
 ## 1. Abstract
 
-The **LemGendary Large Language Model (LLM) Suite** implements next-generation causal autoregressive Transformers incorporating **Rotary Position Embeddings (RoPE)**, **SwiGLU activation functions**, RMSNorm pre-normalization, and **Top-2 Sparse Mixture-of-Experts (MoE)** routing. Engineered to drive system-level automation, natural language dataset queries, and mathematical reasoning across the ecosystem, these models decouple active parameter compute from total parameter capacity, executing high-throughput token generation on consumer and enterprise hardware alike.
+The **LemGendary Large Language Model (LLM) Suite** implements next-generation
+causal autoregressive Transformers incorporating **Rotary Position Embeddings
+(RoPE)**, **SwiGLU activation functions**, RMSNorm pre-normalization,
+and **Top-2 Sparse Mixture-of-Experts (MoE)** routing. Engineered to drive
+system-level automation, natural language dataset queries, and mathematical
+reasoning across the ecosystem, these models decouple active parameter compute
+from total parameter capacity, executing high-throughput token generation on
+consumer and enterprise hardware alike.
 
 ---
 
 ## 2. Causal Decoder Architecture
 
-The network employs a decoder-only architecture where each token attends strictly to preceding tokens via causal attention masking, preventing future information leakage during training.
+The network employs a decoder-only architecture where each token attends
+strictly to preceding tokens via causal attention masking, preventing future
+information leakage during training.
 
 ---
 
 ## 3. RoPE & SwiGLU Formulations
 
-Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and key vectors in complex 2D planes to naturally capture relative distance:
+Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and
+key vectors in complex 2D planes to naturally capture relative distance:
 
-$$R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots, R_{\theta_{d/2}, m})$$
+$$
+R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots,
+R_{\theta_{d/2}, m})
+$$
 
-Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear Units, Shazeer 2020), projecting inputs through independent gate ($W_1$) and value ($W_2$) matrices before down-projection ($W_3$):
+Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear
+Units, Shazeer 2020), projecting inputs through independent gate ($W_1$) and
+value ($W_2$) matrices before down-projection ($W_3$):
 
-$$\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left( (x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3$$
+$$
+\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left(
+(x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3
+$$
 
 ---
 
 ## 4. Sparse Mixture-of-Experts Routing
 
-In MoE layers, token representations are routed to the top 2 out of 8 expert FFNs via softmax gating with auxiliary load-balancing loss:
+In MoE layers, token representations are routed to the top 2 out of 8 expert
+FFNs via softmax gating with auxiliary load-balancing loss:
 
-$$y = \sum_{i \in \text{Top2}} G(x)_i \cdot \text{Expert}_i(x)$$
+$$
+y = \sum_{i \in \text{Top2}} G(x)_i \cdot \text{Expert}_i(x)
+$$
 
-$$\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i$$
+$$
+\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i
+$$
 
 ---
 
 ## 5. KV Cache & Inference Throughput
 
-Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block allocation maximizes continuous batching throughput, significantly mitigating virtual memory fragmentation during extended context inference.
+Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block
+allocation maximizes continuous batching throughput, significantly mitigating
+virtual memory fragmentation during extended context inference.
 
 ---
 
@@ -71,4 +95,5 @@ Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block 
 
 ## 7. Conclusion
 
-Sparse MoE decoders deliver unprecedented reasoning and language generation capabilities while adhering strictly to hardware memory bounds.
+Sparse MoE decoders deliver unprecedented reasoning and language generation
+capabilities while adhering strictly to hardware memory bounds.

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.70`
+**Version**: `v16.9.71`
 
 ---
 
@@ -30,7 +30,7 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 88 entries (heading parity 37, template 39,
+  `scripts/parity_backlog.json`: 68 entries (heading parity 27, template 29,
   text similarity 12), scheduled for the Later Phase. Any other finding fails.
 
 ---
@@ -50,6 +50,26 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.71 - Parity Backlog Batch 1: Quality, Foundation and Vision Papers
+
+* **Approved Template** - `nima-mobile`, `nima-efficientnet`, `nima-pro`,
+  `nima-technical`, `nima-authenticity`, `foundation-diffusion`,
+  `foundation-image-to-text`, `foundation-llm`, `detection-master` and
+  `classification-nsfw` regenerated from their Markdown sources on the
+  approved template (`header`, `nav.toc-sidebar`, `section`, `footer`, family
+  tab bar). Headings and prose now match the Markdown exactly; W3C (vnu) clean.
+* **Markdown** - inline `markdownlint-disable` directives removed from the ten
+  sources; prose rewrapped at 80 columns, one-line display math split into
+  `$$` blocks, tables wider than 80 columns rewritten as lists. Headers use the
+  `# Title` / `## Category ... | Series` / meta-line layout (the
+  "Architecture of LemGendary AI" prefix moved to the subtitle). markdownlint
+  0 on all ten files without inline directives. No technical claims changed.
+* **Parity Backlog** - 20 entries removed (88 to 68: heading parity 27,
+  template 29, text similarity 12).
+* **Version** - hub version v16.9.71 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.70 - Strict Documentation Audit, Test Fixes and Lint Config
 

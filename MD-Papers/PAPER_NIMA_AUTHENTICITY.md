@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: NIMA Authenticity & DeepFake Sentinel
+# NIMA Authenticity & DeepFake Sentinel
 
-**Author**: Lem Treursic
-**Version**: `v16.9.27-STABLE`
-**Category**: Category 07 QUALITY
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 07 QUALITY | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -24,23 +23,36 @@
 
 ## 1. Abstract
 
-The **NIMA Authenticity & DeepFake Sentinel** is a dedicated neural evaluation engine engineered for precise visual quality assessment. Operating on the compiled manifold `LemGendizedNimaAuthenticity`, it leverages **EfficientNetV2-S (Distribution Verification Sentinel)** to predict continuous perceptual distributions rather than simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem, this model captures subtle perceptual judgments with verified mathematical resilience.
+The **NIMA Authenticity & DeepFake Sentinel** is a dedicated neural evaluation
+engine engineered for precise visual quality assessment. Operating on the
+compiled manifold `LemGendizedNimaAuthenticity`, it leverages **EfficientNetV2-S
+(Distribution Verification Sentinel)** to predict continuous perceptual
+distributions rather than simplistic scalar scores. By formulating evaluation as
+an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem,
+this model captures subtle perceptual judgments with verified mathematical
+resilience.
 
 ---
 
 ## 1.1 What NIMA Authenticity & DeepFake Sentinel Does (In Plain English)
 
-Acts like a digital authenticity expert. It inspects images for subtle mathematical artifacts left behind by AI image generators (like Midjourney, Stable Diffusion, or FLUX), confirming whether an image is a genuine real-world photograph.
+Acts like a digital authenticity expert. It inspects images for subtle
+mathematical artifacts left behind by AI image generators (like Midjourney,
+Stable Diffusion, or FLUX), confirming whether an image is a genuine real-world
+photograph.
 
 ### Visual Assessment & Training Distribution
 
-* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional Masterpiece / Authentic).
+* **Score Scale:** 1.0 (Severely Degraded / Synthesized) to 10.0 (Professional
+  Masterpiece / Authentic).
 
-| Poor Quality / Technical Compression (Score: 2.1/10.0) | Authentic Photographic Masterpiece (Score: 8.9/10.0) |
-| :---: | :---: |
-| ![Technical Compression](../assets/technical_compression.png) | ![Aesthetic Masterpiece](../assets/aesthetic_masterpiece.png) |
+* **Poor Quality / Technical Compression (Score: 2.1/10.0)**: ![Technical
+  Compression](../assets/technical_compression.png)
+* **Authentic Photographic Masterpiece (Score: 8.9/10.0)**: ![Aesthetic
+  Masterpiece](../assets/aesthetic_masterpiece.png)
 
-* **Training Metrics:** Tracked via `nima_authenticity_training.png` displaying loss minimization and correlation convergence.
+* **Training Metrics:** Tracked via `nima_authenticity_training.png` displaying
+  loss minimization and correlation convergence.
 
 ![NIMA Authenticity & DeepFake Sentinel Training Curve](../assets/nima_authenticity_training.png)
 
@@ -48,9 +60,14 @@ Acts like a digital authenticity expert. It inspects images for subtle mathemati
 
 ## 2. Visual Taxonomy: Perceptual Rating Distribution & Feature Extraction
 
-Ground-truth human evaluations follow categorical score histograms $p = [p_1, \dots, p_{10}]^T \in \Delta^9$ `[THEORETICAL]`. Intermediate convolutional and transformer representations isolate spatial composition, luminance contrast, and semantic coherence:
+Ground-truth human evaluations follow categorical score histograms
+$p = [p_1, \dots, p_{10}]^T \in \Delta^9$ `[THEORETICAL]`. Intermediate
+convolutional and transformer representations isolate spatial composition,
+luminance contrast, and semantic coherence:
 
-$$p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}$$
+$$
+p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}
+$$
 
 where temperature $\tau = 1.0$ anchors calibration against the human voting distribution.
 
@@ -58,11 +75,17 @@ where temperature $\tau = 1.0$ anchors calibration against the human voting dist
 
 ## 3. Shared Foundations: Earth Mover's Distance & Multi-Scale Optimization
 
-Rather than minimizing standard Cross-Entropy that ignores inter-class distance, training optimizes normalized Earth Mover's Distance (EMD):
+Rather than minimizing standard Cross-Entropy that ignores inter-class distance,
+training optimizes normalized Earth Mover's Distance (EMD):
 
-$$\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( \frac{1}{N} \sum_{k=1}^N |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r \right)^{1/r}$$
+$$
+\mathcal{L}_{\text{EMD}}(p, \hat{p}) = \left( \frac{1}{N} \sum_{k=1}^N
+|\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r \right)^{1/r}
+$$
 
-Coupled with a soft rank-correlation regularizer $\mathcal{L}_{\text{Spearman}}$, the loss guides monotonic feature ordering across perceptual degradation spectra.
+Coupled with a soft rank-correlation regularizer
+$\mathcal{L}_{\text{Spearman}}$, the loss guides monotonic feature ordering
+across perceptual degradation spectra.
 
 ---
 
@@ -72,7 +95,8 @@ Coupled with a soft rank-correlation regularizer $\mathcal{L}_{\text{Spearman}}$
 
 #### 4.1 Model Description, Purpose and Usage
 
-Delivers rapid, distribution-aware perceptual scoring for dataset pre-filtering, automated training loss gating, and desktop studio review.
+Delivers rapid, distribution-aware perceptual scoring for dataset pre-filtering,
+automated training loss gating, and desktop studio review.
 
 #### 4.2 Model Info
 
@@ -98,37 +122,51 @@ Delivers rapid, distribution-aware perceptual scoring for dataset pre-filtering,
 
 ## 5. Challenges & Resilience Architecture
 
-* **Voting Ambiguity & Bimodal Distributions**: Real-world aesthetic evaluations feature polarization. EMD penalizes distant bucket predictions severely while softly tolerating adjacent variance.
-* **Aspect-Ratio Invariance**: Pre-flight Lanczos-3 aspect preservation prevents distortion-induced metric deflation on non-square photographs.
-* **Low-VRAM Execution**: Lightweight batch allocation guarantees sub-50MB runtime memory overhead on consumer devices.
+* **Voting Ambiguity & Bimodal Distributions**: Real-world aesthetic evaluations
+  feature polarization. EMD penalizes distant bucket predictions severely while
+  softly tolerating adjacent variance.
+* **Aspect-Ratio Invariance**: Pre-flight Lanczos-3 aspect preservation prevents
+  distortion-induced metric deflation on non-square photographs.
+* **Low-VRAM Execution**: Lightweight batch allocation guarantees sub-50MB
+  runtime memory overhead on consumer devices.
 
 ---
 
 ## 6. Deployment Strategy & Production Acceleration
 
-* **Production FP16 Engine (`nima-authenticity.onnx`)**: Embedded self-contained weights optimized for instant WebGPU and DirectML evaluation.
-* **High-Precision FP32 Export (`nima-authenticity_FP32.onnx` + `.onnx.data`)**: External sidecar export for scientific verification.
-* **Lifecycle Governance**: 15-minute intra-epoch checkpointing (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target archiving (`vault_score.pth`).
+* **Production FP16 Engine (`nima-authenticity.onnx`)**: Embedded self-contained
+  weights optimized for instant WebGPU and DirectML evaluation.
+* **High-Precision FP32 Export (`nima-authenticity_FP32.onnx` + `.onnx.data`)**:
+  External sidecar export for scientific verification.
+* **Lifecycle Governance**: 15-minute intra-epoch checkpointing
+  (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target
+  archiving (`vault_score.pth`).
 
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
-| Evaluation Metric | Target Standard | Validation Result | Status & Verification |
-| :--- | :--- | :--- | :--- |
-| Accuracy | $\ge 0.960$ `[TARGET]` | 0.974 `[MEASURED]` | Target Met |
-| AUC-ROC | $\ge 0.960$ `[TARGET]` | 0.978 `[MEASURED]` | Target Met |
-| Inference Latency | $\le 20.0\text{ ms}$ `[TARGET]` | 10.8ms `[MEASURED]` | Production Verified |
+* **Accuracy**: Target Standard: $\ge 0.960$ `[TARGET]`; Validation Result:
+  0.974 `[MEASURED]`; Status & Verification: Target Met
+* **AUC-ROC**: Target Standard: $\ge 0.960$ `[TARGET]`; Validation Result: 0.978
+  `[MEASURED]`; Status & Verification: Target Met
+* **Inference Latency**: Target Standard: $\le 20.0\text{ ms}$ `[TARGET]`;
+  Validation Result: 10.8ms `[MEASURED]`; Status & Verification: Production
+  Verified
 
 ---
 
 ## 8. Conclusion
 
-The NIMA Authenticity & DeepFake Sentinel establishes an authoritative mathematical standard for on-device perceptual assessment, combining distribution-aware loss functions with hardware-bounded latency guarantees.
+The NIMA Authenticity & DeepFake Sentinel establishes an authoritative
+mathematical standard for on-device perceptual assessment, combining
+distribution-aware loss functions with hardware-bounded latency guarantees.
 
 ### Related Ecosystem Documentation
 
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNimaAuthenticity`)
-* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)

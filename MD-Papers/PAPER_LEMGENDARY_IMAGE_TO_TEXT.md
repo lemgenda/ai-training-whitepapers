@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: Image-to-Text Multimodal Vision-Language Models
+# Image-to-Text Multimodal Vision-Language Models
 
-**Author**: Lem Treursic  
-**Version**: `v16.9.27-STABLE`  
-**Category**: Category 10 FOUNDATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 10 FOUNDATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -22,35 +21,53 @@
 
 ## 1. Abstract
 
-The **LemGendary Vision-Language Model (VLM)** bridges visual perception and natural language comprehension. By connecting a high-resolution visual encoder (CLIP ViT-L/14 or SigLIP) to an autoregressive causal language decoder via a **Perceiver Resampler** cross-attention projector, the model enables detailed image captioning, visual question answering (VQA), and automated defect diagnostic descriptions. Condensing 256 visual patch tokens into 64 uniform query tokens ensures high-throughput text generation without quadratic context explosion.
+The **LemGendary Vision-Language Model (VLM)** bridges visual perception and
+natural language comprehension. By connecting a high-resolution visual encoder
+(CLIP ViT-L/14 or SigLIP) to an autoregressive causal language decoder via
+a **Perceiver Resampler** cross-attention projector, the model enables detailed
+image captioning, visual question answering (VQA), and automated defect
+diagnostic descriptions. Condensing 256 visual patch tokens into 64 uniform
+query tokens ensures high-throughput text generation without quadratic context
+explosion.
 
 ---
 
 ## 2. Visual Feature Encoding
 
-Input images are split into $14 \times 14$ patches, projected through a Transformer encoder to produce visual tokens $V \in \mathbb{R}^{N \times D_v}$ capturing structural geometry and semantic composition.
+Input images are split into $14 \times 14$ patches, projected through a
+Transformer encoder to produce visual tokens $V \in \mathbb{R}^{N \times D_v}$
+capturing structural geometry and semantic composition.
 
 ---
 
 ## 3. Perceiver Resampler & Token Condensation
 
-To eliminate excessive token overhead in the causal language decoder, a Perceiver Resampler projects $K = 64$ learned query tokens $Q$ across visual features $V$ via cross-attention:
+To eliminate excessive token overhead in the causal language decoder, a
+Perceiver Resampler projects $K = 64$ learned query tokens $Q$ across visual
+features $V$ via cross-attention:
 
-$$Z = \text{CrossAttention}(Q, V, V) = \text{Softmax}\left( \frac{Q (V W_K)^T}{\sqrt{d_k}} \right) (V W_V)$$
+$$
+Z = \text{CrossAttention}(Q, V, V) = \text{Softmax}\left( \frac{Q (V
+W_K)^T}{\sqrt{d_k}} \right) (V W_V)
+$$
 
-This compresses arbitrary resolution inputs into a fixed-length multimodal embedding sequence.
+This compresses arbitrary resolution inputs into a fixed-length multimodal
+embedding sequence.
 
 ---
 
 ## 4. Autoregressive Language Decoder
 
-The language decoder processes interleaved text tokens and visual prompt tokens via causal self-attention, generating response tokens step-by-step.
+The language decoder processes interleaved text tokens and visual prompt tokens
+via causal self-attention, generating response tokens step-by-step.
 
 ---
 
 ## 5. Cross-Entropy Generation Objective
 
-$$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)$$
+$$
+\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)
+$$
 
 ---
 
@@ -66,4 +83,5 @@ $$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)$
 
 ## 7. Conclusion
 
-The Vision-Language Architecture powers automated image metadata curation and intelligent diagnostic reporting.
+The Vision-Language Architecture powers automated image metadata curation and
+intelligent diagnostic reporting.

@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: Universal NSFW Safety Classifier
+# Universal NSFW Safety Classifier
 
-**Author**: Lem Treursic
-**Version**: `v16.9.27-STABLE`
-**Category**: Category 09 VISION
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 09 VISION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -24,27 +23,44 @@
 
 ## 1. Abstract
 
-The **LemGendary Universal NSFW Classifier** is a high-speed, on-device content moderation model powered by an EfficientNetV2-S backbone. Designed to safeguard automated data pipelines, public model endpoints, and desktop GUI workflows, the classifier categorizes incoming images into a 5-tier safety hierarchy. By optimizing Class-Balanced Focal Loss on curated edge distributions, the system achieves a verified False Positive Rate &lt; 0.4% on benign artistic content while reliably identifying explicit material in &lt; 5ms.
+The **LemGendary Universal NSFW Classifier** is a high-speed, on-device content
+moderation model powered by an EfficientNetV2-S backbone. Designed to safeguard
+automated data pipelines, public model endpoints, and desktop GUI workflows, the
+classifier categorizes incoming images into a 5-tier safety hierarchy. By
+optimizing Class-Balanced Focal Loss on curated edge distributions, the system
+achieves a verified False Positive Rate &lt; 0.4% on benign artistic content
+while reliably identifying explicit material in &lt; 5ms.
 
 ---
 
 ## 1.1 What NSFW Classifier Does (In Plain English)
 
-Imagine an automatic gatekeeper protecting datasets and cloud uploads from explicit, harmful, or inappropriate imagery:
+Imagine an automatic gatekeeper protecting datasets and cloud uploads from
+explicit, harmful, or inappropriate imagery:
 
-* **Instant Content Gatekeeping:** In under 5 milliseconds, it analyzes an image and computes confidence percentages across 5 distinct safety tiers.
-* **Smart Artistic Disambiguation:** Unlike simple filters that block classical sculptures or museum paintings, it distinguishes benign fine-art drawings and neutral photography from truly explicit material.
-* **Pipeline Safety:** Automatically quarantines inappropriate images before they contaminate dataset shards or reach public models.
+* **Instant Content Gatekeeping:** In under 5 milliseconds, it analyzes an image
+  and computes confidence percentages across 5 distinct safety tiers.
+* **Smart Artistic Disambiguation:** Unlike simple filters that block classical
+  sculptures or museum paintings, it distinguishes benign fine-art drawings and
+  neutral photography from truly explicit material.
+* **Pipeline Safety:** Automatically quarantines inappropriate images before
+  they contaminate dataset shards or reach public models.
 
 ### 5-Tier Content Moderation Classification Distribution
 
-| Safety Tier | Typical Imagery Description | Pipeline Action Threshold |
-| :--- | :--- | :--- |
-| **Drawings** | Fine art, digital anime illustrations, benign sketches | Permitted (Confidence $\ge 90\%$) |
-| **Neutral** | Real-world photography, landscapes, nature, everyday items | Permitted (Confidence $\ge 90\%$) |
-| **Sexy** | Provocative poses, swimwear, lingerie, non-explicit fitness | Flagged for operator review ($> 65\%$) |
-| **Hentai** | Explicit illustrated adult themes | Auto-quarantined ($> 50\%$) |
-| **Porn** | Explicit real-world adult content | Hard rejected & quarantined ($> 50\%$) |
+* **Drawings**: Typical Imagery Description: Fine art, digital anime
+  illustrations, benign sketches; Pipeline Action Threshold: Permitted
+  (Confidence $\ge 90\%$)
+* **Neutral**: Typical Imagery Description: Real-world photography, landscapes,
+  nature, everyday items; Pipeline Action Threshold: Permitted (Confidence
+  $\ge 90\%$)
+* **Sexy**: Typical Imagery Description: Provocative poses, swimwear, lingerie,
+  non-explicit fitness; Pipeline Action Threshold: Flagged for operator review
+  ($> 65\%$)
+* **Hentai**: Typical Imagery Description: Explicit illustrated adult themes;
+  Pipeline Action Threshold: Auto-quarantined ($> 50\%$)
+* **Porn**: Typical Imagery Description: Explicit real-world adult content;
+  Pipeline Action Threshold: Hard rejected & quarantined ($> 50\%$)
 
 ---
 
@@ -52,7 +68,8 @@ Imagine an automatic gatekeeper protecting datasets and cloud uploads from expli
 
 The model categorizes content into mutually exclusive probability distributions `[THEORETICAL]`:
 
-* **Drawings**: Benign illustrations, digital paintings, comics, and non-explicit anime.
+* **Drawings**: Benign illustrations, digital paintings, comics, and
+  non-explicit anime.
 * **Neutral**: General real-world photographic content, landscapes, everyday objects.
 * **Sexy**: Provocative poses, swimwear, lingerie, and suggestive non-explicit scenes.
 * **Hentai**: Explicit illustrated, animated, or drawn adult material.
@@ -62,11 +79,19 @@ The model categorizes content into mutually exclusive probability distributions 
 
 ## 3. Shared Foundations: EfficientNetV2-S & Class-Balanced Focal Loss
 
-Utilizing Fused-MBConv layers in early stages and MBConv with Squeeze-and-Excitation (SE) in deeper layers, EfficientNetV2-S minimizes training memory while maximizing receptive field coverage. Progressive training gradually increases image resolution from 128px to 256px alongside data augmentation intensity.
+Utilizing Fused-MBConv layers in early stages and MBConv with
+Squeeze-and-Excitation (SE) in deeper layers, EfficientNetV2-S minimizes
+training memory while maximizing receptive field coverage. Progressive training
+gradually increases image resolution from 128px to 256px alongside data
+augmentation intensity.
 
-To overcome heavy real-world class imbalance, the loss incorporates class-frequency weighting $\alpha_t$ and focusing parameter $\gamma = 2.0$:
+To overcome heavy real-world class imbalance, the loss incorporates
+class-frequency weighting $\alpha_t$ and focusing parameter $\gamma = 2.0$:
 
-$$\mathcal{L}_{ \text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 - p_t)^\gamma \log(p_t)$$
+$$
+\mathcal{L}_{ \text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 -
+p_t)^\gamma \log(p_t)
+$$
 
 ---
 
@@ -76,7 +101,8 @@ $$\mathcal{L}_{ \text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 - 
 
 #### 4.1 Model Description, Purpose and Usage
 
-Real-time on-device safety gatekeeper engineered to filter training datasets and sanitize public endpoint uploads.
+Real-time on-device safety gatekeeper engineered to filter training datasets and
+sanitize public endpoint uploads.
 
 #### 4.2 Model Info
 
@@ -103,38 +129,54 @@ Real-time on-device safety gatekeeper engineered to filter training datasets and
 
 ## 5. Challenges & Resilience Architecture
 
-* **Fine Art Disambiguation**: Classical marble sculptures and anatomical figure drawings frequently trigger false positives in naive filters. Contrastive margin penalties separate artistic drawings from explicit material.
-* **Adversarial Noise Resistance**: Randomized JPEG recompression and Gaussian blur augmentations train the classifier against camouflage filters designed to bypass moderation.
-* **Extreme Class Imbalance**: Effective sample weighting ($\beta = 0.9999$) stabilizes gradient backpropagation across underrepresented edge categories.
+* **Fine Art Disambiguation**: Classical marble sculptures and anatomical figure
+  drawings frequently trigger false positives in naive filters. Contrastive
+  margin penalties separate artistic drawings from explicit material.
+* **Adversarial Noise Resistance**: Randomized JPEG recompression and Gaussian
+  blur augmentations train the classifier against camouflage filters designed to
+  bypass moderation.
+* **Extreme Class Imbalance**: Effective sample weighting ($\beta = 0.9999$)
+  stabilizes gradient backpropagation across underrepresented edge categories.
 
 ---
 
 ## 6. Deployment Strategy & Production Acceleration
 
-* **Production FP16 Engine (`nsfw_classifier.onnx`)**: Embedded self-contained weights for high-throughput browser and desktop moderation.
-* **High-Precision FP32 Export (`nsfw_classifier_FP32.onnx` + `.onnx.data`)**: External sidecar export for scientific verification.
-* **Lifecycle Governance**: 15-minute intra-epoch checkpointing (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target archiving (`vault_acc.pth`).
+* **Production FP16 Engine (`nsfw_classifier.onnx`)**: Embedded self-contained
+  weights for high-throughput browser and desktop moderation.
+* **High-Precision FP32 Export (`nsfw_classifier_FP32.onnx` + `.onnx.data`)**:
+  External sidecar export for scientific verification.
+* **Lifecycle Governance**: 15-minute intra-epoch checkpointing
+  (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target
+  archiving (`vault_acc.pth`).
 
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
-| Metric Target | Target Standard | Validation Result | Status & Verification |
-| :--- | :--- | :--- | :--- |
-| Top-1 Accuracy (Overall) | $\ge 98.0\%$ `[TARGET]` | 98.6% `[MEASURED]` | Target Met |
-| Benign False Positive Rate | $\le 0.40\%$ `[TARGET]` | 0.38% `[MEASURED]` | Target Met |
-| Explicit Recall (Porn/Hentai) | $\ge 99.0\%$ `[TARGET]` | 99.4% `[MEASURED]` | Target Met |
-| Inference Latency | $\le 5.0 \text{ ms}$ `[TARGET]` | 4.2 ms `[MEASURED]` | Production Verified |
+* **Top-1 Accuracy (Overall)**: Target Standard: $\ge 98.0\%$ `[TARGET]`;
+  Validation Result: 98.6% `[MEASURED]`; Status & Verification: Target Met
+* **Benign False Positive Rate**: Target Standard: $\le 0.40\%$ `[TARGET]`;
+  Validation Result: 0.38% `[MEASURED]`; Status & Verification: Target Met
+* **Explicit Recall (Porn/Hentai)**: Target Standard: $\ge 99.0\%$ `[TARGET]`;
+  Validation Result: 99.4% `[MEASURED]`; Status & Verification: Target Met
+* **Inference Latency**: Target Standard: $\le 5.0 \text{ ms}$ `[TARGET]`;
+  Validation Result: 4.2 ms `[MEASURED]`; Status & Verification: Production
+  Verified
 
 ---
 
 ## 8. Conclusion
 
-The Universal NSFW Classifier delivers high-precision on-device content safety verification, achieving sub-0.4% false positive rates on artistic content while providing robust real-time protection for data pipelines.
+The Universal NSFW Classifier delivers high-precision on-device content safety
+verification, achieving sub-0.4% false positive rates on artistic content while
+providing robust real-time protection for data pipelines.
 
 ### Related Ecosystem Documentation
 
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedClassificationMaster`)
-* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)
