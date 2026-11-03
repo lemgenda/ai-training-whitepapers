@@ -2,300 +2,629 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LemGendary AI Studio GUI: Architectural Whitepaper</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LemGendary AI Studio GUI: Architectural Whitepaper</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="current-state.html">Current State</a>
-                <a href="env_manager.html">Env Manager</a>
-                <a href="dataset-compiler.html">Dataset Compiler</a>
-                <a href="degradation-engine.html">Degradation Engine</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="ai-studio-whitepaper.html" class="active">Desktop GUI</a>
-                <a href="gui-control-registry.html">GUI Registry</a>
-                <a href="versioning-policy.html">Versioning Policy</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+<a href="current-state.html" class="tab-link">Current State</a>
+<a href="env_manager.html" class="tab-link">Env Manager</a>
+<a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
+<a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
+<a href="training-suite-master.html" class="tab-link">Training Suite</a>
+<a href="ai-studio-whitepaper.html" class="tab-link active">Desktop GUI</a>
+<a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
+<a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>LemGendary AI Studio GUI: Architectural Whitepaper</h1>
+<p class="subtitle">Category 01.4 | Subpage of Master Ecosystem Architecture</p>
+<div class="meta">
+<span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
+<span><strong>Version</strong>: <code>v2.10.19</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-03</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="ai-studio-manual.html" class="toc-link-secondary">→ Operator User Manual</a></li>
-                <li><a href="#section-1">1. Abstract</a></li>
-                <li><a href="#section-2">2. High-Velocity Optimizations</a></li>
-                <li><a href="#section-3">3. Hybrid Cloud &amp; Registry Integration</a></li>
-                <li><a href="#section-4">4. Multi-Modal &amp; Format Resilience</a></li>
-                <li><a href="#section-5">5. Comparative Analysis / Benchmarks</a></li>
-                <li><a href="#section-6">6. Synthesis Flow &amp; Topology</a></li>
-                <li><a href="#section-7">7. Unified Models Registry</a></li>
-                <li><a href="#section-8">8. Conclusion</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+<li><a href="ai-studio-manual.html" class="toc-link-secondary">Operator Manual</a></li>
+
+<li><a href="#1-abstract">1. Abstract</a></li>
+<li><a href="#2-high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
+<li><a href="#3-hybrid-cloud--registry-integration">3. Hybrid Cloud &amp; Registry
+Integration</a></li>
+<li><a href="#4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a></li>
+<li><a href="#5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a></li>
+<li><a href="#6-synthesis-flow--topology">6. Synthesis Flow &amp; Topology</a>
+<ul class="sub-item">
+<li><a href="#61-dynamic-mesh-configuration--protocol-agnostic-origin-routing">6.1 Dynamic Mesh Configuration &amp; Protocol-Agnostic Origin
+Routing</a></li>
+<li><a href="#62-universal-dynamic-configuration--registry-editor">6.2 Universal Dynamic Configuration &amp; Registry
+Editor</a></li>
+<li><a href="#63-contextual-ux-help--micro-documentation-layer">6.3 Contextual UX Help &amp; Micro-Documentation
+Layer</a></li>
+<li><a href="#64-dataset-compiler--kaggle-cloud-synchronization-hub">6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization
+Hub</a></li>
+<li><a href="#65-headless-windowless-service-lifecycle--auto-start-on-launch">6.5 Headless Windowless Service Lifecycle &amp; Auto-Start on
+Launch</a></li>
+<li><a href="#66-test--diagnostic-orchestrator-integration">6.6 Test &amp; Diagnostic Orchestrator
+Integration</a></li>
+<li><a href="#67-comprehensive-testing--ecosystem-verification-battery">6.7 Comprehensive Testing &amp; Ecosystem Verification
+Battery</a></li>
+<li><a href="#68-ecosystem-maintenance--governance-controls">6.8 Ecosystem Maintenance &amp; Governance
+Controls</a></li>
+<li><a href="#69-centralized-state-zustand--solid-component-hierarchy">6.9 Centralized State (Zustand) &amp; S.O.L.I.D. Component
+Hierarchy</a></li>
+<li><a href="#610-multi-variation-kaggle-model-hub-staging--strict-isolation-contract">6.10 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation
+Contract</a></li>
+<li><a href="#611-three-tab-real-time-telemetry-stream--responsive-cancellation">6.11 Three-Tab Real-Time Telemetry Stream &amp; Responsive
+Cancellation</a></li>
+<li><a href="#612-security-model">6.12 Security Model</a></li>
+<li><a href="#613-bug-reporting-subsystem">6.13 Bug Reporting Subsystem</a></li>
+</ul>
+</li>
+<li><a href="#7-unified-models-registry">7. Unified Models Registry</a></li>
+<li><a href="#8-conclusion">8. Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>LemGendary AI Studio GUI: Architectural Whitepaper</h1>
-        <p class="subtitle">High-Performance Desktop Orchestration for Universal ML Workflows</p>
-        <div class="meta">
-                <span>Category 01.4 GUI</span>
-                <span>Version 16.9.16-STABLE</span>
-            </div>
 
-            <section id="section-1">
-                <h2>1. Abstract</h2>
-                <p>The LemGendary AI Studio Desktop GUI establishes an authoritative, hardware-aware desktop orchestration system engineered to provide a low-latency, deterministic control plane for machine learning workflows. Addressing developer friction, process fragmentation, and high memory footprints inherent in traditional web wrappers, this architecture decouples native operating system integration from presentation logic using a high-throughput Rust sidecar boundary, a reactive React 18 frontend, and a local WebSocket telemetry channel. Through asynchronous process multiplexing, strict zero-copy IPC streaming, and native DirectML/CUDA accelerator probing, the system achieves sub-millisecond control loop responsiveness while minimizing memory overhead to under 45 megabytes.</p>
-            </section>
+<section id="1-abstract">
+<h2>1. Abstract</h2>
+<p>The LemGendary AI Studio GUI (client version <code>v2.10.19</code>) is a hardware-aware
+desktop orchestration system that gives machine learning workflows a
+low-latency, deterministic control plane. It addresses developer friction,
+process fragmentation and the high memory footprint of traditional web wrappers
+by separating native operating system integration from presentation logic: a
+Rust host (Tauri v2), a reactive React 18 frontend and local WebSocket telemetry
+channels to three Python sidecars. Every sidecar request carries a client header
+that the sidecars' origin guard checks, the window runs under a strict Content
+Security Policy, and secrets are write-only from the GUI. A built-in bug
+reporter packages a description, annotated screenshots and recent telemetry into
+a local ZIP archive and hands it to the operator's own mail client.</p>
+<blockquote class="blockquote-styled">
+<p><strong>Note:</strong> <strong>Dual Versioning Architecture</strong>: The desktop application and its backends use
+separate version tracks:</p>
+<ol>
+<li><strong>LemGendary AI Studio GUI (<code>v2.10.19</code>)</strong>: Governs the Tauri v2 desktop
+application, the React 18 frontend and the Operator Manual
+(<a href="ai-studio-manual.html"><code>MANUAL_AI_STUDIO_GUI.md</code></a>). <code>package.json</code>
+holds this version and <code>tauri.conf.json</code> reads it from there.</li>
+<li><strong>Sidecar services (<code>v16.x</code>)</strong>: The LemGendary Environment Manager (port
+8000), LemGendary Dataset Compiler Suite (port 8100) and LemGendary Model
+Training Suite (port 8200) each keep their own <code>v16.x</code> release line in their
+README. Each sidecar publishes its contract as <code>openapi.json</code>, and the GUI
+tests check request field names against those files. See the <a href="versioning-policy.html">Document
+Authority Hierarchy &amp; Versioning Policy</a> for track
+governance.</li>
+</ol>
+</blockquote>
+</section>
 
-            <section id="section-2">
-                <h2>2. High-Velocity Optimizations</h2>
-                <p>High-velocity desktop execution demands bounded event latency, minimal frame rendering drops, and efficient non-blocking inter-process communication (IPC). Traditional runtime environments such as Electron introduce severe memory bloat and multi-second initialization delays. The LemGendary AI Studio architecture eliminates this overhead by leveraging native operating system webviews (WebView2 on Windows, WebKitGTK on Linux) coordinated through a compiled Rust runtime.</p>
-                <p>Let $\mathcal{E} = \{e_1, e_2, \dots, e_M\}$ denote the continuous stream of telemetry events emitted by the backend Python orchestrator, and let $B$ represent the circular buffer window size. The event ingestion latency across the local WebSocket boundary is formally bounded by:</p>
-                <p>$$T_{\text{ingest}} = \mathcal{O}\left(\frac{|\mathcal{E}|}{B} + \log B\right)$$</p>
-                <p>To guarantee 60 frames-per-second visual fidelity during high-throughput training log bursts, the user interface enforces batched virtualized windowing:</p>
-                <p>$$T_{\text{render}} = \mathcal{O}\left(V_{\text{DOM}} \cdot \Delta t\right), \quad \text{where } V_{\text{DOM}} \ll |\mathcal{E}|$$</p>
-                <p>Memory scaling satisfies strict upper bounds:</p>
-                <p>$$M_{\text{peak}} = M_{\text{core}} + \mathcal{O}(B \cdot S_{\text{event}})$$</p>
-                <p>where $M_{\text{core}} \approx 42\text{ MB}$ represents the baseline resident set size, ensuring optimal co-existence alongside memory-intensive PyTorch GPU kernels.</p>
-            </section>
+<section id="2-high-velocity-optimizations">
+<h2>2. High-Velocity Optimizations</h2>
+<p>High-velocity desktop execution demands bounded event latency, minimal frame
+rendering drops, and efficient non-blocking inter-process communication (IPC).
+Traditional runtime environments such as Electron introduce severe memory bloat
+and multi-second initialization delays. The LemGendary AI Studio architecture
+eliminates this overhead by leveraging native operating system webviews
+(WebView2 on Windows, WebKitGTK on Linux) coordinated through a compiled Rust
+runtime.</p>
+<p>Let $\mathcal{E} = \{e_1, e_2, \dots, e_M\}$ denote the continuous stream of
+telemetry events emitted by the backend Python orchestrator, and let $B$
+represent the ring buffer size. The event ingestion latency across the local
+WebSocket boundary is bounded by:</p>
+<div class="math-block">$$T_{\text{ingest}} = \mathcal{O}\left(\frac{|\mathcal{E}|}{B} + \log B\right)$$</div>
+<p>The store keeps only the latest $B = 200$ events, so the log panel renders a
+bounded number of DOM rows regardless of stream length:</p>
+<div class="math-block">$$T_{\text{render}} = \mathcal{O}\left(V_{\text{DOM}} \cdot \Delta t\right), \quad \text{where } V_{\text{DOM}} \le B \ll |\mathcal{E}|$$</div>
+<p>Memory scaling satisfies strict upper bounds:</p>
+<div class="math-block">$$M_{\text{peak}} = M_{\text{core}} + \mathcal{O}(B \cdot S_{\text{event}})$$</div>
+<p>where $M_{\text{core}}$ represents the baseline resident set size of the webview
+process, leaving room for memory-intensive PyTorch GPU kernels.</p>
+</section>
 
-            <section id="section-3">
-                <h2>3. Hybrid Cloud &amp; Registry Integration</h2>
-                <p>The LemGendary AI Studio Desktop GUI operates as a unified operational bridge between local edge compute hardware and distributed cloud execution clusters. The interface connects directly to local Python execution runtimes, background headless sidecars, and remote training harnesses.</p>
-                <p>The IPC communication architecture enforces a zero-trust local isolation policy:</p>
-                <p>$$\text{AllowRPC}(origin, endpoint) = \begin{cases} \text{True}, &amp; \text{if } origin = \text{localhost} \land endpoint \in \mathcal{A}_{\text{whitelist}} \\ \text{False}, &amp; \text{otherwise} \end{cases}$$</p>
-                <p>Hardware accelerator probing routes execution commands based on real-time hardware telemetry:</p>
-                <p>$$\mathcal{H}_{\text{target}} = \begin{cases} \text{CUDA}, &amp; \text{if } N_{\text{NVIDIA}} \ge 1 \land \text{DriverVersion} \ge 535.0 \\ \text{ROCm}, &amp; \text{if } N_{\text{AMD}} \ge 1 \land \text{HIP\_VISIBLE} = 1 \\ \text{DirectML}, &amp; \text{if } \text{OS} = \text{Win32} \land N_{\text{DX12}} \ge 1 \\ \text{CPU}, &amp; \text{fallback} \end{cases}$$</p>
-                <p>Through automated registry synchronization, local model checkpoint directories are continuously verified against remote Kaggle manifolds and HuggingFace Hub registries.</p>
-            </section>
+<section id="3-hybrid-cloud--registry-integration">
+<h2>3. Hybrid Cloud &amp; Registry Integration</h2>
+<p>The LemGendary AI Studio GUI operates as a unified operational bridge between
+local edge compute hardware and distributed cloud execution clusters. The
+interface connects directly to local Python execution runtimes, background
+headless sidecars, and remote training harnesses.</p>
+<p>The IPC communication architecture enforces a local isolation policy (section
+6.12 describes the implementation):</p>
+<div class="math-block">$$\text{AllowRPC}(origin, method) = \begin{cases} \text{True}, &amp; \text{if } origin \in \mathcal{A}_{\text{allow}} \land (method = \text{GET} \lor \text{ClientHeader}) \\ \text{False}, &amp; \text{otherwise} \end{cases}$$</div>
+<p>Hardware accelerator probing routes execution commands based on real-time
+hardware telemetry:</p>
+<div class="math-block">$$\mathcal{H}_{\text{target}} = \begin{cases} \text{CUDA}, &amp; \text{if } N_{\text{NVIDIA}} \ge 1 \land \text{DriverVersion} \ge 535.0 \\ \text{ROCm}, &amp; \text{if } N_{\text{AMD}} \ge 1 \land \text{HIP\_VISIBLE} = 1 \\ \text{DirectML}, &amp; \text{if } \text{OS} = \text{Win32} \land N_{\text{DX12}} \ge 1 \\ \text{CPU}, &amp; \text{fallback} \end{cases}$$</div>
+<p>Through registry synchronization, local model checkpoint directories are
+verified against remote Kaggle manifolds and Hugging Face Hub registries.</p>
+</section>
 
-            <section id="section-4">
-                <h2>4. Multi-Modal &amp; Format Resilience</h2>
-                <p>The desktop framework guarantees presentation and format resilience across heterogeneous display topologies, high-DPI scaling factors, and multi-monitor configurations. The design system is constructed entirely on native CSS custom properties, eliminating runtime style evaluation overhead.</p>
-                <p>Format parsing resilience is governed by strict schema validation:</p>
-                <p>$$\text{ValidatePayload}(P) = \begin{cases} \text{Accept}, &amp; \text{if } \text{Schema}(P) \equiv \mathcal{S}_{\text{Telemetry}} \\ \text{SanitizeFallback}, &amp; \text{otherwise} \end{cases}$$</p>
-                <p>Malformed JSON packets or corrupted stderr lines emitted by external compilers are intercepted by the telemetry boundary, converted into structured error diagnostic nodes, and rendered in dedicated monospace panels without destabilizing the React reconciliation tree.</p>
-            </section>
+<section id="4-multi-modal--format-resilience">
+<h2>4. Multi-Modal &amp; Format Resilience</h2>
+<p>The desktop framework guarantees presentation and format resilience across
+heterogeneous display topologies, high-DPI scaling factors, and multi-monitor
+configurations. The design system is constructed entirely on native CSS custom
+properties, eliminating runtime style evaluation overhead.</p>
+<p>Format parsing resilience is governed by strict schema validation:</p>
+<div class="math-block">$$\text{ValidatePayload}(P) = \begin{cases} \text{Accept}, &amp; \text{if } \text{Schema}(P) \equiv \mathcal{S}_{\text{Telemetry}} \\ \text{SanitizeFallback}, &amp; \text{otherwise} \end{cases}$$</div>
+<p>Malformed JSON packets or corrupted log lines emitted by external compilers are
+intercepted by the telemetry boundary, converted into structured error entries,
+and rendered in monospace panels without destabilizing the React reconciliation
+tree.</p>
+</section>
 
-            <section id="section-5">
-                <h2>5. Comparative Analysis / Benchmarks</h2>
-                <p>To quantify the architectural superiority of the Tauri v2 and React desktop stack, rigorous performance benchmarking was conducted against legacy GUI solutions:</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Performance Metric</th>
-                            <th>Electron Standard</th>
-                            <th>PySide6 / Qt Native</th>
-                            <th>LemGendary AI Studio GUI (Tauri v2)</th>
-                            <th>Improvement Factor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Cold Start Launch Time</td>
-                            <td>2,850 ms</td>
-                            <td>1,420 ms</td>
-                            <td>280 ms</td>
-                            <td>10.2&times;</td>
-                        </tr>
-                        <tr>
-                            <td>Idle RAM Footprint (RSS)</td>
-                            <td>194 MB</td>
-                            <td>92 MB</td>
-                            <td>38 MB</td>
-                            <td>5.1&times;</td>
-                        </tr>
-                        <tr>
-                            <td>Telemetry Ingestion Throughput</td>
-                            <td>1,200 events/sec</td>
-                            <td>4,500 events/sec</td>
-                            <td>24,000 events/sec</td>
-                            <td>20.0&times;</td>
-                        </tr>
-                        <tr>
-                            <td>Executable Distribution Size</td>
-                            <td>128 MB</td>
-                            <td>165 MB</td>
-                            <td>8.4 MB</td>
-                            <td>15.2&times;</td>
-                        </tr>
-                        <tr>
-                            <td>Memory Leaks in 24h Soak Test</td>
-                            <td>Observed (&gt;400 MB)</td>
-                            <td>Minor (&lt;25 MB)</td>
-                            <td>Zero Leakage (Deterministic)</td>
-                            <td>Absolute</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+<section id="5-comparative-analysis--benchmarks">
+<h2>5. Comparative Analysis / Benchmarks</h2>
+<p>The following comparison of the Tauri v2 and React desktop stack against legacy
+GUI solutions comes from internal measurements. No benchmark artifact is
+published with this release, so treat the figures as indicative:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Metric</th>
+<th style="text-align:left">Electron</th>
+<th style="text-align:left">PySide6 / Qt</th>
+<th style="text-align:left">AI Studio (Tauri v2)</th>
+<th style="text-align:left">Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Cold start launch time</td>
+<td style="text-align:left">2,850 ms</td>
+<td style="text-align:left">1,420 ms</td>
+<td style="text-align:left">280 ms</td>
+<td style="text-align:left">$10.2\times$</td>
+</tr>
+<tr>
+<td style="text-align:left">Idle RAM footprint (RSS)</td>
+<td style="text-align:left">194 MB</td>
+<td style="text-align:left">92 MB</td>
+<td style="text-align:left">38 MB</td>
+<td style="text-align:left">$5.1\times$</td>
+</tr>
+<tr>
+<td style="text-align:left">Telemetry events per second</td>
+<td style="text-align:left">1,200</td>
+<td style="text-align:left">4,500</td>
+<td style="text-align:left">24,000</td>
+<td style="text-align:left">$20.0\times$</td>
+</tr>
+<tr>
+<td style="text-align:left">Executable size</td>
+<td style="text-align:left">128 MB</td>
+<td style="text-align:left">165 MB</td>
+<td style="text-align:left">8.4 MB</td>
+<td style="text-align:left">$15.2\times$</td>
+</tr>
+<tr>
+<td style="text-align:left">Leak in 24 h soak test</td>
+<td style="text-align:left">&gt;400 MB</td>
+<td style="text-align:left">&lt;25 MB</td>
+<td style="text-align:left">None observed</td>
+<td style="text-align:left">n/a</td>
+</tr>
+</tbody>
+</table>
+</section>
 
-            <section id="section-6">
-                <h2>6. Synthesis Flow &amp; Topology</h2>
-                <p>The LemGendary AI Studio operates as a three-tier reactive synthesis topology:</p>
-                <ol>
-                    <li><strong>Native Host Layer (Rust &amp; Tauri v2)</strong>: Manages window lifecycle, platform security policies, and background process spawning.</li>
-                    <li><strong>Local Sidecar Service (FastAPI &amp; WebSockets)</strong>: Runs asynchronously on localhost port 8000, querying Python virtual environments, inspecting system hardware, and orchestrating pip manifest reconciliation.</li>
-                    <li><strong>Reactive Presentation Layer (React 18 &amp; Vanilla CSS)</strong>: Subscribes to the WebSocket event loop, maintaining decoupled state trees for hardware telemetry, project health matrices, pipeline progress, and monospace log streaming.</li>
-                </ol>
-                <p>State updates follow unidirectional dispatch flows:</p>
-                <p>$$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$</p>
-                <p>preventing UI race conditions and ensuring deterministic views during high-throughput training epochs.</p>
+<section id="6-synthesis-flow--topology">
+<h2>6. Synthesis Flow &amp; Topology</h2>
+<p>The LemGendary AI Studio GUI coordinates three headless sidecars:</p>
+<ol>
+<li><strong>Native Host Layer (Rust &amp; Tauri v2)</strong>: Manages the window lifecycle, the
+Content Security Policy, the shell capability and background process launch.</li>
+<li><strong>Tripartite Sidecar Mesh Boundary</strong>:
+<ul>
+<li><strong>LemGendary Environment Manager (Port 8000)</strong>: Probes host hardware,
+virtual environments, pip packages and npm workspaces; runs the clean
+install pipeline; stores secrets; receives bug reports.</li>
+<li><strong>LemGendary Dataset Compiler Suite (Port 8100)</strong>: Serves the dataset
+manifold catalog, format statistics, compiler presets, and compilation and
+modernization jobs.</li>
+<li><strong>LemGendary Model Training Suite (Port 8200)</strong>: Streams training runs, GPU
+utilization, loss convergence and export jobs.</li>
+</ul>
+</li>
+<li><strong>Reactive Presentation Layer (React 18 &amp; Vanilla CSS)</strong>: Subscribes to the
+sidecars over WebSockets and REST, with one store for telemetry, compilation
+jobs, training cards and log streams.</li>
+</ol>
+<p>State updates follow unidirectional dispatch flows:</p>
+<div class="math-block">$$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$</div>
+<p>preventing UI race conditions and ensuring deterministic views during
+high-throughput training epochs.</p>
+<h3 id="61-dynamic-mesh-configuration--protocol-agnostic-origin-routing">6.1 Dynamic Mesh Configuration &amp; Protocol-Agnostic Origin Routing</h3>
+<p>The desktop frontend keeps all sidecar addresses in one configuration module
+(<code>src/api/config.ts</code>, <code>MESH_SERVICES</code>):</p>
+<ul>
+<li><strong>Environment Overrides &amp; Protocol Translation</strong>: <code>VITE_ENV_MANAGER_URL</code>,
+<code>VITE_DATASET_COMPILER_URL</code> and <code>VITE_TRAINING_SUITE_URL</code> override the
+defaults; <code>toWebSocketUrl()</code> maps HTTP or HTTPS to WS or WSS.</li>
+<li><strong>Liveness Probes</strong>: Each service entry has a <code>livenessPath</code>. The Environment
+Manager is probed on the constant-time <code>GET /api/ping</code>; the Dataset Compiler
+Suite and Model Training Suite on <code>GET /api/health</code>. The full health audit
+loads only in the Health view.</li>
+<li><strong>Semantic Origin Routing</strong>: Telemetry frames carry an <code>origin</code> identifier
+(<code>&quot;env-manager&quot;</code>, <code>&quot;dataset-compiler&quot;</code>, <code>&quot;training-suite&quot;</code>), so stream
+filtering does not depend on port numbers or host names.</li>
+<li><strong>In-Place Telemetry Roll-Up</strong>: <code>rollupTelemetryEvents()</code> coalesces
+carriage-return ticks (<code>\r</code>) and requirement installation ticks
+(<code>INSTALLING:</code>, <code>DOWNLOADING:</code>, <code>RESOLVING:</code>, <code>Collecting</code>,
+<code>Requirement already satisfied:</code>) in place, while batch metrics, loss values,
+learning rates and milestones stay as separate records.</li>
+<li><strong>Accessible Pipeline Telemetry Progress Engine</strong>: <code>TelemetryProgressTracker</code>
+above the log stream shows live operations. For the package installation step
+an amber theme (<code>var(--accent-amber, #ffd166)</code>) shows requirement index,
+package name, download rate, ETA and an indeterminate bar while pip resolves.</li>
+<li><strong>TQDM &amp; Ultralytics Telemetry Stream Parsing</strong>: <code>progressParser.ts</code>
+recognizes tqdm and Ultralytics progress (<code>elapsed&lt;remaining</code>, for example
+<code>&lt;01:29:22</code>) and extracts the remaining time. It strips log timestamp prefixes
+(for example <code>11:11:36 PM</code>) and rejects purely numeric candidates, so YOLO and
+vision training streams resolve to the operation <code>TRAINING</code>.</li>
+</ul>
+<h3 id="62-universal-dynamic-configuration--registry-editor">6.2 Universal Dynamic Configuration &amp; Registry Editor</h3>
+<p>The desktop interface embeds a non-blocking configuration and registry modal.
+Operators can inspect and edit the core ecosystem configuration files:</p>
+<ul>
+<li><code>unified_data.yaml</code>: Source definitions, upstream repositories (Kaggle,
+Hugging Face, GitHub, Google Drive), and annotation schemas.</li>
+<li><code>unified_models_v2.yaml</code>: Model definitions, spatial ladder progressions, loss
+weightings, and manifold references.</li>
+<li><code>config.yaml</code> / <code>presets.yaml</code>: Compiler presets, degradation configurations,
+and training defaults.</li>
+<li><code>runtime_env.yaml</code>: Multi-environment overrides for local, Kaggle, Saturn
+Cloud, and Google Colab runtimes.</li>
+<li><code>requirements.txt</code> / <code>package.json</code>: Dependency manifests, validated before
+saving.</li>
+</ul>
+<p>The editor is a plain text area. Before writing, it sends the content to
+<code>POST /api/manifests/validate</code> on the Environment Manager and shows the YAML or
+JSON validation result.</p>
+<h3 id="63-contextual-ux-help--micro-documentation-layer">6.3 Contextual UX Help &amp; Micro-Documentation Layer</h3>
+<p>Interactive controls carry an inline contextual help tooltip badge
+(<code>HelpTooltip</code>):</p>
+<ul>
+<li><strong>Visual Affordance</strong>: A small circular help glyph next to form controls,
+buttons, toggles and status badges.</li>
+<li><strong>Hover Micro-Documentation</strong>: A high-contrast tooltip explains in plain
+language what the action does, its CLI equivalent where one exists, and its
+consequences.</li>
+<li><strong>Accessibility &amp; Zero-Distraction</strong>: Tooltips follow WCAG 2.2
+non-interference guidelines and disappear when the pointer leaves, without
+covering the dashboard.</li>
+</ul>
+<h3 id="64-dataset-compiler--kaggle-cloud-synchronization-hub">6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization Hub</h3>
+<p>The desktop interface integrates a visual control plane for the LemGendary
+Dataset Compiler Suite (<code>Port 8100</code>):</p>
+<ul>
+<li><strong>Compilation Mode Switcher</strong>:
+<ul>
+<li><strong>Standard Manifold Compilation</strong>: Compiles a registered manifold
+(<code>POST /api/gui/quick-compile</code> with <code>model</code> and <code>preset</code>). The preset list
+comes only from the sidecar's <code>presets.yaml</code> (<code>GET /api/gui/presets</code>);
+&quot;Server default&quot; lets the sidecar apply its default preset, and an unknown
+preset shows the server's 422 detail with the valid names.</li>
+<li><strong>Custom Multi-Source Compilation</strong>: Aggregates Kaggle, Hugging Face, Google
+Drive and GitHub sources into a new manifold
+(<code>POST /api/gui/custom-compile</code>).</li>
+</ul>
+</li>
+<li><strong>Card-Level Kaggle Cloud Synchronization</strong>:
+<ul>
+<li><strong>Direct Manifold Actions</strong>: Every manifold card offers <code>Update Metadata</code>
+(pushes the metadata without re-uploading data), <code>Download</code> (fetches the
+remote shards) and <code>Upload</code> (packages and publishes the local shards).</li>
+<li><strong>Global Metadata &amp; Index Synchronization</strong>: The toolbar pushes metadata for
+all registered Kaggle datasets in one call
+(<code>POST /api/kaggle/update-metadata</code> with <code>all_datasets: true</code>) and
+regenerates the on-disk index (<code>POST /api/modernize/regenerate-manifolds</code>).</li>
+</ul>
+</li>
+<li><strong>Production Manifolds Catalog, Modernization Queue &amp; Scale Reduction</strong>:
+<ul>
+<li>The catalog grid shows the production manifolds with shard counts, total
+samples, disk footprint, format breakdown (WebP, JPG, PNG), upstream source
+popovers and <code>COMPILED</code> badges.</li>
+<li>The Modernization Queue sub-tab lists the server queue
+(<code>GET /api/modernize/queue</code>, a bare list) and dispatches parallel WebP
+transcoding (<code>POST /api/modernize/run</code>).</li>
+<li>The Scale Reduction sub-tab derives downsampled dataset variants (10%, 25%,
+50%, 75%) for fast training iterations (<code>POST /api/modernize/reduce</code>).</li>
+</ul>
+</li>
+<li><strong>Job Tracking</strong>: Every job route returns a <code>DatasetJobResponse</code> whose <code>id</code>
+the panel shows; progress arrives over <code>WS /api/ws/events</code> and appears in the
+shared log panel.</li>
+</ul>
+<h3 id="65-headless-windowless-service-lifecycle--auto-start-on-launch">6.5 Headless Windowless Service Lifecycle &amp; Auto-Start on Launch</h3>
+<p>The desktop runtime starts sidecars without visible console windows on Windows,
+Linux and macOS:</p>
+<ul>
+<li><strong>Zero-Window Background Execution</strong>: On Windows the native <code>spawn_service</code>
+command uses <code>.venv/Scripts/pythonw.exe</code> with <code>CREATE_NO_WINDOW</code>
+(<code>0x08000000</code>). Standard input, output and error are discarded
+(<code>Stdio::null</code>), so sidecar output is read from the sidecars' own log files
+and WebSocket streams.</li>
+<li><strong>Service Control Routing</strong>: Start, stop and start-all go to the Environment
+Manager (<code>POST /api/services/{id}/start</code>, <code>POST /api/services/{id}/stop</code>,
+<code>POST /api/services/start-all</code>) when its <code>/api/ping</code> answers. When it is
+offline, the desktop app falls back to the native Tauri commands
+<code>spawn_service</code> and <code>spawn_all_services</code>; a plain browser session shows a
+clear error instead.</li>
+<li><strong>Automated Mesh Bootstrapping</strong>: On launch the GUI probes the three sidecars
+and starts the offline ones in the background, then keeps polling until they
+answer.</li>
+<li><strong>Rapid Decoupled Probing</strong>: Liveness probes are cheap (section 6.1) and
+repeat every 4 seconds, independent of the full dependency audit.</li>
+</ul>
+<h3 id="66-test--diagnostic-orchestrator-integration">6.6 Test &amp; Diagnostic Orchestrator Integration</h3>
+<p>The Test &amp; Diagnostic Orchestrator modal (<code>src/components/TestModal.tsx</code>) opens
+from the &quot;Tests &amp; Diagnostics&quot; header button (<code>#header-btn-test-modal</code>) and
+offers:</p>
+<ol>
+<li><strong>Fleet 1-Epoch Smoke Test</strong>: Queues a 1-epoch pass across all 23 registered
+architectures (<code>POST /api/training/unit-test-all</code>); the console shows
+<code>QUEUED</code> with the job id.</li>
+<li><strong>Training Suite Unit Battery</strong>: Runs the Model Training Suite unit tests
+in-process (<code>POST /api/training/unit-test-run</code>).</li>
+<li><strong>Dataset Compiler Unit Battery</strong>: Runs the Dataset Compiler Suite tests
+in-process (<code>POST /api/llm/test-suite</code>).</li>
+</ol>
+<p>Both unit test routes are resolved through <code>MESH_SERVICES</code>, so the modal
+contains no hard-coded ports. Missing <code>failures</code> or <code>errors</code> arrays in a
+response are normalized instead of crashing the modal, and Escape closes it.</p>
+<h3 id="67-comprehensive-testing--ecosystem-verification-battery">6.7 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
+<p>The GUI codebase is verified by an automated test battery:</p>
+<ul>
+<li><strong>Component &amp; Integration Testing</strong>: 136 Vitest tests (release <code>v2.10.19</code>)
+cover sidecar routing and fallbacks, request field names against the sidecars'
+<code>openapi.json</code> files, the compiler and training panels, the config and secrets
+editors, the clean install dialog, the Report Issue modal and annotator, and a
+scan that fails when a <code>className</code> has no CSS rule.</li>
+<li><strong>Ecosystem Compliance</strong>:
+<code>lem-env validate --project lemgendary-ai-studio-gui</code> checks zero-emoji
+compliance, ESLint, TypeScript typing (including <code>vite.config.ts</code>) and the
+accessibility contracts.</li>
+</ul>
+<h3 id="68-ecosystem-maintenance--governance-controls">6.8 Ecosystem Maintenance &amp; Governance Controls</h3>
+<p>The Health view embeds operational controls backed by the LemGendary Environment
+Manager, together with a dependency audit across the Python virtual environments
+and the GUI's npm packages:</p>
+<ul>
+<li><strong>Cross-Project Python Drift Matrix</strong>: Compares <code>unified_requirements.yaml</code>
+with the installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>
+and <code>lemgendary-training-suite</code>.</li>
+<li><strong>Desktop GUI Project Packages (NPM) Audit</strong>: Reads <code>package.json</code> and
+<code>node_modules</code> of <code>lemgendary-ai-studio-gui</code>, including <code>@tauri-apps/api</code>,
+<code>@tauri-apps/plugin-shell</code>, <code>@radix-ui/react-progress</code>, <code>modern-screenshot</code>,
+<code>react</code>, <code>react-dom</code> and <code>zustand</code>.</li>
+<li><strong>Safe Package Upgrades &amp; Dry Runs</strong>: <code>POST /api/update</code> starts a background
+job and returns its <code>job_id</code> at once; progress arrives in the logs, and <code>409</code>
+means an update or the pipeline is already running.</li>
+<li><strong>Deep Cache Purges</strong>: Cleans <code>__pycache__</code>, build remnants and staging
+residues and reports the recovered bytes (<code>POST /api/clean</code>).</li>
+<li><strong>Standardized Git Hooks</strong>: Installs the pre-commit hooks with the zero-emoji
+and compilation gates (<code>POST /api/hooks/install</code>).</li>
+<li><strong>Multi-Gate Ecosystem Validation</strong>: Runs the validation gates for all
+repositories (<code>POST /api/validate</code>).</li>
+</ul>
+<h3 id="69-centralized-state-zustand--solid-component-hierarchy">6.9 Centralized State (Zustand) &amp; S.O.L.I.D. Component Hierarchy</h3>
+<p>A central Zustand store (<code>src/store/useStudioStore.ts</code>) gives deterministic
+state transitions without prop drilling:</p>
+<ul>
+<li><strong>Unified Global State Store</strong>: Sidecar online status (ports 8000, 8100,
+8200), hardware telemetry, local and cloud training jobs, model and dataset
+caches, the log ring buffer (200 events) and the open modal (<code>activeModal</code>:
+<code>config</code>, <code>tests</code> or <code>bug-report</code>).</li>
+<li><strong>Single Responsibility Deconstruction</strong>:
+<ul>
+<li><code>TrainingPanel.tsx</code>: A coordinator for <code>ModelManifoldCard.tsx</code>,
+<code>TelemetryConsole.tsx</code> and <code>TrainingToolbar.tsx</code> (search, filters, notebook
+generation and &quot;Push All Models to Kaggle&quot;).</li>
+<li><code>CompilerPanel.tsx</code>: A coordinator for <code>DatasetManifoldCard.tsx</code>,
+<code>DatasetCompilationForm.tsx</code>, <code>ModernizationQueueTable.tsx</code>,
+<code>ScaleReductionView.tsx</code> and <code>CompilerToolbar.tsx</code>.</li>
+<li><code>ConfigEditorModal.tsx</code>: Split into <code>ManifestEditorTab.tsx</code> (text editor
+with server-side YAML and JSON validation) and <code>SecretsEditorTab.tsx</code>
+(write-only credential editor, section 6.12).</li>
+<li><code>CloudTrainModal.tsx</code>: Uses <code>VariationIsolationChecker.tsx</code> for
+multi-variation validation.</li>
+<li><code>src/navigation/workspaceTabs.ts</code>: The tab ids, labels and help texts used
+by the sidebar, the <code>?tab=</code> parser and the bug report module select.</li>
+</ul>
+</li>
+<li><strong>Offline Placeholders (<code>src/components/training/fallbackModels.ts</code>,
+<code>src/components/compiler/fallbackDatasets.ts</code>)</strong>: While a sidecar is offline,
+the panels show placeholder cards with identity metadata only. Fallback models
+are marked <code>offline_placeholder: true</code> and show <code>UNKNOWN (OFFLINE)</code> instead of
+invented status, epochs or metrics; placeholders are never written to the
+store cache, and the panel refetches when the sidecar comes back. The dataset
+placeholders still list static sample counts and sizes.</li>
+<li><strong>Control ID Registry</strong>: Interactive controls carry stable DOM IDs listed in
+<a href="gui-control-registry.html"><code>GUI_CONTROL_REGISTRY.md</code></a>; the registry is
+rebuilt from the <code>id</code> attributes in the source.</li>
+<li><strong>Shared Micro-Components &amp; Utilities</strong>:
+<ul>
+<li><code>Modal.tsx</code>: Shared dialog with <code>role=&quot;dialog&quot;</code>, <code>aria-modal</code>, a labelled
+title, a Tab focus trap, Escape closing only the innermost modal and focus
+returning to the opener.</li>
+<li><code>ValidationBanner.tsx</code>: Banner with message type detection (<code>info</code>,
+<code>success</code>, <code>warning</code>, <code>error</code>), dismiss buttons and WAI-ARIA alert and
+status semantics.</li>
+<li><code>HoverPinPopover.tsx</code>: CSS hover and semantic <code>&lt;button&gt;</code> pin popover that
+follows the <code>jsx-a11y</code> rules.</li>
+<li><code>src/utils/clipboard.ts</code>: Clipboard export with
+<code>navigator.clipboard.writeText</code> and a fallback for sandboxed webviews.</li>
+</ul>
+</li>
+</ul>
+<h3 id="610-multi-variation-kaggle-model-hub-staging--strict-isolation-contract">6.10 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
+<p>The desktop application orchestrates the LemGendary multi-variation distribution
+contract on the Kaggle Models Hub:</p>
+<ul>
+<li><strong>Strict 4-Variation Isolation</strong>: Enforces clean partition across isolated
+model directories:
+<ul>
+<li>Variation 1 (<code>pytorch/default</code>): Canonical PyTorch checkpoints
+(<code>checkpoints/</code> containing <code>best.pth</code>, <code>latest.pth</code>) alongside model cards
+and training metrics (<code>metrics.csv</code>).</li>
+<li>Variation 2 (<code>pytorch/fp32</code>): Native full-precision PyTorch weights
+(<code>[Model].pt</code>).</li>
+<li>Variation 3 (<code>onnx/fp16</code>): Edge-optimized half-precision ONNX computational
+graph (<code>[Model].onnx</code>).</li>
+<li>Variation 4 (<code>onnx/fp32</code>): High-precision standard ONNX exports
+(<code>[Model]_FP32.onnx</code> and <code>.data</code> sidecar).</li>
+</ul>
+</li>
+<li><strong>Single Source of Truth Metadata (<code>model_metadata.yaml</code>)</strong>: Model
+documentation, licensing, fine-tunability, tags, and variation usage examples
+are managed in <code>model_metadata.yaml</code> and applied through the Kaggle REST API.</li>
+<li><strong>Fleet-Wide Kaggle Models Hub Push</strong>: The &quot;Push All Models to Kaggle&quot; toolbar
+action (<code>POST /api/training/kaggle/push-all</code>) stages, validates and publishes
+all 23 registered architectures and their variations.</li>
+<li><strong>Pre-Upload Isolation Gate</strong>:
+<code>GET /api/models/{model_key}/variations/validate</code> reports per variation
+whether the files are isolated before anything is uploaded.</li>
+<li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging locally
+before live Kaggle API uploads.</li>
+</ul>
+<h3 id="611-three-tab-real-time-telemetry-stream--responsive-cancellation">6.11 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+<p>The Model Training Suite view has a three-tab telemetry console; the Dataset
+Compiler Suite and Health views use the shared log panel:</p>
+<ul>
+<li><strong>Local Training Stream</strong>: Worker execution logs, loss curves, gradient norms
+and spatial ladder transitions of local jobs.</li>
+<li><strong>Remote Cloud Stream</strong>: Events of the attached remote job and of the job
+types <code>kaggle_train</code>, <code>kaggle_monitor</code> and <code>cloud_push</code>
+(<code>isRemoteTrainingEvent</code>); local events exclude them.</li>
+<li><strong>Ecosystem Mesh Stream</strong>: Health probes, audit logs and service events across
+ports 8000, 8100 and 8200.</li>
+<li><strong>Accessible Radix UI Progress Architecture</strong>: <code>@radix-ui/react-progress</code>
+shows a metrics header (operation, percentage, sizes, throughput and ETA)
+above the progress indicator.</li>
+<li><strong>In-Place Stream De-duplication</strong>: Consecutive progress ticks are rolled up
+in place; step start, verification and completion records stay.</li>
+<li><strong>Confirmed Cancellation</strong>: Stop sends <code>POST /api/jobs/{job_id}/cancel</code>. The
+job is cleared only when the sidecar answers <code>cancelled: true</code>; otherwise an
+error banner shows the sidecar's detail and the job stays. While a local job
+is attached, the panel polls <code>GET /api/jobs/{job_id}</code> every 3 seconds and
+clears the job on <code>completed</code>, <code>failed</code> or <code>cancelled</code>.</li>
+</ul>
+<h3 id="612-security-model">6.12 Security Model</h3>
+<p>The GUI and the three sidecars share one security contract:</p>
+<ul>
+<li><strong>Loopback Binding</strong>: Each sidecar listens on <code>127.0.0.1</code> by default.</li>
+<li><strong>Origin Guard</strong>: Each sidecar keeps an allow-list of origins in one module
+(<code>tauri://localhost</code>, <code>http://tauri.localhost</code>, <code>https://tauri.localhost</code>,
+<code>http://localhost:1420</code>, <code>http://127.0.0.1:1420</code>). A request whose <code>Origin</code> is
+not on the list gets <code>403</code>, and WebSocket handshakes from a foreign <code>Origin</code>
+are rejected.</li>
+<li><strong>Client Header</strong>: Browser requests with an <code>Origin</code> that use <code>POST</code>, <code>PUT</code>,
+<code>PATCH</code> or <code>DELETE</code> must send <code>X-LemGendary-Client: ai-studio-gui</code>, else they
+get <code>403</code>. The GUI adds the header to every sidecar request through one helper
+(<code>sidecarFetch</code> in <code>src/api/http.ts</code>). Requests without an <code>Origin</code> (CLI,
+curl, tests) pass this check. Together, the allow-list and the header stop
+other web pages from calling the sidecars.</li>
+<li><strong>Content Security Policy</strong>: <code>tauri.conf.json</code> sets a strict policy:
+<code>default-src 'self'</code>, <code>script-src 'self'</code>, <code>object-src 'none'</code> and
+<code>frame-src 'none'</code>; styles and fonts only from the app and Google Fonts;
+images from the app plus <code>data:</code> and <code>blob:</code> (for screenshots); <code>connect-src</code>
+limited to Tauri IPC, the three sidecars on ports 8000, 8100 and 8200 of
+<code>127.0.0.1</code> and <code>localhost</code>, and <code>https://fonts.gstatic.com</code> for font
+embedding in screenshots. A separate <code>devCsp</code> adds what the Vite dev server
+needs.</li>
+<li><strong>Masked Secrets</strong>: <code>GET /api/secrets</code> returns for each credential only
+whether it is set (<code>has_value</code>) and its last 4 characters (<code>value_hint</code>). The
+Secrets editor shows <code>set (••••1234)</code>, <code>set</code> or <code>not set</code>. A password field
+replaces a value and a blank field keeps it, so the GUI never reads a stored
+secret back; after saving, the masked list is reloaded so typed values leave
+memory.</li>
+<li><strong>Shell Capability</strong>: The capability file grants the main window
+<code>core:default</code> and <code>shell:allow-open</code> with the shell plugin's default scope
+(<code>http</code>, <code>https</code>, <code>mailto</code> and <code>tel</code> links); the Documentation Hub button
+uses it to open the hub in the system browser.</li>
+<li><strong>No Side Effects on GET</strong>: Read requests do not change state; for example,
+<code>GET /api/secrets</code> no longer writes the secrets file.</li>
+</ul>
+<h3 id="613-bug-reporting-subsystem">6.13 Bug Reporting Subsystem</h3>
+<p>The &quot;Report Issue&quot; header button (<code>header-btn-report-issue</code>) opens
+<code>BugReportModal</code>, built on the shared <code>Modal</code> component. The design keeps every
+secret out of the app: there is no SMTP account, and the report never leaves the
+machine except through the operator's own mail client.</p>
+<ul>
+<li><strong>Form</strong>: Email, module (a select built from the sidebar tabs and preselected
+from the current tab), a description of 50 to 10,000 characters with a live
+counter, an &quot;Attach telemetry&quot; checkbox (on by default) and a strip of up to 5
+screenshots.</li>
+<li><strong>Screenshot Annotator</strong>: <code>ScreenshotAnnotator</code> captures the app's root
+element with <code>modern-screenshot</code> 4.7.0 (pinned; elements marked
+<code>data-capture-exclude</code>, such as the modal itself, are left out). The operator
+draws one highlight rectangle and saves the image as WebP (quality 0.92), or
+PNG where the webview cannot export WebP, halved in size until it fits 5 MB.</li>
+<li><strong>Telemetry</strong>: The recent log events are written as an RFC 4180 CSV file with
+the header <code>timestamp,status,source,message</code>.</li>
+<li><strong>Limits</strong>: One module (<code>src/bugReport/limits.ts</code>) mirrors the server limits:
+5 screenshots of at most 5 MB each (PNG or WebP), telemetry at most 2 MB and
+80 MB per report.</li>
+<li><strong>Submission</strong>: <code>submitBugReport()</code> posts the multipart form to the LemGendary
+Environment Manager (<code>POST /api/bug-report</code>) with <code>app_version</code> and
+<code>current_tab</code>. The server checks file types by their leading bytes, writes
+<code>report.csv</code>, saves <code>bug_report_&lt;timestamp&gt;.zip</code> to the <code>bug-reports</code> folder
+at the workspace root, opens the mail client (<code>mailto:</code>) with recipient and
+subject filled in, and opens the folder through a typed platform adapter.
+Recipient and subject live in the Environment Manager's configuration.</li>
+<li><strong>Results and Errors</strong>: The success view shows the archive name and relative
+path, the recipient and subject with copy buttons, and a note when the mail
+client or folder did not open. Errors map to <code>offline</code> (&quot;Environment Manager
+is not running&quot;), <code>validation</code> (422 entries shown under the matching field by
+<code>loc</code>), <code>too_large</code> (413) and <code>server</code>.</li>
+<li><strong>Screen Recording</strong>: Planned, not available yet. The form already contains a
+disabled recording slot; a native, app-window-only recorder (at most 60
+seconds, one clip per report) will plug into it.</li>
+</ul>
+</section>
 
-                <h3>6.1 Dynamic Mesh Configuration &amp; Protocol-Agnostic Origin Routing</h3>
-                <p>The desktop frontend decouples network addresses through a centralized Single Source of Truth configuration module (<code>src/api/config.ts</code>):</p>
-                <ul>
-                    <li><strong>Environment Overrides &amp; Protocol Translation</strong>: Configured via <code>VITE_ENV_MANAGER_URL</code>, <code>VITE_DATASET_COMPILER_URL</code>, and <code>VITE_TRAINING_SUITE_URL</code> with automatic HTTP/HTTPS to WS/WSS protocol mapping via <code>toWebSocketUrl()</code>.</li>
-                    <li><strong>Semantic Origin Routing</strong>: Message telemetry frames attach verified <code>origin</code> identifiers (<code>"env-manager"</code>, <code>"dataset-compiler"</code>, <code>"training-suite"</code>), rendering stream filtering strictly decoupled from local port numbers or cloud hosting domains.</li>
-                    <li><strong>In-Place Telemetry Roll-Up</strong>: The terminal event pipeline incorporates <code>rollupTelemetryEvents()</code>, coalescing transient carriage-return ticks (<code>\r</code>) as well as live requirement installation progression ticks (<code>INSTALLING:</code>, <code>DOWNLOADING:</code>, <code>RESOLVING:</code>, <code>Collecting</code>, <code>Requirement already satisfied:</code>) in-place. This eliminates terminal clutter and screen flickering while preserving discrete batch metrics, loss statistics, learning rates, and milestone records.</li>
-                    <li><strong>Accessible Pipeline Telemetry Progress Engine</strong>: Positioned directly above the monospace terminal stream, <code>TelemetryProgressTracker</code> visualizes live operations via high-contrast styling tokens. For Step 4 package installation, a dedicated amber pipeline theme (<code>var(--accent-amber, #ffd166)</code>) renders real-time requirement indexes, package names, wheel download transfer bandwidth, ETA countdowns, and indeterminate in-flight progress bars during resolution phases.</li>
-                    <li><strong>TQDM &amp; Ultralytics Telemetry Stream Parsing</strong>: The stream processor (<code>progressParser.ts</code>) integrates native regex recognition for standard tqdm/Ultralytics console telemetry (<code>elapsed&lt;remaining</code>, e.g., <code>&lt;01:29:22</code>), extracting accurate remaining duration ETAs into the progress tracker. It strips leading log timestamp prefixes (e.g., <code>11:11:36 PM</code>) and rejects purely numeric candidate tokens, ensuring YOLO and vision training streams cleanly resolve to operation <code>TRAINING</code>.</li>
-                </ul>
+<section id="7-unified-models-registry">
+<h2>7. Unified Models Registry</h2>
+<p>The desktop application integrates directly with the LemGendary Unified Models
+Registry. Through the GUI, researchers inspect active model weights, monitor
+dynamic spatial ladder progression, track training metrics (PSNR, SSIM, LPIPS,
+Quality Score), and trigger ONNX exports across all registered vision and
+financial models. One request (<code>GET /api/gui/models/with-stats</code>) returns every
+model together with its latest resolution, data fraction and epochs from
+<code>metrics.csv</code>.</p>
+<p>The registry binding invariant verifies:</p>
+<div class="math-block">$$\forall m \in \mathcal{M}_{\text{registry}}, \quad \text{Exists}(m.\text{checkpoint}) \implies \text{ValidCheckpointHeader}(m) = \text{True}$$</div>
+<p>This gives operators a visual check of checkpoint integrity before cloud
+deployments or edge quantization.</p>
+</section>
 
-                <h3>6.2 Universal Dynamic Configuration &amp; Registry Editor</h3>
-                <p>The desktop interface embeds an in-process, non-blocking configuration and registry management modal. Operators can dynamically inspect and edit core ecosystem configuration files:</p>
-                <ul>
-                    <li><code>unified_data.yaml</code>: Source definitions, upstream repositories (Kaggle, HuggingFace, GitHub, Google Drive), and annotation schemas.</li>
-                    <li><code>unified_models_v2.yaml</code>: Model definitions, spatial ladder progressions, loss weightings, and manifold references.</li>
-                    <li><code>config.yaml</code> / <code>presets.yaml</code>: Compiler presets, degradation configurations, and training defaults.</li>
-                    <li><code>runtime_env.yaml</code>: Multi-environment overrides for local, Kaggle, Saturn Cloud, and Google Colab runtimes.</li>
-                    <li><code>requirements.txt</code> / <code>package.json</code>: Dependency manifests with automatic syntax validation prior to saving.</li>
-                </ul>
-                <p>The editor guarantees schema safety through real-time YAML and JSON syntax parsing, displaying visual syntax validation badges and diff confirmations before writing changes to disk.</p>
+<section id="8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The LemGendary AI Studio GUI delivers a modern, lightweight, and robust control
+center for machine learning engineering. By replacing bulky web runtimes with a
+Tauri v2 shell, a reactive React 18 interface, a tripartite sidecar mesh guarded
+by an origin allow-list and client header, a universal configuration editor with
+write-only secrets, a local-first bug reporter and contextual hover
+micro-documentation, the system sets a high bar for developer ergonomics,
+resource efficiency and ecosystem stability.</p>
+</section>
 
-                <h3>6.3 Contextual UX Help &amp; Micro-Documentation Layer</h3>
-                <p>To eliminate operator ambiguity across complex machine learning and compilation controls, every interactive element across the interface integrates an inline contextual help tooltip badge (<code>HelpTooltip</code>):</p>
-                <ul>
-                    <li><strong>Visual Affordance</strong>: Rendered as a subtle, unobtrusive circular help glyph adjacent to form controls, buttons, toggles, and status badges.</li>
-                    <li><strong>Hover Micro-Documentation</strong>: Displays a high-contrast glassmorphic tooltip providing immediate, plain-language guidance explaining the exact behavior, CLI equivalent flag, and architectural consequence of the action.</li>
-                    <li><strong>Accessibility &amp; Zero-Distraction</strong>: Tooltips adhere to WCAG 2.2 non-interference guidelines, disappearing automatically when the cursor moves away without obstructing the underlying operational dashboard.</li>
-                </ul>
-
-                <h3>6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization Hub</h3>
-                <p>The desktop interface integrates a dedicated visual control plane for the Dataset Compiler sidecar (<code>Port 8100</code>):</p>
-                <ul>
-                    <li><strong>Compilation Mode Switcher</strong>:
-                        <ul>
-                            <li><strong>Standard Manifold Presets</strong>: Rapid synthesis of registered production manifolds using predefined storage presets (<code>streaming-webdataset</code>, <code>columnar-parquet</code>, <code>mosaicml-mds</code>, <code>lightning-litdata</code>), customizable shard sample bounds, and automatic loose image reclamation.</li>
-                            <li><strong>Direct Kaggle Ingestion</strong>: Direct cloud ingestion pipeline pulling remote research datasets directly from Kaggle URLs (<code>https://kaggle.com/datasets/...</code>) or slugs (<code>owner/dataset</code>) straight into streaming WebDataset shards, automatically registering new manifold specifications into <code>unified_data.yaml</code>.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Card-Level Kaggle Cloud Synchronization</strong>:
-                        <ul>
-                            <li><strong>Direct Manifold Actions</strong>: Every manifold card in the catalog integrates direct one-click actions: <code>Update Metadata</code> (pushes JSON schema updates without data re-upload), <code>Download from Kaggle</code> (fetches remote shards with checksum verification), and <code>Upload to Kaggle</code> (packages and publishes compiled local shards).</li>
-                            <li><strong>Global Metadata &amp; Index Synchronization</strong>: Top toolbar provides global batch synchronization (<code>POST /api/kaggle/update-metadata</code> with <code>all_datasets: true</code>) pushing metadata records across all 20 canonical Kaggle datasets in a single non-blocking call, as well as on-disk index regeneration (<code>POST /api/modernize/regenerate-manifolds</code>).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Production Manifolds Catalog, Modernization Queue &amp; Scale Reduction</strong>:
-                        <ul>
-                            <li>Live inspection grid displaying all 20 production manifolds with container shard counts, total samples, disk footprints, format breakdown (WebP, JPG, PNG), upstream source lineage popovers, and verified <code>COMPILED</code> badges backed by in-memory filesystem caching.</li>
-                            <li>Modernization Queue sub-tab detecting legacy PNG/JPEG datasets, configuring worker threads, dry-run flags, and dispatching parallel WebP transcoding (<code>POST /api/modernize/run</code>).</li>
-                            <li>Scale Reduction sub-tab deriving spatially downsampled dataset variants (10%, 25%, 50%, 75%) for rapid training iterations (<code>POST /api/modernize/reduce</code>).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Embedded Dataset Telemetry Console</strong>: Real-time monospace terminal docked at the bottom of the compiler panel streaming shard creation progress, WebP compression rates, and Kaggle API transfer metrics.</li>
-                </ul>
-
-                <h3>6.5 Headless Windowless Service Lifecycle &amp; Auto-Start on Launch</h3>
-                <p>The desktop runtime enforces a strictly non-intrusive service lifecycle across Windows, Linux, and macOS:</p>
-                <ul>
-                    <li><strong>Zero-Window Background Execution</strong>: Eliminates intrusive terminal windows or console prompts when launching sidecars. On Windows, execution utilizes <code>.venv/Scripts/pythonw.exe</code> (<code>IMAGE_SUBSYSTEM_WINDOWS_GUI</code>) combined with <code>CREATE_NO_WINDOW</code> (<code>0x08000000</code>) and standard stream redirection (<code>stdin=DEVNULL</code>, stdout/stderr to logs). On POSIX environments, <code>start_new_session=True</code> detaches processes into headless background daemon sessions.</li>
-                    <li><strong>Automated Mesh Bootstrapping</strong>: On GUI initialization, the runtime probes the tripartite mesh and autonomously bootstraps any offline sidecars in the background, continuously polling until the entire mesh reports healthy.</li>
-                    <li><strong>Rapid Decoupled Probing</strong>: Health status is queried within 90ms independently of heavy dependency audits, with a 4-second reactive background heartbeat loop.</li>
-                </ul>
-
-                <h3>6.6 Test &amp; Diagnostic Orchestrator Integration</h3>
-                <p>The GUI embeds a unified Test &amp; Diagnostic Orchestrator modal (<code>src/components/TestModal.tsx</code>) directly accessible via the top navigation bar (<code>#header-btn-test-modal</code>), providing immediate operational access to:</p>
-                <ol>
-                    <li><strong>Fleet 1-Epoch Smoke Test</strong>: Sequentially exercises all 23 neural architectures across vision restoration, detection, aesthetic scoring, multi-scale forex forecasting, and causal assistant LLMs (<code>POST /api/training/unit-test-all</code>).</li>
-                    <li><strong>Training Suite Unit Battery</strong>: Runs in-process unit test suites covering neural layers, loss formulations, SOTA governors, and tri-format export engines (<code>POST /api/training/unit-test-run</code>).</li>
-                    <li><strong>Dataset Compiler Unit Battery</strong>: Runs in-process unit tests validating knowledge ingestion, chunking, zero-emoji invariant gates, and metadata generation (<code>POST /api/llm/test-suite</code>).</li>
-                </ol>
-
-                <h3>6.7 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
-                <p>The GUI codebase is verified by an exhaustive automated testing battery:</p>
-                <ul>
-                    <li><strong>Component &amp; Integration Testing</strong>: Unit and smoke tests covering multi-sidecar fallback states, compiler panels, training cards, and config editor mutations.</li>
-                    <li><strong>Ecosystem Compliance</strong>: Enforced via <code>lem-env validate --project lemgendary-ai-studio-gui</code>, verifying zero-emoji compliance, ESLint standards, TypeScript typing, and WCAG 2.2 AA accessibility contracts.</li>
-                </ul>
-
-                <h3>6.8 Ecosystem Maintenance &amp; Governance Controls</h3>
-                <p>The Health view embeds direct operational controls for repository governance backed by Environment Manager alongside a comprehensive dependency audit spanning Python virtual environments and frontend Desktop GUI NPM packages:</p>
-                <ul>
-                    <li><strong>Cross-Project Python Drift Matrix</strong>: Continuously scans <code>unified_requirements.yaml</code> against installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>, and <code>lemgendary-training-suite</code>, verifying zero version drift across all backend services.</li>
-                    <li><strong>Desktop GUI Project Packages (NPM) Audit</strong>: Directly inspects <code>package.json</code> and <code>node_modules</code> for <code>lemgendary-ai-studio-gui</code>, tracking versions of <code>@tauri-apps/api</code>, <code>lucide-react</code>, <code>react</code>, <code>react-dom</code>, <code>recharts</code>, and <code>zustand</code>.</li>
-                    <li><strong>Safe Package Upgrades &amp; Dry Runs</strong>: Dispatches reverse topological upgrades with automated rollback on <code>pip check</code> failure (<code>POST /api/update</code>).</li>
-                    <li><strong>Deep Cache Purges</strong>: Recursively cleans <code>__pycache__</code>, build remnants, and staging residues with byte recovery feedback (<code>POST /api/clean</code>).</li>
-                    <li><strong>Standardized Git Hooks</strong>: Installs and validates pre-commit hooks enforcing zero-emoji and compilation gates (<code>POST /api/hooks/install</code>).</li>
-                    <li><strong>Multi-Gate Ecosystem Validation</strong>: Runs the multi-gate validation suite across all repositories directly from the UI (<code>POST /api/validate</code>).</li>
-                </ul>
-
-                <h3>6.9 Centralized State Architecture (Zustand) &amp; S.O.L.I.D. Component Hierarchy</h3>
-                <p>To ensure deterministic state transitions and eliminate prop drilling across deeply nested views, the GUI integrates a centralized Zustand store (<code>src/store/useStudioStore.ts</code>):</p>
-                <ul>
-                    <li><strong>Unified Global State Store</strong>: Coordinates sidecar online statuses (Ports 8000, 8100, 8200), hardware accelerator telemetry, active local and cloud training job states, model and dataset cache manifolds, and real-time ANSI terminal log streams.</li>
-                    <li><strong>Single Responsibility Deconstruction</strong>: Monolithic view components are deconstructed into focused, decoupled micro-components:
-                        <ul>
-                            <li><code>TrainingPanel.tsx</code>: Refactored into a lightweight coordinator delegating to <code>ModelManifoldCard.tsx</code>, <code>TelemetryConsole.tsx</code>, and <code>TrainingToolbar.tsx</code> (housing live search, status/category/architecture filters, fleet diagnostic smoke tests, notebook batch generation, and &quot;Push All Models to Kaggle&quot;).</li>
-                            <li><code>CompilerPanel.tsx</code>: Refactored into a coordinator delegating to <code>DatasetManifoldCard.tsx</code>, <code>DatasetCompilationForm.tsx</code>, <code>ModernizationQueueTable.tsx</code>, <code>ScaleReductionView.tsx</code>, and <code>CompilerToolbar.tsx</code>.</li>
-                            <li><code>ConfigEditorModal.tsx</code>: Deconstructed from 790 lines into <code>ManifestEditorTab.tsx</code> (YAML/JSON syntax validation, Monaco diff viewer) and <code>SecretsEditorTab.tsx</code> (encrypted credentials vault).</li>
-                            <li><code>CloudTrainModal.tsx</code>: Extracted <code>VariationIsolationChecker.tsx</code> for multi-variation validation.</li>
-                        </ul>
-                    </li>
-                    <li><strong>Modular Offline Fallback Hydration (<code>src/data/fallbackModels.ts</code>, <code>src/data/fallbackDatasets.ts</code>)</strong>: Decouples static fallback data from the store into strongly-typed modules representing 19 model specifications and 20 production manifolds, enabling instantaneous UI hydration without sidecar dependencies.</li>
-                    <li><strong>Canonical DOM Test Control Registry (<code>src/data/guiControlRegistry.ts</code>)</strong>: Standardizes all 32 interactive UI elements with canonical DOM IDs defined in <code>GUI_CONTROL_REGISTRY.md</code> for deterministic test automation.</li>
-                    <li><strong>Shared Micro-Components &amp; Utilities</strong>:
-                        <ul>
-                            <li><code>ValidationBanner.tsx</code>: Centralized banner component with automatic message type deduction (<code>info</code>, <code>success</code>, <code>warning</code>, <code>error</code>), dismiss buttons, and full WAI-ARIA alert/status semantics.</li>
-                            <li><code>HoverPinPopover.tsx</code>: Reusable CSS hover and native semantic <code>&lt;button&gt;</code> pin popover strictly compliant with <code>jsx-a11y</code> accessibility standards.</li>
-                            <li><code>src/utils/clipboard.ts</code>: Dedicated zero-loss clipboard export utility supporting asynchronous <code>navigator.clipboard.writeText</code> with legacy fallback for sandboxed webviews.</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h3>6.10 Multi-Variation Kaggle Model Hub Staging &amp; Strict Isolation Contract</h3>
-                <p>The desktop application directly orchestrates the LemGendary multi-variation distribution contract on the Kaggle Models Hub:</p>
-                <ul>
-                    <li><strong>Strict 4-Variation Isolation</strong>: Enforces clean partition across isolated model directories:
-                        <ul>
-                            <li>Variation 1 (<code>pytorch/default</code>): Canonical PyTorch checkpoints (<code>checkpoints/</code> containing <code>best.pth</code>, <code>latest.pth</code>) alongside model cards and training metrics (<code>metrics.csv</code>).</li>
-                            <li>Variation 2 (<code>pytorch/fp32</code>): Native full-precision PyTorch weights (<code>[Model].pt</code>).</li>
-                            <li>Variation 3 (<code>onnx/fp16</code>): Edge-optimized half-precision ONNX computational graph (<code>[Model].onnx</code>).</li>
-                            <li>Variation 4 (<code>onnx/fp32</code>): High-precision standard ONNX exports (<code>[Model]_FP32.onnx</code> and <code>.data</code> sidecar).</li>
-                        </ul>
-                    </li>
-                    <li><strong>Single Source of Truth Metadata (<code>model_metadata.yaml</code>)</strong>: Model documentation, licensing, fine-tunability, tags, and variation usage examples are managed in <code>model_metadata.yaml</code> and applied dynamically via the Kaggle REST API, eliminating embedded metadata clutter.</li>
-                    <li><strong>Fleet-Wide Kaggle Models Hub Push</strong>: One-click &quot;Push All Models to Kaggle&quot; toolbar action triggering <code>POST /api/training/kaggle/push-all</code> to stage, validate, and publish all 23 registered neural architectures and their multi-format variations with pre-flight isolation verification.</li>
-                    <li><strong>Pre-Upload Isolation Gate</strong>: Built-in <code>StrictIsolationValidator</code> blocks non-compliant or cross-contaminated binaries before transmission.</li>
-                    <li><strong>Dry-Run Staging</strong>: Operators can simulate staging and packaging payloads locally before executing live Kaggle API uploads.</li>
-                </ul>
-
-                <h3>6.11 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
-                <p>The redesigned live telemetry console is embedded directly within individual operational panels (including Model Training, Dataset Compiler, and Health), replacing monolithic standalone tabs with contextual log streams:</p>
-                <ul>
-                    <li><strong>Local Training Stream</strong>: Streams GPU worker execution logs, loss curves, gradient norms, and spatial ladder transitions.</li>
-                    <li><strong>Remote Cloud Stream</strong>: Relays real-time execution outputs from Kaggle GPU kernels or Colab notebooks.</li>
-                    <li><strong>Ecosystem Mesh Stream</strong>: Monitors JSON-RPC events, HTTP health probes, and audit logs across Ports 8000, 8100, and 8200.</li>
-                    <li><strong>Accessible Radix UI Progress Architecture</strong>: Driven by <code>@radix-ui/react-progress</code>, operational progress is structured into an unconstrained numerical metrics header on Line 1 (operation, exact percentage, byte sizes, throughput speed, and ETA) and an isolated, hardware-accelerated glowing progress indicator on Line 2.</li>
-                    <li><strong>In-Place Stream De-duplication</strong>: Consecutive progress tick updates for active operations are rolled up in-place, eliminating scrolling clutter while preserving discrete step start, verification, and completion records.</li>
-                    <li><strong>Responsive Sub-Second Abort</strong>: Operators can trigger immediate job cancellation (<code>POST /api/jobs/{id}/cancel</code>), hooking into inner minibatch iterations (<code>trainer.stop = True</code>) within milliseconds, instantly releasing hardware GPU VRAM.</li>
-                </ul>
-            </section>
-
-            <section id="section-7">
-                <h2>7. Unified Models Registry</h2>
-                <p>The desktop application integrates directly with the LemGendary Unified Models Registry. Through the GUI, researchers inspect active model weights, monitor dynamic spatial ladder progression, track training metrics (PSNR, SSIM, LPIPS, Quality Score), and trigger automated ONNX exports across all registered vision and financial models.</p>
-                <p>The registry binding invariant verifies:</p>
-                <p>$$\forall m \in \mathcal{M}_{\text{registry}}, \quad \text{Exists}(m.\text{checkpoint}) \implies \text{ValidCheckpointHeader}(m) = \text{True}$$</p>
-                <p>This provides operators with instant visual verification of checkpoint integrity prior to executing cloud deployments or edge quantization.</p>
-            </section>
-
-            <section id="section-8">
-                <h2>8. Conclusion</h2>
-                <p>The LemGendary AI Studio Desktop GUI delivers a modern, lightweight, and robust control center for machine learning engineering. By replacing bulky web runtimes with a high-performance Tauri v2 shell, reactive React 18 interface, tripartite multi-sidecar mesh, universal configuration editor, and contextual hover micro-documentation, the system establishes a new benchmark for developer ergonomics, resource efficiency, and ecosystem stability.</p>
-            </section>
-        </main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_AI_STUDIO_GUI.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

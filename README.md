@@ -2,6 +2,8 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
+**Version**: `v16.9.64`
+
 ---
 
 ## Directory Overview
@@ -12,6 +14,29 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.64 - LemGendary AI Studio GUI v2.10.19 Documentation Sync
+
+* **GUI Control Registry Rebuilt from Code** - `GUI_CONTROL_REGISTRY.md` and
+  `papers/gui-control-registry.html` now list the 119 `id` attributes of GUI
+  release v2.10.19 (75 controls, 44 dialogs, status regions and headings). 54
+  stale IDs removed, 98 added; endpoints corrected (`GET /api/ping` liveness,
+  `POST /api/pipeline/run` with `clean`, `POST /api/bug-report`, masked `GET
+  /api/secrets`).
+* **Operator Manual** - New chapter 13 "Reporting an Issue" (annotated
+  screenshots, telemetry CSV, local ZIP report and mail client; screen recording
+  marked as planned). Tests & Diagnostics header button, Clean Install
+  confirmation dialog, write-only secrets, offline placeholders, Documentation
+  Hub button served by the Environment Manager. Removed the "Unit Test All
+  Models" toolbar button and the `lem-env validate --all` flag, which do not
+  exist.
+* **Architectural Whitepaper** - Version v2.10.19; new sections 6.12 Security
+  Model (origin guard, client header, Content Security Policy, masked secrets)
+  and 6.13 Bug Reporting Subsystem, placed before the Conclusion; references to
+  nonexistent files and dependencies removed.
+* **HTML Template** - The three HTML pages are generated from the Markdown with
+  the approved template (`header`, `nav.toc-sidebar`, `section`, `footer`) and
+  validate with the W3C Nu validator; Markdown passes markdownlint.
 
 ### v16.9.63 - Tripartite Sidecar Termination & UI Control Alignment
 
