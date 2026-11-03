@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: CodeFormer: VQ-Codebook Face Restoration
+# CodeFormer: VQ-Codebook Face Restoration
 
-**Author**: Lem Treursic
-**Version**: `v16.9.27-STABLE`
-**Category**: Category 08 FACE
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 08 FACE | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -24,28 +23,49 @@
 
 ## 1. Abstract
 
-**CodeFormer** is a robust blind face restoration algorithm that models high-quality facial representations through a discrete **Vector-Quantized (VQ) codebook** prior and a Transformer-based prediction network. Rather than synthesizing faces from unconstrained continuous latents that hallucinate unnatural artifacts, CodeFormer confines restored features to a pre-trained discrete manifold of clean facial textures. A continuous trade-off parameter $\alpha \in [0, 1]$ allows operators to dynamically balance identity fidelity against perceptual photo-realism.
+**CodeFormer** is a robust blind face restoration algorithm that models
+high-quality facial representations through a discrete **Vector-Quantized (VQ)
+codebook** prior and a Transformer-based prediction network. Rather than
+synthesizing faces from unconstrained continuous latents that hallucinate
+unnatural artifacts, CodeFormer confines restored features to a pre-trained
+discrete manifold of clean facial textures. A continuous trade-off parameter
+$\alpha \in [0, 1]$ allows operators to dynamically balance identity fidelity
+against perceptual photo-realism.
 
 ---
 
 ## 1.1 What CodeFormer Does (In Plain English)
 
-Imagine taking an old, scratched, blurry photograph of a loved one from decades ago. Traditional photo programs either blur the face even more or create uncanny, plastic-looking skin. **CodeFormer acts like a master portrait artist**:
+Imagine taking an old, scratched, blurry photograph of a loved one from decades
+ago. Traditional photo programs either blur the face even more or create
+uncanny, plastic-looking skin. **CodeFormer acts like a master portrait
+artist**:
 
-* **The Memory Library:** CodeFormer has memorized over a thousand discrete, natural facial features (sharp pupils, delicate eyelashes, realistic skin pores, and natural lip contours) in an internal codebook.
-* **Intelligent Detail Matching:** When given a blurry or low-resolution face, instead of guessing blindly, it finds the matching clean features in its library and blends them naturally into the original photo.
-* **The Naturalness Dial (Alpha):** Operators have a simple slider dial from 0% to 100%. Set it to 100% to keep the exact original face shape, or set it to 0% to maximize sharpness and photo-clarity.
+* **The Memory Library:** CodeFormer has memorized over a thousand discrete,
+  natural facial features (sharp pupils, delicate eyelashes, realistic skin
+  pores, and natural lip contours) in an internal codebook.
+* **Intelligent Detail Matching:** When given a blurry or low-resolution face,
+  instead of guessing blindly, it finds the matching clean features in its
+  library and blends them naturally into the original photo.
+* **The Naturalness Dial (Alpha):** Operators have a simple slider dial from 0%
+  to 100%. Set it to 100% to keep the exact original face shape, or set it to 0%
+  to maximize sharpness and photo-clarity.
 
 ### Visual Demonstration & Training Convergence
 
-* **Input:** Heavy JPEG compression, sensor noise, lost eye reflections, blurry hair, and skin artifacts.
-* **Output:** Restored iris reflections, natural skin pores, reconstructed eyelashes, and preserved identity at Alpha = 0.75.
+* **Input:** Heavy JPEG compression, sensor noise, lost eye reflections, blurry
+  hair, and skin artifacts.
+* **Output:** Restored iris reflections, natural skin pores, reconstructed
+  eyelashes, and preserved identity at Alpha = 0.75.
 
-| Before Restoration (Degraded Input) | After Restoration (CodeFormer Output) |
-| :---: | :---: |
-| ![Degraded Vintage Portrait](../assets/codeformer_before.png) | ![Restored Portrait](../assets/codeformer_after.png) |
+* **Before Restoration (Degraded Input)**: ![Degraded Vintage
+  Portrait](../assets/codeformer_before.png)
+* **After Restoration (CodeFormer Output)**: ![Restored
+  Portrait](../assets/codeformer_after.png)
 
-* **Training Convergence Curve:** Tracked via `codeformer_training.png` illustrating perceptual LPIPS minimization and codebook commitment loss stabilization.
+* **Training Convergence Curve:** Tracked via `codeformer_training.png`
+  illustrating perceptual LPIPS minimization and codebook commitment loss
+  stabilization.
 
 ![CodeFormer Training Metrics Curve](../assets/codeformer_training.png)
 
@@ -53,25 +73,41 @@ Imagine taking an old, scratched, blurry photograph of a loved one from decades 
 
 ## 2. Visual Taxonomy: Discrete Codebook Prior
 
-The codebook $\mathcal{C} = \{c_k\}_{k=1}^K \subset \mathbb{R}^d$ consists of $K = 1024$ learned discrete code vectors capturing high-frequency eye, skin, and facial geometry primitives `[THEORETICAL]`. Features $z$ from degraded inputs are mapped to their nearest codebook entries:
+The codebook $\mathcal{C} = \{c_k\}_{k=1}^K \subset \mathbb{R}^d$ consists of
+$K = 1024$ learned discrete code vectors capturing high-frequency eye, skin, and
+facial geometry primitives `[THEORETICAL]`. Features $z$ from degraded inputs
+are mapped to their nearest codebook entries:
 
-$$z_q = \arg\min_{c_k \in \mathcal{C}} \|z - c_k\|_2$$
+$$
+z_q = \arg\min_{c_k \in \mathcal{C}} \|z - c_k\|_2
+$$
 
-CodeFormer introduces an adjustable modulation scalar $\alpha \in [0, 1]$ governing intermediate feature fusion:
+CodeFormer introduces an adjustable modulation scalar $\alpha \in [0, 1]$
+governing intermediate feature fusion:
 
-$$\tilde{F} = \alpha \cdot F_{\text{input}} + (1 - \alpha) \cdot F_{\text{codebook}}$$
+$$
+\tilde{F} = \alpha \cdot F_{\text{input}} + (1 - \alpha) \cdot F_{\text{codebook}}
+$$
 
-When $\alpha = 1.0$, identity preservation is maximized (biometric alignment); when $\alpha = 0.0$, perceptual enhancement and de-noising are maximized.
+When $\alpha = 1.0$, identity preservation is maximized (biometric alignment);
+when $\alpha = 0.0$, perceptual enhancement and de-noising are maximized.
 
 ---
 
 ## 3. Shared Foundations: Multi-Objective Optimization
 
-Training unites spatial fidelity, perceptual likeness, codebook commitment, and adversarial discrimination:
+Training unites spatial fidelity, perceptual likeness, codebook commitment, and
+adversarial discrimination:
 
-$$\mathcal{L} = \|I - \hat{I}\|_1 + \lambda_{\text{perc}} \mathcal{L}_{\text{VGG}} + \lambda_{\text{code}} \|\text{sg}[z] - z_q\|_2^2 + \lambda_{\text{adv}} \mathcal{L}_{\text{WGAN}}$$
+$$
+\mathcal{L} = \|I - \hat{I}\|_1 + \lambda_{\text{perc}} \mathcal{L}_{\text{VGG}}
++ \lambda_{\text{code}} \|\text{sg}[z] - z_q\|_2^2 + \lambda_{\text{adv}}
+\mathcal{L}_{\text{WGAN}}
+$$
 
-where $\text{sg}[\cdot]$ represents the stop-gradient operator. Codebook commitment loss prevents code vector explosion, ensuring mathematically bounded gradient propagation across Transformer layers.
+where $\text{sg}[\cdot]$ represents the stop-gradient operator. Codebook
+commitment loss prevents code vector explosion, ensuring mathematically bounded
+gradient propagation across Transformer layers.
 
 ---
 
@@ -81,7 +117,10 @@ where $\text{sg}[\cdot]$ represents the stop-gradient operator. Codebook commitm
 
 #### 4.1 Model Description, Purpose and Usage
 
-The LemGendary CodeFormer utilizes a pre-trained discrete codebook prior coupled with a 9-layer contextual Transformer to reconstruct high-fidelity facial details, pupils, and skin textures from severely degraded portraits without continuous hallucination drift.
+The LemGendary CodeFormer utilizes a pre-trained discrete codebook prior coupled
+with a 9-layer contextual Transformer to reconstruct high-fidelity facial
+details, pupils, and skin textures from severely degraded portraits without
+continuous hallucination drift.
 
 #### 4.2 Model Info
 
@@ -111,42 +150,71 @@ The LemGendary CodeFormer utilizes a pre-trained discrete codebook prior coupled
 
 Severe blind face restoration presents complex edge cases:
 
-* **Extreme Occlusion & Eyeglasses**: Unconstrained continuous models hallucinate warped eyes behind heavy frames. CodeFormer's 9-layer Transformer predicts global contextual indices, utilizing unoccluded facial symmetry to anchor the discrete lookup.
-* **Identity Drift vs. Detail Enhancement**: Sliding scalar $\alpha$ dynamically prevents synthetic over-sharpening from altering recognizable biometric facial features.
-* **Publication-Grade FID 2048 & Memory Safety**: Validation computes Fréchet Inception Distance at standard feature dimension 2048 with micro-chunking (=2$), guaranteeing benchmark comparability against academic baselines while bounding evaluation VRAM to $< 280$ MB.
-* **Monotonic Curriculum Ratchet & Dynamic Degradation**: Training strictly enforces monotonic data fraction expansion (\%$ strides) with on-the-fly degradation synthesis for containerized WebDatasets, preventing curriculum retreat and gradient starvation.
-* **Sensor Readout Noise & JPEG Ringing**: Pre-flight degradation gating in the Dataset Compiler enforces high-fidelity Lanczos-3 rescales, training the codebook against realistic heteroscedastic noise distributions.
+* **Extreme Occlusion & Eyeglasses**: Unconstrained continuous models
+  hallucinate warped eyes behind heavy frames. CodeFormer's 9-layer Transformer
+  predicts global contextual indices, utilizing unoccluded facial symmetry to
+  anchor the discrete lookup.
+* **Identity Drift vs. Detail Enhancement**: Sliding scalar $\alpha$ dynamically
+  prevents synthetic over-sharpening from altering recognizable biometric facial
+  features.
+* **Publication-Grade FID 2048 & Memory Safety**: Validation computes Fréchet
+  Inception Distance at standard feature dimension 2048 with micro-chunking
+  (=2$), guaranteeing benchmark comparability against academic baselines while
+  bounding evaluation VRAM to $< 280$ MB.
+* **Monotonic Curriculum Ratchet & Dynamic Degradation**: Training strictly
+  enforces monotonic data fraction expansion (\%$ strides) with on-the-fly
+  degradation synthesis for containerized WebDatasets, preventing curriculum
+  retreat and gradient starvation.
+* **Sensor Readout Noise & JPEG Ringing**: Pre-flight degradation gating in the
+  Dataset Compiler enforces high-fidelity Lanczos-3 rescales, training the
+  codebook against realistic heteroscedastic noise distributions.
 
 ---
 
 ## 6. Deployment Strategy & Production Acceleration
 
-CodeFormer implements the LemGendary Tri-Format Export Standard upon reaching new `best.pth` milestones:
+CodeFormer implements the LemGendary Tri-Format Export Standard upon reaching
+new `best.pth` milestones:
 
-* **Production FP16 Engine (`codeformer.onnx`)**: Self-contained embedded weights optimized for WebGPU, DirectML, and TensorRT runtime execution with sub-45ms inference bounds `[MEASURED]`.
-* **Research FP32 Export (`codeformer_FP32.onnx` + `.onnx.data`)**: External binary data sidecar preventing protobuf file size overflow for high-precision laboratory evaluation.
-* **Checkpoint Lifecycle Governance**: Automated 15-minute intra-epoch checkpointing (`progress.pth`), end-of-epoch persistence (`latest.pth`), and milestone target archiving (`vault_lpips.pth`).
+* **Production FP16 Engine (`codeformer.onnx`)**: Self-contained embedded
+  weights optimized for WebGPU, DirectML, and TensorRT runtime execution with
+  sub-45ms inference bounds `[MEASURED]`.
+* **Research FP32 Export (`codeformer_FP32.onnx` + `.onnx.data`)**: External
+  binary data sidecar preventing protobuf file size overflow for high-precision
+  laboratory evaluation.
+* **Checkpoint Lifecycle Governance**: Automated 15-minute intra-epoch
+  checkpointing (`progress.pth`), end-of-epoch persistence (`latest.pth`), and
+  milestone target archiving (`vault_lpips.pth`).
 
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
-| Model Benchmark | LPIPS (Lower is better) | Identity Sim (CSIM) | Degradation Resistance | Status & Verification |
-| :--- | :--- | :--- | :--- | :--- |
-| GFPGAN v1.4 | 0.362 | 0.742 | Medium | Baseline `[MEASURED]` |
-| RestoreFormer | 0.338 | 0.760 | High | Baseline `[MEASURED]` |
-| **CodeFormer ($\alpha = 0.5$)** | **0.315** | **0.785** | **Extreme** | **LemGendary `[MEASURED]`** |
-| **CodeFormer SOTA Target** | **$\le 0.300$** | **$\ge 0.800$** | **Maximal** | **Target `[TARGET]`** |
+* **GFPGAN v1.4**: LPIPS (Lower is better): 0.362; Identity Sim (CSIM): 0.742;
+  Degradation Resistance: Medium; Status & Verification: Baseline `[MEASURED]`
+* **RestoreFormer**: LPIPS (Lower is better): 0.338; Identity Sim (CSIM): 0.760;
+  Degradation Resistance: High; Status & Verification: Baseline `[MEASURED]`
+* **CodeFormer ($\alpha = 0.5$)**: LPIPS (Lower is better): **0.315**; Identity
+  Sim (CSIM): **0.785**; Degradation Resistance: **Extreme**; Status &
+  Verification: **LemGendary `[MEASURED]`**
+* **CodeFormer SOTA Target**: LPIPS (Lower is better): **$\le 0.300$**; Identity
+  Sim (CSIM): **$\ge 0.800$**; Degradation Resistance: **Maximal**; Status &
+  Verification: **Target `[TARGET]`**
 
 ---
 
 ## 8. Conclusion
 
-CodeFormer provides robust blind face restoration by grounding generative feature synthesis in discrete geometric priors. The architecture effectively eliminates hallucination artifacts while preserving user-tunable identity fidelity across production deployment environments.
+CodeFormer provides robust blind face restoration by grounding generative
+feature synthesis in discrete geometric priors. The architecture effectively
+eliminates hallucination artifacts while preserving user-tunable identity
+fidelity across production deployment environments.
 
 ### Related Ecosystem Documentation
 
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedCodeFormerLarge`)
-* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+* [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+* [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)

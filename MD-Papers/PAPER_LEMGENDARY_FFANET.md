@@ -1,11 +1,9 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: High-Fidelity FFANet Dehazing via SOTA Infrastructure
+# High-Fidelity FFANet Dehazing via SOTA Infrastructure
 
-**Author**: Lem Treursic  
-**Version**: `v16.9.27-STABLE`  
-**Paper Revision**: 2.6.0 - Dynamic VRAM Sync  
-**Category**: Category 04 RESTORATION  
-**Hardware**: NVIDIA / MPS / XPU
+## Category 04 RESTORATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
+2.6.0 - Dynamic VRAM Sync · **Hardware**: NVIDIA / MPS / XPU
 
 ---
 
@@ -33,55 +31,91 @@
 
 ## 1. Abstract
 
-The LemGendary Model Training Suite has achieved unparalleled visual restoration by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike standard architectures, FFANet explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics. This enables high-bandwidth recovery of depth geometry while natively exporting multi-task object bounding boxes through the specialized BranchedFFANet topology.
+The LemGendary Model Training Suite has achieved unparalleled visual restoration
+by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike
+standard architectures, FFANet explicitly models the non-uniform distribution of
+atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
+mechanics. This enables high-bandwidth recovery of depth geometry while natively
+exporting multi-task object bounding boxes through the specialized
+BranchedFFANet topology.
 
 ---
 
 ## 1.1 What FFANet Does (In Plain English)
 
-Imagine driving through dense mountain fog or attempting to view security camera footage obscured by thick indoor smoke:
+Imagine driving through dense mountain fog or attempting to view security camera
+footage obscured by thick indoor smoke:
 
-- **Atmospheric Haze Subtraction:** FFANet functions like an intelligent optical defogging filter, analyzing exactly where atmospheric particles scatter light and mathematically subtracting the fog layer pixel-by-pixel.
-- **Dual Pixel & Channel Attention:** Instead of crudely cranking up contrast across the whole photograph (which ruins clean foreground subjects), FFANet selectively concentrates its restorative power only on hazy zones.
-- **Structural Depth Preservation:** By preserving depth maps and edge gradients, it restores natural color saturation and distant horizon details without halo artifacts.
+- **Atmospheric Haze Subtraction:** FFANet functions like an intelligent optical
+  defogging filter, analyzing exactly where atmospheric particles scatter light
+  and mathematically subtracting the fog layer pixel-by-pixel.
+- **Dual Pixel & Channel Attention:** Instead of crudely cranking up contrast
+  across the whole photograph (which ruins clean foreground subjects), FFANet
+  selectively concentrates its restorative power only on hazy zones.
+- **Structural Depth Preservation:** By preserving depth maps and edge
+  gradients, it restores natural color saturation and distant horizon details
+  without halo artifacts.
 
 ### Visual Demonstration: Atmospheric Occlusion Recovery
 
-| Dehazing Modality | Typical Atmospheric Degradation | High-Fidelity Restored Output |
-| :--- | :--- | :--- |
-| **Indoor Dehazing** | Uniform artificial mist & particulate scatter | Sharp wall boundaries & natural interior lighting |
-| **Outdoor Dehazing** | Natural depth fog & mountain haze | Balanced horizon contrast & rich foliage colors |
-| **Synthetic Smoke** | Heavy smoke plumes & dense occlusions | Clear structural visibility & zero color casting |
+- **Indoor Dehazing**: Typical Atmospheric Degradation: Uniform artificial mist
+  & particulate scatter; High-Fidelity Restored Output: Sharp wall boundaries &
+  natural interior lighting
+- **Outdoor Dehazing**: Typical Atmospheric Degradation: Natural depth fog &
+  mountain haze; High-Fidelity Restored Output: Balanced horizon contrast & rich
+  foliage colors
+- **Synthetic Smoke**: Typical Atmospheric Degradation: Heavy smoke plumes &
+  dense occlusions; High-Fidelity Restored Output: Clear structural visibility &
+  zero color casting
 
 ---
 
 ## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
-The transition to FFANet architectures required distinct manifolds for processing atmospheric occlusions.
+The transition to FFANet architectures required distinct manifolds for
+processing atmospheric occlusions.
 
 ### 2.1 Indoor Dehazing Track (ffanet_indoor)
 
-By unifying diverse structured indoor scatter subsets into `LemGendizedFfaNetIndoorLarge`, the FFANet backbone is trained to cleanly subtract uniform physical scatter and dense artificial occlusions natively.
+By unifying diverse structured indoor scatter subsets into
+`LemGendizedFfaNetIndoorLarge`, the FFANet backbone is trained to cleanly
+subtract uniform physical scatter and dense artificial occlusions natively.
 
 ![Indoor Dehazing Target](../assets/ffanet_indoor_example.png)
-*Figure 1: Indoor Dehazing Target - Requires the model to navigate dense, artificial occlusions and uniform physical scatter in highly structured environments.*
-The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.
+*Figure 1: Indoor Dehazing Target - Requires the model to navigate dense,
+artificial occlusions and uniform physical scatter in highly structured
+environments.*
+The BranchedFFANet architecture explicitly models the non-uniform distribution
+of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
+mechanics.
 
 ### 2.2 Outdoor Dehazing Track (ffanet_outdoor)
 
-By unifying diverse natural atmospheric scatter subsets into `LemGendizedFfaNetOutdoorLarge`, the FFANet backbone is trained to cleanly subtract complex depth-of-field scattering and natural fog gradients natively.
+By unifying diverse natural atmospheric scatter subsets into
+`LemGendizedFfaNetOutdoorLarge`, the FFANet backbone is trained to cleanly
+subtract complex depth-of-field scattering and natural fog gradients natively.
 
 ![Outdoor Dehazing Target](../assets/ffanet_outdoor_example.png)
-*Figure 2: Outdoor Dehazing Target - Demands robust spatial reconstruction against complex atmospheric scattering, infinite depth-of-field, and natural fog gradients.*
-The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.
+*Figure 2: Outdoor Dehazing Target - Demands robust spatial reconstruction
+against complex atmospheric scattering, infinite depth-of-field, and natural fog
+gradients.*
+The BranchedFFANet architecture explicitly models the non-uniform distribution
+of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
+mechanics.
 
 ### 2.3 Synthetic Smoke Evacuation
 
-By unifying heavy particle interference subsets into synthetic smoke evacuation training targets, the FFANet backbone is trained to cleanly subtract dense particulate columns and smoke occlusions natively.
+By unifying heavy particle interference subsets into synthetic smoke evacuation
+training targets, the FFANet backbone is trained to cleanly subtract dense
+particulate columns and smoke occlusions natively.
 
 ![Smoke Removal Target](../assets/ffanet_smoke_example.png)
-*Figure 3: Synthetic Smoke Target - Validating the PA Layer's ability to zero out heavy particle interference while maintaining background structural integrity.*
-The BranchedFFANet architecture explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics.
+*Figure 3: Synthetic Smoke Target - Validating the PA Layer's ability to zero
+out heavy particle interference while maintaining background structural
+integrity.*
+The BranchedFFANet architecture explicitly models the non-uniform distribution
+of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
+mechanics.
 
 ## 3. Shared Foundations
 
@@ -89,16 +123,22 @@ FFANet leverages the unified LemGendary training pipeline shared with NAFNet.
 
 ### 3.1 Hardware-Aware Infrastructure
 
-**The Headroom-Aware Memory-Sentinel:** Natively probes `torch.cuda.mem_get_info()` to dynamically adjust batch sizes, avoiding VRAM paging crashes on Kaggle T4 nodes.  
-**OVC Data Streaming Bridge:** Pre-decodes multi-task tensors natively in CPU cache before flushing them to the GPU.
+**The Headroom-Aware Memory-Sentinel:** Natively probes
+`torch.cuda.mem_get_info()` to dynamically adjust batch sizes, avoiding VRAM
+paging crashes on Kaggle T4 nodes.  
+**OVC Data Streaming Bridge:** Pre-decodes multi-task tensors natively in CPU
+cache before flushing them to the GPU.
 
 ### 3.2 Mathematical Optimization
 
-The `CombinedLoss` optimizer natively unspools dictionary targets, running `L1Loss` on spatial pixels and `SmoothL1Loss` on bounding boxes simultaneously, locked via a `lambda=0.1` gradient throttle.
+The `CombinedLoss` optimizer natively unspools dictionary targets, running
+`L1Loss` on spatial pixels and `SmoothL1Loss` on bounding boxes simultaneously,
+locked via a `lambda=0.1` gradient throttle.
 
 ### 3.3 Kaggle Cloud Execution Protocols
 
-Single-GPU specialization combined with the Serial Extraction Mutex ensures constant data hydration without multi-processing kernel lockups.
+Single-GPU specialization combined with the Serial Extraction Mutex ensures
+constant data hydration without multi-processing kernel lockups.
 
 ## 4. Model Deep-Dives
 
@@ -106,7 +146,9 @@ Single-GPU specialization combined with the Serial Extraction Mutex ensures cons
 
 #### 4.1.1 Model description, purpose and usage
 
-The **LemGendary FFANet Indoor** scorer is built to navigate dense artificial occlusions in structured indoor environments. It excels at reversing uniform physical scatter across confined depth profiles.
+The **LemGendary FFANet Indoor** scorer is built to navigate dense artificial
+occlusions in structured indoor environments. It excels at reversing uniform
+physical scatter across confined depth profiles.
 
 #### 4.1.2 Model Info
 
@@ -119,7 +161,8 @@ The **LemGendary FFANet Indoor** scorer is built to navigate dense artificial oc
 
 - **Dataset:** LemGendizedFfaNetIndoorLarge
 - **Total Samples:** 196,304 (merged from ITS, RESIDE-6k, Dehazing and Desmoking)
-- **Primary Task:** Reverses artificial haze distributions while identifying key target boxes using the detection head.
+- **Primary Task:** Reverses artificial haze distributions while identifying key
+  target boxes using the detection head.
 
 #### 4.1.4 Performance Metrics
 
@@ -137,22 +180,28 @@ The **LemGendary FFANet Indoor** scorer is built to navigate dense artificial oc
 
 #### 4.1.6 Model specific issues and optimizations
 
-The dual-attention heads originally choked the backward pass memory limit. We engineered an autonomous gradient-accumulation subroutine directly into the train loop to salvage GPU resources.
+The dual-attention heads originally choked the backward pass memory limit. We
+engineered an autonomous gradient-accumulation subroutine directly into the
+train loop to salvage GPU resources.
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA `[TARGET]` Baseline | Gap |
-| :--- | :--- | :--- | :--- |
-| **PSNR** | 45.49 dB | 36.50 dB | +8.99 dB |
-| **SSIM** | 0.9975 | 0.9900 | +0.0075 |
-| **LPIPS** | 0.0157 | 0.0800 | +0.0643 |
-| **FID** | 0.2211 | 12.0000 | +11.7789 |
+- **PSNR**: Current Reality (Mid-Training): 45.49 dB; Target SOTA `[TARGET]`
+  Baseline: 36.50 dB; Gap: +8.99 dB
+- **SSIM**: Current Reality (Mid-Training): 0.9975; Target SOTA `[TARGET]`
+  Baseline: 0.9900; Gap: +0.0075
+- **LPIPS**: Current Reality (Mid-Training): 0.0157; Target SOTA `[TARGET]`
+  Baseline: 0.0800; Gap: +0.0643
+- **FID**: Current Reality (Mid-Training): 0.2211; Target SOTA `[TARGET]`
+  Baseline: 12.0000; Gap: +11.7789
 
 ### 4.2 BranchedFFANet Outdoor Scorer
 
 #### 4.2.1 Model description, purpose and usage
 
-The **LemGendary FFANet Outdoor** handles unpredictable spatial reconstruction against complex atmospheric scattering, infinite depth-of-field, and dynamic natural fog gradients.
+The **LemGendary FFANet Outdoor** handles unpredictable spatial reconstruction
+against complex atmospheric scattering, infinite depth-of-field, and dynamic
+natural fog gradients.
 
 #### 4.2.2 Model Info
 
@@ -164,8 +213,10 @@ The **LemGendary FFANet Outdoor** handles unpredictable spatial reconstruction a
 #### 4.2.3 Manifold Info
 
 - **Dataset:** LemGendizedFfaNetOutdoorLarge
-- **Total Samples:** 217,113 (merged from Outdoor Dehazing, NH-HAZE, O-HAZE, CVPR 2019)
-- **Primary Task:** Restores infinite depth-of-field structural clarity against organic atmospheric scattering.
+- **Total Samples:** 217,113 (merged from Outdoor Dehazing, NH-HAZE, O-HAZE,
+  CVPR 2019)
+- **Primary Task:** Restores infinite depth-of-field structural clarity against
+  organic atmospheric scattering.
 
 #### 4.2.4 Performance Metrics
 
@@ -184,39 +235,59 @@ The **LemGendary FFANet Outdoor** handles unpredictable spatial reconstruction a
 
 #### 4.2.6 Model specific issues and optimizations
 
-Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the detection head was prone to destabilizing the primary image reconstruction if bounding boxes varied wildly across natural environments.
+Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the
+detection head was prone to destabilizing the primary image reconstruction if
+bounding boxes varied wildly across natural environments.
 
 #### 4.2.7 Consolidated SOTA Benchmarks
 
-| Metric | Current Reality (Mid-Training) | Target SOTA `[TARGET]` Baseline | Gap |
-| :--- | :--- | :--- | :--- |
-| **PSNR** | 42.85 dB | 33.70 dB | +9.15 dB |
-| **SSIM** | 0.9871 | 0.9860 | +0.0011 |
-| **LPIPS** | 0.0335 | 0.0800 | +0.0465 |
-| **FID** | 2.3120 | 12.0000 | +9.6880 |
-| **Quality Score** | 604.38 | 501.24 | +103.14 |
+- **PSNR**: Current Reality (Mid-Training): 42.85 dB; Target SOTA `[TARGET]`
+  Baseline: 33.70 dB; Gap: +9.15 dB
+- **SSIM**: Current Reality (Mid-Training): 0.9871; Target SOTA `[TARGET]`
+  Baseline: 0.9860; Gap: +0.0011
+- **LPIPS**: Current Reality (Mid-Training): 0.0335; Target SOTA `[TARGET]`
+  Baseline: 0.0800; Gap: +0.0465
+- **FID**: Current Reality (Mid-Training): 2.3120; Target SOTA `[TARGET]`
+  Baseline: 12.0000; Gap: +9.6880
+- **Quality Score**: Current Reality (Mid-Training): 604.38; Target SOTA
+  `[TARGET]` Baseline: 501.24; Gap: +103.14
 
 ## 5. Challenges & Resilience Architecture
 
-**The Channel Attention Saturation Crash:** At deep training iterations, the Sigmoid gate within `CALayer` locked at 1.0, neutralizing channel-variance extraction. We injected a localized epsilon jitter into the bottlenecks to enforce moving gradients.
+**The Channel Attention Saturation Crash:** At deep training iterations, the
+Sigmoid gate within `CALayer` locked at 1.0, neutralizing channel-variance
+extraction. We injected a localized epsilon jitter into the bottlenecks to
+enforce moving gradients.
 
-**Detection Head Instability:** Uncontrolled bounding box errors corrupted the primary image reconstruction early on. The `CombinedLoss` throttle was hardened to prioritize PSNR strictly.
+**Detection Head Instability:** Uncontrolled bounding box errors corrupted the
+primary image reconstruction early on. The `CombinedLoss` throttle was hardened
+to prioritize PSNR strictly.
 
 ## 6. Deployment Strategy
 
-The ONNX Ghost-Severing protocol automatically prunes the auxiliary detection head when exporting to C++, generating a pure image-in, image-out inference engine.
+The ONNX Ghost-Severing protocol automatically prunes the auxiliary detection
+head when exporting to C++, generating a pure image-in, image-out inference
+engine.
 
 ## 7. SOTA Architectural Performance Matrix
 
-BranchedFFANet systematically outperforms legacy The `[CURRENT]` atmospheric dehazing engine achieves `[MEASURED]` performance in atmospheric restoration algorithms by treating haze as a dense 3D tensor map rather than a linear pixel overlay.
+BranchedFFANet systematically outperforms legacy The `[CURRENT]` atmospheric
+dehazing engine achieves `[MEASURED]` performance in atmospheric restoration
+algorithms by treating haze as a dense 3D tensor map rather than a linear pixel
+overlay.
 
 ## 8. Conclusion
 
-By upgrading to the BranchedFFANet infrastructure and implementing the multi-task `CombinedLoss` engine, the LemGendary Suite now wields a robust, mathematically resilient atmospheric processor capable of dynamic environmental dehazing while detecting tactical landmarks.
+By upgrading to the BranchedFFANet infrastructure and implementing the
+multi-task `CombinedLoss` engine, the LemGendary Suite now wields a robust,
+mathematically resilient atmospheric processor capable of dynamic environmental
+dehazing while detecting tactical landmarks.
 
 ### Related Ecosystem Documentation
 
 - [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedFfanetLarge`)
-- [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 - [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-- [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+- [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.71`
+**Version**: `v16.9.72`
 
 ---
 
@@ -30,8 +30,8 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 68 entries (heading parity 27, template 29,
-  text similarity 12), scheduled for the Later Phase. Any other finding fails.
+  `scripts/parity_backlog.json`: 47 entries (heading parity 17, template 19,
+  text similarity 11), scheduled for the Later Phase. Any other finding fails.
 
 ---
 
@@ -50,6 +50,26 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.72 - Parity Backlog Batch 2: Face, Hybrid and Restoration Papers
+
+* **Approved Template** - `face-codeformer`, `face-parsenet`,
+  `face-retinaface`, `face-suite`, `hybrid-upn-v2`, `hybrid-film-restorer`,
+  `hybrid-multitask`, `universal-hybrid`, `ffanet` and `mirnet` regenerated
+  from their Markdown sources on the approved template with family tab bars.
+  Headings and prose match the Markdown; W3C (vnu) clean. The Markdown is the
+  source of truth: HTML-only presentation (comparison cards, duplicated
+  training-curve sub-sections) is replaced by the Markdown content.
+* **Markdown** - inline `markdownlint-disable` directives removed from the ten
+  sources; prose rewrapped at 80 columns, display math split into `$$`
+  blocks, wide tables rewritten as lists, headers on the approved layout.
+  markdownlint 0 on all ten files without inline directives. No technical
+  claims changed.
+* **Parity Backlog** - 21 entries removed (68 to 47: heading parity 17,
+  template 19, text similarity 11).
+* **Version** - hub version v16.9.72 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.71 - Parity Backlog Batch 1: Quality, Foundation and Vision Papers
 

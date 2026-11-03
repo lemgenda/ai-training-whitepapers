@@ -2,197 +2,204 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Film Restorer - LemGendary AI</title>
-    <meta name="description" content="Archival Media Inpainting, Chemical Dye Recovery, and Film-Native Grain Disentanglement">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Film Restorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="universal-hybrid.html">Hybrid Suite Hub</a>
-  <a href="hybrid-upn-v2.html">UPN v2</a>
-  <a href="hybrid-film-restorer.html" class="active">Film Restorer</a>
-  <a href="hybrid-multitask.html">MultiTask 11-Head</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="universal-hybrid.html" class="tab-link">Hybrid Suite</a>
+<a href="hybrid-upn-v2.html" class="tab-link">UPN v2</a>
+<a href="hybrid-film-restorer.html" class="tab-link active">Film Restorer</a>
+<a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
+<a href="restoration-master.html" class="tab-link">Restoration Master</a>
+<a href="ultrazoom.html" class="tab-link">UltraZoom</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>Universal Film Restorer</h1>
+<p class="subtitle">Category 05 HYBRID | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 / Apple Silicon / T4</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-    <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-    <li><a href="#abstract">1. Abstract</a></li>
-    <li><a href="#plain-english">1.1 What Universal Film Restorer Does (In Plain English)</a></li>
-    <li><a href="#visual-taxonomy">2. Visual Taxonomy: Analog Emulsion Physics</a></li>
-    <li><a href="#shared-foundations">3. Shared Foundations: Tri-Stream &amp; Partial Convolution</a></li>
-    <li><a href="#model-deep-dives">4. Model Deep-Dives</a></li>
-    <li><a href="#challenges">5. Challenges &amp; Resilience Architecture</a></li>
-    <li><a href="#deployment">6. Deployment Strategy &amp; Production Acceleration</a></li>
-    <li><a href="#sota-matrix">7. SOTA Architectural Performance Matrix</a></li>
-    <li><a href="#conclusion">8. Conclusion</a></li>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#1-abstract">1. Abstract</a></li>
+<li><a href="#11-what-universal-film-restorer-does-in-plain-english">1.1 What Universal Film Restorer Does (In Plain English)</a></li>
+<li><a href="#2-visual-taxonomy-analog-emulsion-physics">2. Visual Taxonomy: Analog Emulsion Physics</a></li>
+<li><a href="#3-shared-foundations-tri-stream--partial-convolution-inpainting">3. Shared Foundations: Tri-Stream &amp; Partial Convolution Inpainting</a></li>
+<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#8-conclusion">8. Conclusion</a></li>
+
 </ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-    <h1>Universal Film Restorer</h1>
-    <p class="subtitle">Archival Media Inpainting, Chemical Dye Recovery, and Film-Native Grain Disentanglement</p>
-    <div class="meta">
-        <span>By Lem Treursic</span>
-        <span>Category 05 HYBRID</span>
-        <span>Version v16.9.27-STABLE</span>
-        <span>Hardware: NVIDIA / Apple Silicon / T4</span>
-    </div>
 
-    <section id="abstract">
-        <h2>1. Abstract</h2>
-        <p>The <strong>Universal Film Restorer</strong> is a specialized deep neural network designed to preserve historical, cinematic, and analog photographic media. Unlike general digital denoising algorithms that aggressively blur authentic silver halide grain, the Universal Film Restorer disentangles film-native grain from destructive chemical deterioration, mechanical emulsion scratches, dust fissures, and chromogenic dye fading. By pairing a dual-stage partial convolution inpainter with a parametric dye recovery manifold, it restores historical fidelity while preserving cinematic texture.</p>
-    </section>
+<section id="1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>Universal Film Restorer</strong> is a specialized deep neural network designed to
+preserve historical, cinematic, and analog photographic media. Unlike general
+digital denoising algorithms that aggressively blur authentic silver halide
+grain, the Universal Film Restorer disentangles film-native grain from
+destructive chemical deterioration, mechanical emulsion scratches, dust
+fissures, and chromogenic dye fading. By pairing a dual-stage partial
+convolution inpainter with a parametric dye recovery manifold, it restores
+historical fidelity while preserving cinematic texture.</p>
+</section>
 
-    <section id="plain-english">
-        <h2>1.1 What Universal Film Restorer Does (In Plain English)</h2>
-        <p>Historic movie reels, 8mm home videos, and vintage family photograph prints degrade over decades: chemical dyes fade, celluloid suffers vertical scratches from mechanical projectors, and dust specks scatter across every frame. <strong>Universal Film Restorer acts like a digital film archivist</strong>:</p>
-        <ul>
-            <li><strong>Scratches &amp; Dust Inpainting:</strong> It scans the image for physical damage streaks and fills them in with clean, coherent image details.</li>
-            <li><strong>Analog Grain Balancing:</strong> Unlike naive filters that turn vintage films into unnatural plastic video, it preserves authentic film emulsion grain while removing distracting noise.</li>
-            <li><strong>Chemical Color Recovery:</strong> It recalibrates faded photographic color channels back to their vibrant, true-to-life tones.</li>
-        </ul>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Degraded Vintage Film (Input)</th><th>Restored Archival Output</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><img src="../assets/film_restorer_before.png" alt="Degraded Vintage Film" /></td>
-                        <td><img src="../assets/film_restorer_after.png" alt="Restored Archival Film" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <p><img src="../assets/film_restorer_training.png" alt="Film Restorer Training Curve" /></p>
-    </section>
+<section id="11-what-universal-film-restorer-does-in-plain-english">
+<h2>1.1 What Universal Film Restorer Does (In Plain English)</h2>
+<p>Historic movie reels, 8mm home videos, and vintage family photograph prints
+degrade over decades: chemical dyes fade, celluloid suffers vertical scratches
+from mechanical projectors, and dust specks scatter across every frame.
+<strong>Universal Film Restorer acts like a digital film archivist</strong>:</p>
+<ul>
+<li><strong>Scratches &amp; Dust Inpainting:</strong> It scans the image for physical damage
+streaks and fills them in with clean, coherent image details.</li>
+<li><strong>Analog Grain Balancing:</strong> Unlike naive filters that turn vintage films into
+unnatural plastic video, it preserves authentic film emulsion grain while
+removing distracting noise.</li>
+<li><strong>Chemical Color Recovery:</strong> It recalibrates faded photographic color channels
+back to their vibrant, true-to-life tones.</li>
+</ul>
+<h3 id="visual-demonstration--training-convergence">Visual Demonstration &amp; Training Convergence</h3>
+<ul>
+<li><strong>Degraded Vintage Film (Input)</strong>: <img src="../assets/film_restorer_before.png" alt="Degraded Vintage
+Film"></li>
+<li><strong>Restored Archival Output</strong>: <img src="../assets/film_restorer_after.png" alt="Restored Archival
+Film"></li>
+</ul>
+<p><img src="../assets/film_restorer_training.png" alt="Film Restorer Training Curve"></p>
+</section>
 
-    <section id="visual-taxonomy">
-        <h2>2. Visual Taxonomy: Analog Emulsion Physics</h2>
-        <p>Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as <span class="score-badge-neutral">[THEORETICAL]</span>:</p>
-        <p>\[I_{	\text{archival}} = \mathcal{C}_{	\text{dye}}\left( I_{	\text{scene}} \odot e^{-\kappa d} 
-\right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}\]</p>
-        <p>where \(\mathcal{C}_{	\text{dye}}\) models cyan, magenta, and yellow dye fading over decades, \(\mathcal{G}_{\text{grain}}\) is non-Gaussian photographic grain, and \(\mathcal{M}_{\text{defect}}\) is a binary mask of physical scratches.</p>
-    </section>
+<section id="2-visual-taxonomy-analog-emulsion-physics">
+<h2>2. Visual Taxonomy: Analog Emulsion Physics</h2>
+<p>Analog film degrades through optical, mechanical, and chemical mechanisms. The
+degradation model is formulated as <code>[THEORETICAL]</code>:</p>
+<div class="math-block">$$I_{ \text{archival}} = \mathcal{C}_{ \text{dye}}\left( I_{ \text{scene}} \odot e^{-\kappa d} \right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}$$</div>
+<p>where $\mathcal{C}_{ \text{dye}}$ models cyan, magenta, and yellow dye fading
+over decades, $\mathcal{G}_{\text{grain}}$ is non-Gaussian photographic grain,
+and $\mathcal{M}_{\text{defect}}$ is a binary mask of physical scratches.</p>
+</section>
 
-    <section id="shared-foundations">
-        <h2>3. Shared Foundations: Tri-Stream &amp; Partial Convolution</h2>
-        <p>The architecture processes archival frames through three dedicated pathways: (1) Defect Detection &amp; Inpainting, (2) Dye Correction &amp; Exposure Equalization, and (3) Texture &amp; Grain Synthesizer.</p>
-        <p>Partial convolutions conditioned on defect masks ensure valid feature propagation without bleed:</p>
-        <p>\[W' = \begin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} & \text{if } \mathbf{1}^T M > 0 \ 0 & \text{otherwise} \end{cases}\]</p>
-        <p>A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts channel-wise restoration matrices \(\mathbf{T}_{	\text{RGB}}\), reviving lost spectral richness.</p>
-    </section>
+<section id="3-shared-foundations-tri-stream--partial-convolution-inpainting">
+<h2>3. Shared Foundations: Tri-Stream &amp; Partial Convolution Inpainting</h2>
+<p>The architecture processes archival frames through three dedicated pathways: (1)
+<strong>Defect Detection &amp; Inpainting</strong>, (2) <strong>Dye Correction &amp; Exposure
+Equalization</strong>, and (3) <strong>Texture &amp; Grain Synthesizer</strong>.</p>
+<p>Partial convolutions conditioned on defect masks ensure valid feature
+propagation without bleed:</p>
+<div class="math-block">$$W' = \begin{cases} W \cdot \frac{\mathbf{1}^T \mathbf{1}}{\mathbf{1}^T M} &amp; \text{if } \mathbf{1}^T M &gt; 0 \ 0 &amp; \text{otherwise} \end{cases}$$</div>
+<p>A 3D Color Transform Lattice trained on synthetic chemical decay curves predicts
+channel-wise restoration matrices $\mathbf{T}_{ \text{RGB}}$, reviving lost
+spectral richness.</p>
+</section>
 
-    <section id="model-deep-dives">
-        <h2>4. Model Deep-Dives</h2>
-        <h3>Universal Film Restorer Engine</h3>
-        <h4>4.1 Model Description, Purpose and Usage</h4>
-        <p>Restores archival film, historical celluloid, and vintage photographs by disentangling authentic silver halide grain from destructive mechanical defects and dye fade.</p>
-        <h4>4.2 Model Info</h4>
-        <ul>
-            <li><strong>Architecture</strong>: Tri-Stream PartialConv + 3D Color Transform Lattice</li>
-            <li><strong>Input Resolution</strong>: 512x512</li>
-            <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
-            <li><strong>Latency</strong>: 38.5ms on NVIDIA GTX 1650 <span class="score-badge-green">[MEASURED]</span></li>
-        </ul>
-        <h4>4.3 Manifold Info</h4>
-        <ul>
-            <li><strong>Dataset</strong>: <code>LemGendizedFilmRestorerLarge</code></li>
-            <li><strong>Total Samples</strong>: 35,000 archival scans and paired degradation frames</li>
-            <li><strong>Primary Task</strong>: Archival film scratch inpainting and dye preservation</li>
-        </ul>
-        <h4>4.4 Performance Metrics</h4>
-        <ul>
-            <li><strong>Current Training Epochs</strong>: 28 <span class="score-badge-neutral">[CURRENT]</span></li>
-            <li><strong>Best Scratch IoU</strong>: 0.892 <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.880 <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Best Color Delta-E</strong>: 2.14 <span class="score-badge-green">[MEASURED]</span> (Target: &le; 2.50 <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Best PSNR</strong>: 31.40 dB <span class="score-badge-green">[MEASURED]</span></li>
-            <li><strong>Grain FID</strong>: 8.4 <span class="score-badge-green">[MEASURED]</span></li>
-            <li><strong>Current Learning Rate</strong>: 0.000050</li>
-        </ul>
-    </section>
+<section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+<h3 id="universal-film-restorer-engine">Universal Film Restorer Engine</h3>
+<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<p>Restores archival film, historical celluloid, and vintage photographs by
+disentangling authentic silver halide grain from destructive mechanical defects
+and dye fade.</p>
+<h4 id="42-model-info">4.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: Tri-Stream PartialConv + 3D Color Transform Lattice</li>
+<li><strong>Input Resolution</strong>: 512x512</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: 38.5ms on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
+</ul>
+<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedFilmRestorerLarge</code></li>
+<li><strong>Total Samples</strong>: 35,000 archival scans and paired degradation frames</li>
+<li><strong>Primary Task</strong>: Archival film scratch inpainting and dye preservation</li>
+</ul>
+<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 28 <code>[CURRENT]</code></li>
+<li><strong>Best Scratch IoU</strong>: 0.892 <code>[MEASURED]</code> (Target: $\ge 0.880$ <code>[TARGET]</code>)</li>
+<li><strong>Best Color Delta-E</strong>: 2.14 <code>[MEASURED]</code> (Target: $\le 2.50$ <code>[TARGET]</code>)</li>
+<li><strong>Best PSNR</strong>: 31.40 dB <code>[MEASURED]</code></li>
+<li><strong>Grain FID</strong>: 8.4 <code>[MEASURED]</code></li>
+<li><strong>Current Learning Rate</strong>: 0.000050</li>
+</ul>
+</section>
 
-    <section id="challenges">
-        <h2>5. Challenges &amp; Resilience Architecture</h2>
-        <ul>
-            <li><strong>Chemical Dye Asymmetry</strong>: Cyan, magenta, and yellow couplers fade at disparate exponential decay rates. Independent channel modulation prevents color-cast overshoot.</li>
-            <li><strong>Grain vs. Noise Disentanglement</strong>: Standard denoising blurs silver halide grain. Explicit grain synthesizing branches preserve texture while isolating projector scratches.</li>
-            <li><strong>Partial Convolution Memory Bounds</strong>: Mask updating operations are bounded to avoid GPU memory thrashing during batch validation.</li>
-        </ul>
-    </section>
+<section id="5-challenges--resilience-architecture">
+<h2>5. Challenges &amp; Resilience Architecture</h2>
+<ul>
+<li><strong>Chemical Dye Asymmetry</strong>: Cyan, magenta, and yellow couplers fade at
+disparate exponential decay rates. Independent channel modulation prevents
+color-cast overshoot.</li>
+<li><strong>Grain vs. Noise Disentanglement</strong>: Standard denoising blurs silver halide
+grain. Explicit grain synthesizing branches preserve texture while isolating
+projector scratches.</li>
+<li><strong>Partial Convolution Memory Footprint</strong>: Mask updating operations are bounded
+to avoid GPU memory thrashing during batch validation.</li>
+</ul>
+</section>
 
-    <section id="deployment">
-        <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
-        <ul>
-            <li><strong>Production FP16 Engine (<code>film_restorer.onnx</code>)</strong>: Embedded self-contained weights for high-throughput browser and desktop restoration.</li>
-            <li><strong>High-Precision FP32 Export (<code>film_restorer_FP32.onnx</code> + <code>.onnx.data</code>)</strong>: External binary sidecar for archival lab scanning pipelines.</li>
-            <li><strong>Lifecycle Governance</strong>: 15-minute intra-epoch checkpointing (<code>progress.pth</code>), end-of-epoch persistence (<code>latest.pth</code>), and target archiving (<code>vault_psnr.pth</code>).</li>
-        </ul>
-    </section>
+<section id="6-deployment-strategy--production-acceleration">
+<h2>6. Deployment Strategy &amp; Production Acceleration</h2>
+<ul>
+<li><strong>Production FP16 Engine (<code>film_restorer.onnx</code>)</strong>: Embedded self-contained
+weights for high-throughput browser and desktop restoration.</li>
+<li><strong>High-Precision FP32 Export (<code>film_restorer_FP32.onnx</code> + <code>.onnx.data</code>)</strong>:
+External binary sidecar for archival lab scanning pipelines.</li>
+<li><strong>Lifecycle Governance</strong>: 15-minute intra-epoch checkpointing
+(<code>progress.pth</code>), end-of-epoch persistence (<code>latest.pth</code>), and target
+archiving (<code>vault_psnr.pth</code>).</li>
+</ul>
+</section>
 
-    <section id="sota-matrix">
-        <h2>7. SOTA Architectural Performance Matrix</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Test Corpus</th>
-                        <th>Scratch IoU</th>
-                        <th>Color Delta-E (CIE76)</th>
-                        <th>PSNR (dB)</th>
-                        <th>Grain Fidelity (FID)</th>
-                        <th>Status &amp; Verification</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Historical 35mm (1950-1970)</td>
-                        <td>0.892</td>
-                        <td>2.14</td>
-                        <td>31.40</td>
-                        <td>8.4</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>16mm Archival Newsreel</td>
-                        <td>0.875</td>
-                        <td>2.86</td>
-                        <td>30.12</td>
-                        <td>11.2</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Archival SOTA Target</strong></td>
-                        <td><strong>&ge; 0.880</strong></td>
-                        <td><strong>&le; 2.50</strong></td>
-                        <td><strong>&ge; 31.00</strong></td>
-                        <td><strong>&le; 9.0</strong></td>
-                        <td><span class="score-badge-neutral">Target [TARGET]</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+<section id="7-sota-architectural-performance-matrix">
+<h2>7. SOTA Architectural Performance Matrix</h2>
+<ul>
+<li><strong>Historical 35mm (1950-1970)</strong>: Scratch IoU: 0.892; Color Delta-E (CIE76):
+2.14; PSNR (dB): 31.40; Grain Fidelity (FID): 8.4; Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>16mm Archival Newsreel</strong>: Scratch IoU: 0.875; Color Delta-E (CIE76): 2.86;
+PSNR (dB): 30.12; Grain Fidelity (FID): 11.2; Status &amp; Verification: Measured
+<code>[MEASURED]</code></li>
+<li><strong>Archival SOTA Target</strong>: Scratch IoU: <strong>$\ge 0.880$</strong>; Color Delta-E (CIE76):
+<strong>$\le 2.50$</strong>; PSNR (dB): <strong>$\ge 31.00$</strong>; Grain Fidelity (FID):
+<strong>$\le 9.0$</strong>; Status &amp; Verification: <strong>Target <code>[TARGET]</code></strong></li>
+</ul>
+</section>
 
-    <section id="conclusion">
-        <h2>8. Conclusion</h2>
-        <p>The Universal Film Restorer provides historical preservation by treating analog media as a distinct physical medium, ensuring authentic aesthetic preservation without unnatural digital smoothing.</p>
+<section id="8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The Universal Film Restorer provides historical preservation by treating analog
+media as a distinct physical medium, ensuring authentic aesthetic preservation
+without unnatural digital smoothing.</p>
+<h3 id="related-ecosystem-documentation">Related Ecosystem Documentation</h3>
+<ul>
+<li><a href="dataset-compiler.html">Dataset Compiler Suite</a> (Manifold: <code>LemGendizedFilmRestorerLarge</code>)</li>
+<li><a href="training-suite-master.html">Training Suite Architecture</a> (Tri-Format ONNX / PT
+Checkpoint Lifecycle)</li>
+<li><a href="ai-studio-manual.html">AI Studio GUI Manual</a> (Interactive Training Panel Controls)</li>
+<li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a> (System
+Governance &amp; Specifications)</li>
+</ul>
+</section>
 
-        <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
-            <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
-            <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
-                <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedFilmRestorerLarge)</a></li>
-                <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
-                <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
-                <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
-            </ul>
-        </div>
-    </section>
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_FILM_RESTORER.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>
