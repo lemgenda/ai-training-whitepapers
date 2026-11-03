@@ -2,143 +2,268 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Film Restoration & Super-Resolution Master Suite - LemGendary AI</title>
-    <meta name="description" content="Architectural Specification for Universal Film Restorer, UltraZoom Master Model, UPN v2 Parameter Regressor, and Professional Multi-Task Restoration MoE">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Film Restoration &amp; Super-Resolution Master Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="restoration-master.html">Restoration Hub</a>
-                <a href="restoration-suite.html" class="active">Restoration Suite Overview</a>
-                <a href="nafnet.html">NAFNet</a>
-                <a href="mprnet.html">MPRNet</a>
-                <a href="mirnet.html">MIRNet</a>
-                <a href="ffanet.html">FFANet</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="restoration-master.html" class="tab-link">Restoration Master</a>
+<a href="restoration-suite.html" class="tab-link active">Restoration Suite</a>
+<a href="nafnet.html" class="tab-link">NAFNet</a>
+<a href="mprnet.html" class="tab-link">MPRNet</a>
+<a href="mirnet.html" class="tab-link">MIRNet v2</a>
+<a href="ffanet.html" class="tab-link">FFANet</a>
+<a href="ultrazoom.html" class="tab-link">UltraZoom</a>
+<a href="universal-hybrid.html" class="tab-link">Hybrid Suite</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Navigation Matrix</h2>
-            <ul>
-                <li><a href="../index.html" class="text-accent">Back to Index</a></li>
-            <li><a href="#abstract">1. Abstract</a></li>
-            <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
-            <li><a href="#foundations">3. Shared Foundations</a></li>
-            <li><a href="#models">4. Model Deep-Dives</a></li>
-            <li><a href="#challenges">5. Challenges & Resilience</a></li>
-            <li><a href="#deployment">6. Deployment Strategy</a></li>
-            <li><a href="#benchmarks">7. Performance Matrix</a></li>
-            <li><a href="#conclusion">8. Conclusion</a></li>
-            </ul>
+<header>
+<h1>Advanced Film Restoration &amp; Super-Resolution Master Suite</h1>
+<p class="subtitle">Category 04 RESTORATION | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Paper Revision</strong>: 1.0.0 - Pre-Training &amp; Deployment Specification (2026 Specialization)</span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Dual T4 Cloud Nodes</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
+<ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#1-abstract">1. Abstract</a></li>
+<li><a href="#2-visual-taxonomy-restoration-manifolds">2. Visual Taxonomy: Restoration Manifolds</a></li>
+<li><a href="#3-shared-foundations--universal-acceleration">3. Shared Foundations &amp; Universal Acceleration</a></li>
+<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<ul class="sub-item">
+<li><a href="#41-lemgendary-universal-film-restorer">4.1 LemGendary Universal Film Restorer</a></li>
+<li><a href="#42-lemgendary-ultrazoom-master-model">4.2 LemGendary UltraZoom Master Model</a></li>
+<li><a href="#43-lemgendary-upn-v2-parameter-predictor">4.3 LemGendary UPN v2 Parameter Predictor</a></li>
+<li><a href="#44-lemgendary-professional-multi-task-restoration-moe">4.4 LemGendary Professional Multi-Task Restoration MoE</a></li>
+</ul>
+</li>
+<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#6-deployment-strategy">6. Deployment Strategy</a></li>
+<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#8-conclusion">8. Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Advanced Film Restoration & Super-Resolution Master Suite</h1>
-        <p class="subtitle">Architectural Specification for Universal Film Restorer, UltraZoom Master Model, UPN v2 Parameter Regressor, and Professional Multi-Task Restoration MoE</p>
-        <div class="meta">
-                <span>Category 14 RESTORATION</span><span>Version v16.9.27-STABLE</span><span>Paper Revision: 1.0.0 - Pre-Training &amp; Deployment Specification (2026 Specialization)</span><span>Domain: Advanced Restoration</span>
-            </div>
 
+<section id="1-abstract">
+<h2>1. Abstract</h2>
+<p>This specification establishes the architectural, mathematical, and algorithmic
+documentation for the LemGendary Advanced Restoration and Super-Resolution
+Master Suite (Category 14). Designed to address complex, non-linear physical
+degradations, this suite unites four complementary restoration architectures:</p>
+<ol>
+<li><strong>Universal Film Restorer</strong>: A residual dense autoencoder engineered to
+eliminate archival film damage, chemical dye fading, dust, and continuous
+scratches.</li>
+<li><strong>UltraZoom Master Model</strong>: A sub-pixel efficient super-resolution network
+(ESPCN backbone) restoring high-frequency edge gradients and micro-textures.</li>
+<li><strong>UPN v2 Parameter Predictor</strong>: A mobile-optimized parameter regressor
+predicting optimal physical degradation restoration parameters directly from
+degraded imagery.</li>
+<li><strong>Professional Multi-Task Restoration MoE</strong>: A shared-encoder
+mixture-of-experts (MoE) network executing joint deblurring, denoising, and
+color correction dynamically.</li>
+</ol>
+<p>This document serves as the pre-training and operational framework across
+manifolds <code>LemGendizedFilmRestorerLarge</code>, <code>LemGendizedUltraZoomLarge</code>,
+<code>LemGendizedUpnV2Large</code>, and <code>LemGendizedProfessionalMultitaskRestorationLarge</code>.</p>
+</section>
 
+<section id="2-visual-taxonomy-restoration-manifolds">
+<h2>2. Visual Taxonomy: Restoration Manifolds</h2>
+<p>Restoration tasks process specialized degradation domains:</p>
+<ul>
+<li><strong>Film Archive Degradation (<code>LemGendizedFilmRestorerLarge</code>)</strong>: Synthetic and
+archival grain, dye fading, longitudinal scratches, and mold artifacts.</li>
+<li><strong>Super-Resolution Manifold (<code>LemGendizedUltraZoomLarge</code>)</strong>: Low-resolution
+downsampled pairs ($4\times$ zoom) requiring sub-pixel frequency
+reconstruction.</li>
+<li><strong>Parameter Prediction Manifold (<code>LemGendizedUpnV2Large</code>)</strong>: Multi-label
+continuous parameter targets
+$[\sigma_{\text{noise}}, \theta_{\text{blur}}, \gamma_{\text{color}}]$.</li>
+<li><strong>Unified Multi-Task Manifold
+(<code>LemGendizedProfessionalMultitaskRestorationLarge</code>)</strong>: Compound degradations
+requiring selective expert routing.</li>
+</ul>
+</section>
 
-            <section id="abstract">
-                <h2>1. Abstract</h2>
-                <p>The Advanced Restoration and Super-Resolution Master Suite (Category 14) unifies four specialized models: Universal Film Restorer, UltraZoom Super-Resolution, UPN v2 Parameter Predictor, and the Professional Multi-Task Restoration MoE network.</p>
-            </section>
+<section id="3-shared-foundations--universal-acceleration">
+<h2>3. Shared Foundations &amp; Universal Acceleration</h2>
+<h3 id="31-mathematical-loss-supervision">3.1 Mathematical Loss Supervision</h3>
+<p>Restoration fidelity optimizes a combined Charbonnier reconstruction and deep
+perceptual loss:</p>
+<div class="math-block">$$\mathcal{L}_{\text{total}} = \sqrt{\|I_{\text{restored}} - I_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perceptual}} \|\phi(I_{\text{restored}}) - \phi(I_{\text{gt}})\|_2^2$$</div>
+<h3 id="32-empirical-restoration-quality-score-formulation-project-specific-heuristic">3.2 Empirical Restoration Quality Score Formulation (Project-Specific Heuristic)</h3>
+<blockquote class="blockquote-styled">
+<p><strong>Note:</strong> <strong>Heuristic Classification</strong>: The scalar Restoration Quality Score defined
+below is an internal, project-specific empirical heuristic utilized by the
+<code>SmartTrainingGovernor</code> for automated checkpoint ladder progression. It is not
+an established academic standard or universal perceptual metric. Academic
+comparisons must report decoupled individual metrics ($\text{PSNR}$,
+$\text{SSIM}$, $\text{LPIPS}$, and $\text{FID}$).</p>
+</blockquote>
+<div class="math-block">$$\text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
+<h4 id="empirical-weighting--normalization-rationale">Empirical Weighting &amp; Normalization Rationale</h4>
+<ul>
+<li>
+<p><strong>$\text{PSNR}$ (Scale factor $1.0$)</strong>: Provides global pixel-level intensity
+fidelity in decibels ($\text{dB}$), typically ranging from $20.0$ to $50.0$.</p>
+</li>
+<li>
+<p><strong>$\text{SSIM} \times 20$ (Scale factor $20.0$)</strong>: Maps structural similarity
+(bounded $[0, 1]$) into a $[0, 20]$ interval, making a $\Delta 0.05$
+structural difference equivalent to $\Delta 1.0\text{ dB}$ PSNR.</p>
+</li>
+<li>
+<p><strong>$-\text{LPIPS} \times 20$ (Scale factor $-20.0$)</strong>: Maps deep perceptual
+patch distance (bounded $[0, 1]$, lower is better) into a $[-20, 0]$ penalty,
+penalizing perceptual artifacts proportionally to structural gains.</p>
+</li>
+<li>
+<p><strong>Convergence Target</strong>: Convergence ladders treat scores $\ge 50.0$ as
+entry-level fidelity, $\ge 60.0$ as production-grade, and $\ge 65.0$ as
+benchmark state-of-the-art.</p>
+</li>
+</ul>
+</section>
 
-            <section id="taxonomy">
-                <h2>2. Visual Taxonomy: Restoration Manifolds</h2>
-                <p>Processes archival physical film damage, sub-pixel optical downsampling, degradation parameter regression, and compound degradations across four dedicated manifolds.</p>
-            </section>
+<section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+<h3 id="41-lemgendary-universal-film-restorer">4.1 LemGendary Universal Film Restorer</h3>
+<h4 id="411-model-description--usage">4.1.1 Model Description &amp; Usage</h4>
+<p>Deep Residual Dense Autoencoder designed for digital preservation of historical
+film stock, removing physical emulsion scratches and chemical decay.</p>
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>film_restorer</code></li>
+<li><strong>Architecture</strong>: UniversalFilmRestorer (Residual Dense Autoencoder)</li>
+<li><strong>Status</strong>: Checkpoint Trained (<code>LemGendaryUniversalFilmRestorer.pt</code>)</li>
+<li><strong>Resolution Ladder</strong>: <code>[256, 384, 512]</code></li>
+<li><strong>Loss Function</strong>: <code>l1_lpips</code></li>
+<li><strong>Target PSNR</strong>: $\ge 24.0\text{ dB}$, <strong>SSIM</strong>: $\ge 0.800$, <strong>LPIPS</strong>: $\le 0.250$</li>
+</ul>
+<h3 id="42-lemgendary-ultrazoom-master-model">4.2 LemGendary UltraZoom Master Model</h3>
+<h4 id="421-model-description--usage">4.2.1 Model Description &amp; Usage</h4>
+<p>Sub-pixel convolutional super-resolution network restoring fine optical details
+across high-zoom crops.</p>
+<h4 id="422-model-info">4.2.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>ultrazoom</code></li>
+<li><strong>Architecture</strong>: UltraZoomMaster (Sub-Pixel ESPCN Super-Resolution)</li>
+<li><strong>Status</strong>: Checkpoint Trained (<code>LemGendaryUltraZoom(Master).pt</code>)</li>
+<li><strong>Resolution Ladder</strong>: <code>[256, 384, 512]</code></li>
+<li><strong>Target PSNR</strong>: $\ge 34.0\text{ dB}$, <strong>SSIM</strong>: $\ge 0.950$, <strong>LPIPS</strong>: $\le 0.040$</li>
+</ul>
+<h3 id="43-lemgendary-upn-v2-parameter-predictor">4.3 LemGendary UPN v2 Parameter Predictor</h3>
+<h4 id="431-model-description--usage">4.3.1 Model Description &amp; Usage</h4>
+<p>Mobile-lite continuous parameter regressor inferring noise variance, blur angle,
+and exposure correction factors to guide adaptive filtering pipelines.</p>
+<h4 id="432-model-info">4.3.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>upn_v2</code></li>
+<li><strong>Architecture</strong>: UPN_v2 (MobileNetV3-Small Parameter Regressor)</li>
+<li><strong>Status</strong>: Pre-Training Architectural Specification</li>
+<li><strong>Resolution Ladder</strong>: <code>[128, 192, 256]</code></li>
+<li><strong>Loss Function</strong>: <code>smooth_l1</code></li>
+<li><strong>Target MAE</strong>: $\le 0.050$</li>
+</ul>
+<h3 id="44-lemgendary-professional-multi-task-restoration-moe">4.4 LemGendary Professional Multi-Task Restoration MoE</h3>
+<h4 id="441-model-description--usage">4.4.1 Model Description &amp; Usage</h4>
+<p>Shared-encoder multi-task model routing features to task-specific expert
+sub-networks (denoising, deblurring, dehazing, enhancement) based on input
+degradation signatures.</p>
+<h4 id="442-model-info">4.4.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>professional_multitask_restoration</code></li>
+<li><strong>Architecture</strong>: MultiTaskRestorer (Shared Encoder Multi-Task MoE)</li>
+<li><strong>Status</strong>: Training In-Progress / Pre-Training Architectural Specification</li>
+<li><strong>Target Manifold</strong>: <code>LemGendizedProfessionalMultitaskRestorationLarge</code></li>
+<li><strong>Resolution Ladder</strong>: <code>[256, 384, 512]</code></li>
+<li><strong>Loss Function</strong>: <code>hybrid_restoration</code></li>
+<li><strong>Target PSNR</strong>: $\ge 32.0\text{ dB}$, <strong>SSIM</strong>: $\ge 0.930$, <strong>LPIPS</strong>: $\le 0.070$</li>
+</ul>
+<h4 id="443-spatial-ladder--training-progression">4.4.3 Spatial Ladder &amp; Training Progression</h4>
+<p>The multi-task model progresses through dynamic spatial ladders:</p>
+<div class="math-block">$$\text{Phase 1: } 256\text{px} \longrightarrow \text{Phase 2: } 384\text{px} \longrightarrow \text{Phase 3: } 512\text{px}$$</div>
+<p>As active training runs conclude on dual T4 nodes, checkpoint metrics will
+record into <code>metrics.csv</code>.</p>
+</section>
 
-            <section id="foundations">
-                <h2>3. Shared Foundations &amp; Universal Acceleration</h2>
-                <p>Loss optimization combines Charbonnier reconstruction with VGG perceptual supervision:</p>
-                <div class="math-block">$$\mathcal{L}_{\text{total}} = \sqrt{\|I_{\text{restored}} - I_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perceptual}} \|\phi(I_{\text{restored}}) - \phi(I_{\text{gt}})\|_2^2$$</div>
-                <h3>3.2 Empirical Restoration Quality Score Formulation (Project-Specific Heuristic)</h3>
-                <div class="abstract-box">
-                    <p><strong>Heuristic Classification</strong>: The scalar Restoration Quality Score defined below is an internal, project-specific empirical heuristic utilized by the <code>SmartTrainingGovernor</code> for automated checkpoint ladder progression. It is not an established academic standard or universal perceptual metric. Academic comparisons must report decoupled individual metrics ($\text{PSNR}$, $\text{SSIM}$, $\text{LPIPS}$, and $\text{FID}$).</p>
-                </div>
-                <div class="math-block">$$\text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
-                <ul>
-                    <li><strong>$\text{PSNR}$ (Scale factor $1.0$):</strong> Provides global pixel-level intensity fidelity in decibels ($\text{dB}$), typically ranging from $20.0$ to $50.0$.</li>
-                    <li><strong>$\text{SSIM} \times 20$ (Scale factor $20.0$):</strong> Maps structural similarity (bounded $[0, 1]$) into a $[0, 20]$ interval, making a $\Delta 0.05$ structural difference equivalent to $\Delta 1.0\text{ dB}$ PSNR.</li>
-                    <li><strong>$-\text{LPIPS} \times 20$ (Scale factor $-20.0$):</strong> Maps deep perceptual patch distance (bounded $[0, 1]$, lower is better) into a $[-20, 0]$ penalty.</li>
-                </ul>
-            </section>
+<section id="5-challenges--resilience-architecture">
+<h2>5. Challenges &amp; Resilience Architecture</h2>
+<ul>
+<li><strong>Multi-Task Task Interference</strong>: Balanced gradient normalization prevents
+gradients from one degradation mode from dominating shared encoder parameters.</li>
+<li><strong>Sub-Pixel Artifact Prevention</strong>: Periodic shuffle layers utilize blurred
+kernel initializations to eliminate checkerboard artifacts.</li>
+</ul>
+<h3 id="53-modernized-storage--streaming-ingestion-v1680">5.3 Modernized Storage &amp; Streaming Ingestion (v16.8.0)</h3>
+<p>Under the v16.8.0 storage format standardization, restoration datasets are
+transitioned to specialized streaming container formats:</p>
+<ul>
+<li><strong>WebDataset Paired Restoration Sharding</strong>: Contiguous $\sim 500\text{ MB}$
+tar shards packaging degraded inputs and corresponding ground truth targets
+(<code>sample.webp</code> + <code>sample.target.webp</code>) for single-task networks (FFANet,
+MIRNet, MPRNet, NAFNet, FilmRestorer, CodeFormer, UltraZoom).</li>
+<li><strong>MosaicML Streaming (MDS)</strong>: Multi-task restoration
+(<code>LemGendizedProfessionalMultitaskRestoration</code>) utilizes Zstandard-compressed
+MDS shards supporting elastic multi-head task mixing and zero-latency
+checkpoint resumption.</li>
+<li><strong>LitData Binary Tensor Streaming</strong>: Parameter prediction (<code>LemGendizedUpnV2</code>)
+ingests 1.42M samples directly from binary <code>.bin</code> tensor chunks with zero IPC
+overhead.</li>
+</ul>
+</section>
 
-            <section id="models">
-                <h2>4. Model Deep-Dives</h2>
-                <div id="film">
-                    <h3>4.1 LemGendary Universal Film Restorer</h3>
-                    <p><strong>Architecture:</strong> Deep Residual Dense Autoencoder.</p>
-                    <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUniversalFilmRestorer.pt</code>).</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedFilmRestorerLarge</code> (Ladder: [256, 384, 512]).</p>
-                    <p><strong>SOTA Targets:</strong> PSNR &ge; 24.0 dB, SSIM &ge; 0.800, LPIPS &le; 0.250.</p>
-                </div>
-                <div id="ultrazoom">
-                    <h3>4.2 LemGendary UltraZoom Master Model</h3>
-                    <p><strong>Architecture:</strong> Sub-Pixel ESPCN Super-Resolution Network.</p>
-                    <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUltraZoom(Master).pt</code>).</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedUltraZoomLarge</code> (Ladder: [256, 384, 512]).</p>
-                    <p><strong>SOTA Targets:</strong> PSNR &ge; 34.0 dB, SSIM &ge; 0.950, LPIPS &le; 0.040.</p>
-                </div>
-                <div id="upn">
-                    <h3>4.3 LemGendary UPN v2 Parameter Predictor</h3>
-                    <p><strong>Architecture:</strong> MobileNet-Lite Parameter Regressor.</p>
-                    <p><strong>Status:</strong> Checkpoint Trained (<code>LemGendaryUPN(v2)Modular.pt</code>).</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedUpnV2Large</code> (Ladder: [128, 192, 256]).</p>
-                    <p><strong>SOTA Targets:</strong> MAE &le; 0.050.</p>
-                </div>
-                <div id="multitask">
-                    <h3>4.4 LemGendary Professional Multi-Task Restoration MoE</h3>
-                    <p><strong>Architecture:</strong> Shared Encoder Multi-Task Mixture-of-Experts (MoE).</p>
-                    <p><strong>Status:</strong> Training In-Progress / Pre-Training Architectural Specification.</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedProfessionalMultitaskRestorationLarge</code> (Ladder: [256, 384, 512]).</p>
-                    <p><strong>SOTA Targets:</strong> PSNR &ge; 32.0 dB, SSIM &ge; 0.930, LPIPS &le; 0.070.</p>
-                </div>
-            </section>
+<section id="6-deployment-strategy">
+<h2>6. Deployment Strategy</h2>
+<p>Compiled via ONNX Runtime and TensorRT with dynamic batching. Export scripts
+target FP16 precision with verified numerical stability against gradient
+overflow.</p>
+</section>
 
-            <section id="challenges">
-                <h2>5. Challenges &amp; Resilience Architecture</h2>
-                <p>Task interference across multi-task heads is neutralized using gradient projection and normalized loss scaling, while sub-pixel shuffle layers are initialized to avoid checkerboard artifacts.</p>
-            </section>
+<section id="7-sota-architectural-performance-matrix">
+<h2>7. SOTA Architectural Performance Matrix</h2>
+<ul>
+<li><strong><code>film_restorer</code></strong>: Architecture: Residual Dense Autoencoder; Target
+Manifold: <code>LemGendizedFilmRestorerLarge</code>; Resolution Ladder: [256, 384, 512];
+Target Metric: PSNR 24.0 dB, SSIM 0.80; Status: Checkpoint Trained</li>
+<li><strong><code>ultrazoom</code></strong>: Architecture: Sub-Pixel ESPCN; Target Manifold:
+<code>LemGendizedUltraZoomLarge</code>; Resolution Ladder: [256, 384, 512]; Target
+Metric: PSNR 34.0 dB, SSIM 0.95; Status: Checkpoint Trained</li>
+<li><strong><code>upn_v2</code></strong>: Architecture: MobileNetV3-Small Regressor; Target Manifold:
+<code>LemGendizedUpnV2Large</code>; Resolution Ladder: [128, 192, 256]; Target Metric:
+MAE 0.050; Status: Pre-Training Spec</li>
+<li><strong><code>professional_multitask_restoration</code></strong>: Architecture: Shared Encoder MoE;
+Target Manifold: <code>LemGendizedProfessionalMultitaskRestorationLarge</code>;
+Resolution Ladder: [256, 384, 512]; Target Metric: PSNR 32.0 dB, SSIM 0.93;
+Status: In-Progress / Pre-Training</li>
+</ul>
+</section>
 
-            <section id="deployment">
-                <h2>6. Deployment Strategy</h2>
-                <p>Engines deploy via TensorRT and ONNX Runtime with FP16 mixed-precision and dynamic batch sizing.</p>
-            </section>
+<section id="8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The Advanced Restoration Suite delivers an industrial-grade framework for
+multi-modal image reconstruction. By pre-specifying architectural interfaces and
+target manifolds, ongoing training jobs integrate seamlessly into the production
+registry.</p>
+</section>
 
-            <section id="benchmarks">
-                <h2>7. SOTA Architectural Performance Matrix</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Model Key</th>
-                            <th>Architecture</th>
-                            <th>Target Manifold</th>
-                            <th>Resolution Ladder</th>
-                            <th>Target Metric</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><code>film_restorer</code></td><td>Residual Dense Autoencoder</td><td><code>LemGendizedFilmRestorerLarge</code></td><td>[256, 384, 512]</td><td>PSNR 24.0 dB, SSIM 0.80</td><td>Checkpoint Trained</td></tr>
-                        <tr><td><code>ultrazoom</code></td><td>Sub-Pixel ESPCN</td><td><code>LemGendizedUltraZoomLarge</code></td><td>[256, 384, 512]</td><td>PSNR 34.0 dB, SSIM 0.95</td><td>Checkpoint Trained</td></tr>
-                        <tr><td><code>upn_v2</code></td><td>MobileNet-Lite Regressor</td><td><code>LemGendizedUpnV2Large</code></td><td>[128, 192, 256]</td><td>MAE 0.050</td><td>Checkpoint Trained</td></tr>
-                        <tr><td><code>professional_multitask_restoration</code></td><td>Shared Encoder MoE</td><td><code>LemGendizedProfessionalMultitaskRestorationLarge</code></td><td>[256, 384, 512]</td><td>PSNR 32.0 dB, SSIM 0.93</td><td>In-Progress / Pre-Training</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="conclusion">
-                <h2>8. Conclusion</h2>
-                <p>The Advanced Restoration Suite delivers an industrial framework for diverse restorative tasks, structured for automated telemetry and weights synchronization as training progresses.</p>
-            </section>
-    
-        
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_RESTORATION_SUITE.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

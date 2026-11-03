@@ -2,108 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generative & Multimodal Foundation Models - LemGendary AI</title>
-    <meta name="description" content="Architectural Specifications for Latent Diffusion, Image-to-Text Vision-Language, and Causal LLM/MoE Systems">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    
-    <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-    </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generative &amp; Multimodal Foundation Models</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="foundation-models-master.html" class="active">Foundation Hub</a>
-                <a href="foundation-diffusion.html">Latent Diffusion</a>
-                <a href="foundation-image-to-text.html">Image-to-Text VLM</a>
-                <a href="foundation-llm.html">LLM & MoE Decoders</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="foundation-models-master.html" class="tab-link active">Foundation Models</a>
+<a href="foundation-diffusion.html" class="tab-link">Diffusion</a>
+<a href="foundation-image-to-text.html" class="tab-link">Image-to-Text</a>
+<a href="foundation-llm.html" class="tab-link">LLM</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>Generative &amp; Multimodal Foundation Models</h1>
+<p class="subtitle">Category 10 FOUNDATION | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Last Reviewed</strong>: 2026-10-17</span>
+<span><strong>Target Hardware</strong>: NVIDIA / Apple Silicon / Intel ARC / CPU</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#scaling">2. Foundation Scaling Laws & Compute Budgets</a></li>
-                <li><a href="#diffusion">3. Latent Diffusion Models (LDM)</a></li>
-                <li><a href="#vlm">4. Image-to-Text Vision-Language Models</a></li>
-                <li><a href="#llm">5. Causal Decoder Transformers & MoE</a></li>
-                <li><a href="#training-dynamics">6. Distributed Training Dynamics</a></li>
-                <li><a href="#conclusion">7. Conclusion</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#1-abstract">1. Abstract</a></li>
+<li><a href="#2-foundation-scaling-laws--compute-budgets">2. Foundation Scaling Laws &amp; Compute Budgets</a></li>
+<li><a href="#3-latent-diffusion-models-ldm">3. Latent Diffusion Models (LDM)</a></li>
+<li><a href="#4-image-to-text-vision-language-models">4. Image-to-Text Vision-Language Models</a></li>
+<li><a href="#5-causal-decoder-transformers--moe">5. Causal Decoder Transformers &amp; MoE</a></li>
+<li><a href="#6-distributed-training-dynamics">6. Distributed Training Dynamics</a></li>
+<li><a href="#7-conclusion">7. Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Generative & Multimodal Foundation Models</h1>
-        <p class="subtitle">Architectural Specifications for Latent Diffusion, Image-to-Text Vision-Language, and Causal LLM/MoE Systems</p>
-        <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Category 10 FOUNDATION</span>
-                <span>Version v16.9.27-STABLE</span>
-                <span>Hardware: NVIDIA / MPS / XPU</span>
-            </div>
 
+<section id="1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>Generative &amp; Multimodal Foundation Models Suite (Category 10)</strong>
+establishes the scientific and systems engineering blueprint for three emerging
+generative architectures within the LemGendary AI Ecosystem: <strong>Latent Diffusion
+Models</strong> (score-based continuous diffusion synthesis), <strong>Image-to-Text
+Vision-Language Models</strong> (multimodal visual encoders with cross-attention
+perceiver resamplers), and <strong>Large Language Models</strong> (causal decoder-only
+autoregressive transformers with sparse Mixture-of-Experts routing). This
+specification formalizes the loss objectives, spatial-temporal tokenization
+manifolds, and hardware governor boundaries preparing the infrastructure for
+upcoming foundation training cycles.</p>
+</section>
 
-            <section id="abstract">
-                <h2>1. Abstract</h2>
-                <p>The <strong>Generative &amp; Multimodal Foundation Models Suite (Category 10)</strong> establishes the scientific and systems engineering blueprint for three emerging generative architectures within the LemGendary AI Ecosystem: <strong>Latent Diffusion Models</strong> (score-based continuous diffusion synthesis), <strong>Image-to-Text Vision-Language Models</strong> (multimodal visual encoders with cross-attention perceiver resamplers), and <strong>Large Language Models</strong> (causal decoder-only autoregressive transformers with sparse Mixture-of-Experts routing). This specification formalizes the loss objectives, spatial-temporal tokenization manifolds, and hardware governor boundaries preparing the infrastructure for upcoming foundation training cycles.</p>
-            </section>
+<section id="2-foundation-scaling-laws--compute-budgets">
+<h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
+<h3 id="21-the-compute-optimal-scaling-law-chinchilla-derivation">2.1 The Compute-Optimal Scaling Law (Chinchilla Derivation)</h3>
+<p>Compute budget scaling for dense autoregressive transformer architectures
+follows the empirical and theoretical Chinchilla formulation:</p>
+<div class="math-block">$$C \approx 6 N D$$</div>
+<p>where:</p>
+<ul>
+<li>$C$ represents total training compute budget in floating point operations ($\text{FLOPs}$).</li>
+<li>$N$ denotes the non-embedding active parameter count of the neural network.</li>
+<li>$D$ denotes the total volume of consumed training tokens or samples.</li>
+</ul>
+<h4 id="derivation--first-principles-accounting">Derivation &amp; First-Principles Accounting</h4>
+<p>For a dense transformer layer, each forward pass through feedforward and
+multi-head attention projection weights performs approximately:</p>
+<div class="math-block">$$\text{FLOPs}_{\text{forward}} \approx 2 N \text{ operations per token}$$</div>
+<p>Because the backward pass requires computing gradients with respect to both
+activations (for propagation) and parameters (for weight updates), the backward
+pass requires approximately twice the floating point operations of the forward
+pass:</p>
+<div class="math-block">$$\text{FLOPs}_{\text{backward}} \approx 4 N \text{ operations per token}$$</div>
+<p>Summing both phases yields:</p>
+<div class="math-block">$$\text{FLOPs}_{\text{step}} = \text{FLOPs}_{\text{forward}} + \text{FLOPs}_{\text{backward}} \approx 6 N \text{ operations per token}$$</div>
+<p>Multiplying across the token manifold $D$ gives $C \approx 6ND$.</p>
+<h4 id="crucial-assumptions--architectural-boundaries">Crucial Assumptions &amp; Architectural Boundaries</h4>
+<ol>
+<li><strong>Dense Transformer Dominance</strong>: Assumes parameter-dominated matrix
+multiplications ($\text{GEMM}$) where feedforward and attention projection
+layers constitute $\ge 95\%$ of computation.</li>
+<li><strong>Exclusion of Attention Softmax</strong>: The quadratic attention computation
+$\mathcal{O}(S^2 \cdot d)$ is assumed negligible relative to $6ND$ for
+typical sequence lengths ($S \le 4096$). For long-context models
+($S \ge 32\text{k}$), quadratic attention FLOPs must be modeled explicitly.</li>
+<li><strong>Exclusion of Embedding Projections</strong>: Vocabulary embedding and final
+un-embedding layers are excluded from $N$ to avoid distortion in small models
+with large vocabularies.</li>
+<li><strong>Mixture-of-Experts (MoE) Adjustment</strong>: For sparse MoE architectures (e.g.
+8-expert routing with top-2 active), $N$ must be replaced with
+$N_{\text{active}}$, representing only the parameters actively executed per
+token:
+$$C_{\text{MoE}} \approx 6 N_{\text{active}} D$$</li>
+</ol>
+<h3 id="22-first-principles-vram-allocation--hardware-governors">2.2 First-Principles VRAM Allocation &amp; Hardware Governors</h3>
+<p>Memory containment during large-scale foundation model training requires exact
+accounting across static allocations, dynamic activations, and framework
+overhead:</p>
+<div class="math-block">$$M_{\text{total}} = M_{\text{params}} + M_{\text{grads}} + M_{\text{opt}} + M_{\text{activations}} + M_{\text{workspace}}$$</div>
+<h4 id="1-parameter-memory-m_textparams">1. Parameter Memory ($M_{\text{params}}$)</h4>
+<p>Stores the model weights. For a model with $N$ parameters:</p>
+<ul>
+<li><strong>FP32 Precision</strong>: $M_{\text{params}} = 4N \text{ bytes}$</li>
+<li><strong>FP16 / BF16 Mixed Precision</strong>: $M_{\text{params}} = 2N \text{ bytes}$</li>
+<li><strong>8-Bit Quantized Baseline</strong>: $M_{\text{params}} = 1N \text{ bytes}$</li>
+</ul>
+<h4 id="2-gradient-memory-m_textgrads">2. Gradient Memory ($M_{\text{grads}}$)</h4>
+<p>Stores backpropagated gradients for all trainable parameters:</p>
+<ul>
+<li><strong>FP32 Gradients</strong>: $M_{\text{grads}} = 4N \text{ bytes}$</li>
+<li><strong>FP16 / BF16 Gradients</strong>: $M_{\text{grads}} = 2N \text{ bytes}$</li>
+</ul>
+<h4 id="3-optimizer-state-memory-m_textopt">3. Optimizer State Memory ($M_{\text{opt}}$)</h4>
+<p>The optimizer maintains running historical moments for adaptive updates. For
+standard AdamW:</p>
+<ul>
+<li><strong>Standard FP32 AdamW</strong> (First moment $m_t$ + Second moment $v_t$ + Master
+FP32 weights):
+$$M_{\text{opt}} = 4N (m_t) + 4N (v_t) + 4N (\text{master copy}) = 12N \text{ bytes}$$</li>
+<li><strong>8-Bit AdamW (bitsandbytes)</strong>:
+$$M_{\text{opt}} = 1N (m_t) + 1N (v_t) + 2N (\text{master copy}) = 4N \text{ bytes}$$</li>
+<li><strong>Adafactor / SGD with Momentum</strong>:
+$$M_{\text{opt}} \approx 4N \text{ to } 8N \text{ bytes}$$</li>
+</ul>
+<h4 id="4-activation-memory-m_textactivations">4. Activation Memory ($M_{\text{activations}}$)</h4>
+<p>Stores intermediate forward tensors required during backpropagation:</p>
+<ul>
+<li><strong>Without Activation Checkpointing</strong>:
+$$M_{\text{activations}} = B \cdot S \cdot L \cdot \left( 34 \cdot d_{\text{model}} + 5 \cdot a \cdot S \right) \text{ bytes}$$
+where $B$ is batch size, $S$ is sequence length, $L$ is layer count, and $a$
+is number of attention heads.</li>
+<li><strong>With Selective FlashAttention-2 &amp; Activation Checkpointing</strong>:
+Recomputes intermediate activations on the backward pass, reducing activation
+memory to:
+$$M_{\text{activations}} \approx \mathcal{O}(B \cdot S \cdot d_{\text{model}} \cdot \sqrt{L})$$</li>
+</ul>
+<h4 id="5-framework-workspace--cuda-context-m_textworkspace">5. Framework Workspace &amp; CUDA Context ($M_{\text{workspace}}$)</h4>
+<p>CUDA driver contexts, PyTorch caching allocators, and temporary GEMM scratch
+buffers allocate between $1.0\text{GB}$ and $2.5\text{GB}$ baseline memory.</p>
+</section>
 
-            <section id="scaling">
-                <h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
-                <p>Foundation model optimization follows the Chinchilla compute-optimal scaling formulation:</p>
-                $$C \approx 6ND$$
-                <p>where $C$ represents FLOPs, $N$ denotes non-embedding active parameter count (accounting for $2N$ forward FLOPs/token and $4N$ backward FLOPs/token across dense GEMM layers), and $D$ denotes training token volume. Crucially, quadratic attention overhead $\mathcal{O}(S^2 \cdot d)$ is assumed negligible for $S \le 4096$, and for sparse MoE, $N$ is replaced by active parameters $N_{\text{active}}$.</p>
-                <p>For consumer and hybrid cloud nodes, the Sawtooth Governor enforces mixed-precision memory containment based on first-principles accounting:</p>
-                $$\text{VRAM}_{\text{total}} = M_{\text{params}} + M_{\text{grads}} + M_{\text{opt}} + M_{\text{activations}} + M_{\text{workspace}}$$
-                <p>where in standard FP16/BF16 training with AdamW, $M_{\text{params}} = 2N$, $M_{\text{grads}} = 2N$, and $M_{\text{opt}} = 12N$ (master FP32 weights plus two FP32 momentum tensors), reducible to $4N$ with 8-bit AdamW, while activation memory scales as $\mathcal{O}(B \cdot S \cdot d_{\text{model}} \cdot \sqrt{L})$ with selective FlashAttention-2 and activation checkpointing.</p>
-            </section>
+<section id="3-latent-diffusion-models-ldm">
+<h2>3. Latent Diffusion Models (LDM)</h2>
+<p>Operates by compressing pixel manifolds
+$\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial
+distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with
+perceptual regularizer. The forward diffusion process adds Gaussian noise
+according to schedule $\beta_t$:</p>
+<div class="math-block">$$q(\mathbf{z}_t \mid \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{\bar{\alpha}_t} \mathbf{z}_0, (1 - \bar{\alpha}_t) \mathbf{I}\right)$$</div>
+<p>The denoising network $\epsilon_\theta(\mathbf{z}_t, t, c)$ minimizes the
+simplified variational bound:</p>
+<div class="math-block">$$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_\theta(\mathbf{z}_t, t, c)\|^2 \right]$$</div>
+<p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
+</section>
 
-            <section id="diffusion">
-                <h2>3. Latent Diffusion Models (LDM)</h2>
-                <p>Operates by compressing pixel manifolds $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial distribution $\mathbf{z} = \mathcal{E}(\mathbf{x})$ using an autoencoder with perceptual regularizer. The forward diffusion process adds Gaussian noise according to schedule $\beta_t$:</p>
-                $$q(\mathbf{z}_t \mid \mathbf{z}_0) = \mathcal{N}\left(\mathbf{z}_t; \sqrt{\bar{\alpha}_t} \mathbf{z}_0, (1 - \bar{\alpha}_t) \mathbf{I}\right)$$
-                <p>The denoising network $\epsilon_\theta(\mathbf{z}_t, t, c)$ minimizes the simplified variational bound:</p>
-                $$\mathcal{L}_{\text{LDM}} = \mathbb{E}_{\mathbf{z}_0, \epsilon, t, c}\left[ \|\epsilon - \epsilon_\theta(\mathbf{z}_t, t, c)\|^2 \right]$$
-                <p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
-            </section>
+<section id="4-image-to-text-vision-language-models">
+<h2>4. Image-to-Text Vision-Language Models</h2>
+<p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language
+decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition
+the language model through cross-attention:</p>
+<div class="math-block">$$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{&lt; i}, \mathbf{H}_v)$$</div>
+<p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
+</section>
 
-            <section id="vlm">
-                <h2>4. Image-to-Text Vision-Language Models</h2>
-                <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition the language model through cross-attention:</p>
-                $$\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{\lt i}, \mathbf{H}_v)$$
-                <p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
-            </section>
+<section id="5-causal-decoder-transformers--moe">
+<h2>5. Causal Decoder Transformers &amp; MoE</h2>
+<p>Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and
+top-$k$ sparse Mixture-of-Experts routing:</p>
+<div class="math-block">$$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$</div>
+<p>Dedicated documentation: <a href="foundation-llm.html">Large Language Models Specification</a>.</p>
+</section>
 
-            <section id="llm">
-                <h2>5. Causal Decoder Transformers &amp; MoE</h2>
-                <p>Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and top-$k$ sparse Mixture-of-Experts routing:</p>
-                $$\text{MoE}(\mathbf{x}) = \sum_{i=1}^E \text{Softmax}(\text{TopK}(\mathbf{x} \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})$$
-                <p>Dedicated documentation: <a href="foundation-llm.html">Large Language Models Specification</a>.</p>
-            </section>
+<section id="6-distributed-training-dynamics">
+<h2>6. Distributed Training Dynamics</h2>
+<p>Foundation models utilize DeepSpeed ZeRO-3 parameter sharding, gradient
+checkpointing, and FlashAttention-2 kernels to achieve linear throughput
+scaling.</p>
+</section>
 
-            <section id="training-dynamics">
-                <h2>6. Distributed Training Dynamics</h2>
-                <p>Foundation models utilize DeepSpeed ZeRO-3 parameter sharding, gradient checkpointing, and FlashAttention-2 kernels to achieve linear throughput scaling.</p>
-            </section>
+<section id="7-conclusion">
+<h2>7. Conclusion</h2>
+<p>Category 10 establishes the theoretical and operational blueprint for
+next-generation generative and multimodal systems.</p>
+</section>
 
-            <section id="conclusion">
-                <h2>7. Conclusion</h2>
-                <p>Category 10 establishes the theoretical and operational blueprint for next-generation generative and multimodal systems.</p>
-            </section>
-        
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_FOUNDATION_MODELS_MASTER.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

@@ -1,11 +1,10 @@
-<!-- markdownlint-disable MD013 -->
-# Architecture of LemGendary AI: High-Fidelity MPRNet Deraining via SOTA Infrastructure
+# High-Fidelity MPRNet Deraining via SOTA Infrastructure
 
-**Author**: Lem Treursic  
-**Version**: `v16.9.27-STABLE`  
-**Paper Revision**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
-**Category**: Category 04 RESTORATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
+## Category 04 RESTORATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
+2.6.0 - Dynamic VRAM Sync (2026 Specialization) · **Target Hardware**: NVIDIA
+GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
 
@@ -75,105 +74,162 @@
 
 ## 1. Abstract
 
-The **LemGendary Model Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
+The **LemGendary Model Training Suite** has achieved its ultimate evolution by
+migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art)
+Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration
+Network (MPRNet)**. This paper details the structural and mathematical
+breakthroughs required to stabilize MPRNet's multi-stage progressive restoration
+on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory
+enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual
+Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new
+benchmark for browser-based image restoration and deraining.
 
 ---
 
 ## 1.1 What MPRNet Does (In Plain English)
 
-Imagine capturing an outdoor photograph during a torrential downpour, where heavy rain streaks and splashing water droplets completely obscure faces, signs, and background objects:
+Imagine capturing an outdoor photograph during a torrential downpour, where
+heavy rain streaks and splashing water droplets completely obscure faces, signs,
+and background objects:
 
-- **Progressive Multi-Stage Cleaning:** MPRNet cleans rain in three sequential passes: the first pass identifies major torrential downpour streaks, the second pass removes finer mist and water droplets, and the third pass restores ultra-fine background textures.
-- **Supervised Attention Shielding:** Specialized attention modules ensure that water droplets are cleanly extracted without scrubbing away actual object textures, delicate tree leaves, or building facades behind the rain.
-- **Benchmark Deraining Power:** Delivering over 53.9 dB PSNR on benchmark evaluations, it produces crystal-clear images that look as though it never rained at all.
+- **Progressive Multi-Stage Cleaning:** MPRNet cleans rain in three sequential
+  passes: the first pass identifies major torrential downpour streaks, the
+  second pass removes finer mist and water droplets, and the third pass restores
+  ultra-fine background textures.
+- **Supervised Attention Shielding:** Specialized attention modules ensure that
+  water droplets are cleanly extracted without scrubbing away actual object
+  textures, delicate tree leaves, or building facades behind the rain.
+- **Benchmark Deraining Power:** Delivering over 53.9 dB PSNR on benchmark
+  evaluations, it produces crystal-clear images that look as though it never
+  rained at all.
 
 ### Visual Demonstration: Rain Distortions & Restoration
 
-| Rain Artifact Type | Visual Impact on Input Image | MPRNet Cleaned Output |
-| :--- | :--- | :--- |
-| **Volumetric Downpour** | Dense white streak curtains across entire scene | Complete streak removal with natural depth clarity |
-| **Refractive Drops** | Lens-distortion blur and water droplet glare | Crisp edge restoration and accurate color balance |
-| **Atmospheric Mist** | Low contrast and gray background haze | Punchy contrast and restored background geometry |
+- **Volumetric Downpour**: Visual Impact on Input Image: Dense white streak
+  curtains across entire scene; MPRNet Cleaned Output: Complete streak removal
+  with natural depth clarity
+- **Refractive Drops**: Visual Impact on Input Image: Lens-distortion blur and
+  water droplet glare; MPRNet Cleaned Output: Crisp edge restoration and
+  accurate color balance
+- **Atmospheric Mist**: Visual Impact on Input Image: Low contrast and gray
+  background haze; MPRNet Cleaned Output: Punchy contrast and restored
+  background geometry
 
 ---
 
 ## 2. Visual Taxonomy `[THEORETICAL]`: The LemGendary Restoration Subset
 
-The LemGendary MPRNet is explicitly built to handle one of the most mathematically disruptive artifacts in digital photography: torrential rain and water distortion.
+The LemGendary MPRNet is explicitly built to handle one of the most
+mathematically disruptive artifacts in digital photography: torrential rain and
+water distortion.
 
 ### 2.1 The Deraining Track (mprnet_deraining)
 
-By unifying diverse high-resolution rain subsets into `LemGendizedMprNetDerainingLarge`, the MPRNet backbone is trained to cleanly subtract streaks, volumetric drops, and refractive distortions natively.
+By unifying diverse high-resolution rain subsets into
+`LemGendizedMprNetDerainingLarge`, the MPRNet backbone is trained to cleanly
+subtract streaks, volumetric drops, and refractive distortions natively.
 
 ![Deraining Target](../assets/mprnet_deraining_example.png)
 *Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.*
-Deraining requires the model to cleanly isolate and remove refractive water streaks across infinite depths without blurring the native textures of the objects behind them. MPRNet excels here due to its progressive multi-stage architecture which isolates artifacts at multiple resolutions before collapsing them.
+Deraining requires the model to cleanly isolate and remove refractive water
+streaks across infinite depths without blurring the native textures of the
+objects behind them. MPRNet excels here due to its progressive multi-stage
+architecture which isolates artifacts at multiple resolutions before collapsing
+them.
 
 ### 2.2 Multi-Stage Progressive Operators (CSFF & SAM)
 
-To handle severe torrential rain streaks and refractive drops without losing structural sharpness, MPRNet utilizes a multi-stage architecture ($S_1, S_2, S_3$) equipped with Cross-Stage Feature Fusion (CSFF) and Supervised Attention Modules (SAM):
+To handle severe torrential rain streaks and refractive drops without losing
+structural sharpness, MPRNet utilizes a multi-stage architecture
+($S_1, S_2, S_3$) equipped with Cross-Stage Feature Fusion (CSFF) and Supervised
+Attention Modules (SAM):
 
 - **Cross-Stage Feature Fusion (CSFF)**:
-  Features from earlier encoder-decoder stages ($S_{k-1}$) are dynamically fused into the subsequent stage ($S_k$) to prevent spatial detail degradation across multi-scale downsampling. For feature tensor $F^{k-1}$ from stage $k-1$ and feature tensor $F^k$ from stage $k$:
+  Features from earlier encoder-decoder stages ($S_{k-1}$) are dynamically fused
+  into the subsequent stage ($S_k$) to prevent spatial detail degradation across
+  multi-scale downsampling. For feature tensor $F^{k-1}$ from stage $k-1$ and
+  feature tensor $F^k$ from stage $k$:
 
   $$
-  F_{\text{fused}}^k = F^k + \Phi_{k-1 \to k}\left( \text{Conv}_{1\times 1}(F^{k-1}) \right)
+  F_{\text{fused}}^k = F^k + \Phi_{k-1 \to k}\left( \text{Conv}_{1\times
+  1}(F^{k-1}) \right)
   $$
 
-  where $\Phi_{k-1 \to k}(\cdot)$ denotes spatial rescalers (up/downsampling convolutions) aligning spatial dimensions $H \times W$.
+  where $\Phi_{k-1 \to k}(\cdot)$ denotes spatial rescalers (up/downsampling
+  convolutions) aligning spatial dimensions $H \times W$.
 
 - **Supervised Attention Module (SAM)**:
-  Instead of propagating raw intermediate predictions, SAM generates stage-wise spatial attention maps $M^k \in [0, 1]^{1 \times H \times W}$ slaved directly to intermediate residual targets:
+  Instead of propagating raw intermediate predictions, SAM generates stage-wise
+  spatial attention maps $M^k \in [0, 1]^{1 \times H \times W}$ slaved directly
+  to intermediate residual targets:
 
   $$
-  M^k = \sigma\left( \text{Conv}_{1\times 1}\left( \delta\left( \text{Conv}_{3\times 3}(\hat{I}^k) \right) \right) \right)
+  M^k = \sigma\left( \text{Conv}_{1\times 1}\left( \delta\left(
+  \text{Conv}_{3\times 3}(\hat{I}^k) \right) \right) \right)
   $$
 
   $$
   F_{\text{attended}}^k = F^k \odot M^k + F^k
   $$
 
-  where $\hat{I}^k$ is the intermediate RGB reconstruction at stage $k$, $\sigma(\cdot)$ is the sigmoid function, and $\odot$ represents element-wise Hadamard multiplication.
+  where $\hat{I}^k$ is the intermediate RGB reconstruction at stage $k$,
+  $\sigma(\cdot)$ is the sigmoid function, and $\odot$ represents element-wise
+  Hadamard multiplication.
 
 - **Progressive Stage-Wise Loss Formulation**:
   Total loss is computed as a weighted summation across all 3 stages:
 
   $$
-  \mathcal{L}_{\text{total}} = \sum_{k=1}^3 \left( \|\hat{I}^k - I_{\text{gt}}\|_1 + \lambda_{\text{edge}} \mathcal{L}_{\text{edge}}(\hat{I}^k, I_{\text{gt}}) \right) + \lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\hat{I}^3, I_{\text{gt}})
+  \mathcal{L}_{\text{total}} = \sum_{k=1}^3 \left( \|\hat{I}^k -
+  I_{\text{gt}}\|_1 + \lambda_{\text{edge}} \mathcal{L}_{\text{edge}}(\hat{I}^k,
+  I_{\text{gt}}) \right) + \lambda_{\text{perceptual}}
+  \mathcal{L}_{\text{LPIPS}}(\hat{I}^3, I_{\text{gt}})
   $$
 
-  where $\mathcal{L}_{\text{edge}}$ computes the Charbonnier loss over horizontal and vertical gradient fields $\Delta \hat{I}^k$.
+  where $\mathcal{L}_{\text{edge}}$ computes the Charbonnier loss over
+  horizontal and vertical gradient fields $\Delta \hat{I}^k$.
 
 ## 3. Shared Foundations
 
 ### 3.1 Hardware-Aware Infrastructure: Universal Acceleration
 
-Training massive architectures like MPRNet at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.
+Training massive architectures like MPRNet at high resolutions requires absolute
+synchronization on multi-GPU Kaggle environments and constrained local hardware.
 
 #### 3.1.1 The Headroom-Aware Memory-Sentinel
 
-The Sentinel has evolved to actively probe the hardware environment using `torch.cuda.mem_get_info()`. This ensures that even on 4GB hardware, the MPRNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.
+The Sentinel has evolved to actively probe the hardware environment using
+`torch.cuda.mem_get_info()`. This ensures that even on 4GB hardware, the MPRNet
+architecture is seated with a perfectly calculated physical batch size,
+preventing kernel-level address misalignments and system-wide paging.
 
 #### 3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)
 
-The pipeline harnesses local NumPy/OpenCV workers to decode image tensors natively in CPU cache before flushing them to the GPU. This prevents data-starvation of the GPU cores completely, hiding I/O latency behind raw throughput.
+The pipeline harnesses local NumPy/OpenCV workers to decode image tensors
+natively in CPU cache before flushing them to the GPU. This prevents
+data-starvation of the GPU cores completely, hiding I/O latency behind raw
+throughput.
 
 ---
 
 ### 3.2 Mathematical Optimization & Evaluation Metrics
 
-To rigorously evaluate restoration outputs, the suite employs both structural fidelity and deep perceptual metrics.
+To rigorously evaluate restoration outputs, the suite employs both structural
+fidelity and deep perceptual metrics.
 
 #### 3.2.1 Structural Fidelity Formulations
 
 - **Peak Signal-to-Noise Ratio (PSNR)**:
-  Measures absolute pixel-wise reconstruction accuracy. For a target image $I$ and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
+  Measures absolute pixel-wise reconstruction accuracy. For a target image $I$
+  and restored image $K$ of dimensions $H \times W$, PSNR is defined as:
 
   $$
-  \text{PSNR}(I, K) = 10 \cdot \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)
+  \text{PSNR}(I, K) = 10 \cdot
+  \log_{10}\left(\frac{\text{MAX}_I^2}{\text{MSE}(I, K)}\right)
   $$
 
-  where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean Squared Error:
+  where $\text{MAX}_I = 1.0$ (for normalized float tensors) and MSE is the Mean
+  Squared Error:
 
   $$
   \text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2
@@ -183,59 +239,83 @@ To rigorously evaluate restoration outputs, the suite employs both structural fi
   Evaluates luminance, contrast, and structural comparison between image patches:
 
   $$
-  \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 + \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}
+  \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 +
+  \mu_y^2 + c_1)(\sigma_x^2 + \sigma_y^2 + c_2)}
   $$
 
-  where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are stabilization constants.
+  where $\mu$ and $\sigma$ denote the mean and variance, and $c_1, c_2$ are
+  stabilization constants.
 
 #### 3.2.2 Deep Perceptual Metrics
 
-While structural metrics capture high-frequency alignment, they fail to correlate with human-visual preference. The training suite integrates:
+While structural metrics capture high-frequency alignment, they fail to
+correlate with human-visual preference. The training suite integrates:
 
 - **Learned Perceptual Image Patch Similarity (LPIPS)**:
-  Computes the distance between predicted and ground-truth features extracted from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by channel weights $w_l$:
+  Computes the distance between predicted and ground-truth features extracted
+  from layer $l$ of a pre-trained VGG-16 backbone, normalized and scaled by
+  channel weights $w_l$:
 
   $$
-  d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left( \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2
+  d(x, y) = \sum_{l} \frac{1}{H_l W_l} \sum_{h, w} \left\| w_l \odot \left(
+  \hat{x}^l_{h,w} - \hat{y}^l_{h,w} \right) \right\|_2^2
   $$
 
 - **Fréchet Inception Distance (FID)**:
-  Measures the statistical distance between real ($r$) and generated ($g$) manifolds in the feature space of Inception-V3:
+  Measures the statistical distance between real ($r$) and generated ($g$)
+  manifolds in the feature space of Inception-V3:
 
   $$
-  d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
+  d_{\text{FID}}^2 = \|\mu_r - \mu_g\|_2^2 + \text{Tr}\left(\Sigma_r + \Sigma_g
+  - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
   $$
 
   where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
 
 - **Restoration Quality Score Formulation (Project-Specific Heuristic)**:
-  The orchestrator unifies structural and perceptual metrics into a single internal scalar score for automated ladder gating (not an academic standard; decoupled metrics must be reported for benchmark comparisons):
+  The orchestrator unifies structural and perceptual metrics into a single
+  internal scalar score for automated ladder gating (not an academic standard;
+  decoupled metrics must be reported for benchmark comparisons):
 
   $$
-  \text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)
+  \text{Quality Score}_{\text{heuristic}} = \text{PSNR} + (\text{SSIM} \times
+  20) - (\text{LPIPS} \times 20)
   $$
 
 #### 3.2.3 PCIe VRAM Thrashing & The Chunking Fix
 
-When attempting to validate a subset of $N$ images ($N = 425$), passing all tensors to the perceptual networks simultaneously causes VRAM utilization to scale as:
+When attempting to validate a subset of $N$ images ($N = 425$), passing all
+tensors to the perceptual networks simultaneously causes VRAM utilization to
+scale as:
 
 $$
 \text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C)
 $$
 
-where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes, this immediately shatters the physical memory limit, prompting the operating system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which causes severe latency.
+where $C$ is the feature dimension. In systems with 4GB VRAM or dual-T4 nodes,
+this immediately shatters the physical memory limit, prompting the operating
+system to initiate paging over the PCIe bus (VRAM-to-System-RAM swapping), which
+causes severe latency.
 
-To resolve this, we implemented a **Structural Chunking Loop** with a chunk boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a constant value:
+To resolve this, we implemented a **Structural Chunking Loop** with a chunk
+boundary $b_{\text{chunk}} \le 8$. The peak memory footprint is bounded at a
+constant value:
 
 $$
 \text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)
 $$
 
-This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
+This bounds VRAM utilization to ~500MB regardless of the total validation sample
+count $N$.
 
 #### 3.2.4 The CPU-Bottleneck Bypass
 
-Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking `lpips(net="vgg")` against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks `.to(device)` directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.
+Initial mitigations offloaded predictions physically to System RAM to save VRAM.
+However, invoking `lpips(net="vgg")` against RAM implicitly forced convolutions
+to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final
+stabilization dynamically re-injects standard batch chunks `.to(device)`
+directly back into the T4 GPU solely for the validation millisecond, executing
+validation cycles in mere seconds instead of hours.
 
 ---
 
@@ -243,19 +323,25 @@ Initial mitigations offloaded predictions physically to System RAM to save VRAM.
 
 #### 3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)
 
-We actively deprecate the second GPU in Kaggle instances to double VRAM stability linearly on `cuda:0`.
+We actively deprecate the second GPU in Kaggle instances to double VRAM
+stability linearly on `cuda:0`.
 
 #### 3.3.2 Sub-Epoch Continuity (Progress Snapshots)
 
-We natively execute intra-epoch `progress.pth` serialization precisely tracking global `_batch_steps`.
+We natively execute intra-epoch `progress.pth` serialization precisely tracking
+global `_batch_steps`.
 
 #### 3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)
 
-**Fix**: Implemented the **Serial Extraction Mutex**. Download and extractions are strictly serialized via a Global Named Mutex, ensuring training threads are never starved.
+**Fix**: Implemented the **Serial Extraction Mutex**. Download and extractions
+are strictly serialized via a Global Named Mutex, ensuring training threads are
+never starved.
 
 #### 3.3.4 Registry-First Dynamic Unification (v4.5)
 
-**Fix**: All asset handles and Kaggle URLs are resolved from the `unified_models.yaml` registry, ensuring the pipeline is robust against local/cloud path shifts.
+**Fix**: All asset handles and Kaggle URLs are resolved from the
+`unified_models.yaml` registry, ensuring the pipeline is robust against
+local/cloud path shifts.
 
 ---
 
@@ -267,7 +353,10 @@ We natively execute intra-epoch `progress.pth` serialization precisely tracking 
 
 #### 4.1.1 Model description, purpose and usage
 
-The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized for the `restoration` lifecycle. It progressively subtracts severe rain artifacts—from thin streaks to heavy volumetric water drops—using a multi-stage refinement process.
+The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized
+for the `restoration` lifecycle. It progressively subtracts severe rain
+artifacts—from thin streaks to heavy volumetric water drops—using a multi-stage
+refinement process.
 
 #### 4.1.2 Model Info
 
@@ -279,8 +368,10 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 #### 4.1.3 Manifold Info
 
 - **Dataset**: `LemGendizedMprNetDerainingLarge`
-- **Total Samples**: 248,190 (merged from High Resolution Rainy Image, Rain100L, Rain100H, and Rain Dataset)
-- **Primary Task**: Predict restored pixels using L1 Loss to enforce strict manifold alignment against rain degradation.
+- **Total Samples**: 248,190 (merged from High Resolution Rainy Image, Rain100L,
+  Rain100H, and Rain Dataset)
+- **Primary Task**: Predict restored pixels using L1 Loss to enforce strict
+  manifold alignment against rain degradation.
 
 #### 4.1.4 Performance Metrics
 
@@ -298,7 +389,12 @@ The **LemGendary MPRNet Deraining** is a professional-grade AI model optimized f
 
 #### 4.1.6 Model specific issues and optimizations
 
-MPRNet utilizes a multi-stage architecture where early stages handle broad artifacts and later stages refine structural details. A unique optimization required stabilizing the Cross-Stage Feature Fusion (CSFF) blocks, which originally induced gradient explosion during high-resolution backpropagation. A progressive `L1` clamp combined with our native `CombinedLoss` completely resolved this geometry collapse.
+MPRNet utilizes a multi-stage architecture where early stages handle broad
+artifacts and later stages refine structural details. A unique optimization
+required stabilizing the Cross-Stage Feature Fusion (CSFF) blocks, which
+originally induced gradient explosion during high-resolution backpropagation. A
+progressive `L1` clamp combined with our native `CombinedLoss` completely
+resolved this geometry collapse.
 
 #### 4.1.7 Consolidated SOTA Benchmarks
 
@@ -311,143 +407,244 @@ MPRNet utilizes a multi-stage architecture where early stages handle broad artif
 
 #### 4.1.8 Training Process Analysis
 
-The MPRNet Deraining model was trained over 22 total epochs utilizing the progressive spatial ladder: `256px -> 384px -> 512px`.
+The MPRNet Deraining model was trained over 22 total epochs utilizing the
+progressive spatial ladder: `256px -> 384px -> 512px`.
 
-- **Stage 1 (Epochs 1-8)**: Resolution anchored at `256x256`. PSNR converged rapidly from `36.29 dB` (Epoch 1) to `47.93 dB` (Epoch 8), with SSIM reaching `0.9987` as the multi-stage encoder-decoder learned to isolate heavy volumetric rain streaks.
-- **Stage 2 (Epochs 9-15)**: Resolution expanded to `384x384`. Val loss decreased from `0.001487` down to `0.001087`, while PSNR advanced to `51.22 dB` and LPIPS dropped to `0.0023`.
-- **Stage 3 (Epochs 16-22)**: Resolution scaled to the `512x512` native curriculum ceiling with 100% dataset stream fraction (`Data = 1.0`). At Epoch 22, the architecture reached its peak performance ceiling: **PSNR 53.95 dB**, **SSIM 0.9996**, **LPIPS 0.0013**, **FID 0.2272**, and **Quality Score 719.21**.
+- **Stage 1 (Epochs 1-8)**: Resolution anchored at `256x256`. PSNR converged
+  rapidly from `36.29 dB` (Epoch 1) to `47.93 dB` (Epoch 8), with SSIM reaching
+  `0.9987` as the multi-stage encoder-decoder learned to isolate heavy
+  volumetric rain streaks.
+- **Stage 2 (Epochs 9-15)**: Resolution expanded to `384x384`. Val loss
+  decreased from `0.001487` down to `0.001087`, while PSNR advanced to
+  `51.22 dB` and LPIPS dropped to `0.0023`.
+- **Stage 3 (Epochs 16-22)**: Resolution scaled to the `512x512` native
+  curriculum ceiling with 100% dataset stream fraction (`Data = 1.0`). At Epoch
+  22, the architecture reached its peak performance ceiling: **PSNR 53.95 dB**,
+  **SSIM 0.9996**, **LPIPS 0.0013**, **FID 0.2272**, and **Quality Score
+  719.21**.
 
-The structural FP16 disable prevented Cross-Stage Feature Fusion (CSFF) gradient explosions, while the surgical VRAM defibrillator enabled seamless 512px Inception-V3 FID scoring without memory fragmentation.
+The structural FP16 disable prevented Cross-Stage Feature Fusion (CSFF) gradient
+explosions, while the surgical VRAM defibrillator enabled seamless 512px
+Inception-V3 FID scoring without memory fragmentation.
 
 ## 5. Challenges & Resilience Architecture
 
 ### 5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)
 
-**Issue**: MPRNet training initially exploded with infinite `NaN` losses. Because of the progressive multi-stage recursive aggregation and Cross-Stage Feature Fusion (CSFF), feature map magnitudes easily cross the internal float ceiling of `65,504` in FP16.
-**Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop dynamically disables AMP specifically for `MPRNet`, forcing strict double-precision gradients via FP32.
+**Issue**: MPRNet training initially exploded with infinite `NaN` losses.
+Because of the progressive multi-stage recursive aggregation and Cross-Stage
+Feature Fusion (CSFF), feature map magnitudes easily cross the internal float
+ceiling of `65,504` in FP16.
+**Fix**: Engineered the **Structural FP16 Disable**. The `train.py` loop
+dynamically disables AMP specifically for `MPRNet`, forcing strict
+double-precision gradients via FP32.
 
 ### 5.2 The Contiguous View Kernel Crash
 
-**Issue**: When interacting with partial dataset views, PyTorch passed fragmented tensors into convolutions causing `misaligned address` crashes.
-**Fix**: Patched `models/core_restoration.py` with rigorous `.contiguous()` clamps. Every input passed to `Conv2d`, `Pool2d`, or progressive fusion blocks is physically forced into linear memory realignment.
+**Issue**: When interacting with partial dataset views, PyTorch passed
+fragmented tensors into convolutions causing `misaligned address` crashes.
+**Fix**: Patched `models/core_restoration.py` with rigorous `.contiguous()`
+clamps. Every input passed to `Conv2d`, `Pool2d`, or progressive fusion blocks
+is physically forced into linear memory realignment.
 
 ### 5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock
 
-**Issue**: Standard Early Stopping mechanisms (patience=15) mathematically trigger "Sudden Death" at Epoch 39 due to MSE Val Loss wobbling on the floor, permanently locking the model out of the crucial OneCycleLR precision-cooling sequence (Epochs 40-50).
-**Fix**: Engineered an emergency `early_stopping_patience: 50` override to permanently disable MSE-based sudden death for high-complexity manifolds.
+**Issue**: Standard Early Stopping mechanisms (patience=15) mathematically
+trigger "Sudden Death" at Epoch 39 due to MSE Val Loss wobbling on the floor,
+permanently locking the model out of the crucial OneCycleLR precision-cooling
+sequence (Epochs 40-50).
+**Fix**: Engineered an emergency `early_stopping_patience: 50` override to
+permanently disable MSE-based sudden death for high-complexity manifolds.
 
 ### 5.4 The VGG Perceptual Convergence Collapse
 
 **Issue**: The convergence ceiling unexpectedly hard-locked at exactly ~22.70dB.
 **Fix**:
 
-- **Strict ImageNet Normalization Anchor**: We natively bound standard deviations that dynamically scale input tensors to pure VGG spatial geometry.
-- **Magnitude Equalization**: We radically depressed the scalar magnitude down to `0.005`, allowing VGG to provide sharp detail contours without overpowering PSNR.
+- **Strict ImageNet Normalization Anchor**: We natively bound standard
+  deviations that dynamically scale input tensors to pure VGG spatial geometry.
+- **Magnitude Equalization**: We radically depressed the scalar magnitude down
+  to `0.005`, allowing VGG to provide sharp detail contours without overpowering
+  PSNR.
 
 ### 5.5 The "Double-Step" OneCycleLR Matrix Paradox
 
-**Issue**: Resuming from a checkpoint via PyTorch's `Fast-Forward` loop caused manual invocations of `scheduler.step()` to blindly advance the clock while the dataloader was merely skipping batches.
+**Issue**: Resuming from a checkpoint via PyTorch's `Fast-Forward` loop caused
+manual invocations of `scheduler.step()` to blindly advance the clock while the
+dataloader was merely skipping batches.
 **Fix**: Engineered the **No-Manual-Stepping Resumption Logic**.
 
 ### 5.6 The SOTA Sentry "Defibrillation Override"
 
-**Issue**: Upon extending epochs, the model loaded schedulers where the learning rate had decayed down to terminal levels.
-**Fix**: SOTA Sentry dynamically bypasses `scheduler_state` injection during extended epoch bounds, slamming the architecture with a fresh "Phase-1" burst of velocity.
+**Issue**: Upon extending epochs, the model loaded schedulers where the learning
+rate had decayed down to terminal levels.
+**Fix**: SOTA Sentry dynamically bypasses `scheduler_state` injection during
+extended epoch bounds, slamming the architecture with a fresh "Phase-1" burst of
+velocity.
 
 ### 5.7 The Universal SOTA Optimization Vector
 
 **Fix**:
 
-- **The L1-LPIPS Harmonic Matrix**: We structurally swapped to `L1Loss`, anchoring the true learned `lpips.LPIPS(net='vgg')` layer at exactly `0.025`.
-- **Universal Visual SOTA Sentry**: The orchestrator now mathematically compounds `current_quality_score = psnr + (ssim * 20) - (lpips * 20)`.
+- **The L1-LPIPS Harmonic Matrix**: We structurally swapped to `L1Loss`,
+  anchoring the true learned `lpips.LPIPS(net='vgg')` layer at exactly `0.025`.
+- **Universal Visual SOTA Sentry**: The orchestrator now mathematically
+  compounds `current_quality_score = psnr + (ssim * 20) - (lpips * 20)`.
 
 ### 5.8 The Stagnation Paradox: Plateau-Buster v5.2
 
-**Fix**: Implemented the **v5.2 Plateau-Buster**. The Governor now requires a minimum **0.1% relative improvement** and triggers a **Kinetic Jolt** if the model remains stagnant for more than 2 epochs.
+**Fix**: Implemented the **v5.2 Plateau-Buster**. The Governor now requires a
+minimum **0.1% relative improvement** and triggers a **Kinetic Jolt** if the
+model remains stagnant for more than 2 epochs.
 
 ### 5.9 The Quality-Regression Mutex (SOTA Guardrail)
 
-**Fix**: The SOTA export logic is now strictly bounded by the `current_quality_score`. The system will **NOT** coronation the model as "Best" unless its physical quality metrics have hit a record high.
+**Fix**: The SOTA export logic is now strictly bounded by the
+`current_quality_score`. The system will **NOT** coronation the model as "Best"
+unless its physical quality metrics have hit a record high.
 
 ### 5.10 Persistent I/O Synchronization (v5.8)
 
-**Fix**: Engineered the **Persistent Mission Manifest**. Subsequent restarts load a JSON manifest in milliseconds, shattering the Windows disk-latency bottleneck.
+**Fix**: Engineered the **Persistent Mission Manifest**. Subsequent restarts
+load a JSON manifest in milliseconds, shattering the Windows disk-latency
+bottleneck.
 
 ### 5.11 Architectural Survival Profiles (v5.9)
 
-**Fix**: Implementation of the **Survival Profile**. The environment dynamically detects VRAM constraints and enforces a **Physical Batch Size 1** strategy coupled with **4x Gradient Accumulation**.
+**Fix**: Implementation of the **Survival Profile**. The environment dynamically
+detects VRAM constraints and enforces a **Physical Batch Size 1** strategy
+coupled with **4x Gradient Accumulation**.
 
 ### 5.12 Mission Continuity Guard (v6.1)
 
-**Fix**: Engineered the **Continuity Guard**. A final **Manifold Leak Guard** audit-locks the epoch until 100% of the dataset is processed.
+**Fix**: Engineered the **Continuity Guard**. A final **Manifold Leak Guard**
+audit-locks the epoch until 100% of the dataset is processed.
 
 ### 5.13 Manifold Rescue & High-Energy Jolt (v6.1.17)
 
-**Fix**: Implementation of the **High-Energy Jolt**. When a 12-epoch stagnation is detected, the Governor forces a **Hard-Reset** to the `base_lr` (0.0002).
+**Fix**: Implementation of the **High-Energy Jolt**. When a 12-epoch stagnation
+is detected, the Governor forces a **Hard-Reset** to the `base_lr` (0.0002).
 
 ### 5.14 Velocity Life-Support (v6.1.18)
 
-**Fix**: Implementation of **Velocity Life-Support**. If the current LR drops below 1% of the base training speed, an emergency **Rescue Trigger** forces an immediate Jolt.
+**Fix**: Implementation of **Velocity Life-Support**. If the current LR drops
+below 1% of the base training speed, an emergency **Rescue Trigger** forces an
+immediate Jolt.
 
 ### 5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)
 
-**Fix**: Engineered the **Mitochondrial Pulse**. The persistence trigger now utilizes a **Mathematical Epsilon** (`1e-5`), ensuring that save-states are biologically-synchronized.
+**Fix**: Engineered the **Mitochondrial Pulse**. The persistence trigger now
+utilizes a **Mathematical Epsilon** (`1e-5`), ensuring that save-states are
+biologically-synchronized.
 
 ### 5.16 Telemetry Parity & Plateau Resilience (v6.1.31)
 
 **Fix**:
 
-- **Velocity Shield (Survivor Floor)**: The Regression Guard is now bound by a physical `5e-7` absolute LR floor.
-- **Zero-Lag Telemetry Sync**: Real-time LR readings are slaved directly to the physical `optimizer.param_groups`.
+- **Velocity Shield (Survivor Floor)**: The Regression Guard is now bound by a
+  physical `5e-7` absolute LR floor.
+- **Zero-Lag Telemetry Sync**: Real-time LR readings are slaved directly to the
+  physical `optimizer.param_groups`.
 
 ### 5.17 True Stabilization Shield & Synchronous Spatial Augmentation (v6.1.26)
 
 **Fix**:
 
-- **True Stabilization Shield**: A hard-coded 3-epoch lockout period follows any structural shift or high-energy Jolt.
-- **Synchronous Spatial Augmentation**: Applied 50% randomized geometric flips to both noisy inputs and clean targets to shatter the feature memorization ceiling.
+- **True Stabilization Shield**: A hard-coded 3-epoch lockout period follows any
+  structural shift or high-energy Jolt.
+- **Synchronous Spatial Augmentation**: Applied 50% randomized geometric flips
+  to both noisy inputs and clean targets to shatter the feature memorization
+  ceiling.
 
 ### 5.18 Invariant Native Scorecarding (v6.2.0)
 
-**Fix**: Validation resolution is now fully decoupled from dynamic scaling, anchored to a native 640px evaluation resolution from Epoch 1 to 1000.
+**Fix**: Validation resolution is now fully decoupled from dynamic scaling,
+anchored to a native 640px evaluation resolution from Epoch 1 to 1000.
 
 ### 5.19 Universal Backend Selection (MPS/XPU/DirectML)
 
-The 2026 update introduces a **Unified Hardware Handshake**. By prioritizing CUDA > MPS > XPU > DirectML, the suite ensures that the same MPRNet codebase executes at maximum performance across all major silicon providers without manual intervention.
+The 2026 update introduces a **Unified Hardware Handshake**. By prioritizing
+CUDA > MPS > XPU > DirectML, the suite ensures that the same MPRNet codebase
+executes at maximum performance across all major silicon providers without
+manual intervention.
 
 ### 5.20 Time-Aware Checkpoint Governance (15-min Window)
 
-To protect training progress on high-complexity manifolds, the suite implements a **Time-Aware Checkpoint Governor**. It monitors iteration velocity and dynamically recalibrates the save frequency to target a 15-minute resiliency window, ensuring that no more than 15 minutes of work is ever at risk.
+To protect training progress on high-complexity manifolds, the suite implements
+a **Time-Aware Checkpoint Governor**. It monitors iteration velocity and
+dynamically recalibrates the save frequency to target a 15-minute resiliency
+window, ensuring that no more than 15 minutes of work is ever at risk.
 
 ### 5.21 Dynamic min_delta Scaling for High-Range Quality
 
-**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive "Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta` of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is virtually microscopic, causing the Governor to endlessly wait for statistically improbable fractional improvements, thus completely freezing the dataset expansion engine.
-**Fix:** The Governor dynamically queries `task_type`. For `restoration` tasks, it multiplies the tolerance by 100x (`0.05`), allowing it to accurately detect true plateaus and trigger "Propulsion" (dataset fraction expansion).
+**Issue:** Restoration metrics (like combining PSNR and SSIM) produce massive
+"Quality Scores" (e.g. `475.25`). The legacy Governor used a static `min_delta`
+of `0.0005` to detect plateaus. At a score of 475, a delta of 0.0005 is
+virtually microscopic, causing the Governor to endlessly wait for statistically
+improbable fractional improvements, thus completely freezing the dataset
+expansion engine.
+**Fix:** The Governor dynamically queries `task_type`. For `restoration` tasks,
+it multiplies the tolerance by 100x (`0.05`), allowing it to accurately detect
+true plateaus and trigger "Propulsion" (dataset fraction expansion).
 
 ### 5.22 Resolution-Aware Patience Reset (SOTA Guard)
 
-**Issue:** When the Governor triggered a spatial jump (e.g. expanding validation from 512px to 640px), the baseline metric mathematically plummeted (e.g. `450` down to `300`) because processing 6.25x more pixels is inherently more difficult. However, the Governor stubbornly held onto the old `450` score in its `best_quality` memory, declaring the model "stagnant" forever because it could never beat the low-res score.
-**Fix:** Engineered the **Resolution-Aware SOTA Memory Purge**. When a resolution shift occurs, the Governor explicitly purges its `best_quality` memory and resets the patience clock to zero. It natively anchors a new SOTA baseline at the new 640px complexity.
+**Issue:** When the Governor triggered a spatial jump (e.g. expanding validation
+from 512px to 640px), the baseline metric mathematically plummeted (e.g. `450`
+down to `300`) because processing 6.25x more pixels is inherently more
+difficult. However, the Governor stubbornly held onto the old `450` score in its
+`best_quality` memory, declaring the model "stagnant" forever because it could
+never beat the low-res score.
+**Fix:** Engineered the **Resolution-Aware SOTA Memory Purge**. When a
+resolution shift occurs, the Governor explicitly purges its `best_quality`
+memory and resets the patience clock to zero. It natively anchors a new SOTA
+baseline at the new 640px complexity.
 
 ### 5.23 Validation Sharding (30% Fixed Audit)
 
-**Issue:** High-Fidelity Perceptual Metrics (CPU-based SSIM, InceptionV3 FID, VGG LPIPS) require immense computational overhead. Evaluating 100% of the 640px validation dataset took nearly as long as the training epoch itself, destroying mission velocity.
-**Fix:** Implemented **Validation Sharding**. The pipeline now evaluates a fixed **30% random-seeded subset** of the validation loader. Because `shuffle=False` is enforced, the exact same spatial features are evaluated every epoch, maintaining perfectly smooth LPIPS/FID metric geometry while accelerating the validation cycle by 300%.
+**Issue:** High-Fidelity Perceptual Metrics (CPU-based SSIM, InceptionV3 FID,
+VGG LPIPS) require immense computational overhead. Evaluating 100% of the 640px
+validation dataset took nearly as long as the training epoch itself, destroying
+mission velocity.
+**Fix:** Implemented **Validation Sharding**. The pipeline now evaluates a fixed
+**30% random-seeded subset** of the validation loader. Because `shuffle=False`
+is enforced, the exact same spatial features are evaluated every epoch,
+maintaining perfectly smooth LPIPS/FID metric geometry while accelerating the
+validation cycle by 300%.
 
 ### 5.24 VRAM Defibrillation for InceptionV3
 
-**Issue:** After a dense MPRNet training epoch, residual VRAM fragmentation prevented the massive 2048-dimensional InceptionV3 feature extractor from allocating contiguous blocks during the FID scoring phase, resulting in `CUDA Out of Memory` crashes purely during validation.
-**Fix:** Engineered the **Surgical VRAM Defibrillator**. A mandatory `torch.cuda.empty_cache()` cycle is injected immediately prior to perceptual extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation on 4GB hardware constraints.
+**Issue:** After a dense MPRNet training epoch, residual VRAM fragmentation
+prevented the massive 2048-dimensional InceptionV3 feature extractor from
+allocating contiguous blocks during the FID scoring phase, resulting in
+`CUDA Out of Memory` crashes purely during validation.
+**Fix:** Engineered the **Surgical VRAM Defibrillator**. A mandatory
+`torch.cuda.empty_cache()` cycle is injected immediately prior to perceptual
+extraction, cleanly sweeping the VRAM blocks and allowing robust FID generation
+on 4GB hardware constraints.
 
 ### 5.25 Restoration Quality Score Integration
 
-**Issue:** For restoration models (like MPRNet), the `current_quality_score` was bypassed during validation metrics gathering due to a nested `task_type == "quality"` check in `train.py`. This left the validation scorecarding blind, reporting `0.0000` Quality Scores in `metrics.csv` and freezing curriculum scaling.
-**Fix:** Un-nested the SOTA targets evaluation loop in `train.py`. The orchestrator now dynamically compounds high-fidelity metrics (PSNR, SSIM, LPIPS, FID) for all restoration tasks that define SOTA targets, restoring correct quality scorecarding and curriculum growth.
+**Issue:** For restoration models (like MPRNet), the `current_quality_score` was
+bypassed during validation metrics gathering due to a nested
+`task_type == "quality"` check in `train.py`. This left the validation
+scorecarding blind, reporting `0.0000` Quality Scores in `metrics.csv` and
+freezing curriculum scaling.
+**Fix:** Un-nested the SOTA targets evaluation loop in `train.py`. The
+orchestrator now dynamically compounds high-fidelity metrics (PSNR, SSIM, LPIPS,
+FID) for all restoration tasks that define SOTA targets, restoring correct
+quality scorecarding and curriculum growth.
 
 ### 5.26 Governor History Serialization
 
-**Issue:** The Smart Training Governor's historical epoch memory buffer (`self.history`) was completely omitted from `get_state()` and `load_state()`. As a result, resuming training from a checkpoint completely reset the flatness detector patience, which (when combined with frequent cloud restarts) permanently locked the model at its initial curriculum resolution/variety.
-**Fix:** Hardened the governor state manager in `optimization_engine.py` to serialize and deserialize the `self.history` list. Plateau memory now persists seamlessly across arbitrary stops, resumes, and preemptions.
+**Issue:** The Smart Training Governor's historical epoch memory buffer
+(`self.history`) was completely omitted from `get_state()` and `load_state()`.
+As a result, resuming training from a checkpoint completely reset the flatness
+detector patience, which (when combined with frequent cloud restarts)
+permanently locked the model at its initial curriculum resolution/variety.
+**Fix:** Hardened the governor state manager in `optimization_engine.py` to
+serialize and deserialize the `self.history` list. Plateau memory now persists
+seamlessly across arbitrary stops, resumes, and preemptions.
 
 ---
 
@@ -457,11 +654,15 @@ To protect training progress on high-complexity manifolds, the suite implements 
 
 ### 6.1 Standalone Exporters
 
-Checkpoints saved under `DataParallel` are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.
+Checkpoints saved under `DataParallel` are intelligently parsed and mapped
+cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local
+standalone PCs.
 
 ### 6.2 The Ghost-Severing Protocol
 
-**Fix**: Implemented the **Ghost Severing Protocol**. The model is dynamically constrained to self-contained payload architecture, ensuring a single, 15MB file powers the web instance.
+**Fix**: Implemented the **Ghost Severing Protocol**. The model is dynamically
+constrained to self-contained payload architecture, ensuring a single, 15MB file
+powers the web instance.
 
 ---
 
@@ -469,30 +670,53 @@ Checkpoints saved under `DataParallel` are intelligently parsed and mapped clean
 
 ## 7. SOTA Architectural Performance Matrix
 
-The following matrix isolates MPRNet structurally compared against generic industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants (Restormer/MIRNet).
+The following matrix isolates MPRNet structurally compared against generic
+industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants
+(Restormer/MIRNet).
 
-| Architecture | Paradigm | Parameters | GPU Footprint (1080p) | PSNR | Perceptual Integrity (LPIPS) | WebGPU Viability | Status & Verification |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **DnCNN** | *Legacy CNN* | 0.5M | < 1 GB | ~28.0dB | 0.29 (VGG) | Highly Optimal | Baseline `[MEASURED]` |
-| **U-Net** | *Feature Pyramids* | 13M | ~ 3 GB | ~30.2dB | 0.17 (VGG) | Optimal | Baseline `[MEASURED]` |
-| **MIRNet** | *Multi-Scale Gating* | 31M | ~ 11 GB | ~31.8dB | 0.08 (VGG) | Questionable | Baseline `[MEASURED]` |
-| **Restormer** | *Swin-Transformer MDTA* | 26M | ~ 14 GB | ~32.4dB | 0.05 (VGG) | Highly Degraded (Opset) | Baseline `[MEASURED]` |
-| **LemGendary MPRNet** | *Multi-Stage Progressive (Ours)* | **17M** | **~ 6 GB** | **53.95 dB** | **0.0013 (VGG)** | **Production Grade** | **LemGendary `[MEASURED]`** |
-| **MPRNet SOTA Target** | *Multi-Stage Progressive Target* | **17M** | **~ 6 GB** | **>= 33.5dB** | **<= 0.03 (VGG)** | **Production Grade** | **Target `[TARGET]`** |
+- **DnCNN**: Paradigm: *Legacy CNN*; Parameters: 0.5M; GPU Footprint (1080p): <
+  1 GB; PSNR: ~28.0dB; Perceptual Integrity (LPIPS): 0.29 (VGG); WebGPU
+  Viability: Highly Optimal; Status & Verification: Baseline `[MEASURED]`
+- **U-Net**: Paradigm: *Feature Pyramids*; Parameters: 13M; GPU Footprint
+  (1080p): ~ 3 GB; PSNR: ~30.2dB; Perceptual Integrity (LPIPS): 0.17 (VGG);
+  WebGPU Viability: Optimal; Status & Verification: Baseline `[MEASURED]`
+- **MIRNet**: Paradigm: *Multi-Scale Gating*; Parameters: 31M; GPU Footprint
+  (1080p): ~ 11 GB; PSNR: ~31.8dB; Perceptual Integrity (LPIPS): 0.08 (VGG);
+  WebGPU Viability: Questionable; Status & Verification: Baseline `[MEASURED]`
+- **Restormer**: Paradigm: *Swin-Transformer MDTA*; Parameters: 26M; GPU
+  Footprint (1080p): ~ 14 GB; PSNR: ~32.4dB; Perceptual Integrity (LPIPS): 0.05
+  (VGG); WebGPU Viability: Highly Degraded (Opset); Status & Verification:
+  Baseline `[MEASURED]`
+- **LemGendary MPRNet**: Paradigm: *Multi-Stage Progressive (Ours)*; Parameters:
+  **17M**; GPU Footprint (1080p): **~ 6 GB**; PSNR: **53.95 dB**; Perceptual
+  Integrity (LPIPS): **0.0013 (VGG)**; WebGPU Viability: **Production Grade**;
+  Status & Verification: **LemGendary `[MEASURED]`**
+- **MPRNet SOTA Target**: Paradigm: *Multi-Stage Progressive Target*;
+  Parameters: **17M**; GPU Footprint (1080p): **~ 6 GB**; PSNR: **>= 33.5dB**;
+  Perceptual Integrity (LPIPS): **<= 0.03 (VGG)**; WebGPU Viability:
+  **Production Grade**; Status & Verification: **Target `[TARGET]`**
 
-**Hardware Note**: MPRNet fundamentally achieves Restormer-level clarity without relying on computationally unstable multi-head deterministic attention sweeps, making it the perfect vector engine for [FP16] browser exportation.
+**Hardware Note**: MPRNet fundamentally achieves Restormer-level clarity without
+relying on computationally unstable multi-head deterministic attention sweeps,
+making it the perfect vector engine for [FP16] browser exportation.
 
 ---
 
 ## 8. Conclusion
 
-The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By overriding hardware panics and enforcing contiguous tensor mappings, we built a framework highly resilient against runtime exceptions and numerical instabilities.
+The stabilization of SOTA Backbones represents the final engineering milestone
+of the LemGendary project. By overriding hardware panics and enforcing
+contiguous tensor mappings, we built a framework highly resilient against
+runtime exceptions and numerical instabilities.
 
-The resulting MPRNet architecture proves that studio-grade image restoration can be generated automatically in the cloud, and deployed instantly via WebGPU.
+The resulting MPRNet architecture proves that studio-grade image restoration can
+be generated automatically in the cloud, and deployed instantly via WebGPU.
 
 ### Related Ecosystem Documentation
 
 - [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMprnetLarge`)
-- [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT Checkpoint Lifecycle)
+- [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
+  Checkpoint Lifecycle)
 - [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
-- [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System Governance & Specifications)
+- [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
+  Governance & Specifications)

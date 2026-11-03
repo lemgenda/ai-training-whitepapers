@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.72`
+**Version**: `v16.9.73`
 
 ---
 
@@ -30,8 +30,8 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 47 entries (heading parity 17, template 19,
-  text similarity 11), scheduled for the Later Phase. Any other finding fails.
+  `scripts/parity_backlog.json`: 25 entries (heading parity 8, template 10,
+  text similarity 7), scheduled for the Later Phase. Any other finding fails.
 
 ---
 
@@ -50,6 +50,26 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.73 - Parity Backlog Batch 3: Model Specifications and Engine Paper
+
+* **Approved Template** - `degradation-engine`, `detection-classification`,
+  `detection-yolov8n`, `foundation-models-master`, `restoration-suite`,
+  `mprnet`, `nafnet`, `nima-quality` and `forex_predictor` regenerated from
+  their Markdown sources on the approved template with family tab bars.
+  Headings and prose match the Markdown (the shorter HTML pages for the
+  degradation engine, detection, YOLOv8n, foundation and restoration suite
+  now carry the full Markdown content); W3C (vnu) clean.
+* **Markdown** - inline `markdownlint-disable` directives removed from the
+  nine sources; prose rewrapped at 80 columns, display math split into `$$`
+  blocks, wide tables rewritten as lists, headers on the approved layout.
+  markdownlint 0 on all nine files without inline directives. No technical
+  claims changed.
+* **Parity Backlog** - 22 entries removed (47 to 25: heading parity 8,
+  template 10, text similarity 7).
+* **Version** - hub version v16.9.73 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.72 - Parity Backlog Batch 2: Face, Hybrid and Restoration Papers
 

@@ -2,115 +2,187 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Detection & Multimodal Classification Suite - LemGendary AI</title>
-    <meta name="description" content="Architectural Specification for YOLOv8n Multi-Task Spatial Localization and Universal NSFW Categorical Safety Verification">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-Time Detection &amp; Multimodal Classification Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="detection-master.html">Detection Hub</a>
-                <a href="detection-classification.html" class="active">Suite Overview</a>
-                <a href="detection-yolov8n.html">YOLOv8n Multi-Task</a>
-                <a href="classification-nsfw.html">NSFW Safety Classifier</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="detection-master.html" class="tab-link">Detection Master</a>
+<a href="detection-classification.html" class="tab-link active">Detection &amp; Classification</a>
+<a href="detection-yolov8n.html" class="tab-link">YOLOv8n</a>
+<a href="classification-nsfw.html" class="tab-link">NSFW Classifier</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Navigation Matrix</h2>
-            <ul>
-                <li><a href="../index.html" class="text-accent">Back to Index</a></li>
-            <li><a href="#abstract">1. Abstract</a></li>
-            <li><a href="#taxonomy">2. Visual Taxonomy</a></li>
-            <li><a href="#foundations">3. Shared Foundations</a></li>
-            <li><a href="#models">4. Model Deep-Dives</a></li>
-            <li><a href="#challenges">5. Challenges & Resilience</a></li>
-            <li><a href="#deployment">6. Deployment Strategy</a></li>
-            <li><a href="#benchmarks">7. Performance Matrix</a></li>
-            <li><a href="#conclusion">8. Conclusion</a></li>
-            </ul>
+<header>
+<h1>Real-Time Detection &amp; Multimodal Classification Suite</h1>
+<p class="subtitle">Category 09 VISION | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Paper Revision</strong>: 1.0.0 - Pre-Training &amp; Deployment Specification (2026 Specialization)</span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / P100 Cloud Accelerators</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
+<ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#1-abstract">1. Abstract</a></li>
+<li><a href="#2-visual-taxonomy-detection--classification-manifolds">2. Visual Taxonomy: Detection &amp; Classification Manifolds</a></li>
+<li><a href="#3-shared-foundations--universal-acceleration">3. Shared Foundations &amp; Universal Acceleration</a></li>
+<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<ul class="sub-item">
+<li><a href="#41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</a></li>
+<li><a href="#42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</a></li>
+</ul>
+</li>
+<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#6-deployment-strategy--edge-optimization">6. Deployment Strategy &amp; Edge Optimization</a></li>
+<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#8-conclusion">8. Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Real-Time Detection & Multimodal Classification Suite</h1>
-        <p class="subtitle">Architectural Specification for YOLOv8n Multi-Task Spatial Localization and Universal NSFW Categorical Safety Verification</p>
-        <div class="meta">
-                <span>Category 09 VISION</span><span>Version v16.9.27-STABLE</span><span>Paper Revision: 1.0.0 - Pre-Training &amp; Deployment Specification (2026 Specialization)</span><span>Domain: Detection &amp; Moderation</span>
-            </div>
 
+<section id="1-abstract">
+<h2>1. Abstract</h2>
+<p>This specification defines the architectural structure, loss objectives, and
+evaluation methodologies for the Real-Time Detection and Multimodal
+Classification Suite (Category 09.1 Specification) within the LemGendary AI
+Ecosystem. This suite incorporates two core operational components:</p>
+<ol>
+<li><strong>LemGendary YOLOv8n</strong>: A high-efficiency anchor-free object detection and
+spatial localization network operating on the CSPDarknet53 backbone with
+PANet feature fusion.</li>
+<li><strong>LemGendary Universal NSFW Classifier</strong>: An EfficientNetV2-S categorical
+vision backbone engineered for high-throughput image content moderation and
+safety verification.</li>
+</ol>
+<p>This document formalizes the pre-training architecture, loss formulations, and
+target benchmark matrices across <code>LemGendizedYoloV8n</code> and
+<code>LemGendizedClassificationMasterManifoldLarge</code>.</p>
+</section>
 
+<section id="2-visual-taxonomy-detection--classification-manifolds">
+<h2>2. Visual Taxonomy: Detection &amp; Classification Manifolds</h2>
+<ul>
+<li><strong>Object Detection Manifold (<code>LemGendizedYoloV8n</code>)</strong>: Multi-class bounding box
+bounding arrays with variable target aspect ratios and dense occlusion
+patterns.</li>
+<li><strong>Content Moderation Manifold
+(<code>LemGendizedClassificationMasterManifoldLarge</code>)</strong>: Balanced distribution
+across multi-class safety categories (neutral, drawings, sexy, porn, violent),
+curating high-entropy edge cases.</li>
+</ul>
+</section>
 
-            <section id="abstract">
-                <h2>1. Abstract</h2>
-                <p>This technical whitepaper outlines the Real-Time Detection and Multimodal Classification Suite (Category 09.1 Specification), uniting YOLOv8n (anchor-free spatial bounding box localization) and the Universal NSFW Classifier (EfficientNetV2-S content moderation engine).</p>
-            </section>
+<section id="3-shared-foundations--universal-acceleration">
+<h2>3. Shared Foundations &amp; Universal Acceleration</h2>
+<h3 id="31-loss-formulations">3.1 Loss Formulations</h3>
+<ul>
+<li>
+<p><strong>Complete IoU (CIoU) for Detection Bounding Box Regression</strong>:
+$$\text{CIoU} = \text{IoU} - \left( \frac{\rho^2(b, b^{\text{gt}})}{c^2} + \alpha v \right), \quad v = \frac{4}{\pi^2}\left( \arctan\frac{w^{\text{gt}}}{h^{\text{gt}}} - \arctan\frac{w}{h} \right)^2$$</p>
+</li>
+<li>
+<p><strong>Focal Categorical Cross-Entropy for Classification</strong>:
+$$\text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</p>
+</li>
+</ul>
+</section>
 
-            <section id="taxonomy">
-                <h2>2. Visual Taxonomy: Detection &amp; Classification Manifolds</h2>
-                <p>Operates on <code>LemGendizedYoloV8n</code> (multi-scale bounding box coordinates) and <code>LemGendizedClassificationMasterManifoldLarge</code> (balanced safety category partitions).</p>
-            </section>
+<section id="4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+<h3 id="41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</h3>
+<h4 id="411-model-description--usage">4.1.1 Model Description &amp; Usage</h4>
+<p>Anchor-free real-time object detector providing rapid bounding box regression
+and multi-label classification for automated pipeline triggers.</p>
+<h4 id="412-model-info">4.1.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>yolov8n</code></li>
+<li><strong>Architecture</strong>: YOLOv8n (CSPDarknet53 + PANet)</li>
+<li><strong>Status</strong>: Active Validation Checkpoint (mAP50: 0.698, mAP50-95: 0.582,
+Target Met)</li>
+<li><strong>Target Manifold</strong>: <code>LemGendizedYoloV8n</code></li>
+<li><strong>Resolution Ladder</strong>: <code>[320, 480, 640]</code></li>
+<li><strong>Loss Function</strong>: <code>yolo</code> (CIoU + DFL + BCE)</li>
+<li><strong>Learning Rate</strong>: $1 \times 10^{-2}$</li>
+</ul>
+<h4 id="413-performance-metrics--sota-targets">4.1.3 Performance Metrics &amp; SOTA Targets</h4>
+<ul>
+<li><strong>Target mAP@0.5</strong>: $\ge 0.540$</li>
+<li><strong>Target mAP@0.5:0.95</strong>: $\ge 0.390$</li>
+</ul>
+<h3 id="42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</h3>
+<h4 id="421-model-description--usage">4.2.1 Model Description &amp; Usage</h4>
+<p>High-accuracy categorical classifier verifying safety guidelines and filtering
+inappropriate or sensitive content before automated ingestion into public
+manifolds.</p>
+<h4 id="422-model-info">4.2.2 Model Info</h4>
+<ul>
+<li><strong>Model Key</strong>: <code>universal_nsfw_classification</code></li>
+<li><strong>Architecture</strong>: EfficientNetV2-S (Multi-Class Categorical Head)</li>
+<li><strong>Status</strong>: Pre-Training Architectural Specification</li>
+<li><strong>Target Manifold</strong>: <code>LemGendizedClassificationMasterManifoldLarge</code></li>
+<li><strong>Resolution Ladder</strong>: <code>[224]</code></li>
+<li><strong>Loss Function</strong>: <code>cross_entropy</code></li>
+<li><strong>Learning Rate</strong>: $3 \times 10^{-5}$</li>
+</ul>
+<h4 id="423-performance-metrics--sota-targets">4.2.3 Performance Metrics &amp; SOTA Targets</h4>
+<ul>
+<li><strong>Target Accuracy</strong>: $\ge 0.980$</li>
+<li><strong>Target Macro-F1</strong>: $\ge 0.975$</li>
+</ul>
+</section>
 
-            <section id="foundations">
-                <h2>3. Shared Foundations &amp; Universal Acceleration</h2>
-                <p>Bounding box regression optimizes Complete IoU (CIoU), while categorical classification utilizes Focal Cross-Entropy:</p>
-                <div class="math-block">$$\text{CIoU} = \text{IoU} - \left( \frac{\rho^2(b, b^{\text{gt}})}{c^2} + \alpha v \right), \quad \text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</div>
-            </section>
+<section id="5-challenges--resilience-architecture">
+<h2>5. Challenges &amp; Resilience Architecture</h2>
+<ul>
+<li><strong>Anchor-Free Convergence</strong>: Distributed Focal Loss (DFL) models continuous
+box boundary distributions, eliminating regression instability on small
+objects.</li>
+<li><strong>Class Imbalance Filtering</strong>: Heavy weighting on high-risk safety categories
+ensures false-negative rates remain $&lt; 0.5\%$.</li>
+</ul>
+</section>
 
-            <section id="models">
-                <h2>4. Model Deep-Dives</h2>
-                <div id="yolo">
-                    <h3>4.1 LemGendary YOLOv8n Multi-Task Model</h3>
-                    <p><strong>Architecture:</strong> YOLOv8n (CSPDarknet53 + PANet).</p>
-                    <p><strong>Status:</strong> Active Validation Checkpoint (mAP50: 0.698, mAP50-95: 0.582, Target Met).</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedYoloV8n</code> (Ladder: [320, 480, 640]).</p>
-                    <p><strong>SOTA Targets:</strong> mAP@0.5 &ge; 0.540, mAP@0.5:0.95 &ge; 0.390.</p>
-                </div>
-                <div id="nsfw">
-                    <h3>4.2 LemGendary Universal NSFW &amp; Safety Classifier</h3>
-                    <p><strong>Architecture:</strong> EfficientNetV2-S Categorical Vision Head.</p>
-                    <p><strong>Status:</strong> Pre-Training Architectural Specification.</p>
-                    <p><strong>Manifold:</strong> <code>LemGendizedClassificationMasterManifoldLarge</code> (Input: 224x224).</p>
-                    <p><strong>SOTA Targets:</strong> Accuracy &ge; 0.980, Macro-F1 &ge; 0.975.</p>
-                </div>
-            </section>
+<section id="6-deployment-strategy--edge-optimization">
+<h2>6. Deployment Strategy &amp; Edge Optimization</h2>
+<p>Models are compiled to TensorRT engines with INT8 precision calibration and
+WebGPU runtime profiles, engineered to achieve $&lt; 15\text{ ms}$ per-frame
+inference latency on consumer-grade hardware.</p>
+</section>
 
-            <section id="challenges">
-                <h2>5. Challenges &amp; Resilience Architecture</h2>
-                <p>Anchor-free convergence is stabilized with Distributed Focal Loss (DFL), while false-negative rates on sensitive categories are suppressed to &lt; 0.5% through asymmetric penalty weights.</p>
-            </section>
+<section id="7-sota-architectural-performance-matrix">
+<h2>7. SOTA Architectural Performance Matrix</h2>
+<ul>
+<li><strong><code>yolov8n</code></strong>: Architecture: CSPDarknet53 + PANet; Target Manifold:
+<code>LemGendizedYoloV8n</code>; Resolution Ladder: [320, 480, 640]; Target Metric: mAP50
+0.540, mAP50-95 0.390; Status: Validated / Target Met (mAP50: 0.698, mAP50-95:
+0.582)</li>
+<li><strong><code>universal_nsfw_classification</code></strong>: Architecture: EfficientNetV2-S; Target
+Manifold: <code>LemGendizedClassificationMasterManifoldLarge</code>; Resolution Ladder:
+[224]; Target Metric: Accuracy 0.980; Status: Specification / Pre-Training</li>
+</ul>
+</section>
 
-            <section id="deployment">
-                <h2>6. Deployment Strategy</h2>
-                <p>Compiled to TensorRT engines with INT8 calibration and WebGPU runtime profiles, engineered to achieve &lt; 15 ms inference latency on target edge hardware.</p>
-            </section>
+<section id="8-conclusion">
+<h2>8. Conclusion</h2>
+<p>Category 09 provides robust perceptual localization and automated content
+filtering across the ecosystem. Pre-defined training architectures ensure rapid
+verification and deployment as upcoming training workflows complete.</p>
+</section>
 
-            <section id="benchmarks">
-                <h2>7. SOTA Architectural Performance Matrix</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Model Key</th>
-                            <th>Architecture</th>
-                            <th>Target Manifold</th>
-                            <th>Resolution Ladder</th>
-                            <th>Target Metric</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><code>yolov8n</code></td><td>CSPDarknet53 + PANet</td><td><code>LemGendizedYoloV8n</code></td><td>[320, 480, 640]</td><td>mAP50 0.540, mAP50-95 0.390</td><td>Validated / Target Met (mAP50: 0.698, mAP50-95: 0.582)</td></tr>
-                        <tr><td><code>universal_nsfw_classification</code></td><td>EfficientNetV2-S</td><td><code>LemGendizedClassificationMasterManifoldLarge</code></td><td>[224]</td><td>Accuracy 0.980</td><td>Specification / Pre-Training</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="conclusion">
-                <h2>8. Conclusion</h2>
-                <p>Category 09 completes the automated perception and safety screening pipeline, with structure verified and integrated with live telemetry.</p>
-            </section>
-    
-        
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_DETECTION_CLASSIFICATION.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>
