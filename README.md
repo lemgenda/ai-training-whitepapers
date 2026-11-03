@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.75`
+**Version**: `v16.9.76`
 
 ---
 
@@ -30,7 +30,7 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 4 entries (heading parity 1, template 3,
+  `scripts/parity_backlog.json`: 1 entries (heading parity 0, template 1,
   text similarity 0), scheduled for the Later Phase. Any other finding fails.
 
 ---
@@ -50,6 +50,27 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.76 - Parity Backlog Batch 6: Knowledge Bases
+
+* **Approved Template** - `ai-helper-troubleshooting-knowledge` and
+  `general-ai-training-knowledge` regenerated from their Markdown sources on
+  the approved template (training tab bar; the AI Helper sidebar is built from
+  its H2/H3 headings because the Markdown has no table of contents); W3C
+  (vnu) clean.
+* **Markdown** - `GENERAL_AI_TRAINING_KNOWLEDGE.md`: the inline directive
+  disabling MD001, MD003, MD013, MD024, MD025 and MD035 is removed and the
+  causes fixed: one H1 (section headings one level down, skipped levels
+  closed), the five repeated sub-headings (Strengths, Weaknesses, Best use,
+  ...) name their format, the four pandoc text tables (which rendered as
+  setext headings) are lists, horizontal rules are `---`, prose is wrapped at
+  80 columns. `AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md`: header on the approved
+  layout, prose wrapped at 80 columns. markdownlint 0 on both files without
+  inline directives. No technical claims changed.
+* **Parity Backlog** - 3 entries removed (4 to 1: template 1, `index.html`).
+* **Version** - hub version v16.9.76 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.75 - Parity Backlog Batch 5: Master API and CLI Manuals
 
