@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.78`
+**Version**: `v16.9.79`
 
 ---
 
@@ -56,6 +56,19 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.79 - Strict YAML Lint (DOCS-2)
+
+* **YAML** - every tracked YAML file passes `yamllint -s` with the new
+  `.yamllint.yaml` (defaults, line length 120 as error, same as
+  `lemgendary-env-manager`). `canonical_capabilities.yaml` was reindented
+  (indented sequences, long BibTeX strings folded); its data equals
+  `canonical_capabilities.json` (`registry-parity` passes).
+* **Tooling** - `.gitattributes` forces LF for YAML; the pre-commit config
+  has a new `yamllint` hook.
+* **Version** - hub version v16.9.79 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents
+  (Markdown and HTML).
 
 ### v16.9.78 - Ecosystem Registry Checks and Documentation (DOCS-1)
 

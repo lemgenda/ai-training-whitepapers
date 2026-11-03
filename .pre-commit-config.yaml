@@ -8,3 +8,8 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: yamllint
+        name: yamllint (strict, .yamllint.yaml)
+        entry: yamllint -s -c .yamllint.yaml
+        language: system
+        types: [yaml]
