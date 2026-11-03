@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.64-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Version</strong>: <code>v16.9.65-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -38,103 +38,103 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-high-velocity-optimizations">2. High-Velocity Optimizations</a>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-high-velocity-optimizations">2. High-Velocity Optimizations</a>
 <ul class="sub-item">
-<li><a href="#21-formal-complexity-mappings">2.1 Formal Complexity Mappings</a></li>
-<li><a href="#22-resampling--resolution-constraints">2.2 Resampling &amp; Resolution
+<li><a href="#sec-21-formal-complexity-mappings">2.1 Formal Complexity Mappings</a></li>
+<li><a href="#sec-22-resampling--resolution-constraints">2.2 Resampling &amp; Resolution
 Constraints</a></li>
-<li><a href="#23-system-performance--throughput-matrix">2.3 System Performance &amp; Throughput
+<li><a href="#sec-23-system-performance--throughput-matrix">2.3 System Performance &amp; Throughput
 Matrix</a></li>
-<li><a href="#24-zero-intermediate-webp-transcoding">2.4 Zero-Intermediate WebP
+<li><a href="#sec-24-zero-intermediate-webp-transcoding">2.4 Zero-Intermediate WebP
 Transcoding</a></li>
-<li><a href="#25-direct-streaming-zip-to-container-engine">2.5 Direct Streaming Zip-to-Container
+<li><a href="#sec-25-direct-streaming-zip-to-container-engine">2.5 Direct Streaming Zip-to-Container
 Engine</a></li>
-<li><a href="#26-native-7-zip--tar-archive-acceleration">2.6 Native 7-Zip &amp; Tar Archive
+<li><a href="#sec-26-native-7-zip--tar-archive-acceleration">2.6 Native 7-Zip &amp; Tar Archive
 Acceleration</a></li>
-<li><a href="#27-two-tier-modernization--webp-resumption">2.7 Two-Tier Modernization &amp; WebP
+<li><a href="#sec-27-two-tier-modernization--webp-resumption">2.7 Two-Tier Modernization &amp; WebP
 Resumption</a></li>
-<li><a href="#28-fast-split-shard-discovery--mtime-caching">2.8 Fast Split Shard Discovery &amp; mtime
+<li><a href="#sec-28-fast-split-shard-discovery--mtime-caching">2.8 Fast Split Shard Discovery &amp; mtime
 Caching</a></li>
-<li><a href="#29-in-memory-streaming-download--terminal-telemetry">2.9 In-Memory Streaming Download &amp; Terminal
+<li><a href="#sec-29-in-memory-streaming-download--terminal-telemetry">2.9 In-Memory Streaming Download &amp; Terminal
 Telemetry</a></li>
-<li><a href="#210-modern-telemetry-progress-architecture">2.10 Modern Telemetry Progress
+<li><a href="#sec-210-modern-telemetry-progress-architecture">2.10 Modern Telemetry Progress
 Architecture</a></li>
 </ul>
 </li>
-<li><a href="#3-hybrid-cloud--registry-integration">3. Hybrid Cloud &amp; Registry
+<li><a href="#sec-3-hybrid-cloud--registry-integration">3. Hybrid Cloud &amp; Registry
 Integration</a>
 <ul class="sub-item">
-<li><a href="#31-atomic-registry-resumption--hardlink-deduplication">3.1 Atomic Registry Resumption &amp; Hardlink
+<li><a href="#sec-31-atomic-registry-resumption--hardlink-deduplication">3.1 Atomic Registry Resumption &amp; Hardlink
 Deduplication</a></li>
-<li><a href="#32-metadata-synchronization--cloud-transfer">3.2 Metadata Synchronization &amp; Cloud
+<li><a href="#sec-32-metadata-synchronization--cloud-transfer">3.2 Metadata Synchronization &amp; Cloud
 Transfer</a></li>
-<li><a href="#33-kaggle-cloud-synchronization--storage-hub">3.3 Kaggle Cloud Synchronization &amp; Storage
+<li><a href="#sec-33-kaggle-cloud-synchronization--storage-hub">3.3 Kaggle Cloud Synchronization &amp; Storage
 Hub</a></li>
-<li><a href="#34-canonical-storage-format--kaggle-ssot-governance">3.4 Canonical Storage Format &amp; Kaggle SSOT
+<li><a href="#sec-34-canonical-storage-format--kaggle-ssot-governance">3.4 Canonical Storage Format &amp; Kaggle SSOT
 Governance</a></li>
-<li><a href="#35-multi-source-custom-dataset-synthesis-engine">3.5 Multi-Source Custom Dataset Synthesis
+<li><a href="#sec-35-multi-source-custom-dataset-synthesis-engine">3.5 Multi-Source Custom Dataset Synthesis
 Engine</a></li>
-<li><a href="#36-ssot-notebook-delegation--deduplication">3.6 SSOT Notebook Delegation &amp;
+<li><a href="#sec-36-ssot-notebook-delegation--deduplication">3.6 SSOT Notebook Delegation &amp;
 Deduplication</a></li>
-<li><a href="#37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type
+<li><a href="#sec-37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type
 (v16.9.61)</a></li>
 </ul>
 </li>
-<li><a href="#4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a>
+<li><a href="#sec-4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a>
 <ul class="sub-item">
-<li><a href="#41-upstream-multi-source-expansion-architecture">4.1 Upstream Multi-Source Expansion
+<li><a href="#sec-41-upstream-multi-source-expansion-architecture">4.1 Upstream Multi-Source Expansion
 Architecture</a></li>
-<li><a href="#42-multi-format-annotation-converter-subsystem">4.2 Multi-Format Annotation Converter
+<li><a href="#sec-42-multi-format-annotation-converter-subsystem">4.2 Multi-Format Annotation Converter
 Subsystem</a></li>
-<li><a href="#43-pre-flight-validation-integrity-vetting--pruning">4.3 Pre-flight Validation, Integrity Vetting &amp;
+<li><a href="#sec-43-pre-flight-validation-integrity-vetting--pruning">4.3 Pre-flight Validation, Integrity Vetting &amp;
 Pruning</a></li>
-<li><a href="#44-domain-specializations">4.4 Domain Specializations</a></li>
-<li><a href="#45-modular-container-format-layer">4.5 Modular Container Format Layer</a></li>
-<li><a href="#46-studio-supported-vs-general-knowledge-formats">4.6 Studio-Supported vs. General Knowledge
+<li><a href="#sec-44-domain-specializations">4.4 Domain Specializations</a></li>
+<li><a href="#sec-45-modular-container-format-layer">4.5 Modular Container Format Layer</a></li>
+<li><a href="#sec-46-studio-supported-vs-general-knowledge-formats">4.6 Studio-Supported vs. General Knowledge
 Formats</a></li>
-<li><a href="#47-hardlink-dedup-preservation--pre-flight-gate">4.7 Hardlink Dedup Preservation &amp; Pre-Flight
+<li><a href="#sec-47-hardlink-dedup-preservation--pre-flight-gate">4.7 Hardlink Dedup Preservation &amp; Pre-Flight
 Gate</a></li>
-<li><a href="#48-smart-multi-modal-generation-engine">4.8 Smart Multi-Modal Generation
+<li><a href="#sec-48-smart-multi-modal-generation-engine">4.8 Smart Multi-Modal Generation
 Engine</a></li>
-<li><a href="#49-physical-degradation-synthesis-engine">4.9 Physical Degradation Synthesis
+<li><a href="#sec-49-physical-degradation-synthesis-engine">4.9 Physical Degradation Synthesis
 Engine</a></li>
-<li><a href="#410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</a></li>
+<li><a href="#sec-410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</a></li>
 </ul>
 </li>
-<li><a href="#5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a>
+<li><a href="#sec-5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a>
 <ul class="sub-item">
-<li><a href="#51-technical-comparison-matrix">5.1 Technical Comparison Matrix</a></li>
-<li><a href="#52-competitor-deep-dive-pros-cons--pricing">5.2 Competitor Deep-Dive: Pros, Cons &amp;
+<li><a href="#sec-51-technical-comparison-matrix">5.1 Technical Comparison Matrix</a></li>
+<li><a href="#sec-52-competitor-deep-dive-pros-cons--pricing">5.2 Competitor Deep-Dive: Pros, Cons &amp;
 Pricing</a></li>
 </ul>
 </li>
-<li><a href="#6-synthesis-flow--topology">6. Synthesis Flow &amp; Topology</a>
+<li><a href="#sec-6-synthesis-flow--topology">6. Synthesis Flow &amp; Topology</a>
 <ul class="sub-item">
-<li><a href="#61-the-dataset-hub">6.1 The Dataset Hub</a></li>
-<li><a href="#62-industrial-output-topology">6.2 Industrial Output Topology</a></li>
-<li><a href="#63-llm-manifold-filesystem-topology">6.3 LLM Manifold Filesystem Topology</a></li>
-<li><a href="#64-unified-three-pipeline-architecture">6.4 Unified Three-Pipeline
+<li><a href="#sec-61-the-dataset-hub">6.1 The Dataset Hub</a></li>
+<li><a href="#sec-62-industrial-output-topology">6.2 Industrial Output Topology</a></li>
+<li><a href="#sec-63-llm-manifold-filesystem-topology">6.3 LLM Manifold Filesystem Topology</a></li>
+<li><a href="#sec-64-unified-three-pipeline-architecture">6.4 Unified Three-Pipeline
 Architecture</a></li>
-<li><a href="#65-solid-services-layer--forex-encapsulation">6.5 S.O.L.I.D. Services Layer &amp; Forex
+<li><a href="#sec-65-solid-services-layer--forex-encapsulation">6.5 S.O.L.I.D. Services Layer &amp; Forex
 Encapsulation</a></li>
-<li><a href="#66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid
+<li><a href="#sec-66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid
 CLI</a></li>
-<li><a href="#67-cross-project-automation--desktop-gui-presets">6.7 Cross-Project Automation &amp; Desktop GUI
+<li><a href="#sec-67-cross-project-automation--desktop-gui-presets">6.7 Cross-Project Automation &amp; Desktop GUI
 Presets</a></li>
-<li><a href="#68-modernize-and-reduce-operations">6.8 Modernize and Reduce Operations</a></li>
-<li><a href="#69-security-model">6.9 Security Model</a></li>
+<li><a href="#sec-68-modernize-and-reduce-operations">6.8 Modernize and Reduce Operations</a></li>
+<li><a href="#sec-69-security-model">6.9 Security Model</a></li>
 </ul>
 </li>
-<li><a href="#7-unified-models-registry">7. Unified Models Registry</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-7-unified-models-registry">7. Unified Models Registry</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.64-STABLE</code>) is the data
+<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.65-STABLE</code>) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -169,13 +169,13 @@ The port, bind host, Kaggle owner and sibling folders come from
 </ul>
 </section>
 
-<section id="2-high-velocity-optimizations">
+<section id="sec-2-high-velocity-optimizations">
 <h2>2. High-Velocity Optimizations</h2>
 <p>The v16.2.8 release introduced the High-Fidelity Compiler, optimized for
 processing 1.4M+ item manifolds while maintaining structural integrity for
 restoration tasks. Later releases added zero-unpack streaming, native archive
 acceleration and file-level resumption.</p>
-<h3 id="21-formal-complexity-mappings">2.1 Formal Complexity Mappings</h3>
+<h3 id="sec-21-formal-complexity-mappings">2.1 Formal Complexity Mappings</h3>
 <ul>
 <li>
 <p><strong>O(1) Physical Skip-Indexing</strong>: Traditional compiler engines verify existing
@@ -230,7 +230,7 @@ $\mathcal{C}_{\text{factor}}$ are:</p>
 <p>This reduces the physical manifold footprint from $\sim 738\text{ GB}$ to
 $\sim 5.2\text{ GB}$ across the 8-year temporal continuum (2019 to 2026), with
 $100\%$ bit-exact floating-point recovery.</p>
-<h3 id="22-resampling--resolution-constraints">2.2 Resampling &amp; Resolution Constraints</h3>
+<h3 id="sec-22-resampling--resolution-constraints">2.2 Resampling &amp; Resolution Constraints</h3>
 <ul>
 <li><strong>LANCZOS High-Fidelity Interpolation</strong>: To prevent aliasing and preserve
 high-frequency details (textures and sharp edges) during downsampling of
@@ -260,7 +260,7 @@ $p$ on a $64 \times 64$ thumbnail and $\beta = 0.1$ the configurable
 <code>black_threshold</code>:</li>
 </ul>
 <div class="math-block">$$\frac{\max(W, H)}{\max(1, \min(W, H))} \le 10.0, \qquad \frac{|\{p : g(p) &lt; 10\}|}{|P|} \le 1 - \beta$$</div>
-<h3 id="23-system-performance--throughput-matrix">2.3 System Performance &amp; Throughput Matrix</h3>
+<h3 id="sec-23-system-performance--throughput-matrix">2.3 System Performance &amp; Throughput Matrix</h3>
 <p>To validate these system-level optimizations, execution profiles were collected
 during the compilation of the <code>LemGendizedUpnV2</code> manifold (1.37M samples, 1024px
 targets) on PCIe Gen4 NVMe hardware. Each entry compares the legacy recursive
@@ -279,7 +279,7 @@ ThreadPool).</li>
 </ul>
 <p>These figures are historical measurements from the v16.8.0 profile and were not
 re-measured for <code>v16.9.27</code>.</p>
-<h3 id="24-zero-intermediate-webp-transcoding">2.4 Zero-Intermediate WebP Transcoding</h3>
+<h3 id="sec-24-zero-intermediate-webp-transcoding">2.4 Zero-Intermediate WebP Transcoding</h3>
 <p>Eliminating bulky intermediate disk writes, the compiler transcodes input
 streams directly in memory to tuned WebP formats:</p>
 <ul>
@@ -295,7 +295,7 @@ discrete class indices and pixel boundaries.</li>
 lossless WebP or alpha-composited over calibrated neutral backdrops without
 quantization halos.</li>
 </ul>
-<h3 id="25-direct-streaming-zip-to-container-engine">2.5 Direct Streaming Zip-to-Container Engine</h3>
+<h3 id="sec-25-direct-streaming-zip-to-container-engine">2.5 Direct Streaming Zip-to-Container Engine</h3>
 <p>To resolve Windows NTFS Master File Table (MFT) lock contention, 8.3 short-name
 collision overhead, and antivirus real-time filter driver (<code>WdFilter.sys</code>)
 serialization when unpacking multi-gigabyte legacy archives containing millions
@@ -325,7 +325,7 @@ when asked, unlinks the source <code>.zip</code> archive (<code>--delete-zip</co
 legacy uncompressed directories (<code>--delete-legacy-dir</code>), recovering over
 $120\text{ GB}$ of local storage space.</li>
 </ol>
-<h3 id="26-native-7-zip--tar-archive-acceleration">2.6 Native 7-Zip &amp; Tar Archive Acceleration</h3>
+<h3 id="sec-26-native-7-zip--tar-archive-acceleration">2.6 Native 7-Zip &amp; Tar Archive Acceleration</h3>
 <p>For workflows requiring physical archive extraction, <code>utils/archive.py</code>
 (<code>smart_extract</code>) delegates to native subsystems:</p>
 <ol>
@@ -340,7 +340,7 @@ of magnitude while suppressing per-file stdout progress flooding.</li>
 envelopes (<code>LemGendized{Name}Large/</code>) and flattens directory topologies
 post-extraction to guarantee consistent sibling pathing.</li>
 </ol>
-<h3 id="27-two-tier-modernization--webp-resumption">2.7 Two-Tier Modernization &amp; WebP Resumption</h3>
+<h3 id="sec-27-two-tier-modernization--webp-resumption">2.7 Two-Tier Modernization &amp; WebP Resumption</h3>
 <p>Introduced in v16.7.3:</p>
 <ul>
 <li><strong>Suffix-Removal Modernization</strong>: Retires legacy <code>Large</code> naming conventions
@@ -357,7 +357,7 @@ interrupted runs.</li>
 reporting conversion speed (img/sec), active thread allocation, and countdown
 ETA across both metadata replication and multi-threaded WebP encoding.</li>
 </ul>
-<h3 id="28-fast-split-shard-discovery--mtime-caching">2.8 Fast Split Shard Discovery &amp; mtime Caching</h3>
+<h3 id="sec-28-fast-split-shard-discovery--mtime-caching">2.8 Fast Split Shard Discovery &amp; mtime Caching</h3>
 <p>Introduced in v16.9.6, this eliminates deep recursive walking across hundreds of
 thousands of loose files when evaluating manifold compiled status. The scanner
 inspects container roots (<code>shards/</code>, <code>mds/</code>, <code>wds/</code>, <code>litdata/</code>) and immediate
@@ -366,7 +366,7 @@ also the <code>data/*.jsonl</code> splits of LLM manifolds. Results are cached a
 directory's filesystem <code>st_mtime</code>, dropping API response latency from
 $&gt; 20\text{ seconds}$ to $&lt; 50\text{ ms}$; with $k$ inspected folders a cache
 miss costs $\mathcal{O}(k)$ and a hit $\mathcal{O}(1)$.</p>
-<h3 id="29-in-memory-streaming-download--terminal-telemetry">2.9 In-Memory Streaming Download &amp; Terminal Telemetry</h3>
+<h3 id="sec-29-in-memory-streaming-download--terminal-telemetry">2.9 In-Memory Streaming Download &amp; Terminal Telemetry</h3>
 <p>To prevent terminal line wrapping and intermediate disk consumption during
 remote manifold acquisition, v16.9.1 hardens terminal progress telemetry and
 couples cloud synchronization with the streaming modernization engine:</p>
@@ -395,7 +395,7 @@ in <code>utils/archive.py</code> (<code>smart_extract</code>) changed from <code
 silencing per-file stdout progress emission during fallback physical archive
 extractions.</li>
 </ol>
-<h3 id="210-modern-telemetry-progress-architecture">2.10 Modern Telemetry Progress Architecture</h3>
+<h3 id="sec-210-modern-telemetry-progress-architecture">2.10 Modern Telemetry Progress Architecture</h3>
 <p>v16.9.19 replaces legacy ASCII terminal progress bars with unconstrained metric
 streams that the frontend UI digests:</p>
 <ol>
@@ -436,9 +436,9 @@ focused on milestone events.</p>
 </ol>
 </section>
 
-<section id="3-hybrid-cloud--registry-integration">
+<section id="sec-3-hybrid-cloud--registry-integration">
 <h2>3. Hybrid Cloud &amp; Registry Integration</h2>
-<h3 id="31-atomic-registry-resumption--hardlink-deduplication">3.1 Atomic Registry Resumption &amp; Hardlink Deduplication</h3>
+<h3 id="sec-31-atomic-registry-resumption--hardlink-deduplication">3.1 Atomic Registry Resumption &amp; Hardlink Deduplication</h3>
 <ul>
 <li><strong>Atomic Registry Resumption &amp; SQLite Mappings</strong>: Resumption safety is
 guaranteed by tying the metadata compiler to a transaction-locked SQLite
@@ -471,7 +471,7 @@ cycle to register them:</li>
 <p>where $C = 100{,}000$ is the batch memory chunk limit, preventing memory
 spikes during large recovery operations. Adoption costs
 $\mathcal{O}(|\mathcal{O}|)$ time and $\mathcal{O}(C)$ memory.</p>
-<h3 id="32-metadata-synchronization--cloud-transfer">3.2 Metadata Synchronization &amp; Cloud Transfer</h3>
+<h3 id="sec-32-metadata-synchronization--cloud-transfer">3.2 Metadata Synchronization &amp; Cloud Transfer</h3>
 <ul>
 <li><strong>Metadata Synchronization</strong>:
 <ul>
@@ -530,7 +530,7 @@ to 6: subsequent 1-year blocks) to eliminate temporal data duplication,
 computing 14 quantitative features and synchronizing shards end-to-end for
 dynamic stacking in the LemGendary Model Training Suite.</li>
 </ul>
-<h3 id="33-kaggle-cloud-synchronization--storage-hub">3.3 Kaggle Cloud Synchronization &amp; Storage Hub</h3>
+<h3 id="sec-33-kaggle-cloud-synchronization--storage-hub">3.3 Kaggle Cloud Synchronization &amp; Storage Hub</h3>
 <p>Introduced in v16.9.6, the sidecar exposes bidirectional synchronization between
 the local dataset root (<code>LemGendaryDatasets/</code>) and Kaggle via
 <code>GET /api/kaggle/registry-datasets</code>, <code>POST /api/kaggle/download</code>,
@@ -548,7 +548,7 @@ option.</li>
 valid metadata manifests and streams them to Kaggle Model and Dataset
 registries.</li>
 </ul>
-<h3 id="34-canonical-storage-format--kaggle-ssot-governance">3.4 Canonical Storage Format &amp; Kaggle SSOT Governance</h3>
+<h3 id="sec-34-canonical-storage-format--kaggle-ssot-governance">3.4 Canonical Storage Format &amp; Kaggle SSOT Governance</h3>
 <p>To eliminate dual-storage waste, v16.8.0 established a Single Source of Truth
 (SSOT) container governance matrix. Every manifold declares exactly one
 <code>canonical_format</code> in <code>unified_data.yaml</code> (registry schema <code>4.3.0</code>):</p>
@@ -580,7 +580,7 @@ LLM manifold (<code>LemGendizedAIHelperLemGend</code>).</li>
 licensing, and provenance tables for 10.0 Usability score compliance. CLI:
 <code>sync metadata</code>.</li>
 </ul>
-<h3 id="35-multi-source-custom-dataset-synthesis-engine">3.5 Multi-Source Custom Dataset Synthesis Engine</h3>
+<h3 id="sec-35-multi-source-custom-dataset-synthesis-engine">3.5 Multi-Source Custom Dataset Synthesis Engine</h3>
 <p><code>POST /api/gui/custom-compile</code> (v16.9.6, hardened in v16.9.24) compiles a new
 manifold from heterogeneous sources:</p>
 <ul>
@@ -624,7 +624,7 @@ checked, and <code>formats.directory.purge_loose_layout</code> is shared with
 $\text{packed}(m)$ true when the container for $m$ was written successfully in
 that run, the purged set is:</p>
 <div class="math-block">$$\mathcal{P}_{\text{purge}} = \{ m \in \mathcal{M}_{\text{run}} : \text{cleanup} \wedge \text{compiled}(m) \wedge \text{packed}(m) \}$$</div>
-<h3 id="36-ssot-notebook-delegation--deduplication">3.6 SSOT Notebook Delegation &amp; Deduplication</h3>
+<h3 id="sec-36-ssot-notebook-delegation--deduplication">3.6 SSOT Notebook Delegation &amp; Deduplication</h3>
 <p>To keep a single authoritative source for training and inference notebooks,
 v16.9.7 moved notebook generation out of <code>lemgendary-datasets</code>:</p>
 <ol>
@@ -650,7 +650,7 @@ are purged during compilation and replaced with freshly generated notebooks.</li
 notebook generators are real callables; the training suite is found through the
 <code>training-suite</code> service in <code>ecosystem.json</code> (skipped when the sibling checkout
 is absent).</p>
-<h3 id="37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type (v16.9.61)</h3>
+<h3 id="sec-37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type (v16.9.61)</h3>
 <p><code>task_taxonomy.json</code> (schema <code>task_taxonomy.schema.json</code>) is the single source
 of task ids. Each entry of <code>tasks[]</code> has an <code>id</code>, the split folder the task adds
 (<code>layout_dir</code>: <code>masks</code>, <code>labels</code>, <code>targets</code> or none), a default <code>label_strategy</code>
@@ -677,9 +677,9 @@ taxonomy for manifolds compiled before v16.9.61.</li>
 </ul>
 </section>
 
-<section id="4-multi-modal--format-resilience">
+<section id="sec-4-multi-modal--format-resilience">
 <h2>4. Multi-Modal &amp; Format Resilience</h2>
-<h3 id="41-upstream-multi-source-expansion-architecture">4.1 Upstream Multi-Source Expansion Architecture</h3>
+<h3 id="sec-41-upstream-multi-source-expansion-architecture">4.1 Upstream Multi-Source Expansion Architecture</h3>
 <p>The compiler supports declarative multi-source dataset expansion (<code>sources/</code>)
 through <code>unified_data.yaml</code> under each manifold's <code>refs:</code> array. Operators can
 add heterogeneous source repositories without altering compilation code:</p>
@@ -701,7 +701,7 @@ slices already-compiled sibling manifolds (for example
 <code>LemGendizedNafNetDebluring</code> inside <code>LemGendizedMultitaskRestorationPro</code>)
 without duplicating image files on disk.</li>
 </ul>
-<h3 id="42-multi-format-annotation-converter-subsystem">4.2 Multi-Format Annotation Converter Subsystem</h3>
+<h3 id="sec-42-multi-format-annotation-converter-subsystem">4.2 Multi-Format Annotation Converter Subsystem</h3>
 <p>Regardless of the upstream dataset's original structure, the compiler detects
 and transforms annotations and image tensors through the unified <code>converters/</code>
 subsystem:</p>
@@ -726,7 +726,7 @@ tensors.</li>
 <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, and
 <code>.npy</code> arrays.</li>
 </ul>
-<h3 id="43-pre-flight-validation-integrity-vetting--pruning">4.3 Pre-flight Validation, Integrity Vetting &amp; Pruning</h3>
+<h3 id="sec-43-pre-flight-validation-integrity-vetting--pruning">4.3 Pre-flight Validation, Integrity Vetting &amp; Pruning</h3>
 <p>Every discovered sample from any source passes pre-flight gating before entering
 the manifold:</p>
 <ul>
@@ -744,7 +744,7 @@ score distributions, discarding heavily degraded or out-of-distribution frames
 eliminate duplicate or near-identical images across overlapping upstream
 sources.</li>
 </ul>
-<h3 id="44-domain-specializations">4.4 Domain Specializations</h3>
+<h3 id="sec-44-domain-specializations">4.4 Domain Specializations</h3>
 <ul>
 <li><strong>Parquet &amp; Safetensors Support (v16.6.0)</strong>: Native ingestion of compressed
 PyArrow binaries, Safetensors model weights, and unified annual financial
@@ -770,7 +770,7 @@ rather than generic YOLO polygons.</li>
 from <code>landmarks/</code> into standard YOLO format, with all classes filtered to
 <code>face</code> (index 0).</li>
 </ul>
-<h3 id="45-modular-container-format-layer">4.5 Modular Container Format Layer</h3>
+<h3 id="sec-45-modular-container-format-layer">4.5 Modular Container Format Layer</h3>
 <p>The format layer (<code>formats/</code>: <code>directory</code>, <code>webdataset</code>, <code>litdata</code>, <code>parquet</code>,
 <code>mds</code>, <code>transcode</code>) supports concurrent multi-format emission (<code>--also-format</code>)
 alongside canonical directory structures:</p>
@@ -802,7 +802,7 @@ ingestion, convert them into supported representations (<strong>LitData</strong>
 legacy; transcoding to WebDataset (<code>.data</code>) is available via
 <code>tools/modernization_queue.py</code>.</p>
 </blockquote>
-<h3 id="46-studio-supported-vs-general-knowledge-formats">4.6 Studio-Supported vs. General Knowledge Formats</h3>
+<h3 id="sec-46-studio-supported-vs-general-knowledge-formats">4.6 Studio-Supported vs. General Knowledge Formats</h3>
 <p>The compiler delineates <strong>Studio Native Supported Formats</strong> (first-class
 streaming manifolds and annotation converters ingested by <code>lemgendary-datasets</code>
 and <code>lemgendary-training-suite</code>) from <strong>General Knowledge Formats</strong>
@@ -856,7 +856,7 @@ Apache MXNet pipelines.</li>
 KNOWLEDGE</strong>; non-native, documented; uncompressed Arrow memory buffer mapping;
 ephemeral IPC transfer, lacks compressed row-group partitions.</li>
 </ul>
-<h3 id="47-hardlink-dedup-preservation--pre-flight-gate">4.7 Hardlink Dedup Preservation &amp; Pre-Flight Gate</h3>
+<h3 id="sec-47-hardlink-dedup-preservation--pre-flight-gate">4.7 Hardlink Dedup Preservation &amp; Pre-Flight Gate</h3>
 <p>Because container formats (tarballs, chunked binaries) pack raw byte streams and
 destroy NTFS/POSIX hardlink deduplication, the compiler runs a pre-flight
 hardlink audit gate (<code>audit/hardlinks.py</code>, <code>audit_hardlinks()</code>, exposed as
@@ -865,7 +865,7 @@ hardlink audit gate (<code>audit/hardlinks.py</code>, <code>audit_hardlinks()</c
 <p>Any attempt to emit container formats on restoration manifolds with heavy
 hardlink dedup (such as <code>LemGendizedUpnV2</code> with $1.06\text{ TB}$ recovered) is
 blocked unless explicitly overridden via <code>--force-duplicate</code>.</p>
-<h3 id="48-smart-multi-modal-generation-engine">4.8 Smart Multi-Modal Generation Engine</h3>
+<h3 id="sec-48-smart-multi-modal-generation-engine">4.8 Smart Multi-Modal Generation Engine</h3>
 <p>Integrated AI backends (<code>generators/</code>, CLI <code>label</code>, <code>prompt</code>, <code>mask</code>) run across
 compiled manifolds:</p>
 <ul>
@@ -877,7 +877,7 @@ clusters via <code>MiniBatchKMeans</code> with deterministic seeding.</li>
 object class distributions.</li>
 <li><strong>ParseNet &amp; SAM Segmentation</strong>: Generates discrete face and instance masks.</li>
 </ul>
-<h3 id="49-physical-degradation-synthesis-engine">4.9 Physical Degradation Synthesis Engine</h3>
+<h3 id="sec-49-physical-degradation-synthesis-engine">4.9 Physical Degradation Synthesis Engine</h3>
 <p>Pure NumPy, SciPy, and Pillow kernels (<code>degrade/</code>, CLI <code>degrade</code>,
 <code>POST /api/jobs/degrade</code>) derive paired synthetic restoration manifolds from
 clean targets:</p>
@@ -901,14 +901,14 @@ archival artifacts for film restoration pairs.</li>
 <li><strong>Provenance Logging</strong>: Exact parameter values (blur kernel dimensions, angle,
 noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
 </ul>
-<h3 id="410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</h3>
+<h3 id="sec-410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</h3>
 <p>The suite includes a generic, declarative Large Language Model (LLM) instruction
 manifold compiler in <code>tools/llm_helper/</code> (<code>BaseLLMCompiler</code> in
 <code>base_compiler.py</code>), exposed as CLI <code>llm compile</code> and <code>llm validate</code> and as
 <code>POST /api/llm/compile</code> and <code>POST /api/llm/validate</code>. It replaces ad-hoc
 scraping and manual JSONL formatting with an extraction, chunking and validation
 pipeline driven by declarations in <code>unified_data.yaml</code>.</p>
-<h4 id="4101-declarative-configuration">4.10.1 Declarative Configuration</h4>
+<h4 id="sec-4101-declarative-configuration">4.10.1 Declarative Configuration</h4>
 <p>Every instruction manifold declares its pipeline under the registry. The
 production entry <code>ai_helper_lemgend</code> (abridged) is:</p>
 <pre><code class="language-yaml">ai_helper_lemgend:
@@ -945,7 +945,7 @@ production entry <code>ai_helper_lemgend</code> (abridged) is:</p>
 the workspace root, and dispatches the generator module
 (<code>tools.llm_helper.knowledge_synthesizer</code>). A key without a mapped generator
 raises an error instead of producing an empty manifold.</p>
-<h4 id="4102-supported-multi-format-loaders">4.10.2 Supported Multi-Format Loaders</h4>
+<h4 id="sec-4102-supported-multi-format-loaders">4.10.2 Supported Multi-Format Loaders</h4>
 <p>The knowledge ingestor (<code>KnowledgeIngestor</code>, <code>knowledge_ingestor.py</code>) turns
 documentation and data sources into normalized <code>KnowledgeDocument</code> objects, each
 with a SHA-256 <code>content_hash</code>:</p>
@@ -963,7 +963,7 @@ readable tables.</li>
 <li><strong>Web URLs</strong>: Remote documentation fetched over HTTP and cached on disk (URL
 keyed by a truncated SHA-256 digest).</li>
 </ul>
-<h4 id="4103-chunking-provenance-lineage--hash-verification">4.10.3 Chunking, Provenance Lineage &amp; Hash Verification</h4>
+<h4 id="sec-4103-chunking-provenance-lineage--hash-verification">4.10.3 Chunking, Provenance Lineage &amp; Hash Verification</h4>
 <p>To partition documentation into bounded instruction units, <code>RecursiveChunker</code>
 (<code>chunker.py</code>) splits each document:</p>
 <ul>
@@ -988,7 +988,7 @@ SHA-256 digest (<code>sha256</code>) of its UTF-8 text:</li>
 <p>The hash supports bit-exact deduplication and tamper verification across the
 training lifecycle; <code>index.json</code> lists the record inventory with SHA-256
 hashes.</p>
-<h4 id="4104-quality-invariants--validation">4.10.4 Quality Invariants &amp; Validation</h4>
+<h4 id="sec-4104-quality-invariants--validation">4.10.4 Quality Invariants &amp; Validation</h4>
 <p>Every record passes the <code>QualityValidator</code> gate (<code>quality_validator.py</code>) before
 any file is written. Each finding is a frozen <code>ValidationIssue</code> dataclass
 (record id, <code>field</code>, <code>issue</code>, severity); errors block the compile, warnings are
@@ -1016,9 +1016,9 @@ for $n_c &gt; 1$ and 0 otherwise.</p>
 corpus fails; unreadable or invalid JSONL is reported as such.</p>
 </section>
 
-<section id="5-comparative-analysis--benchmarks">
+<section id="sec-5-comparative-analysis--benchmarks">
 <h2>5. Comparative Analysis / Benchmarks</h2>
-<h3 id="51-technical-comparison-matrix">5.1 Technical Comparison Matrix</h3>
+<h3 id="sec-51-technical-comparison-matrix">5.1 Technical Comparison Matrix</h3>
 <p>The dataset compilation landscape in 2026 is shaped by the trade-off between
 distributed cloud throughput and local zero-IPC hardware efficiency. The
 benchmark compares the <strong>LemGendary Dataset Compiler Suite (v16.8.0 profile)</strong>
@@ -1052,8 +1052,8 @@ Lanczos-3 anti-aliased kernel</strong>.</li>
 logs; metadata manifests; IterDataPipe state dicts; <strong>LemGendary
 transaction-locked SQLite registry</strong>.</li>
 </ul>
-<h3 id="52-competitor-deep-dive-pros-cons--pricing">5.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</h3>
-<h4 id="521-nvidia-nemo-curator--data-designer-v2026">5.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h4>
+<h3 id="sec-52-competitor-deep-dive-pros-cons--pricing">5.2 Competitor Deep-Dive: Pros, Cons &amp; Pricing</h3>
+<h4 id="sec-521-nvidia-nemo-curator--data-designer-v2026">5.2.1 NVIDIA NeMo Curator &amp; Data Designer (v2026)</h4>
 <ul>
 <li><strong>Pros:</strong> GPU-accelerated MinHash deduplication and VLM semantic filtering;
 native integration with the NeMo training framework.</li>
@@ -1063,7 +1063,7 @@ VRAM overhead during pre-processing; locked to the NVIDIA ecosystem.</li>
 Enterprise (USD 4,500 per GPU per year)</strong> or cloud GPU usage rates (USD 3.50
 to 4.80 per GPU-hour).</li>
 </ul>
-<h4 id="522-huggingface-webdataset--datasets-v3-compiler">5.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h4>
+<h4 id="sec-522-huggingface-webdataset--datasets-v3-compiler">5.2.2 HuggingFace WebDataset / Datasets v3 Compiler</h4>
 <ul>
 <li><strong>Pros:</strong> Standard for cloud tarball streaming (<code>.tar</code> / <code>.parquet</code>); HF Hub
 integration and dataset sharing.</li>
@@ -1073,7 +1073,7 @@ physical data duplication; slow random-access seek times.</li>
 user per month)</strong> plus HF Endpoints storage and ingress costs (about USD 0.02
 per GB per month).</li>
 </ul>
-<h4 id="523-ray-data--anyscale-distributed-compiler">5.2.3 Ray Data / Anyscale Distributed Compiler</h4>
+<h4 id="sec-523-ray-data--anyscale-distributed-compiler">5.2.3 Ray Data / Anyscale Distributed Compiler</h4>
 <ul>
 <li><strong>Pros:</strong> Scalable distributed batch execution across thousands of CPU/GPU
 worker nodes; resilient task graphs.</li>
@@ -1083,7 +1083,7 @@ overhead; complex cluster orchestration and setup.</li>
 (USD 0.10 to 0.30 per Anyscale Compute Unit hour)</strong> plus underlying AWS/GCP
 infrastructure costs.</li>
 </ul>
-<h4 id="524-cohere--deepspeed-data-engine">5.2.4 Cohere / DeepSpeed Data Engine</h4>
+<h4 id="sec-524-cohere--deepspeed-data-engine">5.2.4 Cohere / DeepSpeed Data Engine</h4>
 <ul>
 <li><strong>Pros:</strong> Optimized for large-scale LLM/VLM text-image tokenization and
 multi-modal sharding; strong multi-node streaming.</li>
@@ -1093,7 +1093,7 @@ high multi-node network bandwidth requirements.</li>
 custom tier (USD 15,000 to 50,000+ per year commitment)</strong> for managed
 enterprise pipeline deployment.</li>
 </ul>
-<h4 id="525-meta--pytorch-torchdata-manifold-compiler-v2">5.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h4>
+<h4 id="sec-525-meta--pytorch-torchdata-manifold-compiler-v2">5.2.5 Meta / PyTorch TorchData Manifold Compiler v2</h4>
 <ul>
 <li><strong>Pros:</strong> Native PyTorch <code>IterDataPipe</code> / <code>MapDataPipe</code> ecosystem
 compatibility; zero external framework dependencies.</li>
@@ -1103,7 +1103,7 @@ during crashes); high multiprocessing worker IPC overhead.</li>
 standard unoptimized cloud compute and storage overheads due to lack of
 hardlinking.</li>
 </ul>
-<h4 id="526-lemgendary-dataset-compiler-suite">5.2.6 LemGendary Dataset Compiler Suite</h4>
+<h4 id="sec-526-lemgendary-dataset-compiler-suite">5.2.6 LemGendary Dataset Compiler Suite</h4>
 <ul>
 <li><strong>Pros:</strong> $\mathcal{O}(1)$ physical skip-indexing; Zero-IPC ThreadPool RAM
 sharing; 64.6% disk space recovery via NTFS/POSIX hardlinking; Lanczos-3
@@ -1117,9 +1117,9 @@ hardlinking.</li>
 </ul>
 </section>
 
-<section id="6-synthesis-flow--topology">
+<section id="sec-6-synthesis-flow--topology">
 <h2>6. Synthesis Flow &amp; Topology</h2>
-<h3 id="61-the-dataset-hub">6.1 The Dataset Hub</h3>
+<h3 id="sec-61-the-dataset-hub">6.1 The Dataset Hub</h3>
 <p>The interactive dashboard (Dataset Hub v6.0.0-SOTA,
 <code>lemgendary_datasets_hub.ps1</code>) manages manifolds end-to-end on top of a
 decoupled modular engine (<code>core/compiler_core.py</code>, <code>core/manifold_compile.py</code>,
@@ -1130,7 +1130,7 @@ triggers &quot;High-Speed Mode&quot; to prevent I/O thrashing) and <strong>CUDA-
 auto-labeling). <code>tools/manifold_sync.py</code> supports full duplex Kaggle
 synchronization (upload via automatic zipping and download with disk-space
 collision safeguards).</p>
-<h3 id="62-industrial-output-topology">6.2 Industrial Output Topology</h3>
+<h3 id="sec-62-industrial-output-topology">6.2 Industrial Output Topology</h3>
 <p>The output topology (Nuclear Architecture) is:</p>
 <ul>
 <li><code>raw-sets/</code> (source datasets, protected by the Cleanup Guardian)</li>
@@ -1149,7 +1149,7 @@ metadata)</li>
 <code>unified_data.yaml</code> (<code>../LemGendaryDatasets</code>). The loose <code>images/</code>, <code>labels/</code>,
 <code>targets/</code> and <code>masks/</code> folders are removed by <code>--cleanup</code> only after their
 packed container was written in the same run (Section 3.5).</p>
-<h3 id="63-llm-manifold-filesystem-topology">6.3 LLM Manifold Filesystem Topology</h3>
+<h3 id="sec-63-llm-manifold-filesystem-topology">6.3 LLM Manifold Filesystem Topology</h3>
 <p>Compiled LLM manifolds follow the standardized topology:</p>
 <pre><code class="language-text">LemGendaryDatasets/
 └── LemGendized{Name}/
@@ -1174,9 +1174,9 @@ category and task class, as for vision manifolds.</li>
 <li><strong><code>dataset-metadata.json</code></strong>: Kaggle Frictionless descriptor declaring
 licensing and resources.</li>
 </ul>
-<h3 id="64-unified-three-pipeline-architecture">6.4 Unified Three-Pipeline Architecture</h3>
+<h3 id="sec-64-unified-three-pipeline-architecture">6.4 Unified Three-Pipeline Architecture</h3>
 <p>Three standardized pipelines govern the lifecycle of training datasets.</p>
-<h4 id="641-regular-ingestion--manifold-compilation-compile">6.4.1 Regular Ingestion &amp; Manifold Compilation (<code>compile</code>)</h4>
+<h4 id="sec-641-regular-ingestion--manifold-compilation-compile">6.4.1 Regular Ingestion &amp; Manifold Compilation (<code>compile</code>)</h4>
 <ul>
 <li><strong>Primary Scope</strong>: Ingesting raw external datasets (<code>raw-sets/</code>), applying
 quality gating, and compiling standardized production manifolds
@@ -1211,7 +1211,7 @@ per-manifold outcomes into the exit code (1 when nothing compiled);
 </ol>
 </li>
 </ul>
-<h4 id="642-legacy-archive-modernization-stream_zip_to_container">6.4.2 Legacy Archive Modernization (<code>stream_zip_to_container</code>)</h4>
+<h4 id="sec-642-legacy-archive-modernization-stream_zip_to_container">6.4.2 Legacy Archive Modernization (<code>stream_zip_to_container</code>)</h4>
 <ul>
 <li><strong>Primary Scope</strong>: Modernizing legacy multi-gigabyte <code>.zip</code> archives
 containing millions of small files into canonical POSIX WebDataset <code>.tar</code>
@@ -1242,7 +1242,7 @@ the source <code>.zip</code> archive and legacy unpacked directory trees, recove
 </ol>
 </li>
 </ul>
-<h4 id="643-retroactive-manifold-migration-format-migrate">6.4.3 Retroactive Manifold Migration (<code>format migrate</code>)</h4>
+<h4 id="sec-643-retroactive-manifold-migration-format-migrate">6.4.3 Retroactive Manifold Migration (<code>format migrate</code>)</h4>
 <ul>
 <li><strong>Primary Scope</strong>: Converting already modernized local dataset directories
 (loose WebP images, targets and <code>index.json</code>) into canonical streaming
@@ -1265,7 +1265,7 @@ by the training suite DataLoader.</li>
 </ol>
 </li>
 </ul>
-<h3 id="65-solid-services-layer--forex-encapsulation">6.5 S.O.L.I.D. Services Layer &amp; Forex Encapsulation</h3>
+<h3 id="sec-65-solid-services-layer--forex-encapsulation">6.5 S.O.L.I.D. Services Layer &amp; Forex Encapsulation</h3>
 <p>Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:</p>
 <ul>
 <li><strong>In-Process Services Layer (<code>services/</code>)</strong>: Compiler workflows are split into
@@ -1300,7 +1300,7 @@ removed from the code. Since v16.9.51 the repository <code>.pylintrc</code> has 
 <code>disable=</code> entries, and Ruff and Pylint report no findings (v16.9.53,
 v16.9.54).</li>
 </ul>
-<h3 id="66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid CLI</h3>
+<h3 id="sec-66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid CLI</h3>
 <ul>
 <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> with route
 groups for health (<code>/api/health</code>, <code>/api/health/full</code>), GUI aggregation
@@ -1336,7 +1336,7 @@ in-process execution when offline. CLI groups: <code>env</code>, <code>sync</cod
 <code>modernize</code>, <code>llm</code>, plus top-level <code>compile</code>, <code>transcode</code>, <code>audit</code>, <code>label</code>,
 <code>prompt</code>, <code>mask</code>, <code>degrade</code>, <code>reduce</code>, <code>test</code> and <code>version</code>.</li>
 </ul>
-<h3 id="67-cross-project-automation--desktop-gui-presets">6.7 Cross-Project Automation &amp; Desktop GUI Presets</h3>
+<h3 id="sec-67-cross-project-automation--desktop-gui-presets">6.7 Cross-Project Automation &amp; Desktop GUI Presets</h3>
 <ul>
 <li><strong>Canonical Compiler Presets (<code>presets.yaml</code>, <code>core/presets.py</code>)</strong>: Formal
 compilation profiles (<code>quality-vision</code>, <code>restoration-hardlinked</code>,
@@ -1359,7 +1359,7 @@ the API serves.</li>
 Environment Manager (port 8000) and the LemGendary Model Training Suite
 sidecars for synchronized cross-project governance.</li>
 </ul>
-<h3 id="68-modernize-and-reduce-operations">6.8 Modernize and Reduce Operations</h3>
+<h3 id="sec-68-modernize-and-reduce-operations">6.8 Modernize and Reduce Operations</h3>
 <p>v16.9.26 aligns the modernize and reduce routes with the CLI and makes them safe
 by default:</p>
 <ul>
@@ -1395,7 +1395,7 @@ prompt.</p>
 <li><strong>Suffix Retirement</strong>: The former shadowed <code>modernize</code> command is reachable as
 <code>modernize manifolds</code>.</li>
 </ul>
-<h3 id="69-security-model">6.9 Security Model</h3>
+<h3 id="sec-69-security-model">6.9 Security Model</h3>
 <p>The sidecar binds to <code>127.0.0.1</code> by default and shares one security contract
 with the other two sidecars and the GUI:</p>
 <ul>
@@ -1426,7 +1426,7 @@ file, encoding and JSON errors become HTTP 400.</p>
 </ul>
 </section>
 
-<section id="7-unified-models-registry">
+<section id="sec-7-unified-models-registry">
 <h2>7. Unified Models Registry</h2>
 <p><code>unified_data.yaml</code> declares 21 manifolds. The entries below use the canonical
 output folder names (<code>modernized_folder</code>); sample counts are from the latest
@@ -1612,7 +1612,7 @@ precision.</li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The LemGendary Dataset Compiler Suite changes how generative AI manifolds are
 structured, scaled, and consumed. By automating the ingestion pipeline,

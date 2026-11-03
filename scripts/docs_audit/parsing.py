@@ -200,6 +200,7 @@ class _HtmlCollector(HTMLParser):
             self._text.append(data)
 
     def result(self) -> ParsedDocument:
+        """The collected document, with its visible words."""
         self.doc.words = _words(" ".join(self._text))
         return self.doc
 

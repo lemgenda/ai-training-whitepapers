@@ -33,20 +33,20 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#11-what-retinaface-does-in-plain-english">1.1 What RetinaFace Does (In Plain English)</a></li>
-<li><a href="#2-visual-taxonomy-multi-scale-features--landmarks">2. Visual Taxonomy: Multi-Scale Features &amp; Landmarks</a></li>
-<li><a href="#3-shared-foundations-tri-head-multi-task-objective">3. Shared Foundations: Tri-Head Multi-Task Objective</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-retinaface-does-in-plain-english">1.1 What RetinaFace Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-multi-scale-features--landmarks">2. Visual Taxonomy: Multi-Scale Features &amp; Landmarks</a></li>
+<li><a href="#sec-3-shared-foundations-tri-head-multi-task-objective">3. Shared Foundations: Tri-Head Multi-Task Objective</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p><strong>RetinaFace</strong> is a single-stage face localization network engineered for
 high-precision facial bounding box detection and <strong>5-point landmark regression</strong>
@@ -59,7 +59,7 @@ achieves verified detection stability under extreme head poses, harsh
 illumination, and microscopic face scales (&lt; 16px).</p>
 </section>
 
-<section id="11-what-retinaface-does-in-plain-english">
+<section id="sec-11-what-retinaface-does-in-plain-english">
 <h2>1.1 What RetinaFace Does (In Plain English)</h2>
 <p>Imagine an intelligent autofocus system that finds every single human face in a
 bustling crowd scene, even if someone is turning away, standing in shadows, or
@@ -84,7 +84,7 @@ Detections"></li>
 <p><img src="../assets/retinaface_training.png" alt="RetinaFace Training Convergence Curve"></p>
 </section>
 
-<section id="2-visual-taxonomy-multi-scale-features--landmarks">
+<section id="sec-2-visual-taxonomy-multi-scale-features--landmarks">
 <h2>2. Visual Taxonomy: Multi-Scale Features &amp; Landmarks</h2>
 <p>RetinaFace anchors 5 canonical facial landmarks to standardize facial alignment
 across the LemGendary Face Suite <code>[THEORETICAL]</code>:</p>
@@ -105,7 +105,7 @@ monitoring</li>
 </ul>
 </section>
 
-<section id="3-shared-foundations-tri-head-multi-task-objective">
+<section id="sec-3-shared-foundations-tri-head-multi-task-objective">
 <h2>3. Shared Foundations: Tri-Head Multi-Task Objective</h2>
 <p>Each anchor predicts three joint outputs: (1) Face classification probability
 $p_i$, (2) Bounding box coordinate offsets $t_i$, and (3) Five 2D facial
@@ -116,14 +116,14 @@ classification, preventing extreme class imbalance from dominating the
 optimization landscape.</p>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
 <h3 id="retinaface-multi-scale-landmark--localization-engine">RetinaFace Multi-Scale Landmark &amp; Localization Engine</h3>
-<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
 <p>Single-stage face localization and 5-point landmark regression engine utilizing
 the standardized MobileNetV3-Small backbone for high-efficiency edge execution
 and real-time pre-flight alignment.</p>
-<h4 id="42-model-info">4.2 Model Info</h4>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: RetinaFace (MobileNetV3-Small Backbone + Multi-Scale Feature
 Pyramid)</li>
@@ -131,13 +131,13 @@ Pyramid)</li>
 <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
 <li><strong>Latency</strong>: 2.8ms inference on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
 </ul>
-<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedRetinaFaceLarge</code></li>
 <li><strong>Total Samples</strong>: 32,203 WIDER Face annotated samples</li>
 <li><strong>Primary Task</strong>: 5-point facial landmark regression and multi-scale face detection</li>
 </ul>
-<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 80 <code>[CURRENT]</code></li>
 <li><strong>WIDER Face Hard AP</strong>: 84.6% <code>[MEASURED]</code> (Target: $\ge 85.0\%$ <code>[TARGET]</code>)</li>
@@ -148,7 +148,7 @@ Pyramid)</li>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <p>Micro-scale landmark localization encounters severe real-world challenges:</p>
 <ul>
@@ -164,7 +164,7 @@ facial shadow.</li>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <p>RetinaFace integrates seamlessly into the LemGendary runtime stack:</p>
 <ul>
@@ -177,7 +177,7 @@ floating-point model with separate binary weights sidecar.</li>
 </ul>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>RetinaFace-ResNet50</strong>: WIDER Face Easy: 96.5%; WIDER Face Medium: 95.6%;
@@ -192,7 +192,7 @@ Medium: <strong>$\ge 93.0\%$</strong>; WIDER Face Hard: <strong>$\ge 85.0\%$</st
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>RetinaFace with the MobileNetV3-Small backbone provides lightning-fast facial
 bounding box localization and sub-pixel 5-point landmark regression,

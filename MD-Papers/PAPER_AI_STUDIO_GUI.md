@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-03
+**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-04
 
 ---
 
@@ -49,7 +49,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Studio GUI (client version `v2.10.36`) is a hardware-aware
+The LemGendary AI Studio GUI (client version `v2.10.38`) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
@@ -66,7 +66,7 @@ hands it to the operator's own mail client.
 > **Dual Versioning Architecture**: The desktop application and its backends use
 > separate version tracks:
 >
-> 1. **LemGendary AI Studio GUI (`v2.10.36`)**: Governs the Tauri v2 desktop
+> 1. **LemGendary AI Studio GUI (`v2.10.38`)**: Governs the Tauri v2 desktop
 >    application, the React 18 frontend and the Operator Manual
 >    ([`MANUAL_AI_STUDIO_GUI.md`](./MANUAL_AI_STUDIO_GUI.md)). `package.json`
 >    holds this version and `tauri.conf.json` reads it from there.
@@ -202,6 +202,9 @@ committed snapshot `src/generated/ecosystem.json`, a copy of
 `lemgendary-env-manager/ecosystem/ecosystem.json` that
 `npm run sync:ecosystem` refreshes before `dev` and `build`;
 `npm run check:ecosystem` fails when the snapshot differs from the source.
+Since v2.10.37 no sidecar port is written out in the source: the Training
+Panel offline banner shows `servicePort("training-suite")` and the sidecar
+probe fallback (`probeSidecarPort`) uses the snapshot's `bind_host`.
 
 State updates follow unidirectional dispatch flows:
 
@@ -425,6 +428,11 @@ state transitions without prop drilling:
   from pillars, epochs or checkpoints. The badge and the status filter use the
   sidecar verdict only; `unknown` shows an `UNKNOWN` badge with the reason and
   hides the metrics.
+- **Null Model Stats (v2.10.38)**: `parameters_m`, `best_metric` and
+  `sota_target` may be `null` (the last two also strings), as the LemGendary
+  Model Training Suite sends `null` for values it has not measured or does not
+  know. The model card shows Parameters as `N/A` only for `null` (`0` is
+  `0 M`) and a `null` SOTA goal as a dash.
 - **Control ID Registry**: Interactive controls carry stable DOM IDs listed in
   [`GUI_CONTROL_REGISTRY.md`](./GUI_CONTROL_REGISTRY.md); the registry is
   rebuilt from the `id` attributes in the source.

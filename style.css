@@ -535,6 +535,10 @@ footer {
     margin-top: 0;
 }
 
+.hub-page footer a {
+    color: var(--accent-color);
+}
+
 .logo {
     height: 64px;
     margin-bottom: 24px;

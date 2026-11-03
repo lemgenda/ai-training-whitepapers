@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.1 ENV | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.58-STABLE</code> (LemGendary Environment Manager)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Version</strong>: <code>v16.9.60-STABLE</code> (LemGendary Environment Manager)</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -38,44 +38,44 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
-<li><a href="#3-hybrid-cloud--registry-integration">3. Hybrid Cloud &amp; Registry
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-high-velocity-optimizations">2. High-Velocity Optimizations</a></li>
+<li><a href="#sec-3-hybrid-cloud--registry-integration">3. Hybrid Cloud &amp; Registry
 Integration</a>
 <ul class="sub-item">
-<li><a href="#31-sibling-surgery--architectural-decoupling">3.1 Sibling Surgery &amp; Architectural
+<li><a href="#sec-31-sibling-surgery--architectural-decoupling">3.1 Sibling Surgery &amp; Architectural
 Decoupling</a></li>
-<li><a href="#32-pep-508-cross-platform-invariants">3.2 PEP 508 Cross-Platform
+<li><a href="#sec-32-pep-508-cross-platform-invariants">3.2 PEP 508 Cross-Platform
 Invariants</a></li>
 </ul>
 </li>
-<li><a href="#4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a></li>
-<li><a href="#5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a></li>
-<li><a href="#6-synthesis-flow--topology">6. Synthesis Flow &amp; Topology</a>
+<li><a href="#sec-4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a></li>
+<li><a href="#sec-5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a></li>
+<li><a href="#sec-6-synthesis-flow--topology">6. Synthesis Flow &amp; Topology</a>
 <ul class="sub-item">
-<li><a href="#61-entrypoints--operator-interfaces">6.1 Entrypoints &amp; Operator
+<li><a href="#sec-61-entrypoints--operator-interfaces">6.1 Entrypoints &amp; Operator
 Interfaces</a></li>
-<li><a href="#62-dual-interface-telemetry-topology">6.2 Dual-Interface Telemetry
+<li><a href="#sec-62-dual-interface-telemetry-topology">6.2 Dual-Interface Telemetry
 Topology</a></li>
-<li><a href="#63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability">6.3 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem
+<li><a href="#sec-63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability">6.3 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem
 Observability</a></li>
-<li><a href="#64-background-update-jobs">6.4 Background Update Jobs</a></li>
-<li><a href="#65-security-model">6.5 Security Model</a></li>
-<li><a href="#66-bug-report-endpoint">6.6 Bug Report Endpoint</a></li>
-<li><a href="#67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry
+<li><a href="#sec-64-background-update-jobs">6.4 Background Update Jobs</a></li>
+<li><a href="#sec-65-security-model">6.5 Security Model</a></li>
+<li><a href="#sec-66-bug-report-endpoint">6.6 Bug Report Endpoint</a></li>
+<li><a href="#sec-67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry
 (ecosystem.json)</a></li>
 </ul>
 </li>
-<li><a href="#7-unified-models-registry">7. Unified Models Registry</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-7-unified-models-registry">7. Unified Models Registry</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 <li><a href="#companion-documentation">Companion Documentation</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Environment Manager (release <code>v16.9.58-STABLE</code>) is the
+<p>The LemGendary Environment Manager (release <code>v16.9.60-STABLE</code>) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -92,7 +92,7 @@ into a local ZIP archive for the operator's own mail client. Its
 pipeline steps and identity that every project reads (Section 6.7).</p>
 </section>
 
-<section id="2-high-velocity-optimizations">
+<section id="sec-2-high-velocity-optimizations">
 <h2>2. High-Velocity Optimizations</h2>
 <p>High-velocity execution across high-performance computing pipelines mandates
 deterministic sub-second environment inspection and rapid package
@@ -119,7 +119,7 @@ $\mathcal{W}_{\text{orphan}}$ represents unreferenced bytecode caches across
 isolated project virtual directories.</p>
 </section>
 
-<section id="3-hybrid-cloud--registry-integration">
+<section id="sec-3-hybrid-cloud--registry-integration">
 <h2>3. Hybrid Cloud &amp; Registry Integration</h2>
 <p>Seamless execution between local development stations (Windows 11 with
 DirectX/DirectML, CUDA, or ROCm) and cloud execution clusters (Kaggle Linux
@@ -130,7 +130,7 @@ On CUDA hosts the index depends on the NVIDIA driver major version $d$
 <code>cu126</code>:</p>
 <div class="math-block">$$\text{IndexURL}(H) = \begin{cases} \text{.../whl/cu126}, &amp; \text{if } H.\text{backend} = \text{CUDA} \land d \ge 560 \\ \text{.../whl/cu121}, &amp; \text{if } H.\text{backend} = \text{CUDA} \land 535 \le d &lt; 560 \\ \text{.../whl/cu118}, &amp; \text{if } H.\text{backend} = \text{CUDA} \land d &lt; 535 \\ \text{.../whl/rocm6.0}, &amp; \text{if } H.\text{backend} = \text{ROCm} \\ \text{.../whl/cpu}, &amp; \text{otherwise (DirectML or CPU)} \end{cases}$$</div>
 <p>where <code>.../whl/</code> stands for <code>https://download.pytorch.org/whl/</code>.</p>
-<h3 id="31-sibling-surgery--architectural-decoupling">3.1 Sibling Surgery &amp; Architectural Decoupling</h3>
+<h3 id="sec-31-sibling-surgery--architectural-decoupling">3.1 Sibling Surgery &amp; Architectural Decoupling</h3>
 <p>Prior architecture relied on redundant, monolithic PowerShell scripts
 (<code>lemgendary_env_manager.ps1</code>) duplicated across sibling project trees
 (<code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>). This structural
@@ -145,7 +145,7 @@ Communication (IPC) delegation pattern:</p>
 <p>If the centralized <code>lem-env</code> binary is absent, the launcher executes a
 self-healing bootstrap sequence that clones and installs
 <code>lemgendary-env-manager</code> in editable mode before delegating execution.</p>
-<h3 id="32-pep-508-cross-platform-invariants">3.2 PEP 508 Cross-Platform Invariants</h3>
+<h3 id="sec-32-pep-508-cross-platform-invariants">3.2 PEP 508 Cross-Platform Invariants</h3>
 <p>To eliminate wheel collision across heterogeneous runtime operating systems,
 requirements manifests enforce strict PEP 508 platform markers:</p>
 <div class="math-block">$$\mathcal{M}(w, P) = \begin{cases} \text{Install}(w), &amp; \text{if } \text{Eval}(\text{Marker}(w), P) = \text{True} \\ \text{Omit}(w), &amp; \text{otherwise} \end{cases}$$</div>
@@ -155,7 +155,7 @@ excluded in Linux cloud instances (<code>sys_platform == 'win32'</code>), elimin
 silent import failures in Kaggle and Colab container runs.</p>
 </section>
 
-<section id="4-multi-modal--format-resilience">
+<section id="sec-4-multi-modal--format-resilience">
 <h2>4. Multi-Modal &amp; Format Resilience</h2>
 <p>The framework guarantees format resilience across Python packages and Node.js
 tooling. The central files in <code>lemgendary-env-manager/requirements/</code> are the
@@ -178,7 +178,10 @@ only when the drift set is empty:</p>
 <div class="math-block">$$\text{Drift}(C, S) = \{ s \in S : s \notin C \} \cup \{ s \in S : \text{pinned}(s) \land \lnot \text{pinned}(C_s) \} \cup \{ s \in S : \text{floor}(C_s) &lt; \text{floor}(s) \}$$</div>
 <p>A non-empty drift set leaves both files unchanged and is reported as a
 <code>DRIFT:</code> warning (<code>find_requirement_drift</code>, <code>find_package_json_drift</code>); the fix
-is to raise the central pin and sync again.</p>
+is to raise the central pin and sync again. The <code>package.json</code> <code>version</code> is a
+release field, not dependency data (<code>NPM_RELEASE_KEYS</code>, since v16.9.60): the
+central npm manifests do not hold it, drift ignores it and sync keeps the
+sibling's own value.</p>
 <p>The environment manager enforces strict schema parsing resilience:</p>
 <div class="math-block">$$\text{Valid}(\text{line}) = (\text{line} \in \mathcal{M}_{\text{index}}) \lor \text{Match}(\text{line}, \text{PEP508\_REGEX})$$</div>
 <p>pip output is parsed fail-closed. pip stdout and stderr are captured on separate
@@ -187,7 +190,7 @@ failed or unparseable <code>pip list</code> or <code>pip inspect</code> raises <
 upgrade classifier then blocks every candidate instead of guessing.</p>
 </section>
 
-<section id="5-comparative-analysis--benchmarks">
+<section id="sec-5-comparative-analysis--benchmarks">
 <h2>5. Comparative Analysis / Benchmarks</h2>
 <p>To quantify the operational efficiency gains delivered by the unified
 architecture, benchmark evaluations were conducted comparing the legacy
@@ -199,108 +202,108 @@ the current code.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Operational Metric</th>
-<th style="text-align:left">Legacy PowerShell</th>
-<th style="text-align:left"><code>lem-env</code></th>
-<th style="text-align:left">Factor</th>
+<th>Operational Metric</th>
+<th>Legacy PowerShell</th>
+<th><code>lem-env</code></th>
+<th>Factor</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">System Hardware Probe Latency</td>
-<td style="text-align:left">4,250 ms</td>
-<td style="text-align:left">310 ms</td>
-<td style="text-align:left">$13.7\times$</td>
+<td>System Hardware Probe Latency</td>
+<td>4,250 ms</td>
+<td>310 ms</td>
+<td>$13.7\times$</td>
 </tr>
 <tr>
-<td style="text-align:left">Cross-Project Dependency Audit</td>
-<td style="text-align:left">18,900 ms</td>
-<td style="text-align:left">1,420 ms</td>
-<td style="text-align:left">$13.3\times$</td>
+<td>Cross-Project Dependency Audit</td>
+<td>18,900 ms</td>
+<td>1,420 ms</td>
+<td>$13.3\times$</td>
 </tr>
 <tr>
-<td style="text-align:left">Manifest Consistency Sync</td>
-<td style="text-align:left">Manual</td>
-<td style="text-align:left">45 ms</td>
-<td style="text-align:left">$400\times$</td>
+<td>Manifest Consistency Sync</td>
+<td>Manual</td>
+<td>45 ms</td>
+<td>$400\times$</td>
 </tr>
 <tr>
-<td style="text-align:left">MetaTrader 5 Detection</td>
-<td style="text-align:left">None</td>
-<td style="text-align:left">~5 ms</td>
-<td style="text-align:left">Sub-second</td>
+<td>MetaTrader 5 Detection</td>
+<td>None</td>
+<td>~5 ms</td>
+<td>Sub-second</td>
 </tr>
 </tbody>
 </table>
-<p>Capabilities at <code>16.9.58</code>:</p>
+<p>Capabilities at <code>16.9.60</code>:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Capability</th>
-<th style="text-align:left">Legacy PowerShell</th>
-<th style="text-align:left"><code>lem-env</code> <code>v16.9.58</code></th>
+<th>Capability</th>
+<th>Legacy PowerShell</th>
+<th><code>lem-env</code> <code>v16.9.60</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">Manifest sync</td>
-<td style="text-align:left">Manual copy</td>
-<td style="text-align:left">One-way, downgrade guard</td>
+<td>Manifest sync</td>
+<td>Manual copy</td>
+<td>One-way, downgrade guard</td>
 </tr>
 <tr>
-<td style="text-align:left">MetaTrader 5 detection</td>
-<td style="text-align:left">None</td>
-<td style="text-align:left">Registry-first + file version</td>
+<td>MetaTrader 5 detection</td>
+<td>None</td>
+<td>Registry-first + file version</td>
 </tr>
 <tr>
-<td style="text-align:left">Upgrade safety</td>
-<td style="text-align:left">None</td>
-<td style="text-align:left">Reverse-dep check + dry-run, fail-closed</td>
+<td>Upgrade safety</td>
+<td>None</td>
+<td>Reverse-dep check + dry-run, fail-closed</td>
 </tr>
 <tr>
-<td style="text-align:left">Cache corruption recovery</td>
-<td style="text-align:left">Hard failure</td>
-<td style="text-align:left">Detect, purge, retry</td>
+<td>Cache corruption recovery</td>
+<td>Hard failure</td>
+<td>Detect, purge, retry</td>
 </tr>
 <tr>
-<td style="text-align:left">Platforms</td>
-<td style="text-align:left">Windows</td>
-<td style="text-align:left">Engine: Linux, Windows, macOS (1)</td>
+<td>Platforms</td>
+<td>Windows</td>
+<td>Engine: Linux, Windows, macOS (1)</td>
 </tr>
 <tr>
-<td style="text-align:left">Remote observability</td>
-<td style="text-align:left">Console only</td>
-<td style="text-align:left">REST + WebSocket telemetry</td>
+<td>Remote observability</td>
+<td>Console only</td>
+<td>REST + WebSocket telemetry</td>
 </tr>
 <tr>
-<td style="text-align:left">Sibling decoupling</td>
-<td style="text-align:left">Duplicated scripts</td>
-<td style="text-align:left">Autonomous microservice</td>
+<td>Sibling decoupling</td>
+<td>Duplicated scripts</td>
+<td>Autonomous microservice</td>
 </tr>
 <tr>
-<td style="text-align:left">Node.js / npm</td>
-<td style="text-align:left">None</td>
-<td style="text-align:left">Audit, install, <code>npm outdated</code> upgrades</td>
+<td>Node.js / npm</td>
+<td>None</td>
+<td>Audit, install, <code>npm outdated</code> upgrades</td>
 </tr>
 <tr>
-<td style="text-align:left">Compliance validation</td>
-<td style="text-align:left"><code>py_compile</code></td>
-<td style="text-align:left">Multi-linter suite (2)</td>
+<td>Compliance validation</td>
+<td><code>py_compile</code></td>
+<td>Multi-linter suite (2)</td>
 </tr>
 <tr>
-<td style="text-align:left">Local toolchain</td>
-<td style="text-align:left">Global npm</td>
-<td style="text-align:left">Isolated <code>node_modules/.bin</code></td>
+<td>Local toolchain</td>
+<td>Global npm</td>
+<td>Isolated <code>node_modules/.bin</code></td>
 </tr>
 <tr>
-<td style="text-align:left">Domain verification</td>
-<td style="text-align:left">Separate scripts</td>
-<td style="text-align:left"><code>validator.py</code> domain gates</td>
+<td>Domain verification</td>
+<td>Separate scripts</td>
+<td><code>validator.py</code> domain gates</td>
 </tr>
 <tr>
-<td style="text-align:left">Destructive reinstall</td>
-<td style="text-align:left">Always</td>
-<td style="text-align:left">Only with <code>--clean</code> / <code>&quot;clean&quot;: true</code></td>
+<td>Destructive reinstall</td>
+<td>Always</td>
+<td>Only with <code>--clean</code> / <code>&quot;clean&quot;: true</code></td>
 </tr>
 </tbody>
 </table>
@@ -310,7 +313,7 @@ forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
 2.2 AA and the <code>ecosystem_ssot</code> gate.</p>
 </section>
 
-<section id="6-synthesis-flow--topology">
+<section id="sec-6-synthesis-flow--topology">
 <h2>6. Synthesis Flow &amp; Topology</h2>
 <p>The Smart Install Pipeline operates as a directed acyclic synthesis flow
 comprising seven deterministic stages:</p>
@@ -377,7 +380,7 @@ aggregated health status matrix for desktop and CLI display, including
 manifest coverage, single-manifest package inventory, and npm workspace
 drift.</li>
 </ol>
-<h3 id="61-entrypoints--operator-interfaces">6.1 Entrypoints &amp; Operator Interfaces</h3>
+<h3 id="sec-61-entrypoints--operator-interfaces">6.1 Entrypoints &amp; Operator Interfaces</h3>
 <p>The LemGendary Environment Manager provides a unified command line interface
 (<code>lem-env</code>) and a background API server for multi-repository Python and Node.js
 environments. Its commands are <code>probe</code>, <code>audit</code>, <code>install</code>, <code>update</code>, <code>sync</code>,
@@ -399,7 +402,7 @@ lem-env --help
 loop that returns to the menu after each command. It also manages the API server
 as a background PowerShell job, allowing it to remain running while the menu
 stays accessible.</p>
-<h3 id="62-dual-interface-telemetry-topology">6.2 Dual-Interface Telemetry Topology</h3>
+<h3 id="sec-62-dual-interface-telemetry-topology">6.2 Dual-Interface Telemetry Topology</h3>
 <p>The control topology couples a headless CLI engine (<code>lem-env</code>) and a reactive
 desktop GUI shell (<code>lemgendary-ai-studio-gui</code>) via an asynchronous non-blocking
 event stream:</p>
@@ -420,7 +423,7 @@ and ETA countdowns), requirement progress ratios (<code>[k/N requirements]</code
 discrete stage milestones, broadcasting typed progress events
 (<code>is_progress=True</code>) over the <code>/ws/log</code> WebSocket channel without terminal
 stream saturation.</p>
-<h3 id="63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability">6.3 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem Observability</h3>
+<h3 id="sec-63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability">6.3 Desktop GUI State Aggregation &amp; Multi-Sidecar Ecosystem Observability</h3>
 <p>To minimize HTTP handshake overhead in desktop graphical clients, the
 Environment Manager daemon exposes high-density aggregated endpoints:</p>
 <ul>
@@ -444,7 +447,7 @@ telemetry.</li>
 includes <code>run-step</code>, <code>hooks/install</code>, <code>ping</code>, <code>update/status</code>, <code>shutdown</code> and
 <code>bug-report</code>, so Tauri Rust and TypeScript clients can be generated from it.</li>
 </ul>
-<h3 id="64-background-update-jobs">6.4 Background Update Jobs</h3>
+<h3 id="sec-64-background-update-jobs">6.4 Background Update Jobs</h3>
 <p><code>POST /api/update</code> no longer runs the upgrade inside the request handler. A dry
 run returns the plan. A real run starts a background job
 (<code>env_manager/update_jobs.py</code>, <code>UpdateJobManager</code>) and returns at once with
@@ -456,7 +459,7 @@ the running update job and $\Pi$ the running pipeline:</p>
 <div class="math-block">$$\text{Admit}(\text{req}) = \lnot U \land \lnot \Pi, \qquad \text{otherwise HTTP } 409$$</div>
 <p>A runner failure is logged and recorded as <code>status: &quot;failed&quot;</code> with an <code>error</code>,
 and the lock is released.</p>
-<h3 id="65-security-model">6.5 Security Model</h3>
+<h3 id="sec-65-security-model">6.5 Security Model</h3>
 <p>The sidecar binds to <code>127.0.0.1</code> by default and shares one security contract
 with the other two sidecars and the GUI:</p>
 <ul>
@@ -479,7 +482,7 @@ credentials are propagated only to repositories that read them, without
 invented usernames, and the result is reported in <code>propagation</code> (<code>written</code>,
 <code>skipped</code>, <code>failed</code>). All secret files are ignored by git.</li>
 </ul>
-<h3 id="66-bug-report-endpoint">6.6 Bug Report Endpoint</h3>
+<h3 id="sec-66-bug-report-endpoint">6.6 Bug Report Endpoint</h3>
 <p><code>POST /api/bug-report</code> receives the report built by the AI Studio GUI. The
 server sends no email and stores no SMTP credentials:</p>
 <ul>
@@ -501,7 +504,7 @@ cannot be opened, because the archive is saved.</li>
 <li><strong>Configuration</strong>: recipient, subject, reports folder and limits are defined
 in one place, <code>env_manager/bug_report/config.py</code> (<code>BugReportSettings</code>).</li>
 </ul>
-<h3 id="67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry (ecosystem.json)</h3>
+<h3 id="sec-67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry (ecosystem.json)</h3>
 <p>Since v16.9.49 the facts that every project shares are defined in one file,
 <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, described by
 <code>ecosystem/ecosystem.schema.json</code> (JSON Schema draft 2020-12). Edit the file,
@@ -541,12 +544,18 @@ fail validation) reports drift: in code,
 configuration and tests a literal service port, the Kaggle owner, the
 documentation URL or a list of three or more project folders is a finding (test
 fixtures are allowed); in Markdown, HTML and the registries the values may be
-written out but must equal the file. It also checks that the GUI snapshot equals
-the source, that the GUI Content Security Policy ports equal the service ports
-and that the GUI <code>ProjectHealth</code> type matches the OpenAPI schema.</p>
+written out but must equal the file. Since v16.9.59 a service port is a finding
+wherever it stands as its own number token (template literals, calls,
+assignments, list items); longer numbers, hex values, colours, versions,
+decimals, negative numbers and units pass. It also checks that the GUI snapshot
+equals the source, that the GUI Content Security Policy ports equal the service
+ports, that the GUI pipeline steps match the file, that the GUI <code>ProjectHealth</code>
+type matches the OpenAPI schema and that the GUI <code>package.json</code> equals its
+central manifest (<code>check_npm_manifest</code>, finding <code>ssot_npm_manifest</code>; the
+<code>version</code> field is not compared since v16.9.60).</p>
 </section>
 
-<section id="7-unified-models-registry">
+<section id="sec-7-unified-models-registry">
 <h2>7. Unified Models Registry</h2>
 <p>The environment framework interfaces directly with the LemGendary Unified Models
 Registry and Dataset Compilers. By maintaining environment alignment across all
@@ -558,7 +567,7 @@ or missing operator kernels.</p>
 and dataset compilers operate in total environmental equilibrium.</p>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The LemGendary Environment Manager reduces environmental divergence across the
 machine learning development lifecycle. A standalone Python engine with a CLI

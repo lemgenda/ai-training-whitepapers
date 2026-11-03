@@ -33,18 +33,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-causal-decoder-architecture">2. Causal Decoder Architecture</a></li>
-<li><a href="#3-rope--swiglu-formulations">3. RoPE &amp; SwiGLU Formulations</a></li>
-<li><a href="#4-sparse-mixture-of-experts-routing">4. Sparse Mixture-of-Experts Routing</a></li>
-<li><a href="#5-kv-cache--inference-throughput">5. KV Cache &amp; Inference Throughput</a></li>
-<li><a href="#6-parameter-specifications--scaling">6. Parameter Specifications &amp; Scaling</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-causal-decoder-architecture">2. Causal Decoder Architecture</a></li>
+<li><a href="#sec-3-rope--swiglu-formulations">3. RoPE &amp; SwiGLU Formulations</a></li>
+<li><a href="#sec-4-sparse-mixture-of-experts-routing">4. Sparse Mixture-of-Experts Routing</a></li>
+<li><a href="#sec-5-kv-cache--inference-throughput">5. KV Cache &amp; Inference Throughput</a></li>
+<li><a href="#sec-6-parameter-specifications--scaling">6. Parameter Specifications &amp; Scaling</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Large Language Model (LLM) Suite</strong> implements next-generation
 causal autoregressive Transformers incorporating <strong>Rotary Position Embeddings
@@ -56,14 +56,14 @@ from total parameter capacity, executing high-throughput token generation on
 consumer and enterprise hardware alike.</p>
 </section>
 
-<section id="2-causal-decoder-architecture">
+<section id="sec-2-causal-decoder-architecture">
 <h2>2. Causal Decoder Architecture</h2>
 <p>The network employs a decoder-only architecture where each token attends
 strictly to preceding tokens via causal attention masking, preventing future
 information leakage during training.</p>
 </section>
 
-<section id="3-rope--swiglu-formulations">
+<section id="sec-3-rope--swiglu-formulations">
 <h2>3. RoPE &amp; SwiGLU Formulations</h2>
 <p>Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and
 key vectors in complex 2D planes to naturally capture relative distance:</p>
@@ -74,7 +74,7 @@ value ($W_2$) matrices before down-projection ($W_3$):</p>
 <div class="math-block">$$\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left( (x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3$$</div>
 </section>
 
-<section id="4-sparse-mixture-of-experts-routing">
+<section id="sec-4-sparse-mixture-of-experts-routing">
 <h2>4. Sparse Mixture-of-Experts Routing</h2>
 <p>In MoE layers, token representations are routed to the top 2 out of 8 expert
 FFNs via softmax gating with auxiliary load-balancing loss:</p>
@@ -82,42 +82,42 @@ FFNs via softmax gating with auxiliary load-balancing loss:</p>
 <div class="math-block">$$\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i$$</div>
 </section>
 
-<section id="5-kv-cache--inference-throughput">
+<section id="sec-5-kv-cache--inference-throughput">
 <h2>5. KV Cache &amp; Inference Throughput</h2>
 <p>Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block
 allocation maximizes continuous batching throughput, significantly mitigating
 virtual memory fragmentation during extended context inference.</p>
 </section>
 
-<section id="6-parameter-specifications--scaling">
+<section id="sec-6-parameter-specifications--scaling">
 <h2>6. Parameter Specifications &amp; Scaling</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Model Configuration</th>
-<th style="text-align:left">Total Parameters</th>
-<th style="text-align:left">Active Parameters</th>
-<th style="text-align:left">Context Window</th>
+<th>Model Configuration</th>
+<th>Total Parameters</th>
+<th>Active Parameters</th>
+<th>Context Window</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">LemGendary-LLM-1B (Dense)</td>
-<td style="text-align:left">1.1 Billion</td>
-<td style="text-align:left">1.1 Billion</td>
-<td style="text-align:left">8,192 tokens</td>
+<td>LemGendary-LLM-1B (Dense)</td>
+<td>1.1 Billion</td>
+<td>1.1 Billion</td>
+<td>8,192 tokens</td>
 </tr>
 <tr>
-<td style="text-align:left">LemGendary-MoE-8x1B</td>
-<td style="text-align:left">7.2 Billion</td>
-<td style="text-align:left">1.8 Billion</td>
-<td style="text-align:left">32,768 tokens</td>
+<td>LemGendary-MoE-8x1B</td>
+<td>7.2 Billion</td>
+<td>1.8 Billion</td>
+<td>32,768 tokens</td>
 </tr>
 </tbody>
 </table>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>Sparse MoE decoders deliver unprecedented reasoning and language generation
 capabilities while adhering strictly to hardware memory bounds.</p>

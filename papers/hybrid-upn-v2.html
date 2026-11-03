@@ -35,20 +35,20 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#11-what-upn-v2-does-in-plain-english">1.1 What UPN v2 Does (In Plain English)</a></li>
-<li><a href="#2-visual-taxonomy-parameterized-latent-steering">2. Visual Taxonomy: Parameterized Latent Steering</a></li>
-<li><a href="#3-shared-foundations-feature-modulation--multi-objective-optimization">3. Shared Foundations: Feature Modulation &amp; Multi-Objective Optimization</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-upn-v2-does-in-plain-english">1.1 What UPN v2 Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-parameterized-latent-steering">2. Visual Taxonomy: Parameterized Latent Steering</a></li>
+<li><a href="#sec-3-shared-foundations-feature-modulation--multi-objective-optimization">3. Shared Foundations: Feature Modulation &amp; Multi-Objective Optimization</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>Universal Parameterized Network v2 (UPN v2)</strong> represents a breakthrough in
 blind image restoration by replacing discrete task-specific checkpoints with a
@@ -61,7 +61,7 @@ enabling smooth, real-time parametric control over restoration strength directly
 inside edge inference runtimes.</p>
 </section>
 
-<section id="11-what-upn-v2-does-in-plain-english">
+<section id="sec-11-what-upn-v2-does-in-plain-english">
 <h2>1.1 What UPN v2 Does (In Plain English)</h2>
 <p>Imagine having a single universal digital darkroom knob. Traditionally, if an
 image has both motion blur, sensor grain, and low lighting, you have to run
@@ -104,7 +104,7 @@ Output"></p>
 <p><img src="../assets/upn_v2_training.png" alt="UPN v2 Training Convergence Curve"></p>
 </section>
 
-<section id="2-visual-taxonomy-parameterized-latent-steering">
+<section id="sec-2-visual-taxonomy-parameterized-latent-steering">
 <h2>2. Visual Taxonomy: Parameterized Latent Steering</h2>
 <p>Conventional restoration architectures treat degradation as a static problem.
 UPN v2 formulates restoration as a parameterized mapping <code>[THEORETICAL]</code>:</p>
@@ -115,7 +115,7 @@ linearly interpolate across complex degradation manifolds without visual popping
 or artifact discontinuities.</p>
 </section>
 
-<section id="3-shared-foundations-feature-modulation--multi-objective-optimization">
+<section id="sec-3-shared-foundations-feature-modulation--multi-objective-optimization">
 <h2>3. Shared Foundations: Feature Modulation &amp; Multi-Objective Optimization</h2>
 <p>The core structural element of UPN v2 is the Feature Modulation Block (FMB). Let
 $F \in \mathbb{R}^{C  \times H  \times W}$ denote intermediate feature
@@ -130,14 +130,14 @@ $\mathbf{z}$ yield smooth, Lipschitz-bounded modifications to the restored
 output.</p>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
 <h3 id="upn-v2-parametric-restoration-engine">UPN v2 Parametric Restoration Engine</h3>
-<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
 <p>UPN v2 unifies blind restoration across diverse pathologies into a single
 continuous-steering model, replacing discrete model chaining with real-time
 parametric control.</p>
-<h4 id="42-model-info">4.2 Model Info</h4>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: UPN v2 (AdaIN-FMB + Multi-Scale Feature Modulation)</li>
 <li><strong>Input Resolution</strong>: 512x512</li>
@@ -145,13 +145,13 @@ parametric control.</p>
 <li><strong>Latency</strong>: 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) /
 18.0ms on RTX 3060 (256x256 preview) <code>[MEASURED]</code></li>
 </ul>
-<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedUpnV2</code></li>
 <li><strong>Total Samples</strong>: 285 WebDataset streaming shards (1.06 TB NTFS hardlink deduplicated)</li>
 <li><strong>Primary Task</strong>: Parametric latent steering across compound degradation vectors</li>
 </ul>
-<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 35 <code>[CURRENT]</code></li>
 <li><strong>Best PSNR</strong>: 35.18 dB <code>[MEASURED]</code> (Target: $\ge 34.50 \text{ dB}$ <code>[TARGET]</code>)</li>
@@ -160,7 +160,7 @@ parametric control.</p>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <ul>
 <li><strong>Degradation Competition</strong>: When multiple degradations are present
@@ -176,7 +176,7 @@ gates.</li>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <p>Through fixed-shape ONNX Opset 17 export, UPN v2 executes on consumer WebGPU
 runtimes with bounded memory consumption:</p>
@@ -190,7 +190,7 @@ directly to WebGPU uniform buffers, delivering 60 FPS viewport manipulation.</li
 </ul>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>Gaussian Noise ($\sigma = 25$)</strong>: Conditioning $\mathbf{z}$:
@@ -211,7 +211,7 @@ Measured <code>[MEASURED]</code></li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>UPN v2 establishes a unified paradigm for universal image restoration,
 demonstrating that continuous latent steering achieves parity with dedicated

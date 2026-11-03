@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</title>
+<title>LemGendary AI Studio GUI: Control ID Registry</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 <script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
@@ -27,8 +27,8 @@
 <h1>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</h1>
 <p class="subtitle">Category 03.4 CONTROLS | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.36</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
 <span><strong>Companion</strong>: <a href="ai-studio-manual.html">Operator Manual</a></span>
 <span><a href="ai-studio-whitepaper.html">Architectural Whitepaper</a></span>
 </div>
@@ -40,52 +40,52 @@
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 <li><a href="ai-studio-manual.html" class="toc-link-secondary">Operator Manual</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-control-id-taxonomy--schema">2. Control ID Taxonomy &amp; Schema</a></li>
-<li><a href="#3-master-interactive-controls-dictionary">3. Master Interactive Controls
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-control-id-taxonomy--schema">2. Control ID Taxonomy &amp; Schema</a></li>
+<li><a href="#sec-3-master-interactive-controls-dictionary">3. Master Interactive Controls
 Dictionary</a>
 <ul class="sub-item">
-<li><a href="#31-header--sidebar">3.1 Header &amp; Sidebar</a></li>
-<li><a href="#32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</a></li>
-<li><a href="#33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</a></li>
-<li><a href="#34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</a></li>
-<li><a href="#35-dataset-compiler-suite">3.5 Dataset Compiler Suite</a></li>
-<li><a href="#36-model-training-suite">3.6 Model Training Suite</a></li>
-<li><a href="#37-health--version-drift">3.7 Health &amp; Version Drift</a></li>
-<li><a href="#38-config--secrets">3.8 Config &amp; Secrets</a></li>
-<li><a href="#39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp;
+<li><a href="#sec-31-header--sidebar">3.1 Header &amp; Sidebar</a></li>
+<li><a href="#sec-32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</a></li>
+<li><a href="#sec-33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</a></li>
+<li><a href="#sec-34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</a></li>
+<li><a href="#sec-35-dataset-compiler-suite">3.5 Dataset Compiler Suite</a></li>
+<li><a href="#sec-36-model-training-suite">3.6 Model Training Suite</a></li>
+<li><a href="#sec-37-health--version-drift">3.7 Health &amp; Version Drift</a></li>
+<li><a href="#sec-38-config--secrets">3.8 Config &amp; Secrets</a></li>
+<li><a href="#sec-39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp;
 Headings</a></li>
-<li><a href="#310-controls-without-an-id">3.10 Controls Without an ID</a></li>
-<li><a href="#311-changes-since-the-previous-registry">3.11 Changes Since the Previous
+<li><a href="#sec-310-controls-without-an-id">3.10 Controls Without an ID</a></li>
+<li><a href="#sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous
 Registry</a></li>
 </ul>
 </li>
-<li><a href="#4-end-to-end-operational-workflows">4. End-to-End Operational Workflows</a>
+<li><a href="#sec-4-end-to-end-operational-workflows">4. End-to-End Operational Workflows</a>
 <ul class="sub-item">
-<li><a href="#41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health
+<li><a href="#sec-41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health
 Audit</a></li>
-<li><a href="#411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle
+<li><a href="#sec-411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle
 Recovery</a></li>
-<li><a href="#42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</a></li>
-<li><a href="#43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</a></li>
+<li><a href="#sec-42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</a></li>
+<li><a href="#sec-43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</a></li>
 </ul>
 </li>
-<li><a href="#5-operational-boundaries--platform-availability">5. Operational Boundaries &amp; Platform
+<li><a href="#sec-5-operational-boundaries--platform-availability">5. Operational Boundaries &amp; Platform
 Availability</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>This registry lists every element of the LemGendary AI Studio GUI
 (<code>lemgendary-ai-studio-gui</code>) that carries an <code>id</code> attribute, with its label,
-element type, the sidecar endpoint it calls and its behaviour. It is rebuilt
-from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.19</code>: 119
-distinct IDs, of which 75 belong to interactive controls (sections 3.1 to 3.8)
-and 44 to dialogs, status regions, landmarks and headings (section 3.9). It is
-updated for <code>v2.10.36</code>: the screen recording controls (v2.10.20), the
-confirmation dialogs and the compile mode switch IDs (v2.10.28).
+element type, the sidecar endpoint it calls and its behaviour. It is recounted
+from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.38</code>, including
+the IDs that the shared <code>Modal</code>, <code>ConfirmDialog</code> and <code>Tabs</code> components build
+from their props, with a template such as <code>train-btn-start-{model_key}</code> counted
+once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+and 59 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.</p>
 <p>The GUI talks to three local sidecars: the LemGendary Environment Manager on
@@ -93,7 +93,7 @@ port 8000, the LemGendary Dataset Compiler Suite on port 8100 and the LemGendary
 Model Training Suite on port 8200.</p>
 </section>
 
-<section id="2-control-id-taxonomy--schema">
+<section id="sec-2-control-id-taxonomy--schema">
 <h2>2. Control ID Taxonomy &amp; Schema</h2>
 <p>New IDs follow a hyphenated pattern:</p>
 <div class="math-block">$$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$</div>
@@ -117,10 +117,10 @@ the sidecars refuse browser writes without it. &quot;None&quot; means the contro
 changes GUI state.</p>
 </section>
 
-<section id="3-master-interactive-controls-dictionary">
+<section id="sec-3-master-interactive-controls-dictionary">
 <h2>3. Master Interactive Controls Dictionary</h2>
 <p>Each entry reads: ID (element type): label. Endpoint. Behaviour.</p>
-<h3 id="31-header--sidebar">3.1 Header &amp; Sidebar</h3>
+<h3 id="sec-31-header--sidebar">3.1 Header &amp; Sidebar</h3>
 <ul>
 <li><code>header-btn-report-issue</code> (<code>button</code>): &quot;Report Issue&quot;. None. Opens the Report
 Issue dialog (section 3.2) with the module set to the current tab.</li>
@@ -135,7 +135,7 @@ Compiler Suite&quot;, &quot;LemGendary Model Training Suite&quot;, &quot;Clean I
 &quot;Health &amp; Version Drift&quot;). None. Switches the workspace view; the dot shows
 whether the sidecar behind the view is online.</li>
 </ul>
-<h3 id="32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</h3>
+<h3 id="sec-32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</h3>
 <ul>
 <li><code>bug-modal-email</code> (<code>input type=email</code>): &quot;Your email&quot;. None. Reply address, at
 most 254 characters, checked on submit.</li>
@@ -180,7 +180,7 @@ again.</li>
 WebP (PNG where WebP export is not supported), at most 5 MB, and adds it to
 the strip.</li>
 </ul>
-<h3 id="33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</h3>
+<h3 id="sec-33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</h3>
 <ul>
 <li><code>test-modal-btn-close</code> (<code>button</code>): &quot;X&quot;. None. Closes the dialog; Escape does
 the same.</li>
@@ -200,7 +200,7 @@ in-process and prints the summary.</li>
 <code>POST /api/llm/test-suite</code> (8100). Runs the Dataset Compiler test suite
 in-process and prints the summary.</li>
 </ul>
-<h3 id="34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</h3>
+<h3 id="sec-34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</h3>
 <ul>
 <li><code>dash-btn-run-pipeline</code> (<code>button</code>): &quot;Run Pipeline&quot;. <code>POST /api/pipeline/run</code>
 (8000) with <code>clean: false</code>. Runs the 7-step pipeline without deleting
@@ -213,7 +213,7 @@ without a request; it has focus when the dialog opens.</li>
 <code>POST /api/pipeline/run</code> (8000) with <code>clean: true</code>. Deletes the virtual
 environments and <code>node_modules</code> of all projects, then reinstalls them.</li>
 </ul>
-<h3 id="35-dataset-compiler-suite">3.5 Dataset Compiler Suite</h3>
+<h3 id="sec-35-dataset-compiler-suite">3.5 Dataset Compiler Suite</h3>
 <ul>
 <li><code>comp-mode-standard</code>, <code>comp-mode-custom</code> (<code>button</code>, <code>aria-pressed</code>):
 &quot;Standard Preset&quot; and &quot;Custom Multi-Source&quot; compile mode switch. None. Shows
@@ -250,6 +250,9 @@ loose source images after sharding.</li>
 <li><code>custom-sources-area</code> (<code>textarea</code>): source repositories and URLs. None. One
 Kaggle, Hugging Face, Google Drive or GitHub source per line; submitted with
 <code>POST /api/gui/custom-compile</code> (8100).</li>
+<li><code>comp-input-kaggle-custom-ref</code> (<code>input type=text</code>): Kaggle dataset slug or
+URL. <code>POST /api/kaggle/download</code> (8100) on &quot;Ingest from Kaggle&quot;. Downloads a
+public or private Kaggle dataset into <code>LemGendaryDatasets</code>.</li>
 <li><code>comp-btn-meta-{dataset_key}</code> (<code>button</code>): &quot;Update Metadata&quot;.
 <code>POST /api/kaggle/update-metadata</code> (8100). Pushes the metadata of one manifold
 without uploading data.</li>
@@ -262,7 +265,7 @@ source manifold for scale reduction.</li>
 <li><code>reduce-scale-select</code> (<code>select</code>): sampling scale. None. 10, 25, 50 or 75
 percent; sent with <code>POST /api/modernize/reduce</code> (8100).</li>
 </ul>
-<h3 id="36-model-training-suite">3.6 Model Training Suite</h3>
+<h3 id="sec-36-model-training-suite">3.6 Model Training Suite</h3>
 <ul>
 <li><code>train-btn-generate-all-notebooks</code> (<code>button</code>): &quot;Generate All Notebooks&quot;.
 <code>POST /api/notebooks/generate-all</code> (8200). Writes notebooks for every
@@ -295,11 +298,15 @@ Kaggle Models.</li>
 <code>POST /api/training/evaluate</code> (8200). Evaluates the checkpoint locally.</li>
 <li><code>train-btn-export-{model_key}</code> (<code>button</code>): &quot;Export Binaries&quot;.
 <code>POST /api/training/export</code> (8200). Exports the model binaries.</li>
+<li><code>cloud-modal-tab-kaggle</code>, <code>cloud-modal-tab-colab</code>, <code>train-modal-tab-upload</code>
+(<code>button</code>, <code>role=&quot;tab&quot;</code>): &quot;Kaggle GPU Cloud&quot;, &quot;Google Colab FUSE&quot; and &quot;Kaggle
+Models Hub&quot; in the Cloud &amp; Registry Dispatch dialog. None. Switch the panel
+<code>cloud-modal-panel</code>.</li>
 <li><code>gpu-select</code> (<code>select</code>): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.</li>
 <li><code>variation-select</code> (<code>select</code>): variation to check. None. Filters the isolation
 report from <code>GET /api/models/{model_key}/variations/validate</code> (8200).</li>
 </ul>
-<h3 id="37-health--version-drift">3.7 Health &amp; Version Drift</h3>
+<h3 id="sec-37-health--version-drift">3.7 Health &amp; Version Drift</h3>
 <ul>
 <li><code>health-btn-safe-upgrade</code> (<code>button</code>): &quot;Safe Package Upgrade&quot;.
 <code>POST /api/update</code> (8000). Starts a background upgrade job and returns its
@@ -313,8 +320,11 @@ report from <code>GET /api/models/{model_key}/variations/validate</code> (8200).
 <li><code>health-btn-validate-ecosystem</code> (<code>button</code>): &quot;Run Ecosystem Validation&quot;.
 <code>POST /api/validate</code> (8000). Runs the validation gates for all projects.</li>
 </ul>
-<h3 id="38-config--secrets">3.8 Config &amp; Secrets</h3>
+<h3 id="sec-38-config--secrets">3.8 Config &amp; Secrets</h3>
 <ul>
+<li><code>config-editor-tab-manifests</code>, <code>config-editor-tab-secrets</code> (<code>button</code>,
+<code>role=&quot;tab&quot;</code>): &quot;Registry Manifests&quot; and &quot;Secrets &amp; Tokens Vault&quot;. None. Switch
+the panel <code>config-editor-panel</code>.</li>
 <li><code>manifest-select</code> (<code>select</code>): manifest file. <code>GET /api/manifests/registry</code>
 fills it; <code>GET /api/manifests/read</code> (8000) loads the chosen file.</li>
 <li><code>new-service-select</code> (<code>select</code>): &quot;Target Service&quot;. None. Service of a new
@@ -330,15 +340,18 @@ Password&quot;. None. Write-only; sent with <code>POST /api/secrets</code> (8000
 replaces it. The GUI never reads a stored value back: <code>GET /api/secrets</code>
 returns only <code>has_value</code> and the last 4 characters (<code>value_hint</code>).</li>
 </ul>
-<h3 id="39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp; Headings</h3>
+<h3 id="sec-39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp; Headings</h3>
 <p>Dialogs and forms:</p>
 <ul>
 <li><code>bug-modal-dialog</code>, <code>annotator-dialog</code>, <code>pipeline-dialog-clean-install</code>:
 shared <code>Modal</code> dialogs (<code>role=&quot;dialog&quot;</code>, <code>aria-modal</code>, focus trap; Escape
 closes the innermost one). Each title has the ID <code>{dialog_id}-title</code>.</li>
 <li><code>bug-modal-form</code>: the Report Issue form.</li>
-<li><code>cloud-modal</code>, <code>config-editor-modal</code>: the Cloud Training and Config &amp; Secrets
-dialogs (shared <code>Modal</code>).</li>
+<li><code>test-modal</code>, <code>cloud-modal</code>, <code>config-editor-modal</code>: the Test &amp; Diagnostic
+Orchestrator, Cloud Training and Config &amp; Secrets dialogs (shared <code>Modal</code>).</li>
+<li><code>test-modal-panel</code>, <code>cloud-modal-panel</code>, <code>config-editor-panel</code>: the tab
+panels (<code>role=&quot;tabpanel&quot;</code>) of the shared <code>Tabs</code> component, labelled by the
+active tab.</li>
 <li>Confirmation dialogs (<code>ConfirmDialog</code>, focus starts on Cancel; buttons
 <code>{dialog_id}-cancel</code> and <code>{dialog_id}-confirm</code>, text <code>{dialog_id}-desc</code>):
 <code>dash-dialog-stop-service</code> (Stop Service), <code>health-dialog-confirm</code> (Safe
@@ -381,15 +394,15 @@ when the mail client or the reports folder did not open).</li>
 <code>drift-matrix-title</code>, <code>gui-dependencies-title</code>, <code>maintenance-actions-title</code>,
 <code>telemetry-stream-heading</code>, <code>telemetry-card-heading</code>.</li>
 </ul>
-<h3 id="310-controls-without-an-id">3.10 Controls Without an ID</h3>
+<h3 id="sec-310-controls-without-an-id">3.10 Controls Without an ID</h3>
 <p>These controls work but have no <code>id</code> yet; tests find them by role and label: the
 &quot;Config &amp; Secrets&quot; and &quot;LemGendary AI Documentation Hub&quot; header buttons, the
 Start Service and Stop Service buttons on the sidecar tiles, the per-step run
 buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
 Reduction sub-tabs, the modernization
-queue buttons, the scale reduction dispatch button, the config editor tabs and
-the telemetry console tabs.</p>
-<h3 id="311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
+queue buttons, the scale reduction dispatch button, the &quot;Ingest from Kaggle&quot;
+button and the telemetry console tabs.</p>
+<h3 id="sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
 <p>The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
 removed and 98 added.</p>
 <p>Renamed (old ID to current ID): <code>comp-input-custom-name</code> to <code>custom-name-input</code>,
@@ -410,8 +423,9 @@ sub-tab controls (<code>comp-tab-kaggle-download</code>, <code>comp-tab-kaggle-u
 <code>comp-btn-kaggle-upload</code>, replaced by the card actions in section 3.5),
 <code>comp-slider-modernize-workers</code> and the pipeline stage list items
 <code>pipe-stage-*</code>.</p>
-<p>Removed because the control has no ID (section 3.10; <code>comp-mode-standard</code> and
-<code>comp-mode-custom</code> exist again since v2.10.28, section 3.5):
+<p>Removed because the control has no ID (section 3.10; <code>comp-mode-standard</code>,
+<code>comp-mode-custom</code>, <code>comp-input-kaggle-custom-ref</code> and <code>train-modal-tab-upload</code>
+exist again since v2.10.28, sections 3.5 and 3.6):
 <code>comp-btn-custom-compile</code>, <code>comp-subtab-catalog</code>,
 <code>comp-subtab-modernize</code>, <code>comp-subtab-reduce</code>, <code>comp-btn-scan-modernize-queue</code>,
 <code>comp-btn-batch-modernize-all</code>, <code>comp-btn-dispatch-reduce</code>,
@@ -423,9 +437,9 @@ sub-tab controls (<code>comp-tab-kaggle-download</code>, <code>comp-tab-kaggle-u
 and <code>train-modal-tab-upload</code>.</p>
 </section>
 
-<section id="4-end-to-end-operational-workflows">
+<section id="sec-4-end-to-end-operational-workflows">
 <h2>4. End-to-End Operational Workflows</h2>
-<h3 id="41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health Audit</h3>
+<h3 id="sec-41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health Audit</h3>
 <ol>
 <li>The operator starts the LemGendary AI Studio GUI. The sidebar dots and the
 sidecar tiles show which sidecars answer their liveness probe
@@ -443,7 +457,7 @@ cross-project version drift matrix.</li>
 <p>For a clean reinstall the operator clicks <code>pipeline-btn-clean-install</code>, reads
 the list of what will be deleted and confirms with <code>pipeline-btn-clean-confirm</code>,
 which sends <code>clean: true</code>.</p>
-<h3 id="411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle Recovery</h3>
+<h3 id="sec-411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle Recovery</h3>
 <p>The GUI reacts to these terminal <code>status</code> values from the log stream:</p>
 <ul>
 <li><code>success</code>: the pipeline is marked as finished and the data is reloaded; the
@@ -454,7 +468,7 @@ card shows <code>FAILED</code>.</li>
 </ul>
 <p>In all three cases the progress bar is removed and the 1,500 ms status read from
 step 4 runs.</p>
-<h3 id="42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</h3>
+<h3 id="sec-42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</h3>
 <ol>
 <li>The operator opens the Dataset Compiler view (<code>tab-datasets</code>).</li>
 <li>The operator picks a manifold in <code>comp-select-manifold</code> and a preset in
@@ -464,7 +478,7 @@ step 4 runs.</p>
 <li>Job progress arrives over the Dataset Compiler event socket
 (<code>WS /api/ws/events</code>, 8100) and appears in the shared log panel.</li>
 </ol>
-<h3 id="43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</h3>
+<h3 id="sec-43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</h3>
 <ol>
 <li>The operator clicks <code>header-btn-report-issue</code>. The module is preselected from
 the current tab.</li>
@@ -485,7 +499,7 @@ mail. If the mail client did not open, <code>bug-modal-btn-copy-address</code> a
 </ol>
 </section>
 
-<section id="5-operational-boundaries--platform-availability">
+<section id="sec-5-operational-boundaries--platform-availability">
 <h2>5. Operational Boundaries &amp; Platform Availability</h2>
 <p>The desktop app runs on Windows, Linux and macOS. What each platform can do
 depends on the sidecars and the hardware:</p>

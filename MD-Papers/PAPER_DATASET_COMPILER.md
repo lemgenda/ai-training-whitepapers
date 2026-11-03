@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.64-STABLE` (LemGendary Dataset Compiler Suite) · **Last
-audited**: 2026-11-03
+**Version**: `v16.9.65-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+audited**: 2026-11-04
 
 ---
 
@@ -91,7 +91,7 @@ audited**: 2026-11-03
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (release `v16.9.64-STABLE`) is the data
+The LemGendary Dataset Compiler Suite (release `v16.9.65-STABLE`) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,

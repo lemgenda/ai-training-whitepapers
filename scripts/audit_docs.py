@@ -16,6 +16,7 @@ from docs_audit import CHECKS, DOCS_ROOT, render, run_audit
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run the audit, print the report and return the process exit code."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "--root", type=Path, default=DOCS_ROOT, help="docs repository root (default: this repo)"

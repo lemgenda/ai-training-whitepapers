@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.58-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-03
+**Version**: `v16.9.60-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-04
 
 ---
 
@@ -41,7 +41,7 @@ audited**: 2026-11-03
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.58-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.60-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -192,7 +192,10 @@ $$
 
 A non-empty drift set leaves both files unchanged and is reported as a
 `DRIFT:` warning (`find_requirement_drift`, `find_package_json_drift`); the fix
-is to raise the central pin and sync again.
+is to raise the central pin and sync again. The `package.json` `version` is a
+release field, not dependency data (`NPM_RELEASE_KEYS`, since v16.9.60): the
+central npm manifests do not hold it, drift ignores it and sync keeps the
+sibling's own value.
 
 The environment manager enforces strict schema parsing resilience:
 
@@ -226,9 +229,9 @@ Latency measured at `v16.8.0` (legacy engine versus `lem-env`):
 | Manifest Consistency Sync | Manual | 45 ms | $400\times$ |
 | MetaTrader 5 Detection | None | ~5 ms | Sub-second |
 
-Capabilities at `16.9.58`:
+Capabilities at `16.9.60`:
 
-| Capability | Legacy PowerShell | `lem-env` `v16.9.58` |
+| Capability | Legacy PowerShell | `lem-env` `v16.9.60` |
 | :--- | :--- | :--- |
 | Manifest sync | Manual copy | One-way, downgrade guard |
 | MetaTrader 5 detection | None | Registry-first + file version |
@@ -511,9 +514,15 @@ fail validation) reports drift: in code,
 configuration and tests a literal service port, the Kaggle owner, the
 documentation URL or a list of three or more project folders is a finding (test
 fixtures are allowed); in Markdown, HTML and the registries the values may be
-written out but must equal the file. It also checks that the GUI snapshot equals
-the source, that the GUI Content Security Policy ports equal the service ports
-and that the GUI `ProjectHealth` type matches the OpenAPI schema.
+written out but must equal the file. Since v16.9.59 a service port is a finding
+wherever it stands as its own number token (template literals, calls,
+assignments, list items); longer numbers, hex values, colours, versions,
+decimals, negative numbers and units pass. It also checks that the GUI snapshot
+equals the source, that the GUI Content Security Policy ports equal the service
+ports, that the GUI pipeline steps match the file, that the GUI `ProjectHealth`
+type matches the OpenAPI schema and that the GUI `package.json` equals its
+central manifest (`check_npm_manifest`, finding `ssot_npm_manifest`; the
+`version` field is not compared since v16.9.60).
 
 ---
 

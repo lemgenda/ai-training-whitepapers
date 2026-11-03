@@ -31,7 +31,7 @@
 <span><strong>Versioning Policy</strong>: <a href="versioning-policy.html">Document Authority Hierarchy &amp; Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.68-STABLE</code></span>
 <span><strong>Status</strong>: Canonical</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -40,27 +40,27 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-multi-track-versioning-matrix">2. Multi-Track Versioning Matrix</a></li>
-<li><a href="#3-document-authority-hierarchy">3. Document Authority Hierarchy</a></li>
-<li><a href="#4-tripartite-microservice-topology--port-bindings">4. Tripartite Microservice Topology &amp; Port
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-multi-track-versioning-matrix">2. Multi-Track Versioning Matrix</a></li>
+<li><a href="#sec-3-document-authority-hierarchy">3. Document Authority Hierarchy</a></li>
+<li><a href="#sec-4-tripartite-microservice-topology--port-bindings">4. Tripartite Microservice Topology &amp; Port
 Bindings</a></li>
-<li><a href="#5-registered-model-architectures--convergence-status">5. Registered Model Architectures &amp; Convergence
+<li><a href="#sec-5-registered-model-architectures--convergence-status">5. Registered Model Architectures &amp; Convergence
 Status</a></li>
-<li><a href="#6-manifold-ingestion--container-modernization">6. Manifold Ingestion &amp; Container
+<li><a href="#sec-6-manifold-ingestion--container-modernization">6. Manifold Ingestion &amp; Container
 Modernization</a></li>
-<li><a href="#7-cloud-training--remote-synchronization-pipeline">7. Cloud Training &amp; Remote Synchronization
+<li><a href="#sec-7-cloud-training--remote-synchronization-pipeline">7. Cloud Training &amp; Remote Synchronization
 Pipeline</a></li>
-<li><a href="#8-hardware-sentinels--physical-execution-constraints">8. Hardware Sentinels &amp; Physical Execution
+<li><a href="#sec-8-hardware-sentinels--physical-execution-constraints">8. Hardware Sentinels &amp; Physical Execution
 Constraints</a></li>
-<li><a href="#9-zero-suppression-policy-compliance">9. Zero-Suppression Policy Compliance</a></li>
-<li><a href="#10-background-process-lifecycle-governance--zombie-elimination">10. Background Process Lifecycle Governance &amp; Zombie
+<li><a href="#sec-9-zero-suppression-policy-compliance">9. Zero-Suppression Policy Compliance</a></li>
+<li><a href="#sec-10-background-process-lifecycle-governance--zombie-elimination">10. Background Process Lifecycle Governance &amp; Zombie
 Elimination</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary AI Ecosystem</strong> is an end-to-end, hardware-aware deep learning
 platform for vision restoration, perceptual quality assessment, object
@@ -71,7 +71,7 @@ code and the README changelogs of the five project repositories.</p>
 <ul>
 <li><strong>Tripartite Services</strong>: Three decoupled FastAPI sidecars with HTTP REST and
 live WebSocket channels (ports 8000, 8100, 8200), each bound to <code>127.0.0.1</code>
-and described by its own OpenAPI 3.1.0 <code>openapi.json</code> (32, 38 and 40
+and described by its own OpenAPI 3.1.0 <code>openapi.json</code> (33, 37 and 40
 operations).</li>
 <li><strong>Shared Security Contract</strong>: Every sidecar runs the same Origin Guard.
 Browser requests from origins other than the LemGendary AI Studio GUI
@@ -80,7 +80,7 @@ Browser requests from origins other than the LemGendary AI Studio GUI
 state-changing browser requests must send the Client Header
 <code>X-LemGendary-Client: ai-studio-gui</code>. <code>GET /api/secrets</code> returns only whether
 each secret is set and its last 4 characters.</li>
-<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.36</code>), a
+<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.38</code>), a
 cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
 real Content Security Policy and one shared fetch wrapper for all sidecar
 calls.</li>
@@ -119,7 +119,8 @@ distributions (<code>opencv-python</code>, <code>opencv-contrib-python</code> an
 <code>-headless</code> counterparts) as mutually satisfying.</li>
 <li><strong>Toolchain Modernization</strong>: <code>mosaicml-streaming</code> is removed; <strong>Lightning AI
 LitData</strong> and <strong>WebDataset</strong> are the canonical streaming primitives.
-<strong>Ruff</strong> (<code>&gt;=0.9.0</code>) replaces Pylint and astroid.</li>
+<strong>Ruff</strong> (<code>&gt;=0.9.0</code>) is the formatter and fast linter; Pylint runs as a
+validation gate with each project's own <code>.pylintrc</code>.</li>
 <li><strong>Physical MDS Transcoding</strong>: 110.9 GB of legacy <code>.mds.zstd</code> shards were
 transcoded to WebDataset <code>.data</code> archives: <code>LemGendizedClassificationMaster</code>
 (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and
@@ -133,26 +134,26 @@ index (<code>cu126</code>, <code>cu121</code>, <code>cu118</code>) from the driv
 </ul>
 </section>
 
-<section id="2-multi-track-versioning-matrix">
+<section id="sec-2-multi-track-versioning-matrix">
 <h2>2. Multi-Track Versioning Matrix</h2>
 <p>Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.</p>
 <ul>
-<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.107-STABLE</code>): PyTorch training
+<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.122-STABLE</code>): PyTorch training
 loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
 optional SWA, FID re-evaluation tool.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
-<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.64-STABLE</code>): shard synthesis,
+<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.65-STABLE</code>): shard synthesis,
 WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
 Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
-<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.58-STABLE</code>): hardware probe,
+<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.60-STABLE</code>): hardware probe,
 virtual environments, compliance audits, bug report endpoint, ecosystem
 registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
 <code>lemgendary_env_manager.ps1</code>.</li>
-<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.36</code>): Tauri v2 desktop application and
+<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.38</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.80-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.81-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
@@ -161,12 +162,14 @@ exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
 <p>The package metadata matches the README releases: the LemGendary Model
-Training Suite <code>pyproject.toml</code> and <code>training/server/app.py</code> report <code>16.9.107</code>
-(one version since v16.9.69), and the LemGendary Dataset Compiler Suite
-<code>core/cli_args.py</code> reports <code>16.9.64</code> (one version string since v16.9.52).</p>
+Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.122</code>);
+<code>training/version.py</code> reads it for the CLI, the sidecar, the health route and
+<code>openapi.json</code>, and <code>config.yaml</code> has no version key (since v16.9.122). The
+LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.65</code> (one
+version string since v16.9.52).</p>
 </section>
 
-<section id="3-document-authority-hierarchy">
+<section id="sec-3-document-authority-hierarchy">
 <h2>3. Document Authority Hierarchy</h2>
 <p>To keep documentation and code consistent, all documentation follows the
 four-tier authority hierarchy:</p>
@@ -208,10 +211,10 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.80-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.81-STABLE</code>.</p>
 </section>
 
-<section id="4-tripartite-microservice-topology--port-bindings">
+<section id="sec-4-tripartite-microservice-topology--port-bindings">
 <h2>4. Tripartite Microservice Topology &amp; Port Bindings</h2>
 <p>The local orchestration layer runs three background sidecar services, each
 bound to <code>127.0.0.1</code> and protected by the Origin Guard:</p>
@@ -235,7 +238,7 @@ loaders, the LemGendary AI Studio GUI through its snapshot
 value is written anywhere else.</p>
 </section>
 
-<section id="5-registered-model-architectures--convergence-status">
+<section id="sec-5-registered-model-architectures--convergence-status">
 <h2>5. Registered Model Architectures &amp; Convergence Status</h2>
 <p>The LemGendary Model Training Suite governs <strong>23 registered models</strong> tracked in
 <code>unified_models_v2.yaml</code> and documented in <code>LemGendaryModels/&lt;model_key&gt;/</code>.
@@ -296,7 +299,7 @@ whose stats cannot be read is shown as <code>unknown</code> with the reason
 (<code>stats_error</code>).</p>
 </section>
 
-<section id="6-manifold-ingestion--container-modernization">
+<section id="sec-6-manifold-ingestion--container-modernization">
 <h2>6. Manifold Ingestion &amp; Container Modernization</h2>
 <ul>
 <li><strong>Storage Location</strong>: LemGendary Compiled Manifolds Repo
@@ -331,7 +334,7 @@ manifolds without it are resolved through the taxonomy).</li>
 </ul>
 </section>
 
-<section id="7-cloud-training--remote-synchronization-pipeline">
+<section id="sec-7-cloud-training--remote-synchronization-pipeline">
 <h2>7. Cloud Training &amp; Remote Synchronization Pipeline</h2>
 <ul>
 <li><strong>Kaggle Pipelines (<code>kaggle_training/</code>)</strong>: 23 standalone notebooks consuming
@@ -367,7 +370,7 @@ update metadata without re-uploading multi-gigabyte data archives.</li>
 </ul>
 </section>
 
-<section id="8-hardware-sentinels--physical-execution-constraints">
+<section id="sec-8-hardware-sentinels--physical-execution-constraints">
 <h2>8. Hardware Sentinels &amp; Physical Execution Constraints</h2>
 <ul>
 <li><strong>GTX 1650 (4GB VRAM) Edge Baseline</strong>: Sub-nuclear 4GB lockdown enforces
@@ -395,13 +398,16 @@ the cancel request fails.</li>
 </ul>
 </section>
 
-<section id="9-zero-suppression-policy-compliance">
+<section id="sec-9-zero-suppression-policy-compliance">
 <h2>9. Zero-Suppression Policy Compliance</h2>
 <p>The codebase follows the zero-suppression rules of <code>ROBOTS.md</code> across all
 languages:</p>
 <ul>
-<li><strong>Python</strong>: no <code># type: ignore</code>, <code># noqa</code> or <code># pylint: disable</code> directives
-and no programmatic <code>warnings.filterwarnings</code> suppressions.</li>
+<li><strong>Python</strong>: no <code># type: ignore</code> or <code># noqa</code> directives and no programmatic
+<code>warnings.filterwarnings</code> suppressions. The only <code># pylint: disable</code>
+directives are seven inline <code>too-many-arguments</code> in the LemGendary Model
+Training Suite (CLI commands with one parameter per option and model
+constructors); its <code>.pylintrc</code> has no disables.</li>
 <li><strong>TypeScript &amp; JavaScript</strong>: no <code>@ts-ignore</code>, <code>@ts-expect-error</code> or
 <code>/* eslint-disable */</code> directives and no configuration diagnostic
 suppressions (<code>warnOnUnsupportedTypeScriptVersion: false</code> is banned).</li>
@@ -416,7 +422,7 @@ schema validation, safe package upgrades and defensive programming.</li>
 </ul>
 </section>
 
-<section id="10-background-process-lifecycle-governance--zombie-elimination">
+<section id="sec-10-background-process-lifecycle-governance--zombie-elimination">
 <h2>10. Background Process Lifecycle Governance &amp; Zombie Elimination</h2>
 <p>The ecosystem enforces deterministic process lifecycle management to prevent
 orphaned child processes and CPU/VRAM resource leaks:</p>

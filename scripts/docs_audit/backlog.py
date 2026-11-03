@@ -35,6 +35,7 @@ class Backlog:
 
     @classmethod
     def from_mapping(cls, mapping: dict[str, list[str]]) -> Backlog:
+        """Build a backlog from ``{check: [subject, ...]}``."""
         return cls(
             frozenset(
                 (check, subject) for check, subjects in mapping.items() for subject in subjects
@@ -56,6 +57,7 @@ class Triage:
 
     @property
     def passed(self) -> bool:
+        """True when there is no new finding, stale entry or unknown check."""
         return not (self.new or self.stale or self.unknown_checks)
 
 

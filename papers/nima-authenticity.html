@@ -36,20 +36,20 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#11-what-nima-authenticity--deepfake-sentinel-does-in-plain-english">1.1 What NIMA Authenticity &amp; DeepFake Sentinel Does (In Plain English)</a></li>
-<li><a href="#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction">2. Visual Taxonomy: Perceptual Rating Distribution &amp; Feature Extraction</a></li>
-<li><a href="#3-shared-foundations-earth-movers-distance--multi-scale-optimization">3. Shared Foundations: Earth Mover's Distance &amp; Multi-Scale Optimization</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-nima-authenticity--deepfake-sentinel-does-in-plain-english">1.1 What NIMA Authenticity &amp; DeepFake Sentinel Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-perceptual-rating-distribution--feature-extraction">2. Visual Taxonomy: Perceptual Rating Distribution &amp; Feature Extraction</a></li>
+<li><a href="#sec-3-shared-foundations-earth-movers-distance--multi-scale-optimization">3. Shared Foundations: Earth Mover's Distance &amp; Multi-Scale Optimization</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>NIMA Authenticity &amp; DeepFake Sentinel</strong> is a dedicated neural evaluation
 engine engineered for precise visual quality assessment. Operating on the
@@ -61,7 +61,7 @@ this model captures subtle perceptual judgments with verified mathematical
 resilience.</p>
 </section>
 
-<section id="11-what-nima-authenticity--deepfake-sentinel-does-in-plain-english">
+<section id="sec-11-what-nima-authenticity--deepfake-sentinel-does-in-plain-english">
 <h2>1.1 What NIMA Authenticity &amp; DeepFake Sentinel Does (In Plain English)</h2>
 <p>Acts like a digital authenticity expert. It inspects images for subtle
 mathematical artifacts left behind by AI image generators (like Midjourney,
@@ -89,7 +89,7 @@ loss minimization and correlation convergence.</p>
 <p><img src="../assets/nima_authenticity_training.png" alt="NIMA Authenticity &amp; DeepFake Sentinel Training Curve"></p>
 </section>
 
-<section id="2-visual-taxonomy-perceptual-rating-distribution--feature-extraction">
+<section id="sec-2-visual-taxonomy-perceptual-rating-distribution--feature-extraction">
 <h2>2. Visual Taxonomy: Perceptual Rating Distribution &amp; Feature Extraction</h2>
 <p>Ground-truth human evaluations follow categorical score histograms
 $p = [p_1, \dots, p_{10}]^T \in \Delta^9$ <code>[THEORETICAL]</code>. Intermediate
@@ -99,7 +99,7 @@ luminance contrast, and semantic coherence:</p>
 <p>where temperature $\tau = 1.0$ anchors calibration against the human voting distribution.</p>
 </section>
 
-<section id="3-shared-foundations-earth-movers-distance--multi-scale-optimization">
+<section id="sec-3-shared-foundations-earth-movers-distance--multi-scale-optimization">
 <h2>3. Shared Foundations: Earth Mover's Distance &amp; Multi-Scale Optimization</h2>
 <p>Rather than minimizing standard Cross-Entropy that ignores inter-class distance,
 training optimizes normalized Earth Mover's Distance (EMD):</p>
@@ -109,26 +109,26 @@ $\mathcal{L}_{\text{Spearman}}$, the loss guides monotonic feature ordering
 across perceptual degradation spectra.</p>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
 <h3 id="nima-authenticity--deepfake-sentinel-engine">NIMA Authenticity &amp; DeepFake Sentinel Engine</h3>
-<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
 <p>Delivers rapid, distribution-aware perceptual scoring for dataset pre-filtering,
 automated training loss gating, and desktop studio review.</p>
-<h4 id="42-model-info">4.2 Model Info</h4>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: EfficientNetV2-S (Distribution Verification Sentinel)</li>
 <li><strong>Input Resolution</strong>: 384x384</li>
 <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
 <li><strong>Latency</strong>: 10.8ms on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
 </ul>
-<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedNimaAuthenticity</code></li>
 <li><strong>Total Samples</strong>: 310,000 paired authentic photos and modern diffusion/GAN generations</li>
 <li><strong>Primary Task</strong>: Synthetic generation detection and photographic provenance verification</li>
 </ul>
-<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 38 <code>[CURRENT]</code></li>
 <li><strong>Best Accuracy</strong>: 0.974 <code>[MEASURED]</code> (Target: $\ge 0.960$ <code>[TARGET]</code>)</li>
@@ -137,7 +137,7 @@ automated training loss gating, and desktop studio review.</p>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <ul>
 <li><strong>Voting Ambiguity &amp; Bimodal Distributions</strong>: Real-world aesthetic evaluations
@@ -150,7 +150,7 @@ runtime memory overhead on consumer devices.</li>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <ul>
 <li><strong>Production FP16 Engine (<code>nima-authenticity.onnx</code>)</strong>: Embedded self-contained
@@ -163,7 +163,7 @@ archiving (<code>vault_score.pth</code>).</li>
 </ul>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>Accuracy</strong>: Target Standard: $\ge 0.960$ <code>[TARGET]</code>; Validation Result:
@@ -176,7 +176,7 @@ Verified</li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The NIMA Authenticity &amp; DeepFake Sentinel establishes an authoritative
 mathematical standard for on-device perceptual assessment, combining

@@ -33,18 +33,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-latent-space-compression">2. Latent Space Compression</a></li>
-<li><a href="#3-stochastic-differential-equations--score-matching">3. Stochastic Differential Equations &amp; Score Matching</a></li>
-<li><a href="#4-classifier-free-guidance-cfg">4. Classifier-Free Guidance (CFG)</a></li>
-<li><a href="#5-fast-schedulers-ddim--euler-a">5. Fast Schedulers (DDIM &amp; Euler-A)</a></li>
-<li><a href="#6-architecture--training-parameters">6. Architecture &amp; Training Parameters</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-latent-space-compression">2. Latent Space Compression</a></li>
+<li><a href="#sec-3-stochastic-differential-equations--score-matching">3. Stochastic Differential Equations &amp; Score Matching</a></li>
+<li><a href="#sec-4-classifier-free-guidance-cfg">4. Classifier-Free Guidance (CFG)</a></li>
+<li><a href="#sec-5-fast-schedulers-ddim--euler-a">5. Fast Schedulers (DDIM &amp; Euler-A)</a></li>
+<li><a href="#sec-6-architecture--training-parameters">6. Architecture &amp; Training Parameters</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Latent Diffusion Engine</strong> implements score-based generative
 modeling over continuous latent representations. Rather than executing
@@ -57,7 +57,7 @@ the system synthesizes high-fidelity photographic content in as few as 20
 sampling steps.</p>
 </section>
 
-<section id="2-latent-space-compression">
+<section id="sec-2-latent-space-compression">
 <h2>2. Latent Space Compression</h2>
 <p>A convolutional autoencoder encodes pixel inputs
 $x \in \mathbb{R}^{H \times W \times 3}$ into latent tensors
@@ -68,7 +68,7 @@ operates strictly in this compressed manifold, drastically minimizing
 intermediate activation memory.</p>
 </section>
 
-<section id="3-stochastic-differential-equations--score-matching">
+<section id="sec-3-stochastic-differential-equations--score-matching">
 <h2>3. Stochastic Differential Equations &amp; Score Matching</h2>
 <p>Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential equation:</p>
 <div class="math-block">$$dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw$$</div>
@@ -77,7 +77,7 @@ mean squared error:</p>
 <div class="math-block">$$\mathcal{L}_{\text{simple}} = \mathbb{E}_{z_0, \epsilon, t} \left[ \|\epsilon - \epsilon_\theta(z_t, t, c)\|^2 \right]$$</div>
 </section>
 
-<section id="4-classifier-free-guidance-cfg">
+<section id="sec-4-classifier-free-guidance-cfg">
 <h2>4. Classifier-Free Guidance (CFG)</h2>
 <p>Conditioned generation balances prompt alignment against sample diversity via
 Classifier-Free Guidance:</p>
@@ -85,14 +85,14 @@ Classifier-Free Guidance:</p>
 <p>where $s \in [5.0, 9.0]$ is the guidance scale.</p>
 </section>
 
-<section id="5-fast-schedulers-ddim--euler-a">
+<section id="sec-5-fast-schedulers-ddim--euler-a">
 <h2>5. Fast Schedulers (DDIM &amp; Euler-A)</h2>
 <p>Deterministic DDIM and stochastic Euler Ancestral schedulers invert the
 probability flow ODE, reducing generation from 1000 DDPM steps to 20-30 discrete
 evaluation steps.</p>
 </section>
 
-<section id="6-architecture--training-parameters">
+<section id="sec-6-architecture--training-parameters">
 <h2>6. Architecture &amp; Training Parameters</h2>
 <ul>
 <li><strong>Latent Channels ($c$)</strong>: Specification Value: 4; Design Rationale: Optimal
@@ -106,7 +106,7 @@ Accelerated Tensor Core throughput</li>
 </ul>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>Latent Diffusion serves as the generative foundation for generative synthesis
 and guided inpainting across the ecosystem.</p>

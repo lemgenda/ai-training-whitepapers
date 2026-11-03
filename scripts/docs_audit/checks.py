@@ -229,7 +229,7 @@ def check_template(ctx: AuditContext) -> Iterator[Finding]:
             yield Finding("template", path, f"missing {', '.join(missing)}")
 
 
-def _link_target(ctx: AuditContext, source: str, url: str) -> tuple[str, str] | None:
+def _link_target(source: str, url: str) -> tuple[str, str] | None:
     """Resolve an internal link to (target path, fragment); None for external links."""
     if not url or url.startswith("//") or _SCHEME.match(url):
         return None
@@ -243,7 +243,7 @@ def check_links(ctx: AuditContext) -> Iterator[Finding]:
     """Internal links point at existing files and existing anchors."""
     for source in _markdown_sources(ctx) + _publications(ctx):
         for line, url in ctx.parsed(source).links:
-            resolved = _link_target(ctx, source, url)
+            resolved = _link_target(source, url)
             if resolved is None:
                 continue
             target, fragment = resolved

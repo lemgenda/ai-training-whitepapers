@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.107-STABLE` (LemGendary Model Training Suite) · **Last
-audited**: 2026-11-03
+**Version**: `v16.9.122-STABLE` (LemGendary Model Training Suite) · **Last
+audited**: 2026-11-04
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
 Guide](./PAPER_TRAINING_PATHOLOGY.md)
@@ -84,6 +84,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     (v16.9.107)](#232-stochastic-weight-averaging-v169107)
   - [2.33. FID Re-evaluation Tool & Provenance Ledger
     (v16.9.107)](#233-fid-re-evaluation-tool--provenance-ledger-v169107)
+  - [2.34. Version Single Source, Lint & Review Fixes
+    (v16.9.122)](#234-version-single-source-lint--review-fixes-v169122)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -127,7 +129,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
 The LemGendary Model Training Suite is the orchestration layer that trains,
 evaluates and exports the vision, restoration, quality-assessment, financial
 time-series and causal LLM models of the LemGendary ecosystem. This paper
-documents release v16.9.107-STABLE. It covers the curriculum governor and its
+documents release v16.9.122-STABLE. It covers the curriculum governor and its
 Monotonic Ratchet (pair rule, enforced by a `RatchetViolation` guard), the
 bounded epoch budget with an honoured early stop, the 4-pillar completion
 invariant, publication-grade FID evaluation (`feature=2048`, chunks of at most
@@ -1360,6 +1362,38 @@ python -m training.fid_reeval status --all
   missing FID backend.
 - **Tests**: `tests/unit/test_fid_reeval.py` (23 CPU tests with a fake FID
   backend). The real measurements need a GPU and the validation data.
+
+### 2.34. Version Single Source, Lint & Review Fixes (v16.9.122)
+
+- **One version**: `[project] version` in `pyproject.toml` is the only place
+  the suite version is written. `training/version.py` reads it (the installed
+  distribution metadata is only a fallback), and the CLI, the sidecar app, the
+  `GET /api/health` route, the notebook headers and the generated
+  `openapi.json` report it. `config.yaml` has no `version` key.
+- **Static checks**: pyright reports 0 errors (v16.9.120). Pylint with the
+  repository `.pylintrc`, which has no `disable=` entries, reports 0 findings,
+  design checks included (v16.9.121); seven inline `too-many-arguments`
+  directives stay on CLI commands (one parameter per option) and model
+  constructors. Large functions are split into helpers and wide classes group
+  their state into dataclasses: `TrainingContext`
+  (`training/training/context.py`) holds the `models`, `data`, `hardware`,
+  `governance`, `run` and `state` groups instead of flat fields. Serialized
+  formats and model `state_dict` keys are unchanged.
+- **Review fixes (L10)**: the governor reads `plateau_patience` from
+  `governor.manifold` (D-07, same value 6). `GET /api/gui/models/with-stats`
+  reports measured values only: `best_metric` is `null` when nothing was
+  measured, and `parameters_m` comes from `unified_models_v2.yaml` (`null` when
+  the registry has no count) (D-08). A validation pass whose FID feature sets
+  are unbalanced is marked `fid_incomplete` and reports no FID (D-13). The 600
+  to 555 quality anchor on resume is `governor.quality_anchor_recalibration` in
+  `config.yaml` (D-15), and the instruction dataset lookup uses
+  `paths.datasets_root` (D-16). The unused `training/prefetch_worker.py` is
+  deleted (D-12), and the `lemtrain` script targets
+  `training.cli.lemtrain:app` (D-06). A test pins FID to 2048 features and
+  chunks of at most two.
+- **Remediation status**: `REVIEW_REPORT.md` of the LemGendary Model Training
+  Suite lists the status of every review finding. Owner decisions, such as the
+  optional API token and the unread resolution caps, keep today's behaviour.
 
 ---
 

@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-03 · **Sidecars**: LemGendary Environment Manager (port 8000),
+**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-04 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
 [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document
@@ -1060,7 +1060,8 @@ Callout bindings (control type; endpoint or action):
 - **4. Neural Architecture** (Metric Row; Architecture SSOT): Details network
   topology and layer configuration.
 - **5. Parameters** (Metric Row; Architecture SSOT): Reports total trainable
-  parameter count.
+  parameter count (`parameters_m` from the training registry); `N/A` when the
+  registry has no count.
 - **6. Task Category** (Metric Row; Architecture SSOT): Identifies ML problem
   domain classification.
 - **7. Completed Epochs** (Metric Row; Checkpoint telemetry): Displays verified

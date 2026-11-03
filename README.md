@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.80`
+**Version**: `v16.9.81`
 
 ---
 
@@ -19,9 +19,9 @@
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.58, LemGendary
-  Dataset Compiler Suite v16.9.64, LemGendary Model Training Suite v16.9.107,
-  LemGendary AI Studio GUI v2.10.36.
+* **Current baselines** - LemGendary Environment Manager v16.9.60, LemGendary
+  Dataset Compiler Suite v16.9.65, LemGendary Model Training Suite v16.9.122,
+  LemGendary AI Studio GUI v2.10.38.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -57,6 +57,54 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.81 - Final Refresh to the Current Component Releases
+
+* **Training Suite** (`PAPER_TRAINING_SUITE.md`, v16.9.122): new Section 2.34
+  Version Single Source, Lint & Review Fixes: the version lives only in
+  `pyproject.toml` (`training/version.py`; CLI, sidecar, health route,
+  notebooks and `openapi.json` derive it; `config.yaml` has no `version`
+  key), pyright 0, pylint 0 with no `.pylintrc` disables (seven inline
+  `too-many-arguments` directives stay), grouped `TrainingContext`, and the L10
+  review fixes (D-06, D-07 part, D-08, D-12, D-13, D-15, D-16).
+* **Master API Manual**: `parameters_m`, `best_metric` and `sota_target` of
+  `GET /api/gui/models/with-stats` are documented as nullable (measured or
+  registered values only); the example uses the registry count (17.1) and the
+  `GET /api/gui/state` example the real service version.
+* **AI Studio GUI** (v2.10.38): nullable model stats and the `N/A` Parameters
+  row (whitepaper, manual); no sidecar port written out in the source since
+  v2.10.37. The control registry is recounted from the v2.10.38 source (147
+  distinct IDs: 88 in sections 3.1 to 3.8, 59 in section 3.9, was 119 from
+  v2.10.19); the existing `cloud-modal-tab-*`, `train-modal-tab-upload`,
+  `config-editor-tab-*`, `*-panel`, `test-modal` and
+  `comp-input-kaggle-custom-ref` IDs are added and no longer listed as
+  missing.
+* **Environment Manager** (`PAPER_ENV_MANAGER.md`, v16.9.60): the
+  `ecosystem_ssot` port rule flags every standalone port token (v16.9.59);
+  `check_npm_manifest` and the pipeline step check are listed; the
+  `package.json` `version` is not compared or synced (v16.9.60).
+* **Dataset Compiler** (`PAPER_DATASET_COMPILER.md`): version line v16.9.65.
+* **Current State, Versioning Policy, Architecture**: component versions
+  (Environment Manager v16.9.60, Dataset Compiler Suite v16.9.65, Model
+  Training Suite v16.9.122, AI Studio GUI v2.10.38); OpenAPI operation counts
+  33, 37 and 40; Ruff and Pylint both described as in use; the
+  zero-suppression statements name the seven inline pylint directives.
+* **Registries and manifest** - baselines and runtime baselines updated;
+  document baselines of the six papers above. **Version** - hub version
+  v16.9.81 in `README.md`, `index.html`, manifest, both capability
+  registries, `VERSIONING_POLICY.md` and `LEMGENDARY_CURRENT_STATE.md`
+  (+ HTML). HTML pages carry the same changes as their Markdown sources.
+* **Workspace validator** - `python -m env_manager.cli validate -p
+  lemgendary-docs` passes. HTML: heading ids start with a letter (`sec-`
+  prefix, internal links updated); the redundant `style="text-align:left"`
+  on table cells is removed (`style.css` already aligns them left); the hub
+  portal buttons have `type="button"` and the footer link colour moved to
+  `style.css`; four page titles are at most 70 characters. Pylint: docstrings
+  in `scripts/docs_audit`; `tests/test_documentation.py` is split into the
+  shared `tests/docs_test_base.py`, `test_documentation.py`,
+  `test_documentation_content.py` and `test_ai_helper_corpus.py`, and
+  `test_docs_audit.py` into parity, backlog and registry classes (same 65
+  passing tests, 2 skips).
 
 ### v16.9.80 - Later Phase Documentation Sync (DOCS-3)
 

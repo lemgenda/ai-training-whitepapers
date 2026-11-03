@@ -34,24 +34,24 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-visual-taxonomy-detection--classification-manifolds">2. Visual Taxonomy: Detection &amp; Classification Manifolds</a></li>
-<li><a href="#3-shared-foundations--universal-acceleration">3. Shared Foundations &amp; Universal Acceleration</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-visual-taxonomy-detection--classification-manifolds">2. Visual Taxonomy: Detection &amp; Classification Manifolds</a></li>
+<li><a href="#sec-3-shared-foundations--universal-acceleration">3. Shared Foundations &amp; Universal Acceleration</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a>
 <ul class="sub-item">
-<li><a href="#41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</a></li>
-<li><a href="#42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</a></li>
+<li><a href="#sec-41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</a></li>
+<li><a href="#sec-42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</a></li>
 </ul>
 </li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--edge-optimization">6. Deployment Strategy &amp; Edge Optimization</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--edge-optimization">6. Deployment Strategy &amp; Edge Optimization</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>This specification defines the architectural structure, loss objectives, and
 evaluation methodologies for the Real-Time Detection and Multimodal
@@ -70,7 +70,7 @@ target benchmark matrices across <code>LemGendizedYoloV8n</code> and
 <code>LemGendizedClassificationMasterManifoldLarge</code>.</p>
 </section>
 
-<section id="2-visual-taxonomy-detection--classification-manifolds">
+<section id="sec-2-visual-taxonomy-detection--classification-manifolds">
 <h2>2. Visual Taxonomy: Detection &amp; Classification Manifolds</h2>
 <ul>
 <li><strong>Object Detection Manifold (<code>LemGendizedYoloV8n</code>)</strong>: Multi-class bounding box
@@ -83,9 +83,9 @@ curating high-entropy edge cases.</li>
 </ul>
 </section>
 
-<section id="3-shared-foundations--universal-acceleration">
+<section id="sec-3-shared-foundations--universal-acceleration">
 <h2>3. Shared Foundations &amp; Universal Acceleration</h2>
-<h3 id="31-loss-formulations">3.1 Loss Formulations</h3>
+<h3 id="sec-31-loss-formulations">3.1 Loss Formulations</h3>
 <ul>
 <li>
 <p><strong>Complete IoU (CIoU) for Detection Bounding Box Regression</strong>:
@@ -98,13 +98,13 @@ $$\text{FL}(p_t) = -\alpha_t (1 - p_t)^\gamma \log(p_t)$$</p>
 </ul>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
-<h3 id="41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</h3>
-<h4 id="411-model-description--usage">4.1.1 Model Description &amp; Usage</h4>
+<h3 id="sec-41-lemgendary-yolov8n-multi-task-model">4.1 LemGendary YOLOv8n Multi-Task Model</h3>
+<h4 id="sec-411-model-description--usage">4.1.1 Model Description &amp; Usage</h4>
 <p>Anchor-free real-time object detector providing rapid bounding box regression
 and multi-label classification for automated pipeline triggers.</p>
-<h4 id="412-model-info">4.1.2 Model Info</h4>
+<h4 id="sec-412-model-info">4.1.2 Model Info</h4>
 <ul>
 <li><strong>Model Key</strong>: <code>yolov8n</code></li>
 <li><strong>Architecture</strong>: YOLOv8n (CSPDarknet53 + PANet)</li>
@@ -115,17 +115,17 @@ Target Met)</li>
 <li><strong>Loss Function</strong>: <code>yolo</code> (CIoU + DFL + BCE)</li>
 <li><strong>Learning Rate</strong>: $1 \times 10^{-2}$</li>
 </ul>
-<h4 id="413-performance-metrics--sota-targets">4.1.3 Performance Metrics &amp; SOTA Targets</h4>
+<h4 id="sec-413-performance-metrics--sota-targets">4.1.3 Performance Metrics &amp; SOTA Targets</h4>
 <ul>
 <li><strong>Target mAP@0.5</strong>: $\ge 0.540$</li>
 <li><strong>Target mAP@0.5:0.95</strong>: $\ge 0.390$</li>
 </ul>
-<h3 id="42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</h3>
-<h4 id="421-model-description--usage">4.2.1 Model Description &amp; Usage</h4>
+<h3 id="sec-42-lemgendary-universal-nsfw--safety-classifier">4.2 LemGendary Universal NSFW &amp; Safety Classifier</h3>
+<h4 id="sec-421-model-description--usage">4.2.1 Model Description &amp; Usage</h4>
 <p>High-accuracy categorical classifier verifying safety guidelines and filtering
 inappropriate or sensitive content before automated ingestion into public
 manifolds.</p>
-<h4 id="422-model-info">4.2.2 Model Info</h4>
+<h4 id="sec-422-model-info">4.2.2 Model Info</h4>
 <ul>
 <li><strong>Model Key</strong>: <code>universal_nsfw_classification</code></li>
 <li><strong>Architecture</strong>: EfficientNetV2-S (Multi-Class Categorical Head)</li>
@@ -135,14 +135,14 @@ manifolds.</p>
 <li><strong>Loss Function</strong>: <code>cross_entropy</code></li>
 <li><strong>Learning Rate</strong>: $3 \times 10^{-5}$</li>
 </ul>
-<h4 id="423-performance-metrics--sota-targets">4.2.3 Performance Metrics &amp; SOTA Targets</h4>
+<h4 id="sec-423-performance-metrics--sota-targets">4.2.3 Performance Metrics &amp; SOTA Targets</h4>
 <ul>
 <li><strong>Target Accuracy</strong>: $\ge 0.980$</li>
 <li><strong>Target Macro-F1</strong>: $\ge 0.975$</li>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <ul>
 <li><strong>Anchor-Free Convergence</strong>: Distributed Focal Loss (DFL) models continuous
@@ -153,14 +153,14 @@ ensures false-negative rates remain $&lt; 0.5\%$.</li>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--edge-optimization">
+<section id="sec-6-deployment-strategy--edge-optimization">
 <h2>6. Deployment Strategy &amp; Edge Optimization</h2>
 <p>Models are compiled to TensorRT engines with INT8 precision calibration and
 WebGPU runtime profiles, engineered to achieve $&lt; 15\text{ ms}$ per-frame
 inference latency on consumer-grade hardware.</p>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong><code>yolov8n</code></strong>: Architecture: CSPDarknet53 + PANet; Target Manifold:
@@ -173,7 +173,7 @@ Manifold: <code>LemGendizedClassificationMasterManifoldLarge</code>; Resolution 
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>Category 09 provides robust perceptual localization and automated content
 filtering across the ecosystem. Pre-defined training architectures ensure rapid

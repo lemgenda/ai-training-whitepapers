@@ -33,18 +33,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-interface-control-boundaries">2. Interface Control Boundaries</a></li>
-<li><a href="#3-desktop-gui-operational-protocol">3. Desktop GUI Operational Protocol</a></li>
-<li><a href="#4-unified-cli-dispatch-matrix">4. Unified CLI Dispatch Matrix</a></li>
-<li><a href="#5-sidecar-telemetry--ipc-protocols">5. Sidecar Telemetry &amp; IPC Protocols</a></li>
-<li><a href="#6-cross-project-automation-cpa">6. Cross-Project Automation (CPA)</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-interface-control-boundaries">2. Interface Control Boundaries</a></li>
+<li><a href="#sec-3-desktop-gui-operational-protocol">3. Desktop GUI Operational Protocol</a></li>
+<li><a href="#sec-4-unified-cli-dispatch-matrix">4. Unified CLI Dispatch Matrix</a></li>
+<li><a href="#sec-5-sidecar-telemetry--ipc-protocols">5. Sidecar Telemetry &amp; IPC Protocols</a></li>
+<li><a href="#sec-6-cross-project-automation-cpa">6. Cross-Project Automation (CPA)</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The LemGendary AI Ecosystem is governed by three interoperable control planes:
 the <strong>LemGendary AI Studio GUI</strong> (presentation tier), the <strong>Master CLI Suite</strong>
@@ -55,7 +55,7 @@ for operators running data synthesis, hyperparameter tuning, model training, and
 checkpoint validation across universal hardware.</p>
 </section>
 
-<section id="2-interface-control-boundaries">
+<section id="sec-2-interface-control-boundaries">
 <h2>2. Interface Control Boundaries</h2>
 <ul>
 <li><strong>Desktop GUI</strong>: Primary Role: Visual orchestration, reactive monitoring;
@@ -70,7 +70,7 @@ streaming; Target Protocol: HTTP REST / WebSocket; Authoritative Manual:
 </ul>
 </section>
 
-<section id="3-desktop-gui-operational-protocol">
+<section id="sec-3-desktop-gui-operational-protocol">
 <h2>3. Desktop GUI Operational Protocol</h2>
 <p>The LemGendary AI Studio GUI serves as the primary visual cockpit for machine
 learning engineers. Built on Tauri v2 and React 18, it offers
@@ -79,25 +79,25 @@ containers. Key capabilities include hardware discovery, synthesis control, and
 training management.</p>
 </section>
 
-<section id="4-unified-cli-dispatch-matrix">
+<section id="sec-4-unified-cli-dispatch-matrix">
 <h2>4. Unified CLI Dispatch Matrix</h2>
 <p>Headless, cloud, and batch scripting operations use deterministic command-line
 utilities including <code>lem-env</code>, <code>lemtrain</code>, and <code>compiler.py</code>.</p>
 </section>
 
-<section id="5-sidecar-telemetry--ipc-protocols">
+<section id="sec-5-sidecar-telemetry--ipc-protocols">
 <h2>5. Sidecar Telemetry &amp; IPC Protocols</h2>
 <p>Asynchronous daemons operate across ports 8000 (Env Manager), 8100 (Compiler),
 and 8200 (Training Engine), backed by ACID SQLite persistent job databases.</p>
 </section>
 
-<section id="6-cross-project-automation-cpa">
+<section id="sec-6-cross-project-automation-cpa">
 <h2>6. Cross-Project Automation (CPA)</h2>
 <p>Cross-Project Automation guarantees that actions triggered in one repository
 cleanly propagate throughout the entire ecosystem without manual re-linking.</p>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>The Master Operations Manuals Hub establishes clear operational guidelines
 across all user-facing and programmatic entrypoints.</p>

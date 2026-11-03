@@ -33,20 +33,20 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#11-what-nsfw-classifier-does-in-plain-english">1.1 What NSFW Classifier Does (In Plain English)</a></li>
-<li><a href="#2-visual-taxonomy-the-5-tier-moderation-taxonomy">2. Visual Taxonomy: The 5-Tier Moderation Taxonomy</a></li>
-<li><a href="#3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss">3. Shared Foundations: EfficientNetV2-S &amp; Class-Balanced Focal Loss</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-nsfw-classifier-does-in-plain-english">1.1 What NSFW Classifier Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-the-5-tier-moderation-taxonomy">2. Visual Taxonomy: The 5-Tier Moderation Taxonomy</a></li>
+<li><a href="#sec-3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss">3. Shared Foundations: EfficientNetV2-S &amp; Class-Balanced Focal Loss</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Universal NSFW Classifier</strong> is a high-speed, on-device content
 moderation model powered by an EfficientNetV2-S backbone. Designed to safeguard
@@ -57,7 +57,7 @@ achieves a verified False Positive Rate &lt; 0.4% on benign artistic content
 while reliably identifying explicit material in &lt; 5ms.</p>
 </section>
 
-<section id="11-what-nsfw-classifier-does-in-plain-english">
+<section id="sec-11-what-nsfw-classifier-does-in-plain-english">
 <h2>1.1 What NSFW Classifier Does (In Plain English)</h2>
 <p>Imagine an automatic gatekeeper protecting datasets and cloud uploads from
 explicit, harmful, or inappropriate imagery:</p>
@@ -70,7 +70,7 @@ neutral photography from truly explicit material.</li>
 <li><strong>Pipeline Safety:</strong> Automatically quarantines inappropriate images before
 they contaminate dataset shards or reach public models.</li>
 </ul>
-<h3 id="5-tier-content-moderation-classification-distribution">5-Tier Content Moderation Classification Distribution</h3>
+<h3 id="sec-5-tier-content-moderation-classification-distribution">5-Tier Content Moderation Classification Distribution</h3>
 <ul>
 <li><strong>Drawings</strong>: Typical Imagery Description: Fine art, digital anime
 illustrations, benign sketches; Pipeline Action Threshold: Permitted
@@ -88,7 +88,7 @@ Pipeline Action Threshold: Hard rejected &amp; quarantined ($&gt; 50\%$)</li>
 </ul>
 </section>
 
-<section id="2-visual-taxonomy-the-5-tier-moderation-taxonomy">
+<section id="sec-2-visual-taxonomy-the-5-tier-moderation-taxonomy">
 <h2>2. Visual Taxonomy: The 5-Tier Moderation Taxonomy</h2>
 <p>The model categorizes content into mutually exclusive probability distributions <code>[THEORETICAL]</code>:</p>
 <ul>
@@ -101,7 +101,7 @@ non-explicit anime.</li>
 </ul>
 </section>
 
-<section id="3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss">
+<section id="sec-3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss">
 <h2>3. Shared Foundations: EfficientNetV2-S &amp; Class-Balanced Focal Loss</h2>
 <p>Utilizing Fused-MBConv layers in early stages and MBConv with
 Squeeze-and-Excitation (SE) in deeper layers, EfficientNetV2-S minimizes
@@ -113,26 +113,26 @@ class-frequency weighting $\alpha_t$ and focusing parameter $\gamma = 2.0$:</p>
 <div class="math-block">$$\mathcal{L}_{ \text{CB-Focal}}(p_t) = -\frac{1 - \beta}{1 - \beta^{n_y}} (1 - p_t)^\gamma \log(p_t)$$</div>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
 <h3 id="universal-nsfw-classifier-engine">Universal NSFW Classifier Engine</h3>
-<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
 <p>Real-time on-device safety gatekeeper engineered to filter training datasets and
 sanitize public endpoint uploads.</p>
-<h4 id="42-model-info">4.2 Model Info</h4>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: EfficientNetV2-S (5-Class Softmax Head)</li>
 <li><strong>Input Resolution</strong>: 256x256</li>
 <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
 <li><strong>Latency</strong>: 4.2ms inference on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
 </ul>
-<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedClassificationMaster</code></li>
 <li><strong>Total Samples</strong>: 180,000 balanced moderation images across all 5 tiers</li>
 <li><strong>Primary Task</strong>: 5-tier safety classification with false positive suppression</li>
 </ul>
-<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 35 <code>[CURRENT]</code></li>
 <li><strong>Top-1 Accuracy</strong>: 98.6% <code>[MEASURED]</code> (Target: $\ge 98.0\%$ <code>[TARGET]</code>)</li>
@@ -142,7 +142,7 @@ sanitize public endpoint uploads.</p>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <ul>
 <li><strong>Fine Art Disambiguation</strong>: Classical marble sculptures and anatomical figure
@@ -156,7 +156,7 @@ stabilizes gradient backpropagation across underrepresented edge categories.</li
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <ul>
 <li><strong>Production FP16 Engine (<code>nsfw_classifier.onnx</code>)</strong>: Embedded self-contained
@@ -169,7 +169,7 @@ archiving (<code>vault_acc.pth</code>).</li>
 </ul>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>Top-1 Accuracy (Overall)</strong>: Target Standard: $\ge 98.0\%$ <code>[TARGET]</code>;
@@ -184,7 +184,7 @@ Verified</li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The Universal NSFW Classifier delivers high-precision on-device content safety
 verification, achieving sub-0.4% false positive rates on artistic content while

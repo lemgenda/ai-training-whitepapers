@@ -36,39 +36,39 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a>
+<li><a href="#sec-1-abstract">1. Abstract</a>
 <ul class="sub-item">
-<li><a href="#11-what-mirnet-does-in-plain-english">1.1 What MIRNet Does (In Plain English)</a></li>
+<li><a href="#sec-11-what-mirnet-does-in-plain-english">1.1 What MIRNet Does (In Plain English)</a></li>
 </ul>
 </li>
-<li><a href="#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
+<li><a href="#sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
 <ul class="sub-item">
-<li><a href="#21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</a></li>
-<li><a href="#22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</a></li>
+<li><a href="#sec-21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</a></li>
+<li><a href="#sec-22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</a></li>
 </ul>
 </li>
-<li><a href="#3-shared-foundations">3. Shared Foundations</a>
+<li><a href="#sec-3-shared-foundations">3. Shared Foundations</a>
 <ul class="sub-item">
-<li><a href="#31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
-<li><a href="#32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
-<li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
+<li><a href="#sec-31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
+<li><a href="#sec-32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
+<li><a href="#sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
 </ul>
 </li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a>
 <ul class="sub-item">
-<li><a href="#41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</a></li>
-<li><a href="#42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</a></li>
+<li><a href="#sec-41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</a></li>
+<li><a href="#sec-42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</a></li>
 </ul>
 </li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy">6. Deployment Strategy</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy">6. Deployment Strategy</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Model Training Suite</strong> has achieved its ultimate evolution by
 migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art)
@@ -81,7 +81,7 @@ convergence—setting a new benchmark for browser-based image illumination
 enhancement.</p>
 </section>
 
-<section id="11-what-mirnet-does-in-plain-english">
+<section id="sec-11-what-mirnet-does-in-plain-english">
 <h2>1.1 What MIRNet Does (In Plain English)</h2>
 <p>Imagine taking photos in almost pitch-black darkness or on an intensely sunny
 beach where parts of the image are completely blown out:</p>
@@ -108,7 +108,7 @@ highlight textures &amp; balanced mid-tone contrast</li>
 </ul>
 </section>
 
-<section id="2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">
+<section id="sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">
 <h2>2. Visual Taxonomy <code>[THEORETICAL]</code>: The LemGendary Restoration Subset</h2>
 <p>The LemGendary MIRNet is explicitly built to handle the most mathematically
 disruptive illumination artifacts in digital photography: extreme low-light
@@ -117,13 +117,13 @@ environments and blown-out overexposures.</p>
 high-to-low resolution streams, exchanging multi-scale features bidirectionally
 across the network to preserve exact spatial details while correcting global
 illumination.</p>
-<h3 id="21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</h3>
+<h3 id="sec-21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</h3>
 <p>By unifying diverse low-illumination and night subsets into
 <code>LemGendizedMirNetLowLight</code>, the MIRNet backbone is trained to cleanly restore
 dynamic range, amplify features, and suppress severe sensor noise natively.</p>
 <p><img src="../assets/mirnet_lowlight_example.png" alt="Low Light Enhancement">
 Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.</p>
-<h3 id="22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</h3>
+<h3 id="sec-22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</h3>
 <p>By unifying diverse overexposed and dynamic range subsets into
 <code>LemGendizedMirNetExposure</code>, the MIRNet backbone is trained to cleanly restore
 blown-out highlights and balance overall contrast gradients natively.</p>
@@ -132,9 +132,9 @@ Recovering blown-out highlights and balancing overall dynamic range in
 overexposed photography.</p>
 </section>
 
-<section id="3-shared-foundations">
+<section id="sec-3-shared-foundations">
 <h2>3. Shared Foundations</h2>
-<h3 id="31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
+<h3 id="sec-31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
 <p>Training massive architectures like MIRNet (31M+ parameters) at high resolutions
 requires absolute synchronization on multi-GPU Kaggle environments and
 constrained local hardware.</p>
@@ -143,7 +143,7 @@ constrained local hardware.</p>
 <code>torch.cuda.mem_get_info()</code>. This ensures that even on 4GB hardware, the MIRNet
 architecture is seated with a perfectly calculated physical batch size,
 preventing kernel-level address misalignments and system-wide paging.</p>
-<h3 id="32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
+<h3 id="sec-32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
 <p>While PSNR measures absolute mathematical pixel differences, it is notoriously
 poor at determining if an image &quot;looks good.&quot; The 2026 upgrade integrated
 advanced perceptual loops:</p>
@@ -154,7 +154,7 @@ conceptual feature layout.</li>
 <li><strong>FID (Frechet Inception Distance)</strong>: Analyzes macro-distribution geometry
 through an InceptionV3 neural matrix.</li>
 </ul>
-<h3 id="33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
+<h3 id="sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
 <ul>
 <li><strong>Single-GPU Specialization</strong>: We actively deprecate the second GPU in Kaggle
 instances to double VRAM stability linearly on <code>cuda:0</code> because splitting
@@ -165,9 +165,9 @@ robust against local/cloud path shifts.</li>
 </ul>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
-<h3 id="41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</h3>
+<h3 id="sec-41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</h3>
 <h4 id="low-light-model-info">Low-Light Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
@@ -199,7 +199,7 @@ manifold alignment against extreme darkness degradation.</li>
 errors during high-resolution backpropagation, strict <code>Batch Size 1</code> constraints
 combined with Multi-Step Gradient Accumulation were enforced, allowing deep
 optimization without system crash.</p>
-<h3 id="42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</h3>
+<h3 id="sec-42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</h3>
 <h4 id="exposure-model-info">Exposure Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
@@ -230,7 +230,7 @@ boundaries and preserve deep perceptual textures during dynamic range
 compression.</p>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <h3 id="the-parallel-stream-memory-exhaustion">The Parallel Stream Memory Exhaustion</h3>
 <p><strong>Issue</strong>: MIRNet v2 maintains multiple resolution streams concurrently and
@@ -263,7 +263,7 @@ validation loops.
 retaining stable LPIPS/FID curves.</p>
 </section>
 
-<section id="6-deployment-strategy">
+<section id="sec-6-deployment-strategy">
 <h2>6. Deployment Strategy</h2>
 <h3 id="standalone-exporters">Standalone Exporters</h3>
 <p>The [CURRENT] checkpoints saved under <code>DataParallel</code> are intelligently parsed
@@ -276,7 +276,7 @@ graph fragments are physically deleted, ensuring a single, isolated payload
 powers the web instance natively.</p>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>DnCNN</strong>: Paradigm: <em>Legacy CNN</em>; Parameters: 0.5M; GPU Footprint (1080p): &lt;
@@ -295,7 +295,7 @@ Grade</strong></li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The stabilization of SOTA Backbones represents the final engineering milestone
 of the LemGendary project. By mastering multi-scale gating memory pressures and

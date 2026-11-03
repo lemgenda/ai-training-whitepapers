@@ -28,6 +28,7 @@ class Finding:
 
     @property
     def key(self) -> tuple[str, str]:
+        """``(check, subject)``, the identity used by the backlog."""
         return (self.check, self.subject)
 
 
@@ -55,10 +56,12 @@ class AuditContext:
 
     @cached_property
     def manifest(self) -> dict[str, Any]:
+        """The parsed ``manifest/documents.json``."""
         return json.loads(self.read_text(MANIFEST_PATH.as_posix()))
 
     @cached_property
     def pairs(self) -> list[DocumentPair]:
+        """One Markdown/HTML pair per manifest document."""
         return [
             DocumentPair(
                 doc_id=entry["id"],
@@ -70,18 +73,23 @@ class AuditContext:
         ]
 
     def path(self, relative: str) -> Path:
+        """Absolute path of a repository-relative path."""
         return self.root / relative
 
     def exists(self, relative: str) -> bool:
+        """True when the repository-relative path is a file."""
         return self.path(relative).is_file()
 
     def read_text(self, relative: str) -> str:
+        """UTF-8 text of a repository-relative file."""
         return self.path(relative).read_text(encoding="utf-8")
 
     def relative(self, path: Path) -> str:
+        """Repository-relative POSIX path of ``path``."""
         return path.resolve().relative_to(self.root).as_posix()
 
     def glob(self, pattern: str) -> list[str]:
+        """Sorted repository-relative files matching ``pattern``."""
         return sorted(self.relative(p) for p in self.root.glob(pattern) if p.is_file())
 
     def parsed(self, relative: str) -> ParsedDocument:

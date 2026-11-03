@@ -37,26 +37,26 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical">2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds <code>[THEORETICAL]</code></a></li>
-<li><a href="#3-shared-foundations-sub-pixel-convolution--espcn">3. Shared Foundations: Sub-Pixel Convolution &amp; ESPCN</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical">2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds <code>[THEORETICAL]</code></a></li>
+<li><a href="#sec-3-shared-foundations-sub-pixel-convolution--espcn">3. Shared Foundations: Sub-Pixel Convolution &amp; ESPCN</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a>
 <ul class="sub-item">
-<li><a href="#41-ultrazoom-x2-real-time-edge">4.1 UltraZoom-x2 (Real-Time Edge)</a></li>
-<li><a href="#42-ultrazoom-x3-fractional-recovery">4.2 UltraZoom-x3 (Fractional Recovery)</a></li>
-<li><a href="#43-ultrazoom-x4-high-fidelity-detail">4.3 UltraZoom-x4 (High-Fidelity Detail)</a></li>
-<li><a href="#44-ultrazoom-x8-extreme-hallucination">4.4 UltraZoom-x8 (Extreme Hallucination)</a></li>
+<li><a href="#sec-41-ultrazoom-x2-real-time-edge">4.1 UltraZoom-x2 (Real-Time Edge)</a></li>
+<li><a href="#sec-42-ultrazoom-x3-fractional-recovery">4.2 UltraZoom-x3 (Fractional Recovery)</a></li>
+<li><a href="#sec-43-ultrazoom-x4-high-fidelity-detail">4.3 UltraZoom-x4 (High-Fidelity Detail)</a></li>
+<li><a href="#sec-44-ultrazoom-x8-extreme-hallucination">4.4 UltraZoom-x8 (Extreme Hallucination)</a></li>
 </ul>
 </li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary UltraZoom Super-Resolution Suite</strong> establishes an
 authoritative, hardware-aware deep learning framework for sub-pixel image
@@ -70,7 +70,7 @@ spatial ladder progression schedules, loss dynamics, and WebGPU deployment
 specifications across the compiled manifold <code>LemGendizedUltraZoomLarge</code>.</p>
 </section>
 
-<section id="11-what-ultrazoom-does-in-plain-english">
+<section id="sec-11-what-ultrazoom-does-in-plain-english">
 <h2>1.1 What UltraZoom Does (In Plain English)</h2>
 <p>When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
 a bird in a tree or a flower in your garden), the image quickly becomes a
@@ -101,7 +101,7 @@ Zoom"></li>
 <p><img src="../assets/ultrazoom_training.png" alt="UltraZoom Scale Convergence &amp; Benchmarks"></p>
 </section>
 
-<section id="2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical">
+<section id="sec-2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical">
 <h2>2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds <code>[THEORETICAL]</code></h2>
 <p>The <code>[CURRENT]</code> UltraZoom checkpoint provides multi-scale super-resolution,
 which requires learning distinct high-frequency hallucination priors across
@@ -117,7 +117,7 @@ compressed, microscopic source textures.</li>
 </ul>
 </section>
 
-<section id="3-shared-foundations-sub-pixel-convolution--espcn">
+<section id="sec-3-shared-foundations-sub-pixel-convolution--espcn">
 <h2>3. Shared Foundations: Sub-Pixel Convolution &amp; ESPCN</h2>
 <p>The Efficient Sub-Pixel Convolution operator $\mathcal{PS}$ rearranges tensors
 of shape $(H, W, C \cdot r^2)$ into $(r H, r W, C)$:</p>
@@ -127,28 +127,28 @@ edge structure and perceptual distance:</p>
 <div class="math-block">$$\mathcal{L}_{\text{UltraZoom}} = \sqrt{\|\mathbf{I}_{\text{SR}} - \mathbf{I}_{\text{HR}}\|^2 + \epsilon^2} + \lambda_{\text{Lap}} \|\Delta \mathbf{I}_{\text{SR}} - \Delta \mathbf{I}_{\text{HR}}\|_1 + \lambda_{\text{perceptual}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{SR}}, \mathbf{I}_{\text{HR}})$$</div>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
-<h3 id="41-ultrazoom-x2-real-time-edge">4.1 UltraZoom-x2 (Real-Time Edge)</h3>
+<h3 id="sec-41-ultrazoom-x2-real-time-edge">4.1 UltraZoom-x2 (Real-Time Edge)</h3>
 <ul>
 <li><strong>Architecture</strong>: 8-block Residual CNN (64 feature channels)</li>
 <li><strong>Target PSNR</strong>: ≥ 35.20 dB, <strong>SSIM</strong>: ≥ 0.965, <strong>LPIPS</strong>: ≤ 0.025</li>
 <li><strong>Latency</strong>: 11ms on NVIDIA GeForce GTX 1650</li>
 </ul>
-<h3 id="42-ultrazoom-x3-fractional-recovery">4.2 UltraZoom-x3 (Fractional Recovery)</h3>
+<h3 id="sec-42-ultrazoom-x3-fractional-recovery">4.2 UltraZoom-x3 (Fractional Recovery)</h3>
 <ul>
 <li><strong>Architecture</strong>: 12-block Residual Channel Attention Network (RCAN)</li>
 <li><strong>Target PSNR</strong>: ≥ 33.10 dB, <strong>SSIM</strong>: ≥ 0.945, <strong>LPIPS</strong>: ≤ 0.038</li>
 <li><strong>Latency</strong>: 18ms on NVIDIA GeForce GTX 1650</li>
 </ul>
-<h3 id="43-ultrazoom-x4-high-fidelity-detail">4.3 UltraZoom-x4 (High-Fidelity Detail)</h3>
+<h3 id="sec-43-ultrazoom-x4-high-fidelity-detail">4.3 UltraZoom-x4 (High-Fidelity Detail)</h3>
 <ul>
 <li><strong>Architecture</strong>: 16-block Residual Dense Network (RDN)</li>
 <li><strong>Target PSNR</strong>: ≥ 34.00 dB, <strong>SSIM</strong>: ≥ 0.950, <strong>LPIPS</strong>: ≤ 0.040,
 <strong>FID</strong>: ≤ 10.0</li>
 <li><strong>Latency</strong>: 28ms on NVIDIA GeForce GTX 1650</li>
 </ul>
-<h3 id="44-ultrazoom-x8-extreme-hallucination">4.4 UltraZoom-x8 (Extreme Hallucination)</h3>
+<h3 id="sec-44-ultrazoom-x8-extreme-hallucination">4.4 UltraZoom-x8 (Extreme Hallucination)</h3>
 <ul>
 <li><strong>Architecture</strong>: Cascaded Two-Stage ESPCN ($x2 \to x4 \to x8$)</li>
 <li><strong>Target PSNR</strong>: ≥ 28.50 dB, <strong>SSIM</strong>: ≥ 0.885, <strong>LPIPS</strong>: ≤ 0.085</li>
@@ -156,7 +156,7 @@ edge structure and perceptual distance:</p>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <ul>
 <li><strong>ICNR Kernel Initialization</strong>: Eliminates periodic checkerboard artifacts.</li>
@@ -165,14 +165,14 @@ edge structure and perceptual distance:</p>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
-<h3 id="61-webgpu--zero-copy-shader-pipeline">6.1 WebGPU &amp; Zero-Copy Shader Pipeline</h3>
+<h3 id="sec-61-webgpu--zero-copy-shader-pipeline">6.1 WebGPU &amp; Zero-Copy Shader Pipeline</h3>
 <p>Exported using ONNX Opset 17 with fixed tensor shapes, ensuring direct mapping
 to WebGPU compute shaders.</p>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong><code>UltraZoom-x2</code></strong>: Scale Factor: 2x; Backbone: 8x ResBlock (64-ch); Target
@@ -188,7 +188,7 @@ Target PSNR: 28.50 dB; Target SSIM: 0.885; Target LPIPS: 0.085; Latency (GTX
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The UltraZoom Super-Resolution Suite provides high-throughput, multi-scale image
 upscaling engineered for real-time edge execution.</p>

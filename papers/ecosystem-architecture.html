@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LemGendary Ecosystem: Master Architecture Map &amp; Multi-Sidecar Topology</title>
+<title>LemGendary Ecosystem: Master Architecture Map</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 <script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
@@ -36,8 +36,8 @@
 <span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
-<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.58</code>, Dataset Compiler Suite <code>v16.9.64</code>, Model Training Suite <code>v16.9.107</code>, AI Studio GUI <code>v2.10.36</code></span>
-<span><strong>Last Reviewed / Verified</strong>: 2026-11-03</span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.60</code>, Dataset Compiler Suite <code>v16.9.65</code>, Model Training Suite <code>v16.9.122</code>, AI Studio GUI <code>v2.10.38</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-04</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
 </header>
@@ -47,35 +47,35 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a>
+<li><a href="#sec-1-abstract">1. Abstract</a>
 <ul class="sub-item">
-<li><a href="#11-high-level-system-topology">1.1 High-Level System Topology</a></li>
+<li><a href="#sec-11-high-level-system-topology">1.1 High-Level System Topology</a></li>
 </ul>
 </li>
-<li><a href="#2-the-multi-sidecar-daemon-topology">2. The Multi-Sidecar Daemon Topology</a>
+<li><a href="#sec-2-the-multi-sidecar-daemon-topology">2. The Multi-Sidecar Daemon Topology</a>
 <ul class="sub-item">
-<li><a href="#21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar
+<li><a href="#sec-21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar
 (<code>127.0.0.1:8000</code>)</a></li>
-<li><a href="#22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar
+<li><a href="#sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar
 (<code>127.0.0.1:8100</code>)</a></li>
-<li><a href="#23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar
+<li><a href="#sec-23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar
 (<code>127.0.0.1:8200</code>)</a></li>
 </ul>
 </li>
-<li><a href="#3-repository-boundaries--subsystem-responsibilities">3. Repository Boundaries &amp; Subsystem
+<li><a href="#sec-3-repository-boundaries--subsystem-responsibilities">3. Repository Boundaries &amp; Subsystem
 Responsibilities</a></li>
-<li><a href="#4-physical-storage-hierarchy">4. Physical Storage Hierarchy</a></li>
-<li><a href="#5-fault-tolerance--resumption-guarantees">5. Fault Tolerance &amp; Resumption
+<li><a href="#sec-4-physical-storage-hierarchy">4. Physical Storage Hierarchy</a></li>
+<li><a href="#sec-5-fault-tolerance--resumption-guarantees">5. Fault Tolerance &amp; Resumption
 Guarantees</a></li>
-<li><a href="#6-cross-repository-security-contract">6. Cross-Repository Security
+<li><a href="#sec-6-cross-repository-security-contract">6. Cross-Repository Security
 Contract</a></li>
-<li><a href="#7-bug-reporting-flow">7. Bug Reporting Flow</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-7-bug-reporting-flow">7. Bug Reporting Flow</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning platform.
 A desktop operator cockpit (LemGendary AI Studio GUI) and command line tools
@@ -87,7 +87,7 @@ loopback interface and share one security contract: an origin allow-list, a
 client header for write requests and a strict Content Security Policy in the
 GUI. Bug reports are packaged locally by the Environment Manager and sent
 through the operator's own mail client.</p>
-<h3 id="11-high-level-system-topology">1.1 High-Level System Topology</h3>
+<h3 id="sec-11-high-level-system-topology">1.1 High-Level System Topology</h3>
 <div class="mermaid">
 graph TD
     subgraph UI [&quot;Desktop Presentation Tier&quot;]
@@ -134,7 +134,7 @@ graph TD
 </div>
 </section>
 
-<section id="2-the-multi-sidecar-daemon-topology">
+<section id="sec-2-the-multi-sidecar-daemon-topology">
 <h2>2. The Multi-Sidecar Daemon Topology</h2>
 <p>To allow desktop applications, external CLI scripts, and cloud orchestrators to
 control the ecosystem without blocking execution or encountering Python GIL
@@ -148,7 +148,7 @@ loaders, the LemGendary AI Studio GUI through its snapshot
 <code>src/generated/ecosystem.json</code>, and the <code>ecosystem_ssot</code> validation gate
 (error severity since Environment Manager v16.9.52) fails validation when a
 value is written anywhere else.</p>
-<h3 id="21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</h3>
+<h3 id="sec-21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</h3>
 <ul>
 <li><strong>Framework</strong>: FastAPI + Uvicorn with a lifespan handler that starts the other
 sidecars.</li>
@@ -169,7 +169,7 @@ audit.</li>
 </ul>
 </li>
 </ul>
-<h3 id="22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</h3>
+<h3 id="sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</h3>
 <ul>
 <li><strong>Framework</strong>: FastAPI + Uvicorn backed by SQLite job state tracking
 (<code>.lgd_server/jobs.db</code>).</li>
@@ -184,7 +184,7 @@ streaming (<code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>).</li>
 </ul>
 </li>
 </ul>
-<h3 id="23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar (<code>127.0.0.1:8200</code>)</h3>
+<h3 id="sec-23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar (<code>127.0.0.1:8200</code>)</h3>
 <ul>
 <li><strong>Framework</strong>: FastAPI + Uvicorn backed by ACID SQLite persistent job queue in
 <code>.lemtrain_server/jobs.db</code> (WAL mode).</li>
@@ -205,47 +205,47 @@ open.</li>
 </ul>
 </section>
 
-<section id="3-repository-boundaries--subsystem-responsibilities">
+<section id="sec-3-repository-boundaries--subsystem-responsibilities">
 <h2>3. Repository Boundaries &amp; Subsystem Responsibilities</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Subsystem</th>
-<th style="text-align:left">Repository</th>
-<th style="text-align:left">Role</th>
-<th style="text-align:left">Key Invariants</th>
+<th>Subsystem</th>
+<th>Repository</th>
+<th>Role</th>
+<th>Key Invariants</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left"><strong>Presentation</strong></td>
-<td style="text-align:left"><code>lemgendary-ai-studio-gui</code></td>
-<td style="text-align:left">Operator cockpit</td>
-<td style="text-align:left">See (1)</td>
+<td><strong>Presentation</strong></td>
+<td><code>lemgendary-ai-studio-gui</code></td>
+<td>Operator cockpit</td>
+<td>See (1)</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Toolchain &amp; Env</strong></td>
-<td style="text-align:left"><code>lemgendary-env-manager</code></td>
-<td style="text-align:left">Foundation manager</td>
-<td style="text-align:left">See (2)</td>
+<td><strong>Toolchain &amp; Env</strong></td>
+<td><code>lemgendary-env-manager</code></td>
+<td>Foundation manager</td>
+<td>See (2)</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Data Compiler</strong></td>
-<td style="text-align:left"><code>lemgendary-datasets</code></td>
-<td style="text-align:left">Synthesis, ingestion</td>
-<td style="text-align:left">See (3)</td>
+<td><strong>Data Compiler</strong></td>
+<td><code>lemgendary-datasets</code></td>
+<td>Synthesis, ingestion</td>
+<td>See (3)</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Training Suite</strong></td>
-<td style="text-align:left"><code>lemgendary-training-suite</code></td>
-<td style="text-align:left">Model training</td>
-<td style="text-align:left">See (4)</td>
+<td><strong>Training Suite</strong></td>
+<td><code>lemgendary-training-suite</code></td>
+<td>Model training</td>
+<td>See (4)</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Documentation</strong></td>
-<td style="text-align:left"><code>lemgendary-docs</code></td>
-<td style="text-align:left">Docs hub</td>
-<td style="text-align:left">See (5)</td>
+<td><strong>Documentation</strong></td>
+<td><code>lemgendary-docs</code></td>
+<td>Docs hub</td>
+<td>See (5)</td>
 </tr>
 </tbody>
 </table>
@@ -257,8 +257,8 @@ recovery guarantees no step card remains in <code>RUNNING</code> after pipeline
 completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</li>
 <li><strong>Toolchain &amp; Env</strong>: <code>pyproject.toml</code> declares Python <code>&gt;=3.12</code>, matching
 the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
-zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>); a
-<code>.pylintrc</code> is still present. OpenCV variant equivalence in the health
+zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>) and the
+Pylint gate with each project's <code>.pylintrc</code>. OpenCV variant equivalence in the health
 auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</code>). The
 central <code>requirements/</code> files are the manifest single source of truth.</li>
 <li><strong>Data Compiler</strong>: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
@@ -277,7 +277,7 @@ generated on the approved template, Markdown and HTML kept in sync.</li>
 </ol>
 </section>
 
-<section id="4-physical-storage-hierarchy">
+<section id="sec-4-physical-storage-hierarchy">
 <h2>4. Physical Storage Hierarchy</h2>
 <p>The ecosystem maintains strict directory isolation across local storage volumes:</p>
 <ul>
@@ -295,7 +295,7 @@ repository.</li>
 </ul>
 </section>
 
-<section id="5-fault-tolerance--resumption-guarantees">
+<section id="sec-5-fault-tolerance--resumption-guarantees">
 <h2>5. Fault Tolerance &amp; Resumption Guarantees</h2>
 <ol>
 <li><strong>Compilation Interruption</strong>: If a compilation job halts midway, the SQLite
@@ -312,7 +312,7 @@ leaves both files unchanged and reports drift.</li>
 </ol>
 </section>
 
-<section id="6-cross-repository-security-contract">
+<section id="sec-6-cross-repository-security-contract">
 <h2>6. Cross-Repository Security Contract</h2>
 <p>All three sidecars and the GUI implement the same contract, each sidecar in a
 single module (<code>env_manager/security.py</code>, <code>api/security.py</code>,
@@ -339,7 +339,7 @@ every repository.</li>
 </ul>
 </section>
 
-<section id="7-bug-reporting-flow">
+<section id="sec-7-bug-reporting-flow">
 <h2>7. Bug Reporting Flow</h2>
 <ol>
 <li>The operator opens &quot;Report Issue&quot; in the AI Studio GUI, writes a description,
@@ -357,7 +357,7 @@ and sends it; no SMTP credentials exist anywhere in the ecosystem.</li>
 </ol>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>The ecosystem separates presentation, sidecar services, execution engines and
 storage into independent repositories with defined contracts. Three loopback

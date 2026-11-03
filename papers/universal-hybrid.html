@@ -36,28 +36,28 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">Abstract</a></li>
-<li><a href="#2-unified-hybrid-architectures">Unified Hybrid Architectures</a>
+<li><a href="#sec-1-abstract">Abstract</a></li>
+<li><a href="#sec-2-unified-hybrid-architectures">Unified Hybrid Architectures</a>
 <ul class="sub-item">
-<li><a href="#21-upn-v2-large-parameterized-space-recovery">2.1 UPN v2 Large: Parameterized Space-Recovery</a></li>
-<li><a href="#22-universal-film-restorer-synthesized-degradation">2.2 Universal Film Restorer: Synthesized Degradation</a></li>
-<li><a href="#23-multi-task-restorer-multiheaded-mixture-of-experts-routing">2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing</a></li>
+<li><a href="#sec-21-upn-v2-large-parameterized-space-recovery">2.1 UPN v2 Large: Parameterized Space-Recovery</a></li>
+<li><a href="#sec-22-universal-film-restorer-synthesized-degradation">2.2 Universal Film Restorer: Synthesized Degradation</a></li>
+<li><a href="#sec-23-multi-task-restorer-multiheaded-mixture-of-experts-routing">2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing</a></li>
 </ul>
 </li>
-<li><a href="#3-critical-architectural-optimizations">Critical Architectural Optimizations</a>
+<li><a href="#sec-3-critical-architectural-optimizations">Critical Architectural Optimizations</a>
 <ul class="sub-item">
-<li><a href="#31-downsampled-global-attention-oom-remediation">3.1 Downsampled Global Attention (OOM Remediation)</a></li>
-<li><a href="#32-dynamic-filename-task-ingestion">3.2 Dynamic Filename Task Ingestion</a></li>
-<li><a href="#33-dynamic-validation-sharding--auto-expansion">3.3 Dynamic Validation Sharding &amp; Auto-Expansion</a></li>
+<li><a href="#sec-31-downsampled-global-attention-oom-remediation">3.1 Downsampled Global Attention (OOM Remediation)</a></li>
+<li><a href="#sec-32-dynamic-filename-task-ingestion">3.2 Dynamic Filename Task Ingestion</a></li>
+<li><a href="#sec-33-dynamic-validation-sharding--auto-expansion">3.3 Dynamic Validation Sharding &amp; Auto-Expansion</a></li>
 </ul>
 </li>
-<li><a href="#4-deployment-strategy--webgpu-compatibility">Deployment Strategy &amp; WebGPU Compatibility</a></li>
-<li><a href="#5-conclusion">Conclusion</a></li>
+<li><a href="#sec-4-deployment-strategy--webgpu-compatibility">Deployment Strategy &amp; WebGPU Compatibility</a></li>
+<li><a href="#sec-5-conclusion">Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Model Training Suite</strong> achieves absolute multi-modal
 restoration parity through its <strong>Universal Hybrid Architecture</strong> release. By
@@ -71,7 +71,7 @@ optimizations enable high-resolution restoration execution within highly
 constrained consumer hardware environments.</p>
 </section>
 
-<section id="2-unified-hybrid-architectures">
+<section id="sec-2-unified-hybrid-architectures">
 <h2>2. Unified Hybrid Architectures</h2>
 <p>Moving beyond dedicated single-task networks, modern restoration demands high
 generalizability. By combining modular structures with dynamically parameterized
@@ -90,7 +90,7 @@ Restorer"></li>
 Mechanism: Multiheaded task-routing restoration block.; Visual Taxonomy
 Anchor: <img src="../assets/technical_noise.png" alt="Multi-Task Restorer"></li>
 </ul>
-<h3 id="21-upn-v2-large-parameterized-space-recovery">2.1 UPN v2 Large: Parameterized Space-Recovery</h3>
+<h3 id="sec-21-upn-v2-large-parameterized-space-recovery">2.1 UPN v2 Large: Parameterized Space-Recovery</h3>
 <p>The <strong>UPN v2 Large</strong> model represents our premier space-recovery and
 super-resolution engine. Built on top of residual channel-attention blocks, UPN
 v2 incorporates <strong>Parameterized Steering Vectors</strong> that allow real-time strength
@@ -103,7 +103,7 @@ residual feature maps.</li>
 slice and dynamic-shape boundary crashes in browser runtimes by enforcing
 strict static-tensor compilation formats during export.</li>
 </ul>
-<h3 id="22-universal-film-restorer-synthesized-degradation">2.2 Universal Film Restorer: Synthesized Degradation</h3>
+<h3 id="sec-22-universal-film-restorer-synthesized-degradation">2.2 Universal Film Restorer: Synthesized Degradation</h3>
 <p>The <strong>Universal Film Restorer</strong> targets the remediation of legacy analog film
 assets. Its primary innovation is its <strong>Dynamic Film Degradation Synthesizer</strong>,
 which eliminates the need for paired degraded/clean reference manifolds.</p>
@@ -117,7 +117,7 @@ scratches, and localized chromatic aberration vectors.</li>
 visual arrays back to their mathematically clean high-resolution target
 anchors.</li>
 </ul>
-<h3 id="23-multi-task-restorer-multiheaded-mixture-of-experts-routing">2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing</h3>
+<h3 id="sec-23-multi-task-restorer-multiheaded-mixture-of-experts-routing">2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing</h3>
 <p>The <strong>LemGendized Professional Multi-Task Restoration Model</strong> addresses
 heterogenous degradations through a unified architecture. It bypasses the need
 for running multiple isolated models sequentially.</p>
@@ -149,9 +149,9 @@ $$\hat{\mathbf{Y}} = \sum_{i=1}^{11} w_i \cdot \mathbf{H}_i(\mathbf{Z})$$</li>
 </ul>
 </section>
 
-<section id="3-critical-architectural-optimizations">
+<section id="sec-3-critical-architectural-optimizations">
 <h2>3. Critical Architectural Optimizations</h2>
-<h3 id="31-downsampled-global-attention-oom-remediation">3.1 Downsampled Global Attention (OOM Remediation)</h3>
+<h3 id="sec-31-downsampled-global-attention-oom-remediation">3.1 Downsampled Global Attention (OOM Remediation)</h3>
 <p>Standard spatial self-attention possesses quadratic spatial complexity:
 $$\mathcal{O}(N^2) = \mathcal{O}((H \times W)^2)$$</p>
 <p>For high-fidelity inputs scaled up to $256 \times 256$ pixels, the sequence
@@ -173,7 +173,7 @@ $$\mathbf{X}_{\text{out}} = \mathbf{X} + \text{Interpolate}(\text{Attention}(\te
 <p>This maintains high-fidelity backward checkpoint compatibility with existing
 weights while rendering OOM crashes substantially minimized by architectural
 design.</p>
-<h3 id="32-dynamic-filename-task-ingestion">3.2 Dynamic Filename Task Ingestion</h3>
+<h3 id="sec-32-dynamic-filename-task-ingestion">3.2 Dynamic Filename Task Ingestion</h3>
 <p>During dataset consolidation, multi-task models ingest millions of composite
 images. A critical failure mode discovered was <strong>Task-Index Blindness</strong>, where
 the loss engine received a static task label (e.g. <code>&quot;restoration&quot;</code> globally),
@@ -189,7 +189,7 @@ with backward-compatible substring fallbacks.</li>
 <li>Passes explicit <code>task_idx</code> targets to the <code>CombinedLoss</code> CrossEntropy
 classifier during training, forcing proper multi-head optimization.</li>
 </ul>
-<h3 id="33-dynamic-validation-sharding--auto-expansion">3.3 Dynamic Validation Sharding &amp; Auto-Expansion</h3>
+<h3 id="sec-33-dynamic-validation-sharding--auto-expansion">3.3 Dynamic Validation Sharding &amp; Auto-Expansion</h3>
 <p>To balance computational efficiency during optimization with rigorous quality
 assurance, the training suite implements a dual-mode validation regime:</p>
 <ul>
@@ -207,7 +207,7 @@ deployment, protecting against local subset overfitting.</li>
 </ul>
 </section>
 
-<section id="4-deployment-strategy--webgpu-compatibility">
+<section id="sec-4-deployment-strategy--webgpu-compatibility">
 <h2>4. Deployment Strategy &amp; WebGPU Compatibility</h2>
 <p>All Universal Hybrid models are exported utilizing <strong>Opset 15/17</strong> validation
 structures. The network architectures are stripped of all dynamic resizing logic
@@ -216,7 +216,7 @@ efficient float16 parameters, ensuring fast transfer over PCIe lanes and
 low-latency GPU compute shader dispatch inside modern WebGPU browser kernels.</p>
 </section>
 
-<section id="5-conclusion">
+<section id="sec-5-conclusion">
 <h2>5. Conclusion</h2>
 <p>The <strong>Universal Hybrid Restoration</strong> paradigms set a new standard for efficient,
 high-fidelity AI processing. By combining dynamic physical degradation

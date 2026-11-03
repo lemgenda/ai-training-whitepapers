@@ -37,18 +37,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-physical-optical-degradation-taxonomy">2. Physical Optical Degradation Taxonomy</a></li>
-<li><a href="#3-architectural-taxonomy">3. Architectural Taxonomy</a></li>
-<li><a href="#4-mathematical-loss-formulations">4. Mathematical Loss Formulations</a></li>
-<li><a href="#5-sota-architectural-performance-matrix">5. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#6-universal-hardware-deployment">6. Universal Hardware Deployment</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-physical-optical-degradation-taxonomy">2. Physical Optical Degradation Taxonomy</a></li>
+<li><a href="#sec-3-architectural-taxonomy">3. Architectural Taxonomy</a></li>
+<li><a href="#sec-4-mathematical-loss-formulations">4. Mathematical Loss Formulations</a></li>
+<li><a href="#sec-5-sota-architectural-performance-matrix">5. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-6-universal-hardware-deployment">6. Universal Hardware Deployment</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>Dedicated Image Restoration Suite</strong> establishes an authoritative,
 single-task deep learning framework engineered for physical image restoration
@@ -60,7 +60,7 @@ without multi-task cross-talk, maximizing domain-specific reconstruction
 fidelity, peak signal-to-noise ratio (PSNR), and structural similarity (SSIM).</p>
 </section>
 
-<section id="2-physical-optical-degradation-taxonomy">
+<section id="sec-2-physical-optical-degradation-taxonomy">
 <h2>2. Physical Optical Degradation Taxonomy</h2>
 <p>The suite targets five distinct optical phenomena:</p>
 <ol>
@@ -72,7 +72,7 @@ fidelity, peak signal-to-noise ratio (PSNR), and structural similarity (SSIM).</
 </ol>
 </section>
 
-<section id="3-architectural-taxonomy">
+<section id="sec-3-architectural-taxonomy">
 <h2>3. Architectural Taxonomy</h2>
 <ul>
 <li><strong>NAFNet</strong>: Nonlinear Activation-Free network with SimpleGate and Simple
@@ -85,14 +85,14 @@ Feature Fusion (SKFF).</li>
 </ul>
 </section>
 
-<section id="4-mathematical-loss-formulations">
+<section id="sec-4-mathematical-loss-formulations">
 <h2>4. Mathematical Loss Formulations</h2>
 <p>All models optimize a combination of Charbonnier loss, edge frequency
 supervision, and perceptual guidance:</p>
 <div class="math-block">$$\mathcal{L}_{\text{Restoration}} = \sqrt{\|\mathbf{I}_{\text{pred}} - \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{edge}} \sqrt{\|\nabla \mathbf{I}_{\text{pred}} - \nabla \mathbf{I}_{\text{gt}}\|^2 + \epsilon^2} + \lambda_{\text{perc}} \mathcal{L}_{\text{LPIPS}}(\mathbf{I}_{\text{pred}}, \mathbf{I}_{\text{gt}})$$</div>
 </section>
 
-<section id="5-sota-architectural-performance-matrix">
+<section id="sec-5-sota-architectural-performance-matrix">
 <h2>5. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong><code>nafnet_debluring</code></strong>: Target Dataset Manifold:
@@ -119,13 +119,13 @@ PSNR: ≥ 34.00 dB; Target SSIM: ≥ 0.975; Status: Trained / Active</li>
 </ul>
 </section>
 
-<section id="6-universal-hardware-deployment">
+<section id="sec-6-universal-hardware-deployment">
 <h2>6. Universal Hardware Deployment</h2>
 <p>All dedicated restoration models compile to static ONNX graphs (Opset 17) and
 WebGPU shader pipelines for low-latency inference on consumer hardware.</p>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>The Dedicated Image Restoration Suite provides high-fidelity, single-task image
 recovery across classical optical distortions.</p>

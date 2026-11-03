@@ -36,40 +36,40 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a>
+<li><a href="#sec-1-abstract">1. Abstract</a>
 <ul class="sub-item">
-<li><a href="#11-what-ffanet-does-in-plain-english">1.1 What FFANet Does (In Plain English)</a></li>
+<li><a href="#sec-11-what-ffanet-does-in-plain-english">1.1 What FFANet Does (In Plain English)</a></li>
 </ul>
 </li>
-<li><a href="#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
+<li><a href="#sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
 <ul class="sub-item">
-<li><a href="#21-indoor-dehazing-track-ffanet_indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</a></li>
-<li><a href="#22-outdoor-dehazing-track-ffanet_outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</a></li>
-<li><a href="#23-synthetic-smoke-evacuation">2.3 Synthetic Smoke Evacuation</a></li>
+<li><a href="#sec-21-indoor-dehazing-track-ffanet_indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</a></li>
+<li><a href="#sec-22-outdoor-dehazing-track-ffanet_outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</a></li>
+<li><a href="#sec-23-synthetic-smoke-evacuation">2.3 Synthetic Smoke Evacuation</a></li>
 </ul>
 </li>
-<li><a href="#3-shared-foundations">3. Shared Foundations</a>
+<li><a href="#sec-3-shared-foundations">3. Shared Foundations</a>
 <ul class="sub-item">
-<li><a href="#31-hardware-aware-infrastructure">3.1 Hardware-Aware Infrastructure</a></li>
-<li><a href="#32-mathematical-optimization">3.2 Mathematical Optimization</a></li>
-<li><a href="#33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
+<li><a href="#sec-31-hardware-aware-infrastructure">3.1 Hardware-Aware Infrastructure</a></li>
+<li><a href="#sec-32-mathematical-optimization">3.2 Mathematical Optimization</a></li>
+<li><a href="#sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
 </ul>
 </li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a>
 <ul class="sub-item">
-<li><a href="#41-branchedffanet-indoor-scorer">4.1 BranchedFFANet Indoor Scorer</a></li>
-<li><a href="#42-branchedffanet-outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</a></li>
+<li><a href="#sec-41-branchedffanet-indoor-scorer">4.1 BranchedFFANet Indoor Scorer</a></li>
+<li><a href="#sec-42-branchedffanet-outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</a></li>
 </ul>
 </li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy">6. Deployment Strategy</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy">6. Deployment Strategy</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The LemGendary Model Training Suite has achieved unparalleled visual restoration
 by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike
@@ -80,7 +80,7 @@ exporting multi-task object bounding boxes through the specialized
 BranchedFFANet topology.</p>
 </section>
 
-<section id="11-what-ffanet-does-in-plain-english">
+<section id="sec-11-what-ffanet-does-in-plain-english">
 <h2>1.1 What FFANet Does (In Plain English)</h2>
 <p>Imagine driving through dense mountain fog or attempting to view security camera
 footage obscured by thick indoor smoke:</p>
@@ -109,11 +109,11 @@ zero color casting</li>
 </ul>
 </section>
 
-<section id="2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">
+<section id="sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">
 <h2>2. Visual Taxonomy <code>[THEORETICAL]</code>: The LemGendary Restoration Subset</h2>
 <p>The transition to FFANet architectures required distinct manifolds for
 processing atmospheric occlusions.</p>
-<h3 id="21-indoor-dehazing-track-ffanet_indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</h3>
+<h3 id="sec-21-indoor-dehazing-track-ffanet_indoor">2.1 Indoor Dehazing Track (ffanet_indoor)</h3>
 <p>By unifying diverse structured indoor scatter subsets into
 <code>LemGendizedFfaNetIndoorLarge</code>, the FFANet backbone is trained to cleanly
 subtract uniform physical scatter and dense artificial occlusions natively.</p>
@@ -124,7 +124,7 @@ environments.</em>
 The BranchedFFANet architecture explicitly models the non-uniform distribution
 of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
 mechanics.</p>
-<h3 id="22-outdoor-dehazing-track-ffanet_outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</h3>
+<h3 id="sec-22-outdoor-dehazing-track-ffanet_outdoor">2.2 Outdoor Dehazing Track (ffanet_outdoor)</h3>
 <p>By unifying diverse natural atmospheric scatter subsets into
 <code>LemGendizedFfaNetOutdoorLarge</code>, the FFANet backbone is trained to cleanly
 subtract complex depth-of-field scattering and natural fog gradients natively.</p>
@@ -135,7 +135,7 @@ gradients.</em>
 The BranchedFFANet architecture explicitly models the non-uniform distribution
 of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
 mechanics.</p>
-<h3 id="23-synthetic-smoke-evacuation">2.3 Synthetic Smoke Evacuation</h3>
+<h3 id="sec-23-synthetic-smoke-evacuation">2.3 Synthetic Smoke Evacuation</h3>
 <p>By unifying heavy particle interference subsets into synthetic smoke evacuation
 training targets, the FFANet backbone is trained to cleanly subtract dense
 particulate columns and smoke occlusions natively.</p>
@@ -148,46 +148,46 @@ of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA)
 mechanics.</p>
 </section>
 
-<section id="3-shared-foundations">
+<section id="sec-3-shared-foundations">
 <h2>3. Shared Foundations</h2>
 <p>FFANet leverages the unified LemGendary training pipeline shared with NAFNet.</p>
-<h3 id="31-hardware-aware-infrastructure">3.1 Hardware-Aware Infrastructure</h3>
+<h3 id="sec-31-hardware-aware-infrastructure">3.1 Hardware-Aware Infrastructure</h3>
 <p><strong>The Headroom-Aware Memory-Sentinel:</strong> Natively probes
 <code>torch.cuda.mem_get_info()</code> to dynamically adjust batch sizes, avoiding VRAM
 paging crashes on Kaggle T4 nodes.<br>
 <strong>OVC Data Streaming Bridge:</strong> Pre-decodes multi-task tensors natively in CPU
 cache before flushing them to the GPU.</p>
-<h3 id="32-mathematical-optimization">3.2 Mathematical Optimization</h3>
+<h3 id="sec-32-mathematical-optimization">3.2 Mathematical Optimization</h3>
 <p>The <code>CombinedLoss</code> optimizer natively unspools dictionary targets, running
 <code>L1Loss</code> on spatial pixels and <code>SmoothL1Loss</code> on bounding boxes simultaneously,
 locked via a <code>lambda=0.1</code> gradient throttle.</p>
-<h3 id="33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
+<h3 id="sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
 <p>Single-GPU specialization combined with the Serial Extraction Mutex ensures
 constant data hydration without multi-processing kernel lockups.</p>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
-<h3 id="41-branchedffanet-indoor-scorer">4.1 BranchedFFANet Indoor Scorer</h3>
-<h4 id="411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
+<h3 id="sec-41-branchedffanet-indoor-scorer">4.1 BranchedFFANet Indoor Scorer</h3>
+<h4 id="sec-411-model-description-purpose-and-usage">4.1.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary FFANet Indoor</strong> scorer is built to navigate dense artificial
 occlusions in structured indoor environments. It excels at reversing uniform
 physical scatter across confined depth profiles.</p>
-<h4 id="412-model-info">4.1.2 Model Info</h4>
+<h4 id="sec-412-model-info">4.1.2 Model Info</h4>
 <ul>
 <li><strong>Architecture:</strong> BranchedFFANet (Dual Head)</li>
 <li><strong>Input Resolution:</strong> 512x512</li>
 <li><strong>Precision:</strong> ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
 <li><strong>Latency:</strong> Sub-60ms inference bound on target local GPU hardware</li>
 </ul>
-<h4 id="413-manifold-info">4.1.3 Manifold Info</h4>
+<h4 id="sec-413-manifold-info">4.1.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset:</strong> LemGendizedFfaNetIndoorLarge</li>
 <li><strong>Total Samples:</strong> 196,304 (merged from ITS, RESIDE-6k, Dehazing and Desmoking)</li>
 <li><strong>Primary Task:</strong> Reverses artificial haze distributions while identifying key
 target boxes using the detection head.</li>
 </ul>
-<h4 id="414-performance-metrics">4.1.4 Performance Metrics</h4>
+<h4 id="sec-414-performance-metrics">4.1.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs:</strong> 1</li>
 <li><strong>Best PSNR:</strong> 45.49 dB</li>
@@ -196,14 +196,14 @@ target boxes using the detection head.</li>
 <li><strong>Best FID:</strong> 0.2211</li>
 <li><strong>Current Learning Rate:</strong> 0.00000240</li>
 </ul>
-<h4 id="415-training-curve">4.1.5 Training Curve</h4>
+<h4 id="sec-415-training-curve">4.1.5 Training Curve</h4>
 <p><img src="../assets/ffanet_indoor_training.png" alt="Indoor Training Curve">
 <em>Figure 4: FFANet Indoor Training Convergence Matrix.</em></p>
-<h4 id="416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
+<h4 id="sec-416-model-specific-issues-and-optimizations">4.1.6 Model specific issues and optimizations</h4>
 <p>The dual-attention heads originally choked the backward pass memory limit. We
 engineered an autonomous gradient-accumulation subroutine directly into the
 train loop to salvage GPU resources.</p>
-<h4 id="417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
+<h4 id="sec-417-consolidated-sota-benchmarks">4.1.7 Consolidated SOTA Benchmarks</h4>
 <ul>
 <li><strong>PSNR</strong>: Current Reality (Mid-Training): 45.49 dB; Target SOTA <code>[TARGET]</code>
 Baseline: 36.50 dB; Gap: +8.99 dB</li>
@@ -214,19 +214,19 @@ Baseline: 0.0800; Gap: +0.0643</li>
 <li><strong>FID</strong>: Current Reality (Mid-Training): 0.2211; Target SOTA <code>[TARGET]</code>
 Baseline: 12.0000; Gap: +11.7789</li>
 </ul>
-<h3 id="42-branchedffanet-outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</h3>
-<h4 id="421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</h4>
+<h3 id="sec-42-branchedffanet-outdoor-scorer">4.2 BranchedFFANet Outdoor Scorer</h3>
+<h4 id="sec-421-model-description-purpose-and-usage">4.2.1 Model description, purpose and usage</h4>
 <p>The <strong>LemGendary FFANet Outdoor</strong> handles unpredictable spatial reconstruction
 against complex atmospheric scattering, infinite depth-of-field, and dynamic
 natural fog gradients.</p>
-<h4 id="422-model-info">4.2.2 Model Info</h4>
+<h4 id="sec-422-model-info">4.2.2 Model Info</h4>
 <ul>
 <li><strong>Architecture:</strong> BranchedFFANet (Dual Head)</li>
 <li><strong>Input Resolution:</strong> 512x512</li>
 <li><strong>Precision:</strong> ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
 <li><strong>Latency:</strong> Sub-60ms inference bound on target local GPU hardware</li>
 </ul>
-<h4 id="423-manifold-info">4.2.3 Manifold Info</h4>
+<h4 id="sec-423-manifold-info">4.2.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset:</strong> LemGendizedFfaNetOutdoorLarge</li>
 <li><strong>Total Samples:</strong> 217,113 (merged from Outdoor Dehazing, NH-HAZE, O-HAZE,
@@ -234,7 +234,7 @@ CVPR 2019)</li>
 <li><strong>Primary Task:</strong> Restores infinite depth-of-field structural clarity against
 organic atmospheric scattering.</li>
 </ul>
-<h4 id="424-performance-metrics">4.2.4 Performance Metrics</h4>
+<h4 id="sec-424-performance-metrics">4.2.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs:</strong> 6</li>
 <li><strong>Best PSNR:</strong> 42.85 dB</li>
@@ -244,14 +244,14 @@ organic atmospheric scattering.</li>
 <li><strong>Best Quality Score:</strong> 604.38</li>
 <li><strong>Current Learning Rate:</strong> 0.00100000</li>
 </ul>
-<h4 id="425-training-curve">4.2.5 Training Curve</h4>
+<h4 id="sec-425-training-curve">4.2.5 Training Curve</h4>
 <p><img src="../assets/ffanet_outdoor_training.png" alt="Outdoor Training Curve">
 <em>Figure 5: FFANet Outdoor Training Convergence Matrix.</em></p>
-<h4 id="426-model-specific-issues-and-optimizations">4.2.6 Model specific issues and optimizations</h4>
+<h4 id="sec-426-model-specific-issues-and-optimizations">4.2.6 Model specific issues and optimizations</h4>
 <p>Like the Indoor variant, gradient-accumulation was necessary. Furthermore, the
 detection head was prone to destabilizing the primary image reconstruction if
 bounding boxes varied wildly across natural environments.</p>
-<h4 id="427-consolidated-sota-benchmarks">4.2.7 Consolidated SOTA Benchmarks</h4>
+<h4 id="sec-427-consolidated-sota-benchmarks">4.2.7 Consolidated SOTA Benchmarks</h4>
 <ul>
 <li><strong>PSNR</strong>: Current Reality (Mid-Training): 42.85 dB; Target SOTA <code>[TARGET]</code>
 Baseline: 33.70 dB; Gap: +9.15 dB</li>
@@ -266,7 +266,7 @@ Baseline: 12.0000; Gap: +9.6880</li>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <p><strong>The Channel Attention Saturation Crash:</strong> At deep training iterations, the
 Sigmoid gate within <code>CALayer</code> locked at 1.0, neutralizing channel-variance
@@ -277,14 +277,14 @@ primary image reconstruction early on. The <code>CombinedLoss</code> throttle wa
 to prioritize PSNR strictly.</p>
 </section>
 
-<section id="6-deployment-strategy">
+<section id="sec-6-deployment-strategy">
 <h2>6. Deployment Strategy</h2>
 <p>The ONNX Ghost-Severing protocol automatically prunes the auxiliary detection
 head when exporting to C++, generating a pure image-in, image-out inference
 engine.</p>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <p>BranchedFFANet systematically outperforms legacy The <code>[CURRENT]</code> atmospheric
 dehazing engine achieves <code>[MEASURED]</code> performance in atmospheric restoration
@@ -292,7 +292,7 @@ algorithms by treating haze as a dense 3D tensor map rather than a linear pixel
 overlay.</p>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>By upgrading to the BranchedFFANet infrastructure and implementing the
 multi-task <code>CombinedLoss</code> engine, the LemGendary Suite now wields a robust,

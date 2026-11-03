@@ -33,18 +33,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-visual-feature-encoding">2. Visual Feature Encoding</a></li>
-<li><a href="#3-perceiver-resampler--token-condensation">3. Perceiver Resampler &amp; Token Condensation</a></li>
-<li><a href="#4-autoregressive-language-decoder">4. Autoregressive Language Decoder</a></li>
-<li><a href="#5-cross-entropy-generation-objective">5. Cross-Entropy Generation Objective</a></li>
-<li><a href="#6-multimodal-benchmarks--targets">6. Multimodal Benchmarks &amp; Targets</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-visual-feature-encoding">2. Visual Feature Encoding</a></li>
+<li><a href="#sec-3-perceiver-resampler--token-condensation">3. Perceiver Resampler &amp; Token Condensation</a></li>
+<li><a href="#sec-4-autoregressive-language-decoder">4. Autoregressive Language Decoder</a></li>
+<li><a href="#sec-5-cross-entropy-generation-objective">5. Cross-Entropy Generation Objective</a></li>
+<li><a href="#sec-6-multimodal-benchmarks--targets">6. Multimodal Benchmarks &amp; Targets</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary Vision-Language Model (VLM)</strong> bridges visual perception and
 natural language comprehension. By connecting a high-resolution visual encoder
@@ -56,14 +56,14 @@ query tokens ensures high-throughput text generation without quadratic context
 explosion.</p>
 </section>
 
-<section id="2-visual-feature-encoding">
+<section id="sec-2-visual-feature-encoding">
 <h2>2. Visual Feature Encoding</h2>
 <p>Input images are split into $14 \times 14$ patches, projected through a
 Transformer encoder to produce visual tokens $V \in \mathbb{R}^{N \times D_v}$
 capturing structural geometry and semantic composition.</p>
 </section>
 
-<section id="3-perceiver-resampler--token-condensation">
+<section id="sec-3-perceiver-resampler--token-condensation">
 <h2>3. Perceiver Resampler &amp; Token Condensation</h2>
 <p>To eliminate excessive token overhead in the causal language decoder, a
 Perceiver Resampler projects $K = 64$ learned query tokens $Q$ across visual
@@ -73,48 +73,48 @@ features $V$ via cross-attention:</p>
 embedding sequence.</p>
 </section>
 
-<section id="4-autoregressive-language-decoder">
+<section id="sec-4-autoregressive-language-decoder">
 <h2>4. Autoregressive Language Decoder</h2>
 <p>The language decoder processes interleaved text tokens and visual prompt tokens
 via causal self-attention, generating response tokens step-by-step.</p>
 </section>
 
-<section id="5-cross-entropy-generation-objective">
+<section id="sec-5-cross-entropy-generation-objective">
 <h2>5. Cross-Entropy Generation Objective</h2>
 <div class="math-block">$$\mathcal{L}_{\text{VLM}} = -\sum_{t=1}^T \log P_\theta(w_t \mid w_{\lt t}, Z)$$</div>
 </section>
 
-<section id="6-multimodal-benchmarks--targets">
+<section id="sec-6-multimodal-benchmarks--targets">
 <h2>6. Multimodal Benchmarks &amp; Targets</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">Benchmark Task</th>
-<th style="text-align:left">Target Score</th>
-<th style="text-align:left">Evaluation Corpus</th>
+<th>Benchmark Task</th>
+<th>Target Score</th>
+<th>Evaluation Corpus</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">Visual Question Answering</td>
-<td style="text-align:left">$\ge 76.5\%$</td>
-<td style="text-align:left">VQAv2</td>
+<td>Visual Question Answering</td>
+<td>$\ge 76.5\%$</td>
+<td>VQAv2</td>
 </tr>
 <tr>
-<td style="text-align:left">Detailed Image Captioning</td>
-<td style="text-align:left">$\ge 124.0$ CIDEr</td>
-<td style="text-align:left">COCO Captions</td>
+<td>Detailed Image Captioning</td>
+<td>$\ge 124.0$ CIDEr</td>
+<td>COCO Captions</td>
 </tr>
 <tr>
-<td style="text-align:left">Defect Diagnostic Precision</td>
-<td style="text-align:left">$\ge 88.2\%$</td>
-<td style="text-align:left">LemGendary Restoration Audit</td>
+<td>Defect Diagnostic Precision</td>
+<td>$\ge 88.2\%$</td>
+<td>LemGendary Restoration Audit</td>
 </tr>
 </tbody>
 </table>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>The Vision-Language Architecture powers automated image metadata curation and
 intelligent diagnostic reporting.</p>

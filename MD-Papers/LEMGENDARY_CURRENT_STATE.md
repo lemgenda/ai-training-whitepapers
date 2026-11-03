@@ -9,7 +9,7 @@ Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.68-STABLE` · **Status**: Canonical ·
-**Last audited**: 2026-11-03
+**Last audited**: 2026-11-04
 
 ---
 
@@ -46,7 +46,7 @@ Current capabilities:
 
 - **Tripartite Services**: Three decoupled FastAPI sidecars with HTTP REST and
   live WebSocket channels (ports 8000, 8100, 8200), each bound to `127.0.0.1`
-  and described by its own OpenAPI 3.1.0 `openapi.json` (32, 38 and 40
+  and described by its own OpenAPI 3.1.0 `openapi.json` (33, 37 and 40
   operations).
 - **Shared Security Contract**: Every sidecar runs the same Origin Guard.
   Browser requests from origins other than the LemGendary AI Studio GUI
@@ -55,7 +55,7 @@ Current capabilities:
   state-changing browser requests must send the Client Header
   `X-LemGendary-Client: ai-studio-gui`. `GET /api/secrets` returns only whether
   each secret is set and its last 4 characters.
-- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.36`), a
+- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.38`), a
   cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
   real Content Security Policy and one shared fetch wrapper for all sidecar
   calls.
@@ -94,7 +94,8 @@ Current capabilities:
   `-headless` counterparts) as mutually satisfying.
 - **Toolchain Modernization**: `mosaicml-streaming` is removed; **Lightning AI
   LitData** and **WebDataset** are the canonical streaming primitives.
-  **Ruff** (`>=0.9.0`) replaces Pylint and astroid.
+  **Ruff** (`>=0.9.0`) is the formatter and fast linter; Pylint runs as a
+  validation gate with each project's own `.pylintrc`.
 - **Physical MDS Transcoding**: 110.9 GB of legacy `.mds.zstd` shards were
   transcoded to WebDataset `.data` archives: `LemGendizedClassificationMaster`
   (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and
@@ -113,21 +114,21 @@ Current capabilities:
 Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.
 
-- **LemGendary Model Training Suite** (`v16.9.107-STABLE`): PyTorch training
+- **LemGendary Model Training Suite** (`v16.9.122-STABLE`): PyTorch training
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
   optional SWA, FID re-evaluation tool.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.64-STABLE`): shard synthesis,
+- **LemGendary Dataset Compiler Suite** (`v16.9.65-STABLE`): shard synthesis,
   WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
-- **LemGendary Environment Manager** (`v16.9.58-STABLE`): hardware probe,
+- **LemGendary Environment Manager** (`v16.9.60-STABLE`): hardware probe,
   virtual environments, compliance audits, bug report endpoint, ecosystem
   registry (`ecosystem.json`). Entrypoints: `lem-env` and
   `lemgendary_env_manager.ps1`.
-- **LemGendary AI Studio GUI** (`v2.10.36`): Tauri v2 desktop application and
+- **LemGendary AI Studio GUI** (`v2.10.38`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.80-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.81-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
@@ -136,9 +137,11 @@ repository is the source of the release version.
 - **Forex Predictor Specification** (`v2.7.1`): `PAPER_FOREX_PREDICTOR.md`.
 
 The package metadata matches the README releases: the LemGendary Model
-Training Suite `pyproject.toml` and `training/server/app.py` report `16.9.107`
-(one version since v16.9.69), and the LemGendary Dataset Compiler Suite
-`core/cli_args.py` reports `16.9.64` (one version string since v16.9.52).
+Training Suite writes its version only in `pyproject.toml` (`16.9.122`);
+`training/version.py` reads it for the CLI, the sidecar, the health route and
+`openapi.json`, and `config.yaml` has no version key (since v16.9.122). The
+LemGendary Dataset Compiler Suite `core/cli_args.py` reports `16.9.65` (one
+version string since v16.9.52).
 
 ---
 
@@ -176,7 +179,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.80-STABLE`.
+together and share the document baseline `v16.9.81-STABLE`.
 
 ---
 
@@ -364,8 +367,11 @@ $$
 The codebase follows the zero-suppression rules of `ROBOTS.md` across all
 languages:
 
-- **Python**: no `# type: ignore`, `# noqa` or `# pylint: disable` directives
-  and no programmatic `warnings.filterwarnings` suppressions.
+- **Python**: no `# type: ignore` or `# noqa` directives and no programmatic
+  `warnings.filterwarnings` suppressions. The only `# pylint: disable`
+  directives are seven inline `too-many-arguments` in the LemGendary Model
+  Training Suite (CLI commands with one parameter per option and model
+  constructors); its `.pylintrc` has no disables.
 - **TypeScript & JavaScript**: no `@ts-ignore`, `@ts-expect-error` or
   `/* eslint-disable */` directives and no configuration diagnostic
   suppressions (`warnOnUnsupportedTypeScriptVersion: false` is banned).

@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.58`, Dataset Compiler Suite `v16.9.64`, Model Training Suite
-`v16.9.107`, AI Studio GUI `v2.10.36` · **Last Reviewed / Verified**: 2026-11-03
+Manager `v16.9.60`, Dataset Compiler Suite `v16.9.65`, Model Training Suite
+`v16.9.122`, AI Studio GUI `v2.10.38` · **Last Reviewed / Verified**: 2026-11-04
 · **Status**: Canonical
 
 ---
@@ -183,10 +183,11 @@ value is written anywhere else.
    completion (`success`, `warning`, or `error`).
 2. **Toolchain & Env**: `pyproject.toml` declares Python `>=3.12`, matching
    the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
-   zero-emoji and zero-suppression rules. Linting via Ruff (`>=0.9.0`); a
-   `.pylintrc` is still present. OpenCV variant equivalence in the health
-   auditor. Driver-aware CUDA index selection (`select_cuda_torch_index()`). The
-   central `requirements/` files are the manifest single source of truth.
+   zero-emoji and zero-suppression rules. Linting via Ruff (`>=0.9.0`) and the
+   Pylint gate with each project's `.pylintrc`. OpenCV variant equivalence in
+   the health auditor. Driver-aware CUDA index selection
+   (`select_cuda_torch_index()`). The central `requirements/` files are the
+   manifest single source of truth.
 3. **Data Compiler**: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
    formats WebDataset (`.data`/`.tar`), LitData (`.bin`), Parquet and
    Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to

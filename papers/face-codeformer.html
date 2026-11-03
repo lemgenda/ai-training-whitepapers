@@ -33,20 +33,20 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#11-what-codeformer-does-in-plain-english">1.1 What CodeFormer Does (In Plain English)</a></li>
-<li><a href="#2-visual-taxonomy-discrete-codebook-prior">2. Visual Taxonomy: Discrete Codebook Prior</a></li>
-<li><a href="#3-shared-foundations-multi-objective-optimization">3. Shared Foundations: Multi-Objective Optimization</a></li>
-<li><a href="#4-model-deep-dives">4. Model Deep-Dives</a></li>
-<li><a href="#5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
-<li><a href="#6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
-<li><a href="#7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#8-conclusion">8. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-codeformer-does-in-plain-english">1.1 What CodeFormer Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-discrete-codebook-prior">2. Visual Taxonomy: Discrete Codebook Prior</a></li>
+<li><a href="#sec-3-shared-foundations-multi-objective-optimization">3. Shared Foundations: Multi-Objective Optimization</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p><strong>CodeFormer</strong> is a robust blind face restoration algorithm that models
 high-quality facial representations through a discrete <strong>Vector-Quantized (VQ)
@@ -58,7 +58,7 @@ $\alpha \in [0, 1]$ allows operators to dynamically balance identity fidelity
 against perceptual photo-realism.</p>
 </section>
 
-<section id="11-what-codeformer-does-in-plain-english">
+<section id="sec-11-what-codeformer-does-in-plain-english">
 <h2>1.1 What CodeFormer Does (In Plain English)</h2>
 <p>Imagine taking an old, scratched, blurry photograph of a loved one from decades
 ago. Traditional photo programs either blur the face even more or create
@@ -102,7 +102,7 @@ stabilization.</p>
 <p><img src="../assets/codeformer_training.png" alt="CodeFormer Training Metrics Curve"></p>
 </section>
 
-<section id="2-visual-taxonomy-discrete-codebook-prior">
+<section id="sec-2-visual-taxonomy-discrete-codebook-prior">
 <h2>2. Visual Taxonomy: Discrete Codebook Prior</h2>
 <p>The codebook $\mathcal{C} = \{c_k\}_{k=1}^K \subset \mathbb{R}^d$ consists of
 $K = 1024$ learned discrete code vectors capturing high-frequency eye, skin, and
@@ -116,7 +116,7 @@ governing intermediate feature fusion:</p>
 when $\alpha = 0.0$, perceptual enhancement and de-noising are maximized.</p>
 </section>
 
-<section id="3-shared-foundations-multi-objective-optimization">
+<section id="sec-3-shared-foundations-multi-objective-optimization">
 <h2>3. Shared Foundations: Multi-Objective Optimization</h2>
 <p>Training unites spatial fidelity, perceptual likeness, codebook commitment, and
 adversarial discrimination:</p>
@@ -126,28 +126,28 @@ commitment loss prevents code vector explosion, ensuring mathematically bounded
 gradient propagation across Transformer layers.</p>
 </section>
 
-<section id="4-model-deep-dives">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
 <h3 id="codeformer-discrete-codebook-face-restoration-engine">CodeFormer Discrete Codebook Face Restoration Engine</h3>
-<h4 id="41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
 <p>The LemGendary CodeFormer utilizes a pre-trained discrete codebook prior coupled
 with a 9-layer contextual Transformer to reconstruct high-fidelity facial
 details, pupils, and skin textures from severely degraded portraits without
 continuous hallucination drift.</p>
-<h4 id="42-model-info">4.2 Model Info</h4>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
 <ul>
 <li><strong>Architecture</strong>: CodeFormer (VQ-Codebook Prior + 9-Layer Contextual Transformer)</li>
 <li><strong>Input Resolution</strong>: 512x512</li>
 <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
 <li><strong>Latency</strong>: 41.2ms inference on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
 </ul>
-<h4 id="43-manifold-info">4.3 Manifold Info</h4>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
 <ul>
 <li><strong>Dataset</strong>: <code>LemGendizedCodeFormerLarge</code></li>
 <li><strong>Total Samples</strong>: 22,000 high-resolution paired portraits</li>
 <li><strong>Primary Task</strong>: Discrete codebook feature lookup and controllable identity restoration</li>
 </ul>
-<h4 id="44-performance-metrics">4.4 Performance Metrics</h4>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
 <ul>
 <li><strong>Current Training Epochs</strong>: 45 <code>[CURRENT]</code></li>
 <li><strong>Best LPIPS</strong>: 0.315 <code>[MEASURED]</code> (Target: $\le 0.300$ <code>[TARGET]</code>)</li>
@@ -158,7 +158,7 @@ continuous hallucination drift.</p>
 </ul>
 </section>
 
-<section id="5-challenges--resilience-architecture">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
 <p>Severe blind face restoration presents complex edge cases:</p>
 <ul>
@@ -180,7 +180,7 @@ codebook against realistic heteroscedastic noise distributions.</li>
 </ul>
 </section>
 
-<section id="6-deployment-strategy--production-acceleration">
+<section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <p>CodeFormer implements the LemGendary Tri-Format Export Standard upon reaching
 new <code>best.pth</code> milestones:</p>
@@ -197,7 +197,7 @@ milestone target archiving (<code>vault_lpips.pth</code>).</li>
 </ul>
 </section>
 
-<section id="7-sota-architectural-performance-matrix">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong>GFPGAN v1.4</strong>: LPIPS (Lower is better): 0.362; Identity Sim (CSIM): 0.742;
@@ -213,7 +213,7 @@ Verification: <strong>Target <code>[TARGET]</code></strong></li>
 </ul>
 </section>
 
-<section id="8-conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
 <p>CodeFormer provides robust blind face restoration by grounding generative
 feature synthesis in discrete geometric priors. The architecture effectively

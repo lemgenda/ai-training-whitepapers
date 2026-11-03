@@ -772,7 +772,7 @@ Example response:
 {
   "service": {
     "name": "lemgendary-env-manager",
-    "version": "2.0.0",
+    "version": "16.9.60",
     "port": 8000,
     "status": "online"
   },
@@ -1408,7 +1408,7 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
     "display_name": "NAFNet Deblurring (GoPro)",
     "architecture": "NAFNet (Nonlinear Activation Free)",
     "task_type": "restoration",
-    "parameters_m": 16.9,
+    "parameters_m": 17.1,
     "spatial_ladder": [256, 384, 512],
     "ladder_type": "spatial",
     "is_forex": false,
@@ -1487,6 +1487,11 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
 - `data_fraction_completed`: Floating-point fraction of training data manifold
   completed ($0.0$ to $1.0$).
 - `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
+- `parameters_m`, `best_metric`, `sota_target`: measured or registered values
+  only, else `null` (training v16.9.122). `parameters_m` comes from
+  `unified_models_v2.yaml` and is `null` for a model without a count;
+  `best_metric` is `null` until a value is measured; `best_metric` and
+  `sota_target` may also be strings.
 
 - `POST /api/gui/quick-train`: Accepts
   `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300,

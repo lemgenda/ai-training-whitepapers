@@ -71,6 +71,7 @@ class Workspace:
 
     @cached_property
     def ecosystem(self) -> dict[str, Any]:
+        """The parsed ``ecosystem.json`` of the LemGendary Environment Manager."""
         path = self._require(ECOSYSTEM_PATH)
         data = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(data, dict) or not isinstance(data.get("services"), list):
@@ -86,6 +87,7 @@ class Workspace:
         }
 
     def service(self, service_id: str) -> Service:
+        """The service ``service_id``; ``WorkspaceError`` when it is not listed."""
         try:
             return self.services[service_id]
         except KeyError as exc:
@@ -95,6 +97,7 @@ class Workspace:
 
     @property
     def training_registry_path(self) -> Path:
+        """Workspace-relative path of ``unified_models_v2.yaml``."""
         return Path(self.service(TRAINING_SERVICE_ID).project) / TRAINING_REGISTRY_FILE
 
     @cached_property

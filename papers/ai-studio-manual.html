@@ -20,8 +20,8 @@
 <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
 <p class="subtitle">Category 03 | LemGendary AI Documentation Hub | Master Operations Manual</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.36</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
 <span><strong>Sidecars</strong>: LemGendary Environment Manager (port 8000), LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite (port 8200); each keeps its own <code>v16.x</code> release line</span>
 <span><strong>Parent Authority</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
 <span><a href="versioning-policy.html">Document Authority Hierarchy &amp; Versioning Policy</a></span>
@@ -35,133 +35,133 @@
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 <li><a href="ai-studio-whitepaper.html" class="toc-link-secondary">Architectural Whitepaper</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-interface-topology--visual-navigation-matrix">2. Interface Topology &amp; Visual Navigation
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-interface-topology--visual-navigation-matrix">2. Interface Topology &amp; Visual Navigation
 Matrix</a>
 <ul class="sub-item">
-<li><a href="#21-workspace-global-shell-elements--numbered-navigation-guide">2.1 Workspace Global Shell Elements &amp; Numbered Navigation
+<li><a href="#sec-21-workspace-global-shell-elements--numbered-navigation-guide">2.1 Workspace Global Shell Elements &amp; Numbered Navigation
 Guide</a></li>
-<li><a href="#22-tripartite-sidecar-process-control--auto-start">2.2 Tripartite Sidecar Process Control &amp;
+<li><a href="#sec-22-tripartite-sidecar-process-control--auto-start">2.2 Tripartite Sidecar Process Control &amp;
 Auto-Start</a></li>
-<li><a href="#23-centralized-state-zustand--modular-micro-components">2.3 Centralized State (Zustand) &amp; Modular
+<li><a href="#sec-23-centralized-state-zustand--modular-micro-components">2.3 Centralized State (Zustand) &amp; Modular
 Micro-Components</a></li>
 </ul>
 </li>
-<li><a href="#3-universal-configuration--secrets-vault">3. Universal Configuration &amp; Secrets
+<li><a href="#sec-3-universal-configuration--secrets-vault">3. Universal Configuration &amp; Secrets
 Vault</a>
 <ul class="sub-item">
-<li><a href="#31-central-manifest-registry-editor">3.1 Central Manifest Registry Editor</a></li>
-<li><a href="#32-write-only-secrets--cloud-tokens">3.2 Write-Only Secrets &amp; Cloud
+<li><a href="#sec-31-central-manifest-registry-editor">3.1 Central Manifest Registry Editor</a></li>
+<li><a href="#sec-32-write-only-secrets--cloud-tokens">3.2 Write-Only Secrets &amp; Cloud
 Tokens</a></li>
-<li><a href="#33-tests--diagnostics">3.3 Tests &amp; Diagnostics</a></li>
+<li><a href="#sec-33-tests--diagnostics">3.3 Tests &amp; Diagnostics</a></li>
 </ul>
 </li>
-<li><a href="#4-one-click-environment-setup-the-7-stage-clean-install-pipeline">4. One-Click Environment Setup: The 7-Stage Clean Install
+<li><a href="#sec-4-one-click-environment-setup-the-7-stage-clean-install-pipeline">4. One-Click Environment Setup: The 7-Stage Clean Install
 Pipeline</a>
 <ul class="sub-item">
-<li><a href="#41-pipeline-orchestrator-control-card">4.1 Pipeline Orchestrator Control
+<li><a href="#sec-41-pipeline-orchestrator-control-card">4.1 Pipeline Orchestrator Control
 Card</a></li>
-<li><a href="#42-individual-pipeline-step-execution-cards">4.2 Individual Pipeline Step Execution
+<li><a href="#sec-42-individual-pipeline-step-execution-cards">4.2 Individual Pipeline Step Execution
 Cards</a></li>
-<li><a href="#43-hardware-acceleration-sentinel-card">4.3 Hardware Acceleration Sentinel
+<li><a href="#sec-43-hardware-acceleration-sentinel-card">4.3 Hardware Acceleration Sentinel
 Card</a></li>
-<li><a href="#44-managed-workspace-projects-health-cards">4.4 Managed Workspace Projects Health
+<li><a href="#sec-44-managed-workspace-projects-health-cards">4.4 Managed Workspace Projects Health
 Cards</a></li>
 </ul>
 </li>
-<li><a href="#5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds">5. Dataset Compilation: Modernization, Kaggle Ingestion &amp; Streaming
+<li><a href="#sec-5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds">5. Dataset Compilation: Modernization, Kaggle Ingestion &amp; Streaming
 Manifolds</a>
 <ul class="sub-item">
-<li><a href="#51-dataset-compiler--modernization-control-card">5.1 Dataset Compiler &amp; Modernization Control
+<li><a href="#sec-51-dataset-compiler--modernization-control-card">5.1 Dataset Compiler &amp; Modernization Control
 Card</a></li>
-<li><a href="#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync">5.2 Production Manifolds Catalog, Upstream Lineage &amp; One-Click Cloud
+<li><a href="#sec-52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync">5.2 Production Manifolds Catalog, Upstream Lineage &amp; One-Click Cloud
 Sync</a></li>
-<li><a href="#53-modernization-queue--scale-reduction-workflows">5.3 Modernization Queue &amp; Scale Reduction
+<li><a href="#sec-53-modernization-queue--scale-reduction-workflows">5.3 Modernization Queue &amp; Scale Reduction
 Workflows</a></li>
-<li><a href="#54-embedded-dataset-telemetry-console">5.4 Embedded Dataset Telemetry
+<li><a href="#sec-54-embedded-dataset-telemetry-console">5.4 Embedded Dataset Telemetry
 Console</a></li>
 </ul>
 </li>
-<li><a href="#6-model-training-pipeline-architectures-ladders--sawtooth-governor">6. Model Training Pipeline: Architectures, Ladders &amp; Sawtooth
+<li><a href="#sec-6-model-training-pipeline-architectures-ladders--sawtooth-governor">6. Model Training Pipeline: Architectures, Ladders &amp; Sawtooth
 Governor</a>
 <ul class="sub-item">
-<li><a href="#61-model-training-suite--model-orchestration-toolbar">6.1 Model Training Suite &amp; Model Orchestration
+<li><a href="#sec-61-model-training-suite--model-orchestration-toolbar">6.1 Model Training Suite &amp; Model Orchestration
 Toolbar</a></li>
-<li><a href="#62-registered-architectures--checkpoint-telemetry-grid">6.2 Registered Architectures &amp; Checkpoint Telemetry
+<li><a href="#sec-62-registered-architectures--checkpoint-telemetry-grid">6.2 Registered Architectures &amp; Checkpoint Telemetry
 Grid</a></li>
-<li><a href="#621-domain-specific-neural-architecture-model-cards">6.2.1 Domain-Specific Neural Architecture Model
+<li><a href="#sec-621-domain-specific-neural-architecture-model-cards">6.2.1 Domain-Specific Neural Architecture Model
 Cards</a></li>
-<li><a href="#622-interactive-sota-target-pinning--metric-inspection">6.2.2 Interactive SOTA Target Pinning &amp; Metric
+<li><a href="#sec-622-interactive-sota-target-pinning--metric-inspection">6.2.2 Interactive SOTA Target Pinning &amp; Metric
 Inspection</a></li>
-<li><a href="#63-three-tab-real-time-telemetry-stream--responsive-cancellation">6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive
+<li><a href="#sec-63-three-tab-real-time-telemetry-stream--responsive-cancellation">6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive
 Cancellation</a></li>
-<li><a href="#64-revamped-training-dashboard-topology--interactive-sota-inspection">6.4 Revamped Training Dashboard Topology &amp; Interactive SOTA
+<li><a href="#sec-64-revamped-training-dashboard-topology--interactive-sota-inspection">6.4 Revamped Training Dashboard Topology &amp; Interactive SOTA
 Inspection</a></li>
 </ul>
 </li>
-<li><a href="#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive">7. Evaluation, Export &amp; Cloud Publishing to Kaggle and Google
+<li><a href="#sec-7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive">7. Evaluation, Export &amp; Cloud Publishing to Kaggle and Google
 Drive</a>
 <ul class="sub-item">
-<li><a href="#71-real-time-metrics--live-loss-curves">7.1 Real-Time Metrics &amp; Live Loss
+<li><a href="#sec-71-real-time-metrics--live-loss-curves">7.1 Real-Time Metrics &amp; Live Loss
 Curves</a></li>
-<li><a href="#72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</a></li>
-<li><a href="#73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud
+<li><a href="#sec-72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</a></li>
+<li><a href="#sec-73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud
 Registry</a></li>
 </ul>
 </li>
-<li><a href="#8-health-matrix--cross-project-version-drift-analytics">8. Health Matrix &amp; Cross-Project Version Drift
+<li><a href="#sec-8-health-matrix--cross-project-version-drift-analytics">8. Health Matrix &amp; Cross-Project Version Drift
 Analytics</a>
 <ul class="sub-item">
-<li><a href="#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages">8.1 Toolchain Prerequisites, Python Drift Matrix &amp; Desktop GUI NPM
+<li><a href="#sec-81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages">8.1 Toolchain Prerequisites, Python Drift Matrix &amp; Desktop GUI NPM
 Packages</a></li>
-<li><a href="#82-ecosystem-maintenance--governance-controls">8.2 Ecosystem Maintenance &amp; Governance
+<li><a href="#sec-82-ecosystem-maintenance--governance-controls">8.2 Ecosystem Maintenance &amp; Governance
 Controls</a></li>
 </ul>
 </li>
-<li><a href="#9-contextual-ux-help--interactive-hover-guidance-system">9. Contextual UX Help &amp; Interactive Hover Guidance
+<li><a href="#sec-9-contextual-ux-help--interactive-hover-guidance-system">9. Contextual UX Help &amp; Interactive Hover Guidance
 System</a>
 <ul class="sub-item">
-<li><a href="#91-interactive-hover-popovers--safety-diagnostics">9.1 Interactive Hover Popovers &amp; Safety
+<li><a href="#sec-91-interactive-hover-popovers--safety-diagnostics">9.1 Interactive Hover Popovers &amp; Safety
 Diagnostics</a></li>
 </ul>
 </li>
-<li><a href="#10-permanent-offline-documentation-hub--online-synchronization">10. Permanent Offline Documentation Hub &amp; Online
+<li><a href="#sec-10-permanent-offline-documentation-hub--online-synchronization">10. Permanent Offline Documentation Hub &amp; Online
 Synchronization</a>
 <ul class="sub-item">
-<li><a href="#101-local-static-offline-documentation-server">10.1 Local Static Offline Documentation
+<li><a href="#sec-101-local-static-offline-documentation-server">10.1 Local Static Offline Documentation
 Server</a></li>
-<li><a href="#102-live-github-pages-online-synchronization">10.2 Live GitHub Pages Online
+<li><a href="#sec-102-live-github-pages-online-synchronization">10.2 Live GitHub Pages Online
 Synchronization</a></li>
 </ul>
 </li>
-<li><a href="#11-tripartite-multi-sidecar-network-architecture">11. Tripartite Multi-Sidecar Network
+<li><a href="#sec-11-tripartite-multi-sidecar-network-architecture">11. Tripartite Multi-Sidecar Network
 Architecture</a>
 <ul class="sub-item">
-<li><a href="#111-dynamic-configuration--environment-overrides">11.1 Dynamic Configuration &amp; Environment
+<li><a href="#sec-111-dynamic-configuration--environment-overrides">11.1 Dynamic Configuration &amp; Environment
 Overrides</a></li>
-<li><a href="#112-semantic-origin-routing--telemetry-stream-governance">11.2 Semantic Origin Routing &amp; Telemetry Stream
+<li><a href="#sec-112-semantic-origin-routing--telemetry-stream-governance">11.2 Semantic Origin Routing &amp; Telemetry Stream
 Governance</a></li>
-<li><a href="#113-typed-api-client-contracts-srcapiclientts">11.3 Typed API Client Contracts
+<li><a href="#sec-113-typed-api-client-contracts-srcapiclientts">11.3 Typed API Client Contracts
 (src/api/client.ts)</a></li>
 </ul>
 </li>
-<li><a href="#12-automated-testing--ecosystem-quality-assurance">12. Automated Testing &amp; Ecosystem Quality
+<li><a href="#sec-12-automated-testing--ecosystem-quality-assurance">12. Automated Testing &amp; Ecosystem Quality
 Assurance</a></li>
-<li><a href="#13-reporting-an-issue">13. Reporting an Issue</a>
+<li><a href="#sec-13-reporting-an-issue">13. Reporting an Issue</a>
 <ul class="sub-item">
-<li><a href="#131-opening-the-report-issue-form">13.1 Opening the Report Issue Form</a></li>
-<li><a href="#132-screenshots--annotation">13.2 Screenshots &amp; Annotation</a></li>
-<li><a href="#133-telemetry">13.3 Telemetry</a></li>
-<li><a href="#134-sending--the-local-zip-report">13.4 Sending &amp; the Local ZIP Report</a></li>
-<li><a href="#135-when-sending-fails">13.5 When Sending Fails</a></li>
-<li><a href="#136-screen-recording">13.6 Screen Recording</a></li>
+<li><a href="#sec-131-opening-the-report-issue-form">13.1 Opening the Report Issue Form</a></li>
+<li><a href="#sec-132-screenshots--annotation">13.2 Screenshots &amp; Annotation</a></li>
+<li><a href="#sec-133-telemetry">13.3 Telemetry</a></li>
+<li><a href="#sec-134-sending--the-local-zip-report">13.4 Sending &amp; the Local ZIP Report</a></li>
+<li><a href="#sec-135-when-sending-fails">13.5 When Sending Fails</a></li>
+<li><a href="#sec-136-screen-recording">13.6 Screen Recording</a></li>
 </ul>
 </li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>LemGendary AI Studio GUI</strong> is a hardware-aware command center engineered
 to make deep learning dataset synthesis, neural network training, and cloud
@@ -199,14 +199,14 @@ control does, what files are affected, and what safeguards are active.</li>
 Flowchart"></p>
 </section>
 
-<section id="2-interface-topology--visual-navigation-matrix">
+<section id="sec-2-interface-topology--visual-navigation-matrix">
 <h2>2. Interface Topology &amp; Visual Navigation Matrix</h2>
 <p>The AI Studio interface is organized into persistent visual regions designed for
 ergonomic operation. Every element, card, and control in the live interface is
 indexed below with corresponding operational workflows and safety boundaries.</p>
 <p><img src="../assets/gui/gui_shell_header_sidebar.png" alt="LemGendary AI Studio GUI Global
 Shell"></p>
-<h3 id="21-workspace-global-shell-elements--numbered-navigation-guide">2.1 Workspace Global Shell Elements &amp; Numbered Navigation Guide</h3>
+<h3 id="sec-21-workspace-global-shell-elements--numbered-navigation-guide">2.1 Workspace Global Shell Elements &amp; Numbered Navigation Guide</h3>
 <p>The live screen capture above displays the complete primary application frame
 including header, persistent sidebar navigation, active dashboard viewport, and
 the sticky status footer:</p>
@@ -282,7 +282,7 @@ sidecar's connection state.</li>
 <p><strong>Tip:</strong> <strong>New in this release</strong>: the Report Issue and Tests &amp; Diagnostics buttons sit
 next to Config &amp; Secrets in the header. The screenshot above predates them.</p>
 </blockquote>
-<h3 id="22-tripartite-sidecar-process-control--auto-start">2.2 Tripartite Sidecar Process Control &amp; Auto-Start</h3>
+<h3 id="sec-22-tripartite-sidecar-process-control--auto-start">2.2 Tripartite Sidecar Process Control &amp; Auto-Start</h3>
 <p>The Ecosystem Sidecar Services grid permanently monitors and coordinates the
 three local microservices:</p>
 <ul>
@@ -329,7 +329,7 @@ Non-destructive pipeline run (<code>clean: false</code>).</li>
 <li><strong>5. Start / Stop Service</strong> (Action Button; <code>POST /api/services/{id}/start</code> or
 <code>/stop</code>): Starts or stops one sidecar.</li>
 </ul>
-<h3 id="23-centralized-state-zustand--modular-micro-components">2.3 Centralized State (Zustand) &amp; Modular Micro-Components</h3>
+<h3 id="sec-23-centralized-state-zustand--modular-micro-components">2.3 Centralized State (Zustand) &amp; Modular Micro-Components</h3>
 <p>To ensure instantaneous UI responsiveness, eliminate prop drilling, and prevent
 race conditions when streaming high-frequency training metrics, the application
 state is governed by a unified Single Source of Truth (SSOT) Zustand store
@@ -376,13 +376,13 @@ fallback for sandboxed webviews.</li>
 </ol>
 </section>
 
-<section id="3-universal-configuration--secrets-vault">
+<section id="sec-3-universal-configuration--secrets-vault">
 <h2>3. Universal Configuration &amp; Secrets Vault</h2>
 <p>Deep learning workflows require interacting with external registries, storage
 backends, and cloud repositories. The LemGendary AI Studio GUI integrates a
 Universal Configuration &amp; Secrets Vault modal, opened with the
 <code>Config &amp; Secrets</code> header button.</p>
-<h3 id="31-central-manifest-registry-editor">3.1 Central Manifest Registry Editor</h3>
+<h3 id="sec-31-central-manifest-registry-editor">3.1 Central Manifest Registry Editor</h3>
 <p><img src="../assets/gui/gui_config_secrets_modal.png" alt="Universal Dynamic Config &amp; Manifest
 Editor"></p>
 <h4 id="manifest-registry-editor-numbered-reference">Manifest Registry Editor Numbered Reference</h4>
@@ -433,7 +433,7 @@ monospaced indentation.</li>
 <li><strong>10. Modal Close</strong> (Action Button; None): Closes the dialog without saving
 unsaved text.</li>
 </ul>
-<h3 id="32-write-only-secrets--cloud-tokens">3.2 Write-Only Secrets &amp; Cloud Tokens</h3>
+<h3 id="sec-32-write-only-secrets--cloud-tokens">3.2 Write-Only Secrets &amp; Cloud Tokens</h3>
 <p>Secrets are write-only from the GUI. The Environment Manager never sends a
 stored value back: <code>GET /api/secrets</code> returns for each credential only whether
 it is set (<code>has_value</code>) and its last 4 characters (<code>value_hint</code>). Each
@@ -501,7 +501,7 @@ back.</li>
 <li><strong>10. Add Secret Submit</strong> (Primary Button; None until save): Adds the
 credential to the list.</li>
 </ul>
-<h3 id="33-tests--diagnostics">3.3 Tests &amp; Diagnostics</h3>
+<h3 id="sec-33-tests--diagnostics">3.3 Tests &amp; Diagnostics</h3>
 <p>The &quot;Tests &amp; Diagnostics&quot; header button (<code>header-btn-test-modal</code>) opens the Test
 &amp; Diagnostic Orchestrator. Pick a tab, then click its run button; results appear
 in the output console (<code>test-modal-output-console</code>). Escape or the X button
@@ -523,13 +523,13 @@ works with the addresses set by the <code>VITE_*_URL</code> variables. A sidecar
 offline produces an error message in the console instead of a crash.</p>
 </section>
 
-<section id="4-one-click-environment-setup-the-7-stage-clean-install-pipeline">
+<section id="sec-4-one-click-environment-setup-the-7-stage-clean-install-pipeline">
 <h2>4. One-Click Environment Setup: The 7-Stage Clean Install Pipeline</h2>
 <p>Before training an AI model, your computer must have the correct software
 libraries installed. Traditionally, this required typing dozens of cryptic
 terminal commands. The AI Studio eliminates this completely through the
 automated 7-Stage Clean Install Pipeline.</p>
-<h3 id="41-pipeline-orchestrator-control-card">4.1 Pipeline Orchestrator Control Card</h3>
+<h3 id="sec-41-pipeline-orchestrator-control-card">4.1 Pipeline Orchestrator Control Card</h3>
 <p><img src="../assets/gui/gui_pipeline_card.png" alt="Smart Clean Install Pipeline Orchestrator
 Card"></p>
 <h4 id="clean-install-pipeline-numbered-reference">Clean Install Pipeline Numbered Reference</h4>
@@ -598,7 +598,7 @@ assuring operators of active execution.</li>
 <li><strong>Card-Level Progress Indicators</strong>: Each running step card in the 7-stage grid
 displays an animated progress bar along its bottom edge while executing.</li>
 </ul>
-<h3 id="42-individual-pipeline-step-execution-cards">4.2 Individual Pipeline Step Execution Cards</h3>
+<h3 id="sec-42-individual-pipeline-step-execution-cards">4.2 Individual Pipeline Step Execution Cards</h3>
 <p>In addition to running the full automated sequence, operators can execute
 individual stages in isolation for granular troubleshooting, inspection, and
 rapid re-verification:</p>
@@ -679,7 +679,7 @@ certification stage.</li>
 <li><strong>14. Stage 7 Run Step</strong> (Action Button; <code>run-step</code> 7): Generates complete
 ecosystem health report and certifies status.</li>
 </ul>
-<h3 id="43-hardware-acceleration-sentinel-card">4.3 Hardware Acceleration Sentinel Card</h3>
+<h3 id="sec-43-hardware-acceleration-sentinel-card">4.3 Hardware Acceleration Sentinel Card</h3>
 <p>The Hardware Acceleration Sentinel Card is permanently visible on the central
 Dashboard, delivering an un-truncated live readout of physical compute
 capabilities:</p>
@@ -723,7 +723,7 @@ Official PyTorch binary wheel repository URL.</li>
 <li><strong>7. Detected Accelerators &amp; VRAM</strong> (Device Metric Row; NVML / CUDA probe):
 Details physical GPU model, driver level, and dedicated VRAM.</li>
 </ul>
-<h3 id="44-managed-workspace-projects-health-cards">4.4 Managed Workspace Projects Health Cards</h3>
+<h3 id="sec-44-managed-workspace-projects-health-cards">4.4 Managed Workspace Projects Health Cards</h3>
 <p>The Project Environments overview on the Dashboard displays dedicated cards for
 each sub-project in the ecosystem. All cards display clean relative paths
 without exposing sensitive host absolute paths:</p>
@@ -756,14 +756,14 @@ reconciles missing wheels for selected project.</li>
 </ul>
 </section>
 
-<section id="5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds">
+<section id="sec-5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds">
 <h2>5. Dataset Compilation: Modernization, Kaggle Ingestion &amp; Streaming Manifolds</h2>
 <p>High-velocity deep learning requires converting raw, loose image files into
 modern streaming containers. Traditional loose-image folders cause OS filesystem
 freezes when training models on hundreds of thousands of images. The LemGendary
 Dataset Compiler Suite tab provides a complete visual control center for dataset
 synthesis, direct cloud ingestion, and bidirectional Kaggle synchronization.</p>
-<h3 id="51-dataset-compiler--modernization-control-card">5.1 Dataset Compiler &amp; Modernization Control Card</h3>
+<h3 id="sec-51-dataset-compiler--modernization-control-card">5.1 Dataset Compiler &amp; Modernization Control Card</h3>
 <p>The top card of the Dataset Compiler tab governs manifold synthesis and
 streaming storage conversion:</p>
 <p><img src="../assets/gui/gui_dataset_compiler.png" alt="Dataset Compiler &amp; Storage Modernization
@@ -807,7 +807,7 @@ presets plus &quot;Server default&quot;.</li>
 <li><strong>6. Compile Manifold</strong> (Primary Button; <code>POST /api/gui/quick-compile</code>):
 Starts the compile job and shows its id.</li>
 </ul>
-<h3 id="52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync">5.2 Production Manifolds Catalog, Upstream Lineage &amp; One-Click Cloud Sync</h3>
+<h3 id="sec-52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync">5.2 Production Manifolds Catalog, Upstream Lineage &amp; One-Click Cloud Sync</h3>
 <p>The Production Manifolds section catalogs all verified streaming datasets inside
 <code>./LemGendaryDatasets/</code>, providing instant access to upstream lineage and
 integrated card-level Kaggle synchronization:</p>
@@ -872,7 +872,7 @@ Displays upstream provenance, licensing, and raw data lineage.</li>
 <li><strong>7. Card Action Buttons</strong> (Button Group; <code>POST /api/kaggle/...</code>):
 Single-dataset metadata update, audit link, cloud download, and shard upload.</li>
 </ul>
-<h3 id="53-modernization-queue--scale-reduction-workflows">5.3 Modernization Queue &amp; Scale Reduction Workflows</h3>
+<h3 id="sec-53-modernization-queue--scale-reduction-workflows">5.3 Modernization Queue &amp; Scale Reduction Workflows</h3>
 <p>The additional sub-tabs in the Production Manifolds section provide advanced
 dataset operations:</p>
 <ol>
@@ -886,7 +886,7 @@ sample-reduced dataset variants for rapid experimentation (<code>10% Preview</co
 <code>25% Fast Test</code>, <code>50% Balanced</code>, <code>75% High Res</code>) using Lanczos-3 spatial
 downsampling.</li>
 </ol>
-<h3 id="54-embedded-dataset-telemetry-console">5.4 Embedded Dataset Telemetry Console</h3>
+<h3 id="sec-54-embedded-dataset-telemetry-console">5.4 Embedded Dataset Telemetry Console</h3>
 <p>The Dataset Compiler panel features a dedicated live streaming telemetry console
 docked directly at the bottom of the viewport. Integrated with the modern
 <code>@radix-ui/react-progress</code> engine (installed and governed via LemGendary
@@ -907,12 +907,12 @@ verification, and completion records.</li>
 </ol>
 </section>
 
-<section id="6-model-training-pipeline-architectures-ladders--sawtooth-governor">
+<section id="sec-6-model-training-pipeline-architectures-ladders--sawtooth-governor">
 <h2>6. Model Training Pipeline: Architectures, Ladders &amp; Sawtooth Governor</h2>
 <p>Once your dataset is compiled, you are ready to train a production-grade neural
 network. The LemGendary Model Training Suite (<code>.\lemgendary-training-suite\</code>)
 provides dynamic hyperparameter management and nuclear memory safeguards.</p>
-<h3 id="61-model-training-suite--model-orchestration-toolbar">6.1 Model Training Suite &amp; Model Orchestration Toolbar</h3>
+<h3 id="sec-61-model-training-suite--model-orchestration-toolbar">6.1 Model Training Suite &amp; Model Orchestration Toolbar</h3>
 <p>The top toolbar of the Model Training panel provides search, domain filtering
 and batch actions across all 23 registered models. The fleet-wide 1-epoch smoke
 test moved to the Test &amp; Diagnostic Orchestrator (section 3.3).</p>
@@ -968,7 +968,7 @@ Reloads weights status, metrics and ladder completion.</li>
 <p><strong>Note:</strong> The toolbar screenshot above predates this release and still shows the
 removed &quot;Unit Test All Models&quot; button.</p>
 </blockquote>
-<h3 id="62-registered-architectures--checkpoint-telemetry-grid">6.2 Registered Architectures &amp; Checkpoint Telemetry Grid</h3>
+<h3 id="sec-62-registered-architectures--checkpoint-telemetry-grid">6.2 Registered Architectures &amp; Checkpoint Telemetry Grid</h3>
 <p>Each registered model card provides comprehensive telemetry, binary export
 readiness, and interactive SOTA target inspection:</p>
 <p><img src="../assets/gui/gui_architecture_telemetry.png" alt="Registered Neural Architectures Telemetry
@@ -1053,7 +1053,8 @@ PyTorch, ONNX FP32, and ONNX FP16 artifact readiness.</li>
 <li><strong>4. Neural Architecture</strong> (Metric Row; Architecture SSOT): Details network
 topology and layer configuration.</li>
 <li><strong>5. Parameters</strong> (Metric Row; Architecture SSOT): Reports total trainable
-parameter count.</li>
+parameter count (<code>parameters_m</code> from the training registry); <code>N/A</code> when the
+registry has no count.</li>
 <li><strong>6. Task Category</strong> (Metric Row; Architecture SSOT): Identifies ML problem
 domain classification.</li>
 <li><strong>7. Completed Epochs</strong> (Metric Row; Checkpoint telemetry): Displays verified
@@ -1091,10 +1092,10 @@ manifests.</li>
 <li><strong>21. Stage Variations</strong> (Action Button; <code>POST /api/training/stage</code>): Stages
 binaries into isolated Kaggle variation subdirectories.</li>
 </ul>
-<h3 id="621-domain-specific-neural-architecture-model-cards">6.2.1 Domain-Specific Neural Architecture Model Cards</h3>
+<h3 id="sec-621-domain-specific-neural-architecture-model-cards">6.2.1 Domain-Specific Neural Architecture Model Cards</h3>
 <p>To provide precise guidance across distinct ML task categories, the AI Studio
 GUI renders domain-tailored card rows dynamically:</p>
-<h4 id="1-quantitative-finance-forex-card">1. Quantitative Finance (Forex) Card</h4>
+<h4 id="sec-1-quantitative-finance-forex-card">1. Quantitative Finance (Forex) Card</h4>
 <ul>
 <li><strong>Confluence Ladder</strong>: Displays multi-timeframe consensus progression
 (<code>Partial Confluence</code> or <code>Full Confluence (D1)</code> across M1, M5, M15, H1, H4,
@@ -1105,7 +1106,7 @@ fractions.</li>
 <li><strong>SOTA Convergence</strong>: Evaluates multi-objective targets including Directional
 Accuracy (%), Profit Factor, Sharpe Ratio, Sortino Ratio, and Drawdown.</li>
 </ul>
-<h4 id="2-computer-vision--super-resolution-card-upn-v2-codeformer-mirnet">2. Computer Vision &amp; Super-Resolution Card (<code>UPN v2</code>, <code>CodeFormer</code>, <code>MIRNet</code>)</h4>
+<h4 id="sec-2-computer-vision--super-resolution-card-upn-v2-codeformer-mirnet">2. Computer Vision &amp; Super-Resolution Card (<code>UPN v2</code>, <code>CodeFormer</code>, <code>MIRNet</code>)</h4>
 <p><img src="../assets/gui/gui_card_vision.png" alt="Vision &amp; Super-Resolution Model Card"></p>
 <ul>
 <li><strong>Resolution Ladder</strong>: Visualizes spatial rung stepping
@@ -1115,7 +1116,7 @@ percentages).</li>
 <li><strong>Convergence Baselines</strong>: Tracks PSNR (dB) and SSIM restoration fidelity
 baselines.</li>
 </ul>
-<h4 id="3-object-detection--spatial-perception-card-yolov8n-multi-task">3. Object Detection &amp; Spatial Perception Card (<code>YOLOv8n Multi-Task</code>)</h4>
+<h4 id="sec-3-object-detection--spatial-perception-card-yolov8n-multi-task">3. Object Detection &amp; Spatial Perception Card (<code>YOLOv8n Multi-Task</code>)</h4>
 <p><img src="../assets/gui/gui_card_yolo.png" alt="Object Detection Multi-Task Model Card"></p>
 <ul>
 <li><strong>Input Resolution</strong>: Dynamically scales spatial inputs (<code>640px</code> multi-scale
@@ -1123,7 +1124,7 @@ anchor grids).</li>
 <li><strong>Multi-Task Metrics</strong>: Simultaneously monitors box mAP50-95, classification
 accuracy, and mask loss.</li>
 </ul>
-<h4 id="4-large-language-model-card-ai-studio-assistant---causal-llm">4. Large Language Model Card (<code>AI Studio Assistant - Causal LLM</code>)</h4>
+<h4 id="sec-4-large-language-model-card-ai-studio-assistant---causal-llm">4. Large Language Model Card (<code>AI Studio Assistant - Causal LLM</code>)</h4>
 <p><img src="../assets/gui/gui_card_llm.png" alt="Causal LLM Model Card"></p>
 <ul>
 <li><strong>QLoRA Instruction Tuning Matrix</strong>: Dedicated matrix displaying context
@@ -1134,13 +1135,13 @@ tokens (<code>2048 tokens</code>), adapter rank (<code>LoRA r=16, alpha=32</code
 <li><strong>Training Dataset</strong>: References the domain instruction corpus
 (<code>LemGendizedAIHelperLemGend</code>).</li>
 </ul>
-<h3 id="622-interactive-sota-target-pinning--metric-inspection">6.2.2 Interactive SOTA Target Pinning &amp; Metric Inspection</h3>
+<h3 id="sec-622-interactive-sota-target-pinning--metric-inspection">6.2.2 Interactive SOTA Target Pinning &amp; Metric Inspection</h3>
 <p>Clicking the <strong>Target Metrics (SOTA)</strong> header on any active card pins the metric
 inspection popover in place:</p>
 <p><img src="../assets/gui/gui_sota_popover.png" alt="Interactive SOTA Target Pinning Popover"></p>
 <p>The pinned popover details all convergence parameters, goal thresholds, achieved
 validation scores, and real-time pass/fail indicators.</p>
-<h3 id="63-three-tab-real-time-telemetry-stream--responsive-cancellation">6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
+<h3 id="sec-63-three-tab-real-time-telemetry-stream--responsive-cancellation">6.3 Three-Tab Real-Time Telemetry Stream &amp; Responsive Cancellation</h3>
 <p>The redesigned Live Telemetry Console is embedded directly on the Model Training
 panel, providing a tabbed terminal interface for complete observability across
 local training, remote cloud execution, and ecosystem mesh daemons:</p>
@@ -1195,7 +1196,7 @@ High-performance terminal container with in-place stream de-duplication.</li>
 <li><strong>6. Stream Controls</strong> (Action Buttons; Buffer sync / Job cancel): Copies log,
 clears screen, or issues sub-second training cancellation.</li>
 </ul>
-<h3 id="64-revamped-training-dashboard-topology--interactive-sota-inspection">6.4 Revamped Training Dashboard Topology &amp; Interactive SOTA Inspection</h3>
+<h3 id="sec-64-revamped-training-dashboard-topology--interactive-sota-inspection">6.4 Revamped Training Dashboard Topology &amp; Interactive SOTA Inspection</h3>
 <p>The modern Training Panel employs a high-productivity split topology:</p>
 <p><img src="../assets/gui/gui_training_panel_overview.png" alt="Revamped Training Dashboard Topology &amp; Interactive SOTA
 Inspection"></p>
@@ -1234,9 +1235,9 @@ Dispatches local GPU execution or opens remote cloud modal.</li>
 </ul>
 </section>
 
-<section id="7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive">
+<section id="sec-7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive">
 <h2>7. Evaluation, Export &amp; Cloud Publishing to Kaggle and Google Drive</h2>
-<h3 id="71-real-time-metrics--live-loss-curves">7.1 Real-Time Metrics &amp; Live Loss Curves</h3>
+<h3 id="sec-71-real-time-metrics--live-loss-curves">7.1 Real-Time Metrics &amp; Live Loss Curves</h3>
 <p>During training, the GUI visualizes live training and validation loss curves:</p>
 <ul>
 <li><strong>Training Loss (Blue Line)</strong>: Decreases as the model memorizes garden
@@ -1247,7 +1248,7 @@ photos it has never seen before.</li>
 Similarity), and mAP (mean Average Precision) are plotted in real time and
 recorded in <code>metrics.csv</code>.</li>
 </ul>
-<h3 id="72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</h3>
+<h3 id="sec-72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</h3>
 <p>Once training completes, you can export your trained model with a single click:</p>
 <ul>
 <li><strong>ONNX Export</strong>: Generates fixed-shape <code>.onnx</code> files compatible with DirectML
@@ -1256,7 +1257,7 @@ web browsers (WebGPU).</li>
 <li><strong>Safetensors Weights</strong>: Saves cryptographic, zero-copy weights free of
 arbitrary code execution vulnerabilities.</li>
 </ul>
-<h3 id="73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud Registry</h3>
+<h3 id="sec-73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud Registry</h3>
 <p>Clicking <code>Sync Kaggle Models Hub</code> on any registered architecture card opens the
 isolated multi-variation publishing workflow:</p>
 <p><img src="../assets/gui/gui_model_export_publish.png" alt="Model Export, Binary Packaging &amp; Kaggle Models Hub Registry
@@ -1349,7 +1350,7 @@ neural models and checkpoints to Kaggle Models Hub simultaneously using the
 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
 </section>
 
-<section id="8-health-matrix--cross-project-version-drift-analytics">
+<section id="sec-8-health-matrix--cross-project-version-drift-analytics">
 <h2>8. Health Matrix &amp; Cross-Project Version Drift Analytics</h2>
 <p>In modern multi-project software suites, one project updating a shared library
 (like <code>torch</code> or <code>numpy</code>) while another stays on an older version causes
@@ -1358,7 +1359,7 @@ cross-project dependency audits covering Python virtual environments and
 frontend desktop GUI NPM packages.</p>
 <p><img src="../assets/gui/gui_health_drift_matrix.png" alt="Toolchain Prerequisites, Python Drift Matrix &amp; Desktop GUI NPM
 Packages"></p>
-<h3 id="81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages">8.1 Toolchain Prerequisites, Python Drift Matrix &amp; Desktop GUI NPM Packages</h3>
+<h3 id="sec-81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages">8.1 Toolchain Prerequisites, Python Drift Matrix &amp; Desktop GUI NPM Packages</h3>
 <h4 id="health-matrix-numbered-reference">Health Matrix Numbered Reference</h4>
 <ol>
 <li><strong>Toolchain Prerequisites Section Header &amp; Status</strong>: Overview header
@@ -1389,7 +1390,7 @@ installed NPM package versions for the desktop GUI frontend.</li>
 <li><strong>4. Maintenance Controls</strong> (Action Buttons; <code>POST /api/...</code>): One-click
 maintenance buttons for upgrades, cache purge, and validation.</li>
 </ul>
-<h3 id="82-ecosystem-maintenance--governance-controls">8.2 Ecosystem Maintenance &amp; Governance Controls</h3>
+<h3 id="sec-82-ecosystem-maintenance--governance-controls">8.2 Ecosystem Maintenance &amp; Governance Controls</h3>
 <p>The Health and Maintenance view provides nuclear-hardened ecosystem maintenance
 controls backed by <code>lemgendary-env-manager</code> on port 8000:</p>
 <p><img src="../assets/gui/gui_ecosystem_maintenance.png" alt="Ecosystem Maintenance &amp; Governance
@@ -1429,14 +1430,14 @@ Executes multi-gate compilation, zero-emoji, and schema validation.</li>
 </ul>
 </section>
 
-<section id="9-contextual-ux-help--interactive-hover-guidance-system">
+<section id="sec-9-contextual-ux-help--interactive-hover-guidance-system">
 <h2>9. Contextual UX Help &amp; Interactive Hover Guidance System</h2>
 <p>Every single visual control across the LemGendary AI Studio GUI features
 contextual interactive hover guidance engineered according to the Gardening
 Model Rule:</p>
 <p><img src="../assets/gui/gui_contextual_help_popover.png" alt="Contextual UX Help &amp; Interactive Hover Guidance
 Popover"></p>
-<h3 id="91-interactive-hover-popovers--safety-diagnostics">9.1 Interactive Hover Popovers &amp; Safety Diagnostics</h3>
+<h3 id="sec-91-interactive-hover-popovers--safety-diagnostics">9.1 Interactive Hover Popovers &amp; Safety Diagnostics</h3>
 <h4 id="contextual-help-numbered-reference">Contextual Help Numbered Reference</h4>
 <ol>
 <li><strong>Contextual Help Trigger Icon (<code>?</code>)</strong>: Subtle, non-intrusive icon button
@@ -1464,14 +1465,14 @@ plain-English explanation, endpoints, and safety rules.</li>
 </ul>
 </section>
 
-<section id="10-permanent-offline-documentation-hub--online-synchronization">
+<section id="sec-10-permanent-offline-documentation-hub--online-synchronization">
 <h2>10. Permanent Offline Documentation Hub &amp; Online Synchronization</h2>
 <p>Reliability requires that complete engineering documentation is accessible at
 all times including on isolated workstations, offline air-gapped lab servers, or
 during broadband outages.</p>
 <p><img src="../assets/gui/gui_docs_hub_offline.png" alt="Permanent Offline Documentation Hub
 Interface"></p>
-<h3 id="101-local-static-offline-documentation-server">10.1 Local Static Offline Documentation Server</h3>
+<h3 id="sec-101-local-static-offline-documentation-server">10.1 Local Static Offline Documentation Server</h3>
 <p>The LemGendary Environment Manager serves the Documentation Hub from the local
 <code>lemgendary-docs</code> checkout. The header button asks it for the address
 (<code>GET /api/docs/status</code>, field <code>local_url</code>) and opens that address in your
@@ -1507,7 +1508,7 @@ full-text papers and operator manuals.</li>
 <li><strong>5. Offline Status Indicator</strong> (Status Pill; Local server health): Confirms
 100% offline document availability with zero external assets.</li>
 </ul>
-<h3 id="102-live-github-pages-online-synchronization">10.2 Live GitHub Pages Online Synchronization</h3>
+<h3 id="sec-102-live-github-pages-online-synchronization">10.2 Live GitHub Pages Online Synchronization</h3>
 <p>For external collaboration, mobile reading, and research sharing, the
 Documentation Hub is synchronized with GitHub Pages:</p>
 <p><code>https://lemgenda.github.io/ai-training-whitepapers/index.html</code></p>
@@ -1516,7 +1517,7 @@ typography, and structural content, ensuring total parity across offline and
 online environments.</p>
 </section>
 
-<section id="11-tripartite-multi-sidecar-network-architecture">
+<section id="sec-11-tripartite-multi-sidecar-network-architecture">
 <h2>11. Tripartite Multi-Sidecar Network Architecture</h2>
 <p>The LemGendary AI Studio GUI is one visual client for three background services.
 Their addresses come from one registry (<code>src/api/config.ts</code>), so the same build
@@ -1540,7 +1541,7 @@ writes:</p>
 | * Bug Reports    |  |                  |  |                  |
 +------------------+  +------------------+  +------------------+
 </code></pre>
-<h3 id="111-dynamic-configuration--environment-overrides">11.1 Dynamic Configuration &amp; Environment Overrides</h3>
+<h3 id="sec-111-dynamic-configuration--environment-overrides">11.1 Dynamic Configuration &amp; Environment Overrides</h3>
 <p>Endpoint addresses and ports are completely decoupled from code literals.
 Production and remote environments can override service locations via standard
 environment variables:</p>
@@ -1555,7 +1556,7 @@ environment variables:</p>
 <p>The <code>toWebSocketUrl()</code> utility parses HTTP/HTTPS URLs and maps them
 automatically to corresponding <code>ws://</code> or <code>wss://</code> protocols, providing seamless
 transition from local loopback ports to secure TLS cloud deployments.</p>
-<h3 id="112-semantic-origin-routing--telemetry-stream-governance">11.2 Semantic Origin Routing &amp; Telemetry Stream Governance</h3>
+<h3 id="sec-112-semantic-origin-routing--telemetry-stream-governance">11.2 Semantic Origin Routing &amp; Telemetry Stream Governance</h3>
 <p>Telemetry event streams are classified using semantic origin routing rather than
 brittle port number or regex guessing:</p>
 <ul>
@@ -1568,7 +1569,7 @@ appear in the compiler view's log panel.</li>
 terminal cursor while preserving discrete loss metrics, learning rates,
 checkpoint saves, and milestone events in terminal history.</li>
 </ul>
-<h3 id="113-typed-api-client-contracts-srcapiclientts">11.3 Typed API Client Contracts (<code>src/api/client.ts</code>)</h3>
+<h3 id="sec-113-typed-api-client-contracts-srcapiclientts">11.3 Typed API Client Contracts (<code>src/api/client.ts</code>)</h3>
 <p>The desktop application talks to the sidecars through typed asynchronous
 TypeScript functions that all use <code>sidecarFetch</code>. For multi-objective
 optimization, the client calls the Pareto Model Soup engine on the LemGendary
@@ -1592,7 +1593,7 @@ others) on disk without retraining. <code>ModelSoupResult</code> stands for the 
 object with <code>model_key</code>, <code>success</code> and <code>soup_checkpoint</code>.</p>
 </section>
 
-<section id="12-automated-testing--ecosystem-quality-assurance">
+<section id="sec-12-automated-testing--ecosystem-quality-assurance">
 <h2>12. Automated Testing &amp; Ecosystem Quality Assurance</h2>
 <p>To guarantee system stability, the LemGendary ecosystem includes extensive
 automated test batteries across all projects. You can verify the health of the
@@ -1628,14 +1629,14 @@ markdown link integrity, LaTeX formula rendering, and the absolute absence of
 emojis across all codebases and documentation.</p>
 </section>
 
-<section id="13-reporting-an-issue">
+<section id="sec-13-reporting-an-issue">
 <h2>13. Reporting an Issue</h2>
 <p>When something does not work, the Report Issue form collects what the
 maintainers need: your description, annotated screenshots and recent telemetry.
 The LemGendary Environment Manager saves everything as a ZIP file on your
 computer and opens your own mail client; no password or mail account is stored
 in the app.</p>
-<h3 id="131-opening-the-report-issue-form">13.1 Opening the Report Issue Form</h3>
+<h3 id="sec-131-opening-the-report-issue-form">13.1 Opening the Report Issue Form</h3>
 <p>Click <strong>Report Issue</strong> in the header (<code>header-btn-report-issue</code>). The form opens
 with <strong>Module</strong> set to the tab you were working in; change it if the problem
 belongs elsewhere.</p>
@@ -1655,7 +1656,7 @@ recording is available in the desktop app&quot;.</li>
 <p><strong>Note:</strong> The figure for this chapter (the Report Issue form, the annotator and the
 success view) will be added with the next screenshot refresh.</p>
 </blockquote>
-<h3 id="132-screenshots--annotation">13.2 Screenshots &amp; Annotation</h3>
+<h3 id="sec-132-screenshots--annotation">13.2 Screenshots &amp; Annotation</h3>
 <p>Click <strong>Capture screenshot</strong> (<code>bug-modal-btn-add-screenshot</code>). The app takes a
 picture of its own window, leaving out the Report Issue form itself, and opens
 the annotator:</p>
@@ -1671,11 +1672,11 @@ form.</li>
 </ul>
 <p>Each saved screenshot appears as a thumbnail with a <strong>Remove</strong> button. After 5
 screenshots the capture button is disabled.</p>
-<h3 id="133-telemetry">13.3 Telemetry</h3>
+<h3 id="sec-133-telemetry">13.3 Telemetry</h3>
 <p>With <strong>Attach telemetry</strong> on, the form attaches the recent log events (up to the
 last 200) as a CSV file with the columns <code>timestamp</code>, <code>status</code>, <code>source</code> and
 <code>message</code>. Turn it off if the log contains information you do not want to share.</p>
-<h3 id="134-sending--the-local-zip-report">13.4 Sending &amp; the Local ZIP Report</h3>
+<h3 id="sec-134-sending--the-local-zip-report">13.4 Sending &amp; the Local ZIP Report</h3>
 <p>Click <strong>Send report</strong> (<code>bug-modal-btn-submit</code>). The form is checked first;
 problems are shown under the matching field. The Environment Manager then:</p>
 <ol>
@@ -1693,7 +1694,7 @@ If the mail client did not open, use <strong>Copy address</strong>
 you when the folder did not open. <strong>Done</strong> closes the form and clears it.</p>
 <p>Size limits: 5 screenshots of at most 5 MB each, telemetry at most 2 MB, and 80
 MB for the whole report.</p>
-<h3 id="135-when-sending-fails">13.5 When Sending Fails</h3>
+<h3 id="sec-135-when-sending-fails">13.5 When Sending Fails</h3>
 <ul>
 <li><strong>Environment Manager is not running</strong>: Start it from the Dashboard service
 tiles and send again; your input stays in the form.</li>
@@ -1702,7 +1703,7 @@ example a description that is too short).</li>
 <li><strong>Report too large</strong>: Remove a screenshot and try again.</li>
 <li><strong>Other server errors</strong>: The message is shown at the top of the form.</li>
 </ul>
-<h3 id="136-screen-recording">13.6 Screen Recording</h3>
+<h3 id="sec-136-screen-recording">13.6 Screen Recording</h3>
 <p>In the desktop app on Windows you can attach one short recording of the app
 window (only this window, at most 60 seconds of recorded time):</p>
 <ol>

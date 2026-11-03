@@ -32,17 +32,17 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-visual-manifolds">2. Visual Manifolds</a></li>
-<li><a href="#3-yolov8n-multi-task-architecture">3. YOLOv8n Multi-Task Architecture</a></li>
-<li><a href="#4-universal-nsfw-classifier">4. Universal NSFW Classifier</a></li>
-<li><a href="#5-sota-architectural-performance-matrix">5. SOTA Architectural Performance Matrix</a></li>
-<li><a href="#6-conclusion">6. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-visual-manifolds">2. Visual Manifolds</a></li>
+<li><a href="#sec-3-yolov8n-multi-task-architecture">3. YOLOv8n Multi-Task Architecture</a></li>
+<li><a href="#sec-4-universal-nsfw-classifier">4. Universal NSFW Classifier</a></li>
+<li><a href="#sec-5-sota-architectural-performance-matrix">5. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-6-conclusion">6. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>Real-Time Detection &amp; Moderation Suite (Category 09)</strong> decouples real-time
 geometric scene perception from deep generative moderation. It integrates two
@@ -52,7 +52,7 @@ Classifier</strong> (an EfficientNetV2-S categorical safety filter separating cl
 photographic art from inappropriate media).</p>
 </section>
 
-<section id="2-visual-manifolds">
+<section id="sec-2-visual-manifolds">
 <h2>2. Visual Manifolds</h2>
 <ul>
 <li><strong>Detection Manifold (<code>LemGendizedYoloV8n</code>)</strong>: Spatially dense annotations
@@ -63,7 +63,7 @@ suggestive content, explicit pornography, and violence.</li>
 </ul>
 </section>
 
-<section id="3-yolov8n-multi-task-architecture">
+<section id="sec-3-yolov8n-multi-task-architecture">
 <h2>3. YOLOv8n Multi-Task Architecture</h2>
 <p>Operating on the CSPDarknet53 backbone with PANet feature fusion, YOLOv8n
 eliminates anchor box generation, predicting spatial bounding boxes via
@@ -71,7 +71,7 @@ Distributed Focal Loss (DFL) and Complete IoU (CIoU) regression.</p>
 <p>Dedicated documentation: <a href="detection-yolov8n.html">YOLOv8n Multi-Task Whitepaper</a>.</p>
 </section>
 
-<section id="4-universal-nsfw-classifier">
+<section id="sec-4-universal-nsfw-classifier">
 <h2>4. Universal NSFW Classifier</h2>
 <p>Built upon the EfficientNetV2-S backbone, the Universal NSFW Classifier uses
 categorical focal cross-entropy loss to achieve ultra-low false negative rates
@@ -79,7 +79,7 @@ categorical focal cross-entropy loss to achieve ultra-low false negative rates
 <p>Dedicated documentation: <a href="classification-nsfw.html">Universal NSFW Classifier Whitepaper</a>.</p>
 </section>
 
-<section id="5-sota-architectural-performance-matrix">
+<section id="sec-5-sota-architectural-performance-matrix">
 <h2>5. SOTA Architectural Performance Matrix</h2>
 <ul>
 <li><strong><code>yolov8n</code></strong>: Task Domain: Detection, Class, Pose; Architecture:
@@ -91,7 +91,7 @@ Architecture: EfficientNetV2-S Categorical; Target Metric: Accuracy ≥
 </ul>
 </section>
 
-<section id="6-conclusion">
+<section id="sec-6-conclusion">
 <h2>6. Conclusion</h2>
 <p>Category 09 delivers edge-capable spatial localization and content safety
 enforcement for universal ML workflows.</p>

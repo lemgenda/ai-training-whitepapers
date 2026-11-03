@@ -2,8 +2,8 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-03 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
+**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-04 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
 ---
@@ -43,12 +43,12 @@
 
 This registry lists every element of the LemGendary AI Studio GUI
 (`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
-element type, the sidecar endpoint it calls and its behaviour. It is rebuilt
-from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.19`: 119
-distinct IDs, of which 75 belong to interactive controls (sections 3.1 to 3.8)
-and 44 to dialogs, status regions, landmarks and headings (section 3.9). It is
-updated for `v2.10.36`: the screen recording controls (v2.10.20), the
-confirmation dialogs and the compile mode switch IDs (v2.10.28).
+element type, the sidecar endpoint it calls and its behaviour. It is recounted
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.38`, including
+the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
+from their props, with a template such as `train-btn-start-{model_key}` counted
+once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+and 59 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
 
@@ -221,6 +221,9 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `custom-sources-area` (`textarea`): source repositories and URLs. None. One
   Kaggle, Hugging Face, Google Drive or GitHub source per line; submitted with
   `POST /api/gui/custom-compile` (8100).
+- `comp-input-kaggle-custom-ref` (`input type=text`): Kaggle dataset slug or
+  URL. `POST /api/kaggle/download` (8100) on "Ingest from Kaggle". Downloads a
+  public or private Kaggle dataset into `LemGendaryDatasets`.
 - `comp-btn-meta-{dataset_key}` (`button`): "Update Metadata".
   `POST /api/kaggle/update-metadata` (8100). Pushes the metadata of one manifold
   without uploading data.
@@ -266,6 +269,10 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `POST /api/training/evaluate` (8200). Evaluates the checkpoint locally.
 - `train-btn-export-{model_key}` (`button`): "Export Binaries".
   `POST /api/training/export` (8200). Exports the model binaries.
+- `cloud-modal-tab-kaggle`, `cloud-modal-tab-colab`, `train-modal-tab-upload`
+  (`button`, `role="tab"`): "Kaggle GPU Cloud", "Google Colab FUSE" and "Kaggle
+  Models Hub" in the Cloud & Registry Dispatch dialog. None. Switch the panel
+  `cloud-modal-panel`.
 - `gpu-select` (`select`): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.
 - `variation-select` (`select`): variation to check. None. Filters the isolation
   report from `GET /api/models/{model_key}/variations/validate` (8200).
@@ -286,6 +293,9 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.8 Config & Secrets
 
+- `config-editor-tab-manifests`, `config-editor-tab-secrets` (`button`,
+  `role="tab"`): "Registry Manifests" and "Secrets & Tokens Vault". None. Switch
+  the panel `config-editor-panel`.
 - `manifest-select` (`select`): manifest file. `GET /api/manifests/registry`
   fills it; `GET /api/manifests/read` (8000) loads the chosen file.
 - `new-service-select` (`select`): "Target Service". None. Service of a new
@@ -309,8 +319,11 @@ Dialogs and forms:
   shared `Modal` dialogs (`role="dialog"`, `aria-modal`, focus trap; Escape
   closes the innermost one). Each title has the ID `{dialog_id}-title`.
 - `bug-modal-form`: the Report Issue form.
-- `cloud-modal`, `config-editor-modal`: the Cloud Training and Config & Secrets
-  dialogs (shared `Modal`).
+- `test-modal`, `cloud-modal`, `config-editor-modal`: the Test & Diagnostic
+  Orchestrator, Cloud Training and Config & Secrets dialogs (shared `Modal`).
+- `test-modal-panel`, `cloud-modal-panel`, `config-editor-panel`: the tab
+  panels (`role="tabpanel"`) of the shared `Tabs` component, labelled by the
+  active tab.
 - Confirmation dialogs (`ConfirmDialog`, focus starts on Cancel; buttons
   `{dialog_id}-cancel` and `{dialog_id}-confirm`, text `{dialog_id}-desc`):
   `dash-dialog-stop-service` (Stop Service), `health-dialog-confirm` (Safe
@@ -360,8 +373,8 @@ These controls work but have no `id` yet; tests find them by role and label: the
 Start Service and Stop Service buttons on the sidecar tiles, the per-step run
 buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
 Reduction sub-tabs, the modernization
-queue buttons, the scale reduction dispatch button, the config editor tabs and
-the telemetry console tabs.
+queue buttons, the scale reduction dispatch button, the "Ingest from Kaggle"
+button and the telemetry console tabs.
 
 ### 3.11 Changes Since the Previous Registry
 
@@ -388,8 +401,9 @@ sub-tab controls (`comp-tab-kaggle-download`, `comp-tab-kaggle-upload`,
 `comp-slider-modernize-workers` and the pipeline stage list items
 `pipe-stage-*`.
 
-Removed because the control has no ID (section 3.10; `comp-mode-standard` and
-`comp-mode-custom` exist again since v2.10.28, section 3.5):
+Removed because the control has no ID (section 3.10; `comp-mode-standard`,
+`comp-mode-custom`, `comp-input-kaggle-custom-ref` and `train-modal-tab-upload`
+exist again since v2.10.28, sections 3.5 and 3.6):
 `comp-btn-custom-compile`, `comp-subtab-catalog`,
 `comp-subtab-modernize`, `comp-subtab-reduce`, `comp-btn-scan-modernize-queue`,
 `comp-btn-batch-modernize-all`, `comp-btn-dispatch-reduce`,

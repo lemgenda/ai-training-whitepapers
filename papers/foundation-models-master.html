@@ -34,18 +34,18 @@
 <ul>
 <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<li><a href="#1-abstract">1. Abstract</a></li>
-<li><a href="#2-foundation-scaling-laws--compute-budgets">2. Foundation Scaling Laws &amp; Compute Budgets</a></li>
-<li><a href="#3-latent-diffusion-models-ldm">3. Latent Diffusion Models (LDM)</a></li>
-<li><a href="#4-image-to-text-vision-language-models">4. Image-to-Text Vision-Language Models</a></li>
-<li><a href="#5-causal-decoder-transformers--moe">5. Causal Decoder Transformers &amp; MoE</a></li>
-<li><a href="#6-distributed-training-dynamics">6. Distributed Training Dynamics</a></li>
-<li><a href="#7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-foundation-scaling-laws--compute-budgets">2. Foundation Scaling Laws &amp; Compute Budgets</a></li>
+<li><a href="#sec-3-latent-diffusion-models-ldm">3. Latent Diffusion Models (LDM)</a></li>
+<li><a href="#sec-4-image-to-text-vision-language-models">4. Image-to-Text Vision-Language Models</a></li>
+<li><a href="#sec-5-causal-decoder-transformers--moe">5. Causal Decoder Transformers &amp; MoE</a></li>
+<li><a href="#sec-6-distributed-training-dynamics">6. Distributed Training Dynamics</a></li>
+<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
 
 </ul>
 </nav>
 
-<section id="1-abstract">
+<section id="sec-1-abstract">
 <h2>1. Abstract</h2>
 <p>The <strong>Generative &amp; Multimodal Foundation Models Suite (Category 10)</strong>
 establishes the scientific and systems engineering blueprint for three emerging
@@ -59,9 +59,9 @@ manifolds, and hardware governor boundaries preparing the infrastructure for
 upcoming foundation training cycles.</p>
 </section>
 
-<section id="2-foundation-scaling-laws--compute-budgets">
+<section id="sec-2-foundation-scaling-laws--compute-budgets">
 <h2>2. Foundation Scaling Laws &amp; Compute Budgets</h2>
-<h3 id="21-the-compute-optimal-scaling-law-chinchilla-derivation">2.1 The Compute-Optimal Scaling Law (Chinchilla Derivation)</h3>
+<h3 id="sec-21-the-compute-optimal-scaling-law-chinchilla-derivation">2.1 The Compute-Optimal Scaling Law (Chinchilla Derivation)</h3>
 <p>Compute budget scaling for dense autoregressive transformer architectures
 follows the empirical and theoretical Chinchilla formulation:</p>
 <div class="math-block">$$C \approx 6 N D$$</div>
@@ -101,25 +101,25 @@ $N_{\text{active}}$, representing only the parameters actively executed per
 token:
 $$C_{\text{MoE}} \approx 6 N_{\text{active}} D$$</li>
 </ol>
-<h3 id="22-first-principles-vram-allocation--hardware-governors">2.2 First-Principles VRAM Allocation &amp; Hardware Governors</h3>
+<h3 id="sec-22-first-principles-vram-allocation--hardware-governors">2.2 First-Principles VRAM Allocation &amp; Hardware Governors</h3>
 <p>Memory containment during large-scale foundation model training requires exact
 accounting across static allocations, dynamic activations, and framework
 overhead:</p>
 <div class="math-block">$$M_{\text{total}} = M_{\text{params}} + M_{\text{grads}} + M_{\text{opt}} + M_{\text{activations}} + M_{\text{workspace}}$$</div>
-<h4 id="1-parameter-memory-m_textparams">1. Parameter Memory ($M_{\text{params}}$)</h4>
+<h4 id="sec-1-parameter-memory-m_textparams">1. Parameter Memory ($M_{\text{params}}$)</h4>
 <p>Stores the model weights. For a model with $N$ parameters:</p>
 <ul>
 <li><strong>FP32 Precision</strong>: $M_{\text{params}} = 4N \text{ bytes}$</li>
 <li><strong>FP16 / BF16 Mixed Precision</strong>: $M_{\text{params}} = 2N \text{ bytes}$</li>
 <li><strong>8-Bit Quantized Baseline</strong>: $M_{\text{params}} = 1N \text{ bytes}$</li>
 </ul>
-<h4 id="2-gradient-memory-m_textgrads">2. Gradient Memory ($M_{\text{grads}}$)</h4>
+<h4 id="sec-2-gradient-memory-m_textgrads">2. Gradient Memory ($M_{\text{grads}}$)</h4>
 <p>Stores backpropagated gradients for all trainable parameters:</p>
 <ul>
 <li><strong>FP32 Gradients</strong>: $M_{\text{grads}} = 4N \text{ bytes}$</li>
 <li><strong>FP16 / BF16 Gradients</strong>: $M_{\text{grads}} = 2N \text{ bytes}$</li>
 </ul>
-<h4 id="3-optimizer-state-memory-m_textopt">3. Optimizer State Memory ($M_{\text{opt}}$)</h4>
+<h4 id="sec-3-optimizer-state-memory-m_textopt">3. Optimizer State Memory ($M_{\text{opt}}$)</h4>
 <p>The optimizer maintains running historical moments for adaptive updates. For
 standard AdamW:</p>
 <ul>
@@ -131,7 +131,7 @@ $$M_{\text{opt}} = 1N (m_t) + 1N (v_t) + 2N (\text{master copy}) = 4N \text{ byt
 <li><strong>Adafactor / SGD with Momentum</strong>:
 $$M_{\text{opt}} \approx 4N \text{ to } 8N \text{ bytes}$$</li>
 </ul>
-<h4 id="4-activation-memory-m_textactivations">4. Activation Memory ($M_{\text{activations}}$)</h4>
+<h4 id="sec-4-activation-memory-m_textactivations">4. Activation Memory ($M_{\text{activations}}$)</h4>
 <p>Stores intermediate forward tensors required during backpropagation:</p>
 <ul>
 <li><strong>Without Activation Checkpointing</strong>:
@@ -143,12 +143,12 @@ Recomputes intermediate activations on the backward pass, reducing activation
 memory to:
 $$M_{\text{activations}} \approx \mathcal{O}(B \cdot S \cdot d_{\text{model}} \cdot \sqrt{L})$$</li>
 </ul>
-<h4 id="5-framework-workspace--cuda-context-m_textworkspace">5. Framework Workspace &amp; CUDA Context ($M_{\text{workspace}}$)</h4>
+<h4 id="sec-5-framework-workspace--cuda-context-m_textworkspace">5. Framework Workspace &amp; CUDA Context ($M_{\text{workspace}}$)</h4>
 <p>CUDA driver contexts, PyTorch caching allocators, and temporary GEMM scratch
 buffers allocate between $1.0\text{GB}$ and $2.5\text{GB}$ baseline memory.</p>
 </section>
 
-<section id="3-latent-diffusion-models-ldm">
+<section id="sec-3-latent-diffusion-models-ldm">
 <h2>3. Latent Diffusion Models (LDM)</h2>
 <p>Operates by compressing pixel manifolds
 $\mathbf{x} \in \mathbb{R}^{H \times W \times 3}$ into a latent spatial
@@ -162,7 +162,7 @@ simplified variational bound:</p>
 <p>Dedicated documentation: <a href="foundation-diffusion.html">Diffusion Models Specification</a>.</p>
 </section>
 
-<section id="4-image-to-text-vision-language-models">
+<section id="sec-4-image-to-text-vision-language-models">
 <h2>4. Image-to-Text Vision-Language Models</h2>
 <p>Connects a vision backbone (e.g. CLIP / SigLIP) with an autoregressive language
 decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition
@@ -171,7 +171,7 @@ the language model through cross-attention:</p>
 <p>Dedicated documentation: <a href="foundation-image-to-text.html">Image-to-Text VLM Specification</a>.</p>
 </section>
 
-<section id="5-causal-decoder-transformers--moe">
+<section id="sec-5-causal-decoder-transformers--moe">
 <h2>5. Causal Decoder Transformers &amp; MoE</h2>
 <p>Incorporates Rotary Position Embeddings (RoPE), SwiGLU activation functions, and
 top-$k$ sparse Mixture-of-Experts routing:</p>
@@ -179,14 +179,14 @@ top-$k$ sparse Mixture-of-Experts routing:</p>
 <p>Dedicated documentation: <a href="foundation-llm.html">Large Language Models Specification</a>.</p>
 </section>
 
-<section id="6-distributed-training-dynamics">
+<section id="sec-6-distributed-training-dynamics">
 <h2>6. Distributed Training Dynamics</h2>
 <p>Foundation models utilize DeepSpeed ZeRO-3 parameter sharding, gradient
 checkpointing, and FlashAttention-2 kernels to achieve linear throughput
 scaling.</p>
 </section>
 
-<section id="7-conclusion">
+<section id="sec-7-conclusion">
 <h2>7. Conclusion</h2>
 <p>Category 10 establishes the theoretical and operational blueprint for
 next-generation generative and multimodal systems.</p>
