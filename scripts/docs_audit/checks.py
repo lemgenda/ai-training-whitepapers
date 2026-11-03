@@ -1,0 +1,312 @@
+"""The audit checks. Each check is one function registered in ``CHECKS``.
+
+Add a check by writing a function that takes an ``AuditContext`` and yields
+``Finding`` objects, then appending it to ``CHECKS``; the runner and the
+backlog need no change.
+"""
+
+from __future__ import annotations
+
+import difflib
+import json
+import posixpath
+import re
+from collections.abc import Callable, Iterable, Iterator
+from dataclasses import dataclass
+from urllib.parse import unquote
+
+from .model import MANIFEST_PATH, AuditContext, Finding
+from .parsing import content_headings
+
+SIMILARITY_THRESHOLD = 0.85
+TEMPLATE_ELEMENTS = (
+    "!doctype",
+    "html",
+    "head",
+    "body",
+    "header",
+    "nav.toc-sidebar",
+    "section",
+    "footer",
+)
+REGISTRY_FILES = ("canonical_capabilities.json", "canonical_capabilities.yaml")
+HISTORICAL_FILES = frozenset({"REVIEW_REPORT.md"})
+TEXT_SUFFIXES = frozenset(
+    {
+        ".md",
+        ".html",
+        ".css",
+        ".js",
+        ".json",
+        ".yaml",
+        ".yml",
+        ".py",
+        ".txt",
+        ".toml",
+        ".cfg",
+        ".ini",
+        ".sh",
+        ".ps1",
+    }
+)
+SKIPPED_DIRS = frozenset(
+    {".git", ".pytest_cache", "__pycache__", "node_modules", ".venv", "scratch"}
+)
+
+# Drive roots, file URIs and Unix home directories. The pattern is written so
+# that its own source text does not match it.
+_ABSOLUTE_PATH = re.compile(
+    r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]+|file:/{2}|/(?:home|Users)/", re.IGNORECASE
+)
+_README_VERSION = re.compile(r"^\*\*Version\*\*: `(v[0-9][^`]*)`", re.MULTILINE)
+_YAML_BASELINE = re.compile(r"^document_baseline:\s*['\"]?([^'\"\s]+)", re.MULTILINE)
+_SCHEME = re.compile(r"^[a-z][a-z0-9+.-]*:", re.IGNORECASE)
+_GAP = r"(\s+)"
+_NAME_RULES = (
+    (
+        re.compile(r"\bAI" + _GAP + r"Studio" + _GAP + r"Desktop" + _GAP + r"GUI"),
+        "LemGendary AI Studio GUI",
+    ),
+    (
+        re.compile(r"LemGendary" + _GAP + r"Training" + _GAP + r"Suite"),
+        "LemGendary Model Training Suite",
+    ),
+    (
+        re.compile(r"LemGendary" + _GAP + r"AI" + _GAP + r"Studio\b(?!\s+(?:GUI|Assistant))"),
+        "LemGendary AI Studio GUI",
+    ),
+    (
+        re.compile(r"LemGendary" + _GAP + r"Dataset" + _GAP + r"Compiler\b(?!\s+(?:Suite|API\"))"),
+        "LemGendary Dataset Compiler Suite",
+    ),
+)
+
+
+@dataclass(frozen=True)
+class Check:
+    """A named audit check."""
+
+    name: str
+    description: str
+    run: Callable[[AuditContext], Iterable[Finding]]
+
+
+def _strip_v(version: str) -> str:
+    return version.removeprefix("v")
+
+
+def _publications(ctx: AuditContext) -> list[str]:
+    return ctx.glob("papers/*.html") + ["index.html"]
+
+
+def _markdown_sources(ctx: AuditContext) -> list[str]:
+    return [p for p in ctx.glob("*.md") + ctx.glob("MD-Papers/*.md") if p not in HISTORICAL_FILES]
+
+
+def check_manifest(ctx: AuditContext) -> Iterator[Finding]:
+    """Every manifest path exists and every publication is in the manifest."""
+    subject = MANIFEST_PATH.as_posix()
+    ids = [pair.doc_id for pair in ctx.pairs]
+    for doc_id in sorted({i for i in ids if ids.count(i) > 1}):
+        yield Finding("manifest", subject, f"duplicate document id {doc_id}")
+    declared = ctx.manifest.get("total_publications")
+    if declared != len(ctx.pairs):
+        yield Finding(
+            "manifest",
+            subject,
+            f"total_publications is {declared}, documents lists {len(ctx.pairs)}",
+        )
+    listed: set[str] = set()
+    for pair in ctx.pairs:
+        for path in (pair.md_path, pair.html_path):
+            listed.add(path)
+            if not ctx.exists(path):
+                yield Finding("manifest", subject, f"{pair.doc_id}: {path} does not exist")
+    for path in ctx.glob("papers/*.html") + ctx.glob("MD-Papers/*.md"):
+        if path not in listed:
+            yield Finding("manifest", subject, f"{path} is not listed in the manifest")
+
+
+def check_hub_version(ctx: AuditContext) -> Iterator[Finding]:
+    """README, index.html, manifest and both registries carry one hub version."""
+    match = _README_VERSION.search(ctx.read_text("README.md"))
+    if not match:
+        yield Finding("hub-version", "README.md", "no **Version**: `vX.Y.Z` line")
+        return
+    expected = f"{match.group(1)}-STABLE"
+    if f"Version {expected}" not in ctx.read_text("index.html"):
+        yield Finding("hub-version", "index.html", f"header does not show Version {expected}")
+    actual = {
+        MANIFEST_PATH.as_posix(): ctx.manifest.get("document_baseline"),
+        REGISTRY_FILES[0]: json.loads(ctx.read_text(REGISTRY_FILES[0])).get("document_baseline"),
+    }
+    yaml_match = _YAML_BASELINE.search(ctx.read_text(REGISTRY_FILES[1]))
+    actual[REGISTRY_FILES[1]] = yaml_match.group(1) if yaml_match else None
+    for path, value in actual.items():
+        if value != expected:
+            yield Finding(
+                "hub-version", path, f"document_baseline is {value}, README says {expected}"
+            )
+
+
+def check_version_lines(ctx: AuditContext) -> Iterator[Finding]:
+    """Markdown and HTML version lines equal the manifest baseline_version."""
+    for pair in ctx.pairs:
+        want = _strip_v(pair.baseline_version)
+        for path in (pair.md_path, pair.html_path):
+            if not ctx.exists(path):
+                continue
+            found = ctx.parsed(path).version
+            if found is None:
+                yield Finding("version-line", pair.doc_id, f"{path} has no version line")
+            elif _strip_v(found) != want:
+                yield Finding(
+                    "version-line",
+                    pair.doc_id,
+                    f"{path} says {found}, manifest says {pair.baseline_version}",
+                )
+
+
+def _existing_pairs(ctx: AuditContext) -> Iterator[tuple[str, str, str]]:
+    for pair in ctx.pairs:
+        if ctx.exists(pair.md_path) and ctx.exists(pair.html_path):
+            yield pair.doc_id, pair.md_path, pair.html_path
+
+
+def check_heading_parity(ctx: AuditContext) -> Iterator[Finding]:
+    """Markdown and HTML have the same headings (level and text) in the same order."""
+    for doc_id, md_path, html_path in _existing_pairs(ctx):
+        md = content_headings(ctx.parsed(md_path))
+        page = content_headings(ctx.parsed(html_path))
+        if md == page:
+            continue
+        index = next(
+            (i for i, (a, b) in enumerate(zip(md, page, strict=False)) if a != b),
+            min(len(md), len(page)),
+        )
+        md_at = f"h{md[index].level} '{md[index].text}'" if index < len(md) else "end"
+        page_at = f"h{page[index].level} '{page[index].text}'" if index < len(page) else "end"
+        yield Finding(
+            "heading-parity",
+            doc_id,
+            f"MD {len(md)} vs HTML {len(page)} headings; first difference at #{index + 1}: "
+            f"MD {md_at} vs HTML {page_at}",
+        )
+
+
+def check_text_similarity(ctx: AuditContext) -> Iterator[Finding]:
+    """Markdown and HTML prose match (word-sequence similarity at least 0.85)."""
+    for doc_id, md_path, html_path in _existing_pairs(ctx):
+        md_words = ctx.parsed(md_path).words
+        page_words = ctx.parsed(html_path).words
+        ratio = difflib.SequenceMatcher(None, md_words, page_words, autojunk=False).ratio()
+        if ratio < SIMILARITY_THRESHOLD:
+            yield Finding(
+                "text-similarity",
+                doc_id,
+                f"similarity {ratio:.3f} < {SIMILARITY_THRESHOLD} "
+                f"(MD {len(md_words)} words, HTML {len(page_words)})",
+            )
+
+
+def check_template(ctx: AuditContext) -> Iterator[Finding]:
+    """HTML pages use the approved structural template."""
+    for path in _publications(ctx):
+        elements = ctx.parsed(path).elements
+        missing = [name for name in TEMPLATE_ELEMENTS if name not in elements]
+        if missing:
+            yield Finding("template", path, f"missing {', '.join(missing)}")
+
+
+def _link_target(ctx: AuditContext, source: str, url: str) -> tuple[str, str] | None:
+    """Resolve an internal link to (target path, fragment); None for external links."""
+    if not url or url.startswith("//") or _SCHEME.match(url):
+        return None
+    path, _, fragment = url.partition("#")
+    path = unquote(path.split("?")[0])
+    target = posixpath.normpath(posixpath.join(posixpath.dirname(source), path)) if path else source
+    return target, unquote(fragment)
+
+
+def check_links(ctx: AuditContext) -> Iterator[Finding]:
+    """Internal links point at existing files and existing anchors."""
+    for source in _markdown_sources(ctx) + _publications(ctx):
+        for line, url in ctx.parsed(source).links:
+            resolved = _link_target(ctx, source, url)
+            if resolved is None:
+                continue
+            target, fragment = resolved
+            if not ctx.path(target).exists():
+                yield Finding("links", source, f"line {line}: {url} -> missing {target}")
+            elif (
+                fragment
+                and target.endswith((".md", ".html"))
+                and not target.startswith("../")
+                and fragment not in ctx.parsed(target).anchors
+            ):
+                yield Finding(
+                    "links", source, f"line {line}: {url} -> no anchor #{fragment} in {target}"
+                )
+
+
+def _text_files(ctx: AuditContext) -> Iterator[str]:
+    for path in sorted(ctx.root.rglob("*")):
+        relative = path.relative_to(ctx.root)
+        if any(part in SKIPPED_DIRS or part.startswith(".venv") for part in relative.parts):
+            continue
+        if path.is_file() and (
+            path.suffix.lower() in TEXT_SUFFIXES or relative.parts[0] == ".githooks"
+        ):
+            yield relative.as_posix()
+
+
+def check_absolute_paths(ctx: AuditContext) -> Iterator[Finding]:
+    """No hard-coded absolute paths in any text file."""
+    for path in _text_files(ctx):
+        for number, line in enumerate(ctx.read_text(path).splitlines(), start=1):
+            match = _ABSOLUTE_PATH.search(line)
+            if match:
+                excerpt = line[max(0, match.start() - 20) : match.end() + 20].strip()
+                yield Finding("absolute-paths", path, f"line {number}: {excerpt}")
+
+
+def _name_scope(ctx: AuditContext, path: str) -> str:
+    text = ctx.read_text(path)
+    if path == "README.md":
+        changelog = re.search(r"^### v", text, re.MULTILINE)
+        return text[: changelog.start()] if changelog else text
+    return text
+
+
+def check_canonical_names(ctx: AuditContext) -> Iterator[Finding]:
+    """Project names use the seven canonical names (README changelog is history)."""
+    for path in _markdown_sources(ctx) + _publications(ctx):
+        text = _name_scope(ctx, path)
+        for pattern, canonical in _NAME_RULES:
+            for match in pattern.finditer(text):
+                line = text.count("\n", 0, match.start()) + 1
+                alias = re.sub(r"\s+", " ", match.group(0))
+                yield Finding(
+                    "canonical-names", path, f"line {line}: '{alias}' should be '{canonical}'"
+                )
+
+
+CHECKS: tuple[Check, ...] = (
+    Check("manifest", "manifest paths exist; no unlisted publications", check_manifest),
+    Check("hub-version", "README, index.html, manifest and registries agree", check_hub_version),
+    Check("version-line", "MD and HTML version lines equal the manifest", check_version_lines),
+    Check(
+        "heading-parity",
+        "MD and HTML headings match in level, text and order",
+        check_heading_parity,
+    ),
+    Check(
+        "text-similarity",
+        f"MD and HTML prose similarity >= {SIMILARITY_THRESHOLD}",
+        check_text_similarity,
+    ),
+    Check("template", "HTML uses the approved structural template", check_template),
+    Check("links", "internal links and anchors resolve", check_links),
+    Check("absolute-paths", "no hard-coded absolute paths", check_absolute_paths),
+    Check("canonical-names", "canonical project names only", check_canonical_names),
+)

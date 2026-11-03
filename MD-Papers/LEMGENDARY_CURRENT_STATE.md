@@ -120,7 +120,7 @@ repository is the source of the release version.
   `lem-env` and `lemgendary_env_manager.ps1`.
 - **LemGendary AI Studio GUI** (`v2.10.19`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.69-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.70-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
@@ -169,7 +169,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.69-STABLE`.
+together and share the document baseline `v16.9.70-STABLE`.
 
 ---
 

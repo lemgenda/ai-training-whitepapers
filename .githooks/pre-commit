@@ -48,5 +48,15 @@ if [ -d "$ROOT_DIR/tests" ]; then
     fi
 fi
 
+echo "[PRE-COMMIT] Running documentation parity audit..."
+"$LEM_ENV_PY" "$ROOT_DIR/scripts/audit_docs.py"
+AUDIT_EXIT=$?
+if [ $AUDIT_EXIT -ne 0 ]; then
+    echo "====================================================="
+    echo "COMMIT BLOCKED: Documentation parity audit failed."
+    echo "====================================================="
+    exit $AUDIT_EXIT
+fi
+
 echo "[PRE-COMMIT] Validation passed for $PROJECT_NAME."
 exit 0

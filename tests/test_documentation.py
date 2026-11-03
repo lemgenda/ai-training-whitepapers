@@ -25,8 +25,6 @@ class TestDocumentationIntegrity(unittest.TestCase):
         cls.md_files = glob.glob(os.path.join(cls.docs_root, 'MD-Papers', '*.md'))
         cls.manifest_path = os.path.join(cls.workspace_root, 'lemgendary-training-suite', 'unified_models_v2.yaml')
         if not os.path.exists(cls.manifest_path):
-            cls.manifest_path = os.path.abspath('lemgendary-training-suite/unified_models_v2.yaml')
-        if not os.path.exists(cls.manifest_path):
             candidate = os.path.join(cls.docs_root, 'canonical_capabilities.yaml')
             if os.path.exists(candidate):
                 cls.manifest_path = candidate
@@ -40,6 +38,28 @@ class TestDocumentationIntegrity(unittest.TestCase):
                 cls.manifest = {m['id']: m for m in raw_manifest['models'] if 'id' in m}
             else:
                 cls.manifest = raw_manifest
+
+    # The AI Helper corpus is data of the LemGendary Compiled Manifolds Repo
+    # (../LemGendaryDatasets), a sibling checkout that is not part of this
+    # repository. Tests that read it skip with this reason when it is absent.
+    AI_HELPER_CORPUS_DIRS = ('LemGendizedAIHelperLemGend', 'LemGendizedAIHelperCorpus')
+
+    def _ai_helper_corpus(self):
+        """Return (corpus_dir, train_path, val_path) or skip with an explicit reason."""
+        manifolds_repo = os.path.join(self.workspace_root, 'LemGendaryDatasets')
+        for name in self.AI_HELPER_CORPUS_DIRS:
+            corpus_dir = os.path.join(manifolds_repo, name)
+            data_dir = os.path.join(corpus_dir, 'data')
+            base = data_dir if os.path.isdir(data_dir) else corpus_dir
+            train_path = os.path.join(base, 'ai_helper_train.jsonl')
+            val_path = os.path.join(base, 'ai_helper_val.jsonl')
+            if os.path.isfile(train_path) and os.path.isfile(val_path):
+                return corpus_dir, train_path, val_path
+        self.skipTest(
+            'AI Helper corpus not found: needs the LemGendary Compiled Manifolds Repo checked out as '
+            '../LemGendaryDatasets with ' + ' or '.join(self.AI_HELPER_CORPUS_DIRS)
+            + ' containing ai_helper_train.jsonl and ai_helper_val.jsonl'
+        )
 
     # ── 1. Zero Emoji Rule ───────────────────────────────────────────────────
     def test_zero_emojis(self):
@@ -300,30 +320,14 @@ class TestDocumentationIntegrity(unittest.TestCase):
     def test_ai_helper_corpus_integrity(self):
         """Rule: AI Helper JSONL corpus must exist, parse cleanly, obey zero-emojis,
         strictly align with unified_models_v2.yaml SSOT, and maintain balanced validation coverage."""
-        corpus_dir = os.path.abspath(
-            os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend')
-        )
-        if not os.path.exists(corpus_dir):
-            corpus_dir = os.path.abspath(
-                os.path.join(self.docs_root, '..', 'LemGendaryDatasets', 'LemGendizedAIHelperCorpus')
-            )
-        data_subdir = os.path.join(corpus_dir, 'data')
-        if os.path.exists(data_subdir):
-            train_path = os.path.join(data_subdir, 'ai_helper_train.jsonl')
-            val_path = os.path.join(data_subdir, 'ai_helper_val.jsonl')
-        else:
-            train_path = os.path.join(corpus_dir, 'ai_helper_train.jsonl')
-            val_path = os.path.join(corpus_dir, 'ai_helper_val.jsonl')
-
-        self.assertTrue(os.path.exists(train_path), "ai_helper_train.jsonl missing")
-        self.assertTrue(os.path.exists(val_path), "ai_helper_val.jsonl missing")
+        _corpus_dir, train_path, val_path = self._ai_helper_corpus()
 
         train_records = []
         with open(train_path, 'r', encoding='utf-8') as f:
             for line_idx, line in enumerate(f, 1):
                 try:
                     train_records.append(json.loads(line))
-                except Exception as e:
+                except json.JSONDecodeError as e:
                     self.fail(f"Malformed JSON on line {line_idx} of ai_helper_train.jsonl: {e}")
 
         val_records = []
@@ -331,7 +335,7 @@ class TestDocumentationIntegrity(unittest.TestCase):
             for line_idx, line in enumerate(f, 1):
                 try:
                     val_records.append(json.loads(line))
-                except Exception as e:
+                except json.JSONDecodeError as e:
                     self.fail(f"Malformed JSON on line {line_idx} of ai_helper_val.jsonl: {e}")
 
         all_records = train_records + val_records
@@ -731,16 +735,16 @@ class TestDocumentationIntegrity(unittest.TestCase):
     def test_cross_repo_manifest_and_runtime_consistency(self):
         """Rule: Model identifiers in unified_models_v2.yaml and sidecar ports (8000, 8100, 8200)
         must match documentation."""
-        models = [k for k in self.manifest.keys() if not k.startswith('_')]
+        models = [k for k in self.manifest if not k.startswith('_')]
         self.assertGreater(len(models), 10, "unified_models_v2.yaml must declare model definitions")
 
         # Verify port bindings in authoritative documents
         current_state_path = os.path.join(self.docs_root, 'papers', 'current-state.html')
         with open(current_state_path, 'r', encoding='utf-8', errors='ignore') as f:
             cs_txt = f.read()
-        self.assertIn("8000", cs_txt, "Current state must reference Port 8000 (Training Suite)")
-        self.assertIn("8100", cs_txt, "Current state must reference Port 8100 (Env Manager)")
-        self.assertIn("8200", cs_txt, "Current state must reference Port 8200 (Dataset Compiler)")
+        self.assertIn("8000", cs_txt, "Current state must reference Port 8000 (LemGendary Environment Manager)")
+        self.assertIn("8100", cs_txt, "Current state must reference Port 8100 (LemGendary Dataset Compiler Suite)")
+        self.assertIn("8200", cs_txt, "Current state must reference Port 8200 (LemGendary Model Training Suite)")
 
     # ── 34. 3-Stage Diagnostic Intake Protocol Integrity ────────────────────
     def test_three_stage_diagnostic_protocol_integrity(self):
@@ -786,17 +790,7 @@ class TestDocumentationIntegrity(unittest.TestCase):
     # ── 36. AI Helper Dataset Schema & Split Integrity ───────────────────────
     def test_ai_helper_dataset_integrity(self):
         """Rule: ai_helper_train.jsonl and ai_helper_val.jsonl must have valid schemas, zero overlap, and 0 emojis."""
-        dataset_dir = os.path.join(self.workspace_root, 'LemGendaryDatasets', 'LemGendizedAIHelperLemGend')
-        data_subdir = os.path.join(dataset_dir, 'data')
-        if os.path.exists(data_subdir):
-            train_path = os.path.join(data_subdir, 'ai_helper_train.jsonl')
-            val_path = os.path.join(data_subdir, 'ai_helper_val.jsonl')
-        else:
-            train_path = os.path.join(dataset_dir, 'ai_helper_train.jsonl')
-            val_path = os.path.join(dataset_dir, 'ai_helper_val.jsonl')
-
-        if not os.path.exists(train_path) or not os.path.exists(val_path):
-            return  # Skip if dataset directory is not located at expected path
+        dataset_dir, train_path, val_path = self._ai_helper_corpus()
 
         train_ids = set()
         val_ids = set()
@@ -884,65 +878,16 @@ class TestDocumentationIntegrity(unittest.TestCase):
     def test_html_markdown_companion_parity(self):
         """Rule: All standalone HTML publications in papers/ must maintain a 1-to-1 synchronized
         Markdown companion in MD-Papers/."""
-        html_files = [os.path.basename(p) for p in glob.glob(os.path.join(self.docs_root, 'papers', '*.html'))]
-        md_files = [os.path.basename(p) for p in glob.glob(os.path.join(self.docs_root, 'MD-Papers', '*.md'))]
+        with open(os.path.join(self.docs_root, 'manifest', 'documents.json'), 'r', encoding='utf-8') as f:
+            documents = json.load(f)['documents']
+        html_files = sorted(os.path.basename(p) for p in glob.glob(os.path.join(self.docs_root, 'papers', '*.html')))
+        canonical_map = {os.path.basename(d['html_path']): os.path.basename(d['md_path']) for d in documents}
 
-        canonical_map = {
-            'ai-helper-troubleshooting-knowledge.html': 'AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md',
-            'ai-studio-manual.html': 'MANUAL_AI_STUDIO_GUI.md',
-            'ai-studio-whitepaper.html': 'PAPER_AI_STUDIO_GUI.md',
-            'api-manual.html': 'MANUAL_API.md',
-            'classification-nsfw.html': 'PAPER_LEMGENDARY_NSFW_CLASSIFIER.md',
-            'cli-manual.html': 'MANUAL_CLI.md',
-            'current-state.html': 'LEMGENDARY_CURRENT_STATE.md',
-            'dataset-compiler.html': 'PAPER_DATASET_COMPILER.md',
-            'degradation-engine.html': 'PAPER_DEGRADATION_ENGINE.md',
-            'detection-classification.html': 'PAPER_LEMGENDARY_DETECTION_CLASSIFICATION.md',
-            'detection-master.html': 'PAPER_DETECTION_MASTER.md',
-            'detection-yolov8n.html': 'PAPER_LEMGENDARY_YOLOV8N.md',
-            'ecosystem-architecture.html': 'ECOSYSTEM_ARCHITECTURE.md',
-            'env_manager.html': 'PAPER_ENV_MANAGER.md',
-            'face-codeformer.html': 'PAPER_LEMGENDARY_CODEFORMER.md',
-            'face-parsenet.html': 'PAPER_LEMGENDARY_PARSENET.md',
-            'face-retinaface.html': 'PAPER_LEMGENDARY_RETINAFACE.md',
-            'face-suite.html': 'PAPER_LEMGENDARY_FACE_SUITE.md',
-            'ffanet.html': 'PAPER_LEMGENDARY_FFANET.md',
-            'forex_predictor.html': 'PAPER_FOREX_PREDICTOR.md',
-            'foundation-diffusion.html': 'PAPER_LEMGENDARY_DIFFUSION.md',
-            'foundation-image-to-text.html': 'PAPER_LEMGENDARY_IMAGE_TO_TEXT.md',
-            'foundation-llm.html': 'PAPER_LEMGENDARY_LLM.md',
-            'foundation-models-master.html': 'PAPER_FOUNDATION_MODELS_MASTER.md',
-            'general-ai-training-knowledge.html': 'GENERAL_AI_TRAINING_KNOWLEDGE.md',
-            'glossary.html': 'GLOSSARY.md',
-            'gui-control-registry.html': 'GUI_CONTROL_REGISTRY.md',
-            'hybrid-film-restorer.html': 'PAPER_LEMGENDARY_FILM_RESTORER.md',
-            'hybrid-multitask.html': 'PAPER_LEMGENDARY_MULTITASK.md',
-            'hybrid-upn-v2.html': 'PAPER_LEMGENDARY_UPN_V2.md',
-            'manuals-hub.html': 'MANUALS_HUB.md',
-            'mirnet.html': 'PAPER_LEMGENDARY_MIRNET.md',
-            'mprnet.html': 'PAPER_LEMGENDARY_MPRNET.md',
-            'nafnet.html': 'PAPER_LEMGENDARY_NAFNET.md',
-            'nima-authenticity.html': 'PAPER_NIMA_AUTHENTICITY.md',
-            'nima-efficientnet.html': 'PAPER_NIMA_EFFICIENTNET.md',
-            'nima-master.html': 'PAPER_NIMA_MASTER.md',
-            'nima-mobile.html': 'PAPER_NIMA_MOBILE.md',
-            'nima-pro.html': 'PAPER_NIMA_PRO.md',
-            'nima-quality.html': 'PAPER_LEMGENDARY_NIMA.md',
-            'nima-technical.html': 'PAPER_NIMA_TECHNICAL.md',
-            'restoration-master.html': 'PAPER_RESTORATION_MASTER.md',
-            'restoration-suite.html': 'PAPER_LEMGENDARY_RESTORATION_SUITE.md',
-            'training-pathology.html': 'PAPER_TRAINING_PATHOLOGY.md',
-            'training-suite-master.html': 'PAPER_TRAINING_SUITE.md',
-            'ultrazoom.html': 'PAPER_LEMGENDARY_ULTRAZOOM.md',
-            'universal-hybrid.html': 'PAPER_LEMGENDARY_HYBRID.md',
-            'versioning-policy.html': 'VERSIONING_POLICY.md',
-        }
-
-        self.assertEqual(len(html_files), len(canonical_map), "Mismatch in total HTML publication count")
-        missing_md = []
-        for h_name, m_name in canonical_map.items():
-            if m_name not in md_files:
-                missing_md.append((h_name, m_name))
+        self.assertEqual(html_files, sorted(canonical_map), "Every HTML publication must be listed in the manifest")
+        missing_md = [
+            (h_name, m_name) for h_name, m_name in canonical_map.items()
+            if not os.path.isfile(os.path.join(self.docs_root, 'MD-Papers', m_name))
+        ]
         self.assertEqual(len(missing_md), 0, f"Missing Markdown companion files: {missing_md}")
 
 

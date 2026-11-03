@@ -2,9 +2,9 @@
 repos:
   - repo: local
     hooks:
-      - id: verify-docs
-        name: Verify LemGendary Docs (Lint, W3C HTML, Text Sync)
-        entry: python verify_docs.py --staged
+      - id: audit-docs
+        name: Audit LemGendary Docs (manifest, versions, MD/HTML parity, template, links, paths, names)
+        entry: python scripts/audit_docs.py
         language: system
         pass_filenames: false
         always_run: true
