@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.76`
+**Version**: `v16.9.77`
 
 ---
 
@@ -29,9 +29,9 @@
 * **Documentation audit** - `python scripts/audit_docs.py` (also the
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
-  and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 1 entries (heading parity 0, template 1,
-  text similarity 0), scheduled for the Later Phase. Any other finding fails.
+  and anchors, absolute paths and canonical names. The parity backlog
+  (`scripts/parity_backlog.json`) is empty since v16.9.77, so any finding
+  fails.
 
 ---
 
@@ -50,6 +50,23 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.77 - Parity Backlog Cleared: Hub Index and Lint
+
+* **Hub Index** - `index.html` now has the template's `nav.toc-sidebar`
+  (a centered category bar linking to the 14 catalog cards, which carry
+  `cat-NN` ids) and wraps the catalog in a `section`; `style.css` styles the
+  hub bar (`.hub-page .hub-toc`). W3C (vnu) reports no errors or warnings on
+  `index.html` and all 48 pages.
+* **Markdown** - `INVESTOR_STRATEGY_LEMGENDARY_2026.md` rewrapped at 80
+  columns and its wide tables rewritten as lists. markdownlint reports 0
+  findings repository-wide with inline directives ignored (1957 at v16.9.70),
+  and no `markdownlint-disable` directive remains.
+* **Parity Backlog** - last entry removed (1 to 0); the backlog file stays,
+  empty, and `README.md` no longer lists open drift.
+* **Version** - hub version v16.9.77 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.76 - Parity Backlog Batch 6: Knowledge Bases
 
