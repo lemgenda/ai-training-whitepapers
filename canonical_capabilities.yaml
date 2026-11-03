@@ -1,6 +1,6 @@
 ---
 schema_version: 1.0.0
-document_baseline: v16.9.77-STABLE
+document_baseline: v16.9.78-STABLE
 runtime_engine_baseline: v16.9.68-STABLE
 desktop_client_baseline: v2.10.19
 dataset_compiler_baseline: v16.9.27-STABLE
@@ -1236,3 +1236,36 @@ platform_capabilities:
   evidence:
     code: lemgendary-training-suite/training/model_soup.py
     whitepaper: lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md
+- id: ecosystem_registry
+  name: Ecosystem Registry (ecosystem.json)
+  status: implemented
+  owner_project: lemgendary-env-manager
+  baseline: v16.9.49-STABLE
+  file: lemgendary-env-manager/ecosystem/ecosystem.json
+  schema: lemgendary-env-manager/ecosystem/ecosystem.schema.json
+  contents:
+  - identity (docs_url, kaggle_owner, bind_host)
+  - services[] (id, port, paths)
+  - projects[] (folder, kind, managed, validated, upgrade_order)
+  - pipeline_steps[] (number, id, name, descriptions)
+  consumers:
+    environment_manager: env_manager.ecosystem.ecosystem() (LEMGENDARY_ECOSYSTEM_FILE
+      override)
+    dataset_compiler: core/ecosystem.py loader
+    training: training/ecosystem.py loader
+    gui: snapshot src/generated/ecosystem.json (npm run sync:ecosystem, check:ecosystem)
+    documentation_audit: scripts/docs_audit (registry model ids and ports)
+  drift_gate: ecosystem_ssot (warning severity)
+  control_planes:
+    gui:
+      available: false
+    cli:
+      available: true
+      command: lem-env validate
+    api:
+      available: true
+      route: GET /api/ecosystem
+      port: 8000
+  evidence:
+    code: lemgendary-env-manager/env_manager/ecosystem.py
+    whitepaper: lemgendary-docs/MD-Papers/PAPER_ENV_MANAGER.md

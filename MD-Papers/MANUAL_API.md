@@ -74,6 +74,10 @@ lem-env serve --host 127.0.0.1 --port 8000
 - **TCP Port**: Default Value: `8000`; CLI Flag: `--port`; Description: Local
   listening port for incoming requests
 
+Both defaults come from `ecosystem/ecosystem.json` (`identity.bind_host` and
+the port of the `env-manager` service); see `GET /api/ecosystem` in
+Section 2.7.
+
 The server's lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan
 handler. A background asyncio task drains the WebSocket event queue for the
 lifetime of the server and is cancelled cleanly on shutdown.
@@ -741,6 +745,9 @@ Event Status Values:
 - `warning`: Step completed with non-fatal advisory notice.
 - `error`: Fatal error encountered in step execution.
 
+`step_number`, `total_steps` and `step_name` come from `pipeline_steps` in
+`ecosystem/ecosystem.json`.
+
 Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`,
 which allows the background pipeline thread to broadcast events on the server's
 running event loop without blocking.
@@ -782,11 +789,24 @@ Example response:
 }
 ```
 
+#### `GET /api/ecosystem`
+
+Returns the ecosystem registry `ecosystem/ecosystem.json` as a typed
+`Ecosystem` response (since v16.9.49): `schema_version`, `identity`
+(`docs_url`, `kaggle_owner`, `bind_host`), `services[]` (id, aliases,
+project, port, health, liveness and WebSocket paths, app import, log
+folder), `projects[]` (folder, display name, kind, managed, validated,
+upgrade order, git hook, manifests, legacy folders) and `pipeline_steps[]`
+(number, id, name, short and long description). Other clients read the
+ports, project folders, pipeline step names and Kaggle owner from this
+response or from the file instead of hard-coding them.
+
 #### `GET /api/gui/ecosystem`
 
 Monitors health and connectivity across local ecosystem sidecars by actively
-probing `http://127.0.0.1:8100/api/health` and
-`http://127.0.0.1:8200/api/health` with a non-blocking timeout. Powers the
+probing the health path of every service in `ecosystem.json`
+(`http://127.0.0.1:8100/api/health` and
+`http://127.0.0.1:8200/api/health`) with a non-blocking timeout. Powers the
 desktop GUI top-bar status indicator and service mesh dashboard tiles:
 
 ```json

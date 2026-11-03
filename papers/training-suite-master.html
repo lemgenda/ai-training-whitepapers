@@ -722,6 +722,10 @@ logs into <code>LemGendaryModels/&lt;model_name&gt;/</code>.</li>
 <li><strong>Credential Fallback Hierarchy</strong>: Automatically cascades from user UI prompt
 to environment variables (<code>KAGGLE_USERNAME</code>, <code>KAGGLE_KEY</code>),
 <code>~/.kaggle/kaggle.json</code>, and local <code>.kaggle_token</code>.</li>
+<li><strong>Ecosystem Facts (<code>training/ecosystem.py</code>)</strong>: The sidecar ports, the
+Kaggle owner (including the generated notebook cells) and the documentation
+URL are read from <code>lemgendary-env-manager/ecosystem/ecosystem.json</code> through
+one loader; <code>LEMGENDARY_WORKSPACE_ROOT</code> overrides the workspace root.</li>
 <li><strong>Multi-Account Live Cloud Telemetry (<code>kaggle_monitor.py</code>)</strong>: Supports
 multi-user credential switching across registered <code>.kaggle_users</code> profiles
 with on-demand custom account entry. Concurrently resolves active and recent

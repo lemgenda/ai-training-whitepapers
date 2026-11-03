@@ -31,6 +31,8 @@ audited**: 2026-11-03
   - [6.4 Background Update Jobs](#64-background-update-jobs)
   - [6.5 Security Model](#65-security-model)
   - [6.6 Bug Report Endpoint](#66-bug-report-endpoint)
+  - [6.7 Ecosystem Registry
+    (ecosystem.json)](#67-ecosystem-registry-ecosystemjson)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -255,6 +257,12 @@ $$
 v_7\}
 $$
 
+Since v16.9.49 the step numbers, ids and names come from `pipeline_steps` in
+`ecosystem/ecosystem.json` (Section 6.7), and the step events of the pipeline
+carry those names: Hardware Discovery, Toolchain Audit, Virtual Environments,
+Requirements Sync & Install, Dependency Audit & Upgrades, Codebase Verification
+and Health Matrix. The list below describes what each step does.
+
 1. **Hardware Discovery ($v_1$)**: Evaluates OS architecture, CPU topology,
    system RAM, GPU accelerators, and MetaTrader 5 installation. Resolves the
    PyTorch index URL (Section 3). MT5 detection uses a registry-first strategy
@@ -449,6 +457,50 @@ server sends no email and stores no SMTP credentials:
   cannot be opened, because the archive is saved.
 - **Configuration**: recipient, subject, reports folder and limits are defined
   in one place, `env_manager/bug_report/config.py` (`BugReportSettings`).
+
+### 6.7 Ecosystem Registry (ecosystem.json)
+
+Since v16.9.49 the facts that every project shares are defined in one file,
+`lemgendary-env-manager/ecosystem/ecosystem.json`, described by
+`ecosystem/ecosystem.schema.json` (JSON Schema draft 2020-12). Edit the file,
+not the code:
+
+- **Services** (`services[]`): id, aliases, project folder, port, health,
+  liveness and WebSocket paths, app import and log folder of each sidecar. The
+  sidecar ports, URLs and the `lem-env serve` defaults are read from here.
+- **Projects** (`projects[]`): folder, display name, kind (`python`, `node`,
+  `asset`), whether the project is managed, validated or git-hooked, its
+  upgrade order and manifests. Project discovery, the validation targets, the
+  upgrade order and the manifest sync targets are derived from this list.
+- **Pipeline steps** (`pipeline_steps[]`): number, id, name and descriptions of
+  the seven pipeline steps (Section 6).
+- **Identity** (`identity`): documentation URL, Kaggle owner and bind host.
+
+Python code in this repository reads the file through
+`env_manager.ecosystem.ecosystem()` (parsed once and cached;
+`LEMGENDARY_ECOSYSTEM_FILE` overrides the location). `GET /api/ecosystem`
+returns it as a typed `Ecosystem` response. The other projects read the same
+file:
+
+- The LemGendary Dataset Compiler Suite and the LemGendary Model Training Suite
+  each have one loader, `core/ecosystem.py` and `training/ecosystem.py`, that
+  locates the file in the workspace (`LEMGENDARY_WORKSPACE_ROOT` or the parent
+  folder) and provides ports, project folders and the Kaggle owner.
+- The LemGendary AI Studio GUI copies it to the committed snapshot
+  `src/generated/ecosystem.json` before `dev` and `build`
+  (`npm run sync:ecosystem`; `npm run check:ecosystem` fails when the snapshot
+  differs) and derives its sidecar ports and project folders from the snapshot.
+- The LemGendary AI Documentation Hub audit checks that the model ids of
+  `canonical_capabilities.json` equal the training registry keys and that its
+  ports equal the service ports in the file.
+
+The validation gate `ecosystem_ssot` (warning severity) reports drift: in code,
+configuration and tests a literal service port, the Kaggle owner, the
+documentation URL or a list of three or more project folders is a finding (test
+fixtures are allowed); in Markdown, HTML and the registries the values may be
+written out but must equal the file. It also checks that the GUI snapshot equals
+the source, that the GUI Content Security Policy ports equal the service ports
+and that the GUI `ProjectHealth` type matches the OpenAPI schema.
 
 ---
 

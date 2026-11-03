@@ -671,6 +671,10 @@ to 512px is therefore no longer reported as complete.
 - **Credential Fallback Hierarchy**: Automatically cascades from user UI prompt
   to environment variables (`KAGGLE_USERNAME`, `KAGGLE_KEY`),
   `~/.kaggle/kaggle.json`, and local `.kaggle_token`.
+- **Ecosystem Facts (`training/ecosystem.py`)**: The sidecar ports, the
+  Kaggle owner (including the generated notebook cells) and the documentation
+  URL are read from `lemgendary-env-manager/ecosystem/ecosystem.json` through
+  one loader; `LEMGENDARY_WORKSPACE_ROOT` overrides the workspace root.
 - **Multi-Account Live Cloud Telemetry (`kaggle_monitor.py`)**: Supports
   multi-user credential switching across registered `.kaggle_users` profiles
   with on-demand custom account entry. Concurrently resolves active and recent

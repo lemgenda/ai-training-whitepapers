@@ -1,7 +1,9 @@
 """Tests for the documentation audit module (scripts/docs_audit).
 
 Each test builds a small synthetic docs repository with one clean MD/HTML
-pair, applies one kind of drift, and checks that the audit reports it.
+pair, applies one kind of drift, and checks that the audit reports it. The
+sibling sources (ecosystem.json, training registry) come from the fixture
+workspace in tests/fixtures/workspace, selected with LEMGENDARY_WORKSPACE_ROOT.
 """
 
 import contextlib
@@ -13,6 +15,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
+
+import yaml
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
@@ -20,6 +25,10 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 docs_audit = importlib.import_module("docs_audit")
 audit_docs = importlib.import_module("audit_docs")
+
+FIXTURE_WORKSPACE = Path(__file__).resolve().parent / "fixtures" / "workspace"
+FIXTURE = docs_audit.Workspace(FIXTURE_WORKSPACE)
+GUI_PORT_SERVICES = importlib.import_module("docs_audit.checks").GUI_PORT_SERVICES
 
 HUB_VERSION = "v1.2.3"
 DOC_VERSION = "v1.0.0-STABLE"
@@ -103,13 +112,42 @@ class SyntheticDocsRepo:
             "documents": documents,
         }
         self.write("manifest/documents.json", json.dumps(manifest, indent=2))
-        self.write("canonical_capabilities.json", json.dumps({"document_baseline": baseline}))
-        self.write("canonical_capabilities.yaml", f"document_baseline: {baseline}\n")
+        self.write_registry(self.registry(baseline))
         self.write(
             "README.md",
             f"# Hub\n\n**Version**: `{HUB_VERSION}`\n\n### {HUB_VERSION} - Notes\n\nOld text.\n",
         )
         self.write("index.html", INDEX.format(hub=HUB_VERSION))
+
+    @staticmethod
+    def registry(baseline: str) -> dict:
+        """A capability registry consistent with the fixture workspace."""
+        training_port = FIXTURE.service("training-suite").port
+        return {
+            "document_baseline": baseline,
+            "control_planes": {
+                "gui": {
+                    "ports": {
+                        key: FIXTURE.service(service_id).port
+                        for key, service_id in GUI_PORT_SERVICES.items()
+                    }
+                }
+            },
+            "models": [
+                {
+                    "id": model_id,
+                    "control_planes": {"api": {"available": True, "port": training_port}},
+                }
+                for model_id in FIXTURE.training_model_ids
+            ],
+        }
+
+    def write_registry(self, data: dict, yaml_data: dict | None = None) -> None:
+        self.write("canonical_capabilities.json", json.dumps(data, indent=2))
+        self.write(
+            "canonical_capabilities.yaml",
+            yaml.safe_dump(data if yaml_data is None else yaml_data, sort_keys=False),
+        )
 
     def path(self, relative: str) -> Path:
         return self.root / relative
@@ -135,6 +173,9 @@ class TestDocsAudit(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
+        env = mock.patch.dict(os.environ, {docs_audit.WORKSPACE_ENV: str(FIXTURE_WORKSPACE)})
+        env.start()
+        self.addCleanup(env.stop)
         self.repo = SyntheticDocsRepo(Path(self._tmp.name))
 
     def audit(self):
@@ -267,6 +308,64 @@ class TestDocsAudit(unittest.TestCase):
         result = self.audit()
         self.assertEqual(result.unknown_checks, [("no-such-check", "beta")])
         self.assertFalse(result.passed)
+
+    def _registry(self) -> dict:
+        return json.loads(self.repo.path("canonical_capabilities.json").read_text(encoding="utf-8"))
+
+    def test_registry_yaml_drift_detected(self):
+        data = self._registry()
+        yaml_data = json.loads(json.dumps(data))
+        yaml_data["document_baseline"] = "v0.0.0-STABLE"
+        self.repo.write_registry(data, yaml_data)
+        result = self.audit()
+        self.assertFinding(result, "registry-parity", "canonical_capabilities.yaml")
+        self.assertIn("document_baseline", docs_audit.render(result))
+
+    def test_registry_model_drift_detected(self):
+        data = self._registry()
+        removed = data["models"][0]["id"]
+        data["models"][0]["id"] = "gamma_model"
+        self.repo.write_registry(data)
+        result = self.audit()
+        self.assertFinding(result, "registry-models", "canonical_capabilities.json")
+        report = docs_audit.render(result)
+        source = FIXTURE.training_registry_path.as_posix()
+        self.assertIn(f"models not in {source}: gamma_model", report)
+        self.assertIn(f"missing models of {source}: {removed}", report)
+
+    def test_registry_metadata_key_is_not_a_model(self):
+        self.assertNotIn("_registry_metadata", FIXTURE.training_model_ids)
+        self.assertTrue(self.audit().passed)
+
+    def test_api_port_drift_detected(self):
+        data = self._registry()
+        data["models"][0]["control_planes"]["api"]["port"] += 1
+        self.repo.write_registry(data)
+        self.assertFinding(self.audit(), "service-ports", "canonical_capabilities.json")
+
+    def test_gui_port_drift_detected(self):
+        data = self._registry()
+        key = next(iter(GUI_PORT_SERVICES))
+        data["control_planes"]["gui"]["ports"][key] += 1
+        self.repo.write_registry(data)
+        result = self.audit()
+        self.assertFinding(result, "service-ports", "canonical_capabilities.json")
+        self.assertIn(key, docs_audit.render(result))
+
+    def test_missing_workspace_is_a_clear_finding(self):
+        with mock.patch.dict(os.environ, {docs_audit.WORKSPACE_ENV: str(self.repo.root)}):
+            result = self.audit()
+        self.assertFinding(result, "registry-models", "canonical_capabilities.json")
+        self.assertIn(docs_audit.WORKSPACE_ENV, docs_audit.render(result))
+        self.assertIn("ecosystem.json not found", docs_audit.render(result))
+
+    def test_workspace_root_defaults_to_docs_parent(self):
+        with mock.patch.dict(os.environ):
+            os.environ.pop(docs_audit.WORKSPACE_ENV, None)
+            self.assertEqual(
+                docs_audit.workspace_root(self.repo.root), self.repo.root.resolve().parent
+            )
+        self.assertEqual(docs_audit.workspace_root(self.repo.root), FIXTURE_WORKSPACE.resolve())
 
     def test_cli_exit_codes_from_another_directory(self):
         cwd = os.getcwd()

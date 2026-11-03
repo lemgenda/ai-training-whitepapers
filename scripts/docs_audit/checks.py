@@ -13,10 +13,14 @@ import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
+from typing import Any
 from urllib.parse import unquote
+
+import yaml
 
 from .model import MANIFEST_PATH, AuditContext, Finding
 from .parsing import content_headings
+from .workspace import ECOSYSTEM_PATH, TRAINING_SERVICE_ID, WorkspaceError
 
 SIMILARITY_THRESHOLD = 0.85
 TEMPLATE_ELEMENTS = (
@@ -30,6 +34,13 @@ TEMPLATE_ELEMENTS = (
     "footer",
 )
 REGISTRY_FILES = ("canonical_capabilities.json", "canonical_capabilities.yaml")
+# Keys of control_planes.gui.ports in the capability registry, by service id
+# of ecosystem.json.
+GUI_PORT_SERVICES = {
+    "environment_manager_sidecar": "env-manager",
+    "dataset_compiler_sidecar": "dataset-compiler",
+    "training_sidecar": TRAINING_SERVICE_ID,
+}
 HISTORICAL_FILES = frozenset({"REVIEW_REPORT.md"})
 TEXT_SUFFIXES = frozenset(
     {
@@ -291,6 +302,98 @@ def check_canonical_names(ctx: AuditContext) -> Iterator[Finding]:
                 )
 
 
+def _registry(ctx: AuditContext) -> dict[str, Any]:
+    data = json.loads(ctx.read_text(REGISTRY_FILES[0]))
+    return data if isinstance(data, dict) else {}
+
+
+def check_registry_parity(ctx: AuditContext) -> Iterator[Finding]:
+    """The YAML capability registry holds the same data as the JSON registry."""
+    json_data = _registry(ctx)
+    yaml_data = yaml.safe_load(ctx.read_text(REGISTRY_FILES[1]))
+    if json_data == yaml_data:
+        return
+    if not isinstance(yaml_data, dict):
+        yield Finding("registry-parity", REGISTRY_FILES[1], "is not a mapping")
+        return
+    keys = sorted(
+        key
+        for key in set(json_data) | set(yaml_data)
+        if json_data.get(key) != yaml_data.get(key)
+    )
+    yield Finding(
+        "registry-parity",
+        REGISTRY_FILES[1],
+        f"differs from {REGISTRY_FILES[0]} in: {', '.join(keys)}",
+    )
+
+
+def _models(ctx: AuditContext) -> list[dict[str, Any]]:
+    models = _registry(ctx).get("models")
+    return [m for m in models if isinstance(m, dict)] if isinstance(models, list) else []
+
+
+def check_registry_models(ctx: AuditContext) -> Iterator[Finding]:
+    """Registry model ids equal the training registry keys (without metadata)."""
+    subject = REGISTRY_FILES[0]
+    try:
+        expected = ctx.workspace.training_model_ids
+        source = ctx.workspace.training_registry_path.as_posix()
+    except WorkspaceError as error:
+        yield Finding("registry-models", subject, str(error))
+        return
+    ids = [str(model.get("id")) for model in _models(ctx)]
+    for model_id in sorted({i for i in ids if ids.count(i) > 1}):
+        yield Finding("registry-models", subject, f"duplicate model id {model_id}")
+    missing = sorted(set(expected) - set(ids))
+    extra = sorted(set(ids) - set(expected))
+    if missing:
+        yield Finding(
+            "registry-models", subject, f"missing models of {source}: {', '.join(missing)}"
+        )
+    if extra:
+        yield Finding("registry-models", subject, f"models not in {source}: {', '.join(extra)}")
+
+
+def check_service_ports(ctx: AuditContext) -> Iterator[Finding]:
+    """Registry ports equal the service ports of ecosystem.json."""
+    subject = REGISTRY_FILES[0]
+    source = ECOSYSTEM_PATH.as_posix()
+    try:
+        services = ctx.workspace.services
+        training = ctx.workspace.service(TRAINING_SERVICE_ID)
+    except WorkspaceError as error:
+        yield Finding("service-ports", subject, str(error))
+        return
+    for model in _models(ctx):
+        api = model.get("control_planes", {}).get("api", {})
+        port = api.get("port")
+        if port is None and not api.get("available"):
+            continue
+        if port != training.port:
+            yield Finding(
+                "service-ports",
+                subject,
+                f"model {model.get('id')}: api.port is {port}, "
+                f"{source} gives {TRAINING_SERVICE_ID} port {training.port}",
+            )
+    gui_ports = _registry(ctx).get("control_planes", {}).get("gui", {}).get("ports", {})
+    for key in sorted(set(gui_ports) | set(GUI_PORT_SERVICES)):
+        service_id = GUI_PORT_SERVICES.get(key)
+        if service_id is None:
+            yield Finding("service-ports", subject, f"control_planes.gui.ports.{key} is unknown")
+            continue
+        service = services.get(service_id)
+        want = service.port if service else None
+        if gui_ports.get(key) != want:
+            yield Finding(
+                "service-ports",
+                subject,
+                f"control_planes.gui.ports.{key} is {gui_ports.get(key)}, "
+                f"{source} gives {service_id} port {want}",
+            )
+
+
 CHECKS: tuple[Check, ...] = (
     Check("manifest", "manifest paths exist; no unlisted publications", check_manifest),
     Check("hub-version", "README, index.html, manifest and registries agree", check_hub_version),
@@ -309,4 +412,11 @@ CHECKS: tuple[Check, ...] = (
     Check("links", "internal links and anchors resolve", check_links),
     Check("absolute-paths", "no hard-coded absolute paths", check_absolute_paths),
     Check("canonical-names", "canonical project names only", check_canonical_names),
+    Check("registry-parity", "JSON and YAML capability registries agree", check_registry_parity),
+    Check(
+        "registry-models",
+        "registry model ids equal the training registry keys",
+        check_registry_models,
+    ),
+    Check("service-ports", "registry ports equal the ecosystem.json ports", check_service_ports),
 )

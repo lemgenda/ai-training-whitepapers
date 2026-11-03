@@ -145,7 +145,7 @@ virtual environments, compliance audits, bug report endpoint. Entrypoints:
 <code>lem-env</code> and <code>lemgendary_env_manager.ps1</code>.</li>
 <li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.19</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.77-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.78-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
@@ -201,7 +201,7 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.77-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.78-STABLE</code>.</p>
 </section>
 
 <section id="4-tripartite-microservice-topology--port-bindings">
@@ -218,6 +218,13 @@ manifold sharding, WebP conversion, Kaggle sync hub and custom compilation.</li>
 training job submission (<code>POST /api/training/train</code>), live loss streaming,
 GPU device allocation, model soup and SOTA audits.</li>
 </ul>
+<p>The ports, the project list, the pipeline step names and the Kaggle owner
+are defined once, in <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>
+(served by <code>GET /api/ecosystem</code>). The LemGendary Dataset Compiler Suite and
+the LemGendary Model Training Suite read it through their <code>ecosystem</code>
+loaders, the LemGendary AI Studio GUI through its snapshot
+<code>src/generated/ecosystem.json</code>, and the <code>ecosystem_ssot</code> validation gate
+reports values written anywhere else.</p>
 </section>
 
 <section id="5-registered-model-architectures--convergence-status">

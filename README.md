@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.77`
+**Version**: `v16.9.78`
 
 ---
 
@@ -29,7 +29,13 @@
 * **Documentation audit** - `python scripts/audit_docs.py` (also the
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
-  and anchors, absolute paths and canonical names. The parity backlog
+  and anchors, absolute paths and canonical names, and the capability
+  registry against the sibling repositories: JSON and YAML hold the same
+  data, the model ids equal the keys of the training registry
+  (`unified_models_v2.yaml`) and every port equals the service port in
+  `lemgendary-env-manager/ecosystem/ecosystem.json`. The sibling files are
+  found next to this repository or under `LEMGENDARY_WORKSPACE_ROOT`; a
+  missing file is a finding that names the path. The parity backlog
   (`scripts/parity_backlog.json`) is empty since v16.9.77, so any finding
   fails.
 
@@ -50,6 +56,41 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.78 - Ecosystem Registry Checks and Documentation (DOCS-1)
+
+* **Audit** - three new checks in `scripts/docs_audit/`:
+  `registry-parity` (`canonical_capabilities.json` and `.yaml` hold the same
+  data), `registry-models` (model ids equal the keys of the training registry
+  `unified_models_v2.yaml`, without `_registry_metadata`) and `service-ports`
+  (every model `api.port` equals the `training-suite` port and
+  `control_planes.gui.ports` equal the service ports of
+  `lemgendary-env-manager/ecosystem/ecosystem.json`). New module
+  `docs_audit/workspace.py` resolves the sibling files from the workspace root
+  (the parent of this repository, or `LEMGENDARY_WORKSPACE_ROOT`); the training
+  folder is taken from `ecosystem.json`. A missing file is a finding that
+  names the expected path and the variable.
+* **Tests** - `test_cross_repo_manifest_and_runtime_consistency` reads the
+  ports from `ecosystem.json` instead of literals (the 3 `ecosystem_ssot`
+  findings in this repository are gone; the gate reports 0).
+  `tests/test_docs_audit.py` uses a fixture workspace
+  (`tests/fixtures/workspace/`) and has 7 new tests (registry drift, model
+  drift, metadata key, API and GUI port drift, missing workspace, root
+  resolution). 65 passed, 2 skipped.
+* **Papers and Manuals** - the Environment Manager whitepaper has a new
+  Section 6.7 Ecosystem Registry (file contents, `GET /api/ecosystem`, the
+  Dataset Compiler and Training Suite `ecosystem` loaders, the GUI snapshot
+  `src/generated/ecosystem.json`, the `ecosystem_ssot` gate) and notes that
+  pipeline step names come from the file. The Master API Manual documents
+  `GET /api/ecosystem` and where the server defaults and step names come
+  from; Current State, Ecosystem Architecture, the AI Studio GUI whitepaper,
+  the Dataset Compiler and the Training Suite papers say where ports, project
+  lists, step names and the Kaggle owner live. HTML updated to match.
+* **Registries** - new platform capability `ecosystem_registry` in both
+  capability registries; `api-manual` audited 2026-11-03 in the manifest.
+* **Version** - hub version v16.9.78 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.77 - Parity Backlog Cleared: Hub Index and Lint
 

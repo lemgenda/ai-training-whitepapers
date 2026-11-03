@@ -101,6 +101,9 @@ Description: Network IP address to bind HTTP and WebSocket listener</li>
 <li><strong>TCP Port</strong>: Default Value: <code>8000</code>; CLI Flag: <code>--port</code>; Description: Local
 listening port for incoming requests</li>
 </ul>
+<p>Both defaults come from <code>ecosystem/ecosystem.json</code> (<code>identity.bind_host</code> and
+the port of the <code>env-manager</code> service); see <code>GET /api/ecosystem</code> in
+Section 2.7.</p>
 <p>The server's lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan
 handler. A background asyncio task drains the WebSocket event queue for the
 lifetime of the server and is cancelled cleanly on shutdown.</p>
@@ -612,6 +615,8 @@ emitted by the pipeline.</p>
 <li><code>warning</code>: Step completed with non-fatal advisory notice.</li>
 <li><code>error</code>: Fatal error encountered in step execution.</li>
 </ul>
+<p><code>step_number</code>, <code>total_steps</code> and <code>step_name</code> come from <code>pipeline_steps</code> in
+<code>ecosystem/ecosystem.json</code>.</p>
 <p>Thread-safe dispatch is guaranteed via <code>asyncio.run_coroutine_threadsafe()</code>,
 which allows the background pipeline thread to broadcast events on the server's
 running event loop without blocking.</p>
@@ -643,10 +648,21 @@ payload.</p>
   }
 }
 </code></pre>
+<h4 id="get-apiecosystem"><code>GET /api/ecosystem</code></h4>
+<p>Returns the ecosystem registry <code>ecosystem/ecosystem.json</code> as a typed
+<code>Ecosystem</code> response (since v16.9.49): <code>schema_version</code>, <code>identity</code>
+(<code>docs_url</code>, <code>kaggle_owner</code>, <code>bind_host</code>), <code>services[]</code> (id, aliases,
+project, port, health, liveness and WebSocket paths, app import, log
+folder), <code>projects[]</code> (folder, display name, kind, managed, validated,
+upgrade order, git hook, manifests, legacy folders) and <code>pipeline_steps[]</code>
+(number, id, name, short and long description). Other clients read the
+ports, project folders, pipeline step names and Kaggle owner from this
+response or from the file instead of hard-coding them.</p>
 <h4 id="get-apiguiecosystem"><code>GET /api/gui/ecosystem</code></h4>
 <p>Monitors health and connectivity across local ecosystem sidecars by actively
-probing <code>http://127.0.0.1:8100/api/health</code> and
-<code>http://127.0.0.1:8200/api/health</code> with a non-blocking timeout. Powers the
+probing the health path of every service in <code>ecosystem.json</code>
+(<code>http://127.0.0.1:8100/api/health</code> and
+<code>http://127.0.0.1:8200/api/health</code>) with a non-blocking timeout. Powers the
 desktop GUI top-bar status indicator and service mesh dashboard tiles:</p>
 <pre><code class="language-json">{
   "env_manager": {

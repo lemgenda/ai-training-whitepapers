@@ -241,6 +241,11 @@ utilization, loss convergence and export jobs.</li>
 sidecars over WebSockets and REST, with one store for telemetry, compilation
 jobs, training cards and log streams.</li>
 </ol>
+<p>Since v2.10.32 the sidecar ports and the project folders come from the
+committed snapshot <code>src/generated/ecosystem.json</code>, a copy of
+<code>lemgendary-env-manager/ecosystem/ecosystem.json</code> that
+<code>npm run sync:ecosystem</code> refreshes before <code>dev</code> and <code>build</code>;
+<code>npm run check:ecosystem</code> fails when the snapshot differs from the source.</p>
 <p>State updates follow unidirectional dispatch flows:</p>
 <div class="math-block">$$\text{State}_{t+1} = \Phi(\text{State}_t, \text{TelemetryEvent})$$</div>
 <p>preventing UI race conditions and ensuring deterministic views during

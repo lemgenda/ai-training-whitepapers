@@ -85,10 +85,10 @@ and governed as follows:
      release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen
      OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.77-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.78-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals,
      and foundational whitepapers.
-   - Reflects the active documentation release (`v16.9.77-STABLE`, reviewed
+   - Reflects the active documentation release (`v16.9.78-STABLE`, reviewed
      2026-11-03) while governing systems against the core runtime backend engine
      baseline (`v16.9.68-STABLE`) and desktop operator client (`v2.10.19`).
 4. **Specialized Diagnostic & Clinical Specifications (`v1.x.y` / `v2.x.y`)**:
@@ -122,7 +122,7 @@ as follows:
   `src-tauri/tauri.conf.json`; Primary Interface: Tauri v2 Desktop App / Ports
   8000/8100/8200
 - **Documentation Hub**: Repository / Component: `lemgendary-docs`; Runtime
-  Version: `v16.9.77-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
+  Version: `v16.9.78-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
   Interface: Documentation Hub (`index.html`)
 - **Model Registry**: Repository / Component: `LemGendaryModels`; Runtime
   Version: `v16.9.16-STABLE`; Config Manifests: `LemGendaryModels/*/README.md`;

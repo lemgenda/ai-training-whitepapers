@@ -120,7 +120,7 @@ repository is the source of the release version.
   `lem-env` and `lemgendary_env_manager.ps1`.
 - **LemGendary AI Studio GUI** (`v2.10.19`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.77-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.78-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
@@ -169,7 +169,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.77-STABLE`.
+together and share the document baseline `v16.9.78-STABLE`.
 
 ---
 
@@ -186,6 +186,14 @@ bound to `127.0.0.1` and protected by the Origin Guard:
 - **LemGendary Model Training Suite**, port `8200` (HTTP / WebSocket):
   training job submission (`POST /api/training/train`), live loss streaming,
   GPU device allocation, model soup and SOTA audits.
+
+The ports, the project list, the pipeline step names and the Kaggle owner
+are defined once, in `lemgendary-env-manager/ecosystem/ecosystem.json`
+(served by `GET /api/ecosystem`). The LemGendary Dataset Compiler Suite and
+the LemGendary Model Training Suite read it through their `ecosystem`
+loaders, the LemGendary AI Studio GUI through its snapshot
+`src/generated/ecosystem.json`, and the `ecosystem_ssot` validation gate
+reports values written anywhere else.
 
 ---
 

@@ -1308,6 +1308,9 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
   groups for health (`/api/health`, `/api/health/full`), GUI aggregation
   (`/api/gui/*`), datasets, sources, gates, Kaggle, modernize, LLM,
   configuration, jobs and environment. `openapi.json` lists all 38 operations.
+  The port, the Kaggle owner and the sibling project folders are read
+  from `lemgendary-env-manager/ecosystem/ecosystem.json` through one loader,
+  `core/ecosystem.py`.
 - **SQLite Job Registry (`.lgd_server/jobs.db`)**: Persistent state machine with
   restart recovery that marks orphaned runs `interrupted`. Job types include
   compile, degrade, generic (`POST /api/jobs/generic`) and, since v16.9.25,

@@ -106,7 +106,15 @@ graph TD
 To allow desktop applications, external CLI scripts, and cloud orchestrators to
 control the ecosystem without blocking execution or encountering Python GIL
 contentions, the ecosystem deploys three specialized asynchronous sidecar
-daemons across standardized local ports (`8000`, `8100`, and `8200`):
+daemons across standardized local ports (`8000`, `8100`, and `8200`).
+
+The ports, the project list, the pipeline step names and the Kaggle owner
+are defined once, in `lemgendary-env-manager/ecosystem/ecosystem.json`
+(served by `GET /api/ecosystem`). The LemGendary Dataset Compiler Suite and
+the LemGendary Model Training Suite read it through their `ecosystem`
+loaders, the LemGendary AI Studio GUI through its snapshot
+`src/generated/ecosystem.json`, and the `ecosystem_ssot` validation gate
+reports values written anywhere else.
 
 ### 2.1 Environment Manager Sidecar (`127.0.0.1:8000`)
 

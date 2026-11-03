@@ -3,10 +3,17 @@ import importlib
 import json
 import os
 import re
+import sys
 import unittest
 from html.parser import HTMLParser
+from pathlib import Path
 
 yaml = importlib.import_module('yaml')
+
+SCRIPTS_DIR = Path(__file__).resolve().parents[1] / 'scripts'
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+docs_audit = importlib.import_module('docs_audit')
 
 
 class TestDocumentationIntegrity(unittest.TestCase):
@@ -17,7 +24,9 @@ class TestDocumentationIntegrity(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.docs_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        cls.workspace_root = os.path.abspath(os.path.join(cls.docs_root, '..'))
+        # Parent of the docs root, or LEMGENDARY_WORKSPACE_ROOT when set.
+        cls.workspace_root = str(docs_audit.workspace_root(Path(cls.docs_root)))
+        cls.workspace = docs_audit.Workspace(Path(cls.workspace_root))
         cls.html_files = glob.glob(os.path.join(cls.docs_root, 'papers', '*.html'))
         cls.index_html = os.path.join(cls.docs_root, 'index.html')
         if os.path.exists(cls.index_html):
@@ -733,8 +742,8 @@ class TestDocumentationIntegrity(unittest.TestCase):
 
     # ── 33. Cross-Repository Runtime & Manifest Consistency ─────────────────
     def test_cross_repo_manifest_and_runtime_consistency(self):
-        """Rule: Model identifiers in unified_models_v2.yaml and sidecar ports (8000, 8100, 8200)
-        must match documentation."""
+        """Rule: Model identifiers in unified_models_v2.yaml and the sidecar ports of
+        ecosystem.json (LemGendary Environment Manager) must match documentation."""
         models = [k for k in self.manifest if not k.startswith('_')]
         self.assertGreater(len(models), 10, "unified_models_v2.yaml must declare model definitions")
 
@@ -742,9 +751,14 @@ class TestDocumentationIntegrity(unittest.TestCase):
         current_state_path = os.path.join(self.docs_root, 'papers', 'current-state.html')
         with open(current_state_path, 'r', encoding='utf-8', errors='ignore') as f:
             cs_txt = f.read()
-        self.assertIn("8000", cs_txt, "Current state must reference Port 8000 (LemGendary Environment Manager)")
-        self.assertIn("8100", cs_txt, "Current state must reference Port 8100 (LemGendary Dataset Compiler Suite)")
-        self.assertIn("8200", cs_txt, "Current state must reference Port 8200 (LemGendary Model Training Suite)")
+        services = self.workspace.services
+        self.assertTrue(services, "ecosystem.json must declare the sidecar services")
+        for service in services.values():
+            self.assertIn(
+                str(service.port), cs_txt,
+                f"Current state must reference port {service.port} ({service.service_id}, "
+                "from ecosystem.json)"
+            )
 
     # ── 34. 3-Stage Diagnostic Intake Protocol Integrity ────────────────────
     def test_three_stage_diagnostic_protocol_integrity(self):

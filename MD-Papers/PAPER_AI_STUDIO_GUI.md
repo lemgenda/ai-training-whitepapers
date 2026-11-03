@@ -196,6 +196,12 @@ The LemGendary AI Studio GUI coordinates three headless sidecars:
    sidecars over WebSockets and REST, with one store for telemetry, compilation
    jobs, training cards and log streams.
 
+Since v2.10.32 the sidecar ports and the project folders come from the
+committed snapshot `src/generated/ecosystem.json`, a copy of
+`lemgendary-env-manager/ecosystem/ecosystem.json` that
+`npm run sync:ecosystem` refreshes before `dev` and `build`;
+`npm run check:ecosystem` fails when the snapshot differs from the source.
+
 State updates follow unidirectional dispatch flows:
 
 $$

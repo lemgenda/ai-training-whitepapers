@@ -1256,7 +1256,9 @@ suppression-free.</li>
 <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> with route
 groups for health (<code>/api/health</code>, <code>/api/health/full</code>), GUI aggregation
 (<code>/api/gui/*</code>), datasets, sources, gates, Kaggle, modernize, LLM,
-configuration, jobs and environment. <code>openapi.json</code> lists all 38 operations.</li>
+configuration, jobs and environment. <code>openapi.json</code> lists all 38 operations. The port, the Kaggle owner and the sibling project folders are read
+from <code>lemgendary-env-manager/ecosystem/ecosystem.json</code> through one loader,
+<code>core/ecosystem.py</code>.</li>
 <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with
 restart recovery that marks orphaned runs <code>interrupted</code>. Job types include
 compile, degrade, generic (<code>POST /api/jobs/generic</code>) and, since v16.9.25,

@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .parsing import ParsedDocument, parse_html, parse_markdown
+from .workspace import Workspace, workspace_root
 
 MANIFEST_PATH = Path("manifest") / "documents.json"
 
@@ -46,6 +47,11 @@ class AuditContext:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
         self._parsed: dict[str, ParsedDocument] = {}
+
+    @cached_property
+    def workspace(self) -> Workspace:
+        """The sibling repositories (see ``workspace.workspace_root``)."""
+        return Workspace(workspace_root(self.root))
 
     @cached_property
     def manifest(self) -> dict[str, Any]:

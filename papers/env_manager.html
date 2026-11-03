@@ -62,6 +62,8 @@ Observability</a></li>
 <li><a href="#64-background-update-jobs">6.4 Background Update Jobs</a></li>
 <li><a href="#65-security-model">6.5 Security Model</a></li>
 <li><a href="#66-bug-report-endpoint">6.6 Bug Report Endpoint</a></li>
+<li><a href="#67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry
+(ecosystem.json)</a></li>
 </ul>
 </li>
 <li><a href="#7-unified-models-registry">7. Unified Models Registry</a></li>
@@ -310,6 +312,11 @@ markdownlint, yamllint, W3C HTML and WCAG 2.2 AA.</p>
 <p>The Smart Install Pipeline operates as a directed acyclic synthesis flow
 comprising seven deterministic stages:</p>
 <div class="math-block">$$\mathcal{G} = (\mathcal{V}, \mathcal{E}), \quad \mathcal{V} = \{v_1, v_2, \dots, v_7\}$$</div>
+<p>Since v16.9.49 the step numbers, ids and names come from <code>pipeline_steps</code> in
+<code>ecosystem/ecosystem.json</code> (Section 6.7), and the step events of the pipeline
+carry those names: Hardware Discovery, Toolchain Audit, Virtual Environments,
+Requirements Sync &amp; Install, Dependency Audit &amp; Upgrades, Codebase Verification
+and Health Matrix. The list below describes what each step does.</p>
 <ol>
 <li><strong>Hardware Discovery ($v_1$)</strong>: Evaluates OS architecture, CPU topology,
 system RAM, GPU accelerators, and MetaTrader 5 installation. Resolves the
@@ -482,6 +489,48 @@ cannot be opened, because the archive is saved.</li>
 <li><strong>Configuration</strong>: recipient, subject, reports folder and limits are defined
 in one place, <code>env_manager/bug_report/config.py</code> (<code>BugReportSettings</code>).</li>
 </ul>
+<h3 id="67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry (ecosystem.json)</h3>
+<p>Since v16.9.49 the facts that every project shares are defined in one file,
+<code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, described by
+<code>ecosystem/ecosystem.schema.json</code> (JSON Schema draft 2020-12). Edit the file,
+not the code:</p>
+<ul>
+<li><strong>Services</strong> (<code>services[]</code>): id, aliases, project folder, port, health,
+liveness and WebSocket paths, app import and log folder of each sidecar. The
+sidecar ports, URLs and the <code>lem-env serve</code> defaults are read from here.</li>
+<li><strong>Projects</strong> (<code>projects[]</code>): folder, display name, kind (<code>python</code>, <code>node</code>,
+<code>asset</code>), whether the project is managed, validated or git-hooked, its
+upgrade order and manifests. Project discovery, the validation targets, the
+upgrade order and the manifest sync targets are derived from this list.</li>
+<li><strong>Pipeline steps</strong> (<code>pipeline_steps[]</code>): number, id, name and descriptions of
+the seven pipeline steps (Section 6).</li>
+<li><strong>Identity</strong> (<code>identity</code>): documentation URL, Kaggle owner and bind host.</li>
+</ul>
+<p>Python code in this repository reads the file through
+<code>env_manager.ecosystem.ecosystem()</code> (parsed once and cached;
+<code>LEMGENDARY_ECOSYSTEM_FILE</code> overrides the location). <code>GET /api/ecosystem</code>
+returns it as a typed <code>Ecosystem</code> response. The other projects read the same
+file:</p>
+<ul>
+<li>The LemGendary Dataset Compiler Suite and the LemGendary Model Training Suite
+each have one loader, <code>core/ecosystem.py</code> and <code>training/ecosystem.py</code>, that
+locates the file in the workspace (<code>LEMGENDARY_WORKSPACE_ROOT</code> or the parent
+folder) and provides ports, project folders and the Kaggle owner.</li>
+<li>The LemGendary AI Studio GUI copies it to the committed snapshot
+<code>src/generated/ecosystem.json</code> before <code>dev</code> and <code>build</code>
+(<code>npm run sync:ecosystem</code>; <code>npm run check:ecosystem</code> fails when the snapshot
+differs) and derives its sidecar ports and project folders from the snapshot.</li>
+<li>The LemGendary AI Documentation Hub audit checks that the model ids of
+<code>canonical_capabilities.json</code> equal the training registry keys and that its
+ports equal the service ports in the file.</li>
+</ul>
+<p>The validation gate <code>ecosystem_ssot</code> (warning severity) reports drift: in code,
+configuration and tests a literal service port, the Kaggle owner, the
+documentation URL or a list of three or more project folders is a finding (test
+fixtures are allowed); in Markdown, HTML and the registries the values may be
+written out but must equal the file. It also checks that the GUI snapshot equals
+the source, that the GUI Content Security Policy ports equal the service ports
+and that the GUI <code>ProjectHealth</code> type matches the OpenAPI schema.</p>
 </section>
 
 <section id="7-unified-models-registry">
