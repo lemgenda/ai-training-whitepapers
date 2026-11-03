@@ -1,6 +1,6 @@
 # Degradation Engine & Synthetic Manifold Synthesis Whitepaper
 
-## Category 01.2 | Subpage of Master Ecosystem Architecture
+## Category 01.6 ENGINE | Subpage of Master Ecosystem Architecture
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 

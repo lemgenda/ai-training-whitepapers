@@ -2,7 +2,29 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.67`
+**Version**: `v16.9.68`
+
+---
+
+## Hub Features
+
+* **48 publications** - Markdown sources in `MD-Papers/` paired 1-to-1 with
+  HTML pages in `papers/`, catalogued in `manifest/documents.json`.
+* **Capability registry** - `canonical_capabilities.json` and its YAML twin
+  (kept identical) list the 23 registered models with registry categories,
+  CLI commands (`lemtrain train MODEL_KEY`), API routes
+  (`POST /api/training/train`) and GUI control IDs, plus the platform
+  capabilities: Bug Report Tool (`POST /api/bug-report`, screen recording
+  planned), the sidecar security contract (Origin Guard and Client Header) and
+  Pareto Model Soup.
+* **Current baselines** - LemGendary Environment Manager v16.9.18, LemGendary
+  Dataset Compiler Suite v16.9.27, LemGendary Model Training Suite v16.9.68,
+  LemGendary AI Studio GUI v2.10.19.
+* **Glossary and current state** - canonical terms (including Bug Report
+  Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
+  the verified workspace state with the versioning matrix.
+* **Approved HTML template** - synchronized pages use `header`,
+  `nav.toc-sidebar`, `section` and `footer` and pass W3C validation.
 
 ---
 
@@ -14,6 +36,43 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.68 - Capability Registries, Manifest, Glossary and Current State Sync
+
+* **Capability Registries** - `canonical_capabilities.json` and `.yaml`
+  (identical after parsing): baselines updated (documents v16.9.68, Model
+  Training Suite v16.9.68, AI Studio GUI v2.10.19, Dataset Compiler Suite
+  v16.9.27, new Environment Manager v16.9.18), audited 2026-11-03. Removed the
+  nonexistent `POST /v16/train/start` (now `POST /api/training/train`; LLM:
+  `POST /api/training/llm/train`); CLI syntax fixed to `lemtrain train
+  MODEL_KEY` and `lemtrain llm train`; CLI engine is Typer; 14 model categories
+  aligned with `unified_models_v2.yaml` and a `registry_status` field added;
+  manifold formats follow the registry (`parquet` for `forex_predictor`,
+  `directory` for `yolov8n`); GUI IDs point to `train-btn-start-{model_key}`.
+  New `platform_capabilities`: `bug_reporting` (env manager
+  `POST /api/bug-report`, local ZIP plus mail client, at most 5 screenshots,
+  Telemetry CSV, recording planned), `security_contract` (Origin Guard, Client
+  Header, masked secrets) and `model_soup` (SWA not implemented).
+* **Document Manifest** - `manifest/documents.json` baseline v16.9.68, audited
+  2026-11-03. Titles, versions and audit dates for the GUI documents (v2.10.19),
+  Environment Manager (v16.9.18), Ecosystem Architecture (v16.9.65), Dataset
+  Compiler Suite (v16.9.27), Model Training Suite and pathology guide
+  (v16.9.68), glossary and current state. Category collisions fixed: Environment
+  Manager 01.1 ENV, Dataset Compiler Suite 01.2 DATASET, Degradation Engine
+  01.6 ENGINE (Markdown and HTML updated), AI Studio GUI whitepaper 01.4 GUI,
+  GUI Control Registry 03.4 CONTROLS. All 48 entries point to existing files.
+* **Glossary** - `GLOSSARY.md` and `papers/glossary.html` rebuilt on the
+  approved template ("1. Abstract", TOC, wrapped lines, matrix as a list); new
+  terms Ratchet Violation, Epoch Budget, Origin Guard, Client Header, Bug Report
+  Tool, Bug Report Archive, Screenshot Annotator and Telemetry CSV.
+* **Current State** - `LEMGENDARY_CURRENT_STATE.md` and
+  `papers/current-state.html` on the approved template; Section 1 is now
+  "1. Abstract"; versioning matrix and feature list updated (security
+  contract, bug reporting, pair-rule ratchet, epoch budget, model soup, 23
+  models, 4-pillar invariant, known package-version drift); FID unverified note
+  for `codeformer`, `ffanet_indoor`, `mprnet_deraining` and `mirnet_lowlight`.
+* **Environment Manager paper** - category banner reads "Category 01.1 ENV",
+  which fixes `test_category_taxonomy_uniqueness`.
 
 ### v16.9.67 - Model Training Suite v16.9.68 Paper Sync (Pair-Rule Ratchet)
 

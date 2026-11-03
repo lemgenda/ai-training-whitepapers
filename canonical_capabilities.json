@@ -1,13 +1,15 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.60-STABLE",
-  "runtime_engine_baseline": "v16.9.60-STABLE",
-  "desktop_client_baseline": "v2.10.5",
-  "last_audited": "2026-11-02",
+  "document_baseline": "v16.9.68-STABLE",
+  "runtime_engine_baseline": "v16.9.68-STABLE",
+  "desktop_client_baseline": "v2.10.19",
+  "dataset_compiler_baseline": "v16.9.27-STABLE",
+  "environment_manager_baseline": "v16.9.18-STABLE",
+  "last_audited": "2026-11-03",
   "control_planes": {
     "gui": {
       "framework": "Tauri v2 + React 18 + Vite",
-      "version": "v2.10.5",
+      "version": "v2.10.19",
       "ports": {
         "environment_manager_sidecar": 8000,
         "dataset_compiler_sidecar": 8100,
@@ -15,17 +17,32 @@
       }
     },
     "cli": {
-      "engine": "Python argparse / click",
+      "engine": "Typer (all three Python projects)",
       "entrypoints": {
-        "training": "python -m training.cli.lemtrain",
+        "training": "lemtrain",
         "dataset_compiler": "python cli.py",
         "environment_manager": "lem-env"
+      },
+      "syntax": {
+        "train": "lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME]",
+        "llm_train": "lemtrain llm train [MODEL_KEY]",
+        "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]"
       }
     },
     "api": {
       "framework": "FastAPI + WebSocket",
       "openapi_specification": "openapi.json",
-      "contracts": "Frozen OpenAPI 3.1"
+      "contracts": "OpenAPI 3.1.0, one openapi.json per sidecar",
+      "operation_counts": {
+        "environment_manager": 32,
+        "dataset_compiler": 38,
+        "training": 40
+      },
+      "training_routes": {
+        "train": "POST /api/training/train",
+        "llm_train": "POST /api/training/llm/train",
+        "model_soup": "POST /api/models/{model_key}/soup"
+      }
     }
   },
   "models": [
@@ -33,10 +50,11 @@
       "id": "forex_predictor",
       "name": "Forex Predictor (Multi-Scale CNN-Transformer)",
       "category": "forex",
+      "registry_status": "TRAINING",
       "domain": "time_series_quantitative_finance",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/ForexPredictor/ForexPredictor.py",
       "weights_path": "LemGendaryModels/ForexPredictor/ForexPredictorWeights_FP32.pth",
       "architecture_type": "Causal TCN + Multi-Head Cross-Timeframe Attention",
@@ -46,20 +64,20 @@
           "parquet",
           "mt5_ticks"
         ],
-        "manifold": "tar_stream"
+        "manifold": "parquet"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-forex-predictor"
+          "element_id": "train-btn-start-forex_predictor"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model forex_predictor"
+          "command": "lemtrain train forex_predictor"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -88,11 +106,12 @@
     {
       "id": "nima_aesthetic_mobile",
       "name": "NIMA Aesthetic Mobile",
-      "category": "quality_assessment",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_mobile/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_mobile/weights.pth",
       "architecture_type": "MobileNetV3-Small + Earth Mover's Distance Head",
@@ -102,20 +121,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nima-aesthetic-mobile"
+          "element_id": "train-btn-start-nima_aesthetic_mobile"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nima_aesthetic_mobile"
+          "command": "lemtrain train nima_aesthetic_mobile"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -143,11 +162,12 @@
     {
       "id": "nima_aesthetic_efficientnet",
       "name": "NIMA Aesthetic EfficientNet",
-      "category": "quality_assessment",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_efficientnet/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_efficientnet/weights.pth",
       "architecture_type": "EfficientNet-B0 Backbone + EMD Loss",
@@ -157,20 +177,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nima-aesthetic-efficientnet"
+          "element_id": "train-btn-start-nima_aesthetic_efficientnet"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nima_aesthetic_efficientnet"
+          "command": "lemtrain train nima_aesthetic_efficientnet"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -198,11 +218,12 @@
     {
       "id": "nima_aesthetic_pro",
       "name": "NIMA Aesthetic Pro",
-      "category": "quality_assessment",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_pro/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_pro/weights.pth",
       "architecture_type": "DenseNet-201 / ConvNeXt-Tiny + Multi-Head EMD",
@@ -213,20 +234,20 @@
           "webp",
           "tiff"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nima-aesthetic-pro"
+          "element_id": "train-btn-start-nima_aesthetic_pro"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nima_aesthetic_pro"
+          "command": "lemtrain train nima_aesthetic_pro"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -254,11 +275,12 @@
     {
       "id": "nima_technical",
       "name": "NIMA Technical Quality",
-      "category": "quality_assessment",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "technical_distortion_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nima_technical/model.py",
       "weights_path": "LemGendaryModels/nima_technical/weights.pth",
       "architecture_type": "MobileNetV3 Backbone + Multi-Distortion Classification Head",
@@ -268,20 +290,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nima-technical"
+          "element_id": "train-btn-start-nima_technical"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nima_technical"
+          "command": "lemtrain train nima_technical"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -309,11 +331,12 @@
     {
       "id": "nima_authenticity",
       "name": "NIMA Authenticity & Artifact Detection",
-      "category": "quality_assessment",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "synthetic_generation_authenticity",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nima_authenticity/model.py",
       "weights_path": "LemGendaryModels/nima_authenticity/weights.pth",
       "architecture_type": "Frequency-Aware High-Pass ResNet Backbone",
@@ -323,20 +346,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nima-authenticity"
+          "element_id": "train-btn-start-nima_authenticity"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nima_authenticity"
+          "command": "lemtrain train nima_authenticity"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -364,11 +387,12 @@
     {
       "id": "upn_v2",
       "name": "Universal Perceptual Network V2",
-      "category": "restoration",
+      "category": "enhance",
+      "registry_status": "VALIDATED",
       "domain": "vision_hybrid_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/upn_v2/model.py",
       "weights_path": "LemGendaryModels/upn_v2/weights.pth",
       "architecture_type": "Residual-in-Residual Dense Blocks with Spatial Attention",
@@ -378,20 +402,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-upn-v2"
+          "element_id": "train-btn-start-upn_v2"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model upn_v2"
+          "command": "lemtrain train upn_v2"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -420,10 +444,11 @@
       "id": "film_restorer",
       "name": "Film Restorer (Vintage Grain & Scratch Removal)",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "vintage_photographic_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/film_restorer/model.py",
       "weights_path": "LemGendaryModels/film_restorer/weights.pth",
       "architecture_type": "Dual-Branch Attention Network (Structure + Grain Decomposition)",
@@ -434,20 +459,20 @@
           "webp",
           "tiff"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-film-restorer"
+          "element_id": "train-btn-start-film_restorer"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model film_restorer"
+          "command": "lemtrain train film_restorer"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -475,11 +500,12 @@
     {
       "id": "codeformer",
       "name": "CodeFormer Face Restoration",
-      "category": "face_restoration",
+      "category": "face",
+      "registry_status": "VALIDATED",
       "domain": "blind_face_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/codeformer/model.py",
       "weights_path": "LemGendaryModels/codeformer/weights.pth",
       "architecture_type": "Learned Discrete Codebook Transformer with Fidelity Controllability",
@@ -489,20 +515,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-codeformer"
+          "element_id": "train-btn-start-codeformer"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model codeformer"
+          "command": "lemtrain train codeformer"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -530,11 +556,12 @@
     {
       "id": "parsenet",
       "name": "ParseNet Facial Parsing",
-      "category": "facial_segmentation",
+      "category": "face",
+      "registry_status": "VALIDATED",
       "domain": "semantic_face_segmentation",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/parsenet/model.py",
       "weights_path": "LemGendaryModels/parsenet/weights.pth",
       "architecture_type": "BiSeNet-V2 with Spatial and Context Paths",
@@ -544,20 +571,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-parsenet"
+          "element_id": "train-btn-start-parsenet"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model parsenet"
+          "command": "lemtrain train parsenet"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -586,10 +613,11 @@
       "id": "ffanet_indoor",
       "name": "FFA-Net Indoor Dehazing",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "feature_fusion_indoor_dehazing",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/ffanet_indoor/model.py",
       "weights_path": "LemGendaryModels/ffanet_indoor/weights.pth",
       "architecture_type": "Feature Fusion Attention Network (Channel + Pixel Attention)",
@@ -599,20 +627,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-ffanet-indoor"
+          "element_id": "train-btn-start-ffanet_indoor"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model ffanet_indoor"
+          "command": "lemtrain train ffanet_indoor"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -641,10 +669,11 @@
       "id": "ffanet_outdoor",
       "name": "FFA-Net Outdoor Dehazing",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "feature_fusion_outdoor_dehazing",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/ffanet_outdoor/model.py",
       "weights_path": "LemGendaryModels/ffanet_outdoor/weights.pth",
       "architecture_type": "Feature Fusion Attention Network (Extended Depth Layers)",
@@ -654,20 +683,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-ffanet-outdoor"
+          "element_id": "train-btn-start-ffanet_outdoor"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model ffanet_outdoor"
+          "command": "lemtrain train ffanet_outdoor"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -696,10 +725,11 @@
       "id": "mirnet_lowlight",
       "name": "MIRNet Low-Light Enhancement",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "multi_scale_low_light_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/mirnet_lowlight/model.py",
       "weights_path": "LemGendaryModels/mirnet_lowlight/weights.pth",
       "architecture_type": "Multi-Scale Residual Block with Dual Attention Units",
@@ -710,20 +740,20 @@
           "webp",
           "raw"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-mirnet-lowlight"
+          "element_id": "train-btn-start-mirnet_lowlight"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model mirnet_lowlight"
+          "command": "lemtrain train mirnet_lowlight"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -752,10 +782,11 @@
       "id": "mirnet_exposure",
       "name": "MIRNet Exposure Correction",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "dual_exposure_over_under_correction",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/mirnet_exposure/model.py",
       "weights_path": "LemGendaryModels/mirnet_exposure/weights.pth",
       "architecture_type": "Multi-Scale Residual Block with Highlight Preservation",
@@ -766,20 +797,20 @@
           "webp",
           "raw"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-mirnet-exposure"
+          "element_id": "train-btn-start-mirnet_exposure"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model mirnet_exposure"
+          "command": "lemtrain train mirnet_exposure"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -808,10 +839,11 @@
       "id": "mprnet_deraining",
       "name": "MPRNet Deraining & Drop Removal",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "multi_stage_progressive_deraining",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/mprnet_deraining/model.py",
       "weights_path": "LemGendaryModels/mprnet_deraining/weights.pth",
       "architecture_type": "3-Stage Progressive Architecture with Cross-Stage Feature Fusion",
@@ -821,20 +853,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-mprnet-deraining"
+          "element_id": "train-btn-start-mprnet_deraining"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model mprnet_deraining"
+          "command": "lemtrain train mprnet_deraining"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -863,10 +895,11 @@
       "id": "nafnet_debluring",
       "name": "NAFNet Deblurring",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "nonlinear_activation_free_deblurring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nafnet_debluring/model.py",
       "weights_path": "LemGendaryModels/nafnet_debluring/weights.pth",
       "architecture_type": "Nonlinear Activation Free Network (SimpleGate + Simplified Channel Attention)",
@@ -876,20 +909,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nafnet-debluring"
+          "element_id": "train-btn-start-nafnet_debluring"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nafnet_debluring"
+          "command": "lemtrain train nafnet_debluring"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -918,10 +951,11 @@
       "id": "nafnet_denoising",
       "name": "NAFNet Denoising",
       "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "nonlinear_activation_free_denoising",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/nafnet_denoising/model.py",
       "weights_path": "LemGendaryModels/nafnet_denoising/weights.pth",
       "architecture_type": "Nonlinear Activation Free Network (36-Block Backbone)",
@@ -932,20 +966,20 @@
           "webp",
           "tiff"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nafnet-denoising"
+          "element_id": "train-btn-start-nafnet_denoising"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model nafnet_denoising"
+          "command": "lemtrain train nafnet_denoising"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -973,11 +1007,12 @@
     {
       "id": "yolov8n",
       "name": "YOLOv8 Nano Object Detection",
-      "category": "detection",
+      "category": "yolo",
+      "registry_status": "PRODUCTION",
       "domain": "realtime_object_detection",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/yolov8n/model.py",
       "weights_path": "LemGendaryModels/yolov8n/weights.pth",
       "architecture_type": "Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned Assigner)",
@@ -988,20 +1023,20 @@
           "webp",
           "video_mp4"
         ],
-        "manifold": "tar_stream"
+        "manifold": "directory"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-yolov8n"
+          "element_id": "train-btn-start-yolov8n"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model yolov8n"
+          "command": "lemtrain train yolov8n"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -1029,11 +1064,12 @@
     {
       "id": "professional_multitask_restoration",
       "name": "Professional Multitask Restoration Pro",
-      "category": "hybrid_restoration",
+      "category": "restoration",
+      "registry_status": "DATASET_READY",
       "domain": "unified_multi_distortion_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/professional_multitask_restoration/model.py",
       "weights_path": "LemGendaryModels/professional_multitask_restoration/weights.pth",
       "architecture_type": "Dynamic Multi-Head Transformer with Task Prompt Embeddings",
@@ -1043,20 +1079,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-multitask"
+          "element_id": "train-btn-start-professional_multitask_restoration"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model professional_multitask_restoration"
+          "command": "lemtrain train professional_multitask_restoration"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -1084,11 +1120,12 @@
     {
       "id": "ultrazoom",
       "name": "UltraZoom Super-Resolution",
-      "category": "super_resolution",
+      "category": "restoration",
+      "registry_status": "VALIDATED",
       "domain": "perceptual_super_resolution",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/ultrazoom/model.py",
       "weights_path": "LemGendaryModels/ultrazoom/weights.pth",
       "architecture_type": "Cascaded Residual LapSRN + High-Frequency Edge Head",
@@ -1098,20 +1135,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-ultrazoom"
+          "element_id": "train-btn-start-ultrazoom"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model ultrazoom"
+          "command": "lemtrain train ultrazoom"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -1129,7 +1166,7 @@
       ],
       "academic_reference": {
         "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
-        "authors": "Wenzhe Shi, Jose Caballero, Ferenc Husz\u00e1r, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang",
+        "authors": "Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang",
         "year": 2016,
         "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
         "link": "https://arxiv.org/abs/1609.05158",
@@ -1139,11 +1176,12 @@
     {
       "id": "universal_nsfw_classification",
       "name": "Universal NSFW & Content Moderation Classifier",
-      "category": "moderation",
+      "category": "enhance",
+      "registry_status": "DATASET_READY",
       "domain": "content_safety_classification",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/universal_nsfw_classification/model.py",
       "weights_path": "LemGendaryModels/universal_nsfw_classification/weights.pth",
       "architecture_type": "Vision Transformer (ViT-Small / EfficientNet-B2 Head)",
@@ -1153,20 +1191,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-nsfw"
+          "element_id": "train-btn-start-universal_nsfw_classification"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model universal_nsfw_classification"
+          "command": "lemtrain train universal_nsfw_classification"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -1194,11 +1232,12 @@
     {
       "id": "retinaface",
       "name": "RetinaFace Landmark Detection",
-      "category": "face_detection",
+      "category": "face",
+      "registry_status": "DATASET_READY",
       "domain": "dense_face_and_landmark_localization",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/retinaface/model.py",
       "weights_path": "LemGendaryModels/retinaface/weights.pth",
       "architecture_type": "Feature Pyramid Network with Context Modules and Multi-Task Loss",
@@ -1208,20 +1247,20 @@
           "jpg",
           "webp"
         ],
-        "manifold": "tar_stream"
+        "manifold": "webdataset"
       },
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-retinaface"
+          "element_id": "train-btn-start-retinaface"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.cli.lemtrain --model retinaface"
+          "command": "lemtrain train retinaface"
         },
         "api": {
           "available": true,
-          "route": "POST /v16/train/start",
+          "route": "POST /api/training/train",
           "port": 8200
         }
       },
@@ -1249,11 +1288,12 @@
     {
       "id": "ai_helper_lemgend",
       "name": "LemGendary AI Studio Assistant (Causal LLM)",
-      "category": "llm_assistant",
+      "category": "llm",
+      "registry_status": "PRODUCTION",
       "domain": "technical_documentation_and_ecosystem_triage",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.60-STABLE",
+      "runtime_baseline": "v16.9.68-STABLE",
       "codebase_path": "LemGendaryModels/ai_helper_lemgend/model.py",
       "weights_path": "LemGendaryModels/ai_helper_lemgend/checkpoints/AIHelperLemGend_best.pth",
       "architecture_type": "Causal Decoder Transformer (QLoRA Fine-Tuned)",
@@ -1267,11 +1307,11 @@
       "control_planes": {
         "gui": {
           "available": true,
-          "element_id": "model-select-ai-helper-lemgend"
+          "element_id": "train-btn-start-ai_helper_lemgend"
         },
         "cli": {
           "available": true,
-          "command": "python -m training.core_loop --model ai_helper_lemgend"
+          "command": "lemtrain llm train ai_helper_lemgend"
         },
         "api": {
           "available": true,
@@ -1301,5 +1341,122 @@
       }
     }
   ],
-  "dataset_compiler_baseline": "v16.9.21-STABLE"
+  "platform_capabilities": [
+    {
+      "id": "bug_reporting",
+      "name": "Bug Report Tool",
+      "status": "implemented",
+      "owner_project": "lemgendary-env-manager",
+      "baseline": "v16.9.18-STABLE",
+      "client_baseline": "v2.10.19",
+      "request": "multipart/form-data: email, module, description (50 to 10000 characters), app_version, current_tab; optional files screenshot (repeatable), telemetry, recording",
+      "delivery": "Saves a Bug Report Archive (ZIP) under bug-reports/ in the workspace root and opens the user's own mail client with a mailto: link; the user attaches the ZIP by hand. No SMTP credentials ship with the application.",
+      "archive_contents": [
+        "report.csv",
+        "screenshot_N.png or screenshot_N.webp",
+        "telemetry.csv",
+        "recording.webm or recording.mp4"
+      ],
+      "limits": {
+        "max_screenshots": 5,
+        "max_screenshot_mb": 5,
+        "max_telemetry_mb": 2,
+        "max_recording_mb": 50,
+        "max_total_mb": 80
+      },
+      "components": {
+        "screenshot_annotator": "GUI ScreenshotAnnotator: captures the app window and lets the user draw one highlight rectangle before the image is attached.",
+        "telemetry_csv": "GUI telemetryCsv: RFC 4180 CSV with the columns timestamp, status, source, message, built from pipeline events.",
+        "screen_recording": "planned: app-window-only recording as a native Tauri command; the endpoint already accepts an optional recording file."
+      },
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "element_id": "header-btn-report-issue"
+        },
+        "cli": {
+          "available": false
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/bug-report",
+          "port": 8000
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-env-manager/env_manager/bug_report/",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_ENV_MANAGER.md",
+        "manual": "lemgendary-docs/MD-Papers/MANUAL_AI_STUDIO_GUI.md"
+      }
+    },
+    {
+      "id": "security_contract",
+      "name": "Sidecar Security Contract (Origin Guard)",
+      "status": "implemented",
+      "owner_projects": [
+        "lemgendary-env-manager",
+        "lemgendary-datasets",
+        "lemgendary-training-suite"
+      ],
+      "baselines": {
+        "environment_manager": "v16.9.18-STABLE",
+        "dataset_compiler": "v16.9.27-STABLE",
+        "training": "v16.9.68-STABLE",
+        "gui": "v2.10.19"
+      },
+      "bind_address": "127.0.0.1",
+      "allowed_origins": [
+        "tauri://localhost",
+        "http://tauri.localhost",
+        "https://tauri.localhost",
+        "http://localhost:1420",
+        "http://127.0.0.1:1420"
+      ],
+      "client_header": {
+        "name": "X-LemGendary-Client",
+        "value": "ai-studio-gui",
+        "required_for": "browser requests (with an Origin header) that use POST, PUT, PATCH or DELETE"
+      },
+      "rejection": "HTTP 403 with a JSON detail; WebSocket handshakes from other origins are refused",
+      "non_browser_clients": "Requests without an Origin header (CLI, scripts, tests) are allowed",
+      "secrets_api": "GET /api/secrets returns only whether each secret is set and its last 4 characters; POST /api/secrets sets or replaces a value (Environment Manager, port 8000)",
+      "evidence": {
+        "code": [
+          "lemgendary-env-manager/env_manager/security.py",
+          "lemgendary-datasets/api/security.py",
+          "lemgendary-training-suite/training/server/security.py"
+        ],
+        "whitepaper": "lemgendary-docs/MD-Papers/ECOSYSTEM_ARCHITECTURE.md"
+      }
+    },
+    {
+      "id": "model_soup",
+      "name": "Pareto Model Soup",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.68-STABLE",
+      "control_planes": {
+        "gui": {
+          "available": false
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST]"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/models/{model_key}/soup",
+          "port": 8200,
+          "body": "optional JSON {donors, weights}"
+        }
+      },
+      "limitations": [
+        "Blends vault checkpoints only; Stochastic Weight Averaging (SWA) is not implemented."
+      ],
+      "evidence": {
+        "code": "lemgendary-training-suite/training/model_soup.py",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 # LemGendary Environment Manager: Technical Whitepaper
 
-## Category 01.1 | Subpage of Master Ecosystem Architecture
+## Category 01.1 ENV | Subpage of Master Ecosystem Architecture
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
