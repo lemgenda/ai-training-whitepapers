@@ -2,20 +2,13 @@
   "description": "Known MD/HTML parity drift recorded on 2026-11-03 (docs v16.9.70). scripts/audit_docs.py reports these as backlog instead of failing. Scheduled for the Later Phase in FIX_PLAN.md: migrate the listed pages to the approved template and resynchronize the listed pairs, then delete each entry. A listed entry with no finding left fails the audit as stale, so this list only shrinks. Never add entries to hide new drift.",
   "backlog": {
     "heading-parity": [
-      "ai-helper-troubleshooting-knowledge",
-      "api-manual",
-      "cli-manual"
+      "ai-helper-troubleshooting-knowledge"
     ],
     "template": [
       "index.html",
       "papers/ai-helper-troubleshooting-knowledge.html",
-      "papers/api-manual.html",
-      "papers/cli-manual.html",
       "papers/general-ai-training-knowledge.html"
     ],
-    "text-similarity": [
-      "api-manual",
-      "cli-manual"
-    ]
+    "text-similarity": []
   }
 }

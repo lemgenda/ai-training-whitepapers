@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.74`
+**Version**: `v16.9.75`
 
 ---
 
@@ -30,8 +30,8 @@
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
   heading parity and text similarity, the approved template, internal links
   and anchors, absolute paths and canonical names. Known drift is listed in
-  `scripts/parity_backlog.json`: 10 entries (heading parity 3, template 5,
-  text similarity 2), scheduled for the Later Phase. Any other finding fails.
+  `scripts/parity_backlog.json`: 4 entries (heading parity 1, template 3,
+  text similarity 0), scheduled for the Later Phase. Any other finding fails.
 
 ---
 
@@ -50,6 +50,28 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.75 - Parity Backlog Batch 5: Master API and CLI Manuals
+
+* **Approved Template** - `api-manual` and `cli-manual` regenerated from
+  `MANUAL_API.md` and `MANUAL_CLI.md` on the approved template (manuals tab
+  bar); W3C (vnu) clean. The Markdown is a superset of the old HTML (it also
+  documents `POST /api/hooks/install`, the notebook synthesis, Kaggle metadata
+  and modernize endpoints), so no HTML content had to be ported back.
+* **Markdown** - inline `markdownlint-disable` directives removed; prose
+  rewrapped at 80 columns, wide tables rewritten as lists, long JSON example
+  lines expanded over several lines, long shell commands split with `\`
+  continuations and long comments over two lines. markdownlint 0 on both
+  files without inline directives. No technical claims changed.
+* **Audit** - the HTML parser now also leaves code blocks (`pre`) out of the
+  compared prose, as the Markdown parser already skips fenced code; code
+  inside `pre` keeps literal `"` so JSON examples read as in the Markdown.
+  New test `test_code_block_is_not_prose` (58 passed, 2 skipped).
+* **Parity Backlog** - 6 entries removed (10 to 4: heading parity 1,
+  template 3, text similarity 0).
+* **Version** - hub version v16.9.75 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.74 - Parity Backlog Batch 4: Suite Masters, Manuals Hub and Policy
 

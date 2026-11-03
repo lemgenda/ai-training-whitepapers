@@ -182,6 +182,21 @@ class TestDocsAudit(unittest.TestCase):
         result = self.audit()
         self.assertTrue(result.passed, docs_audit.render(result))
 
+    def test_code_block_is_not_prose(self):
+        code = "\n".join(f'"key_{i}": "value number {i}",' for i in range(40))
+        self.repo.replace(
+            "MD-Papers/ALPHA.md",
+            "gated network.\n",
+            f"gated network.\n\n```json\n{code}\n```\n",
+        )
+        self.repo.replace(
+            "papers/alpha.html",
+            "gated network.</p>",
+            f"gated network.</p><pre><code>{code}</code></pre>",
+        )
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
     def test_version_line_drift_detected(self):
         self.repo.replace("papers/alpha.html", f"Version: {DOC_VERSION}", "Version: v0.9.0-STABLE")
         self.assertFinding(self.audit(), "version-line", "alpha")

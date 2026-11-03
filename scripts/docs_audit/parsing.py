@@ -139,11 +139,12 @@ def parse_markdown(source: str) -> ParsedDocument:
 class _HtmlCollector(HTMLParser):
     """Collect headings, ids, link targets and visible text in one pass.
 
-    Display math (``div.math-block``) is left out of the prose, matching
-    ``markdown_content_lines``, which skips ``$$`` blocks in Markdown.
+    Code blocks (``pre``) and display math (``div.math-block``) are left out
+    of the prose, matching ``markdown_content_lines``, which skips fenced code
+    and ``$$`` blocks in Markdown.
     """
 
-    _HIDDEN = frozenset({"script", "style", "head", "nav"})
+    _HIDDEN = frozenset({"script", "style", "head", "nav", "pre"})
     _MATH_CLASS = "math-block"
 
     def __init__(self) -> None:

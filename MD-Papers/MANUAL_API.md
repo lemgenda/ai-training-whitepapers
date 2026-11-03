@@ -41,19 +41,23 @@
 
 ## 1. Executive Overview
 
-The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for machine-to-machine integration,
+The LemGendary Ecosystem exposes clean, typed, deterministic API surfaces for
+machine-to-machine integration,
 desktop UI orchestration, and automated pipeline execution.
-Central to the ecosystem is the authoritative FastAPI daemon running in `lemgendary-env-manager`, providing both
+Central to the ecosystem is the authoritative FastAPI daemon running in
+`lemgendary-env-manager`, providing both
 high-throughput HTTP REST endpoints and bidirectional WebSocket streams.
 
-All REST endpoints follow standard HTTP semantics, return strict JSON payloads conforming to Pydantic models,
+All REST endpoints follow standard HTTP semantics, return strict JSON payloads
+conforming to Pydantic models,
 and maintain zero extraneous metadata.
 
 ---
 
 ## 2. Environment Manager REST API
 
-The Environment Manager server runs locally or inside CI environments to expose hardware discovery, ecosystem audits,
+The Environment Manager server runs locally or inside CI environments to expose
+hardware discovery, ecosystem audits,
 package synchronization, and multi-gate validations over HTTP.
 
 ### 2.1 Server Configuration & Startup
@@ -65,18 +69,21 @@ The server is launched via the `lem-env` command or PowerShell management consol
 lem-env serve --host 127.0.0.1 --port 8000
 ```
 
-| Configuration Parameter | Default Value | CLI Flag | Description |
-| :--- | :--- | :--- | :--- |
-| Host Interface | `127.0.0.1` | `--host` | Network IP address to bind HTTP and WebSocket listener |
-| TCP Port | `8000` | `--port` | Local listening port for incoming requests |
+- **Host Interface**: Default Value: `127.0.0.1`; CLI Flag: `--host`;
+  Description: Network IP address to bind HTTP and WebSocket listener
+- **TCP Port**: Default Value: `8000`; CLI Flag: `--port`; Description: Local
+  listening port for incoming requests
 
-The server's lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler. A background asyncio task drains the WebSocket event queue for the lifetime of the server and is cancelled cleanly on shutdown.
+The server's lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan
+handler. A background asyncio task drains the WebSocket event queue for the
+lifetime of the server and is cancelled cleanly on shutdown.
 
 ---
 
 ### 2.2 Interactive OpenAPI Documentation
 
-When the server is active, auto-generated interactive OpenAPI specifications are served at:
+When the server is active, auto-generated interactive OpenAPI specifications are
+served at:
 
 - Swagger UI: `http://127.0.0.1:8000/docs`
 - ReDoc UI: `http://127.0.0.1:8000/redoc`
@@ -88,13 +95,16 @@ When the server is active, auto-generated interactive OpenAPI specifications are
 
 #### `GET /api/health`
 
-Returns the complete ecosystem health audit. This is the largest response body in the API, containing bootstrap status, hardware profile, project environments, version drift entries, manifest coverage, single-manifest inventory, and npm status.
+Returns the complete ecosystem health audit. This is the largest response body
+in the API, containing bootstrap status, hardware profile, project environments,
+version drift entries, manifest coverage, single-manifest inventory, and npm
+status.
 
 Query parameters:
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `include_safety` | Boolean | `false` | When true, runs per-project pip safety dry-runs to classify each outdated package as safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project. |
+- **`include_safety`**: Type: Boolean; Default: `false`; Description: When true,
+  runs per-project pip safety dry-runs to classify each outdated package as
+  safe-↑ or blocked-⊘. Adds 15–40 seconds of latency per Python project.
 
 Response structure (top-level keys):
 
@@ -115,9 +125,23 @@ Response structure (top-level keys):
   "version_drift": [
     {
       "package_name": "numpy",
-      "versions": { "lemgendary-datasets": "2.5.3", "lemgendary-training-suite": "2.5.3" },
-      "pins": { "lemgendary-datasets": { "pin_type": "range", "specifier": ">=2.2.6,<2.6" } },
-      "upgrades": { "lemgendary-datasets": { "current": "2.5.3", "latest": null, "safe": false } },
+      "versions": {
+        "lemgendary-datasets": "2.5.3",
+        "lemgendary-training-suite": "2.5.3"
+      },
+      "pins": {
+        "lemgendary-datasets": {
+          "pin_type": "range",
+          "specifier": ">=2.2.6,<2.6"
+        }
+      },
+      "upgrades": {
+        "lemgendary-datasets": {
+          "current": "2.5.3",
+          "latest": null,
+          "safe": false
+        }
+      },
       "has_drift": false,
       "has_pin_mismatch": false,
       "projects_declared": 2
@@ -150,13 +174,13 @@ Response structure (top-level keys):
 
 #### `GET /api/drift`
 
-Compact alternative to `/api/health` that returns only the drift-related data. Useful for GUI dashboards that only need the matrix view.
+Compact alternative to `/api/health` that returns only the drift-related data.
+Useful for GUI dashboards that only need the matrix view.
 
 Query parameters:
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `include_safety` | Boolean | `false` | Same semantics as `/api/health?include_safety`. |
+- **`include_safety`**: Type: Boolean; Default: `false`; Description: Same
+  semantics as `/api/health?include_safety`.
 
 Response structure:
 
@@ -170,11 +194,15 @@ Response structure:
 }
 ```
 
-`python` entries are drift rows (packages declared in two or more manifests). `coverage` entries reconcile each manifest's declared set against its installed set. `single_manifest` lists packages declared in exactly one manifest. `npm` entries track version drift across npm workspaces.
+`python` entries are drift rows (packages declared in two or more manifests).
+`coverage` entries reconcile each manifest's declared set against its installed
+set. `single_manifest` lists packages declared in exactly one manifest. `npm`
+entries track version drift across npm workspaces.
 
 #### `GET /api/hardware`
 
-Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU devices, primary backend, recommended PyTorch index, and MetaTrader 5 info.
+Returns the parsed hardware and accelerator profile: OS, CPU topology, RAM, GPU
+devices, primary backend, recommended PyTorch index, and MetaTrader 5 info.
 
 Example response:
 
@@ -205,11 +233,14 @@ Example response:
 }
 ```
 
-The `metatrader5.version` field is populated from `terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo` property. This is authoritative even when winget has no record of the MT5 installation.
+The `metatrader5.version` field is populated from `terminal64.exe`'s
+`FileVersion` metadata via PowerShell's `VersionInfo` property. This is
+authoritative even when winget has no record of the MT5 installation.
 
 #### `GET /api/projects`
 
-Enumerates all discovered ecosystem repositories with their virtual environment status, installed package count, and health indicators.
+Enumerates all discovered ecosystem repositories with their virtual environment
+status, installed package count, and health indicators.
 
 ```json
 [
@@ -229,7 +260,8 @@ Enumerates all discovered ecosystem repositories with their virtual environment 
 
 #### `GET /api/npm`
 
-Returns Node.js workspace status and the npm package dependency matrix for every workspace containing `package.json`.
+Returns Node.js workspace status and the npm package dependency matrix for every
+workspace containing `package.json`.
 
 ---
 
@@ -237,7 +269,8 @@ Returns Node.js workspace status and the npm package dependency matrix for every
 
 #### `GET /api/pipeline/status`
 
-Returns the execution state of the background pipeline orchestrator together with the last 50 telemetry events.
+Returns the execution state of the background pipeline orchestrator together
+with the last 50 telemetry events.
 
 ```json
 {
@@ -268,7 +301,8 @@ Lists every centralized requirements manifest with its raw contents.
 
 #### `POST /api/pipeline/run`
 
-Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events stream across WebSocket connections.
+Triggers the Smart Clean Install Pipeline asynchronously. Telemetry events
+stream across WebSocket connections.
 
 Request body:
 
@@ -347,7 +381,8 @@ Event status values:
 
 - `upgraded`: package was successfully upgraded.
 - `blocked`: upgrade blocked by reverse dependency; `message` contains the reason.
-- `verified`: environment verified as healthy without a version change (`pip check`, `torch-cuda-verify`, or torch-family no-op).
+- `verified`: environment verified as healthy without a version change
+  (`pip check`, `torch-cuda-verify`, or torch-family no-op).
 - `failed`: batch or rollback failure.
 - `skipped`: nothing to do.
 
@@ -389,7 +424,8 @@ Response:
 
 #### `POST /api/clean`
 
-Purges temporary build residues, bytecode caches (`__pycache__`, `*.pyc`), and staging artifacts across all projects or a specified project.
+Purges temporary build residues, bytecode caches (`__pycache__`, `*.pyc`), and
+staging artifacts across all projects or a specified project.
 
 Request body:
 
@@ -412,7 +448,9 @@ Response:
 
 #### `POST /api/hooks/install`
 
-Installs or repairs standardized pre-commit hooks across all ecosystem projects or a specified target project. The hooks delegate to `lem-env validate` to prevent invalid commits.
+Installs or repairs standardized pre-commit hooks across all ecosystem projects
+or a specified target project. The hooks delegate to `lem-env validate` to
+prevent invalid commits.
 
 Request body:
 
@@ -445,7 +483,8 @@ Response:
 
 #### `POST /api/manifests/sync`
 
-One-way copy of centralized manifests to project directories. Returns per-project sync status.
+One-way copy of centralized manifests to project directories. Returns
+per-project sync status.
 
 ```json
 {
@@ -465,7 +504,8 @@ One-way copy of centralized manifests to project directories. Returns per-projec
 
 #### `GET /api/manifests/registry`
 
-Enumerates all manageable ecosystem manifests across all repositories, including file existence, size in bytes, and resolved disk paths.
+Enumerates all manageable ecosystem manifests across all repositories, including
+file existence, size in bytes, and resolved disk paths.
 
 Response:
 
@@ -496,11 +536,13 @@ Response:
 
 #### `GET /api/manifests/read`
 
-Retrieves the raw text content, format, and resolved path of a designated registered manifest.
+Retrieves the raw text content, format, and resolved path of a designated
+registered manifest.
 
 Query Parameters:
 
-- `name` (string, required): Registered manifest name (e.g., `unified_models_v2.yaml`, `runtime_env.yaml`, `config.yaml`).
+- `name` (string, required): Registered manifest name (e.g.,
+  `unified_models_v2.yaml`, `runtime_env.yaml`, `config.yaml`).
 
 Response:
 
@@ -515,7 +557,8 @@ Response:
 
 #### `POST /api/manifests/validate`
 
-Performs strict syntax and structure validation on arbitrary manifest content prior to disk persistence. Supports YAML, JSON, and text formats.
+Performs strict syntax and structure validation on arbitrary manifest content
+prior to disk persistence. Supports YAML, JSON, and text formats.
 
 Request body:
 
@@ -537,7 +580,8 @@ Response:
 
 #### `POST /api/manifests/save`
 
-Safely writes updated manifest content to disk with automatic pre-validation and generation of a `.bak` backup file before atomic replacement.
+Safely writes updated manifest content to disk with automatic pre-validation and
+generation of a `.bak` backup file before atomic replacement.
 
 Request body:
 
@@ -560,7 +604,10 @@ Response:
 
 #### `GET /api/secrets`
 
-Retrieves all stored ecosystem secrets from `.secrets.yaml`. Automatically seeds defaults from existing credential files (`.kaggle_users`, `.GOOGLE_DRIVE`, `.GITHUB_PAT`, `.huggingface_token`, `.mt5_credentials`, `.SATURN_PAT`) if `.secrets.yaml` does not yet exist.
+Retrieves all stored ecosystem secrets from `.secrets.yaml`. Automatically seeds
+defaults from existing credential files (`.kaggle_users`, `.GOOGLE_DRIVE`,
+`.GITHUB_PAT`, `.huggingface_token`, `.mt5_credentials`, `.SATURN_PAT`) if
+`.secrets.yaml` does not yet exist.
 
 Response:
 
@@ -583,7 +630,10 @@ Response:
 
 #### `POST /api/secrets`
 
-Atomically writes the ecosystem secrets registry to `.secrets.yaml` and propagates mandatory authentication credentials (such as Kaggle tokens) across dependent projects (`lemgendary-datasets`, `lemgendary-training-suite`, and `lemgendary-env-manager`).
+Atomically writes the ecosystem secrets registry to `.secrets.yaml` and
+propagates mandatory authentication credentials (such as Kaggle tokens) across
+dependent projects (`lemgendary-datasets`, `lemgendary-training-suite`, and
+`lemgendary-env-manager`).
 
 Request body:
 
@@ -615,7 +665,8 @@ Response:
 
 #### `GET /api/docs/status`
 
-Reports availability of the local offline documentation hub mounted at `/documentation-hub` and provides the canonical GitHub Pages URL.
+Reports availability of the local offline documentation hub mounted at
+`/documentation-hub` and provides the canonical GitHub Pages URL.
 
 Response:
 
@@ -654,14 +705,17 @@ Response:
 
 ### 2.6 WebSocket Real-Time Telemetry
 
-Real-time logging, telemetry, and pipeline progression are streamed to connected clients over a persistent WebSocket connection:
+Real-time logging, telemetry, and pipeline progression are streamed to connected
+clients over a persistent WebSocket connection:
 
 ```bash
 ws://127.0.0.1:8000/ws/log
 ws://127.0.0.1:8000/ws/logs
 ```
 
-Both paths are aliases for the same handler. On connect, the client receives the last 20 buffered events, then continues to receive new events as they are emitted by the pipeline.
+Both paths are aliases for the same handler. On connect, the client receives the
+last 20 buffered events, then continues to receive new events as they are
+emitted by the pipeline.
 
 Telemetry Event Schema (`PipelineEvent`):
 
@@ -687,17 +741,23 @@ Event Status Values:
 - `warning`: Step completed with non-fatal advisory notice.
 - `error`: Fatal error encountered in step execution.
 
-Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`, which allows the background pipeline thread to broadcast events on the server's running event loop without blocking.
+Thread-safe dispatch is guaranteed via `asyncio.run_coroutine_threadsafe()`,
+which allows the background pipeline thread to broadcast events on the server's
+running event loop without blocking.
 
 ---
 
 ### 2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem Endpoints
 
-The Environment Manager provides specialized endpoints for high-velocity hydration in `lemgendary-ai-studio-gui`:
+The Environment Manager provides specialized endpoints for high-velocity
+hydration in `lemgendary-ai-studio-gui`:
 
 #### `GET /api/gui/state` (Environment Manager)
 
-Returns a consolidated snapshot containing service identity, hardware profile (`probe_hardware()`), discovered projects summary (`discover_projects()`), and pipeline execution status (`orchestrator.is_running`) in a single non-blocking payload.
+Returns a consolidated snapshot containing service identity, hardware profile
+(`probe_hardware()`), discovered projects summary (`discover_projects()`), and
+pipeline execution status (`orchestrator.is_running`) in a single non-blocking
+payload.
 
 Example response:
 
@@ -724,7 +784,10 @@ Example response:
 
 #### `GET /api/gui/ecosystem`
 
-Monitors health and connectivity across local ecosystem sidecars by actively probing `http://127.0.0.1:8100/api/health` and `http://127.0.0.1:8200/api/health` with a non-blocking timeout. Powers the desktop GUI top-bar status indicator and service mesh dashboard tiles:
+Monitors health and connectivity across local ecosystem sidecars by actively
+probing `http://127.0.0.1:8100/api/health` and
+`http://127.0.0.1:8200/api/health` with a non-blocking timeout. Powers the
+desktop GUI top-bar status indicator and service mesh dashboard tiles:
 
 ```json
 {
@@ -759,11 +822,21 @@ Monitors health and connectivity across local ecosystem sidecars by actively pro
 
 #### `POST /api/services/{service_id}/start`
 
-Spawns the background daemon process for the designated sidecar service (`dataset-compiler`, `training-suite`, or `env-manager`). Automatically resolves the target virtual environment Python executable, executing completely headless without creating console or terminal windows (`pythonw.exe` and `CREATE_NO_WINDOW` on Windows; `start_new_session=True` on Linux/macOS). Redirects standard streams (`stdin=subprocess.DEVNULL`, `stdout`/`stderr` to diagnostic log files) and polls the service health endpoint with an extended 20-second timeout to accommodate PyTorch and CUDA runtime initialization. Includes `is_port_in_use()` collision protection to prevent duplicate process spawning.
+Spawns the background daemon process for the designated sidecar service
+(`dataset-compiler`, `training-suite`, or `env-manager`). Automatically resolves
+the target virtual environment Python executable, executing completely headless
+without creating console or terminal windows (`pythonw.exe` and
+`CREATE_NO_WINDOW` on Windows; `start_new_session=True` on Linux/macOS).
+Redirects standard streams (`stdin=subprocess.DEVNULL`, `stdout`/`stderr` to
+diagnostic log files) and polls the service health endpoint with an extended
+20-second timeout to accommodate PyTorch and CUDA runtime initialization.
+Includes `is_port_in_use()` collision protection to prevent duplicate process
+spawning.
 
 Path Parameters:
 
-- `service_id` (string, required): Canonical identifier or recognized alias (`dataset-compiler`, `training-suite`, `env-manager`).
+- `service_id` (string, required): Canonical identifier or recognized alias
+  (`dataset-compiler`, `training-suite`, `env-manager`).
 
 Example response:
 
@@ -778,7 +851,8 @@ Example response:
 
 #### `POST /api/services/{service_id}/stop`
 
-Gracefully terminates the specified sidecar daemon process by reading its recorded PID file or querying the active socket connection on the assigned port.
+Gracefully terminates the specified sidecar daemon process by reading its
+recorded PID file or querying the active socket connection on the assigned port.
 
 Example response:
 
@@ -792,7 +866,8 @@ Example response:
 
 #### `POST /api/services/start-all`
 
-Orchestrates sequential startup across all offline ecosystem sidecars (`dataset-compiler` and `training-suite`).
+Orchestrates sequential startup across all offline ecosystem sidecars
+(`dataset-compiler` and `training-suite`).
 
 Example response:
 
@@ -801,7 +876,8 @@ Example response:
   "results": {
     "dataset-compiler": {
       "status": "already_running",
-      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
+      "message":
+"LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
       "port": 8100
     },
     "training-suite": {
@@ -818,25 +894,34 @@ Example response:
 
 ## 3. Desktop GUI Tauri IPC API Contracts
 
-The desktop frontend `lemgendary-ai-studio-gui` communicates with the native Rust backend via Tauri v2 IPC invocations.
+The desktop frontend `lemgendary-ai-studio-gui` communicates with the native
+Rust backend via Tauri v2 IPC invocations.
 
-| IPC Command | Arguments | Return Type | Purpose |
-| :--- | :--- | :--- | :--- |
-| `run_system_probe` | None | `SystemProbeResult` | Triggers hardware discovery from native desktop thread |
-| `get_ecosystem_status` | None | `EcosystemReport` | Queries active environment manager daemon for health metrics |
-| `trigger_clean_install` | `project: Option<String>` | `PipelineLaunchResult` | Starts environment provisioning pipeline |
-| `execute_validation` | `project: Option<String>` | `ValidationResult` | Runs multi-gate verification suite |
-| `connect_telemetry_stream` | None | `WebSocketHandle` | Subscribes frontend to `/ws/log` channel |
+- **`run_system_probe`**: Arguments: None; Return Type: `SystemProbeResult`;
+  Purpose: Triggers hardware discovery from native desktop thread
+- **`get_ecosystem_status`**: Arguments: None; Return Type: `EcosystemReport`;
+  Purpose: Queries active environment manager daemon for health metrics
+- **`trigger_clean_install`**: Arguments: `project: Option<String>`; Return
+  Type: `PipelineLaunchResult`; Purpose: Starts environment provisioning
+  pipeline
+- **`execute_validation`**: Arguments: `project: Option<String>`; Return Type:
+  `ValidationResult`; Purpose: Runs multi-gate verification suite
+- **`connect_telemetry_stream`**: Arguments: None; Return Type:
+  `WebSocketHandle`; Purpose: Subscribes frontend to `/ws/log` channel
 
 ---
 
 ## 4. Training Suite Sidecar Daemon & Python Engine
 
-The `lemgendary-training-suite` repository provides both a background FastAPI sidecar service on `127.0.0.1:8200` and high-performance Python engine classes for in-process training, SOTA validation, and WebGPU optimization.
+The `lemgendary-training-suite` repository provides both a background FastAPI
+sidecar service on `127.0.0.1:8200` and high-performance Python engine classes
+for in-process training, SOTA validation, and WebGPU optimization.
 
 ### 4.1 Server Architecture & Startup
 
-The sidecar service daemon coordinates background training pipelines, asynchronous job execution, real-time log streaming, and model compilation. It is launched via the `lemtrain` CLI:
+The sidecar service daemon coordinates background training pipelines,
+asynchronous job execution, real-time log streaming, and model compilation. It
+is launched via the `lemtrain` CLI:
 
 ```bash
 # Launch server daemon as a background service on port 8200
@@ -861,55 +946,102 @@ python cli.py server stop
 
 ### 4.2 Security & Authentication
 
-Operational endpoints under `/api` requiring modification or system access enforce token authentication:
+Operational endpoints under `/api` requiring modification or system access
+enforce token authentication:
 
-- Provide the token via HTTP header `X-LemTrain-Token: <token>` or `Authorization: Bearer <token>`.
-- Token resolution: checked from the `LEMTRAIN_API_TOKEN` environment variable, or read from `.lemtrain_server/token`.
-- Unauthenticated requests to protected endpoints return `401 Unauthorized`. Diagnostic endpoints (`/api/health`, `/docs`, `/openapi.json`, `/redoc`) and WebSocket streams (`/api/ws/*`) are open for non-blocking monitoring.
+- Provide the token via HTTP header `X-LemTrain-Token: <token>` or
+  `Authorization: Bearer <token>`.
+- Token resolution: checked from the `LEMTRAIN_API_TOKEN` environment variable,
+  or read from `.lemtrain_server/token`.
+- Unauthenticated requests to protected endpoints return `401 Unauthorized`.
+  Diagnostic endpoints (`/api/health`, `/docs`, `/openapi.json`, `/redoc`) and
+  WebSocket streams (`/api/ws/*`) are open for non-blocking monitoring.
 
 ### 4.3 Endpoint Reference Matrix
 
-| Method | Endpoint | Auth | Description |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | None | Basic liveness, uptime, accelerator device, and version v16.9.16-STABLE (illustrative example payload) |
-| `GET` | `/api/config` | Required | Active configuration parameters and loaded training configurations |
-| `GET` | `/api/presets` | Required | Canonical training presets list and hyperparameter definitions |
-| `GET` | `/api/presets/{name}` | Required | Detailed hyperparameter parameters for a specific preset |
-| `GET` | `/api/jobs` | Required | List background jobs with pagination and status filtering |
-| `POST` | `/api/jobs` | Required | Submit asynchronous background job (train, eval, export, audit, sync) |
-| `GET` | `/api/jobs/{id}` | Required | Query job state, progress metrics, exit code, and timestamps |
-| `GET` | `/api/jobs/{id}/logs` | Required | Retrieve execution log text slice or tail lines for a job |
-| `POST` | `/api/jobs/{id}/cancel` | Required | Gracefully cancel a running background job |
-| `GET` | `/api/models` | Required | Enumerate registered neural architectures and target domains |
-| `GET` | `/api/models/{name}` | Required | Retrieve model specifications and default hyperparameters |
-| `GET` | `/api/models/{name}/audit` | Required | Detailed model audit: parameter counts, layer topology, memory |
-| `POST` | `/api/training/train` | Required | In-process training initiation with hardware discovery |
-| `POST` | `/api/training/evaluate` | Required | In-process checkpoint evaluation under torch.no_grad() |
-| `POST` | `/api/training/export` | Required | In-process multi-format model compilation and export |
-| `POST` | `/api/training/models/{model_key}/docs/generate` | Required | Regenerate model card README and Kaggle model-metadata.json |
-| `POST` | `/api/training/models/{model_key}/export/stage` | Required | Stage exported model binaries into canonical isolated Kaggle variation subdirectories |
-| `GET` | `/api/training/models/{model_key}/variations/validate` | Required | Validate strict binary isolation across all Kaggle variation directories |
-| `POST` | `/api/training/kaggle/push-model` | Required | Publish validated isolated model variation(s) to Kaggle Models Hub |
-| `POST` | `/api/training/kaggle/push-all` | Required | Enqueue fleet synchronization staging and pushing all registered models to Kaggle Models Hub |
-| `POST` | `/api/training/llm/train` | Required | Enqueue background QLoRA instruction tuning job for assistant LLM |
-| `POST` | `/api/training/llm/export` | Required | Enqueue background tri-format export job for an LLM (adapter, merged safetensors, GGUF/ONNX) |
-| `POST` | `/api/training/unit-test-all` | Required | Queue 1-epoch diagnostic smoke test across all 23 registered models |
-| `POST` | `/api/training/unit-test-run` | Required | Execute in-process unit test suite across tests/unit matching pattern |
-| `GET` | `/api/notebooks/models` | Required | Enumerate registered architectures available for notebook generation |
-| `POST` | `/api/notebooks/generate` | Required | Generate Jupyter training, inference, or usage notebooks for a model |
-| `POST` | `/api/notebooks/refresh-all` | Required | Batch regenerate and synchronize notebooks across all registered models |
-| `POST` | `/api/notebooks/generate-all` | Required | Alias for refresh-all; batch regenerate all notebooks |
-| `GET` | `/api/datasets` | Required | Discover available compiled datasets and dataset manifolds |
-| `GET` | `/api/env/telemetry` | Required | System hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk |
-| `GET` | `/api/gui/state` | Required | Consolidated GUI snapshot: daemon, hardware, active jobs, models |
-| `GET` | `/api/gui/models/with-stats` | Required | Model cards hydrated with checkpoint and export disk stats |
-| `POST` | `/api/gui/quick-train` | Required | High-velocity one-click preset training dispatch |
+- **`GET`**: Endpoint: `/api/health`; Auth: None; Description: Basic liveness,
+  uptime, accelerator device, and version v16.9.16-STABLE (illustrative example
+  payload)
+- **`GET`**: Endpoint: `/api/config`; Auth: Required; Description: Active
+  configuration parameters and loaded training configurations
+- **`GET`**: Endpoint: `/api/presets`; Auth: Required; Description: Canonical
+  training presets list and hyperparameter definitions
+- **`GET`**: Endpoint: `/api/presets/{name}`; Auth: Required; Description:
+  Detailed hyperparameter parameters for a specific preset
+- **`GET`**: Endpoint: `/api/jobs`; Auth: Required; Description: List background
+  jobs with pagination and status filtering
+- **`POST`**: Endpoint: `/api/jobs`; Auth: Required; Description: Submit
+  asynchronous background job (train, eval, export, audit, sync)
+- **`GET`**: Endpoint: `/api/jobs/{id}`; Auth: Required; Description: Query job
+  state, progress metrics, exit code, and timestamps
+- **`GET`**: Endpoint: `/api/jobs/{id}/logs`; Auth: Required; Description:
+  Retrieve execution log text slice or tail lines for a job
+- **`POST`**: Endpoint: `/api/jobs/{id}/cancel`; Auth: Required; Description:
+  Gracefully cancel a running background job
+- **`GET`**: Endpoint: `/api/models`; Auth: Required; Description: Enumerate
+  registered neural architectures and target domains
+- **`GET`**: Endpoint: `/api/models/{name}`; Auth: Required; Description:
+  Retrieve model specifications and default hyperparameters
+- **`GET`**: Endpoint: `/api/models/{name}/audit`; Auth: Required; Description:
+  Detailed model audit: parameter counts, layer topology, memory
+- **`POST`**: Endpoint: `/api/training/train`; Auth: Required; Description:
+  In-process training initiation with hardware discovery
+- **`POST`**: Endpoint: `/api/training/evaluate`; Auth: Required; Description:
+  In-process checkpoint evaluation under torch.no_grad()
+- **`POST`**: Endpoint: `/api/training/export`; Auth: Required; Description:
+  In-process multi-format model compilation and export
+- **`POST`**: Endpoint: `/api/training/models/{model_key}/docs/generate`; Auth:
+  Required; Description: Regenerate model card README and Kaggle
+  model-metadata.json
+- **`POST`**: Endpoint: `/api/training/models/{model_key}/export/stage`; Auth:
+  Required; Description: Stage exported model binaries into canonical isolated
+  Kaggle variation subdirectories
+- **`GET`**: Endpoint: `/api/training/models/{model_key}/variations/validate`;
+  Auth: Required; Description: Validate strict binary isolation across all
+  Kaggle variation directories
+- **`POST`**: Endpoint: `/api/training/kaggle/push-model`; Auth: Required;
+  Description: Publish validated isolated model variation(s) to Kaggle Models
+  Hub
+- **`POST`**: Endpoint: `/api/training/kaggle/push-all`; Auth: Required;
+  Description: Enqueue fleet synchronization staging and pushing all registered
+  models to Kaggle Models Hub
+- **`POST`**: Endpoint: `/api/training/llm/train`; Auth: Required; Description:
+  Enqueue background QLoRA instruction tuning job for assistant LLM
+- **`POST`**: Endpoint: `/api/training/llm/export`; Auth: Required; Description:
+  Enqueue background tri-format export job for an LLM (adapter, merged
+  safetensors, GGUF/ONNX)
+- **`POST`**: Endpoint: `/api/training/unit-test-all`; Auth: Required;
+  Description: Queue 1-epoch diagnostic smoke test across all 23 registered
+  models
+- **`POST`**: Endpoint: `/api/training/unit-test-run`; Auth: Required;
+  Description: Execute in-process unit test suite across tests/unit matching
+  pattern
+- **`GET`**: Endpoint: `/api/notebooks/models`; Auth: Required; Description:
+  Enumerate registered architectures available for notebook generation
+- **`POST`**: Endpoint: `/api/notebooks/generate`; Auth: Required; Description:
+  Generate Jupyter training, inference, or usage notebooks for a model
+- **`POST`**: Endpoint: `/api/notebooks/refresh-all`; Auth: Required;
+  Description: Batch regenerate and synchronize notebooks across all registered
+  models
+- **`POST`**: Endpoint: `/api/notebooks/generate-all`; Auth: Required;
+  Description: Alias for refresh-all; batch regenerate all notebooks
+- **`GET`**: Endpoint: `/api/datasets`; Auth: Required; Description: Discover
+  available compiled datasets and dataset manifolds
+- **`GET`**: Endpoint: `/api/env/telemetry`; Auth: Required; Description: System
+  hardware telemetry: CPU, RAM, GPU, VRAM headroom, disk
+- **`GET`**: Endpoint: `/api/gui/state`; Auth: Required; Description:
+  Consolidated GUI snapshot: daemon, hardware, active jobs, models
+- **`GET`**: Endpoint: `/api/gui/models/with-stats`; Auth: Required;
+  Description: Model cards hydrated with checkpoint and export disk stats
+- **`POST`**: Endpoint: `/api/gui/quick-train`; Auth: Required; Description:
+  High-velocity one-click preset training dispatch
 
 #### Diagnostic & Unit Test Fleet Endpoints
 
 ##### `POST /api/training/unit-test-all`
 
-Submits an asynchronous background job executing a 1-epoch diagnostic smoke test across all 22 registered neural architectures via `tools/train_all.py`.
+Submits an asynchronous background job executing a 1-epoch diagnostic smoke test
+across all 22 registered neural architectures via `tools/train_all.py`.
 
 Request body:
 
@@ -931,7 +1063,9 @@ Response:
 
 ##### `POST /api/training/unit-test-run`
 
-Executes in-process unit tests in `tests/unit` matching the specified file glob pattern (default: `test_*.py`) using Python's standard `unittest` test discovery engine, returning structured telemetry.
+Executes in-process unit tests in `tests/unit` matching the specified file glob
+pattern (default: `test_*.py`) using Python's standard `unittest` test discovery
+engine, returning structured telemetry.
 
 Request body:
 
@@ -975,7 +1109,8 @@ Response:
 
 ##### `POST /api/notebooks/generate`
 
-Generates execution or usage guide notebooks for a specific model architecture and platform.
+Generates execution or usage guide notebooks for a specific model architecture
+and platform.
 
 Request body:
 
@@ -1032,7 +1167,9 @@ Response:
 
 ##### `POST /api/training/models/{model_key}/docs/generate`
 
-Regenerates the model card (`README.md`) with live SOTA targets and Kaggle Models manifest (`model-metadata.json`) directly into `LemGendaryModels/<model_key>/`.
+Regenerates the model card (`README.md`) with live SOTA targets and Kaggle
+Models manifest (`model-metadata.json`) directly into
+`LemGendaryModels/<model_key>/`.
 
 Response:
 
@@ -1048,7 +1185,9 @@ Response:
 
 ##### `POST /api/training/models/{model_key}/export/stage`
 
-Stages exported model binaries into canonical isolated Kaggle variation subdirectories (`dist/kaggle/pytorch/`, `dist/kaggle/onnx_fp32/`, `dist/kaggle/onnx_fp16/`).
+Stages exported model binaries into canonical isolated Kaggle variation
+subdirectories (`dist/kaggle/pytorch/`, `dist/kaggle/onnx_fp32/`,
+`dist/kaggle/onnx_fp16/`).
 
 Response:
 
@@ -1069,11 +1208,14 @@ Response:
 
 ##### `POST /api/models/{model_key}/soup`
 
-Blends specialized vault checkpoints (`vault_psnr.pth`, `vault_lpips.pth`, `vault_plcc.pth`, `vault_srcc.pth`, etc.) using linear Pareto Model Soup weight averaging into `checkpoints/{model_key}/best_soup.pth`.
+Blends specialized vault checkpoints (`vault_psnr.pth`, `vault_lpips.pth`,
+`vault_plcc.pth`, `vault_srcc.pth`, etc.) using linear Pareto Model Soup weight
+averaging into `checkpoints/{model_key}/best_soup.pth`.
 
 Request parameters:
 
-- `model_key`: URL path parameter identifying target architecture (e.g. `codeformer`, `mirnet_exposure`).
+- `model_key`: URL path parameter identifying target architecture (e.g.
+  `codeformer`, `mirnet_exposure`).
 
 Response payload:
 
@@ -1087,7 +1229,8 @@ Response payload:
 
 ##### `GET /api/training/models/{model_key}/variations/validate`
 
-Validates strict binary isolation across all Kaggle variation directories for the specified model key, verifying zero cross-contamination.
+Validates strict binary isolation across all Kaggle variation directories for
+the specified model key, verifying zero cross-contamination.
 
 Response:
 
@@ -1106,7 +1249,8 @@ Response:
 
 ##### `POST /api/training/kaggle/push-model`
 
-Publishes validated isolated model variation(s) to Kaggle Models Hub using the Kaggle API.
+Publishes validated isolated model variation(s) to Kaggle Models Hub using the
+Kaggle API.
 
 Request body:
 
@@ -1136,7 +1280,9 @@ Response:
 
 ##### `POST /api/training/kaggle/push-all`
 
-Enqueues an asynchronous background job to stage, validate binary isolation, and publish all registered neural models, checkpoints, and variations to Kaggle Models Hub.
+Enqueues an asynchronous background job to stage, validate binary isolation, and
+publish all registered neural models, checkpoints, and variations to Kaggle
+Models Hub.
 
 Request body:
 
@@ -1154,7 +1300,8 @@ Response:
 {
   "job_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
   "status": "pending",
-  "message": "Kaggle fleet push enqueued for all models (variation: all, dry_run: false)",
+  "message":
+   "Kaggle fleet push enqueued for all models (variation: all, dry_run: false)",
   "variation": "all",
   "dry_run": false
 }
@@ -1164,7 +1311,8 @@ Response:
 
 ##### `POST /api/training/llm/train`
 
-Enqueues a background QLoRA instruction fine-tuning job for the Causal LLM assistant (`AIHelperLemGend`).
+Enqueues a background QLoRA instruction fine-tuning job for the Causal LLM
+assistant (`AIHelperLemGend`).
 
 Request body:
 
@@ -1199,24 +1347,36 @@ Response:
 
 ### 4.4 WebSocket Real-Time Telemetry & Log Streaming
 
-Persistent WebSocket streams provide low-latency log and telemetry feeds for connected user interfaces:
+Persistent WebSocket streams provide low-latency log and telemetry feeds for
+connected user interfaces:
 
-- `ws://127.0.0.1:8200/api/ws/jobs/{id}/logs` — Streams real-time line-buffered log output for an active background job.
-- `ws://127.0.0.1:8200/api/ws/logs` — Global server execution and orchestration log stream.
+- `ws://127.0.0.1:8200/api/ws/jobs/{id}/logs` — Streams real-time line-buffered
+  log output for an active background job.
+- `ws://127.0.0.1:8200/api/ws/logs` — Global server execution and orchestration
+  log stream.
 
 ### 4.5 SQLite WAL Job Persistence & Crash Recovery
 
-All asynchronous jobs are persisted in `.lemtrain_server/jobs.db` using SQLite Write-Ahead Logging (WAL) mode:
+All asynchronous jobs are persisted in `.lemtrain_server/jobs.db` using SQLite
+Write-Ahead Logging (WAL) mode:
 
-- Immediate ACID recording of job metadata, parameters, start time, and state transitions (`queued`, `running`, `completed`, `failed`, `cancelled`).
-- Crash recovery: when the sidecar daemon restarts, any jobs found in `running` or `queued` state from an ungraceful host shutdown are automatically transitioned to `failed` with diagnostic recovery logs.
+- Immediate ACID recording of job metadata, parameters, start time, and state
+  transitions (`queued`, `running`, `completed`, `failed`, `cancelled`).
+- Crash recovery: when the sidecar daemon restarts, any jobs found in `running`
+  or `queued` state from an ungraceful host shutdown are automatically
+  transitioned to `failed` with diagnostic recovery logs.
 
 ### 4.6 Desktop GUI Dashboard Aggregation Endpoints
 
-To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized aggregation endpoints hydrate desktop views in a single HTTP transaction:
+To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized
+aggregation endpoints hydrate desktop views in a single HTTP transaction:
 
-- `GET /api/gui/state`: Returns system health, GPU hardware metrics, active job count, recent jobs, and model catalog in one payload.
-- `GET /api/gui/models/with-stats`: Enriches each registered model with discovered `.pth` checkpoints, file sizes, timestamps, resolution ladder status, 100% data fraction completion, and multi-metric SOTA target evaluation.
+- `GET /api/gui/state`: Returns system health, GPU hardware metrics, active job
+  count, recent jobs, and model catalog in one payload.
+- `GET /api/gui/models/with-stats`: Enriches each registered model with
+  discovered `.pth` checkpoints, file sizes, timestamps, resolution ladder
+  status, 100% data fraction completion, and multi-metric SOTA target
+  evaluation.
 
 #### Schema: `GET /api/gui/models/with-stats` Response Model
 
@@ -1244,10 +1404,38 @@ To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized a
     "sota_targets_met": 4,
     "sota_all_met": true,
     "sota_details": [
-      { "key": "psnr", "label": "PSNR (dB)", "target": 33.9, "achieved": 33.9157, "lower_is_better": false, "passed": true },
-      { "key": "ssim", "label": "SSIM", "target": 0.97, "achieved": 0.9753, "lower_is_better": false, "passed": true },
-      { "key": "lpips", "label": "LPIPS", "target": 0.04, "achieved": 0.0381, "lower_is_better": true, "passed": true },
-      { "key": "fid", "label": "FID", "target": 6.0, "achieved": 1.0532, "lower_is_better": true, "passed": true }
+      {
+        "key": "psnr",
+        "label": "PSNR (dB)",
+        "target": 33.9,
+        "achieved": 33.9157,
+        "lower_is_better": false,
+        "passed": true
+      },
+      {
+        "key": "ssim",
+        "label": "SSIM",
+        "target": 0.97,
+        "achieved": 0.9753,
+        "lower_is_better": false,
+        "passed": true
+      },
+      {
+        "key": "lpips",
+        "label": "LPIPS",
+        "target": 0.04,
+        "achieved": 0.0381,
+        "lower_is_better": true,
+        "passed": true
+      },
+      {
+        "key": "fid",
+        "label": "FID",
+        "target": 6.0,
+        "achieved": 1.0532,
+        "lower_is_better": true,
+        "passed": true
+      }
     ],
     "sota_reached": true,
     "training_status": "fully_trained"
@@ -1258,18 +1446,32 @@ To eliminate waterfall roundtrips from `lemgendary-ai-studio-gui`, specialized a
 ##### Field Definitions
 
 - `training_status` (`"fully_trained" | "partially_trained" | "weights_ready" | "initializing"`):
-  - Strictly evaluates to `"fully_trained"` if and only if `sota_all_met === true && ladder_passed === true && data_fraction_passed === true`.
-  - Evaluates to `"partially_trained"` if `epochs_completed > 0` but any of the 3 pillars is unfulfilled.
-- `ladder_type` (`"spatial" | "timeframe"`): Declares whether the ladder represents spatial pixel dimensions or temporal MetaTrader 5 candle resolutions (`[1, 5, 15, 60, 240, 1440]`).
-- `sota_details`: Exhaustive list of target metrics evaluated against their directional thresholds.
-- `data_fraction_completed`: Floating-point fraction of training data manifold completed ($0.0$ to $1.0$).
+  - Strictly evaluates to `"fully_trained"` if and only if
+    `sota_all_met === true && ladder_passed === true && data_fraction_passed ===
+    true`.
+  - Evaluates to `"partially_trained"` if `epochs_completed > 0` but any of the
+    3 pillars is unfulfilled.
+- `ladder_type` (`"spatial" | "timeframe"`): Declares whether the ladder
+  represents spatial pixel dimensions or temporal MetaTrader 5 candle
+  resolutions (`[1, 5, 15, 60, 240, 1440]`).
+- `sota_details`: Exhaustive list of target metrics evaluated against their
+  directional thresholds.
+- `data_fraction_completed`: Floating-point fraction of training data manifold
+  completed ($0.0$ to $1.0$).
 - `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
 
-- `POST /api/gui/quick-train`: Accepts `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300, "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640, "enable_sawtooth": true }` and queues a training pipeline instantly with validated parameters. Supports Ultralytics native trainer delegation for YOLOv8n and automatic fallback resolving `task_type: forex` for financial models.
+- `POST /api/gui/quick-train`: Accepts
+  `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300,
+  "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640,
+  "enable_sawtooth": true }` and queues a training pipeline instantly with
+  validated parameters. Supports Ultralytics native trainer delegation for
+  YOLOv8n and automatic fallback resolving `task_type: forex` for financial
+  models.
 
 ### 4.7 Python In-Process Engine & Governance API
 
-The training suite provides foundational Python engine classes for standalone execution and notebook integration:
+The training suite provides foundational Python engine classes for standalone
+execution and notebook integration:
 
 ```python
 from training.core.orchestrator import TrainingOrchestrator
@@ -1296,7 +1498,11 @@ orchestrator = TrainingOrchestrator(
 
 ## 5. Datasets Compilation & Stream Pipeline API
 
-The `lemgendary-datasets` repository provides a high-throughput sidecar API service running on `127.0.0.1:8100` (`api/`). It provides REST endpoints for hardware inspection, configuration validation, dataset and raw-source querying, and background execution of compilation and degradation tasks, with bidirectional WebSocket streaming for live logs and global telemetry.
+The `lemgendary-datasets` repository provides a high-throughput sidecar API
+service running on `127.0.0.1:8100` (`api/`). It provides REST endpoints for
+hardware inspection, configuration validation, dataset and raw-source querying,
+and background execution of compilation and degradation tasks, with
+bidirectional WebSocket streaming for live logs and global telemetry.
 
 ### 5.1 Server Architecture & Discovery
 
@@ -1311,70 +1517,113 @@ python cli.py server status
 python cli.py server stop
 ```
 
-| Parameter | Default | Description |
-| :--- | :--- | :--- |
-| Bind Host | `127.0.0.1` | Local loopback interface |
-| Bind Port | `8100` | Dedicated compiler service port (distinct from `lem-env` on 8000) |
-| Interactive Docs | `/docs` | OpenAPI Swagger UI |
-| Schema Spec | `/openapi.json` | OpenAPI 3.1.0 JSON specification |
+- **Bind Host**: Default: `127.0.0.1`; Description: Local loopback interface
+- **Bind Port**: Default: `8100`; Description: Dedicated compiler service port
+  (distinct from `lem-env` on 8000)
+- **Interactive Docs**: Default: `/docs`; Description: OpenAPI Swagger UI
+- **Schema Spec**: Default: `/openapi.json`; Description: OpenAPI 3.1.0 JSON
+  specification
 
 ### 5.2 Security & Authentication
 
-All operational endpoints under `/api` requiring modification privileges enforce token authentication:
+All operational endpoints under `/api` requiring modification privileges enforce
+token authentication:
 
-- Provide the token via HTTP header `X-API-Key: <token>` or `Authorization: Bearer <token>`.
-- Master token resolution: checked from `LEMGENDARY_API_TOKEN` environment variable, or automatically loaded/generated in `.lgd_server/token`.
-- Unauthenticated requests to protected endpoints return `401 Unauthorized`; invalid tokens return `403 Forbidden`. Diagnostic endpoints (`/api/health`, `/api/datasets`, `/api/sources`, `/api/gates`) and WebSocket streams are open.
+- Provide the token via HTTP header `X-API-Key: <token>` or
+  `Authorization: Bearer <token>`.
+- Master token resolution: checked from `LEMGENDARY_API_TOKEN` environment
+  variable, or automatically loaded/generated in `.lgd_server/token`.
+- Unauthenticated requests to protected endpoints return `401 Unauthorized`;
+  invalid tokens return `403 Forbidden`. Diagnostic endpoints (`/api/health`,
+  `/api/datasets`, `/api/sources`, `/api/gates`) and WebSocket streams are open.
 
 ### 5.3 Endpoint Reference Matrix
 
-| Method | Endpoint | Auth | Description |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/api/health` | None | Basic liveness check, uptime, version, and active job count |
-| `GET` | `/api/health/full` | None | Detailed telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model |
-| `GET` | `/api/config` | Required | Retrieves parsed `unified_data.yaml` structure |
-| `POST` | `/api/config/validate` | Required | Validates configuration against Pydantic schema |
-| `GET` | `/api/jobs` | Required | List historical and active jobs with pagination (`limit`, `offset`, `state`, `job_type`) |
-| `GET` | `/api/jobs/{id}` | Required | Fetch state, timestamps, exit code, and error details for a single job |
-| `GET` | `/api/jobs/{id}/logs` | Required | Retrieve buffered execution log text or tail lines |
-| `POST` | `/api/jobs/compile` | Required | Queue a manifold compilation task |
-| `POST` | `/api/jobs/degrade` | Required | Queue a synthetic degradation derivation task |
-| `POST` | `/api/jobs/{id}/cancel` | Required | Terminate an active job subprocess |
-| `GET` | `/api/datasets` | None | Catalog compiled manifolds with size, sample counts, and container formats |
-| `GET` | `/api/datasets/{name}` | None | Retrieve `dataset_info.yaml` and class lists for a specific manifold |
-| `GET` | `/api/sources` | None | Catalog local `raw-sets` and configured upstream datasets |
-| `GET` | `/api/kaggle/status` | None | Check Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env) |
-| `GET` | `/api/kaggle/registry-datasets` | None | Enumerate 20 canonical Kaggle-bound production manifolds with local status |
-| `POST` | `/api/kaggle/download` | None | Ingest dataset from Kaggle via URL or repo slug with auto-extraction |
-| `POST` | `/api/kaggle/upload` | None | Package and upload local compiled manifold to Kaggle repository |
-| `POST` | `/api/kaggle/sync` | Required | Queue a Kaggle push/pull metadata synchronization job |
-| `POST` | `/api/kaggle/update-metadata` | Required | Pushes dataset metadata JSON to Kaggle (supports all_datasets: true) |
-| `GET` | `/api/modernize/queue` | None | Scans all manifolds and queues those requiring WebP modernization |
-| `POST` | `/api/modernize/run` | Required | Dispatches batch modernization and parallel WebP transcoding |
-| `POST` | `/api/modernize/reduce` | Required | Dispatches spatial or sample scale reduction (downsample) job |
-| `POST` | `/api/llm/compile` | Required | Queue or execute compilation of an LLM instruction manifold from unified_data.yaml |
-| `POST` | `/api/llm/validate` | None | Validate an LLM dataset JSONL file against the 4 LemGendary Quality Invariants |
-| `POST` | `/api/llm/test-suite` | None | Execute in-process dataset compiler unit tests matching pattern |
-| `POST` | `/api/modernize/regenerate-manifolds` | Required | Batch regenerates master manifolds.json and dataset-metadata.json |
-| `GET` | `/api/gates/hardlinks` | None | Audit NTFS/POSIX hardlink fractions and evaluate container safety |
-| `GET` | `/api/gui/state` | None | Unified snapshot: uptime, active jobs, storage capacity, hardware profile, presets |
-| `GET` | `/api/gui/datasets/with-stats` | None | Detailed manifold catalog: file distribution by format (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics |
-| `GET` | `/api/gui/jobs/active` | None | Real-time execution telemetry for active compiler background tasks |
-| `GET` | `/api/gui/presets` | None | Canonical compiler preset parameter definitions and descriptions |
-| `POST` | `/api/gui/quick-compile` | None | Fast-dispatch compilation using a predefined compiler preset profile |
-| `POST` | `/api/gui/custom-compile` | None | Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH) |
-| `GET` | `/api/env/status` | Required | Passthrough delegating to `lem-env audit --fast` |
-| `POST` | `/api/env/validate` | Required | Passthrough delegating to `lem-env validate --project lemgendary-datasets` |
+- **`GET`**: Endpoint: `/api/health`; Auth: None; Description: Basic liveness
+  check, uptime, version, and active job count
+- **`GET`**: Endpoint: `/api/health/full`; Auth: None; Description: Detailed
+  telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model
+- **`GET`**: Endpoint: `/api/config`; Auth: Required; Description: Retrieves
+  parsed `unified_data.yaml` structure
+- **`POST`**: Endpoint: `/api/config/validate`; Auth: Required; Description:
+  Validates configuration against Pydantic schema
+- **`GET`**: Endpoint: `/api/jobs`; Auth: Required; Description: List historical
+  and active jobs with pagination (`limit`, `offset`, `state`, `job_type`)
+- **`GET`**: Endpoint: `/api/jobs/{id}`; Auth: Required; Description: Fetch
+  state, timestamps, exit code, and error details for a single job
+- **`GET`**: Endpoint: `/api/jobs/{id}/logs`; Auth: Required; Description:
+  Retrieve buffered execution log text or tail lines
+- **`POST`**: Endpoint: `/api/jobs/compile`; Auth: Required; Description: Queue
+  a manifold compilation task
+- **`POST`**: Endpoint: `/api/jobs/degrade`; Auth: Required; Description: Queue
+  a synthetic degradation derivation task
+- **`POST`**: Endpoint: `/api/jobs/{id}/cancel`; Auth: Required; Description:
+  Terminate an active job subprocess
+- **`GET`**: Endpoint: `/api/datasets`; Auth: None; Description: Catalog
+  compiled manifolds with size, sample counts, and container formats
+- **`GET`**: Endpoint: `/api/datasets/{name}`; Auth: None; Description: Retrieve
+  `dataset_info.yaml` and class lists for a specific manifold
+- **`GET`**: Endpoint: `/api/sources`; Auth: None; Description: Catalog local
+  `raw-sets` and configured upstream datasets
+- **`GET`**: Endpoint: `/api/kaggle/status`; Auth: None; Description: Check
+  Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env)
+- **`GET`**: Endpoint: `/api/kaggle/registry-datasets`; Auth: None; Description:
+  Enumerate 20 canonical Kaggle-bound production manifolds with local status
+- **`POST`**: Endpoint: `/api/kaggle/download`; Auth: None; Description: Ingest
+  dataset from Kaggle via URL or repo slug with auto-extraction
+- **`POST`**: Endpoint: `/api/kaggle/upload`; Auth: None; Description: Package
+  and upload local compiled manifold to Kaggle repository
+- **`POST`**: Endpoint: `/api/kaggle/sync`; Auth: Required; Description: Queue a
+  Kaggle push/pull metadata synchronization job
+- **`POST`**: Endpoint: `/api/kaggle/update-metadata`; Auth: Required;
+  Description: Pushes dataset metadata JSON to Kaggle (supports all_datasets:
+  true)
+- **`GET`**: Endpoint: `/api/modernize/queue`; Auth: None; Description: Scans
+  all manifolds and queues those requiring WebP modernization
+- **`POST`**: Endpoint: `/api/modernize/run`; Auth: Required; Description:
+  Dispatches batch modernization and parallel WebP transcoding
+- **`POST`**: Endpoint: `/api/modernize/reduce`; Auth: Required; Description:
+  Dispatches spatial or sample scale reduction (downsample) job
+- **`POST`**: Endpoint: `/api/llm/compile`; Auth: Required; Description: Queue
+  or execute compilation of an LLM instruction manifold from unified_data.yaml
+- **`POST`**: Endpoint: `/api/llm/validate`; Auth: None; Description: Validate
+  an LLM dataset JSONL file against the 4 LemGendary Quality Invariants
+- **`POST`**: Endpoint: `/api/llm/test-suite`; Auth: None; Description: Execute
+  in-process dataset compiler unit tests matching pattern
+- **`POST`**: Endpoint: `/api/modernize/regenerate-manifolds`; Auth: Required;
+  Description: Batch regenerates master manifolds.json and dataset-metadata.json
+- **`GET`**: Endpoint: `/api/gates/hardlinks`; Auth: None; Description: Audit
+  NTFS/POSIX hardlink fractions and evaluate container safety
+- **`GET`**: Endpoint: `/api/gui/state`; Auth: None; Description: Unified
+  snapshot: uptime, active jobs, storage capacity, hardware profile, presets
+- **`GET`**: Endpoint: `/api/gui/datasets/with-stats`; Auth: None; Description:
+  Detailed manifold catalog: file distribution by format
+  (WebP/JPEG/PNG/Parquet), storage bytes, hardlink metrics
+- **`GET`**: Endpoint: `/api/gui/jobs/active`; Auth: None; Description:
+  Real-time execution telemetry for active compiler background tasks
+- **`GET`**: Endpoint: `/api/gui/presets`; Auth: None; Description: Canonical
+  compiler preset parameter definitions and descriptions
+- **`POST`**: Endpoint: `/api/gui/quick-compile`; Auth: None; Description:
+  Fast-dispatch compilation using a predefined compiler preset profile
+- **`POST`**: Endpoint: `/api/gui/custom-compile`; Auth: None; Description:
+  Synthesize custom dataset manifold from multi-source URLs (Kaggle, HF, GD, GH)
+- **`GET`**: Endpoint: `/api/env/status`; Auth: Required; Description:
+  Passthrough delegating to `lem-env audit --fast`
+- **`POST`**: Endpoint: `/api/env/validate`; Auth: Required; Description:
+  Passthrough delegating to `lem-env validate --project lemgendary-datasets`
 
 ### 5.4 WebSocket Real-Time Log Streaming
 
-Clients connect to real-time log channels to monitor long-running compiler and degradation tasks without polling:
+Clients connect to real-time log channels to monitor long-running compiler and
+degradation tasks without polling:
 
 ```text
 ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs
 ```
 
-On connection, the server automatically replays any existing backlog text buffered on disk, then streams incremental stdout/stderr chunks in real time as emitted by the subprocess.
+On connection, the server automatically replays any existing backlog text
+buffered on disk, then streams incremental stdout/stderr chunks in real time as
+emitted by the subprocess.
 
 Message Payload Format:
 
@@ -1386,63 +1635,98 @@ Message Payload Format:
 }
 ```
 
-When execution concludes, a terminal chunk `[PROCESS_TERMINATED] Job <id> COMPLETED (Exit Code: 0)` is emitted before socket closing.
+When execution concludes, a terminal chunk
+`[PROCESS_TERMINATED] Job <id> COMPLETED (Exit Code: 0)` is emitted before
+socket closing.
 
 ### 5.5 SQLite Job Persistence & Restart Recovery
 
-All job states, parameters, created/started/completed timestamps, exit codes, and log paths are recorded in `.lgd_server/jobs.db` via SQLite.
-If the API server or host reboots while jobs are in `running` or `pending` state, an automated recovery pass on boot transitions orphaned jobs to `interrupted`, preventing zombie job tracking and providing clean diagnostic records.
+All job states, parameters, created/started/completed timestamps, exit codes,
+and log paths are recorded in `.lgd_server/jobs.db` via SQLite.
+If the API server or host reboots while jobs are in `running` or `pending`
+state, an automated recovery pass on boot transitions orphaned jobs to
+`interrupted`, preventing zombie job tracking and providing clean diagnostic
+records.
 
 ### 5.6 Desktop GUI Aggregated Endpoints & Presets (Phase 8)
 
-The Dataset Compiler API exposes specialized endpoints tailored for `lemgendary-ai-studio-gui` desktop integration and Cross-Project Automation (CPA):
+The Dataset Compiler API exposes specialized endpoints tailored for
+`lemgendary-ai-studio-gui` desktop integration and Cross-Project Automation
+(CPA):
 
 #### `GET /api/gui/state` (Dataset Compiler)
 
-Aggregates system uptime, active jobs count, discovered manifold count, storage metrics, hardware sensors, and available compiler presets into a single rapid hydration payload.
+Aggregates system uptime, active jobs count, discovered manifold count, storage
+metrics, hardware sensors, and available compiler presets into a single rapid
+hydration payload.
 
 #### `GET /api/gui/datasets/with-stats`
 
-Returns comprehensive manifold storage and format statistics, including file distribution counts across formats (`webp`, `jpg`, `png`, `parquet`), total byte footprint, and physical NTFS hardlink deduplication ratios.
+Returns comprehensive manifold storage and format statistics, including file
+distribution counts across formats (`webp`, `jpg`, `png`, `parquet`), total byte
+footprint, and physical NTFS hardlink deduplication ratios.
 
 #### `GET /api/gui/jobs/active`
 
-Streams execution progress telemetry for currently running compilation and degradation tasks, including percentage complete, current sample index, elapsed duration, and processing frames-per-second (`fps`).
+Streams execution progress telemetry for currently running compilation and
+degradation tasks, including percentage complete, current sample index, elapsed
+duration, and processing frames-per-second (`fps`).
 
 #### `GET /api/gui/presets`
 
-Catalogs canonical compiler preset profiles (`quality-vision`, `restoration-hardlinked`, `detection-variable`, `cloud-archival`) loaded from `presets.yaml`. Each entry documents target image formats, quality floors, NIMA vetting thresholds, YOLO auto-labeling flags, and container targets.
+Catalogs canonical compiler preset profiles (`quality-vision`,
+`restoration-hardlinked`, `detection-variable`, `cloud-archival`) loaded from
+`presets.yaml`. Each entry documents target image formats, quality floors, NIMA
+vetting thresholds, YOLO auto-labeling flags, and container targets.
 
 #### `POST /api/gui/quick-compile`
 
-Fast-dispatch compilation endpoint accepting a preset profile name, target model key, and optional worker/storage overrides. Executed without blocking for local desktop GUI integration.
+Fast-dispatch compilation endpoint accepting a preset profile name, target model
+key, and optional worker/storage overrides. Executed without blocking for local
+desktop GUI integration.
 
 #### `POST /api/gui/custom-compile`
 
-Custom multi-source compilation endpoint accepting a user-defined manifold name, target domain task (`restoration`, `detection`, `segmentation`, `quality`, `vision`), storage preset, container architecture (`webdataset`, `parquet`, `mds`, `litdata`), shard size, loose file cleanup toggle, and an array of heterogeneous source repository links:
+Custom multi-source compilation endpoint accepting a user-defined manifold name,
+target domain task (`restoration`, `detection`, `segmentation`, `quality`,
+`vision`), storage preset, container architecture (`webdataset`, `parquet`,
+`mds`, `litdata`), shard size, loose file cleanup toggle, and an array of
+heterogeneous source repository links:
 
 - Kaggle (`kaggle://` or URL)
 - Hugging Face (`hf://` or URL)
 - Google Drive (`gd://` or URL)
 - GitHub (`gh://` or URL)
 
-Normalizes all links to standard URI schemes, updates `unified_data.yaml` dynamically, and launches background compilation.
+Normalizes all links to standard URI schemes, updates `unified_data.yaml`
+dynamically, and launches background compilation.
 
 #### `GET /api/kaggle/registry-datasets`
 
-Returns an array of all 20 canonical Kaggle-bound production manifolds from `unified_data.yaml`. Each entry includes manifold key, human-readable title, repository slug, container format, sample count, and a boolean flag `is_local_present` indicating local on-disk existence.
+Returns an array of all 20 canonical Kaggle-bound production manifolds from
+`unified_data.yaml`. Each entry includes manifold key, human-readable title,
+repository slug, container format, sample count, and a boolean flag
+`is_local_present` indicating local on-disk existence.
 
 #### `POST /api/kaggle/download`
 
-Initiates an asynchronous download job from Kaggle for a registry manifold or custom repository reference. Accepts `{ "kaggle_ref": "owner/dataset", "target_folder": "LemGendizedDataset", "force": false }`. Unpacks and organizes shards directly into the dataset root.
+Initiates an asynchronous download job from Kaggle for a registry manifold or
+custom repository reference. Accepts
+`{ "kaggle_ref": "owner/dataset", "target_folder": "LemGendizedDataset",
+"force": false }`. Unpacks and organizes shards directly into the dataset root.
 
 #### `POST /api/kaggle/upload`
 
-Packages and uploads a local compiled manifold to Kaggle. Accepts `{ "manifold": "LemGendizedUpnV2", "kaggle_ref": "owner/slug" }`. Automatically discovers dataset directory, generates manifests, and streams to Kaggle via the API manager.
+Packages and uploads a local compiled manifold to Kaggle. Accepts
+`{ "manifold": "LemGendizedUpnV2", "kaggle_ref": "owner/slug" }`. Automatically
+discovers dataset directory, generates manifests, and streams to Kaggle via the
+API manager.
 
 #### `POST /api/kaggle/update-metadata`
 
-Updates dataset metadata on Kaggle. Supports single-manifold updates by specifying `dataset_name`, or bulk updates across all canonical manifolds by setting `all_datasets: true`.
+Updates dataset metadata on Kaggle. Supports single-manifold updates by
+specifying `dataset_name`, or bulk updates across all canonical manifolds by
+setting `all_datasets: true`.
 
 Request body:
 
@@ -1457,7 +1741,10 @@ Request body:
 
 #### `GET /api/modernize/queue`
 
-Scans all manifolds across `LemGendaryDatasets/` and returns the queue of datasets requiring WebP modernization and transcode. Each item details sample counts, format breakdowns (`webp`, `jpg`, `png`), and whether modernization is required.
+Scans all manifolds across `LemGendaryDatasets/` and returns the queue of
+datasets requiring WebP modernization and transcode. Each item details sample
+counts, format breakdowns (`webp`, `jpg`, `png`), and whether modernization is
+required.
 
 Response:
 
@@ -1477,7 +1764,8 @@ Response:
 
 #### `POST /api/modernize/run`
 
-Submits an asynchronous background job to batch modernizes and transcodes manifolds to WebP.
+Submits an asynchronous background job to batch modernizes and transcodes
+manifolds to WebP.
 
 Request body:
 
@@ -1525,7 +1813,8 @@ Response:
 
 #### `POST /api/modernize/regenerate-manifolds`
 
-Regenerates master `manifolds.json` and synchronized `dataset-metadata.json` across all manifolds on disk.
+Regenerates master `manifolds.json` and synchronized `dataset-metadata.json`
+across all manifolds on disk.
 
 Response:
 
@@ -1543,24 +1832,38 @@ The dataset compilation engine supports three canonical processing pathways:
 
 1. **Regular Ingestion & Manifold Compilation Pipeline**:
    - Ingests raw source folders from `raw-sets/`.
-   - Executes image integrity verification, aspect ratio checks, NIMA perceptual quality gating, YOLO auto-labeling, and Lanczos-3 spatial downsampling.
-   - Emits standardized directories with zero-intermediate WebP transcoding (`quality=92` images, `quality=95` targets), or simultaneous streaming containers via `--also-format` (`webdataset`, `mds`, `litdata`).
+   - Executes image integrity verification, aspect ratio checks, NIMA perceptual
+     quality gating, YOLO auto-labeling, and Lanczos-3 spatial downsampling.
+   - Emits standardized directories with zero-intermediate WebP transcoding
+     (`quality=92` images, `quality=95` targets), or simultaneous streaming
+     containers via `--also-format` (`webdataset`, `mds`, `litdata`).
    - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
 
 2. **Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)**:
-   - Directly indexes and reads legacy multi-gigabyte `.zip` archives containing millions of small images.
-   - Streams raw byte streams in memory through a 12-thread worker pool for parallel WebP transcoding, eliminating NTFS MFT locking, 8.3 short-name collision overhead, and antivirus filter driver lag.
-   - Dual-pass sequential tar streaming writes input images sequentially, then appends paired targets in POSIX append mode (`"a"`).
-   - Validates shard byte counts and unlinks source `.zip` archives (`--delete-zip`) and purges legacy uncompressed directories (`--delete-legacy-dir`), reclaiming hundreds of gigabytes of disk space.
+   - Directly indexes and reads legacy multi-gigabyte `.zip` archives containing
+     millions of small images.
+   - Streams raw byte streams in memory through a 12-thread worker pool for
+     parallel WebP transcoding, eliminating NTFS MFT locking, 8.3 short-name
+     collision overhead, and antivirus filter driver lag.
+   - Dual-pass sequential tar streaming writes input images sequentially, then
+     appends paired targets in POSIX append mode (`"a"`).
+   - Validates shard byte counts and unlinks source `.zip` archives
+     (`--delete-zip`) and purges legacy uncompressed directories
+     (`--delete-legacy-dir`), reclaiming hundreds of gigabytes of disk space.
 
 3. **Retroactive Manifold Migration Pipeline (`format migrate` / `migrate_manifold_format.py`)**:
-   - Discovers existing modernized dataset folders containing loose `.webp` files and an `index.json` catalog.
-   - Serializes loose samples into continuous ~500 MB WebDataset `.tar` shards or MosaicML `.mds` chunks.
-   - When invoked with `--purge-source`, unlinks the loose directory trees upon verified shard writing, eliminating filesystem cluster allocation overhead while keeping sample contents bit-exact.
+   - Discovers existing modernized dataset folders containing loose `.webp`
+     files and an `index.json` catalog.
+   - Serializes loose samples into continuous ~500 MB WebDataset `.tar` shards
+     or MosaicML `.mds` chunks.
+   - When invoked with `--purge-source`, unlinks the loose directory trees upon
+     verified shard writing, eliminating filesystem cluster allocation overhead
+     while keeping sample contents bit-exact.
 
 ### 5.8 Python In-Process Engine & Streaming Pipeline APIs
 
-The dataset compiler exposes programmatic Python service classes and streaming utilities for automated workflows and sidecar runners:
+The dataset compiler exposes programmatic Python service classes and streaming
+utilities for automated workflows and sidecar runners:
 
 ```python
 from pathlib import Path
@@ -1613,13 +1916,16 @@ if fmt == "matlab" and ann_path:
 
 All ecosystem APIs implement strict error resilience:
 
-| HTTP Status | Code String | Description |
-| :--- | :--- | :--- |
-| `200 OK` | `SUCCESS` | Request processed successfully |
-| `400 Bad Request` | `VALIDATION_ERROR` | Request body or query parameters failed schema validation |
-| `404 Not Found` | `PROJECT_NOT_FOUND` | Specified target repository does not exist in workspace |
-| `409 Conflict` | `PIPELINE_ACTIVE` | An install or update pipeline is currently executing |
-| `500 Server Error` | `INTERNAL_FAILURE` | Unhandled internal exception occurred during toolchain execution |
+- **`200 OK`**: Code String: `SUCCESS`; Description: Request processed
+  successfully
+- **`400 Bad Request`**: Code String: `VALIDATION_ERROR`; Description: Request
+  body or query parameters failed schema validation
+- **`404 Not Found`**: Code String: `PROJECT_NOT_FOUND`; Description: Specified
+  target repository does not exist in workspace
+- **`409 Conflict`**: Code String: `PIPELINE_ACTIVE`; Description: An install or
+  update pipeline is currently executing
+- **`500 Server Error`**: Code String: `INTERNAL_FAILURE`; Description:
+  Unhandled internal exception occurred during toolchain execution
 
 Error Response Format:
 
@@ -1633,10 +1939,19 @@ Error Response Format:
 
 Additional resilience features:
 
-- **Automatic cache recovery**: `run_pip_with_recovery` detects corruption signatures in pip's output (`access violation`, hash mismatch, truncated download) and purges the HTTP cache before retrying once with `--no-cache-dir`.
-- **Reverse-dependency safety**: No upgrade is applied if it would violate an installed package's requirement. The blocked reason is returned in the event stream.
-- **Snapshot rollback**: Every package batch is snapshotted via `pip freeze` before apply. If `pip check` fails afterward, the batch is rolled back automatically.
-- **Graceful WebSocket shutdown**: The event drain task is cancelled cleanly by the FastAPI lifespan handler on server shutdown, so no `Task was destroyed but it is pending!` warnings appear in the log.
+- **Automatic cache recovery**: `run_pip_with_recovery` detects corruption
+  signatures in pip's output (`access violation`, hash mismatch, truncated
+  download) and purges the HTTP cache before retrying once with
+  `--no-cache-dir`.
+- **Reverse-dependency safety**: No upgrade is applied if it would violate an
+  installed package's requirement. The blocked reason is returned in the event
+  stream.
+- **Snapshot rollback**: Every package batch is snapshotted via `pip freeze`
+  before apply. If `pip check` fails afterward, the batch is rolled back
+  automatically.
+- **Graceful WebSocket shutdown**: The event drain task is cancelled cleanly by
+  the FastAPI lifespan handler on server shutdown, so no
+  `Task was destroyed but it is pending!` warnings appear in the log.
 
 ---
 
