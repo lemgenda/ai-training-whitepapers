@@ -36,7 +36,7 @@
 <span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
-<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.18</code>, Dataset Compiler Suite <code>v16.9.27</code>, Model Training Suite <code>v16.9.68</code>, AI Studio GUI <code>v2.10.19</code></span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.58</code>, Dataset Compiler Suite <code>v16.9.64</code>, Model Training Suite <code>v16.9.107</code>, AI Studio GUI <code>v2.10.36</code></span>
 <span><strong>Last Reviewed / Verified</strong>: 2026-11-03</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
@@ -146,7 +146,8 @@ are defined once, in <code>lemgendary-env-manager/ecosystem/ecosystem.json</code
 the LemGendary Model Training Suite read it through their <code>ecosystem</code>
 loaders, the LemGendary AI Studio GUI through its snapshot
 <code>src/generated/ecosystem.json</code>, and the <code>ecosystem_ssot</code> validation gate
-reports values written anywhere else.</p>
+(error severity since Environment Manager v16.9.52) fails validation when a
+value is written anywhere else.</p>
 <h3 id="21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</h3>
 <ul>
 <li><strong>Framework</strong>: FastAPI + Uvicorn with a lifespan handler that starts the other
@@ -254,8 +255,8 @@ contracts; no business logic in the frontend. Every sidecar request goes
 through <code>sidecarFetch</code>, which adds the client header. WebSocket lifecycle
 recovery guarantees no step card remains in <code>RUNNING</code> after pipeline
 completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</li>
-<li><strong>Toolchain &amp; Env</strong>: <code>pyproject.toml</code> declares Python <code>&gt;=3.10</code>, but the code
-uses Python 3.12 APIs, so 3.12 is the effective minimum. Enforces the
+<li><strong>Toolchain &amp; Env</strong>: <code>pyproject.toml</code> declares Python <code>&gt;=3.12</code>, matching
+the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
 zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>); a
 <code>.pylintrc</code> is still present. OpenCV variant equivalence in the health
 auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</code>). The
@@ -342,8 +343,9 @@ every repository.</li>
 <h2>7. Bug Reporting Flow</h2>
 <ol>
 <li>The operator opens &quot;Report Issue&quot; in the AI Studio GUI, writes a description,
-picks the module and adds up to 5 annotated screenshots and, optionally, the
-recent telemetry as CSV.</li>
+picks the module and adds up to 5 annotated screenshots, optionally a
+recording of the app window (desktop app on Windows, MP4, at most 60 s) and,
+optionally, the recent telemetry as CSV.</li>
 <li>The GUI posts the multipart form to the Environment Manager
 (<code>POST /api/bug-report</code>).</li>
 <li>The Environment Manager checks fields, sizes and file signatures, writes
@@ -353,7 +355,6 @@ the workspace root.</li>
 and reveals the archive in the file manager. The operator attaches the ZIP
 and sends it; no SMTP credentials exist anywhere in the ecosystem.</li>
 </ol>
-<p>Screen recording is planned and not yet available.</p>
 </section>
 
 <section id="8-conclusion">

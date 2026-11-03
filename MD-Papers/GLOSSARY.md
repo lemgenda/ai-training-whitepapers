@@ -17,9 +17,12 @@ audited**: 2026-11-03
   - [2.2 Manifold (Compiled Training
     Manifold)](#22-manifold-compiled-training-manifold)
 - [3. Compiler & Storage Primitives](#3-compiler--storage-primitives)
+  - [3.9 Task Taxonomy](#39-task-taxonomy)
 - [4. Model Training Suite & Optimization](#4-model-training-suite--optimization)
   - [4.5 Ratchet Violation](#45-ratchet-violation)
   - [4.6 Epoch Budget](#46-epoch-budget)
+  - [4.7 Stochastic Weight Averaging (SWA)](#47-stochastic-weight-averaging-swa)
+  - [4.8 FID Provenance Ledger](#48-fid-provenance-ledger)
 - [5. Training Pathology & Diagnostics](#5-training-pathology--diagnostics)
 - [6. Environment & Infrastructure](#6-environment--infrastructure)
   - [6.3 Origin Guard](#63-origin-guard)
@@ -156,6 +159,17 @@ driver version and returns the newest compatible PyTorch wheel index (`cu126`,
 then `cu121`, then `cu118`). It eliminates hard-coded CUDA index pins and
 ensures the correct build is installed regardless of driver version.
 
+### 3.9 Task Taxonomy
+
+The file `lemgendary-datasets/task_taxonomy.json` (schema
+`task_taxonomy.schema.json`), the single source of task ids such as `pose`,
+`segmentation`, `restoration` or `detection`. For each task it gives the split
+folder the task adds (`layout_dir`), the default label and mask strategies and
+the name patterns of the fallback heuristic. Every entry in `unified_data.yaml`
+names its `task`; an entry with `task_confirmed: false` waits for the owner to
+confirm it. The compiler writes the task id as `task_type` into each
+manifold's `dataset_info.yaml`, which the LemGendary Model Training Suite reads.
+
 ---
 
 ## 4. Model Training Suite & Optimization
@@ -226,6 +240,25 @@ budget a hard cap). With budget $E$ and extension ceiling $E_{\max}$:
 $$
 E_{\text{trained}} \le E + E_{\max}
 $$
+
+### 4.7 Stochastic Weight Averaging (SWA)
+
+A running mean of the model weights over the last epochs of a run, computed
+with `torch.optim.swa_utils` (`AveragedModel`, optional `SWALR`, `update_bn`).
+In the LemGendary Model Training Suite it is set in the `swa` section of
+`config.yaml` and is **off by default**. The averaged weights are written as
+`checkpoints/vault_swa.pth`, an ingredient for the Pareto Model Soup; they
+never move the curriculum rungs. Not to be confused with Mini-SWA or
+Metric-Specific SWA (MS-SWA), which are not implemented.
+
+### 4.8 FID Provenance Ledger
+
+The append-only file `LemGendaryModels/<model>/fid_provenance.csv` written by
+`python -m training.fid_reeval`. Each row records where a FID value came from:
+`unverified` rows mark `metrics.csv` values rewritten by the removed
+`tools/recalibrate_fid.py`; `reevaluated` rows hold a FID re-measured from a
+checkpoint with `feature=2048` and chunks of at most two, with the image count
+and the checkpoint SHA-256. `metrics.csv` itself is never rewritten.
 
 ---
 
@@ -301,9 +334,10 @@ description of at least 50 characters, and may attach up to 5 screenshots and
 the Telemetry CSV. The GUI posts the form as `multipart/form-data` to
 `POST /api/bug-report` on the LemGendary Environment Manager (port `8000`),
 which saves a Bug Report Archive and opens the user's own mail client through
-a `mailto:` link. No SMTP password ships with the application. Screen
-recording is **planned**: the endpoint already accepts an optional recording
-file, but the GUI does not record yet.
+a `mailto:` link. No SMTP password ships with the application. In the desktop
+app on Windows the user can also record the app window (H.264 MP4, up to 60 s,
+854x480 at 24 fps) and attach it as `recording.mp4`; other platforms report
+that recording is not supported yet.
 
 ### 7.2 Bug Report Archive
 
@@ -311,8 +345,8 @@ The ZIP file that `POST /api/bug-report` writes under `bug-reports/` in the
 workspace root. It holds `report.csv` (one row: timestamp, report ID, email,
 module, current tab, app version, description and attachment flags), the
 screenshots (`screenshot_N.png` or `.webp`, at most 5, 5 MB each), the
-optional `telemetry.csv` (at most 2 MB) and, once recording ships, an optional
-recording (`.webm` or `.mp4`, at most 50 MB). The whole report is limited to
+optional `telemetry.csv` (at most 2 MB) and an optional recording (`.webm` or
+`.mp4`, at most 50 MB). The whole report is limited to
 80 MB. A `mailto:` link cannot carry files, so the user attaches the archive to
 the prepared message by hand.
 

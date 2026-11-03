@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.4 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v2.10.19</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Version</strong>: <code>v2.10.36</code> (LemGendary AI Studio GUI)</span>
 <span><strong>Last audited</strong>: 2026-11-03</span>
 </div>
 </header>
@@ -81,7 +81,7 @@ Cancellation</a></li>
 
 <section id="1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary AI Studio GUI (client version <code>v2.10.19</code>) is a hardware-aware
+<p>The LemGendary AI Studio GUI (client version <code>v2.10.36</code>) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
@@ -90,13 +90,14 @@ Rust host (Tauri v2), a reactive React 18 frontend and local WebSocket telemetry
 channels to three Python sidecars. Every sidecar request carries a client header
 that the sidecars' origin guard checks, the window runs under a strict Content
 Security Policy, and secrets are write-only from the GUI. A built-in bug
-reporter packages a description, annotated screenshots and recent telemetry into
-a local ZIP archive and hands it to the operator's own mail client.</p>
+reporter packages a description, annotated screenshots, an optional screen
+recording of the app window and recent telemetry into a local ZIP archive and
+hands it to the operator's own mail client.</p>
 <blockquote class="blockquote-styled">
 <p><strong>Note:</strong> <strong>Dual Versioning Architecture</strong>: The desktop application and its backends use
 separate version tracks:</p>
 <ol>
-<li><strong>LemGendary AI Studio GUI (<code>v2.10.19</code>)</strong>: Governs the Tauri v2 desktop
+<li><strong>LemGendary AI Studio GUI (<code>v2.10.36</code>)</strong>: Governs the Tauri v2 desktop
 application, the React 18 frontend and the Operator Manual
 (<a href="ai-studio-manual.html"><code>MANUAL_AI_STUDIO_GUI.md</code></a>). <code>package.json</code>
 holds this version and <code>tauri.conf.json</code> reads it from there.</li>
@@ -393,8 +394,8 @@ response are normalized instead of crashing the modal, and Escape closes it.</p>
 <h3 id="67-comprehensive-testing--ecosystem-verification-battery">6.7 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
 <p>The GUI codebase is verified by an automated test battery:</p>
 <ul>
-<li><strong>Component &amp; Integration Testing</strong>: 136 Vitest tests (release <code>v2.10.19</code>)
-cover sidecar routing and fallbacks, request field names against the sidecars'
+<li><strong>Component &amp; Integration Testing</strong>: 183 Vitest tests and 21 Rust tests
+(release <code>v2.10.34</code>) cover sidecar routing, request field names against the sidecars'
 <code>openapi.json</code> files, the compiler and training panels, the config and secrets
 editors, the clean install dialog, the Report Issue modal and annotator, and a
 scan that fails when a <code>className</code> has no CSS rule.</li>
@@ -450,13 +451,20 @@ multi-variation validation.</li>
 by the sidebar, the <code>?tab=</code> parser and the bug report module select.</li>
 </ul>
 </li>
-<li><strong>Offline Placeholders (<code>src/components/training/fallbackModels.ts</code>,
-<code>src/components/compiler/fallbackDatasets.ts</code>)</strong>: While a sidecar is offline,
-the panels show placeholder cards with identity metadata only. Fallback models
-are marked <code>offline_placeholder: true</code> and show <code>UNKNOWN (OFFLINE)</code> instead of
-invented status, epochs or metrics; placeholders are never written to the
-store cache, and the panel refetches when the sidecar comes back. The dataset
-placeholders still list static sample counts and sizes.</li>
+<li><strong>No Fake Catalogs (v2.10.34)</strong>: The model and manifold catalogs come only
+from the sidecars. The hand-written fallback lists (<code>fallbackModels.ts</code>,
+<code>fallbackDatasets.ts</code>) and the <code>offline_placeholder</code> flag are removed. With a
+sidecar offline or returning an empty list, the training and compiler panels
+show an empty or offline state (the training panel with Retry) and reload
+when the sidecar answers.</li>
+<li><strong>Training Status Contract (v2.10.34)</strong>: <code>training_status</code>
+(<code>TrainingStatus</code>: <code>fully_trained</code>, <code>partially_trained</code>, <code>weights_ready</code>,
+<code>initializing</code>, <code>unknown</code>) and <code>is_fully_trained</code> are required fields of the
+model catalog, as in the LemGendary Model Training Suite <code>ModelWithStats</code>
+schema; <code>stats_error</code> is passed through. The GUI no longer derives the status
+from pillars, epochs or checkpoints. The badge and the status filter use the
+sidecar verdict only; <code>unknown</code> shows an <code>UNKNOWN</code> badge with the reason and
+hides the metrics.</li>
 <li><strong>Control ID Registry</strong>: Interactive controls carry stable DOM IDs listed in
 <a href="gui-control-registry.html"><code>GUI_CONTROL_REGISTRY.md</code></a>; the registry is
 rebuilt from the <code>id</code> attributes in the source.</li>
@@ -595,9 +603,19 @@ path, the recipient and subject with copy buttons, and a note when the mail
 client or folder did not open. Errors map to <code>offline</code> (&quot;Environment Manager
 is not running&quot;), <code>validation</code> (422 entries shown under the matching field by
 <code>loc</code>), <code>too_large</code> (413) and <code>server</code>.</li>
-<li><strong>Screen Recording</strong>: Planned, not available yet. The form already contains a
-disabled recording slot; a native, app-window-only recorder (at most 60
-seconds, one clip per report) will plug into it.</li>
+<li><strong>Screen Recording (v2.10.20)</strong>: A native recorder in
+<code>src-tauri/src/recording/</code> captures only the app's own window with Windows
+Graphics Capture (Windows only), scales frames into an even-sized 854x480 box,
+encodes H.264 with openh264 at 24 fps and muxes an MP4 in memory. A pure state
+machine handles start, pause, continue and stop with a 60-second limit on
+unpaused time. The commands are <code>recording_start</code>, <code>recording_pause</code>,
+<code>recording_resume</code>, <code>recording_stop</code> and <code>recording_status</code>; other platforms
+return &quot;not supported on this platform yet&quot;. In the form, <code>RecordingSlot</code>
+offers &quot;Start recording&quot;; while recording, the dialog hides and
+<code>RecordingControlBar</code> shows the timer, Pause/Continue and &quot;Stop and attach&quot;.
+<code>RecordingController</code> polls the native status every 250 ms and stops at the
+limit or on a capture failure. The clip is sent as <code>recording.mp4</code> (the
+Environment Manager accepts <code>video/mp4</code> up to 50 MB).</li>
 </ul>
 </section>
 

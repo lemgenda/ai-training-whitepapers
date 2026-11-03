@@ -79,6 +79,7 @@
 <li><a href="#69-cloud-synchronization-sync">6.9 Cloud Synchronization (<code>sync</code>)</a></li>
 <li><a href="#610-sidecar-daemon-operations-server">6.10 Sidecar Daemon Operations (<code>server</code>)</a></li>
 <li><a href="#611-llm-causal-instruction-tuning--model-export-llm">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</a></li>
+<li><a href="#612-fid-re-evaluation-python--m-trainingfid_reeval">6.12 FID Re-evaluation (<code>python -m training.fid_reeval</code>)</a></li>
 </ul>
 </li>
 <li><a href="#7-models-hub--verification-toolchain">7. Models Hub &amp; Verification Toolchain</a></li>
@@ -286,25 +287,39 @@ lem-env validate
 # Validate specific project
 lem-env validate --project lemgendary-docs
 </code></pre>
-<p>Validation gates enforced:</p>
+<p>Validation gates enforced (in run order, from
+<code>env_manager/validation/registry.py</code>):</p>
 <ul>
 <li><strong>Python bytecode</strong>: Tool: <code>py_compile</code>; Projects: Python projects</li>
 <li><strong>Zero-emoji</strong>: Tool: Regex scan; Projects: All projects</li>
-<li><strong>JS/TS linting</strong>: Tool: ESLint (<code>--format json</code>); Projects:
-<code>lemgendary-ai-studio-gui</code></li>
-<li><strong>TypeScript types</strong>: Tool: <code>tsc --noEmit</code>; Projects:
-<code>lemgendary-ai-studio-gui</code></li>
-<li><strong>JSON RFC 8259</strong>: Tool: Python <code>json</code> (in-process); Projects: All 7 repos</li>
-<li><strong>PowerShell syntax</strong>: Tool: <code>PSScriptAnalyzer</code> (<code>pwsh</code> preferred); Projects:
-Repositories with <code>.ps1</code></li>
-<li><strong>Markdown lint</strong>: Tool: <code>markdownlint-cli</code>; Projects: All 7 repos</li>
 <li><strong>YAML lint</strong>: Tool: <code>yamllint</code> (env-manager .venv); Projects: All 7 repos</li>
-<li><strong>W3C HTML</strong>: Tool: <code>html-validate</code>; Projects: <code>lemgendary-docs</code></li>
-<li><strong>CSS lint</strong>: Tool: <code>stylelint</code>; Projects: <code>lemgendary-docs</code></li>
-<li><strong>WCAG 2.2 AA</strong>: Tool: <code>pa11y</code>; Projects: <code>lemgendary-docs</code> (static HTML)</li>
-<li><strong>Domain Verifications</strong>: Tool: <code>validator.py</code> ecosystem gates; Projects: All
-7 repos (doc sync, parquet schemas, weights, Tauri)</li>
+<li><strong>JSON RFC 8259</strong>: Tool: Python <code>json</code> (in-process); Projects: All 7 repos</li>
+<li><strong>Markdown lint</strong>: Tool: <code>markdownlint-cli2</code>; Projects: All 7 repos</li>
+<li><strong>JS/TS linting</strong>: Tool: ESLint (<code>--format json</code>); Projects: Node projects
+(<code>lemgendary-ai-studio-gui</code>)</li>
+<li><strong>TypeScript types</strong>: Tool: <code>tsc --noEmit</code>; Projects: Node projects</li>
+<li><strong>W3C HTML</strong>: Tool: <code>html-validate</code>; Projects: static HTML sites
+(<code>lemgendary-docs</code>)</li>
+<li><strong>WCAG 2.2 AA</strong>: Tool: <code>pa11y</code>; Projects: static HTML sites
+(<code>lemgendary-docs</code>)</li>
+<li><strong>PowerShell analysis</strong>: Tool: <code>PSScriptAnalyzer</code> (<code>pwsh</code> preferred);
+Projects: Repositories with <code>.ps1</code></li>
+<li><strong>Pylint</strong>: Tool: <code>pylint</code> from the project's <code>.venv</code> with the project's own
+config; Projects: Python projects</li>
+<li><strong>Forbidden suppressions</strong>: Tool: in-process scan (Python directives and
+<code>warnings</code> ignore filters, TS/JS <code>@ts-*</code> and <code>eslint-disable</code> comments, Rust
+<code>allow</code> attributes); Projects: All projects</li>
+<li><strong>Absolute paths</strong>: Tool: in-process scan for hardcoded absolute paths;
+Projects: All projects</li>
+<li><strong>Domain Verifications</strong>: Tool: domain gates (README changelog, docs sync,
+docs manifests, docs suite, dataset manifests, training suite, models hub,
+git hooks); Projects: the matching repositories</li>
+<li><strong>Ecosystem SSOT</strong>: Tool: <code>ecosystem_ssot</code> (error severity): literal ports,
+Kaggle owner, docs URL or project lists that do not come from
+<code>lemgendary-env-manager/ecosystem/ecosystem.json</code>; Projects: All projects</li>
 </ul>
+<p>Gates fail closed: a missing or crashing tool is a <code>tool_error</code> finding, and the
+npx fallback (<code>npx --no</code>) never downloads packages.</p>
 <p>All Node.js validation tools are resolved locally from
 <code>lemgendary-env-manager/node_modules/.bin</code> via <code>_resolve_tool_cmd()</code>,
 eliminating global toolchain pollution.</p>
@@ -1026,6 +1041,38 @@ python cli.py llm export ai_helper_lemgend --target qlora_adapter \
 architecture for high-throughput vLLM and HuggingFace inference.</li>
 <li><strong>GGUF / ONNX Quantized</strong>: Integer-quantized format (q4_k_m.gguf or INT8 ONNX)
 optimized for edge deployment on consumer hardware.</li>
+</ul>
+<h3 id="612-fid-re-evaluation-python--m-trainingfid_reeval">6.12 FID Re-evaluation (<code>python -m training.fid_reeval</code>)</h3>
+<p>Re-measures FID (<code>feature=2048</code>, chunks of at most two) for the four models whose
+historical FID rows were rewritten by a removed tool (<code>codeformer</code>,
+<code>ffanet_indoor</code>, <code>mprnet_deraining</code>, <code>mirnet_lowlight</code>). Run it from the
+<code>lemgendary-training-suite</code> root:</p>
+<pre><code class="language-bash"># Record the formula-rewritten metrics.csv rows as unverified (no GPU)
+python -m training.fid_reeval mark-unverified --all --dry-run
+python -m training.fid_reeval mark-unverified --all
+
+# Check all inputs on CPU, then measure (default: checkpoints/best.pth)
+python -m training.fid_reeval measure --model codeformer --dry-run
+python -m training.fid_reeval measure --model codeformer --device cuda \
+  --batch-size 4 --note "re-evaluation of best.pth"
+
+# Summarise the ledgers
+python -m training.fid_reeval status --all
+</code></pre>
+<ul>
+<li><strong><code>measure</code></strong>: <code>--model</code> (any registry key), <code>--checkpoint</code>,
+<code>--datasets-root</code>, <code>--models-root</code> (default
+<code>&lt;workspace&gt;/LemGendaryModels</code>), <code>--env local|kaggle|colab</code>,
+<code>--device auto|cpu|cuda|cuda:N</code>, <code>--batch-size</code> (default 4),
+<code>--num-workers</code>, <code>--non-strict</code> (allow missing or extra keys; noted in the
+row), <code>--note</code>, <code>--dry-run</code>.</li>
+<li><strong><code>mark-unverified</code></strong> and <strong><code>status</code></strong>: <code>--model</code> (one of the four models) or
+<code>--all</code>, <code>--models-root</code>; <code>mark-unverified</code> also takes <code>--dry-run</code>.</li>
+<li><strong>Output</strong>: rows are appended to
+<code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code>; <code>metrics.csv</code>, checkpoints and
+rung state are never written.</li>
+<li><strong>Exit codes</strong>: <code>0</code> success, <code>2</code> bad input or ledger, <code>3</code> FID invariant
+failure or missing FID backend.</li>
 </ul>
 </section>
 

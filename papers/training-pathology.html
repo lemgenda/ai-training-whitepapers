@@ -26,8 +26,8 @@
 <div class="meta">
 <span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
 <span><strong>Author</strong>: Lem Treursic</span>
-<span><strong>Version</strong>: <code>v16.9.68-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Paper Revision</strong>: 1.5.0 - Pair-Rule Ratchet Sync (2026-11-03)</span>
+<span><strong>Version</strong>: <code>v16.9.107-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Paper Revision</strong>: 1.6.0 - SWA and FID Re-evaluation Sync (2026-11-03)</span>
 <span><strong>Last audited</strong>: 2026-11-03</span>
 <span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
 </div>
@@ -152,13 +152,15 @@ remediation framework—the <strong>&quot;Nuclear Stability&quot; protocol</stro
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.5.0 aligns the guide with release v16.9.68-STABLE
-of the LemGendary Model Training Suite: the governor obeys the Monotonic Ratchet
-pair rule (resolution never decreases, the data fraction never decreases within
-one resolution step, and every backward step raises <code>RatchetViolation</code>),
-training ends on a bounded epoch budget, and the historical FID rows of four
-models are unverified. Remedies that earlier revisions described but the code
-does not run are marked as such.</p>
+cloud GPU clusters. Revision 1.6.0 aligns the guide with release
+v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
+decreases within one resolution step, and every backward step raises
+<code>RatchetViolation</code>), training ends on a bounded epoch budget, Stochastic Weight
+Averaging (SWA) is available but off by default, and the historical FID rows of
+four models are unverified until the FID re-evaluation tool has re-measured
+them. Remedies that earlier revisions described but the code does not run are
+marked as such.</p>
 </section>
 
 <section id="2-the-diagnostic-master-table">
@@ -232,8 +234,9 @@ input.</li>
 <li><em>Recognition Metrics</em>: Loss curve is flat for many epochs despite no
 convergence.</li>
 <li><em>Remediation Strategy</em>: <strong>LR Scheduler</strong> (Cosine/Plateau); try <strong>SWA</strong>
-(Stochastic Weight Averaging; general practice, not implemented in the
-LemGendary Model Training Suite).</li>
+(Stochastic Weight Averaging; in the LemGendary Model Training Suite set
+<code>swa.enabled: true</code> in <code>config.yaml</code>, off by default; the plateau-triggered
+Mini-SWA is not implemented).</li>
 </ul>
 </li>
 <li><strong>Internal Covariate Shift</strong>
@@ -427,7 +430,7 @@ smooth charts (for example FID rescaling).</li>
 produced; abrupt jumps between legacy and rescaled rows.</li>
 <li><em>Remediation Strategy</em>: Remove the tool, mark the rows as unverified and
 re-evaluate from the checkpoints (FID with <code>feature=2048</code>, chunks of at most
-two).</li>
+two; <code>python -m training.fid_reeval</code>).</li>
 </ul>
 </li>
 </ul>
@@ -764,7 +767,9 @@ historical FID values of the four models are <strong>unverified</strong> whereve
 appear (model papers, <code>metrics.csv</code>, training charts), and no replacement
 numbers are published. They must be re-evaluated from the checkpoints with
 real Inception FID (<code>feature=2048</code>, micro-chunks of at most two samples) or
-excluded from charts. No re-evaluation tool exists yet.</li>
+excluded from charts. Since v16.9.107, <code>python -m training.fid_reeval mark-unverified</code> records the rows as <code>unverified</code> and <code>measure</code> re-measures a
+checkpoint; both append to <code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> and
+never write <code>metrics.csv</code>. The measurements need a GPU and are still open.</li>
 </ul>
 </section>
 

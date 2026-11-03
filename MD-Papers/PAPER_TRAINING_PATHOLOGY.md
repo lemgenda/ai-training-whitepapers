@@ -5,8 +5,8 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.68-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.5.0 - Pair-Rule Ratchet Sync
+**Author**: Lem Treursic · **Version**: `v16.9.107-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.6.0 - SWA and FID Re-evaluation Sync
 (2026-11-03) · **Last audited**: 2026-11-03
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
@@ -117,13 +117,15 @@ remediation framework—the **"Nuclear Stability" protocol**. By cataloging 27
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.5.0 aligns the guide with release v16.9.68-STABLE
-of the LemGendary Model Training Suite: the governor obeys the Monotonic Ratchet
-pair rule (resolution never decreases, the data fraction never decreases within
-one resolution step, and every backward step raises `RatchetViolation`),
-training ends on a bounded epoch budget, and the historical FID rows of four
-models are unverified. Remedies that earlier revisions described but the code
-does not run are marked as such.
+cloud GPU clusters. Revision 1.6.0 aligns the guide with release
+v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
+decreases within one resolution step, and every backward step raises
+`RatchetViolation`), training ends on a bounded epoch budget, Stochastic Weight
+Averaging (SWA) is available but off by default, and the historical FID rows of
+four models are unverified until the FID re-evaluation tool has re-measured
+them. Remedies that earlier revisions described but the code does not run are
+marked as such.
 
 ---
 
@@ -179,8 +181,9 @@ LemGendary ecosystem.
   - *Recognition Metrics*: Loss curve is flat for many epochs despite no
     convergence.
   - *Remediation Strategy*: **LR Scheduler** (Cosine/Plateau); try **SWA**
-    (Stochastic Weight Averaging; general practice, not implemented in the
-    LemGendary Model Training Suite).
+    (Stochastic Weight Averaging; in the LemGendary Model Training Suite set
+    `swa.enabled: true` in `config.yaml`, off by default; the plateau-triggered
+    Mini-SWA is not implemented).
 - **Internal Covariate Shift**
   - *When & Why it Happens*: Distribution of layer inputs changes during
     training, slowing convergence.
@@ -326,7 +329,7 @@ LemGendary ecosystem.
     produced; abrupt jumps between legacy and rescaled rows.
   - *Remediation Strategy*: Remove the tool, mark the rows as unverified and
     re-evaluate from the checkpoints (FID with `feature=2048`, chunks of at most
-    two).
+    two; `python -m training.fid_reeval`).
 
 ---
 
@@ -688,7 +691,10 @@ $$
   appear (model papers, `metrics.csv`, training charts), and no replacement
   numbers are published. They must be re-evaluated from the checkpoints with
   real Inception FID (`feature=2048`, micro-chunks of at most two samples) or
-  excluded from charts. No re-evaluation tool exists yet.
+  excluded from charts. Since v16.9.107, `python -m training.fid_reeval
+  mark-unverified` records the rows as `unverified` and `measure` re-measures a
+  checkpoint; both append to `LemGendaryModels/<model>/fid_provenance.csv` and
+  never write `metrics.csv`. The measurements need a GPU and are still open.
 
 ---
 

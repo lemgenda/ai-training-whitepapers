@@ -1342,10 +1342,12 @@ Request body:
   "epochs": 3,
   "batch_size": 2,
   "lr": 0.0002,
-  "max_seq_length": 2048,
   "env": "local"
 }
 ```
+
+The request has no `max_seq_length` field (removed in training v16.9.75; an
+unknown field is ignored, and no training service parameter ever read it).
 
 Response:
 
@@ -1359,7 +1361,6 @@ Response:
     "epochs": 3,
     "batch_size": 2,
     "lr": 0.0002,
-    "max_seq_length": 2048,
     "env": "local"
   }
 }
@@ -1465,12 +1466,19 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
 
 ##### Field Definitions
 
-- `training_status` (`"fully_trained" | "partially_trained" | "weights_ready" | "initializing"`):
-  - Strictly evaluates to `"fully_trained"` if and only if
-    `sota_all_met === true && ladder_passed === true && data_fraction_passed ===
-    true`.
-  - Evaluates to `"partially_trained"` if `epochs_completed > 0` but any of the
-    3 pillars is unfulfilled.
+- `training_status` (`"fully_trained" | "partially_trained" | "weights_ready"
+  | "initializing" | "unknown"`) and `is_fully_trained` (boolean): required on
+  every entry (`ModelWithStats` response model, training v16.9.94).
+  - `"fully_trained"` and `is_fully_trained: true` if and only if all 4 pillars
+    hold: at least 20 epochs, `sota_reached`, `ladder_passed` and
+    `data_fraction_passed` (the fraction counts only at the resolution step it
+    was trained at).
+  - `"partially_trained"` if `epochs_completed > 0` but a pillar is unfulfilled;
+    `"weights_ready"` if no epoch is logged but a checkpoint exists; otherwise
+    `"initializing"`.
+  - `"unknown"` (with `is_fully_trained: false`) when the stats of a model
+    cannot be computed; the reason is in `stats_error` and the rest of the
+    list is still returned.
 - `ladder_type` (`"spatial" | "timeframe"`): Declares whether the ladder
   represents spatial pixel dimensions or temporal MetaTrader 5 candle
   resolutions (`[1, 5, 15, 60, 240, 1440]`).

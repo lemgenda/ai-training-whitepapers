@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.1 ENV | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.18-STABLE</code> (LemGendary Environment Manager)</span>
+<span><strong>Version</strong>: <code>v16.9.58-STABLE</code> (LemGendary Environment Manager)</span>
 <span><strong>Last audited</strong>: 2026-11-03</span>
 </div>
 </header>
@@ -75,7 +75,7 @@ Observability</a></li>
 
 <section id="1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Environment Manager (release <code>v16.9.18-STABLE</code>) is the
+<p>The LemGendary Environment Manager (release <code>v16.9.58-STABLE</code>) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -87,7 +87,9 @@ pip dry-run that fails closed, and real-time WebSocket telemetry. The pipeline
 is non-destructive by default; a clean reinstall needs an explicit option. The
 sidecar accepts browser requests only from AI Studio GUI origins, never returns
 stored secrets, runs package updates as background jobs and packages bug reports
-into a local ZIP archive for the operator's own mail client.</p>
+into a local ZIP archive for the operator's own mail client. Its
+<code>ecosystem/ecosystem.json</code> is the single source of the ports, project list,
+pipeline steps and identity that every project reads (Section 6.7).</p>
 </section>
 
 <section id="2-high-velocity-optimizations">
@@ -230,13 +232,13 @@ the current code.</p>
 </tr>
 </tbody>
 </table>
-<p>Capabilities at <code>v16.9.18</code>:</p>
+<p>Capabilities at <code>16.9.58</code>:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align:left">Capability</th>
 <th style="text-align:left">Legacy PowerShell</th>
-<th style="text-align:left"><code>lem-env</code> <code>v16.9.18</code></th>
+<th style="text-align:left"><code>lem-env</code> <code>v16.9.58</code></th>
 </tr>
 </thead>
 <tbody>
@@ -303,8 +305,9 @@ the current code.</p>
 </tbody>
 </table>
 <p>(1) The PowerShell launcher and the git hook template are Windows-only.
-(2) <code>py_compile</code>, ESLint, TypeScript, jsonlint, PSScriptAnalyzer,
-markdownlint, yamllint, W3C HTML and WCAG 2.2 AA.</p>
+(2) <code>py_compile</code>, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
+forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
+2.2 AA and the <code>ecosystem_ssot</code> gate.</p>
 </section>
 
 <section id="6-synthesis-flow--topology">
@@ -326,10 +329,10 @@ reporting even when winget has no record of the installation.</li>
 <li><strong>Toolchain Audit ($v_2$)</strong>: Verifies the host Python runtime, Git binaries,
 Node.js / npm, PowerShell modules, and MetaTrader 5 package managers.
 Resolves local linters from <code>lemgendary-env-manager/node_modules/.bin</code>.
-<code>pyproject.toml</code> declares <code>requires-python &gt;=3.10</code> and the bootstrap accepts
-3.10, but the validator (<code>Path.walk</code>) and the venv manager
-(<code>shutil.rmtree(onexc=...)</code>) use Python 3.12 APIs, so Python 3.12 is the
-effective minimum.</li>
+<code>pyproject.toml</code> declares <code>requires-python &gt;=3.12</code>, the bootstrap
+(<code>MIN_PYTHON</code>) and the launcher ask for Python 3.12+, and a test keeps the
+values equal; the code uses Python 3.12 APIs (<code>Path.walk</code>,
+<code>shutil.rmtree(onexc=...)</code>, <code>datetime.UTC</code>).</li>
 <li><strong>Virtual Environments Provisioning ($v_3$)</strong>: Identifies missing or invalid
 virtual environments across Python projects and creates isolated <code>.venv</code>
 trees. A default run keeps valid venvs and <code>node_modules</code> and stops no
@@ -351,13 +354,22 @@ dual-stack project gets both. Every pip candidate is classified as safe or
 blocked by a reverse-dependency check (via <code>pip inspect --local</code>) followed by
 a constraint-preserving pip dry-run. Only safe candidates are upgraded;
 blocked candidates carry a reason describing the violated requirement.
+The apply phase installs exactly the vetted versions (<code>name==version</code>), and
+a failed install restores the <code>pip freeze</code> snapshot taken before it.
 Torch-family packages on CUDA hosts are resolved against the PyTorch CUDA
 index and filtered to the installed subset.</li>
 <li><strong>Codebase Verification ($v_6$)</strong>: Executes <code>py_compile</code> bytecode
-compilation, ESLint, TypeScript check, RFC 8259 JSON validation, PowerShell
-analysis (<code>PSScriptAnalyzer</code>), markdownlint, yamllint, W3C HTML validation,
-WCAG 2.2 AA accessibility audit, and ecosystem domain verifications (dataset
-schemas and training checkpoint integrity). The documentation check compares
+compilation and the registered validation gates
+(<code>env_manager/validation/registry.py</code>): yamllint, RFC 8259 JSON validation,
+markdownlint, ESLint, TypeScript check, W3C HTML validation, WCAG 2.2 AA
+accessibility audit, PowerShell analysis (<code>PSScriptAnalyzer</code>), Pylint,
+forbidden suppressions (Python directives and <code>warnings</code> filters, TS/JS
+<code>@ts-*</code> and <code>eslint-disable</code> comments, Rust <code>allow</code> attributes), hardcoded
+absolute paths, ecosystem domain verifications (README changelog, docs hub,
+dataset manifests, training suite, models hub, git hooks) and
+<code>ecosystem_ssot</code> (Section 6.7). Gates fail closed: a missing or crashing
+tool is a <code>tool_error</code> finding, and the npx fallback never downloads
+packages. A new gate is one more <code>Gate</code> in the registry. The documentation check compares
 each Markdown and HTML pair by H2 count, table count and length ratio; it is
 not a word-for-word comparison.</li>
 <li><strong>Health Matrix Generation ($v_7$)</strong>: Compiles global telemetry into an
@@ -524,7 +536,8 @@ differs) and derives its sidecar ports and project folders from the snapshot.</l
 <code>canonical_capabilities.json</code> equal the training registry keys and that its
 ports equal the service ports in the file.</li>
 </ul>
-<p>The validation gate <code>ecosystem_ssot</code> (warning severity) reports drift: in code,
+<p>The validation gate <code>ecosystem_ssot</code> (error severity since v16.9.52; findings
+fail validation) reports drift: in code,
 configuration and tests a literal service port, the Kaggle owner, the
 documentation URL or a list of three or more project folders is a finding (test
 fixtures are allowed); in Markdown, HTML and the registries the values may be

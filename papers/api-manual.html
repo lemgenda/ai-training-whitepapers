@@ -1117,10 +1117,11 @@ assistant (<code>AIHelperLemGend</code>).</p>
   "epochs": 3,
   "batch_size": 2,
   "lr": 0.0002,
-  "max_seq_length": 2048,
   "env": "local"
 }
 </code></pre>
+<p>The request has no <code>max_seq_length</code> field (removed in training v16.9.75; an
+unknown field is ignored, and no training service parameter ever read it).</p>
 <p>Response:</p>
 <pre><code class="language-json">{
   "job_id": "7f8b9c1d-2e3a-4b5c-6d7e-8f9a0b1c2d3e",
@@ -1131,7 +1132,6 @@ assistant (<code>AIHelperLemGend</code>).</p>
     "epochs": 3,
     "batch_size": 2,
     "lr": 0.0002,
-    "max_seq_length": 2048,
     "env": "local"
   }
 }
@@ -1231,12 +1231,19 @@ evaluation.</li>
 <h5 id="field-definitions">Field Definitions</h5>
 <ul>
 <li>
-<p><code>training_status</code> (<code>&quot;fully_trained&quot; | &quot;partially_trained&quot; | &quot;weights_ready&quot; | &quot;initializing&quot;</code>):</p>
+<p><code>training_status</code> (<code>&quot;fully_trained&quot; | &quot;partially_trained&quot; | &quot;weights_ready&quot; | &quot;initializing&quot; | &quot;unknown&quot;</code>) and <code>is_fully_trained</code> (boolean): required on
+every entry (<code>ModelWithStats</code> response model, training v16.9.94).</p>
 <ul>
-<li>Strictly evaluates to <code>&quot;fully_trained&quot;</code> if and only if
-<code>sota_all_met === true &amp;&amp; ladder_passed === true &amp;&amp; data_fraction_passed === true</code>.</li>
-<li>Evaluates to <code>&quot;partially_trained&quot;</code> if <code>epochs_completed &gt; 0</code> but any of the
-3 pillars is unfulfilled.</li>
+<li><code>&quot;fully_trained&quot;</code> and <code>is_fully_trained: true</code> if and only if all 4 pillars
+hold: at least 20 epochs, <code>sota_reached</code>, <code>ladder_passed</code> and
+<code>data_fraction_passed</code> (the fraction counts only at the resolution step it
+was trained at).</li>
+<li><code>&quot;partially_trained&quot;</code> if <code>epochs_completed &gt; 0</code> but a pillar is unfulfilled;
+<code>&quot;weights_ready&quot;</code> if no epoch is logged but a checkpoint exists; otherwise
+<code>&quot;initializing&quot;</code>.</li>
+<li><code>&quot;unknown&quot;</code> (with <code>is_fully_trained: false</code>) when the stats of a model
+cannot be computed; the reason is in <code>stats_error</code> and the rest of the
+list is still returned.</li>
 </ul>
 </li>
 <li>

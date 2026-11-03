@@ -2,7 +2,7 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.19` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-03 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
@@ -46,7 +46,9 @@ This registry lists every element of the LemGendary AI Studio GUI
 element type, the sidecar endpoint it calls and its behaviour. It is rebuilt
 from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.19`: 119
 distinct IDs, of which 75 belong to interactive controls (sections 3.1 to 3.8)
-and 44 to dialogs, status regions, landmarks and headings (section 3.9).
+and 44 to dialogs, status regions, landmarks and headings (section 3.9). It is
+updated for `v2.10.36`: the screen recording controls (v2.10.20), the
+confirmation dialogs and the compile mode switch IDs (v2.10.28).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
 
@@ -119,9 +121,17 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   the annotator; disabled when 5 screenshots are attached.
 - `bug-modal-btn-remove-screenshot-{n}` (`button`): "Remove". None. Removes
   screenshot `{n}` from the strip.
+- `bug-modal-btn-start-recording` (`button`): "Start recording". Native
+  `recording_start`. Desktop app only; hides the dialog and shows the recording
+  control bar.
 - `bug-modal-btn-remove-recording` (`button`): "Remove recording". None. Shown
-  only when a recording is attached; screen recording is planned and not
-  available yet.
+  only when a recording is attached; discards it.
+- `recording-btn-pause` (`button`): "Pause". Native `recording_pause`. Shown in
+  `recording-control-bar` while recording.
+- `recording-btn-resume` (`button`): "Continue". Native `recording_resume`.
+  Shown while paused.
+- `recording-btn-stop` (`button`): "Stop and attach". Native `recording_stop`.
+  Returns to the dialog with the MP4 attached as `recording.mp4`.
 - `bug-modal-btn-cancel` (`button`): "Cancel". None. Closes the dialog.
 - `bug-modal-btn-submit` (`button type=submit`): "Send report".
   `POST /api/bug-report` (8000), multipart. Validates the form, sends it and
@@ -176,6 +186,9 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.5 Dataset Compiler Suite
 
+- `comp-mode-standard`, `comp-mode-custom` (`button`, `aria-pressed`):
+  "Standard Preset" and "Custom Multi-Source" compile mode switch. None. Shows
+  the standard or the custom multi-source compilation form.
 - `comp-btn-update-all-kaggle` (`button`): "Update All Kaggle Metadata".
   `POST /api/kaggle/update-metadata` (8100) with `all_datasets: true`. Pushes
   metadata for every registered Kaggle dataset.
@@ -296,6 +309,15 @@ Dialogs and forms:
   shared `Modal` dialogs (`role="dialog"`, `aria-modal`, focus trap; Escape
   closes the innermost one). Each title has the ID `{dialog_id}-title`.
 - `bug-modal-form`: the Report Issue form.
+- `cloud-modal`, `config-editor-modal`: the Cloud Training and Config & Secrets
+  dialogs (shared `Modal`).
+- Confirmation dialogs (`ConfirmDialog`, focus starts on Cancel; buttons
+  `{dialog_id}-cancel` and `{dialog_id}-confirm`, text `{dialog_id}-desc`):
+  `dash-dialog-stop-service` (Stop Service), `health-dialog-confirm` (Safe
+  Package Upgrade and Deep Cache Purge), `config-dialog-delete-secret` (delete a
+  credential), `config-dialog-discard-edits` (close or leave the manifest editor
+  with unsaved edits) and `config-dialog-discard-manifest` (switch manifests
+  with unsaved edits).
 - `pipeline-dialog-clean-install-desc`: lists what a clean install deletes.
 
 Status and error regions:
@@ -307,8 +329,14 @@ Status and error regions:
 - `bug-modal-description-counter`, `annotator-status`, `bug-modal-copy-status`:
   live status text.
 - `bug-modal-screenshot-{n}`: thumbnail `{n}` in the screenshot strip.
-- `bug-modal-recording-slot`: the recording field set, disabled with the note
-  "Screen recording is available in the desktop app" (planned).
+- `bug-modal-recording-slot`: the recording field set; outside the desktop app
+  it is disabled with the note "Screen recording is available in the desktop
+  app".
+- `bug-modal-recording-summary`: the attached clip (length, resolution, size);
+  `bug-modal-recorder-error`: recorder failures (`role="alert"`).
+- `recording-control-bar` (`role="region"`, "Screen recording"),
+  `recording-control-status`, `recording-control-time`: the floating bar shown
+  while recording (state and elapsed time against the 60 s limit).
 - `bug-modal-success`, `bug-modal-archive-path`, `bug-modal-recipient`,
   `bug-modal-subject`, `bug-modal-note-mail`, `bug-modal-note-folder`: the
   success view (archive name and relative path, recipient, subject, and notes
@@ -330,8 +358,8 @@ Landmarks and headings:
 These controls work but have no `id` yet; tests find them by role and label: the
 "Config & Secrets" and "LemGendary AI Documentation Hub" header buttons, the
 Start Service and Stop Service buttons on the sidecar tiles, the per-step run
-buttons of the pipeline step cards, the Standard and Custom compile mode switch,
-the Catalog, Modernization Queue and Scale Reduction sub-tabs, the modernization
+buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
+Reduction sub-tabs, the modernization
 queue buttons, the scale reduction dispatch button, the config editor tabs and
 the telemetry console tabs.
 
@@ -360,8 +388,9 @@ sub-tab controls (`comp-tab-kaggle-download`, `comp-tab-kaggle-upload`,
 `comp-slider-modernize-workers` and the pipeline stage list items
 `pipe-stage-*`.
 
-Removed because the control has no ID (section 3.10): `comp-mode-standard`,
-`comp-mode-custom`, `comp-btn-custom-compile`, `comp-subtab-catalog`,
+Removed because the control has no ID (section 3.10; `comp-mode-standard` and
+`comp-mode-custom` exist again since v2.10.28, section 3.5):
+`comp-btn-custom-compile`, `comp-subtab-catalog`,
 `comp-subtab-modernize`, `comp-subtab-reduce`, `comp-btn-scan-modernize-queue`,
 `comp-btn-batch-modernize-all`, `comp-btn-dispatch-reduce`,
 `comp-input-kaggle-custom-ref`, `comp-btn-kaggle-download`,
@@ -425,7 +454,9 @@ step 4 runs.
    keeps or clears `bug-modal-telemetry`.
 3. Optionally the operator clicks `bug-modal-btn-add-screenshot`, draws a
    highlight in `annotator-canvas` and clicks `annotator-btn-save` (up to 5
-   screenshots).
+   screenshots). In the desktop app the operator can also click
+   `bug-modal-btn-start-recording`, reproduce the problem and click
+   `recording-btn-stop` (at most 60 s).
 4. The operator clicks `bug-modal-btn-submit`. The Environment Manager
    (`POST /api/bug-report`, 8000) saves a ZIP report in the `bug-reports` folder
    of the workspace, opens the mail client with recipient and subject filled in
@@ -452,5 +483,6 @@ depends on the sidecars and the hardware:
   DirectML or CPU only.
 - **Spatial ladder scaling**: full speed on CUDA GPUs; slower on DirectML; not
   practical on CPU.
-- **Screen recording in bug reports**: planned for the desktop app; not
-  available yet in any build.
+- **Screen recording in bug reports**: desktop app on Windows (Windows
+  Graphics Capture, app window only); macOS and Linux report "not supported on
+  this platform yet"; not available in the browser build.

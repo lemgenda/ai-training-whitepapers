@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.27-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.64-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-03</span>
 </div>
 </header>
@@ -77,6 +77,8 @@ Governance</a></li>
 Engine</a></li>
 <li><a href="#36-ssot-notebook-delegation--deduplication">3.6 SSOT Notebook Delegation &amp;
 Deduplication</a></li>
+<li><a href="#37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type
+(v16.9.61)</a></li>
 </ul>
 </li>
 <li><a href="#4-multi-modal--format-resilience">4. Multi-Modal &amp; Format Resilience</a>
@@ -132,7 +134,7 @@ Presets</a></li>
 
 <section id="1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.27-STABLE</code>) is the data
+<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.64-STABLE</code>) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -152,7 +154,15 @@ text, and purges loose images only after a successful compile. LLM compile jobs
 start and are awaited with a bounded poll. Modernize and reduce honour scope and
 dry run, and never delete sources unless asked. <code>POST /api/llm/validate</code> only
 opens files inside the dataset root, and <code>openapi.json</code> is regenerated from the
-live application (38 operations).</p>
+live application (38 operations at v16.9.27).</p>
+<p>The <code>v16.9.28</code> to <code>v16.9.64</code> releases remove silent exception handling and
+lint suppressions, split the large modules, and move shared facts to single
+sources. API jobs run the same service entry points as the CLI
+(<code>python -m services.&lt;module&gt;</code>, described by a typed <code>ServiceInvocation</code>), and
+the arbitrary-command endpoint <code>POST /api/jobs/generic</code> is removed (37 operations).
+The port, bind host, Kaggle owner and sibling folders come from
+<code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, and task ids come from
+<code>task_taxonomy.json</code> (Section 3.7).</p>
 <ul>
 <li><strong>Project Repository</strong>:
 <a href="https://github.com/lemgenda/lemgendary-datasets">lemgendary-datasets</a></li>
@@ -636,6 +646,35 @@ placed in <code>LemGendaryModels/&lt;model&gt;/</code>, <code>kaggle_training/</
 compiled manifolds (such as <code>classification_master_manifold_training.ipynb</code>)
 are purged during compilation and replaced with freshly generated notebooks.</li>
 </ol>
+<p>A contract test (<code>tests/test_ecosystem.py</code>) checks that the training suite's
+notebook generators are real callables; the training suite is found through the
+<code>training-suite</code> service in <code>ecosystem.json</code> (skipped when the sibling checkout
+is absent).</p>
+<h3 id="37-task-taxonomy--manifold-task-type-v16961">3.7 Task Taxonomy &amp; Manifold Task Type (v16.9.61)</h3>
+<p><code>task_taxonomy.json</code> (schema <code>task_taxonomy.schema.json</code>) is the single source
+of task ids. Each entry of <code>tasks[]</code> has an <code>id</code>, the split folder the task adds
+(<code>layout_dir</code>: <code>masks</code>, <code>labels</code>, <code>targets</code> or none), a default <code>label_strategy</code>
+and <code>mask_strategy</code>, and the ordered <code>name_patterns</code> of the fallback heuristic
+(<code>heuristic.fallback_task</code> is <code>detection</code>, <code>heuristic.unnamed_task</code> is
+<code>quality</code>). <code>documentation_tasks</code> gives the documentation profile per manifold
+folder. The loader <code>core/task_taxonomy.py</code> caches the file
+(<code>LEMGENDARY_TASK_TAXONOMY_FILE</code> overrides the path; a missing or invalid file
+raises <code>TaskTaxonomyError</code> naming it) and replaces the former in-code tables
+(<code>_TASK_PATTERNS</code>, <code>_TASK_DIRS</code>, the label and mask strategy dicts and
+<code>MANIFOLD_TASK_MAP</code>). Outputs are unchanged.</p>
+<ul>
+<li><strong>Registry</strong>: every <code>unified_data.yaml</code> entry sets <code>task</code> explicitly
+(<code>upn_v2</code> moved from <code>task_override</code> to <code>task</code>), and <code>load_unified_data</code>
+rejects task ids the taxonomy does not define. Four entries carry
+<code>task_confirmed: false</code> until the owner confirms them:
+<code>retinaface_mobilenet</code> (<code>pose</code>), <code>nima_authenticity</code> (<code>quality</code>),
+<code>forex_universe</code> (<code>detection</code>) and <code>ai_helper_lemgend</code> (<code>detection</code>).</li>
+<li><strong>Manifold metadata</strong>: the compiler writes the task id as <code>task_type</code> into
+every manifold's <code>dataset_info.yaml</code> (image and forex paths). A docs-only
+regeneration takes it from the registry entry, else keeps the existing value.
+The LemGendary Model Training Suite reads <code>task_type</code> and falls back to the
+taxonomy for manifolds compiled before v16.9.61.</li>
+</ul>
 </section>
 
 <section id="4-multi-modal--format-resilience">
@@ -1234,6 +1273,16 @@ single-responsibility services (<code>CompilerService</code>, <code>DegradeServi
 <code>AuditService</code>, <code>DocService</code>, <code>GenerationService</code>, <code>MigrationService</code>,
 <code>SyncService</code>) plus the <code>job_watch</code> helper. CLI commands call typed service
 layers in-process rather than shelling out to external subprocesses.</li>
+<li><strong>One Service Layer for CLI and API (v16.9.57)</strong>: long API jobs (compile,
+degrade, LLM compile, modernization queue and reduce, Kaggle and manifold
+sync) run a service module as their own process
+(<code>services.compiler_service</code>, <code>services.degrade_service</code>,
+<code>services.llm_service</code>, <code>services.migration_service queue|reduce</code>,
+<code>services.sync_service kaggle|manifold</code>); each module's <code>main(argv)</code> calls
+the same function the CLI calls in-process. <code>services/invocation.py</code> holds
+the typed <code>ServiceInvocation</code> and the flag tables that both the job and the
+parser use, and <code>JobManager</code> is the only place in the API that starts a
+process.</li>
 <li><strong>Unified Audit Engine</strong>: <code>AuditService.audit_manifold()</code> unifies magic-byte
 checking, resolution and aspect ratio validation, DCT perceptual
 deduplication, and NTFS hardlink fraction audits in one command (<code>audit</code>).</li>
@@ -1247,22 +1296,24 @@ backward-compatibility shims and CLI subcommands (<code>forex convert</code>,
 <code>forex embed</code>).</li>
 <li><strong>Warning Suppression Policy</strong>: Programmatic warning suppressions
 (<code>warnings.filterwarnings</code>) and inline diagnostic silencing directives were
-removed from the code. The repository <code>.pylintrc</code> still carries a
-project-level <code>disable=</code> list, so lint configuration is not yet
-suppression-free.</li>
+removed from the code. Since v16.9.51 the repository <code>.pylintrc</code> has no
+<code>disable=</code> entries, and Ruff and Pylint report no findings (v16.9.53,
+v16.9.54).</li>
 </ul>
 <h3 id="66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid CLI</h3>
 <ul>
 <li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> with route
 groups for health (<code>/api/health</code>, <code>/api/health/full</code>), GUI aggregation
 (<code>/api/gui/*</code>), datasets, sources, gates, Kaggle, modernize, LLM,
-configuration, jobs and environment. <code>openapi.json</code> lists all 38 operations. The port, the Kaggle owner and the sibling project folders are read
+configuration, jobs and environment. <code>openapi.json</code> lists all 37 operations
+(<code>POST /api/jobs/generic</code> was removed in v16.9.58). The port, the Kaggle owner and the sibling project folders are read
 from <code>lemgendary-env-manager/ecosystem/ecosystem.json</code> through one loader,
 <code>core/ecosystem.py</code>.</li>
 <li><strong>SQLite Job Registry (<code>.lgd_server/jobs.db</code>)</strong>: Persistent state machine with
 restart recovery that marks orphaned runs <code>interrupted</code>. Job types include
-compile, degrade, generic (<code>POST /api/jobs/generic</code>) and, since v16.9.25,
-<code>llm</code>. A job moves <code>pending</code> to <code>running</code> to <code>completed</code>, <code>failed</code> (with the
+compile, degrade and, since v16.9.25, <code>llm</code>. The arbitrary-command job
+endpoint (<code>POST /api/jobs/generic</code>) was removed in v16.9.58; every job is a typed
+<code>ServiceInvocation</code>. A job moves <code>pending</code> to <code>running</code> to <code>completed</code>, <code>failed</code> (with the
 exit code), <code>cancelled</code> or <code>interrupted</code>.</li>
 <li><strong>WebSocket Streaming</strong>: Live logs stream per job via
 <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>, and dashboard events via

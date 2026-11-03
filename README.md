@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.79`
+**Version**: `v16.9.80`
 
 ---
 
@@ -15,12 +15,13 @@
   (kept identical) list the 23 registered models with registry categories,
   CLI commands (`lemtrain train MODEL_KEY`), API routes
   (`POST /api/training/train`) and GUI control IDs, plus the platform
-  capabilities: Bug Report Tool (`POST /api/bug-report`, screen recording
-  planned), the sidecar security contract (Origin Guard and Client Header) and
-  Pareto Model Soup.
-* **Current baselines** - LemGendary Environment Manager v16.9.18, LemGendary
-  Dataset Compiler Suite v16.9.27, LemGendary Model Training Suite v16.9.68,
-  LemGendary AI Studio GUI v2.10.19.
+  capabilities: Bug Report Tool (`POST /api/bug-report`, screen recording in
+  the desktop app on Windows), the sidecar security contract (Origin Guard and
+  Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
+  Averaging and the FID Re-evaluation Tool.
+* **Current baselines** - LemGendary Environment Manager v16.9.58, LemGendary
+  Dataset Compiler Suite v16.9.64, LemGendary Model Training Suite v16.9.107,
+  LemGendary AI Studio GUI v2.10.36.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -56,6 +57,57 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.80 - Later Phase Documentation Sync (DOCS-3)
+
+* **Training Suite** (`PAPER_TRAINING_SUITE.md`, v16.9.107): new Sections
+  2.30 Ecosystem Facts & GUI Training Verdict (required `training_status` and
+  `is_fully_trained`, `unknown` with `stats_error`, derived `kaggle_ref`), 2.31
+  Manifold Task from `dataset_info.yaml` (`task_type`, taxonomy fallback,
+  legacy `restoration` default), 2.32 Stochastic Weight Averaging (`swa.*`
+  keys, off by default, `vault_swa.pth`, `swa_state.pth`) and 2.33 FID
+  Re-evaluation Tool & Provenance Ledger (`python -m training.fid_reeval
+  measure|mark-unverified|status`, `fid_provenance.csv`). The "SWA is not
+  implemented" and "no re-evaluation tool exists yet" statements in the
+  abstract, Sections 2, 2.27, 2.28 and 8.1 are corrected; Mini-SWA and MS-SWA
+  stay not implemented. Training Pathology guide revision 1.6.0 (v16.9.107).
+* **Dataset Compiler** (`PAPER_DATASET_COMPILER.md`, v16.9.64): new Section
+  3.7 Task Taxonomy & Manifold Task Type (`task_taxonomy.json`, registry
+  `task`, the four `task_confirmed: false` entries, `task_type` in
+  `dataset_info.yaml`); API jobs run `python -m services.<module>` through
+  `ServiceInvocation`; `POST /api/jobs/generic` removed (37 operations);
+  `.pylintrc` has no disables.
+* **Environment Manager** (`PAPER_ENV_MANAGER.md`, v16.9.58): `ecosystem_ssot`
+  is an error-severity gate; the validation gates match the gate registry
+  (Pylint, forbidden suppressions, absolute paths, fail-closed tools);
+  `requires-python >=3.12`; upgrades install exactly the vetted versions with
+  a `pip freeze` rollback. The Master CLI Manual gate list is rebuilt from the
+  registry (the `stylelint` gate it listed does not exist) and has a new
+  Section 6.12 for the FID re-evaluation tool.
+* **AI Studio GUI** (v2.10.36): screen recording for bug reports (Windows,
+  app window only, MP4 up to 60 s) replaces "planned" in the manual (Section
+  13.6), whitepaper, control registry (recording controls, confirmation
+  dialogs, `comp-mode-*` IDs), glossary, architecture and current state; the
+  fallback model and dataset catalogs are documented as removed; the training
+  status badge shows the sidecar verdict including `UNKNOWN`; Python 3.12+
+  baseline.
+* **Master API Manual**: `max_seq_length` removed from
+  `POST /api/training/llm/train`; `training_status` lists `unknown` and the
+  required `is_fully_trained`.
+* **Current State, Glossary, Versioning Policy, Architecture**: component
+  versions (Environment Manager v16.9.58, Dataset Compiler Suite v16.9.64,
+  Model Training Suite v16.9.107, AI Studio GUI v2.10.36); the stale
+  package-version drift note is replaced; new glossary terms 3.9 Task
+  Taxonomy, 4.7 Stochastic Weight Averaging and 4.8 FID Provenance Ledger.
+* **Registries** - both capability registries: new platform capabilities
+  `stochastic_weight_averaging` and `fid_reevaluation`; screen recording
+  implemented; model soup limitations updated; `ecosystem_ssot` error
+  severity; operation counts (Environment Manager 33, Dataset Compiler 37);
+  baselines updated. Manifest baselines for the seven papers above.
+* **Version** - hub version v16.9.80 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML). HTML pages updated with the same
+  changes as their Markdown sources.
 
 ### v16.9.79 - Strict YAML Lint (DOCS-2)
 

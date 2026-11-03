@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.27-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+**Version**: `v16.9.64-STABLE` (LemGendary Dataset Compiler Suite) · **Last
 audited**: 2026-11-03
 
 ---
@@ -46,6 +46,8 @@ audited**: 2026-11-03
     Engine](#35-multi-source-custom-dataset-synthesis-engine)
   - [3.6 SSOT Notebook Delegation &
     Deduplication](#36-ssot-notebook-delegation--deduplication)
+  - [3.7 Task Taxonomy & Manifold Task Type
+    (v16.9.61)](#37-task-taxonomy--manifold-task-type-v16961)
 - [4. Multi-Modal & Format Resilience](#4-multi-modal--format-resilience)
   - [4.1 Upstream Multi-Source Expansion
     Architecture](#41-upstream-multi-source-expansion-architecture)
@@ -89,7 +91,7 @@ audited**: 2026-11-03
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (release `v16.9.27-STABLE`) is the data
+The LemGendary Dataset Compiler Suite (release `v16.9.64-STABLE`) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -110,7 +112,16 @@ text, and purges loose images only after a successful compile. LLM compile jobs
 start and are awaited with a bounded poll. Modernize and reduce honour scope and
 dry run, and never delete sources unless asked. `POST /api/llm/validate` only
 opens files inside the dataset root, and `openapi.json` is regenerated from the
-live application (38 operations).
+live application (38 operations at v16.9.27).
+
+The `v16.9.28` to `v16.9.64` releases remove silent exception handling and
+lint suppressions, split the large modules, and move shared facts to single
+sources. API jobs run the same service entry points as the CLI
+(`python -m services.<module>`, described by a typed `ServiceInvocation`), and
+the arbitrary-command endpoint `POST /api/jobs/generic` is removed (37 operations).
+The port, bind host, Kaggle owner and sibling folders come from
+`lemgendary-env-manager/ecosystem/ecosystem.json`, and task ids come from
+`task_taxonomy.json` (Section 3.7).
 
 - **Project Repository**:
   [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
@@ -650,6 +661,37 @@ v16.9.7 moved notebook generation out of `lemgendary-datasets`:
 4. **Stale Artifact Purge**: Obsolete or unreferenced legacy notebooks in
    compiled manifolds (such as `classification_master_manifold_training.ipynb`)
    are purged during compilation and replaced with freshly generated notebooks.
+
+A contract test (`tests/test_ecosystem.py`) checks that the training suite's
+notebook generators are real callables; the training suite is found through the
+`training-suite` service in `ecosystem.json` (skipped when the sibling checkout
+is absent).
+
+### 3.7 Task Taxonomy & Manifold Task Type (v16.9.61)
+
+`task_taxonomy.json` (schema `task_taxonomy.schema.json`) is the single source
+of task ids. Each entry of `tasks[]` has an `id`, the split folder the task adds
+(`layout_dir`: `masks`, `labels`, `targets` or none), a default `label_strategy`
+and `mask_strategy`, and the ordered `name_patterns` of the fallback heuristic
+(`heuristic.fallback_task` is `detection`, `heuristic.unnamed_task` is
+`quality`). `documentation_tasks` gives the documentation profile per manifold
+folder. The loader `core/task_taxonomy.py` caches the file
+(`LEMGENDARY_TASK_TAXONOMY_FILE` overrides the path; a missing or invalid file
+raises `TaskTaxonomyError` naming it) and replaces the former in-code tables
+(`_TASK_PATTERNS`, `_TASK_DIRS`, the label and mask strategy dicts and
+`MANIFOLD_TASK_MAP`). Outputs are unchanged.
+
+- **Registry**: every `unified_data.yaml` entry sets `task` explicitly
+  (`upn_v2` moved from `task_override` to `task`), and `load_unified_data`
+  rejects task ids the taxonomy does not define. Four entries carry
+  `task_confirmed: false` until the owner confirms them:
+  `retinaface_mobilenet` (`pose`), `nima_authenticity` (`quality`),
+  `forex_universe` (`detection`) and `ai_helper_lemgend` (`detection`).
+- **Manifold metadata**: the compiler writes the task id as `task_type` into
+  every manifold's `dataset_info.yaml` (image and forex paths). A docs-only
+  regeneration takes it from the registry entry, else keeps the existing value.
+  The LemGendary Model Training Suite reads `task_type` and falls back to the
+  taxonomy for manifolds compiled before v16.9.61.
 
 ---
 
@@ -1285,6 +1327,16 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
   `AuditService`, `DocService`, `GenerationService`, `MigrationService`,
   `SyncService`) plus the `job_watch` helper. CLI commands call typed service
   layers in-process rather than shelling out to external subprocesses.
+- **One Service Layer for CLI and API (v16.9.57)**: long API jobs (compile,
+  degrade, LLM compile, modernization queue and reduce, Kaggle and manifold
+  sync) run a service module as their own process
+  (`services.compiler_service`, `services.degrade_service`,
+  `services.llm_service`, `services.migration_service queue|reduce`,
+  `services.sync_service kaggle|manifold`); each module's `main(argv)` calls
+  the same function the CLI calls in-process. `services/invocation.py` holds
+  the typed `ServiceInvocation` and the flag tables that both the job and the
+  parser use, and `JobManager` is the only place in the API that starts a
+  process.
 - **Unified Audit Engine**: `AuditService.audit_manifold()` unifies magic-byte
   checking, resolution and aspect ratio validation, DCT perceptual
   deduplication, and NTFS hardlink fraction audits in one command (`audit`).
@@ -1298,24 +1350,26 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
   `forex embed`).
 - **Warning Suppression Policy**: Programmatic warning suppressions
   (`warnings.filterwarnings`) and inline diagnostic silencing directives were
-  removed from the code. The repository `.pylintrc` still carries a
-  project-level `disable=` list, so lint configuration is not yet
-  suppression-free.
+  removed from the code. Since v16.9.51 the repository `.pylintrc` has no
+  `disable=` entries, and Ruff and Pylint report no findings (v16.9.53,
+  v16.9.54).
 
 ### 6.6 Asynchronous Sidecar API & Hybrid CLI
 
 - **FastAPI / Uvicorn Daemon (`api/`)**: Runs on `127.0.0.1:8100` with route
   groups for health (`/api/health`, `/api/health/full`), GUI aggregation
   (`/api/gui/*`), datasets, sources, gates, Kaggle, modernize, LLM,
-  configuration, jobs and environment. `openapi.json` lists all 38 operations.
+  configuration, jobs and environment. `openapi.json` lists all 37 operations
+  (`POST /api/jobs/generic` was removed in v16.9.58).
   The port, the Kaggle owner and the sibling project folders are read
   from `lemgendary-env-manager/ecosystem/ecosystem.json` through one loader,
   `core/ecosystem.py`.
 - **SQLite Job Registry (`.lgd_server/jobs.db`)**: Persistent state machine with
   restart recovery that marks orphaned runs `interrupted`. Job types include
-  compile, degrade, generic (`POST /api/jobs/generic`) and, since v16.9.25,
-  `llm`. A job moves `pending` to `running` to `completed`, `failed` (with the
-  exit code), `cancelled` or `interrupted`.
+  compile, degrade and, since v16.9.25, `llm`. The arbitrary-command job
+  endpoint (`POST /api/jobs/generic`) was removed in v16.9.58; every job is a
+  typed `ServiceInvocation`. A job moves `pending` to `running` to
+  `completed`, `failed` (with the exit code), `cancelled` or `interrupted`.
 - **WebSocket Streaming**: Live logs stream per job via
   `ws://127.0.0.1:8100/api/ws/jobs/{id}/logs`, and dashboard events via
   `ws://127.0.0.1:8100/api/ws/events`.

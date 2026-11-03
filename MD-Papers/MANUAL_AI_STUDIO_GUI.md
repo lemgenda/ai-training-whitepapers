@@ -2,7 +2,7 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.19` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-03 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
@@ -102,7 +102,7 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [13.3 Telemetry](#133-telemetry)
   - [13.4 Sending & the Local ZIP Report](#134-sending--the-local-zip-report)
   - [13.5 When Sending Fails](#135-when-sending-fails)
-  - [13.6 Screen Recording (Planned)](#136-screen-recording-planned)
+  - [13.6 Screen Recording](#136-screen-recording)
 
 ---
 
@@ -305,14 +305,12 @@ state is governed by a unified Single Source of Truth (SSOT) Zustand store
    stop request counts only when the sidecar confirms it (section 6.3).
 5. **Open Modal**: One store field (`activeModal`) records which dialog is open:
    `config`, `tests` or `bug-report`.
-6. **Offline Placeholders** (`src/components/training/fallbackModels.ts`,
-   `src/components/compiler/fallbackDatasets.ts`): While a sidecar is offline,
-   the training and compiler views show placeholder cards with identity metadata
-   only. A placeholder model card shows `UNKNOWN (OFFLINE)` and "Unknown"
-   instead of invented status, epochs, checkpoints or metrics. Placeholders are
-   never cached as real data, and the view reloads the real list as soon as the
-   sidecar comes back online. The dataset placeholders still show static sample
-   counts and sizes.
+6. **Offline Catalogs**: The model and manifold catalogs come only from the
+   sidecars; there are no hand-written fallback lists (removed in v2.10.34).
+   While the LemGendary Model Training Suite or the LemGendary Dataset Compiler
+   Suite is offline or returns an empty list, the view shows an empty state
+   with a message to start the sidecar (the training view also has **Retry**)
+   and reloads the real list once the sidecar answers.
 7. **Control ID Registry**: Interactive controls carry stable DOM IDs, listed
    with their endpoints in
    [`GUI_CONTROL_REGISTRY.md`](./GUI_CONTROL_REGISTRY.md) (for example
@@ -592,7 +590,7 @@ Grid](../assets/gui/gui_pipeline_step_cards.png)
    (`POST /api/pipeline/run-step`, step 1, `clean: false`), refreshing system
    hardware telemetry without touching virtual environments.
 3. **Stage 2 Card Title (Toolchain Audit)**: Validates host toolchain
-   requirements (Python 3.10+, Git SCM, Node.js, and npm).
+   requirements (Python 3.12+, Git SCM, Node.js, and npm).
 4. **Stage 2 Run Step Action Button**: Dispatches isolated execution of Step 2
    (`POST /api/pipeline/run-step`, step 2, `clean: false`), verifying host
    prerequisites against ecosystem requirements.
@@ -678,7 +676,7 @@ Card](../assets/gui/gui_hardware_card.png)
 2. **Host Operating System Row**: Confirms operating system release and kernel
    architecture (`Windows (11, AMD64)`).
 3. **Python Runtime Row**: Displays active Python interpreter revision
-   (`3.12.10`), verifying compliance with the 3.10+ ecosystem baseline.
+   (`3.12.10`), verifying compliance with the 3.12+ ecosystem baseline.
 4. **CPU Cores Allocation Row**: Reports available host processor allocation
    across logical threads and physical compute cores (`12 / 6`).
 5. **System RAM Capacity Row**: Displays physical host RAM capacity
@@ -696,7 +694,7 @@ Callout bindings (control type; endpoint or action):
   header.
 - **2. Operating System** (Metric Row; `platform.platform()`): Confirms
   operating system version and kernel architecture.
-- **3. Python Runtime** (Metric Row; `sys.version`): Verifies Python 3.10+
+- **3. Python Runtime** (Metric Row; `sys.version`): Verifies Python 3.12+
   interpreter compliance.
 - **4. CPU Cores (Logical / Physical)** (Metric Row; `os.cpu_count()` /
   `psutil`): Reports available logical threads and physical cores.
@@ -987,8 +985,12 @@ Card](../assets/gui/gui_architecture_telemetry.png)
 1. **Model Identity, Help Glyph & Target Pin**: Displays canonical model title
    (`LemGendary Forex Predictor`), contextual help tooltip (`?`), and target
    pinning toggle button.
-2. **Training Progress & Checkpoint State Pill**: Displays multi-pillar training
-   status badge (`PARTIALLY TRAINED`, `FULLY TRAINED`, or `NOT STARTED`).
+2. **Training Progress & Checkpoint State Pill**: Displays the training
+   status the LemGendary Model Training Suite reports (`training_status`):
+   `FULLY TRAINED`, `PARTIALLY TRAINED`, `WEIGHTS READY`, `INITIALIZING`, or
+   `UNKNOWN` with the reason (`stats_error`) when the sidecar could not read the
+   model's stats; metrics are hidden for `UNKNOWN`. The GUI does not derive the
+   status itself.
 3. **Binary Format Variations Badges**: Visual indicators confirming compiled
    formats ready for inference (`PyTorch (.pt)`, `ONNX FP32`, `ONNX FP16`).
 4. **Neural Architecture Backbone Row**: Displays network architecture type
@@ -1724,8 +1726,9 @@ belongs elsewhere.
    Describe what you did, what you expected and what happened instead.
 4. **Attach telemetry** (`bug-modal-telemetry`): On by default (section 13.3).
 5. **Screenshots**: Up to 5 annotated screenshots (section 13.2).
-6. **Recording**: A disabled field. Screen recording is planned and not
-   available yet (section 13.6).
+6. **Recording**: One optional recording of the app window (section 13.6).
+   Outside the desktop app the field is disabled with the note "Screen
+   recording is available in the desktop app".
 
 > [!NOTE]
 > The figure for this chapter (the Report Issue form, the annotator and the
@@ -1761,8 +1764,8 @@ Click **Send report** (`bug-modal-btn-submit`). The form is checked first;
 problems are shown under the matching field. The Environment Manager then:
 
 1. Saves the report as `bug_report_<timestamp>.zip` in the `bug-reports` folder
-   at the workspace root. The archive holds `report.csv`, the screenshots and
-   the telemetry file.
+   at the workspace root. The archive holds `report.csv`, the screenshots, the
+   telemetry file and the recording, when attached.
 2. Opens your mail client with the recipient and subject filled in.
 3. Opens the `bug-reports` folder in your file manager.
 
@@ -1785,9 +1788,24 @@ MB for the whole report.
 - **Report too large**: Remove a screenshot and try again.
 - **Other server errors**: The message is shown at the top of the form.
 
-### 13.6 Screen Recording (Planned)
+### 13.6 Screen Recording
 
-A short recording of the app window (at most 60 seconds, one per report) is
-planned for the desktop app. Until it is available, the Recording field in the
-form stays disabled with the note "Screen recording is available in the desktop
-app"; describe the steps in the description instead.
+In the desktop app on Windows you can attach one short recording of the app
+window (only this window, at most 60 seconds of recorded time):
+
+1. Click **Start recording** (`bug-modal-btn-start-recording`). The Report Issue
+   form hides and a control bar (`recording-control-bar`) shows the state and
+   the elapsed time against the limit.
+2. Reproduce the problem. **Pause** (`recording-btn-pause`) and **Continue**
+   (`recording-btn-resume`) stop and restart the clock; paused time does not
+   count.
+3. Click **Stop and attach** (`recording-btn-stop`). The form returns with the
+   clip summary (`bug-modal-recording-summary`: length, resolution, size,
+   MP4). **Remove recording** (`bug-modal-btn-remove-recording`) discards it.
+
+Recording stops by itself at the 60-second limit or when the capture fails; the
+error appears in the form. The clip is H.264 MP4 at 24 frames per second,
+scaled into 854x480, and is sent as `recording.mp4` (the Environment Manager
+accepts up to 50 MB). On macOS and Linux the recorder reports that recording
+is not supported on this platform yet; describe the steps in the description
+instead.

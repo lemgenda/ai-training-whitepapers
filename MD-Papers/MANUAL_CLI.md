@@ -51,6 +51,7 @@
   - [6.9 Cloud Synchronization (`sync`)](#69-cloud-synchronization-sync)
   - [6.10 Sidecar Daemon Operations (`server`)](#610-sidecar-daemon-operations-server)
   - [6.11 LLM Causal Instruction Tuning & Model Export (`llm`)](#611-llm-causal-instruction-tuning--model-export-llm)
+  - [6.12 FID Re-evaluation (`python -m training.fid_reeval`)](#612-fid-re-evaluation-python--m-trainingfid_reeval)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
 - [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
@@ -294,24 +295,39 @@ lem-env validate
 lem-env validate --project lemgendary-docs
 ```
 
-Validation gates enforced:
+Validation gates enforced (in run order, from
+`env_manager/validation/registry.py`):
 
 - **Python bytecode**: Tool: `py_compile`; Projects: Python projects
 - **Zero-emoji**: Tool: Regex scan; Projects: All projects
-- **JS/TS linting**: Tool: ESLint (`--format json`); Projects:
-  `lemgendary-ai-studio-gui`
-- **TypeScript types**: Tool: `tsc --noEmit`; Projects:
-  `lemgendary-ai-studio-gui`
-- **JSON RFC 8259**: Tool: Python `json` (in-process); Projects: All 7 repos
-- **PowerShell syntax**: Tool: `PSScriptAnalyzer` (`pwsh` preferred); Projects:
-  Repositories with `.ps1`
-- **Markdown lint**: Tool: `markdownlint-cli`; Projects: All 7 repos
 - **YAML lint**: Tool: `yamllint` (env-manager .venv); Projects: All 7 repos
-- **W3C HTML**: Tool: `html-validate`; Projects: `lemgendary-docs`
-- **CSS lint**: Tool: `stylelint`; Projects: `lemgendary-docs`
-- **WCAG 2.2 AA**: Tool: `pa11y`; Projects: `lemgendary-docs` (static HTML)
-- **Domain Verifications**: Tool: `validator.py` ecosystem gates; Projects: All
-  7 repos (doc sync, parquet schemas, weights, Tauri)
+- **JSON RFC 8259**: Tool: Python `json` (in-process); Projects: All 7 repos
+- **Markdown lint**: Tool: `markdownlint-cli2`; Projects: All 7 repos
+- **JS/TS linting**: Tool: ESLint (`--format json`); Projects: Node projects
+  (`lemgendary-ai-studio-gui`)
+- **TypeScript types**: Tool: `tsc --noEmit`; Projects: Node projects
+- **W3C HTML**: Tool: `html-validate`; Projects: static HTML sites
+  (`lemgendary-docs`)
+- **WCAG 2.2 AA**: Tool: `pa11y`; Projects: static HTML sites
+  (`lemgendary-docs`)
+- **PowerShell analysis**: Tool: `PSScriptAnalyzer` (`pwsh` preferred);
+  Projects: Repositories with `.ps1`
+- **Pylint**: Tool: `pylint` from the project's `.venv` with the project's own
+  config; Projects: Python projects
+- **Forbidden suppressions**: Tool: in-process scan (Python directives and
+  `warnings` ignore filters, TS/JS `@ts-*` and `eslint-disable` comments, Rust
+  `allow` attributes); Projects: All projects
+- **Absolute paths**: Tool: in-process scan for hardcoded absolute paths;
+  Projects: All projects
+- **Domain Verifications**: Tool: domain gates (README changelog, docs sync,
+  docs manifests, docs suite, dataset manifests, training suite, models hub,
+  git hooks); Projects: the matching repositories
+- **Ecosystem SSOT**: Tool: `ecosystem_ssot` (error severity): literal ports,
+  Kaggle owner, docs URL or project lists that do not come from
+  `lemgendary-env-manager/ecosystem/ecosystem.json`; Projects: All projects
+
+Gates fail closed: a missing or crashing tool is a `tool_error` finding, and the
+npx fallback (`npx --no`) never downloads packages.
 
 All Node.js validation tools are resolved locally from
 `lemgendary-env-manager/node_modules/.bin` via `_resolve_tool_cmd()`,
@@ -1174,6 +1190,41 @@ python cli.py llm export ai_helper_lemgend --target qlora_adapter \
   architecture for high-throughput vLLM and HuggingFace inference.
 - **GGUF / ONNX Quantized**: Integer-quantized format (q4_k_m.gguf or INT8 ONNX)
   optimized for edge deployment on consumer hardware.
+
+### 6.12 FID Re-evaluation (`python -m training.fid_reeval`)
+
+Re-measures FID (`feature=2048`, chunks of at most two) for the four models whose
+historical FID rows were rewritten by a removed tool (`codeformer`,
+`ffanet_indoor`, `mprnet_deraining`, `mirnet_lowlight`). Run it from the
+`lemgendary-training-suite` root:
+
+```bash
+# Record the formula-rewritten metrics.csv rows as unverified (no GPU)
+python -m training.fid_reeval mark-unverified --all --dry-run
+python -m training.fid_reeval mark-unverified --all
+
+# Check all inputs on CPU, then measure (default: checkpoints/best.pth)
+python -m training.fid_reeval measure --model codeformer --dry-run
+python -m training.fid_reeval measure --model codeformer --device cuda \
+  --batch-size 4 --note "re-evaluation of best.pth"
+
+# Summarise the ledgers
+python -m training.fid_reeval status --all
+```
+
+- **`measure`**: `--model` (any registry key), `--checkpoint`,
+  `--datasets-root`, `--models-root` (default
+  `<workspace>/LemGendaryModels`), `--env local|kaggle|colab`,
+  `--device auto|cpu|cuda|cuda:N`, `--batch-size` (default 4),
+  `--num-workers`, `--non-strict` (allow missing or extra keys; noted in the
+  row), `--note`, `--dry-run`.
+- **`mark-unverified`** and **`status`**: `--model` (one of the four models) or
+  `--all`, `--models-root`; `mark-unverified` also takes `--dry-run`.
+- **Output**: rows are appended to
+  `LemGendaryModels/<model>/fid_provenance.csv`; `metrics.csv`, checkpoints and
+  rung state are never written.
+- **Exit codes**: `0` success, `2` bad input or ledger, `3` FID invariant
+  failure or missing FID backend.
 
 ---
 

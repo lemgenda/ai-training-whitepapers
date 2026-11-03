@@ -41,11 +41,17 @@
 Manifold)</a></li>
 </ul>
 </li>
-<li><a href="#3-compiler--storage-primitives">3. Compiler &amp; Storage Primitives</a></li>
+<li><a href="#3-compiler--storage-primitives">3. Compiler &amp; Storage Primitives</a>
+<ul class="sub-item">
+<li><a href="#39-task-taxonomy">3.9 Task Taxonomy</a></li>
+</ul>
+</li>
 <li><a href="#4-model-training-suite--optimization">4. Model Training Suite &amp; Optimization</a>
 <ul class="sub-item">
 <li><a href="#45-ratchet-violation">4.5 Ratchet Violation</a></li>
 <li><a href="#46-epoch-budget">4.6 Epoch Budget</a></li>
+<li><a href="#47-stochastic-weight-averaging-swa">4.7 Stochastic Weight Averaging (SWA)</a></li>
+<li><a href="#48-fid-provenance-ledger">4.8 FID Provenance Ledger</a></li>
 </ul>
 </li>
 <li><a href="#5-training-pathology--diagnostics">5. Training Pathology &amp; Diagnostics</a></li>
@@ -179,6 +185,15 @@ measured in hours. The LemGendary Model Training Suite discovers and decodes
 driver version and returns the newest compatible PyTorch wheel index (<code>cu126</code>,
 then <code>cu121</code>, then <code>cu118</code>). It eliminates hard-coded CUDA index pins and
 ensures the correct build is installed regardless of driver version.</p>
+<h3 id="39-task-taxonomy">3.9 Task Taxonomy</h3>
+<p>The file <code>lemgendary-datasets/task_taxonomy.json</code> (schema
+<code>task_taxonomy.schema.json</code>), the single source of task ids such as <code>pose</code>,
+<code>segmentation</code>, <code>restoration</code> or <code>detection</code>. For each task it gives the split
+folder the task adds (<code>layout_dir</code>), the default label and mask strategies and
+the name patterns of the fallback heuristic. Every entry in <code>unified_data.yaml</code>
+names its <code>task</code>; an entry with <code>task_confirmed: false</code> waits for the owner to
+confirm it. The compiler writes the task id as <code>task_type</code> into each
+manifold's <code>dataset_info.yaml</code>, which the LemGendary Model Training Suite reads.</p>
 </section>
 
 <section id="4-model-training-suite--optimization">
@@ -223,6 +238,21 @@ extend or stop, and records the stop reason (<code>converged</code>, <code>early
 <code>max_extension_epochs</code>; the shipped ceiling is 0, which makes the configured
 budget a hard cap). With budget $E$ and extension ceiling $E_{\max}$:</p>
 <div class="math-block">$$E_{\text{trained}} \le E + E_{\max}$$</div>
+<h3 id="47-stochastic-weight-averaging-swa">4.7 Stochastic Weight Averaging (SWA)</h3>
+<p>A running mean of the model weights over the last epochs of a run, computed
+with <code>torch.optim.swa_utils</code> (<code>AveragedModel</code>, optional <code>SWALR</code>, <code>update_bn</code>).
+In the LemGendary Model Training Suite it is set in the <code>swa</code> section of
+<code>config.yaml</code> and is <strong>off by default</strong>. The averaged weights are written as
+<code>checkpoints/vault_swa.pth</code>, an ingredient for the Pareto Model Soup; they
+never move the curriculum rungs. Not to be confused with Mini-SWA or
+Metric-Specific SWA (MS-SWA), which are not implemented.</p>
+<h3 id="48-fid-provenance-ledger">4.8 FID Provenance Ledger</h3>
+<p>The append-only file <code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> written by
+<code>python -m training.fid_reeval</code>. Each row records where a FID value came from:
+<code>unverified</code> rows mark <code>metrics.csv</code> values rewritten by the removed
+<code>tools/recalibrate_fid.py</code>; <code>reevaluated</code> rows hold a FID re-measured from a
+checkpoint with <code>feature=2048</code> and chunks of at most two, with the image count
+and the checkpoint SHA-256. <code>metrics.csv</code> itself is never rewritten.</p>
 </section>
 
 <section id="5-training-pathology--diagnostics">
@@ -282,16 +312,17 @@ description of at least 50 characters, and may attach up to 5 screenshots and
 the Telemetry CSV. The GUI posts the form as <code>multipart/form-data</code> to
 <code>POST /api/bug-report</code> on the LemGendary Environment Manager (port <code>8000</code>),
 which saves a Bug Report Archive and opens the user's own mail client through
-a <code>mailto:</code> link. No SMTP password ships with the application. Screen
-recording is <strong>planned</strong>: the endpoint already accepts an optional recording
-file, but the GUI does not record yet.</p>
+a <code>mailto:</code> link. No SMTP password ships with the application. In the desktop
+app on Windows the user can also record the app window (H.264 MP4, up to 60 s,
+854x480 at 24 fps) and attach it as <code>recording.mp4</code>; other platforms report
+that recording is not supported yet.</p>
 <h3 id="72-bug-report-archive">7.2 Bug Report Archive</h3>
 <p>The ZIP file that <code>POST /api/bug-report</code> writes under <code>bug-reports/</code> in the
 workspace root. It holds <code>report.csv</code> (one row: timestamp, report ID, email,
 module, current tab, app version, description and attachment flags), the
 screenshots (<code>screenshot_N.png</code> or <code>.webp</code>, at most 5, 5 MB each), the
-optional <code>telemetry.csv</code> (at most 2 MB) and, once recording ships, an optional
-recording (<code>.webm</code> or <code>.mp4</code>, at most 50 MB). The whole report is limited to
+optional <code>telemetry.csv</code> (at most 2 MB) and an optional recording (<code>.webm</code> or
+<code>.mp4</code>, at most 50 MB). The whole report is limited to
 80 MB. A <code>mailto:</code> link cannot carry files, so the user attaches the archive to
 the prepared message by hand.</p>
 <h3 id="73-screenshot-annotator">7.3 Screenshot Annotator</h3>

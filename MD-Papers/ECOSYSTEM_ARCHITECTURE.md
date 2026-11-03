@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.18`, Dataset Compiler Suite `v16.9.27`, Model Training Suite
-`v16.9.68`, AI Studio GUI `v2.10.19` · **Last Reviewed / Verified**: 2026-11-03
+Manager `v16.9.58`, Dataset Compiler Suite `v16.9.64`, Model Training Suite
+`v16.9.107`, AI Studio GUI `v2.10.36` · **Last Reviewed / Verified**: 2026-11-03
 · **Status**: Canonical
 
 ---
@@ -114,7 +114,8 @@ are defined once, in `lemgendary-env-manager/ecosystem/ecosystem.json`
 the LemGendary Model Training Suite read it through their `ecosystem`
 loaders, the LemGendary AI Studio GUI through its snapshot
 `src/generated/ecosystem.json`, and the `ecosystem_ssot` validation gate
-reports values written anywhere else.
+(error severity since Environment Manager v16.9.52) fails validation when a
+value is written anywhere else.
 
 ### 2.1 Environment Manager Sidecar (`127.0.0.1:8000`)
 
@@ -180,8 +181,8 @@ reports values written anywhere else.
    through `sidecarFetch`, which adds the client header. WebSocket lifecycle
    recovery guarantees no step card remains in `RUNNING` after pipeline
    completion (`success`, `warning`, or `error`).
-2. **Toolchain & Env**: `pyproject.toml` declares Python `>=3.10`, but the code
-   uses Python 3.12 APIs, so 3.12 is the effective minimum. Enforces the
+2. **Toolchain & Env**: `pyproject.toml` declares Python `>=3.12`, matching
+   the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
    zero-emoji and zero-suppression rules. Linting via Ruff (`>=0.9.0`); a
    `.pylintrc` is still present. OpenCV variant equivalence in the health
    auditor. Driver-aware CUDA index selection (`select_cuda_torch_index()`). The
@@ -267,8 +268,9 @@ single module (`env_manager/security.py`, `api/security.py`,
 ## 7. Bug Reporting Flow
 
 1. The operator opens "Report Issue" in the AI Studio GUI, writes a description,
-   picks the module and adds up to 5 annotated screenshots and, optionally, the
-   recent telemetry as CSV.
+   picks the module and adds up to 5 annotated screenshots, optionally a
+   recording of the app window (desktop app on Windows, MP4, at most 60 s) and,
+   optionally, the recent telemetry as CSV.
 2. The GUI posts the multipart form to the Environment Manager
    (`POST /api/bug-report`).
 3. The Environment Manager checks fields, sizes and file signatures, writes
@@ -277,8 +279,6 @@ single module (`env_manager/security.py`, `api/security.py`,
 4. It opens the operator's mail client (`mailto:` with recipient and subject)
    and reveals the archive in the file manager. The operator attaches the ZIP
    and sends it; no SMTP credentials exist anywhere in the ecosystem.
-
-Screen recording is planned and not yet available.
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v2.10.19` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.36` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-03
 
 ---
@@ -49,7 +49,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Studio GUI (client version `v2.10.19`) is a hardware-aware
+The LemGendary AI Studio GUI (client version `v2.10.36`) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
@@ -58,14 +58,15 @@ Rust host (Tauri v2), a reactive React 18 frontend and local WebSocket telemetry
 channels to three Python sidecars. Every sidecar request carries a client header
 that the sidecars' origin guard checks, the window runs under a strict Content
 Security Policy, and secrets are write-only from the GUI. A built-in bug
-reporter packages a description, annotated screenshots and recent telemetry into
-a local ZIP archive and hands it to the operator's own mail client.
+reporter packages a description, annotated screenshots, an optional screen
+recording of the app window and recent telemetry into a local ZIP archive and
+hands it to the operator's own mail client.
 
 > [!NOTE]
 > **Dual Versioning Architecture**: The desktop application and its backends use
 > separate version tracks:
 >
-> 1. **LemGendary AI Studio GUI (`v2.10.19`)**: Governs the Tauri v2 desktop
+> 1. **LemGendary AI Studio GUI (`v2.10.36`)**: Governs the Tauri v2 desktop
 >    application, the React 18 frontend and the Operator Manual
 >    ([`MANUAL_AI_STUDIO_GUI.md`](./MANUAL_AI_STUDIO_GUI.md)). `package.json`
 >    holds this version and `tauri.conf.json` reads it from there.
@@ -354,8 +355,8 @@ response are normalized instead of crashing the modal, and Escape closes it.
 
 The GUI codebase is verified by an automated test battery:
 
-- **Component & Integration Testing**: 136 Vitest tests (release `v2.10.19`)
-  cover sidecar routing and fallbacks, request field names against the sidecars'
+- **Component & Integration Testing**: 183 Vitest tests and 21 Rust tests
+  (release `v2.10.34`) cover sidecar routing, request field names against the sidecars'
   `openapi.json` files, the compiler and training panels, the config and secrets
   editors, the clean install dialog, the Report Issue modal and annotator, and a
   scan that fails when a `className` has no CSS rule.
@@ -410,13 +411,20 @@ state transitions without prop drilling:
     multi-variation validation.
   - `src/navigation/workspaceTabs.ts`: The tab ids, labels and help texts used
     by the sidebar, the `?tab=` parser and the bug report module select.
-- **Offline Placeholders (`src/components/training/fallbackModels.ts`,
-  `src/components/compiler/fallbackDatasets.ts`)**: While a sidecar is offline,
-  the panels show placeholder cards with identity metadata only. Fallback models
-  are marked `offline_placeholder: true` and show `UNKNOWN (OFFLINE)` instead of
-  invented status, epochs or metrics; placeholders are never written to the
-  store cache, and the panel refetches when the sidecar comes back. The dataset
-  placeholders still list static sample counts and sizes.
+- **No Fake Catalogs (v2.10.34)**: The model and manifold catalogs come only
+  from the sidecars. The hand-written fallback lists (`fallbackModels.ts`,
+  `fallbackDatasets.ts`) and the `offline_placeholder` flag are removed. With a
+  sidecar offline or returning an empty list, the training and compiler panels
+  show an empty or offline state (the training panel with Retry) and reload
+  when the sidecar answers.
+- **Training Status Contract (v2.10.34)**: `training_status`
+  (`TrainingStatus`: `fully_trained`, `partially_trained`, `weights_ready`,
+  `initializing`, `unknown`) and `is_fully_trained` are required fields of the
+  model catalog, as in the LemGendary Model Training Suite `ModelWithStats`
+  schema; `stats_error` is passed through. The GUI no longer derives the status
+  from pillars, epochs or checkpoints. The badge and the status filter use the
+  sidecar verdict only; `unknown` shows an `UNKNOWN` badge with the reason and
+  hides the metrics.
 - **Control ID Registry**: Interactive controls carry stable DOM IDs listed in
   [`GUI_CONTROL_REGISTRY.md`](./GUI_CONTROL_REGISTRY.md); the registry is
   rebuilt from the `id` attributes in the source.
@@ -553,9 +561,19 @@ machine except through the operator's own mail client.
   client or folder did not open. Errors map to `offline` ("Environment Manager
   is not running"), `validation` (422 entries shown under the matching field by
   `loc`), `too_large` (413) and `server`.
-- **Screen Recording**: Planned, not available yet. The form already contains a
-  disabled recording slot; a native, app-window-only recorder (at most 60
-  seconds, one clip per report) will plug into it.
+- **Screen Recording (v2.10.20)**: A native recorder in
+  `src-tauri/src/recording/` captures only the app's own window with Windows
+  Graphics Capture (Windows only), scales frames into an even-sized 854x480 box,
+  encodes H.264 with openh264 at 24 fps and muxes an MP4 in memory. A pure state
+  machine handles start, pause, continue and stop with a 60-second limit on
+  unpaused time. The commands are `recording_start`, `recording_pause`,
+  `recording_resume`, `recording_stop` and `recording_status`; other platforms
+  return "not supported on this platform yet". In the form, `RecordingSlot`
+  offers "Start recording"; while recording, the dialog hides and
+  `RecordingControlBar` shows the timer, Pause/Continue and "Stop and attach".
+  `RecordingController` polls the native status every 250 ms and stops at the
+  limit or on a capture failure. The clip is sent as `recording.mp4` (the
+  Environment Manager accepts `video/mp4` up to 50 MB).
 
 ## 7. Unified Models Registry
 

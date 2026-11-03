@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.18-STABLE` (LemGendary Environment Manager) · **Last
+**Version**: `v16.9.58-STABLE` (LemGendary Environment Manager) · **Last
 audited**: 2026-11-03
 
 ---
@@ -41,7 +41,7 @@ audited**: 2026-11-03
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.18-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.58-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -53,7 +53,9 @@ pip dry-run that fails closed, and real-time WebSocket telemetry. The pipeline
 is non-destructive by default; a clean reinstall needs an explicit option. The
 sidecar accepts browser requests only from AI Studio GUI origins, never returns
 stored secrets, runs package updates as background jobs and packages bug reports
-into a local ZIP archive for the operator's own mail client.
+into a local ZIP archive for the operator's own mail client. Its
+`ecosystem/ecosystem.json` is the single source of the ports, project list,
+pipeline steps and identity that every project reads (Section 6.7).
 
 ---
 
@@ -224,9 +226,9 @@ Latency measured at `v16.8.0` (legacy engine versus `lem-env`):
 | Manifest Consistency Sync | Manual | 45 ms | $400\times$ |
 | MetaTrader 5 Detection | None | ~5 ms | Sub-second |
 
-Capabilities at `v16.9.18`:
+Capabilities at `16.9.58`:
 
-| Capability | Legacy PowerShell | `lem-env` `v16.9.18` |
+| Capability | Legacy PowerShell | `lem-env` `v16.9.58` |
 | :--- | :--- | :--- |
 | Manifest sync | Manual copy | One-way, downgrade guard |
 | MetaTrader 5 detection | None | Registry-first + file version |
@@ -242,8 +244,9 @@ Capabilities at `v16.9.18`:
 | Destructive reinstall | Always | Only with `--clean` / `"clean": true` |
 
 (1) The PowerShell launcher and the git hook template are Windows-only.
-(2) `py_compile`, ESLint, TypeScript, jsonlint, PSScriptAnalyzer,
-markdownlint, yamllint, W3C HTML and WCAG 2.2 AA.
+(2) `py_compile`, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
+forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
+2.2 AA and the `ecosystem_ssot` gate.
 
 ---
 
@@ -271,10 +274,10 @@ and Health Matrix. The list below describes what each step does.
 2. **Toolchain Audit ($v_2$)**: Verifies the host Python runtime, Git binaries,
    Node.js / npm, PowerShell modules, and MetaTrader 5 package managers.
    Resolves local linters from `lemgendary-env-manager/node_modules/.bin`.
-   `pyproject.toml` declares `requires-python >=3.10` and the bootstrap accepts
-   3.10, but the validator (`Path.walk`) and the venv manager
-   (`shutil.rmtree(onexc=...)`) use Python 3.12 APIs, so Python 3.12 is the
-   effective minimum.
+   `pyproject.toml` declares `requires-python >=3.12`, the bootstrap
+   (`MIN_PYTHON`) and the launcher ask for Python 3.12+, and a test keeps the
+   values equal; the code uses Python 3.12 APIs (`Path.walk`,
+   `shutil.rmtree(onexc=...)`, `datetime.UTC`).
 3. **Virtual Environments Provisioning ($v_3$)**: Identifies missing or invalid
    virtual environments across Python projects and creates isolated `.venv`
    trees. A default run keeps valid venvs and `node_modules` and stops no
@@ -296,15 +299,24 @@ and Health Matrix. The list below describes what each step does.
    blocked by a reverse-dependency check (via `pip inspect --local`) followed by
    a constraint-preserving pip dry-run. Only safe candidates are upgraded;
    blocked candidates carry a reason describing the violated requirement.
+   The apply phase installs exactly the vetted versions (`name==version`), and
+   a failed install restores the `pip freeze` snapshot taken before it.
    Torch-family packages on CUDA hosts are resolved against the PyTorch CUDA
    index and filtered to the installed subset.
 6. **Codebase Verification ($v_6$)**: Executes `py_compile` bytecode
-   compilation, ESLint, TypeScript check, RFC 8259 JSON validation, PowerShell
-   analysis (`PSScriptAnalyzer`), markdownlint, yamllint, W3C HTML validation,
-   WCAG 2.2 AA accessibility audit, and ecosystem domain verifications (dataset
-   schemas and training checkpoint integrity). The documentation check compares
-   each Markdown and HTML pair by H2 count, table count and length ratio; it is
-   not a word-for-word comparison.
+   compilation and the registered validation gates
+   (`env_manager/validation/registry.py`): yamllint, RFC 8259 JSON validation,
+   markdownlint, ESLint, TypeScript check, W3C HTML validation, WCAG 2.2 AA
+   accessibility audit, PowerShell analysis (`PSScriptAnalyzer`), Pylint,
+   forbidden suppressions (Python directives and `warnings` filters, TS/JS
+   `@ts-*` and `eslint-disable` comments, Rust `allow` attributes), hardcoded
+   absolute paths, ecosystem domain verifications (README changelog, docs hub,
+   dataset manifests, training suite, models hub, git hooks) and
+   `ecosystem_ssot` (Section 6.7). Gates fail closed: a missing or crashing
+   tool is a `tool_error` finding, and the npx fallback never downloads
+   packages. A new gate is one more `Gate` in the registry. The documentation
+   check compares each Markdown and HTML pair by H2 count, table count and
+   length ratio; it is not a word-for-word comparison.
 7. **Health Matrix Generation ($v_7$)**: Compiles global telemetry into an
    aggregated health status matrix for desktop and CLI display, including
    manifest coverage, single-manifest package inventory, and npm workspace
@@ -494,7 +506,8 @@ file:
   `canonical_capabilities.json` equal the training registry keys and that its
   ports equal the service ports in the file.
 
-The validation gate `ecosystem_ssot` (warning severity) reports drift: in code,
+The validation gate `ecosystem_ssot` (error severity since v16.9.52; findings
+fail validation) reports drift: in code,
 configuration and tests a literal service port, the Kaggle owner, the
 documentation URL or a list of three or more project folders is a finding (test
 fixtures are allowed); in Markdown, HTML and the registries the values may be

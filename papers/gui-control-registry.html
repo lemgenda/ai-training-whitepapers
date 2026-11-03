@@ -27,7 +27,7 @@
 <h1>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</h1>
 <p class="subtitle">Category 03.4 CONTROLS | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.19</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Version</strong>: <code>v2.10.36</code> (LemGendary AI Studio GUI)</span>
 <span><strong>Last audited</strong>: 2026-11-03</span>
 <span><strong>Companion</strong>: <a href="ai-studio-manual.html">Operator Manual</a></span>
 <span><a href="ai-studio-whitepaper.html">Architectural Whitepaper</a></span>
@@ -83,7 +83,9 @@ Availability</a></li>
 element type, the sidecar endpoint it calls and its behaviour. It is rebuilt
 from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.19</code>: 119
 distinct IDs, of which 75 belong to interactive controls (sections 3.1 to 3.8)
-and 44 to dialogs, status regions, landmarks and headings (section 3.9).
+and 44 to dialogs, status regions, landmarks and headings (section 3.9). It is
+updated for <code>v2.10.36</code>: the screen recording controls (v2.10.20), the
+confirmation dialogs and the compile mode switch IDs (v2.10.28).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.</p>
 <p>The GUI talks to three local sidecars: the LemGendary Environment Manager on
@@ -148,9 +150,17 @@ default; attaches the recent log events as a CSV file
 the annotator; disabled when 5 screenshots are attached.</li>
 <li><code>bug-modal-btn-remove-screenshot-{n}</code> (<code>button</code>): &quot;Remove&quot;. None. Removes
 screenshot <code>{n}</code> from the strip.</li>
+<li><code>bug-modal-btn-start-recording</code> (<code>button</code>): &quot;Start recording&quot;. Native
+<code>recording_start</code>. Desktop app only; hides the dialog and shows the recording
+control bar.</li>
 <li><code>bug-modal-btn-remove-recording</code> (<code>button</code>): &quot;Remove recording&quot;. None. Shown
-only when a recording is attached; screen recording is planned and not
-available yet.</li>
+only when a recording is attached; discards it.</li>
+<li><code>recording-btn-pause</code> (<code>button</code>): &quot;Pause&quot;. Native <code>recording_pause</code>. Shown in
+<code>recording-control-bar</code> while recording.</li>
+<li><code>recording-btn-resume</code> (<code>button</code>): &quot;Continue&quot;. Native <code>recording_resume</code>.
+Shown while paused.</li>
+<li><code>recording-btn-stop</code> (<code>button</code>): &quot;Stop and attach&quot;. Native <code>recording_stop</code>.
+Returns to the dialog with the MP4 attached as <code>recording.mp4</code>.</li>
 <li><code>bug-modal-btn-cancel</code> (<code>button</code>): &quot;Cancel&quot;. None. Closes the dialog.</li>
 <li><code>bug-modal-btn-submit</code> (<code>button type=submit</code>): &quot;Send report&quot;.
 <code>POST /api/bug-report</code> (8000), multipart. Validates the form, sends it and
@@ -205,6 +215,9 @@ environments and <code>node_modules</code> of all projects, then reinstalls them
 </ul>
 <h3 id="35-dataset-compiler-suite">3.5 Dataset Compiler Suite</h3>
 <ul>
+<li><code>comp-mode-standard</code>, <code>comp-mode-custom</code> (<code>button</code>, <code>aria-pressed</code>):
+&quot;Standard Preset&quot; and &quot;Custom Multi-Source&quot; compile mode switch. None. Shows
+the standard or the custom multi-source compilation form.</li>
 <li><code>comp-btn-update-all-kaggle</code> (<code>button</code>): &quot;Update All Kaggle Metadata&quot;.
 <code>POST /api/kaggle/update-metadata</code> (8100) with <code>all_datasets: true</code>. Pushes
 metadata for every registered Kaggle dataset.</li>
@@ -324,6 +337,15 @@ returns only <code>has_value</code> and the last 4 characters (<code>value_hint<
 shared <code>Modal</code> dialogs (<code>role=&quot;dialog&quot;</code>, <code>aria-modal</code>, focus trap; Escape
 closes the innermost one). Each title has the ID <code>{dialog_id}-title</code>.</li>
 <li><code>bug-modal-form</code>: the Report Issue form.</li>
+<li><code>cloud-modal</code>, <code>config-editor-modal</code>: the Cloud Training and Config &amp; Secrets
+dialogs (shared <code>Modal</code>).</li>
+<li>Confirmation dialogs (<code>ConfirmDialog</code>, focus starts on Cancel; buttons
+<code>{dialog_id}-cancel</code> and <code>{dialog_id}-confirm</code>, text <code>{dialog_id}-desc</code>):
+<code>dash-dialog-stop-service</code> (Stop Service), <code>health-dialog-confirm</code> (Safe
+Package Upgrade and Deep Cache Purge), <code>config-dialog-delete-secret</code> (delete a
+credential), <code>config-dialog-discard-edits</code> (close or leave the manifest editor
+with unsaved edits) and <code>config-dialog-discard-manifest</code> (switch manifests
+with unsaved edits).</li>
 <li><code>pipeline-dialog-clean-install-desc</code>: lists what a clean install deletes.</li>
 </ul>
 <p>Status and error regions:</p>
@@ -335,8 +357,14 @@ error messages (<code>role=&quot;alert&quot;</code>).</li>
 <li><code>bug-modal-description-counter</code>, <code>annotator-status</code>, <code>bug-modal-copy-status</code>:
 live status text.</li>
 <li><code>bug-modal-screenshot-{n}</code>: thumbnail <code>{n}</code> in the screenshot strip.</li>
-<li><code>bug-modal-recording-slot</code>: the recording field set, disabled with the note
-&quot;Screen recording is available in the desktop app&quot; (planned).</li>
+<li><code>bug-modal-recording-slot</code>: the recording field set; outside the desktop app
+it is disabled with the note &quot;Screen recording is available in the desktop
+app&quot;.</li>
+<li><code>bug-modal-recording-summary</code>: the attached clip (length, resolution, size);
+<code>bug-modal-recorder-error</code>: recorder failures (<code>role=&quot;alert&quot;</code>).</li>
+<li><code>recording-control-bar</code> (<code>role=&quot;region&quot;</code>, &quot;Screen recording&quot;),
+<code>recording-control-status</code>, <code>recording-control-time</code>: the floating bar shown
+while recording (state and elapsed time against the 60 s limit).</li>
 <li><code>bug-modal-success</code>, <code>bug-modal-archive-path</code>, <code>bug-modal-recipient</code>,
 <code>bug-modal-subject</code>, <code>bug-modal-note-mail</code>, <code>bug-modal-note-folder</code>: the
 success view (archive name and relative path, recipient, subject, and notes
@@ -357,8 +385,8 @@ when the mail client or the reports folder did not open).</li>
 <p>These controls work but have no <code>id</code> yet; tests find them by role and label: the
 &quot;Config &amp; Secrets&quot; and &quot;LemGendary AI Documentation Hub&quot; header buttons, the
 Start Service and Stop Service buttons on the sidecar tiles, the per-step run
-buttons of the pipeline step cards, the Standard and Custom compile mode switch,
-the Catalog, Modernization Queue and Scale Reduction sub-tabs, the modernization
+buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
+Reduction sub-tabs, the modernization
 queue buttons, the scale reduction dispatch button, the config editor tabs and
 the telemetry console tabs.</p>
 <h3 id="311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
@@ -382,8 +410,9 @@ sub-tab controls (<code>comp-tab-kaggle-download</code>, <code>comp-tab-kaggle-u
 <code>comp-btn-kaggle-upload</code>, replaced by the card actions in section 3.5),
 <code>comp-slider-modernize-workers</code> and the pipeline stage list items
 <code>pipe-stage-*</code>.</p>
-<p>Removed because the control has no ID (section 3.10): <code>comp-mode-standard</code>,
-<code>comp-mode-custom</code>, <code>comp-btn-custom-compile</code>, <code>comp-subtab-catalog</code>,
+<p>Removed because the control has no ID (section 3.10; <code>comp-mode-standard</code> and
+<code>comp-mode-custom</code> exist again since v2.10.28, section 3.5):
+<code>comp-btn-custom-compile</code>, <code>comp-subtab-catalog</code>,
 <code>comp-subtab-modernize</code>, <code>comp-subtab-reduce</code>, <code>comp-btn-scan-modernize-queue</code>,
 <code>comp-btn-batch-modernize-all</code>, <code>comp-btn-dispatch-reduce</code>,
 <code>comp-input-kaggle-custom-ref</code>, <code>comp-btn-kaggle-download</code>,
@@ -443,7 +472,9 @@ the current tab.</li>
 keeps or clears <code>bug-modal-telemetry</code>.</li>
 <li>Optionally the operator clicks <code>bug-modal-btn-add-screenshot</code>, draws a
 highlight in <code>annotator-canvas</code> and clicks <code>annotator-btn-save</code> (up to 5
-screenshots).</li>
+screenshots). In the desktop app the operator can also click
+<code>bug-modal-btn-start-recording</code>, reproduce the problem and click
+<code>recording-btn-stop</code> (at most 60 s).</li>
 <li>The operator clicks <code>bug-modal-btn-submit</code>. The Environment Manager
 (<code>POST /api/bug-report</code>, 8000) saves a ZIP report in the <code>bug-reports</code> folder
 of the workspace, opens the mail client with recipient and subject filled in
@@ -470,8 +501,9 @@ FAT or exFAT.</li>
 DirectML or CPU only.</li>
 <li><strong>Spatial ladder scaling</strong>: full speed on CUDA GPUs; slower on DirectML; not
 practical on CPU.</li>
-<li><strong>Screen recording in bug reports</strong>: planned for the desktop app; not
-available yet in any build.</li>
+<li><strong>Screen recording in bug reports</strong>: desktop app on Windows (Windows
+Graphics Capture, app window only); macOS and Linux report &quot;not supported on
+this platform yet&quot;; not available in the browser build.</li>
 </ul>
 </section>
 

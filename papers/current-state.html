@@ -80,7 +80,7 @@ Browser requests from origins other than the LemGendary AI Studio GUI
 state-changing browser requests must send the Client Header
 <code>X-LemGendary-Client: ai-studio-gui</code>. <code>GET /api/secrets</code> returns only whether
 each secret is set and its last 4 characters.</li>
-<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.19</code>), a
+<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.36</code>), a
 cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
 real Content Security Policy and one shared fetch wrapper for all sidecar
 calls.</li>
@@ -89,7 +89,9 @@ module, description of at least 50 characters, up to 5 annotated
 screenshots, optional Telemetry CSV). <code>POST /api/bug-report</code> on the
 LemGendary Environment Manager saves a Bug Report Archive (ZIP) in the
 workspace and opens the user's own mail client; no SMTP password ships with
-the application. Screen recording is <strong>planned</strong> (deferred by the owner).</li>
+the application. In the desktop app on Windows the form can also attach a
+screen recording of the app window (MP4, up to 60 s); other platforms report
+that recording is not supported yet.</li>
 <li><strong>Monotonic Ratchet (pair rule)</strong>: Resolution never decreases, and the data
 fraction never decreases within one resolution step; it may reset when the
 resolution steps up. A backward step raises <code>RatchetViolation</code>.</li>
@@ -97,13 +99,15 @@ resolution steps up. A backward step raises <code>RatchetViolation</code>.</li>
 completion), on the governor's early stop or when the configured budget is
 spent; extensions are opt-in and capped.</li>
 <li><strong>Pareto Model Soup</strong>: <code>lemtrain soup</code> and <code>POST /api/models/{model_key}/soup</code>
-blend vault checkpoints. Stochastic Weight Averaging (SWA) is not
-implemented.</li>
+blend vault checkpoints. Optional Stochastic Weight Averaging (SWA, the
+<code>swa</code> section of <code>config.yaml</code>, off by default) adds <code>vault_swa.pth</code> as one
+more ingredient.</li>
 <li><strong>Publication-Grade FID</strong>: FID uses the 2048-dimensional Inception pooling
 layer in micro-chunks of at most two samples. Historical FID values of
 <code>codeformer</code>, <code>ffanet_indoor</code>, <code>mprnet_deraining</code> and <code>mirnet_lowlight</code> are
 <strong>FID unverified</strong> (rewritten by a removed tool) until the checkpoints are
-re-evaluated.</li>
+re-evaluated with <code>python -m training.fid_reeval</code>, which records its results
+in <code>fid_provenance.csv</code> (needs a GPU; not run yet).</li>
 <li><strong>Non-Destructive Pipelines</strong>: The Run Pipeline action is non-destructive by
 default; a clean run needs an explicit option and a confirmation dialog.</li>
 <li><strong>Zero-Hang Pipeline Lifecycle</strong>: GUI pipeline completion recovers from all
@@ -134,29 +138,32 @@ index (<code>cu126</code>, <code>cu121</code>, <code>cu118</code>) from the driv
 <p>Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.</p>
 <ul>
-<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.68-STABLE</code>): PyTorch training
-loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup.
+<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.107-STABLE</code>): PyTorch training
+loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
+optional SWA, FID re-evaluation tool.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
-<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.27-STABLE</code>): shard synthesis,
-WebP transcoding, Kaggle and HF ingestion, 21 manifolds. Entrypoints:
+<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.64-STABLE</code>): shard synthesis,
+WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
+Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
-<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.18-STABLE</code>): hardware probe,
-virtual environments, compliance audits, bug report endpoint. Entrypoints:
-<code>lem-env</code> and <code>lemgendary_env_manager.ps1</code>.</li>
-<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.19</code>): Tauri v2 desktop application and
+<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.58-STABLE</code>): hardware probe,
+virtual environments, compliance audits, bug report endpoint, ecosystem
+registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
+<code>lemgendary_env_manager.ps1</code>.</li>
+<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.36</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.79-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.80-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
-<li><strong>Training Pathology Guide</strong> (<code>1.5.0</code>, baseline <code>v16.9.68-STABLE</code>):
+<li><strong>Training Pathology Guide</strong> (<code>1.6.0</code>, baseline <code>v16.9.107-STABLE</code>):
 <code>PAPER_TRAINING_PATHOLOGY.md</code>.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
-<p>Known package-version drift (code metadata behind the README releases): the
-LemGendary Model Training Suite <code>pyproject.toml</code>, <code>training/server/app.py</code> and
-<code>training/cli/lemtrain.py</code> report <code>16.2.9</code>; the LemGendary Dataset Compiler
-Suite <code>core/cli_args.py</code> reports <code>16.9.5</code>.</p>
+<p>The package metadata matches the README releases: the LemGendary Model
+Training Suite <code>pyproject.toml</code> and <code>training/server/app.py</code> report <code>16.9.107</code>
+(one version since v16.9.69), and the LemGendary Dataset Compiler Suite
+<code>core/cli_args.py</code> reports <code>16.9.64</code> (one version string since v16.9.52).</p>
 </section>
 
 <section id="3-document-authority-hierarchy">
@@ -201,7 +208,7 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.79-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.80-STABLE</code>.</p>
 </section>
 
 <section id="4-tripartite-microservice-topology--port-bindings">
@@ -224,7 +231,8 @@ are defined once, in <code>lemgendary-env-manager/ecosystem/ecosystem.json</code
 the LemGendary Model Training Suite read it through their <code>ecosystem</code>
 loaders, the LemGendary AI Studio GUI through its snapshot
 <code>src/generated/ecosystem.json</code>, and the <code>ecosystem_ssot</code> validation gate
-reports values written anywhere else.</p>
+(error severity since Environment Manager v16.9.52) fails validation when a
+value is written anywhere else.</p>
 </section>
 
 <section id="5-registered-model-architectures--convergence-status">
@@ -276,7 +284,16 @@ at least 20 epochs):</p>
 <code>ffanet_indoor</code>, <code>mprnet_deraining</code> and <code>mirnet_lowlight</code> were rewritten by
 the removed <code>tools/recalibrate_fid.py</code> and are not measured values. Any FID
 value or chart from these four histories is unverified until the checkpoints
-are re-evaluated with <code>feature=2048</code>.</p>
+are re-evaluated with <code>feature=2048</code>. The tool for that is
+<code>python -m training.fid_reeval</code> (training v16.9.107): it appends to
+<code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> and never rewrites
+<code>metrics.csv</code>. The re-measurement needs a GPU and has not been run.</p>
+<p><strong>Training status in the GUI</strong>: <code>GET /api/gui/models/with-stats</code> always
+returns <code>training_status</code> (<code>fully_trained</code>, <code>partially_trained</code>,
+<code>weights_ready</code>, <code>initializing</code> or <code>unknown</code>) and <code>is_fully_trained</code>. The
+LemGendary AI Studio GUI shows that verdict and no longer derives it. A model
+whose stats cannot be read is shown as <code>unknown</code> with the reason
+(<code>stats_error</code>).</p>
 </section>
 
 <section id="6-manifold-ingestion--container-modernization">
@@ -304,6 +321,13 @@ compression:
 <li>Alpha / Segmentation Masks: WebP Lossless.</li>
 </ul>
 </li>
+<li><strong>Task Taxonomy</strong>: <code>lemgendary-datasets/task_taxonomy.json</code> defines the task
+ids. Every registry entry in <code>unified_data.yaml</code> names its <code>task</code>; four are
+marked <code>task_confirmed: false</code> until the owner confirms them
+(<code>retinaface_mobilenet</code>, <code>nima_authenticity</code>, <code>forex_universe</code>,
+<code>ai_helper_lemgend</code>). The compiler writes <code>task_type</code> into each manifold's
+<code>dataset_info.yaml</code>, and the LemGendary Model Training Suite reads it (older
+manifolds without it are resolved through the taxonomy).</li>
 </ul>
 </section>
 

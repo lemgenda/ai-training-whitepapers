@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.68-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.107-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-03
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -76,6 +76,14 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     (v16.9.67)](#228-publication-grade-fid--unverified-historical-fid-rows-v16967)
   - [2.29. Sidecar Security Model & OpenAPI Contract (v16.9.64,
     v16.9.68)](#229-sidecar-security-model--openapi-contract-v16964-v16968)
+  - [2.30. Ecosystem Facts & GUI Training Verdict (v16.9.93,
+    v16.9.94)](#230-ecosystem-facts--gui-training-verdict-v16993-v16994)
+  - [2.31. Manifold Task from `dataset_info.yaml` (v16.9.100,
+    v16.9.101)](#231-manifold-task-from-dataset_infoyaml-v169100-v169101)
+  - [2.32. Stochastic Weight Averaging
+    (v16.9.107)](#232-stochastic-weight-averaging-v169107)
+  - [2.33. FID Re-evaluation Tool & Provenance Ledger
+    (v16.9.107)](#233-fid-re-evaluation-tool--provenance-ledger-v169107)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -119,15 +127,16 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
 The LemGendary Model Training Suite is the orchestration layer that trains,
 evaluates and exports the vision, restoration, quality-assessment, financial
 time-series and causal LLM models of the LemGendary ecosystem. This paper
-documents release v16.9.68-STABLE. It covers the curriculum governor and its
+documents release v16.9.107-STABLE. It covers the curriculum governor and its
 Monotonic Ratchet (pair rule, enforced by a `RatchetViolation` guard), the
 bounded epoch budget with an honoured early stop, the 4-pillar completion
 invariant, publication-grade FID evaluation (`feature=2048`, chunks of at most
-two samples), the Pareto Model Soup service and the sidecar security model.
+two samples), the Pareto Model Soup service, optional Stochastic Weight
+Averaging (SWA, off by default, Section 2.32) and the sidecar security model.
 Features that earlier revisions described but the code does not run are marked
-as not active or not implemented (Section 8.1). Stochastic Weight Averaging
-(SWA) is not implemented. Historical FID rows of four models are unverified
-(Section 2.28).
+as not active or not implemented (Section 8.1). Historical FID rows of four
+models are unverified (Section 2.28); the FID re-evaluation tool (Section 2.33)
+can re-measure their checkpoints.
 
 ---
 
@@ -210,13 +219,15 @@ complex textures and micro-artifacts from the very first epoch.
   passes run in micro-chunks of at most two samples (`chunk_size = 2`) for both
   real and reconstructed images (Section 2.28). The historical FID rows of
   `codeformer`, `ffanet_indoor`, `mprnet_deraining` and `mirnet_lowlight` were
-  rewritten by the removed `tools/recalibrate_fid.py` and are unverified.
+  rewritten by the removed `tools/recalibrate_fid.py` and are unverified;
+  `python -m training.fid_reeval` re-measures them (Section 2.33).
 - **Pareto Model Soup (vault checkpoint blending)**: `lemtrain soup` and
   `POST /api/models/{model_key}/soup` blend a model's vault checkpoints
   (`vault_psnr.pth`, `vault_lpips.pth`, ...) into one weighted average
-  checkpoint (Section 2.27). Stochastic Weight Averaging (SWA) is not
-  implemented. Whether a blend beats its donors is not checked automatically and
-  must be measured per model.
+  checkpoint (Section 2.27). With optional Stochastic Weight Averaging (Section
+  2.32) the averaged weights are one more vault, `vault_swa.pth`. Whether a
+  blend beats its donors is not checked automatically and must be measured per
+  model.
 - **Universal Quality Scorecarding**: The trainer dynamically compounds PSNR,
   SSIM, LPIPS, and FID for all restoration models, mathematically verifying
   ultimate convergence against academic SOTA benchmarks.
@@ -1159,10 +1170,10 @@ $$
   `soup_weights` stores the weights as given. The blend is not evaluated
   automatically, so any claim that it beats its donors must come from a measured
   evaluation.
-- **SWA is not implemented**: the suite has no `torch.optim.swa_utils`,
-  `AveragedModel` or `update_bn` code. The ROBOTS.md Pareto Model Soup standard
-  (SWA plus soup blending) is therefore only partly met; SWA is an open item of
-  the remediation plan.
+- **SWA ingredient**: since v16.9.107 a run with SWA enabled (Section 2.32)
+  writes `checkpoints/vault_swa.pth`. The default glob picks it up, or name it
+  with `--donors psnr swa`, so SWA plus soup blending (the ROBOTS.md Pareto
+  Model Soup standard) works. SWA is off by default.
 - **Tests**: `tests/unit/test_model_soup_service.py` (20 torch-free tests) and
   two CLI runner tests.
 
@@ -1199,8 +1210,10 @@ $$
   they appear (model papers, `metrics.csv`, training charts). This paper cites
   no FID value for these models and publishes no replacement numbers.
 - **Open item**: the checkpoints must be re-evaluated with real Inception FID
-  (`feature=2048`, chunks of at most two) or the rows excluded from charts. No
-  re-evaluation tool exists yet.
+  (`feature=2048`, chunks of at most two) or the rows excluded from charts.
+  Since v16.9.107 the FID re-evaluation tool (Section 2.33) measures a
+  checkpoint and records the rows as `unverified`; the measurements need a GPU
+  and have not been run. The formula values are still in `metrics.csv`.
 
 ### 2.29. Sidecar Security Model & OpenAPI Contract (v16.9.64, v16.9.68)
 
@@ -1224,6 +1237,129 @@ $$
   40 HTTP operations (39 paths; `/api/health` has GET and HEAD). `--check` exits
   1 on drift, and `tests/unit/test_openapi_contract.py` fails when the file
   differs from the live app. The two WebSocket routes are not part of OpenAPI.
+
+### 2.30. Ecosystem Facts & GUI Training Verdict (v16.9.93, v16.9.94)
+
+- **Ecosystem file**: `training/ecosystem.py` reads
+  `lemgendary-env-manager/ecosystem/ecosystem.json` (`LEMGENDARY_ECOSYSTEM_FILE`,
+  else the file under the workspace root; `LEMGENDARY_WORKSPACE_ROOT` overrides
+  the root). Ports, the bind host, the Kaggle owner and the documentation URL
+  come from it; a missing or malformed file raises `EcosystemFileError` naming
+  the expected path. Model `kaggle_ref` and `kaggle_dataset_urls` are derived
+  from `datasets` and the owner; an explicit value on a model is a per-model
+  override.
+- **Training verdict**: `GET /api/gui/models/with-stats` returns
+  `ModelWithStats` entries (`training/server/routes/gui_schemas.py`).
+  `training_status` (`fully_trained`, `partially_trained`, `weights_ready`,
+  `initializing` or `unknown`) and `is_fully_trained` are required on every
+  entry. `training_verdict()` is the only place that turns the 4 pillars (20
+  epochs, top ladder rung, full data at that rung, all SOTA targets) into both
+  fields. The data fraction counts only for the resolution step it was trained
+  at (pair rule). A model whose stats cannot be computed is listed with
+  `training_status: "unknown"`, `is_fully_trained: false` and the reason in
+  `stats_error`, instead of failing the whole list.
+
+### 2.31. Manifold Task from `dataset_info.yaml` (v16.9.100, v16.9.101)
+
+`training/data/task_resolution.py` resolves a manifold's task without guessing
+from folder names:
+
+1. `task_type` in the manifold's `dataset_info.yaml`, the plain task id the
+   LemGendary Dataset Compiler Suite writes (for example `pose`).
+2. A legacy manifold without `task_type` is resolved from its layout (forex
+   markers, `masks/`, `labels/`, `targets/`) through the datasets
+   `task_taxonomy.json` (`LEMGENDARY_TASK_TAXONOMY_FILE`, else
+   `<workspace_root>/lemgendary-datasets/task_taxonomy.json`).
+3. An images-only legacy manifold falls back to `restoration` and logs a
+   warning naming the `dataset_info.yaml` to fix.
+
+`DATASETS_TO_INTERNAL_TASK` is the one table that maps datasets task ids to
+internal names (`pose` to `face_detection`, `super-resolution` to
+`restoration`, `authenticity` to `quality`, `ai_helper` to
+`text_instruction`; the rest unchanged; `diffusion` and `vision` have no
+equivalent). A missing or malformed taxonomy, or a task with no equivalent,
+raises `TaskResolutionError` naming the file to fix.
+
+### 2.32. Stochastic Weight Averaging (v16.9.107)
+
+`training/training/swa.py` adds optional SWA on `torch.optim.swa_utils`. It is
+configured in the `swa` section of `config.yaml` (validated by
+`training/swa_config.py`) and is **off by default**:
+
+- `enabled` (default `false`); `start_epoch` (first averaged epoch, overrides
+  `start_fraction`) or `start_fraction` (default `0.75`, the last quarter of
+  the epoch budget).
+- `swa_lr`: when set, `SWALR` takes over the learning rate in the SWA phase
+  and anneals over `anneal_epochs` (default 5) with `anneal_strategy` (`cos`
+  or `linear`); the main scheduler is no longer stepped. `null` keeps the main
+  schedule (averaging only).
+- `update_every` (default 1): average every N epochs of the phase.
+- `eval_every` (default 0): refresh BatchNorm, validate the averaged model and
+  write `vault_swa.pth` every N updates; `0` does this once, when training
+  ends. `bn_update_batches` caps the BatchNorm refresh (`null` uses the whole
+  train loader).
+
+With $n$ averaged epochs, epoch $t$ updates the running mean as
+
+$$
+\theta_{\text{SWA}} \leftarrow \frac{n \, \theta_{\text{SWA}} + \theta_t}{n + 1}
+$$
+
+- **Engine seam**: one `SwaPhase` component. The engine calls it after the
+  governor audit of each epoch and once after the loop. `AveragedModel` is
+  created at the first SWA epoch. `update_bn` re-estimates BatchNorm
+  statistics before the averaged model is validated.
+- **Ratchet safety**: SWA metrics go to the log and `swa_metrics` only, never to
+  the SOTA tracker or the governor, so curriculum rungs still change only
+  through `_commit_rung` (Monotonic Ratchet). A disabled run is unchanged.
+- **Soup ingredient**: the averaged weights after the BatchNorm refresh are
+  saved as `checkpoints/vault_swa.pth` (Section 2.27). They are not promoted to
+  `best.pth`.
+- **Resume**: the average, `n_averaged` and the `SWALR` state are kept in the
+  `checkpoints/swa_state.pth` sidecar and restored when it matches the resumed
+  epoch; otherwise averaging restarts with a warning. Cloud sync does not carry
+  the sidecar yet.
+- **Not implemented**: Mini-SWA (the `trigger_mini_swa` flag is still unread)
+  and Metric-Specific SWA (MS-SWA).
+- **Tests**: `tests/unit/test_swa.py` (18 CPU tests).
+
+### 2.33. FID Re-evaluation Tool & Provenance Ledger (v16.9.107)
+
+`python -m training.fid_reeval` (package `training/fid_reeval/`) re-measures
+FID for the four models with unverified FID history (Section 2.28):
+
+```bash
+# Mark the formula-rewritten metrics.csv rows (no GPU, safe to repeat)
+python -m training.fid_reeval mark-unverified --all
+
+# Check all inputs on CPU, then measure (default checkpoint: best.pth)
+python -m training.fid_reeval measure --model codeformer --dry-run
+python -m training.fid_reeval measure --model codeformer --device cuda
+
+# Summarise the ledgers
+python -m training.fid_reeval status --all
+```
+
+- **Measurement**: `measure` uses the validation FID module
+  (`FrechetInceptionDistance(feature=2048)`, chunks of at most two) on the
+  model's validation split. It checks that the feature size is 2048 and that
+  no chunk exceeds two, refuses a FID computed from part of the data, and loads
+  the checkpoint strictly (`--non-strict` is explicit and noted in the row).
+  Options: `--checkpoint`, `--datasets-root`, `--models-root`,
+  `--env local|kaggle|colab`, `--device`, `--batch-size`, `--num-workers`,
+  `--note`, `--dry-run`.
+- **Provenance ledger**: results are appended to
+  `LemGendaryModels/<model>/fid_provenance.csv` (UTC time, model, status
+  `unverified` or `reevaluated`, source, epoch, value, image count, feature
+  size, maximum chunk, checkpoint and its SHA-256, datasets root, device,
+  note). Rows are only appended; a file with another header is refused.
+- **What it never writes**: `metrics.csv` (its 28-column schema stays),
+  checkpoints, `best.pth`, the quality score and the ratchet or rung state. A
+  re-measured FID is evidence only.
+- **Exit codes**: 0 success, 2 bad input or ledger, 3 FID invariant failure or
+  missing FID backend.
+- **Tests**: `tests/unit/test_fid_reeval.py` (23 CPU tests with a fake FID
+  backend). The real measurements need a GPU and the validation data.
 
 ---
 
@@ -1594,7 +1730,11 @@ performance.
   2.26); 4-pillar completion on the pre-audit governor state (Section 2.3.1);
   FID with `feature=2048` and chunks of at most two (Section 2.28); Pareto Model
   Soup service for CLI and API (Section 2.27); origin guard, closed CORS and the
-  OpenAPI contract test (Section 2.29); omni-metric deficit engine and
+  OpenAPI contract test (Section 2.29); ecosystem facts from `ecosystem.json`
+  and the required GUI training verdict (Section 2.30); manifold task from
+  `task_type` (Section 2.31); Stochastic Weight Averaging, off by default
+  (Section 2.32); the FID re-evaluation tool (Section 2.33); omni-metric
+  deficit engine and
   rank-boost escalation (Section 2.7); Soft-Spearman loss with the rank memory
   bank (Section 2.9).
 - **Present but not active** (code exists, never invoked by the training loop):
@@ -1602,7 +1742,8 @@ performance.
   resolution escalation built on it; the resolution-jump veto and the pre-jump
   dry-run probe; the `trigger_mini_swa` flag; the hardware resolution caps in
   `config.yaml`.
-- **Not implemented**: Stochastic Weight Averaging (SWA), including Mini-SWA
-  with its `update_bn` rollback guard and Metric-Specific SWA (MS-SWA) over the
-  per-metric vaults; the absolute patience limit; validation sharding; a FID
-  re-evaluation tool for the four models with unverified FID history.
+- **Not implemented**: Mini-SWA with its `update_bn` rollback guard and
+  Metric-Specific SWA (MS-SWA) over the per-metric vaults; the absolute
+  patience limit; validation sharding.
+- **Needs the owner's GPU**: the FID re-measurement of the four models with
+  unverified FID history (Section 2.33).
