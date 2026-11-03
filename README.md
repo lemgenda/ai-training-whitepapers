@@ -2,7 +2,7 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.65`
+**Version**: `v16.9.66`
 
 ---
 
@@ -14,6 +14,31 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.66 - Dataset Compiler Suite v16.9.27 Whitepaper Sync
+
+* **Dataset Compiler Whitepaper** - `PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` describe release v16.9.27 in exactly the eight
+  framework sections. The former section 5 (modernization) is folded into
+  sections 2, 3, 4 and 6; the former section 9 (LLM compiler) into 4.10 and
+  6.3; the Conclusion is section 8.
+* **New Behaviour** - default preset from `presets.yaml`, atomic registry
+  writes with HTTP 409/422/500, purge only after a successful compile, async
+  LLM jobs with a bounded CLI wait, modernize and reduce scope and dry-run
+  guarantees, origin guard and closed CORS, dataset-root confinement for
+  `llm validate`, and the regenerated `openapi.json` (38 operations).
+* **Corrected Claims** - 21 registry manifolds (not 22), all vision containers
+  except YoloV8n on WebDataset (no `mds`), canonical folder names
+  (`LemGendizedRetinaFace`, `LemGendizedMultitaskRestorationPro`),
+  `KnowledgeIngestor`, chunk `sha256`, 1200/200 chunking, stratified 80/20
+  split, validator rules as coded, resolution floors from `audit/vision_audit.py`,
+  WebP quality on streaming download, removed modules and the nonexistent
+  `compile_all` and `_read_stream`. Added the `rain`, `lowlight`, `downsample`
+  and `film` filters and the `modernize`, `llm`, `forex`, `test` and
+  `sync metadata` CLI groups. Benchmark figures marked as historical.
+* **HTML Template** - Regenerated from the Markdown with the approved template
+  and MathJax. W3C valid, markdownlint clean, MD and HTML heading lists
+  identical.
 
 ### v16.9.65 - Environment Manager v16.9.18 and Ecosystem Architecture Sync
 
