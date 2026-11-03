@@ -2,7 +2,7 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.66`
+**Version**: `v16.9.67`
 
 ---
 
@@ -14,6 +14,36 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.67 - Model Training Suite v16.9.68 Paper Sync (Pair-Rule Ratchet)
+
+* **Training Suite Whitepaper** - `PAPER_TRAINING_SUITE.md` and
+  `papers/training-suite-master.html` retitled "LemGendary Model Training
+  Suite: Technical Whitepaper" and synced with training suite v16.9.68. New
+  sections 2.25 to 2.29: pair-rule Monotonic Ratchet with the enforced
+  `RatchetViolation` guard (`_commit_rung`), bounded epoch budget with honoured
+  early stop (`training_budget`, stop reasons), Pareto Model Soup service (CLI
+  and API, what the blend does and does not do; SWA is not implemented),
+  publication-grade FID (`feature=2048`, chunks of at most two) and the sidecar
+  security model with the 40-operation `openapi.json`. Section 4 regenerated
+  from `unified_models_v2.yaml` (23 models); new 8.1 Implementation Status.
+* **Pathology Guide** - `PAPER_TRAINING_PATHOLOGY.md` and
+  `papers/training-pathology.html` revision 1.5.0: header and TOC on the
+  standard layout, wide tables turned into lists, Pathology 26 (unbounded epoch
+  horizon) and 27 (fabricated FID history) added, registry-accurate model
+  groups (diffusion and VLM groups marked as planned).
+* **Corrected Claims** - removed the intra-resolution fraction recoil and the
+  early-epoch fraction override (both broke the ratchet); 4-pillar epochs 20
+  (not 30); `maturity_soak` 5; FID `feature=2048` (not 64); rollback
+  registration, loop-breaker, resolution-jump veto, dry-run probe and Mini-SWA
+  marked as not active, absolute patience, validation sharding, SWA and MS-SWA
+  as not implemented. Historical FID rows of `codeformer`, `ffanet_indoor`,
+  `mprnet_deraining` and `mirnet_lowlight` are marked unverified; no
+  replacement numbers.
+* **Lint & HTML** - inline `markdownlint-disable` comments removed and the
+  hidden issues fixed (TOC anchors, line length, duplicate headings); both
+  HTML files rebuilt on the approved template with MathJax. markdownlint 0,
+  W3C 0, anchors resolve, MD/HTML headings identical (52 and 53).
 
 ### v16.9.66 - Dataset Compiler Suite v16.9.27 Whitepaper Sync
 
