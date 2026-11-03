@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity FFANet Dehazing via SOTA Infrastructure
 
 **Author**: Lem Treursic  
-**Version**: 2.6.0 - Dynamic VRAM Sync  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 2.6.0 - Dynamic VRAM Sync  
 **Category**: Category 04 RESTORATION  
 **Hardware**: NVIDIA / MPS / XPU
 
@@ -12,7 +13,7 @@
 
 - [1. Abstract](#1-abstract)
   - [1.1 What FFANet Does (In Plain English)](#11-what-ffanet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
+- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
   - [2.1 Indoor Dehazing Track (ffanet_indoor)](#21-indoor-dehazing-track-ffanet_indoor)
   - [2.2 Outdoor Dehazing Track (ffanet_outdoor)](#22-outdoor-dehazing-track-ffanet_outdoor)
   - [2.3 Synthetic Smoke Evacuation](#23-synthetic-smoke-evacuation)
@@ -32,7 +33,7 @@
 
 ## 1. Abstract
 
-The LemGendary Training Suite has achieved unparalleled visual restoration by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike standard architectures, FFANet explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics. This enables high-bandwidth recovery of depth geometry while natively exporting multi-task object bounding boxes through the specialized BranchedFFANet topology.
+The LemGendary Model Training Suite has achieved unparalleled visual restoration by deploying the Branched Feature Fusion Attention Network (FFANet). Unlike standard architectures, FFANet explicitly models the non-uniform distribution of atmospheric haze using Pixel Attention (PA) and Channel Attention (CA) mechanics. This enables high-bandwidth recovery of depth geometry while natively exporting multi-task object bounding boxes through the specialized BranchedFFANet topology.
 
 ---
 

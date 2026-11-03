@@ -2,6 +2,8 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
+**Version**: `v16.9.44-STABLE`
+
 ---
 
 ## Table of Contents
@@ -19,7 +21,7 @@
   - [2.9 Telemetry Daemon & Background Server (`serve`)](#29-telemetry-daemon--background-server-serve)
   - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
-- [4. AI Studio Desktop GUI CLI & Toolchain](#4-ai-studio-desktop-gui-cli--toolchain)
+- [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
   - [5.1 Invocation Syntax](#51-invocation-syntax)
   - [5.2 Manifold Compilation (`compile`)](#52-manifold-compilation-compile)
@@ -107,7 +109,8 @@ Key features:
 MetaTrader 5 detection priority:
 
 1. Windows registry keys under `HKCU`/`HKLM\SOFTWARE\MetaQuotes\Terminal` (fast, ~5 ms)
-2. Well-known install paths (`C:\Program Files\MetaTrader 5\terminal64.exe`)
+2. Well-known install paths (`%ProgramFiles%\MetaTrader 5\terminal64.exe`,
+   the MetaTrader 5 installation folder under Program Files)
 3. PowerShell `Get-Package -Name '*MetaTrader*'` (slow fallback)
 
 When an install path is available, the version is read directly from `terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo` property. This gives an authoritative version number even when winget has no record of the installation (typical for MT5, which is often installed outside winget's package database).
@@ -345,7 +348,7 @@ Interactive Menu Matrix:
 
 ---
 
-## 4. AI Studio Desktop GUI CLI & Toolchain
+## 4. LemGendary AI Studio GUI CLI & Toolchain
 
 The desktop application `lemgendary-ai-studio-gui` utilizes Node.js, React 18, Vite, and Tauri v2.
 
@@ -1044,6 +1047,6 @@ lem-env validate || exit 2
 ## Companion Documentation
 
 - [Technical Whitepaper (Markdown)](PAPER_ENV_MANAGER.md)
-- [Technical Whitepaper (HTML)](env_manager.html)
+- [Technical Whitepaper (HTML)](../papers/env_manager.html)
 - [Master REST & WebSocket API Specification (Markdown)](MANUAL_API.md)
-- [Master REST & WebSocket API Specification (HTML)](api-manual.html)
+- [Master REST & WebSocket API Specification (HTML)](../papers/api-manual.html)

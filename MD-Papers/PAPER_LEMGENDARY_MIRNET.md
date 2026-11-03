@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity MIRNet v2 Enhancement via SOTA Infrastructure
 
 **Author**: Lem Treursic  
-**Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
 **Category**: Category 04 RESTORATION  
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -12,7 +13,7 @@
 
 - [1. Abstract](#1-abstract)
   - [1.1 What MIRNet Does (In Plain English)](#11-what-mirnet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
+- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
   - [2.1 Low-Light Manifold (mirnet_lowlight)](#21-low-light-manifold-mirnet_lowlight)
   - [2.2 Exposure Manifold (mirnet_exposure)](#22-exposure-manifold-mirnet_exposure)
 - [3. Shared Foundations](#3-shared-foundations)
@@ -25,13 +26,13 @@
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
 - [6. Deployment Strategy](#6-deployment-strategy)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
-- [8. Conclusion](#conclusion)
+- [8. Conclusion](#8-conclusion)
 
 ---
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **MIRNet v2** (Multi-Scale Residual Network). This paper details the structural and mathematical breakthroughs required to stabilize MIRNet's massive multi-scale gating on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked unprecedented convergence—setting a new benchmark for browser-based image illumination enhancement.
+The **LemGendary Model Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **MIRNet v2** (Multi-Scale Residual Network). This paper details the structural and mathematical breakthroughs required to stabilize MIRNet's massive multi-scale gating on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked unprecedented convergence—setting a new benchmark for browser-based image illumination enhancement.
 
 ---
 

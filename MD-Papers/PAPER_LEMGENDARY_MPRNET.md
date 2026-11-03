@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity MPRNet Deraining via SOTA Infrastructure
 
 **Author**: Lem Treursic  
-**Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
 **Category**: Category 04 RESTORATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -12,7 +13,7 @@
 
 - [1. Abstract](#1-abstract)
   - [1.1 What MPRNet Does (In Plain English)](#11-what-mprnet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
+- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
   - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
   - [2.2 Multi-Stage Progressive Operators (CSFF & SAM)](#22-multi-stage-progressive-operators-csff--sam)
 - [3. Shared Foundations](#3-shared-foundations)
@@ -40,9 +41,9 @@
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
     - [4.1.8 Training Process Analysis](#418-training-process-analysis)
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-  - [5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)](#51-the-simplegate-nan-overflows-structural-fp16-disable)
+  - [5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)](#51-the-progressive-stage-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
-  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock](#53-the-onecyclelr-sudden-death-adamw-resume-shock)
+  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock](#53-the-onecyclelr-sudden-death--adamw-resume-shock)
   - [5.4 The VGG Perceptual Convergence Collapse](#54-the-vgg-perceptual-convergence-collapse)
   - [5.5 The "Double-Step" OneCycleLR Matrix Paradox](#55-the-double-step-onecyclelr-matrix-paradox)
   - [5.6 The SOTA Sentry "Defibrillation Override"](#56-the-sota-sentry-defibrillation-override)
@@ -70,11 +71,11 @@
   - [6.1 Standalone Exporters](#61-standalone-exporters)
   - [6.2 The Ghost-Severing Protocol](#62-the-ghost-severing-protocol)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
-- [8. Conclusion](#conclusion)
+- [8. Conclusion](#8-conclusion)
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
+The **LemGendary Model Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by the **Multi-Stage Progressive Image Restoration Network (MPRNet)**. This paper details the structural and mathematical breakthroughs required to stabilize MPRNet's multi-stage progressive restoration on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked 53.95 dB PSNR convergence—setting a new benchmark for browser-based image restoration and deraining.
 
 ---
 

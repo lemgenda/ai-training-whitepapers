@@ -33,9 +33,9 @@
 <span><a href="dataset-compiler.html">Dataset Compiler Suite</a></span>
 <span><a href="degradation-engine.html">Physical Degradation Engine</a></span>
 <span><a href="training-suite-master.html">Master Training Suite</a></span>
-<span><a href="ai-studio-whitepaper.html">AI Studio Desktop GUI Architecture</a></span>
+<span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
-<span><strong>Hub Version</strong>: <code>v16.9.65-STABLE</code></span>
+<span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
 <span><strong>Component Versions</strong>: Environment Manager <code>v16.9.18</code>, Dataset Compiler Suite <code>v16.9.27</code>, Model Training Suite <code>v16.9.68</code>, AI Studio GUI <code>v2.10.19</code></span>
 <span><strong>Last Reviewed / Verified</strong>: 2026-11-03</span>
 <span><strong>Status</strong>: Canonical</span>
@@ -91,7 +91,7 @@ through the operator's own mail client.</p>
 <div class="mermaid">
 graph TD
     subgraph UI [&quot;Desktop Presentation Tier&quot;]
-        GUI[&quot;LemGendary AI Studio Desktop GUI&lt;br/&gt;(Tauri / Rust / TypeScript)&quot;]
+        GUI[&quot;LemGendary AI Studio GUI&lt;br/&gt;(Tauri / Rust / TypeScript)&quot;]
         CLI[&quot;Hybrid CLI Dispatch&lt;br/&gt;(lem-env / cli.py / lemtrain)&quot;]
     end
 
@@ -109,7 +109,7 @@ graph TD
 
     subgraph Storage [&quot;Physical Storage &amp; Registry Tier&quot;]
         RAW[&quot;Raw Sets Repository&lt;br/&gt;(raw-sets/)&quot;]
-        MANIFOLDS[&quot;Compiled Manifolds&lt;br/&gt;(../LemGendaryDatasets/LemGendized*)&quot;]
+        MANIFOLDS[&quot;LemGendary Compiled Manifolds Repo&lt;br/&gt;(../LemGendaryDatasets/LemGendized*)&quot;]
         DB[&quot;Manifold Registries &amp; Job DB&lt;br/&gt;(manifold_registry.db / jobs.db)&quot;]
         WEIGHTS[&quot;Model Checkpoints&lt;br/&gt;(checkpoints/ / best_weights.pt)&quot;]
     end
@@ -274,8 +274,9 @@ generated on the approved template, Markdown and HTML kept in sync.</li>
 <p>The ecosystem maintains strict directory isolation across local storage volumes:</p>
 <ul>
 <li><code>raw-sets/</code>: Mutable upstream source archives (TAR, ZIP, Kaggle drops).</li>
-<li><code>../LemGendaryDatasets/</code>: Deterministic training manifolds. Contains only
-suffix-free modernized datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and
+<li><code>../LemGendaryDatasets/</code> (LemGendary Compiled Manifolds Repo):
+Deterministic training manifolds. Contains only suffix-free modernized
+datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and
 preserved legacy folders.</li>
 <li><code>checkpoints/</code>: Epoch-specific model weight tensors (<code>.pt</code>, <code>.safetensors</code>)
 and optimizer states.</li>

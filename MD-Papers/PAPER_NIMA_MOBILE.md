@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: NIMA Aesthetic Mobile Architecture
 
 **Author**: Lem Treursic
-**Version**: 16.9.16-STABLE
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -11,7 +11,7 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What NIMA Aesthetic Mobile Architecture Does (In Plain English)](#11-what-nima-mobile-does-in-plain-english)
+* [1.1 What NIMA Aesthetic Mobile Architecture Does (In Plain English)](#11-what-nima-aesthetic-mobile-architecture-does-in-plain-english)
 * [2. Visual Taxonomy: Perceptual Rating Distribution & Feature Extraction](#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction)
 * [3. Shared Foundations: Earth Mover's Distance & Multi-Scale Optimization](#3-shared-foundations-earth-movers-distance--multi-scale-optimization)
 * [4. Model Deep-Dives](#4-model-deep-dives)

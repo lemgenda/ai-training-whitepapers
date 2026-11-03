@@ -5,11 +5,11 @@
 **Integrated Subpages**: [Environment Manager](./PAPER_ENV_MANAGER.md) ·
 [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) · [Physical Degradation
 Engine](./PAPER_DEGRADATION_ENGINE.md) · [Master Training
-Suite](./PAPER_TRAINING_SUITE.md) · [AI Studio Desktop GUI
+Suite](./PAPER_TRAINING_SUITE.md) · [LemGendary AI Studio GUI
 Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
-**Hub Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
+**Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
 Manager `v16.9.18`, Dataset Compiler Suite `v16.9.27`, Model Training Suite
 `v16.9.68`, AI Studio GUI `v2.10.19` · **Last Reviewed / Verified**: 2026-11-03
 · **Status**: Canonical
@@ -57,7 +57,7 @@ through the operator's own mail client.
 ```mermaid
 graph TD
     subgraph UI ["Desktop Presentation Tier"]
-        GUI["LemGendary AI Studio Desktop GUI<br/>(Tauri / Rust / TypeScript)"]
+        GUI["LemGendary AI Studio GUI<br/>(Tauri / Rust / TypeScript)"]
         CLI["Hybrid CLI Dispatch<br/>(lem-env / cli.py / lemtrain)"]
     end
 
@@ -75,7 +75,7 @@ graph TD
 
     subgraph Storage ["Physical Storage & Registry Tier"]
         RAW["Raw Sets Repository<br/>(raw-sets/)"]
-        MANIFOLDS["Compiled Manifolds<br/>(../LemGendaryDatasets/LemGendized*)"]
+        MANIFOLDS["LemGendary Compiled Manifolds Repo<br/>(../LemGendaryDatasets/LemGendized*)"]
         DB["Manifold Registries & Job DB<br/>(manifold_registry.db / jobs.db)"]
         WEIGHTS["Model Checkpoints<br/>(checkpoints/ / best_weights.pt)"]
     end
@@ -199,8 +199,9 @@ daemons across standardized local ports (`8000`, `8100`, and `8200`):
 The ecosystem maintains strict directory isolation across local storage volumes:
 
 - `raw-sets/`: Mutable upstream source archives (TAR, ZIP, Kaggle drops).
-- `../LemGendaryDatasets/`: Deterministic training manifolds. Contains only
-  suffix-free modernized datasets (e.g. `LemGendizedNimaAesthetic/`) and
+- `../LemGendaryDatasets/` (LemGendary Compiled Manifolds Repo):
+  Deterministic training manifolds. Contains only suffix-free modernized
+  datasets (e.g. `LemGendizedNimaAesthetic/`) and
   preserved legacy folders.
 - `checkpoints/`: Epoch-specific model weight tensors (`.pt`, `.safetensors`)
   and optimizer states.

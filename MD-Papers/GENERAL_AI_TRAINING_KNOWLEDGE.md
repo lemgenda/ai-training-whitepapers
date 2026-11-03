@@ -4,6 +4,7 @@
 
 ## Category 00 --- General AI Knowledge Reference Specification
 
+**Version:** `v16.9.27-STABLE`\
 **Document status:** Canonical general-knowledge reference\
 **Scope:** Universal AI/ML systems engineering, training dynamics, architecture taxonomy, and dataset engineering independent of specific software implementations.\
 **Primary purpose:** Provide an exhaustive, mathematically rigorous, and technically authoritative reference manual for deep learning training, dataset container architectures, model selection, loss formulation, optimization, evaluation, and production deployment decisions.

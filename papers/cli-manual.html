@@ -44,7 +44,7 @@
                 </li>
                 <li><a href="#section-3">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a>
                 </li>
-                <li><a href="#section-4">4. AI Studio Desktop GUI CLI &amp; Toolchain</a></li>
+                <li><a href="#section-4">4. LemGendary AI Studio GUI CLI &amp; Toolchain</a></li>
                 <li><a href="#section-5">5. Datasets Compilation Suite CLI</a></li>
                 <li><a href="#section-6">6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</a>
                     <ul class="sub-item">
@@ -71,7 +71,7 @@
         <p class="subtitle">Authoritative Command-Line Interface Reference for Ecosystem Management</p>
         <div class="meta">
                 <span>Category 03 MANUALS</span>
-                <span>Version 16.9.16-STABLE</span>
+                <span>Version v16.9.44-STABLE</span>
                 <span>Component: Ecosystem Toolchain</span>
             </div>
 
@@ -150,7 +150,7 @@ lem-env --help</code></pre>
                 <ol>
                     <li>Windows registry keys under <code>HKCU</code>/<code>HKLM\SOFTWARE\MetaQuotes\Terminal</code>
                         (fast, ~5 ms)</li>
-                    <li>Well-known install paths (<code>C:\Program Files\MetaTrader 5\terminal64.exe</code>)</li>
+                    <li>Well-known install paths (<code>%ProgramFiles%\MetaTrader 5\terminal64.exe</code>, the MetaTrader 5 installation folder under Program Files)</li>
                     <li>PowerShell <code>Get-Package -Name '*MetaTrader*'</code> (slow fallback)</li>
                 </ol>
                 <p>When an install path is available, the version is read directly from <code>terminal64.exe</code>'s
@@ -558,7 +558,7 @@ lem-env setup-hooks --project lemgendary-datasets</code></pre>
             </section>
 
             <section id="section-4">
-                <h2>4. AI Studio Desktop GUI CLI &amp; Toolchain</h2>
+                <h2>4. LemGendary AI Studio GUI CLI &amp; Toolchain</h2>
                 <p>
                     The desktop application <code>lemgendary-ai-studio-gui</code> utilizes Node.js, React 18, Vite, and
                     Tauri v2.

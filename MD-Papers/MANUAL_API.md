@@ -2,6 +2,8 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
+**Version**: `v16.9.44-STABLE`
+
 ---
 
 ## Table of Contents
@@ -198,7 +200,7 @@ Example response:
   "metatrader5": {
     "installed": true,
     "version": "5.0.0.6182",
-    "install_path": "C:\\Program Files\\MetaTrader 5"
+    "install_path": "%ProgramFiles%\\MetaTrader 5"
   }
 }
 ```
@@ -1641,6 +1643,6 @@ Additional resilience features:
 ## Companion Documentation
 
 - [Technical Whitepaper (Markdown)](PAPER_ENV_MANAGER.md)
-- [Technical Whitepaper (HTML)](env_manager.html)
+- [Technical Whitepaper (HTML)](../papers/env_manager.html)
 - [Master CLI Operations Manual (Markdown)](MANUAL_CLI.md)
-- [Master CLI Operations Manual (HTML)](cli-manual.html)
+- [Master CLI Operations Manual (HTML)](../papers/cli-manual.html)

@@ -8,7 +8,7 @@ Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 **Versioning Policy**: [Document Authority Hierarchy & Versioning
 Policy](./VERSIONING_POLICY.md)
 
-**Documentation Hub Version**: `v16.9.68-STABLE` · **Status**: Canonical ·
+**Version**: `v16.9.68-STABLE` · **Status**: Canonical ·
 **Last audited**: 2026-11-03
 
 ---
@@ -120,7 +120,7 @@ repository is the source of the release version.
   `lem-env` and `lemgendary_env_manager.ps1`.
 - **LemGendary AI Studio GUI** (`v2.10.19`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.68-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.69-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
@@ -169,7 +169,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.68-STABLE`.
+together and share the document baseline `v16.9.69-STABLE`.
 
 ---
 
@@ -247,8 +247,8 @@ are re-evaluated with `feature=2048`.
 
 ## 6. Manifold Ingestion & Container Modernization
 
-- **Storage Location**: `LemGendaryDatasets/` (suffix-free directory
-  topology).
+- **Storage Location**: LemGendary Compiled Manifolds Repo
+  (`LemGendaryDatasets/`, suffix-free directory topology).
 - **Container Formats**: WebDataset (`.data`/`.tar`), Lightning AI LitData
   (`.bin`), Apache Parquet (`.parquet`), Directory (`.webp`). The registry
   canonical formats are `webdataset` for vision models, `parquet` for

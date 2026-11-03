@@ -2,7 +2,7 @@
 
 > Authoritative technical whitepapers, architectural manuals, API references, CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.68`
+**Version**: `v16.9.69`
 
 ---
 
@@ -36,6 +36,33 @@
 * **`manifest/`** — Machine-readable document catalog pairing all 48 publications 1-to-1 with Markdown companions.
 * **`tests/`** — Automated documentation verification test suite enforcing formatting, structure, and integrity gates.
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.69 - Hub Versions, Links, Paths and Canonical Names
+
+* **Version Split** - Hub version is v16.9.69 in `README.md`, `index.html`
+  (Last Reviewed 2026-11-03), `manifest/documents.json`, both capability
+  registries, `VERSIONING_POLICY.md` and `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
+  Every Markdown and HTML version line now equals its manifest
+  `baseline_version` (37 documents fixed, version lines added to 5 Markdown and
+  1 HTML file). Paper-local releases moved to a separate **Paper Revision**
+  line; `VERSIONING_POLICY.md` states this rule and lists current component
+  versions. The header test reads the version from this README.
+* **Links and Anchors** - 0 broken links: 34 Markdown TOC fragments, 4
+  Markdown companion links (now `../papers/*.html`), 4 HTML anchors in
+  `ultrazoom.html` and the corrupted UltraZoom TOC entry. Three display-math
+  blocks in the Film Restorer and UPN v2 papers that hid later headings now
+  use `$$` fence lines. `MD051` removed from 31 inline `markdownlint-disable`
+  comments.
+* **Absolute Paths** - MetaTrader 5 install paths in the API and CLI manuals
+  (+ HTML) now use `%ProgramFiles%`; the v16.9.62 note no longer quotes a
+  drive-rooted `file:` URI. 0 absolute paths remain.
+* **Canonical Names** - 46 aliases replaced ("AI Studio Desktop GUI",
+  "LemGendary Training Suite", "LemGendary AI Studio", "LemGendary Dataset
+  Compiler") in Markdown and HTML; index copyright reads "LemGendary AI
+  Documentation Hub"; LemGendary Compiled Manifolds Repo named in the
+  architecture, glossary and current-state documents.
+* **W3C** - fixed 4 errors (unescaped `<` in the AI helper and Forex pages,
+  duplicate `class` in `mirnet.html`).
 
 ### v16.9.68 - Capability Registries, Manifest, Glossary and Current State Sync
 
@@ -181,7 +208,7 @@
 
 ### v16.9.62 - Absolute Paths Elimination & Relative Link Governance
 
-* **Universal Relative Path Normalization** - Converted all legacy `file:///c:/...` absolute links across 34 Markdown whitepapers and `MANUAL_API.md` payload specifications into clean, portable relative paths (`./`, `../`).
+* **Universal Relative Path Normalization** - Converted all legacy drive-rooted `file:` URI links across 34 Markdown whitepapers and `MANUAL_API.md` payload specifications into clean, portable relative paths (`./`, `../`).
 
 ### v16.9.61 - Pipeline Step 5 Safe Dependency Upgrade Execution Specification
 

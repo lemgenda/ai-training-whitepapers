@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Advanced Film Restoration & Super-Resolution Master Suite
 
 **Author**: Lem Treursic
-**Version**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)
+**Version**: `v16.9.27-STABLE`
+**Paper Revision**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Dual T4 Cloud Nodes
 
 ---

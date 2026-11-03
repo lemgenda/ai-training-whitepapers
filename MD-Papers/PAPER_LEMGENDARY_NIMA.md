@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity NIMA Assessment via Hardware-Aware Optimization
 
 **Author**: Lem Treursic
-**Version**: 3.2.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14)
+**Version**: `v16.9.27-STABLE`
+**Paper Revision**: 3.2.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14)
 **Category**: Category 07 QUALITY
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -16,7 +17,7 @@
   - [2.2 NIMA Authenticity: Generative vs. Real Manifolds](#22-nima-authenticity-generative-vs-real-manifolds)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Mathematical Optimization: The 2026 Resonance Loss](#31-mathematical-optimization-the-2026-resonance-loss)
-    - [3.1.1 Earth Mover's Distance (EMD) - The Histogram Anchor](#311-earth-movers-distance-emd-the-histogram-anchor)
+    - [3.1.1 Earth Mover's Distance (EMD) - The Histogram Anchor](#311-earth-movers-distance-emd---the-histogram-anchor)
     - [3.1.2 True Rank Correlation via EMD Temperature Anchoring](#312-true-rank-correlation-via-emd-temperature-anchoring)
     - [3.1.3 The Resonance Coefficient Selection (0.15 Weighting)](#313-the-resonance-coefficient-selection-015-weighting)
     - [3.1.4 The Soft-Label PMF Strategy](#314-the-soft-label-pmf-strategy)
@@ -25,10 +26,10 @@
     - [3.2.1 The Headroom-Aware Memory-Sentinel](#321-the-headroom-aware-memory-sentinel)
     - [3.2.2 Intra-Epoch Paging Protection](#322-intra-epoch-paging-protection)
     - [3.2.3 OVC Data Streaming Bridge (OpenCV-to-CUDA)](#323-ovc-data-streaming-bridge-opencv-to-cuda)
-  - [3.3 Dataset Health & Recovery: The Infinite Pipeline](#33-dataset-health-recovery-the-infinite-pipeline)
+  - [3.3 Dataset Health & Recovery: The Infinite Pipeline](#33-dataset-health--recovery-the-infinite-pipeline)
     - [3.3.1 The Surgical Memory Purger](#331-the-surgical-memory-purger)
-    - [3.3.2 Pre-Fetch Workers & Latency Hiding](#332-pre-fetch-workers-latency-hiding)
-    - [3.3.3 Automated Checksum & Integrity Shield](#333-automated-checksum-integrity-shield)
+    - [3.3.2 Pre-Fetch Workers & Latency Hiding](#332-pre-fetch-workers--latency-hiding)
+    - [3.3.3 Automated Checksum & Integrity Shield](#333-automated-checksum--integrity-shield)
     - [3.3.4 Standardized Data-Unification](#334-standardized-data-unification)
 - [4. Model Deep-Dives](#4-model-deep-dives)
   - [4.1 NIMA Aesthetic Scorer (Mobile)](#41-nima-aesthetic-scorer-mobile)
@@ -71,14 +72,14 @@
     - [4.5.5 Training Curve](#455-training-curve)
     - [4.5.6 Model specific issues and optimizations](#456-model-specific-issues-and-optimizations)
     - [4.5.7 Consolidated SOTA Benchmarks](#457-consolidated-sota-benchmarks)
-- [5. Challenges & Resilience Architecture](#5-challenges-resilience-architecture)
+- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
   - [5.1 The Scheduler Double-Stepping Bug](#51-the-scheduler-double-stepping-bug)
   - [5.2 Numerical Instability (NaN Shield)](#52-numerical-instability-nan-shield)
-  - [5.3 Continuity & SOTA Recovery](#53-continuity-sota-recovery)
+  - [5.3 Continuity & SOTA Recovery](#53-continuity--sota-recovery)
   - [5.4 The SRCC Convergence Plateau (Nuclear Stability Lockdown)](#54-the-srcc-convergence-plateau-nuclear-stability-lockdown)
   - [5.5 The Sentinel-Scheduler De-Sync (SOTA Alignment)](#55-the-sentinel-scheduler-de-sync-sota-alignment)
   - [5.6 Pre-Emptive State Injection](#56-pre-emptive-state-injection)
-  - [5.7 The Infinite Loop Plateau (Deep-State Sanitization & Thermal Shield)](#57-the-infinite-loop-plateau-deep-state-sanitization-thermal-shield)
+  - [5.7 The Infinite Loop Plateau (Deep-State Sanitization & Thermal Shield)](#57-the-infinite-loop-plateau-deep-state-sanitization--thermal-shield)
   - [5.8 The Pearson Singularity (Singularity Shield)](#58-the-pearson-singularity-singularity-shield)
   - [5.9 Mitochondrial Runway Bloat (Runway Recalibration)](#59-mitochondrial-runway-bloat-runway-recalibration)
   - [5.10 Power-Loss Resilience (The Mitochondrial Shield)](#510-power-loss-resilience-the-mitochondrial-shield)
@@ -88,7 +89,7 @@
   - [5.14 The Plateau Breaker: Dynamic Kinetic LR Injection (v5.2)](#514-the-plateau-breaker-dynamic-kinetic-lr-injection-v52)
   - [5.15 Manifold Smoothing via SWA](#515-manifold-smoothing-via-swa)
   - [5.16 Intra-Epoch Cosine Recalibration (v3.0 Resiliency)](#516-intra-epoch-cosine-recalibration-v30-resiliency)
-  - [5.17 Metric-Driven Deployment & Polarity Alignment (v3.1 Resiliency)](#517-metric-driven-deployment-polarity-alignment-v31-resiliency)
+  - [5.17 Metric-Driven Deployment & Polarity Alignment (v3.1 Resiliency)](#517-metric-driven-deployment--polarity-alignment-v31-resiliency)
   - [5.18 Mission Velocity Acceleration: Stochastic Subsampling (v3.2)](#518-mission-velocity-acceleration-stochastic-subsampling-v32)
   - [5.19 Registry-First Unification (v4.5)](#519-registry-first-unification-v45)
   - [5.20 Standardized Epoch Resumption (The Windows Shield)](#520-standardized-epoch-resumption-the-windows-shield)
@@ -99,10 +100,10 @@
   - [5.25 Velocity Life-Support (v6.1.18)](#525-velocity-life-support-v6118)
   - [5.26 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#526-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
   - [5.27 The Rank Margin Objective (v6.1.30)](#527-the-rank-margin-objective-v6130)
-  - [5.28 Telemetry Parity & Plateau Resilience (v6.1.31)](#528-telemetry-parity-plateau-resilience-v6131)
+  - [5.28 Telemetry Parity & Plateau Resilience (v6.1.31)](#528-telemetry-parity--plateau-resilience-v6131)
   - [5.29 Invariant Native Scorecarding (v6.2.0)](#529-invariant-native-scorecarding-v620)
   - [5.30 Low-Variance Safety Gate for Authenticity Convergence (v6.2.8)](#530-low-variance-safety-gate-for-authenticity-convergence-v628)
-  - [5.31 SOTA Memorization & Data Verification (v6.2.8)](#531-sota-memorization-data-verification-v628)
+  - [5.31 SOTA Memorization & Data Verification (v6.2.8)](#531-sota-memorization--data-verification-v628)
   - [5.32 SOTA Quality Selection Guard (v6.2.8)](#532-sota-quality-selection-guard-v628)
   - [5.33 Same-Resolution Recoil Protection (v6.2.8)](#533-same-resolution-recoil-protection-v628)
   - [5.34 Overfitting Rescue Protocol (v6.3.0)](#534-overfitting-rescue-protocol-v630)
@@ -112,11 +113,11 @@
   - [5.38 Jolt Cooldown State Persistence (v6.3.4)](#538-jolt-cooldown-state-persistence-v634)
   - [5.39 Max Stress LR Freeze Fix (Governor v16)](#539-max-stress-lr-freeze-fix-governor-v16)
   - [5.40 Autonomous SOTA Hyperparameter Adaptation (Governor v17.5)](#540-autonomous-sota-hyperparameter-adaptation-governor-v175)
-  - [5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#541-head-projection-upgrade-resolution-ladder-expansion-v161)
+  - [5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#541-head-projection-upgrade--resolution-ladder-expansion-v161)
   - [5.42 Cross-Split Dataset Path Resolver (v16.2)](#542-cross-split-dataset-path-resolver-v162)
-  - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation-anti-loop-breakout-v1633)
-  - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)](#544-proven-manifold-protection-intra-resolution-data-recoil-v1600)
-  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration (v18.0)](#545-srcc-driven-dynamic-governance-rank-margin-ceiling-calibration-v180)
+  - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation--anti-loop-breakout-v1633)
+  - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)](#544-proven-manifold-protection--intra-resolution-data-recoil-v1600)
+  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration (v18.0)](#545-srcc-driven-dynamic-governance--rank-margin-ceiling-calibration-v180)
   - [5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)](#546-dynamic-manifold-scaled-jolt-shield-calibration-v181)
   - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
   - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
@@ -135,7 +136,7 @@
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** is a unified deep learning environment specialized in producing high-fidelity Neural IMage Assessment (NIMA) models, including five dedicated variants spanning Aesthetic, Technical, and Authenticity scoring. This paper details core pillars of the suite: the **LemGendized Universal Quality Subset**, the **2026 Resilience Engine**, the **Hyper-Convergence Patch (v2.6)**, the **Head Projection Upgrade (v16.1)**, and the **SRCC-Driven Dynamic Governance Protocol (v18.0)**. By merging legacy benchmarks, implementing hardware-aware 'Jolt' mechanisms, and dynamically adapting ranking loss formulations, the suite achieved record-breaking benchmarks across all tiers: **PLCC 0.9102** (SOTA target hit) on NIMA Technical, **99.07% Accuracy / PLCC 0.9826** on NIMA Authenticity, and **PLCC 0.6326 / SRCC 0.5890** on NIMA Aesthetic Pro—establishing an authoritative standard for real-time edge and browser-based image quality evaluation.
+The **LemGendary Model Training Suite** is a unified deep learning environment specialized in producing high-fidelity Neural IMage Assessment (NIMA) models, including five dedicated variants spanning Aesthetic, Technical, and Authenticity scoring. This paper details core pillars of the suite: the **LemGendized Universal Quality Subset**, the **2026 Resilience Engine**, the **Hyper-Convergence Patch (v2.6)**, the **Head Projection Upgrade (v16.1)**, and the **SRCC-Driven Dynamic Governance Protocol (v18.0)**. By merging legacy benchmarks, implementing hardware-aware 'Jolt' mechanisms, and dynamically adapting ranking loss formulations, the suite achieved record-breaking benchmarks across all tiers: **PLCC 0.9102** (SOTA target hit) on NIMA Technical, **99.07% Accuracy / PLCC 0.9826** on NIMA Authenticity, and **PLCC 0.6326 / SRCC 0.5890** on NIMA Aesthetic Pro—establishing an authoritative standard for real-time edge and browser-based image quality evaluation.
 
 ---
 
@@ -865,7 +866,7 @@ To protect both SSD lifespan and training progress, the suite implements a **15-
 
 ## 8. Conclusion: The Real-Time Quality Paradigm
 
-The LemGendary Training Suite has established a new 2026 baseline for Neural Image Assessment, proving that state-of-the-art results do not require corporate-scale compute clusters—they require **hardware-aware resilience architecture**.
+The LemGendary Model Training Suite has established a new 2026 baseline for Neural Image Assessment, proving that state-of-the-art results do not require corporate-scale compute clusters—they require **hardware-aware resilience architecture**.
 
 ### 8.1 Summary of Breakthroughs
 

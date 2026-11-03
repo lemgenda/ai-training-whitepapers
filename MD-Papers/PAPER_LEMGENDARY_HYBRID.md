@@ -1,7 +1,8 @@
 # Architecture of LemGendary AI: Universal Hybrid Restoration Pipelines
 
 **Author**: Lem Treursic  
-**Version**: 1.0.0 - Unified Multi-Modal Release (2026 Specialization)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 1.0.0 - Unified Multi-Modal Release (2026 Specialization)  
 **Category**: Category 05 HYBRID  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -25,7 +26,7 @@
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** achieves absolute multi-modal restoration parity through its **Universal Hybrid Architecture** release. By integrating parameterized steering networks, dynamic physical degradation modeling, and soft Mixture-of-Experts (MoE) multi-task routing, the suite expands beyond single-problem architectures. This paper presents the mathematical models, spatial complexity optimizations, and deployment pathways for three flagship models: **UPN v2 Large**, the **Universal Film Restorer**, and the **Multi-Task Restorer**. We demonstrate how memory-sentinel optimizations enable high-resolution restoration execution within highly constrained consumer hardware environments.
+The **LemGendary Model Training Suite** achieves absolute multi-modal restoration parity through its **Universal Hybrid Architecture** release. By integrating parameterized steering networks, dynamic physical degradation modeling, and soft Mixture-of-Experts (MoE) multi-task routing, the suite expands beyond single-problem architectures. This paper presents the mathematical models, spatial complexity optimizations, and deployment pathways for three flagship models: **UPN v2 Large**, the **Universal Film Restorer**, and the **Multi-Task Restorer**. We demonstrate how memory-sentinel optimizations enable high-resolution restoration execution within highly constrained consumer hardware environments.
 
 ---
 

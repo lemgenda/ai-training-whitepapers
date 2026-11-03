@@ -44,7 +44,7 @@
         <p class="subtitle">Authoritative Synchronization Standard, Multi-Track Taxonomy, and Document Authority Hierarchy</p>
         <div class="meta">
                 <span>Category 01.5 POLICY</span>
-                <span>Version 16.9.16-STABLE</span>
+                <span>Version v16.9.27-STABLE</span>
                 <span>Component: Ecosystem Governance</span>
             </div>
 
@@ -70,10 +70,10 @@
                 <h2>3. Multi-Track Versioning Taxonomy &amp; Rationale</h2>
                 <p>Different subsystems within the LemGendary AI ecosystem serve different operational domains and therefore adhere to distinct, intentional versioning tracks:</p>
                 <ol>
-                    <li><strong>Core Backend Engines &amp; Services (<code>v16.x.y</code>)</strong>: Covers <code>lemgendary-training-suite</code> (<code>v16.9.16-STABLE</code>), <code>lemgendary-datasets</code> (<code>v16.9.6</code>), and <code>lemgendary-env-manager</code> (<code>v16.9.3</code>), governing Python microservice sidecars (Ports 8000, 8100, 8200), training loops, and dataset compilers.</li>
+                    <li><strong>Core Backend Engines &amp; Services (<code>v16.x.y</code>)</strong>: Covers <code>lemgendary-training-suite</code> (<code>v16.9.68-STABLE</code>), <code>lemgendary-datasets</code> (<code>v16.9.27</code>), and <code>lemgendary-env-manager</code> (<code>v16.9.18</code>), governing Python microservice sidecars (Ports 8000, 8100, 8200), training loops, and dataset compilers.</li>
                     <li><strong>Desktop Operator GUI Client (<code>v2.x.y</code> / <code>v2.0.0</code>)</strong>: Covers <code>lemgendary-ai-studio-gui</code> (Tauri v2 + React 18 + Vite desktop cockpit) and the Operator Manual (<code>MANUAL_AI_STUDIO_GUI.md</code>). Version <code>2.0.0</code> represents the second-generation Tauri v2 native desktop release (superseding legacy web/Electron prototypes). The GUI acts as a consumer of <code>v16.x.y</code> sidecar APIs via frozen OpenAPI 3.1 contracts.</li>
-                    <li><strong>Master Ecosystem Documentation Hub &amp; Specification Baseline (<code>v16.9.27-STABLE</code>)</strong>: Covers <code>lemgendary-docs</code>, master architectural maps, operations manuals, and foundational whitepapers. Reflects the active documentation release (<code>v16.9.27-STABLE</code>, reviewed 2026-10-17) while governing systems against the core runtime backend engine baseline (<code>v16.9.16-STABLE</code>) and desktop operator client (<code>v2.0.0</code>).</li>
-                    <li><strong>Specialized Diagnostic &amp; Clinical Specifications (<code>v1.x.y</code> / <code>v2.x.y</code>)</strong>: Covers clinical diagnostic standards such as <code>PAPER_TRAINING_PATHOLOGY.md</code> (<code>v1.4.0</code>) and algorithmic specifications (<code>ForexPredictor v2.7.1</code>). These versions reflect domain-specific taxonomy releases rather than software runtime build numbers.</li>
+                    <li><strong>Master Ecosystem Documentation Hub &amp; Specification Baseline (<code>v16.9.69-STABLE</code>)</strong>: Covers <code>lemgendary-docs</code>, master architectural maps, operations manuals, and foundational whitepapers. Reflects the active documentation release (<code>v16.9.69-STABLE</code>, reviewed 2026-11-03) while governing systems against the core runtime backend engine baseline (<code>v16.9.68-STABLE</code>) and desktop operator client (<code>v2.10.19</code>).</li>
+                    <li><strong>Specialized Diagnostic &amp; Clinical Specifications (<code>v1.x.y</code> / <code>v2.x.y</code>)</strong>: Covers clinical diagnostic standards such as <code>PAPER_TRAINING_PATHOLOGY.md</code> (<code>v1.5.0</code>) and algorithmic specifications (<code>ForexPredictor v2.7.1</code>). These versions reflect domain-specific taxonomy releases rather than software runtime build numbers. On every document the <strong>Version</strong> line equals the <code>baseline_version</code> in <code>manifest/documents.json</code>; a paper-local release is shown separately as <strong>Paper Revision</strong>.</li>
                 </ol>
             </section>
 
@@ -94,35 +94,35 @@
                             <tr>
                                 <td><strong>Training Engine</strong></td>
                                 <td><code>lemgendary-training-suite</code></td>
-                                <td><code>v16.9.16-STABLE</code></td>
+                                <td><code>v16.9.68-STABLE</code></td>
                                 <td><code>unified_models_v2.yaml</code></td>
                                 <td><code>python -m training.cli.lemtrain</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Dataset Compiler</strong></td>
                                 <td><code>lemgendary-datasets</code></td>
-                                <td><code>v16.9.6</code></td>
+                                <td><code>v16.9.27</code></td>
                                 <td><code>unified_data.yaml</code></td>
                                 <td><code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Env Manager</strong></td>
                                 <td><code>lemgendary-env-manager</code></td>
-                                <td><code>v16.9.3</code></td>
+                                <td><code>v16.9.18</code></td>
                                 <td><code>pyproject.toml</code>, <code>package.json</code></td>
                                 <td><code>lem-env</code> / <code>lemgendary_env_manager.ps1</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Desktop Operator GUI</strong></td>
                                 <td><code>lemgendary-ai-studio-gui</code></td>
-                                <td><code>v2.0.0</code> (Client)</td>
+                                <td><code>v2.10.19</code> (Client)</td>
                                 <td><code>package.json</code>, <code>src-tauri/tauri.conf.json</code></td>
                                 <td>Tauri v2 Desktop App / Ports 8000/8100/8200</td>
                             </tr>
                             <tr>
                                 <td><strong>Documentation Hub</strong></td>
                                 <td><code>lemgendary-docs</code></td>
-                                <td><code>v16.9.27-STABLE</code></td>
+                                <td><code>v16.9.69-STABLE</code></td>
                                 <td><code>MD-Papers/</code>, <code>papers/</code></td>
                                 <td>Documentation Hub (<code>index.html</code>)</td>
                             </tr>
@@ -154,8 +154,8 @@
                 <h2>6. Standalone Diagnostic Specifications</h2>
                 <p>Specialized clinical or analytical diagnostic frameworks maintain independent specification versions to reflect domain-specific diagnostic taxonomies:</p>
                 <ul>
-                    <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>: Maintained at <strong>v1.4.0 (Clinical Diagnostic Standard)</strong>. While the training suite executing these diagnostics operates at <code>v16.9.16</code>, the diagnostic taxonomy itself evolves according to independent clinical diagnostic revisions.</li>
-                    <li><strong>Forex Predictive Architecture (<code>PAPER_FOREX_PREDICTOR.md</code>)</strong>: Maintained at <strong>v2.7.1 (Quantitative Model Specification)</strong>, executing under the <code>v16.9.16</code> engine.</li>
+                    <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>: Maintained at <strong>v1.5.0 (Clinical Diagnostic Standard)</strong>. While the training suite executing these diagnostics operates at <code>v16.9.68</code>, the diagnostic taxonomy itself evolves according to independent clinical diagnostic revisions.</li>
+                    <li><strong>Forex Predictive Architecture (<code>PAPER_FOREX_PREDICTOR.md</code>)</strong>: Maintained at <strong>v2.7.1 (Quantitative Model Specification)</strong>, executing under the <code>v16.9.68</code> engine.</li>
                 </ul>
             </section>
 

@@ -71,7 +71,8 @@ architectural invariant across the ecosystem:
 
 - **Definition**: A deterministic, vetted, hardware-aligned data
   representation compiled specifically for machine learning ingestion.
-- **Location**: Stored in `../LemGendaryDatasets/LemGendized<Name>/`.
+- **Location**: Stored in the LemGendary Compiled Manifolds Repo
+  (`../LemGendaryDatasets/LemGendized<Name>/`).
 - **Characteristics**:
   - **Unified Invariants**: Strict resolution floors ($\ge 224\text{px}$
     restoration, $\ge 512\text{px}$ diffusion), standardized WebP encoding

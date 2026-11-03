@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Helper Troubleshooting Knowledge Base | LemGendary AI Studio</title>
+    <title>AI Helper Troubleshooting Knowledge Base | LemGendary AI Studio GUI</title>
     <link rel="stylesheet" href="../style.css">
     <style>
         .scenario-card {
@@ -109,7 +109,7 @@
             <p class="subtitle">Structured diagnostics, historical failure modes, root-cause analyses, and mitigation playbooks for the LemGendary AI ecosystem.</p>
             <div class="meta" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
                 <span>Category 02 GUIDE</span>
-                <span>Hub Version: v16.9.27-STABLE</span>
+                <span>Version: v16.9.27-STABLE</span>
                 <span>Runtime Baseline: v16.9.16-STABLE</span>
                 <span>Reviewed: 2026-10-18</span>
                 <span>Status: Canonical</span>
@@ -562,7 +562,7 @@
                 <div class="attr-label">Context</div>
                 <div class="attr-content">
                     <ul>
-                        <li>Tool: LemGendary Dataset Compiler</li>
+                        <li>Tool: LemGendary Dataset Compiler Suite</li>
                         <li>Module: Deduplication Engine</li>
                     </ul>
                 </div>
@@ -686,7 +686,7 @@
                     <div class="attr-content">
                         <p><em>Prerequisite:</em> Action is conditioned on telemetry gathered in Stage 2.</p>
                         <ol>
-                            <li>If gradient norm < 1e-4: Gradient vanishing diagnosed; adjust residual scaling or learning rate multiplier.</li>
+                            <li>If gradient norm &lt; 1e-4: Gradient vanishing diagnosed; adjust residual scaling or learning rate multiplier.</li>
                             <li>If training loss is dropping while validation loss creeps up: Overfitting diagnosed; trigger Overfitting Rescue Protocol (force-expand dataset fraction by +15%).</li>
                             <li>If validation subset is noisy: Auto-expand validation shard to 100% full dataset evaluation before declaring a false plateau.</li>
                         </ol>
@@ -702,7 +702,7 @@
                 <div class="attr-label">Context</div>
                 <div class="attr-content">
                     <ul>
-                        <li>Tool: LemGendary AI Studio Desktop GUI (lemgendary-ai-studio-gui)</li>
+                        <li>Tool: LemGendary AI Studio GUI (lemgendary-ai-studio-gui)</li>
                         <li>Component: Pipeline Execution View (App.tsx, PipelineStepCards.tsx)</li>
                         <li>Precondition: Pipeline completes with warnings (status="warning") or errors (status="error")</li>
                     </ul>
@@ -845,7 +845,7 @@
                 <div class="attr-label">Context</div>
                 <div class="attr-content">
                     <ul>
-                        <li>Tool: LemGendary Dataset Compiler Modernization Queue (tools/modernization_queue.py)</li>
+                        <li>Tool: LemGendary Dataset Compiler Suite Modernization Queue (tools/modernization_queue.py)</li>
                         <li>Target Manifolds: LemGendizedClassificationMaster, LemGendizedMultitaskRestorationPro</li>
                         <li>Format Transition: MDS (.mds.zstd) to WebDataset (.data)</li>
                     </ul>

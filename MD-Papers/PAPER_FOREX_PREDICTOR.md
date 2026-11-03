@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Multi-Scale CNN-Transformer Forex & Commodity Predictor
 
 **Author**: Lem Treursic  
-**Version**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine)  
 **Category**: Category 11 FINANCIAL  
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
@@ -39,7 +40,7 @@
   - [5.4 Risk-Adjusted Position Sizing via Fractional Kelly](#54-risk-adjusted-position-sizing-via-fractional-kelly)
   - [5.5 Sub-5ms Real-Time Inference Deployment](#55-sub-5ms-real-time-inference-deployment)
 - [6. Deployment Strategy: MetaTrader 5 Expert Advisor Bridge](#6-deployment-strategy-metatrader-5-expert-advisor-bridge)
-  - [6.1 Stateless ONNX Model Export `[THEORETICAL]`](#61-stateless-onnx-model-export)
+  - [6.1 Stateless ONNX Model Export `[THEORETICAL]`](#61-stateless-onnx-model-export-theoretical)
   - [6.2 Automated Real-Time Tick Ingestion](#62-automated-real-time-tick-ingestion)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)

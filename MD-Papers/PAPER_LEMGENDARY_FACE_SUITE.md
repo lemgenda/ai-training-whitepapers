@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity Facial Restoration, Parsing & Detection Suite
 
 **Author**: Lem Treursic  
-**Version**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization)  
 **Category**: Category 08 FACE  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Dual T4 Cloud Nodes
 
@@ -188,7 +189,7 @@ where $\mathcal{L}_{\text{box}}$ denotes Smooth-L1 regression and $\mathcal{L}_{
 
 ## 6. Deployment Strategy & WebAssembly/ONNX Bridge
 
-The Facial Vision Suite compiles into quantized ONNX (Opset 18) and WebGPU/WASM artifacts for real-time edge processing in the LemGendary AI Studio Desktop GUI. Memory allocations are locked at $< 350\text{ MB}$ total runtime footprint.
+The Facial Vision Suite compiles into quantized ONNX (Opset 18) and WebGPU/WASM artifacts for real-time edge processing in the LemGendary AI Studio GUI. Memory allocations are locked at $< 350\text{ MB}$ total runtime footprint.
 
 ---
 

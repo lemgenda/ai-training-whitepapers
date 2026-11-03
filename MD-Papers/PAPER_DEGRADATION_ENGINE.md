@@ -2,6 +2,8 @@
 
 ## Category 01.6 ENGINE | Subpage of Master Ecosystem Architecture
 
+**Version**: `v16.9.27-STABLE`
+
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
 ---
@@ -37,7 +39,7 @@
 
 The LemGendary Degradation Engine (v16.4.1-MODERNIZED) is an industrial-standard synthetic image degradation and manifold derivation framework designed for Deep Learning Vision Restoration, Super-Resolution, and Artifact Removal pipelines. It unifies offline batch manifold derivation with real-time, on-the-fly training augmentation into a single, pure NumPy, SciPy, and Pillow execution engine. By deterministically simulating physical optical aberrations, atmospheric scattering, sensor noise electronics, precipitation dynamics, lossy compression artifacts, and analog film degradation, the engine synthesizes paired restoration datasets while recording exact per-sample quantitative parameter descriptors into structured JSON annotations for parameter-conditioned neural network supervision.
 
-- **Project Repository**: [lemgendary-dataset-generator](https://github.com/lemgenda/lemgendary-dataset-generator)
+- **Project Repository**: [LemGendary Dataset Compiler Suite](https://github.com/lemgenda/lemgendary-dataset-generator)
 - **Training Suite Integration**: [lemgendary-model-training](https://github.com/lemgenda/lemgendary-model-training)
 
 ---

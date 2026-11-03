@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Generative & Multimodal Foundation Models
 
 **Author**: Lem Treursic  

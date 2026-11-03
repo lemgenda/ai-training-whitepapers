@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: UPN v2: Universal Parameterized Network
 
 **Author**: Lem Treursic
-**Version**: 16.9.16-STABLE
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 05 HYBRID
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -57,7 +57,7 @@ Conventional restoration architectures treat degradation as a static problem. UP
 
 $$\hat{I} = \mathcal{F}_{\theta}(I_{ \text{degraded}}, \mathbf{z})$$
 
-where $\mathbf{z} = [z_{ \text{blur}}, z_{ \text{noise}}, z_{ \text{jpeg}}, z_{ \text{haze}}]^T$ is continuous. When an operator adjusts a UI slider in the AI Studio Desktop GUI, $\mathbf{z}$ updates smoothly, allowing the network to linearly interpolate across complex degradation manifolds without visual popping or artifact discontinuities.
+where $\mathbf{z} = [z_{ \text{blur}}, z_{ \text{noise}}, z_{ \text{jpeg}}, z_{ \text{haze}}]^T$ is continuous. When an operator adjusts a UI slider in the LemGendary AI Studio GUI, $\mathbf{z}$ updates smoothly, allowing the network to linearly interpolate across complex degradation manifolds without visual popping or artifact discontinuities.
 
 ---
 
@@ -65,13 +65,17 @@ where $\mathbf{z} = [z_{ \text{blur}}, z_{ \text{noise}}, z_{ \text{jpeg}}, z_{ 
 
 The core structural element of UPN v2 is the Feature Modulation Block (FMB). Let $F \in \mathbb{R}^{C  \times H  \times W}$ denote intermediate feature representations:
 
-$$ \text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)}
-\right) + \beta(\mathbf{z})$$
+$$
+\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)}
+\right) + \beta(\mathbf{z})
+$$
 
 where $\gamma(\cdot)$ and $\beta(\cdot)$ are affine projection networks that map $\mathbf{z}$ to channel-wise scale and bias vectors. Training couples spatial errors, perceptual discrepancies, and parameter gradient smoothness:
 
-$$\mathcal{L}_{\text{total}} = \rho(\hat{I} - I_{ \text{clean}}) + \lambda_{ \text{perc}} \mathcal{L}_{ \text{VGG}}(\hat{I}, I_{ \text{clean}}) + \lambda_{ \text{grad}} \|
-\nabla_{\mathbf{z}} \mathcal{F}_{\theta}(I, \mathbf{z})\|_2$$
+$$
+\mathcal{L}_{\text{total}} = \rho(\hat{I} - I_{ \text{clean}}) + \lambda_{ \text{perc}} \mathcal{L}_{ \text{VGG}}(\hat{I}, I_{ \text{clean}}) + \lambda_{ \text{grad}} \|
+\nabla_{\mathbf{z}} \mathcal{F}_{\theta}(I, \mathbf{z})\|_2
+$$
 
 The gradient penalty ensures that minute changes in the steering parameter $\mathbf{z}$ yield smooth, Lipschitz-bounded modifications to the restored output.
 

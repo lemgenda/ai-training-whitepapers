@@ -1,8 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: High-Fidelity NAFNet Restoration via SOTA Infrastructure
 
 **Author**: Lem Treursic  
-**Version**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
+**Version**: `v16.9.27-STABLE`  
+**Paper Revision**: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)  
 **Category**: Category 04 RESTORATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -12,17 +13,18 @@
 
 - [1. Abstract](#1-abstract)
   - [1.1 What NAFNet Does (In Plain English)](#11-what-nafnet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-the-lemgendary-restoration-subset)
+- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
   - [2.1 The Denoising Track (nafnet_denoising)](#21-the-denoising-track-nafnet_denoising)
   - [2.2 The Deblurring Track (nafnet_debluring)](#22-the-deblurring-track-nafnet_debluring)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
     - [3.1.1 The Headroom-Aware Memory-Sentinel](#311-the-headroom-aware-memory-sentinel)
     - [3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)](#312-ovc-data-streaming-bridge-opencv-to-cuda)
-  - [3.2 Mathematical Optimization: High-Fidelity Perceptual Engines](#32-mathematical-optimization-high-fidelity-perceptual-engines)
-    - [3.2.1 Structural VS Perceptual Verification](#321-structural-vs-perceptual-verification)
-    - [3.2.2 PCIe VRAM Thrashing & The Chunking Fix](#322-pcie-vram-thrashing--the-chunking-fix)
-    - [3.2.3 The CPU-Bottleneck Bypass](#323-the-cpu-bottleneck-bypass)
+  - [3.2 Mathematical Optimization & Evaluation Metrics](#32-mathematical-optimization--evaluation-metrics)
+    - [3.2.1 Structural Fidelity Formulations](#321-structural-fidelity-formulations)
+    - [3.2.2 Deep Perceptual Metrics](#322-deep-perceptual-metrics)
+    - [3.2.3 PCIe VRAM Thrashing & The Chunking Fix](#323-pcie-vram-thrashing--the-chunking-fix)
+    - [3.2.4 The CPU-Bottleneck Bypass](#324-the-cpu-bottleneck-bypass)
   - [3.3 Kaggle Cloud Execution Protocols](#33-kaggle-cloud-execution-protocols)
     - [3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)](#331-single-gpu-specialization-15gb-t4-node-strategy)
     - [3.3.2 Sub-Epoch Continuity (Progress Snapshots)](#332-sub-epoch-continuity-progress-snapshots)
@@ -50,7 +52,7 @@
 - [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
   - [5.1 The SimpleGate NaN Overflows (Structural FP16 Disable)](#51-the-simplegate-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
-  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock](#53-the-onecyclelr-sudden-death-adamw-resume-shock)
+  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock](#53-the-onecyclelr-sudden-death--adamw-resume-shock)
   - [5.4 The VGG Perceptual Convergence Collapse](#54-the-vgg-perceptual-convergence-collapse)
   - [5.5 The "Double-Step" OneCycleLR Matrix Paradox](#55-the-double-step-onecyclelr-matrix-paradox)
   - [5.6 The SOTA Sentry "Defibrillation Override"](#56-the-sota-sentry-defibrillation-override)
@@ -82,7 +84,7 @@
 
 ## 1. Abstract
 
-The **LemGendary Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **NAFNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
+The **LemGendary Model Training Suite** has achieved its ultimate evolution by migrating from legacy proxy models to production-grade **SOTA (State-of-the-Art) Architectures**, spearheaded by **NAFNet** (Nonlinear Activation Free Network). This paper details the structural and mathematical breakthroughs required to stabilize NAFNet on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict FP32 precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked >32.5dB PSNR convergence—setting a new benchmark for browser-based image restoration and enhancement.
 
 ---
 
@@ -251,7 +253,7 @@ $$
 This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
 This bounds VRAM utilization to ~500MB regardless of the total validation sample count $N$.
 
-#### 3.2.3 The CPU-Bottleneck Bypass
+#### 3.2.4 The CPU-Bottleneck Bypass
 
 Initial mitigations offloaded predictions physically to System RAM to save VRAM. However, invoking `lpips(net="vgg")` against RAM implicitly forced convolutions to run on the 2-Core Kaggle CPU at fractions of a frame per second. The final stabilization dynamically re-injects standard batch chunks `.to(device)` directly back into the T4 GPU solely for the validation millisecond, executing validation cycles in mere seconds instead of hours.
 

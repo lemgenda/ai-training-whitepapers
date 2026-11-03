@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Dedicated Image Restoration Suite
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: `v16.9.27-STABLE`  
 **Category**: Category 04 RESTORATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 

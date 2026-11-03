@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: CodeFormer: VQ-Codebook Face Restoration
 
 **Author**: Lem Treursic
-**Version**: 16.9.16-STABLE
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 08 FACE
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 

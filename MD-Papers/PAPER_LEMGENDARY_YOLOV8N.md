@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: YOLOv8n Multi-Task Perception Architecture
 
 **Author**: Lem Treursic
-**Version**: 16.9.10
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 09 VISION
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 

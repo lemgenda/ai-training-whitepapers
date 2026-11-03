@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Universal Film Restorer
 
 **Author**: Lem Treursic
-**Version**: 16.9.16-STABLE
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 05 HYBRID
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
@@ -50,8 +50,10 @@ Historic movie reels, 8mm home videos, and vintage family photograph prints degr
 
 Analog film degrades through optical, mechanical, and chemical mechanisms. The degradation model is formulated as `[THEORETICAL]`:
 
-$$I_{ \text{archival}} = \mathcal{C}_{ \text{dye}}\left( I_{ \text{scene}} \odot e^{-\kappa d}
-\right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}$$
+$$
+I_{ \text{archival}} = \mathcal{C}_{ \text{dye}}\left( I_{ \text{scene}} \odot e^{-\kappa d}
+\right) + \mathcal{G}_{\text{grain}}(\sigma_{\text{ISO}}) + \mathcal{M}_{\text{defect}} \odot I_{\text{scratch}}
+$$
 
 where $\mathcal{C}_{ \text{dye}}$ models cyan, magenta, and yellow dye fading over decades, $\mathcal{G}_{\text{grain}}$ is non-Gaussian photographic grain, and $\mathcal{M}_{\text{defect}}$ is a binary mask of physical scratches.
 

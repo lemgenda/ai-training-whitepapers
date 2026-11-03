@@ -750,7 +750,7 @@ Callout bindings (control type; endpoint or action):
 High-velocity deep learning requires converting raw, loose image files into
 modern streaming containers. Traditional loose-image folders cause OS filesystem
 freezes when training models on hundreds of thousands of images. The LemGendary
-Dataset Compiler tab provides a complete visual control center for dataset
+Dataset Compiler Suite tab provides a complete visual control center for dataset
 synthesis, direct cloud ingestion, and bidirectional Kaggle synchronization.
 
 ### 5.1 Dataset Compiler & Modernization Control Card
@@ -1384,7 +1384,7 @@ neural models and checkpoints to Kaggle Models Hub simultaneously using the
 
 In modern multi-project software suites, one project updating a shared library
 (like `torch` or `numpy`) while another stays on an older version causes
-insidious bugs. The LemGendary AI Studio provides continuous real-time
+insidious bugs. The LemGendary AI Studio GUI provides continuous real-time
 cross-project dependency audits covering Python virtual environments and
 frontend desktop GUI NPM packages.
 

@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Image-to-Text Multimodal Vision-Language Models
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: `v16.9.27-STABLE`  
 **Category**: Category 10 FOUNDATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 

@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Latent Diffusion & Score-Based Generative Architectures
 
 **Author**: Lem Treursic  
-**Version**: 16.7.3  
+**Version**: `v16.9.27-STABLE`  
 **Category**: Category 10 FOUNDATION  
 **Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 

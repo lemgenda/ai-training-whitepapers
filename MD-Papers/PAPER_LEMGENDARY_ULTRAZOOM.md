@@ -1,8 +1,8 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: UltraZoom Super-Resolution Master Suite
 
 **Author**: Lem Treursic
-**Version**: 16.7.3
+**Version**: `v16.9.27-STABLE`
 **Category**: Category 06 SUPER-RES
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
@@ -11,15 +11,15 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`](#2-multi-scale-The `[CURRENT]` ultra-resolution checkpoint provides multi-scale super-resolution-manifolds)
-* [3. Shared Foundations: Sub-Pixel Convolution & ESPCN](#3-sub-pixel-convolution--espcn-foundations)
+* [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`](#2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical)
+* [3. Shared Foundations: Sub-Pixel Convolution & ESPCN](#3-shared-foundations-sub-pixel-convolution--espcn)
 * [4. Model Deep-Dives](#4-model-deep-dives)
   * [4.1 UltraZoom-x2 (Real-Time Edge)](#41-ultrazoom-x2-real-time-edge)
   * [4.2 UltraZoom-x3 (Fractional Recovery)](#42-ultrazoom-x3-fractional-recovery)
   * [4.3 UltraZoom-x4 (High-Fidelity Detail)](#43-ultrazoom-x4-high-fidelity-detail)
   * [4.4 UltraZoom-x8 (Extreme Hallucination)](#44-ultrazoom-x8-extreme-hallucination)
 * [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. WebGPU & Zero-Copy Shader Pipeline](#6-webgpu--zero-copy-shader-pipeline)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
 * [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
@@ -51,6 +51,8 @@ When you pinch-to-zoom on a smartphone photo or crop into a distant object (like
 ![UltraZoom Scale Convergence & Benchmarks](../assets/ultrazoom_training.png)
 
 ## 2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`
+
+The `[CURRENT]` UltraZoom checkpoint provides multi-scale super-resolution, which requires learning distinct high-frequency hallucination priors across scale factors:
 
 * **UltraZoom-x2 Manifold**: Targets high-frequency sub-pixel edge restoration with minimal perceptual hallucination.
 * **UltraZoom-x3 Manifold**: Fractional scaling designed for irregular display resolution matching.

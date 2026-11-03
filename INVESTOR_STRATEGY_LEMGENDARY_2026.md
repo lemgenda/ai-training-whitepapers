@@ -27,7 +27,7 @@
 
 The LemGendary ecosystem comprises two synergistic "Hubs" that automate the entire AI lifecycle:
 
-#### **A. LemGendary Training Suite (The Engine)**
+#### **A. LemGendary Model Training Suite (The Engine)**
 
 * **Sub-Nuclear 4GB Iron-Clamp (v22.0)**: On low-VRAM hardware like the GTX 1650, the engine enforces a strict **Serial-Only Mode** (0 workers) and dynamically scales pixel volumes and physical batch sizes, preventing GPU-to-CPU paging bottleneck and keeping computation 100% inside physical VRAM.
 * **Smart Training Governor & Validation Auto-Expansion**: Subsets the validation dataloader to 30% per epoch to accelerate compute-heavy perceptual metrics (LPIPS/VGG) by **3x**. During the final **Refinement Phase**, the Governor dynamically auto-expands validation to **100%** to guarantee an absolute SOTA generalizability audit.
@@ -68,7 +68,7 @@ The global **Edge MLOps** market is projected to exceed **$4.38B by 2026**, driv
 
 ### **SPECIAL AUDIT: NAFNet Deblurring SOTA Run Proof (VRAM Containment)**
 
-To prove the real-world efficiency of the LemGendary Training Suite on consumer-grade hardware, the active curriculum run for **NAFNet Deblurring** shows exceptional optimization and loss convergence:
+To prove the real-world efficiency of the LemGendary Model Training Suite on consumer-grade hardware, the active curriculum run for **NAFNet Deblurring** shows exceptional optimization and loss convergence:
 
 | Epoch | Resolution | Data Fraction | PSNR (dB) | SSIM | LPIPS | FID | Status / Action |
 | --- | --- | --- | --- | --- | --- | --- | --- |

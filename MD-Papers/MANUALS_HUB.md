@@ -1,9 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # LemGendary Ecosystem: Master Operations Manuals Hub
 
 **Author**: Lem Treursic  
 **Category**: Category 03 MANUALS  
-**Hub Version**: `v16.9.27-STABLE`  
+**Version**: `v16.9.27-STABLE`  
 **Runtime Baseline**: `v16.9.16-STABLE`  
 **Last Reviewed / Verified**: 2026-10-17  
 **Status**: Canonical  
@@ -24,7 +24,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Ecosystem is governed by three interoperable control planes: the **AI Studio Desktop GUI** (presentation tier), the **Master CLI Suite** (scripted pipeline dispatch), and the **Master Sidecar API** (asynchronous REST, WebSocket, and IPC services). This manual hub establishes the authoritative operating procedures, communication contracts, and error remediation pathways for operators running data synthesis, hyperparameter tuning, model training, and checkpoint validation across universal hardware.
+The LemGendary AI Ecosystem is governed by three interoperable control planes: the **LemGendary AI Studio GUI** (presentation tier), the **Master CLI Suite** (scripted pipeline dispatch), and the **Master Sidecar API** (asynchronous REST, WebSocket, and IPC services). This manual hub establishes the authoritative operating procedures, communication contracts, and error remediation pathways for operators running data synthesis, hyperparameter tuning, model training, and checkpoint validation across universal hardware.
 
 ---
 
@@ -40,7 +40,7 @@ The LemGendary AI Ecosystem is governed by three interoperable control planes: t
 
 ## 3. Desktop GUI Operational Protocol
 
-The AI Studio Desktop GUI serves as the primary visual cockpit for machine learning engineers. Built on Tauri v2 and React 18, it offers millisecond-latency UI updates without the memory penalty of traditional web containers. Key capabilities include hardware discovery, synthesis control, and training management.
+The LemGendary AI Studio GUI serves as the primary visual cockpit for machine learning engineers. Built on Tauri v2 and React 18, it offers millisecond-latency UI updates without the memory penalty of traditional web containers. Key capabilities include hardware discovery, synthesis control, and training management.
 
 ---
 

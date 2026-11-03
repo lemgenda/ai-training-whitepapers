@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD051 MD013 -->
+<!-- markdownlint-disable MD013 -->
 # Architecture of LemGendary AI: Real-Time Detection & Moderation Suite
 
 **Author**: Lem Treursic  

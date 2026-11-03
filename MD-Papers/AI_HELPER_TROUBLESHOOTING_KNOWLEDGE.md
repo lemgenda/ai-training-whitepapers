@@ -1,8 +1,8 @@
-# LemGendary AI Studio: AI Helper Troubleshooting Knowledge Base
+# LemGendary AI Studio GUI: AI Helper Troubleshooting Knowledge Base
 
 > Structured diagnostics, historical failure modes, root-cause analyses, and mitigation playbooks for the LemGendary AI ecosystem.
 
-**Hub Version**: `v16.9.27-STABLE`  
+**Version**: `v16.9.27-STABLE`  
 **Runtime Baseline**: `v16.9.16-STABLE`  
 **Last Reviewed / Verified**: 2026-10-18  
 **Status**: Canonical  
@@ -240,7 +240,7 @@ If a requested behavior, obscure failure state, or ungrounded option is not esta
 
 * **`symptom`**: Dataset compilation claims 0 duplicate images removed, but visual inspection shows hundreds of duplicate photos with minor JPEG re-compression.
 * **`context`**:
-  * Tool: LemGendary Dataset Compiler
+  * Tool: LemGendary Dataset Compiler Suite
   * Module: Deduplication Engine
 * **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Review Dataset Compiler execution command flags used during compilation in compiler.log.
@@ -302,7 +302,7 @@ If a requested behavior, obscure failure state, or ungrounded option is not esta
 
 * **`symptom`**: Step 7 ("Health Matrix") card in desktop GUI displays `RUNNING` badge indefinitely with active telemetry progress bar, even after sidecar logs indicate pipeline completion.
 * **`context`**:
-  * Tool: LemGendary AI Studio Desktop GUI (`lemgendary-ai-studio-gui`)
+  * Tool: LemGendary AI Studio GUI (`lemgendary-ai-studio-gui`)
   * Component: Pipeline Execution View (`App.tsx`, `PipelineStepCards.tsx`)
   * Precondition: Pipeline completes with warnings (`status="warning"`) or errors (`status="error"`).
 * **`Stage 1: Initial Triage (Safe Checks)`**:
@@ -367,7 +367,7 @@ If a requested behavior, obscure failure state, or ungrounded option is not esta
 
 * **`symptom`**: `python tools/modernization_queue.py --list` reports `MISSING SOURCE` for manifolds whose source data exists exclusively in legacy `.mds.zstd` shards (`mds/train/`, `mds/val/`).
 * **`context`**:
-  * Tool: LemGendary Dataset Compiler Modernization Queue (`tools/modernization_queue.py`)
+  * Tool: LemGendary Dataset Compiler Suite Modernization Queue (`tools/modernization_queue.py`)
   * Target Manifolds: `LemGendizedClassificationMaster`, `LemGendizedMultitaskRestorationPro`
   * Format Transition: MDS (`.mds.zstd`) to WebDataset (`.data`)
 * **`Stage 1: Initial Triage (Safe Checks)`**:

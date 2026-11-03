@@ -513,7 +513,11 @@ class TestDocumentationIntegrity(unittest.TestCase):
         with open(self.index_html, 'r', encoding='utf-8', errors='ignore') as f:
             txt = f.read()
 
-        self.assertIn('Version v16.9.27-STABLE', txt, "index.html missing header version metadata")
+        readme = os.path.join(self.docs_root, 'README.md')
+        with open(readme, 'r', encoding='utf-8') as f:
+            hub_version = re.search(r'\*\*Version\*\*: `(v[0-9.]+)`', f.read()).group(1)
+        self.assertIn(f'Version {hub_version}-STABLE', txt,
+                      "index.html header version must equal the README version")
         self.assertIn('Last Reviewed:', txt, "index.html missing last-reviewed date metadata")
         self.assertIn('AUTHORITATIVE SSOT', txt, "index.html missing authoritative SSOT badge")
 
@@ -628,8 +632,9 @@ class TestDocumentationIntegrity(unittest.TestCase):
         with open(index_html, 'r', encoding='utf-8', errors='ignore') as f:
             txt = f.read()
         self.assertNotIn('alt="LemGenda"', txt, "Index logo alt text should be 'LemGendary AI'")
-        self.assertNotIn('&copy; 2026 LemGenda AI Hub', txt, "Index copyright should be 'LemGendary AI Hub'")
-        self.assertIn('&copy; 2026 LemGendary AI Hub', txt, "Missing canonical 'LemGendary AI Hub' copyright")
+        self.assertNotIn('&copy; 2026 LemGenda AI Hub', txt, "Index copyright should use the canonical hub name")
+        self.assertIn('&copy; 2026 LemGendary AI Documentation Hub', txt,
+                      "Missing canonical 'LemGendary AI Documentation Hub' copyright")
 
     # ── 31. Universal LaTeX Formula & Tag Integrity ──────────────────────────
     def test_universal_latex_formula_and_tag_integrity(self):

@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: 1.5.0 - Pair-Rule Ratchet Sync
-(2026-11-03) · **Baseline**: `v16.9.68-STABLE` (LemGendary Model Training Suite)
-· **Last audited**: 2026-11-03
+**Author**: Lem Treursic · **Version**: `v16.9.68-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.5.0 - Pair-Rule Ratchet Sync
+(2026-11-03) · **Last audited**: 2026-11-03
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud

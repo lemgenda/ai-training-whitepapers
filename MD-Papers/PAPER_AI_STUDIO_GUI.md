@@ -82,7 +82,7 @@ a local ZIP archive and hands it to the operator's own mail client.
 High-velocity desktop execution demands bounded event latency, minimal frame
 rendering drops, and efficient non-blocking inter-process communication (IPC).
 Traditional runtime environments such as Electron introduce severe memory bloat
-and multi-second initialization delays. The LemGendary AI Studio architecture
+and multi-second initialization delays. The LemGendary AI Studio GUI architecture
 eliminates this overhead by leveraging native operating system webviews
 (WebView2 on Windows, WebKitGTK on Linux) coordinated through a compiled Rust
 runtime.
