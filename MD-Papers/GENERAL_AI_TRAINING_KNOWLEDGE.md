@@ -1,16 +1,25 @@
-<!-- markdownlint-disable MD025 MD024 MD035 MD003 MD001 MD013 -->
-
 # General AI Training Knowledge & Systems Engineering Reference
 
 ## Category 00 --- General AI Knowledge Reference Specification
 
+**Version:** `v16.9.27-STABLE`\
 **Document status:** Canonical general-knowledge reference\
-**Scope:** Universal AI/ML systems engineering, training dynamics, architecture taxonomy, and dataset engineering independent of specific software implementations.\
-**Primary purpose:** Provide an exhaustive, mathematically rigorous, and technically authoritative reference manual for deep learning training, dataset container architectures, model selection, loss formulation, optimization, evaluation, and production deployment decisions.
+**Scope:** Universal AI/ML systems engineering, training dynamics, architecture
+taxonomy, and dataset engineering independent of specific software
+implementations.\
+**Primary purpose:** Provide an exhaustive, mathematically rigorous, and
+technically authoritative reference manual for deep learning training, dataset
+container architectures, model selection, loss formulation, optimization,
+evaluation, and production deployment decisions.
 
-> **Boundary:** This specification describes foundational AI/ML scientific principles, algorithmic formalisms, and industry-standard engineering practices. It remains completely decoupled from proprietary software implementations, vendor-specific GUI wrappers, and localized workflow paths. Implementation-specific configurations and project runtime defaults belong exclusively in dedicated application manuals.
+> **Boundary:** This specification describes foundational AI/ML scientific
+> principles, algorithmic formalisms, and industry-standard engineering
+> practices. It remains completely decoupled from proprietary software
+> implementations, vendor-specific GUI wrappers, and localized workflow paths.
+> Implementation-specific configurations and project runtime defaults belong
+> exclusively in dedicated application manuals.
 
-------------------------------------------------------------------------
+---
 
 ## Table of Contents
 
@@ -90,9 +99,9 @@
 - [Appendix C: Required Behavior for Derived AI-Helper Training Examples](#appendix-c-required-behavior-for-derived-ai-helper-training-examples)
 - [Appendix D: Source Authority Boundary](#appendix-d-source-authority-boundary)
 
-------------------------------------------------------------------------
+---
 
-# 1. Knowledge Architecture
+## 1. Knowledge Architecture
 
 The AI training lifecycle can be represented as:
 
@@ -150,11 +159,11 @@ A strong AI system is not produced by choosing an architecture in
 isolation. Dataset quality, task definition, objective, optimization,
 evaluation methodology, hardware, and deployment constraints interact.
 
-------------------------------------------------------------------------
+---
 
-# 2. Core Concepts
+## 2. Core Concepts
 
-## 2.1 Dataset
+### 2.1 Dataset
 
 A dataset is a collection of samples and associated metadata intended
 for a defined analytical or machine-learning purpose.
@@ -180,7 +189,8 @@ A dataset should have an explicit **task contract**:
 ``` yaml
 task:
   modality: image | text | audio | video | tabular | multimodal | time_series
-  objective: classification | detection | segmentation | restoration | generation | regression | ...
+  objective: classification | detection | segmentation | restoration |
+    generation | regression | ...
   input_schema: ...
   target_schema: ...
   preprocessing: ...
@@ -188,7 +198,7 @@ task:
   evaluation_protocol: ...
 ```
 
-## 2.2 Dataset split
+### 2.2 Dataset split
 
 Common splits are:
 
@@ -203,7 +213,7 @@ third-party benchmark may serve as an external test set.
 For grouped, temporal, medical, geospatial, or otherwise correlated
 data, random row-level splitting may be invalid.
 
-## 2.3 Sample independence
+### 2.3 Sample independence
 
 Many ML assumptions concern independent and identically distributed
 observations, but real datasets often contain dependencies.
@@ -220,7 +230,7 @@ Examples:
 When correlated samples cross train/validation boundaries, evaluation
 can become optimistically biased.
 
-## 2.4 Data leakage
+### 2.4 Data leakage
 
 Data leakage occurs when information unavailable at inference time
 influences training or model selection.
@@ -239,16 +249,16 @@ Major forms include:
 6. **Augmentation leakage** --- augmented variants of the same source
     cross splits.
 
-------------------------------------------------------------------------
+---
 
-# 3. General Dataset Formats
+## 3. General Dataset Formats
 
 Dataset formats are not interchangeable. Format selection depends on
 access pattern, modality, schema, scale, storage backend, framework,
 concurrency, compression, and whether training requires random access or
 sequential streaming.
 
-## 3.1 Format decision framework
+### 3.1 Format decision framework
 
 Use these questions:
 
@@ -265,13 +275,13 @@ Use these questions:
 10. Is the format an interchange format, training format, or both?
 ```
 
-------------------------------------------------------------------------
+---
 
-## 3.2 CSV / TSV
+### 3.2 CSV / TSV
 
 CSV and TSV are simple delimited text formats.
 
-### Strengths
+#### Strengths (CSV / TSV)
 
 - human-readable;
 - ubiquitous;
@@ -279,7 +289,7 @@ CSV and TSV are simple delimited text formats.
 - simple interchange;
 - supported by nearly every data tool.
 
-### Weaknesses
+#### Weaknesses (CSV / TSV)
 
 - textual parsing overhead;
 - weak schema/type enforcement;
@@ -288,21 +298,21 @@ CSV and TSV are simple delimited text formats.
 - poor random access without an index;
 - expensive repeated parsing during training.
 
-### Best use
+#### Best use (CSV / TSV)
 
 - small to medium tabular datasets;
 - interchange;
 - inspection;
 - source ingestion.
 
-### Poor use
+#### Poor use
 
 Large-scale high-throughput GPU training where the same text must be
 reparsed repeatedly.
 
-------------------------------------------------------------------------
+---
 
-## 3.3 JSON Lines / JSONL / NDJSON
+### 3.3 JSON Lines / JSONL / NDJSON
 
 JSON Lines stores one JSON object per line.
 
@@ -313,7 +323,7 @@ Example:
 {"id":2,"text":"world","label":"negative"}
 ```
 
-### Strengths
+#### Strengths (JSON Lines / JSONL / NDJSON)
 
 - one record per line;
 - easy append and streaming;
@@ -322,7 +332,7 @@ Example:
 - excellent for language-model instruction/SFT source data;
 - easy to process incrementally.
 
-### Weaknesses
+#### Weaknesses (JSON Lines / JSONL / NDJSON)
 
 - parsing cost;
 - larger than binary formats;
@@ -330,7 +340,7 @@ Example:
 - random access requires indexing;
 - malformed records must be handled explicitly.
 
-### Best use
+#### Best use (JSON Lines / JSONL / NDJSON)
 
 - instruction tuning;
 - chat/SFT corpora;
@@ -338,15 +348,15 @@ Example:
 - preprocessing pipelines;
 - streaming ingestion.
 
-### Important distinction
+#### Important distinction
 
 JSONL is an excellent **source/interchange format** for LLM training
 examples, but it is not automatically the optimal final representation
 for very large high-throughput training.
 
-------------------------------------------------------------------------
+---
 
-## 3.4 Apache Parquet
+### 3.4 Apache Parquet
 
 Parquet is a column-oriented binary storage format.
 
@@ -362,7 +372,7 @@ File
            +-- Pages
 ```
 
-### Important properties
+#### Important properties
 
 - typed schema;
 - columnar storage;
@@ -373,7 +383,7 @@ File
 - projection pushdown;
 - efficient analytical scans.
 
-### Strengths
+#### Strengths (Apache Parquet)
 
 - excellent tabular analytics;
 - strong compression;
@@ -381,7 +391,7 @@ File
 - rich ecosystem;
 - excellent integration with Apache Arrow and query engines.
 
-### Weaknesses
+#### Weaknesses (Apache Parquet)
 
 - not inherently a tensor-training format;
 - row-oriented random sample access can be less natural than key-value
@@ -390,7 +400,7 @@ File
     training;
 - many small files can become an operational problem.
 
-### Best use
+#### Best use (Apache Parquet)
 
 - tabular datasets;
 - metadata;
@@ -400,14 +410,14 @@ File
 - feature stores;
 - large structured datasets.
 
-------------------------------------------------------------------------
+---
 
-## 3.5 Apache Arrow / Arrow IPC / Feather
+### 3.5 Apache Arrow / Arrow IPC / Feather
 
 Apache Arrow defines a language-independent in-memory columnar
 representation and interoperability ecosystem.
 
-### Strengths
+#### Strengths (Apache Arrow / Arrow IPC / Feather)
 
 - efficient columnar memory layout;
 - zero-copy interoperability in appropriate situations;
@@ -415,7 +425,7 @@ representation and interoperability ecosystem.
 - vectorized processing;
 - efficient interchange between analytical systems.
 
-### Weaknesses
+#### Weaknesses (Apache Arrow / Arrow IPC / Feather)
 
 - Arrow is primarily a memory/interchange model rather than a
     universal training-dataset format;
@@ -424,7 +434,7 @@ representation and interoperability ecosystem.
 - tensor-heavy workloads may be better represented by chunked array
     formats.
 
-### Best use
+#### Best use (Apache Arrow / Arrow IPC / Feather)
 
 - preprocessing;
 - analytical pipelines;
@@ -432,9 +442,9 @@ representation and interoperability ecosystem.
 - tabular data;
 - integration between languages and systems.
 
-------------------------------------------------------------------------
+---
 
-## 3.6 Zarr
+### 3.6 Zarr
 
 Zarr stores N-dimensional arrays in independently addressable chunks.
 
@@ -449,7 +459,7 @@ Array
  +-- ...
 ```
 
-### Strengths
+#### Strengths (Zarr)
 
 - N-dimensional arrays;
 - chunk-level access;
@@ -458,14 +468,14 @@ Array
 - parallel reads/writes;
 - excellent for scientific and imaging workloads.
 
-### Weaknesses
+#### Weaknesses (Zarr)
 
 - poor chunk design can cause severe I/O amplification;
 - many small objects can stress object stores;
 - metadata and storage layout require engineering;
 - not automatically optimal for every deep-learning sample format.
 
-### Chunk design principle
+#### Chunk design principle
 
 Choose chunks according to the expected access pattern.
 
@@ -485,9 +495,9 @@ all time points -> one spatial location
 
 a different chunk orientation is preferable.
 
-------------------------------------------------------------------------
+---
 
-## 3.7 TFRecord
+### 3.7 TFRecord
 
 TFRecord is a sequential binary record format strongly associated with
 TensorFlow.
@@ -495,29 +505,29 @@ TensorFlow.
 A record contains length information, integrity fields, and serialized
 payload data.
 
-### Strengths
+#### Strengths (TFRecord)
 
 - efficient sequential streaming;
 - mature TensorFlow integration;
 - good distributed ingestion;
 - suitable for large training pipelines.
 
-### Weaknesses
+#### Weaknesses (TFRecord)
 
 - less convenient outside TensorFlow ecosystems;
 - sequential access is natural;
 - random access requires auxiliary indexing;
 - serialized feature schemas must be managed.
 
-### Best use
+#### Best use (TFRecord)
 
 - TensorFlow pipelines;
 - TPU-oriented input pipelines;
 - sequential large-scale training.
 
-------------------------------------------------------------------------
+---
 
-## 3.8 WebDataset
+### 3.8 WebDataset
 
 WebDataset commonly represents samples inside TAR shards.
 
@@ -535,7 +545,7 @@ Example:
 
 Files sharing a sample key form one logical sample.
 
-### Strengths
+#### Strengths (WebDataset)
 
 - sequential I/O;
 - simple sharding;
@@ -545,14 +555,14 @@ Files sharing a sample key form one logical sample.
 - easy shard-level partitioning;
 - efficient streaming.
 
-### Weaknesses
+#### Weaknesses (WebDataset)
 
 - not naturally random-access oriented;
 - shard management matters;
 - sample-to-shard assignment affects distributed efficiency;
 - TAR itself does not provide rich typed schema semantics.
 
-### Best use
+#### Best use (WebDataset)
 
 - computer vision;
 - multimodal training;
@@ -560,9 +570,9 @@ Files sharing a sample key form one logical sample.
 - video;
 - large-scale streaming training.
 
-------------------------------------------------------------------------
+---
 
-## 3.9 HDF5
+### 3.9 HDF5
 
 HDF5 provides hierarchical groups and multidimensional datasets inside a
 single container.
@@ -575,7 +585,7 @@ single container.
 +-- calibration
 ```
 
-### Strengths
+#### Strengths (HDF5)
 
 - scientific computing;
 - multidimensional arrays;
@@ -584,7 +594,7 @@ single container.
 - rich metadata;
 - mature ecosystem.
 
-### Weaknesses
+#### Weaknesses (HDF5)
 
 - multiprocessing/concurrency requires care;
 - single-file access can create operational bottlenecks;
@@ -592,7 +602,7 @@ single container.
 - object-storage workflows can be less natural than chunk/object
     formats.
 
-### Best use
+#### Best use (HDF5)
 
 - scientific datasets;
 - microscopy;
@@ -600,9 +610,9 @@ single container.
 - dense multidimensional arrays;
 - legacy scientific pipelines.
 
-------------------------------------------------------------------------
+---
 
-## 3.10 NetCDF
+### 3.10 NetCDF
 
 NetCDF is designed for scientific multidimensional data, especially
 geospatial and climate data.
@@ -616,56 +626,56 @@ longitude
 level
 ```
 
-### Strengths
+#### Strengths (NetCDF)
 
 - scientific metadata;
 - coordinate systems;
 - gridded environmental data;
 - integration with xarray and scientific Python.
 
-### Weaknesses
+#### Weaknesses (NetCDF)
 
 - specialized rather than general-purpose ML storage;
 - access pattern and chunking must be designed carefully;
 - may require transformation before high-throughput model training.
 
-### Best use
+#### Best use (NetCDF)
 
 - climate;
 - weather;
 - oceanography;
 - geospatial scientific datasets.
 
-------------------------------------------------------------------------
+---
 
-## 3.11 LMDB
+### 3.11 LMDB
 
 LMDB is an embedded transactional key-value database using memory
 mapping.
 
-### Strengths
+#### Strengths (LMDB)
 
 - fast key-based lookup;
 - mature transactional semantics;
 - efficient local random access;
 - useful for datasets with sample IDs as keys.
 
-### Weaknesses
+#### Weaknesses (LMDB)
 
 - storage is less transparent than loose files;
 - environment configuration matters;
 - object-store-native workflows are not its primary strength.
 
-### Best use
+#### Best use (LMDB)
 
 - local key-value datasets;
 - image patches;
 - embeddings;
 - random-access sample stores.
 
-------------------------------------------------------------------------
+---
 
-## 3.12 MosaicML MDS / streaming formats
+### 3.12 MosaicML MDS / streaming formats
 
 Streaming dataset systems commonly divide datasets into binary shards
 plus metadata/index information.
@@ -681,52 +691,42 @@ Typical goals:
 They can be excellent when the training framework and infrastructure are
 designed around streaming.
 
-------------------------------------------------------------------------
+---
 
-## 3.13 Format comparison
+### 3.13 Format comparison
 
-  -----------------------------------------------------------------------------------------------------
-  Format       Best access        Schema                Streaming   Random      Best domain
-                                                                    access
-  ------------ ------------------ --------------------- ----------- ----------- -----------------------
-  CSV/TSV      Row scan           Weak                  Yes         Poor        Simple tabular
+- **CSV/TSV**: Best access: Row scan; Schema: Weak; Streaming: Yes; Random
+  access: Poor; Best domain: Simple tabular
+- **JSONL**: Best access: Record stream; Schema: Flexible; Streaming: Excellent;
+  Random access: Poor without index; Best domain: LLM/SFT/source data
+- **Parquet**: Best access: Column/row-group; Schema: Strong; Streaming: Good;
+  Random access: Moderate; Best domain: Tabular/analytics
+- **Arrow IPC**: Best access: Columnar; Schema: Strong; Streaming: Good; Random
+  access: Good; Best domain: Interchange/analytics
+- **Zarr**: Best access: Chunk; Schema: Strong; Streaming: Good; Random access:
+  Excellent by chunk; Best domain: N-D arrays
+- **TFRecord**: Best access: Sequential; Schema: Serialized features; Streaming:
+  Excellent; Random access: Poor without index; Best domain: TensorFlow
+- **WebDataset**: Best access: Shard/sample stream; Schema: Convention-based;
+  Streaming: Excellent; Random access: Poor; Best domain: Vision/multimodal
+- **HDF5**: Best access: Dataset/chunk; Schema: Strong; Streaming: Possible;
+  Random access: Good; Best domain: Scientific arrays
+- **NetCDF**: Best access: Dimension/chunk; Schema: Strong; Streaming: Possible;
+  Random access: Good; Best domain: Geoscience
+- **LMDB**: Best access: Key; Schema: Application-defined; Streaming: Good;
+  Random access: Excellent; Best domain: Local random access
 
-  JSONL        Record stream      Flexible              Excellent   Poor        LLM/SFT/source data
-                                                                    without
-                                                                    index
-
-  Parquet      Column/row-group   Strong                Good        Moderate    Tabular/analytics
-
-  Arrow IPC    Columnar           Strong                Good        Good        Interchange/analytics
-
-  Zarr         Chunk              Strong                Good        Excellent   N-D arrays
-                                                                    by chunk
-
-  TFRecord     Sequential         Serialized features   Excellent   Poor        TensorFlow
-                                                                    without
-                                                                    index
-
-  WebDataset   Shard/sample       Convention-based      Excellent   Poor        Vision/multimodal
-               stream
-
-  HDF5         Dataset/chunk      Strong                Possible    Good        Scientific arrays
-
-  NetCDF       Dimension/chunk    Strong                Possible    Good        Geoscience
-
-LMDB         Key                Application-defined   Good        Excellent   Local random access
-  -----------------------------------------------------------------------------------------------------
-
-### Important rule
+#### Important rule
 
 **There is no universally best dataset format.**
 
 The correct choice follows the training access pattern.
 
-------------------------------------------------------------------------
+---
 
-# 4. Dataset Structure and Engineering
+## 4. Dataset Structure and Engineering
 
-## 4.1 Canonical dataset layers
+### 4.1 Canonical dataset layers
 
 A robust pipeline separates:
 
@@ -759,7 +759,7 @@ TRAINING
 DEPLOYMENT / ARCHIVE
 ```
 
-## 4.2 Dataset manifest
+### 4.2 Dataset manifest
 
 A production dataset should have a manifest containing at least:
 
@@ -786,7 +786,7 @@ label_schema:
 quality_checks:
 ```
 
-## 4.3 Dataset invariants
+### 4.3 Dataset invariants
 
 Before training, validate:
 
@@ -809,9 +809,9 @@ Before training, validate:
 - license/provenance;
 - checksum/integrity.
 
-------------------------------------------------------------------------
+---
 
-# 5. Model Weights, Checkpoints, Serialization and Runtime Artifacts
+## 5. Model Weights, Checkpoints, Serialization and Runtime Artifacts
 
 A critical distinction:
 
@@ -842,14 +842,14 @@ EXPORTED MODEL
 
 A deployment artifact is not necessarily a training checkpoint.
 
-------------------------------------------------------------------------
+---
 
-## 5.1 Safetensors
+### 5.1 Safetensors
 
 Safetensors is a tensor serialization format designed around a simple
 header plus raw tensor storage.
 
-### Strengths
+#### Strengths (Safetensors)
 
 - avoids Python pickle execution semantics;
 - explicit tensor metadata;
@@ -857,23 +857,23 @@ header plus raw tensor storage.
 - memory mapping can be used by compatible implementations;
 - strong ecosystem support in modern model repositories.
 
-### Limitations
+#### Limitations (Safetensors)
 
 - stores tensors, not arbitrary Python training state;
 - optimizer state must be stored separately or as additional tensors;
 - a Safetensors file does not by itself describe the entire executable
     model architecture.
 
-### Best use
+#### Best use (Safetensors)
 
 - model weights;
 - safe interchange;
 - Hugging Face ecosystem;
 - inference and fine-tuning checkpoints.
 
-------------------------------------------------------------------------
+---
 
-## 5.2 PyTorch `.pt` / `.pth`
+### 5.2 PyTorch `.pt` / `.pth`
 
 PyTorch commonly uses `torch.save` / `torch.load` for checkpoints.
 
@@ -885,22 +885,22 @@ Depending on how the file was produced, it can contain:
 - arbitrary Python objects;
 - complete serialized objects.
 
-### Security rule
+#### Security rule
 
 Do not blindly deserialize untrusted PyTorch pickle-based artifacts.
 
 Prefer safer state-dict workflows and formats such as Safetensors where
 supported.
 
-### Best use
+#### Best use (PyTorch `.pt` / `.pth`)
 
 - native PyTorch training;
 - research checkpoints;
 - complete training-state snapshots when trust is established.
 
-------------------------------------------------------------------------
+---
 
-## 5.3 ONNX
+### 5.3 ONNX
 
 ONNX is an open model interchange representation.
 
@@ -915,23 +915,23 @@ It describes:
 An ONNX model is intended to be executed by an ONNX-compatible runtime
 rather than directly being a PyTorch training checkpoint.
 
-### Strengths
+#### Strengths (ONNX)
 
 - cross-framework interchange;
 - broad inference-runtime ecosystem;
 - graph-level optimization;
 - CPU/GPU/accelerator deployment.
 
-### Limitations
+#### Limitations (ONNX)
 
 - operator compatibility matters;
 - dynamic shapes can complicate optimization;
 - training support is not equivalent to native framework training;
 - export can expose unsupported or numerically different operations.
 
-------------------------------------------------------------------------
+---
 
-## 5.4 GGUF
+### 5.4 GGUF
 
 GGUF is a model-file format strongly associated with llama.cpp and
 related LLM inference ecosystems.
@@ -944,29 +944,29 @@ It supports:
 - memory-mapped inference;
 - CPU/GPU-oriented LLM execution.
 
-### Best use
+#### Best use (GGUF)
 
 - local LLM inference;
 - quantized transformer deployment;
 - llama.cpp-compatible ecosystems.
 
-### Important limitation
+#### Important limitation
 
 GGUF should not be treated as a universal model format for arbitrary
 vision or scientific models.
 
-------------------------------------------------------------------------
+---
 
-## 5.5 GGML
+### 5.5 GGML
 
 GGML is an older ecosystem and tensor/model representation associated
 with early llama.cpp implementations.
 
 GGUF largely replaced it for modern llama.cpp model packaging.
 
-------------------------------------------------------------------------
+---
 
-## 5.6 TensorRT engines
+### 5.6 TensorRT engines
 
 TensorRT builds optimized inference engines for NVIDIA hardware.
 
@@ -978,7 +978,7 @@ Optimizations can include:
 - memory planning;
 - hardware-specific execution.
 
-### Critical portability rule
+#### Critical portability rule
 
 A serialized TensorRT engine may depend on:
 
@@ -989,9 +989,9 @@ A serialized TensorRT engine may depend on:
 
 Therefore it is not equivalent to a portable model-weight file.
 
-------------------------------------------------------------------------
+---
 
-## 5.7 OpenVINO
+### 5.7 OpenVINO
 
 OpenVINO provides an intermediate representation and optimized runtime
 ecosystem primarily associated with Intel hardware.
@@ -1003,9 +1003,9 @@ It supports optimized inference on:
 - discrete GPUs;
 - supported accelerators.
 
-------------------------------------------------------------------------
+---
 
-## 5.8 Core ML
+### 5.8 Core ML
 
 Core ML is Apple's model deployment ecosystem.
 
@@ -1018,9 +1018,9 @@ It targets Apple devices and can integrate with:
 Model conversion and supported operations depend on the specific model
 and Core ML version.
 
-------------------------------------------------------------------------
+---
 
-## 5.9 TFLite / LiteRT ecosystem
+### 5.9 TFLite / LiteRT ecosystem
 
 TensorFlow Lite, now evolving toward LiteRT terminology in Google's
 ecosystem, targets efficient deployment on constrained and mobile
@@ -1033,9 +1033,9 @@ Typical goals include:
 - mobile/edge inference;
 - quantization.
 
-------------------------------------------------------------------------
+---
 
-## 5.10 JAX / Orbax checkpoints
+### 5.10 JAX / Orbax checkpoints
 
 JAX ecosystems often separate model state from executable architecture
 and use checkpoint systems such as Orbax.
@@ -1050,48 +1050,35 @@ Checkpointing can preserve:
 This is conceptually closer to a training-state system than a universal
 deployment format.
 
-------------------------------------------------------------------------
+---
 
-## 5.11 Weight-format comparison
+### 5.11 Weight-format comparison
 
-  --------------------------------------------------------------------------------------------------------
-  Format              Training    Inference          Quantization          Portability Primary ecosystem
-                         state
-  --------------- ------------ ------------ --------------------- -------------------- -------------------
-  Safetensors          Limited          Yes                   Yes                 High PyTorch/HF
-                  unless state
-                       encoded
+- **Safetensors**: Training state: Limited unless state encoded; Inference: Yes;
+  Quantization: Yes; Portability: High; Primary ecosystem: PyTorch/HF
+- **PyTorch checkpoint**: Training state: Excellent; Inference: Yes;
+  Quantization: Framework-dependent; Portability: Medium/High; Primary
+  ecosystem: PyTorch
+- **ONNX**: Training state: Not a normal training checkpoint; Inference:
+  Excellent; Quantization: Yes; Portability: High; Primary ecosystem:
+  Cross-runtime
+- **GGUF**: Training state: No general training state; Inference: Excellent for
+  supported LLMs; Quantization: Excellent; Portability: High within ecosystem;
+  Primary ecosystem: llama.cpp
+- **TensorRT engine**: Training state: No; Inference: Excellent; Quantization:
+  Excellent; Portability: Hardware-dependent; Primary ecosystem: NVIDIA
+- **OpenVINO IR**: Training state: No general training state; Inference:
+  Excellent; Quantization: Yes; Portability: Intel-oriented; Primary ecosystem:
+  OpenVINO
+- **Core ML**: Training state: No general training state; Inference: Excellent;
+  Quantization: Yes; Portability: Apple-oriented; Primary ecosystem: Apple
+- **TFLite/LiteRT**: Training state: No general training state; Inference:
+  Excellent; Quantization: Yes; Portability: Edge-oriented; Primary ecosystem:
+  TensorFlow/Google
 
-  PyTorch            Excellent          Yes   Framework-dependent          Medium/High PyTorch
-  checkpoint
+---
 
-  ONNX            Not a normal    Excellent                   Yes                 High Cross-runtime
-                      training
-                    checkpoint
-
-  GGUF              No general    Excellent             Excellent          High within llama.cpp
-                      training          for                                  ecosystem
-                         state    supported
-                                       LLMs
-
-  TensorRT engine           No    Excellent             Excellent   Hardware-dependent NVIDIA
-
-  OpenVINO IR       No general    Excellent                   Yes       Intel-oriented OpenVINO
-                      training
-                         state
-
-  Core ML           No general    Excellent                   Yes       Apple-oriented Apple
-                      training
-                         state
-
-TFLite/LiteRT     No general    Excellent                   Yes        Edge-oriented TensorFlow/Google
-                      training
-                         state
-  --------------------------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# 6. Deep Learning Architecture Knowledge
+## 6. Deep Learning Architecture Knowledge
 
 Architecture determines how information is represented and transformed.
 There is no universally best architecture.
@@ -1111,9 +1098,9 @@ deployment hardware
 training budget
 ```
 
-------------------------------------------------------------------------
+---
 
-## 6.1 Multilayer Perceptron / MLP
+### 6.1 Multilayer Perceptron / MLP
 
 An MLP applies learned affine transformations and nonlinearities:
 
@@ -1121,22 +1108,22 @@ An MLP applies learned affine transformations and nonlinearities:
 x -> Linear -> Activation -> Linear -> ...
 ```
 
-### Strengths
+#### Strengths (Multilayer Perceptron / MLP)
 
 - simple;
 - strong baseline for tabular data;
 - inexpensive;
 - useful inside larger architectures.
 
-### Weaknesses
+#### Weaknesses (Multilayer Perceptron / MLP)
 
 - poor spatial inductive bias;
 - parameter-heavy for high-dimensional images;
 - limited sequence structure without additional mechanisms.
 
-------------------------------------------------------------------------
+---
 
-## 6.2 CNN
+### 6.2 CNN
 
 Convolutional neural networks use local receptive fields and shared
 kernels.
@@ -1147,21 +1134,21 @@ A 2D convolution can be expressed as:
 Y[i,j] = sum_{u,v,c} W[u,v,c] X[i+u,j+v,c]
 ```
 
-### Strengths
+#### Strengths (CNN)
 
 - locality;
 - translation-related inductive bias;
 - efficient spatial feature extraction;
 - excellent for vision and restoration.
 
-### Weaknesses
+#### Weaknesses (CNN)
 
 - receptive field grows through depth or architectural mechanisms;
 - long-range dependencies can require additional structures.
 
-------------------------------------------------------------------------
+---
 
-## 6.3 ResNet
+### 6.3 ResNet
 
 ResNet introduces residual connections:
 
@@ -1172,9 +1159,9 @@ y = F(x) + x
 Residual pathways improve optimization of deep networks and became
 foundational to modern vision architectures.
 
-------------------------------------------------------------------------
+---
 
-## 6.4 EfficientNet
+### 6.4 EfficientNet
 
 EfficientNet uses compound scaling to jointly scale:
 
@@ -1184,9 +1171,9 @@ EfficientNet uses compound scaling to jointly scale:
 
 The key idea is that scaling only one dimension is often inefficient.
 
-------------------------------------------------------------------------
+---
 
-## 6.5 ConvNeXt
+### 6.5 ConvNeXt
 
 ConvNeXt modernizes convolutional networks using design choices inspired
 by transformer-era architectures while retaining convolutional inductive
@@ -1199,9 +1186,9 @@ Useful when:
 - transformer-style design patterns are attractive without full
     attention everywhere.
 
-------------------------------------------------------------------------
+---
 
-## 6.6 Vision Transformer (ViT)
+### 6.6 Vision Transformer (ViT)
 
 ViT divides an image into patches, embeds the patches, and processes
 them with transformer blocks.
@@ -1217,14 +1204,14 @@ image
  -> task head
 ```
 
-### Strengths
+#### Strengths (Vision Transformer (ViT))
 
 - global interactions;
 - scalable architecture;
 - strong transfer learning;
 - unified transformer ecosystem.
 
-### Weaknesses
+#### Weaknesses (Vision Transformer (ViT))
 
 - computational cost;
 - data requirements;
@@ -1232,9 +1219,9 @@ image
 - less local inductive bias than CNNs unless introduced
     architecturally.
 
-------------------------------------------------------------------------
+---
 
-## 6.7 Swin Transformer
+### 6.7 Swin Transformer
 
 Swin uses windowed self-attention and shifted windows.
 
@@ -1248,9 +1235,9 @@ Useful for:
 - dense vision tasks;
 - high-resolution imagery.
 
-------------------------------------------------------------------------
+---
 
-## 6.8 Transformer
+### 6.8 Transformer
 
 The transformer is based primarily on attention and feed-forward blocks.
 
@@ -1261,14 +1248,14 @@ Attention(Q,K,V) =
 softmax(Q K^T / sqrt(d_k)) V
 ```
 
-### Core strengths
+#### Core strengths
 
 - flexible sequence modeling;
 - global token interactions;
 - strong scaling behavior;
 - multimodal adaptability.
 
-### Core costs
+#### Core costs
 
 Naive full attention has approximately quadratic complexity in sequence
 length:
@@ -1289,9 +1276,9 @@ Modern systems reduce practical cost using:
 - local/global hybrids;
 - linear/state-space alternatives.
 
-------------------------------------------------------------------------
+---
 
-## 6.9 U-Net
+### 6.9 U-Net
 
 U-Net uses an encoder-decoder structure with skip connections.
 
@@ -1317,9 +1304,9 @@ Excellent for:
 - denoising;
 - diffusion-model components.
 
-------------------------------------------------------------------------
+---
 
-## 6.10 GAN
+### 6.10 GAN
 
 A Generative Adversarial Network contains:
 
@@ -1336,22 +1323,22 @@ Discriminator <--- real sample
 The generator attempts to produce realistic samples while the
 discriminator distinguishes real and generated data.
 
-### Strengths
+#### Strengths (GAN)
 
 - sharp generated outputs;
 - adversarial learning;
 - image synthesis and translation.
 
-### Weaknesses
+#### Weaknesses (GAN)
 
 - training instability;
 - mode collapse;
 - sensitive objective dynamics;
 - evaluation complexity.
 
-------------------------------------------------------------------------
+---
 
-## 6.11 VAE
+### 6.11 VAE
 
 A Variational Autoencoder learns a probabilistic latent representation.
 
@@ -1370,9 +1357,9 @@ Useful for:
 - generative systems;
 - compression.
 
-------------------------------------------------------------------------
+---
 
-## 6.12 Diffusion models
+### 6.12 Diffusion models
 
 Diffusion systems learn to reverse a progressive corruption process.
 
@@ -1396,9 +1383,9 @@ Common components include:
 Diffusion is not limited to images; related formulations exist for
 audio, video, 3D, molecules, and other modalities.
 
-------------------------------------------------------------------------
+---
 
-## 6.13 Mixture of Experts
+### 6.13 Mixture of Experts
 
 MoE architectures contain multiple expert subnetworks and a router.
 
@@ -1416,14 +1403,14 @@ combine
 
 Only a subset of experts may process each token.
 
-### Advantages
+#### Advantages
 
 - high parameter capacity;
 - lower active compute than a dense model of equivalent total
     parameter count;
 - specialization.
 
-### Problems
+#### Problems
 
 - routing imbalance;
 - communication overhead;
@@ -1431,9 +1418,9 @@ Only a subset of experts may process each token.
 - capacity overflow;
 - distributed-training complexity.
 
-------------------------------------------------------------------------
+---
 
-## 6.14 State Space Models / Mamba-style architectures
+### 6.14 State Space Models / Mamba-style architectures
 
 State-space models represent sequences through recurrent state dynamics.
 
@@ -1447,57 +1434,40 @@ y(t)  = C h(t)
 Modern selective state-space architectures make parts of the state
 dynamics input-dependent and use hardware-aware scan algorithms.
 
-### Strengths
+#### Strengths (State Space Models / Mamba-style architectures)
 
 - efficient long-sequence processing;
 - alternatives to quadratic attention;
 - strong sequence modeling.
 
-### Trade-offs
+#### Trade-offs
 
 - different inductive bias from attention;
 - ecosystem/tooling differences;
 - architecture-specific optimization requirements.
 
-------------------------------------------------------------------------
+---
 
-## 6.15 Architecture selection matrix
+### 6.15 Architecture selection matrix
 
-  -----------------------------------------------------------------------
-  Task                                Strong candidates
-  ----------------------------------- -----------------------------------
-  Tabular classification              MLP, tree models, transformer
-                                      variants
+- **Tabular classification**: Strong candidates: MLP, tree models, transformer variants
+- **Image classification**: Strong candidates: CNN, ConvNeXt, ViT
+- **Object detection**: Strong candidates: CNN detectors, DETR-family,
+  Swin-based systems
+- **Segmentation**: Strong candidates: U-Net, U-Net variants, transformer hybrids
+- **Restoration**: Strong candidates: CNN/U-Net, NAFNet-like,
+  transformer/restoration hybrids
+- **Language modeling**: Strong candidates: Transformer, MoE, SSM/hybrid
+- **Image generation**: Strong candidates: Diffusion, GAN, flow-based systems
+- **Representation learning**: Strong candidates: CNN, ViT, autoencoder,
+  contrastive architectures
+- **Long sequences**: Strong candidates: Transformer variants, SSMs, hybrid models
+- **Multimodal**: Strong candidates: Transformer-based fusion, modality-specific
+  encoders + shared heads
 
-  Image classification                CNN, ConvNeXt, ViT
+---
 
-  Object detection                    CNN detectors, DETR-family,
-                                      Swin-based systems
-
-  Segmentation                        U-Net, U-Net variants, transformer
-                                      hybrids
-
-  Restoration                         CNN/U-Net, NAFNet-like,
-                                      transformer/restoration hybrids
-
-  Language modeling                   Transformer, MoE, SSM/hybrid
-
-  Image generation                    Diffusion, GAN, flow-based systems
-
-  Representation learning             CNN, ViT, autoencoder, contrastive
-                                      architectures
-
-  Long sequences                      Transformer variants, SSMs, hybrid
-                                      models
-
-Multimodal                          Transformer-based fusion,
-                                      modality-specific encoders + shared
-                                      heads
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# 7. Training Theory
+## 7. Training Theory
 
 Training is numerical optimization over a parameterized function.
 
@@ -1509,9 +1479,9 @@ theta* = argmin_theta E[L(f_theta(x), y)]
 
 In practice the expectation is approximated using minibatches.
 
-------------------------------------------------------------------------
+---
 
-## 7.1 Forward pass
+### 7.1 Forward pass
 
 The model computes:
 
@@ -1519,9 +1489,9 @@ The model computes:
 prediction = f_theta(x)
 ```
 
-------------------------------------------------------------------------
+---
 
-## 7.2 Loss
+### 7.2 Loss
 
 The loss quantifies disagreement between prediction and target.
 
@@ -1541,9 +1511,9 @@ Examples:
 The loss being optimized is not necessarily the metric users ultimately
 care about.
 
-------------------------------------------------------------------------
+---
 
-## 7.3 Backpropagation
+### 7.3 Backpropagation
 
 Backpropagation applies the chain rule to compute gradients:
 
@@ -1554,9 +1524,9 @@ dL/dtheta
 Automatic differentiation systems construct or track computational
 graphs and propagate derivatives backward.
 
-------------------------------------------------------------------------
+---
 
-## 7.4 Gradient descent
+### 7.4 Gradient descent
 
 Basic gradient descent:
 
@@ -1566,30 +1536,30 @@ theta_(t+1) = theta_t - \beta * grad_theta L
 
 where `\beta` is the learning rate.
 
-------------------------------------------------------------------------
+---
 
-# 8. Optimizers
+## 8. Optimizers
 
-## 8.1 SGD
+### 8.1 SGD
 
 ``` text
 theta <- theta - \beta * g
 ```
 
-### Strengths
+#### Strengths (SGD)
 
 - simple;
 - predictable;
 - strong generalization behavior in many vision settings.
 
-### Weaknesses
+#### Weaknesses (SGD)
 
 - learning-rate tuning;
 - potentially slower convergence.
 
-------------------------------------------------------------------------
+---
 
-## 8.2 Momentum
+### 8.2 Momentum
 
 Momentum maintains a running update direction.
 
@@ -1601,9 +1571,9 @@ theta_t = theta_(t-1) - \beta * v_t
 It reduces oscillation and can accelerate movement along persistent
 gradient directions.
 
-------------------------------------------------------------------------
+---
 
-## 8.3 Adam
+### 8.3 Adam
 
 Adam maintains first and second moments of gradients.
 
@@ -1614,18 +1584,18 @@ v_t = beta2*v_(t-1) + (1-beta2)*g_t²
 
 Bias correction is applied before updating parameters.
 
-------------------------------------------------------------------------
+---
 
-## 8.4 AdamW
+### 8.4 AdamW
 
 AdamW decouples weight decay from the adaptive gradient update.
 
 This is generally preferred over treating weight decay as an ordinary
 gradient term when using Adam-style optimizers.
 
-------------------------------------------------------------------------
+---
 
-## 8.5 RMSProp
+### 8.5 RMSProp
 
 RMSProp adapts updates using an exponential moving average of squared
 gradients.
@@ -1633,18 +1603,18 @@ gradients.
 It can be useful for some recurrent and nonstationary optimization
 problems.
 
-------------------------------------------------------------------------
+---
 
-## 8.6 LAMB / LARS
+### 8.6 LAMB / LARS
 
 Layer-wise adaptive methods can be useful for very large batch training.
 
 They scale updates using layer-wise norms and can help stabilize
 large-batch optimization.
 
-------------------------------------------------------------------------
+---
 
-## 8.7 Lion
+### 8.7 Lion
 
 Lion is a sign-based optimizer with low optimizer-state memory relative
 to Adam-style methods.
@@ -1652,18 +1622,18 @@ to Adam-style methods.
 Its practical suitability depends on model family and training regime;
 it should not be assumed universally superior.
 
-------------------------------------------------------------------------
+---
 
-## 8.8 Sophia
+### 8.8 Sophia
 
 Sophia uses curvature information to adapt updates more efficiently than
 purely first-order methods in some language-model training settings.
 
 It is more specialized than AdamW.
 
-------------------------------------------------------------------------
+---
 
-## 8.9 Muon
+### 8.9 Muon
 
 Muon is an optimizer family designed around structured updates to weight
 matrices and has attracted interest in modern neural-network training.
@@ -1672,9 +1642,9 @@ It should be treated as an alternative requiring architecture- and
 implementation-specific validation rather than a drop-in universal
 replacement.
 
-------------------------------------------------------------------------
+---
 
-# 9. Learning Rate and Schedulers
+## 9. Learning Rate and Schedulers
 
 Learning rate is one of the most influential hyperparameters.
 
@@ -1687,7 +1657,7 @@ initial learning rate
 + decay
 ```
 
-## 9.1 Warmup
+### 9.1 Warmup
 
 Warmup gradually increases the learning rate at the beginning of
 training.
@@ -1699,7 +1669,7 @@ Useful when:
 - transformer training is sensitive to early updates;
 - mixed precision requires stabilization.
 
-## 9.2 Cosine decay
+### 9.2 Cosine decay
 
 A cosine schedule smoothly decreases the learning rate.
 
@@ -1709,14 +1679,14 @@ Conceptually:
 \beta(t) = \beta_min + 0.5*(\beta_max-\beta_min)*(1 + cos(pi*t/T))
 ```
 
-## 9.3 OneCycle
+### 9.3 OneCycle
 
 OneCycle increases and then decreases the learning rate, often with an
 inverse momentum relationship.
 
 It can be effective for some supervised training workloads.
 
-## 9.4 Exponential decay
+### 9.4 Exponential decay
 
 ``` text
 \beta_t = \beta_0 * gamma^t
@@ -1724,7 +1694,7 @@ It can be effective for some supervised training workloads.
 
 Simple but can decay too aggressively if not tuned.
 
-## 9.5 Warmup-Stable-Decay
+### 9.5 Warmup-Stable-Decay
 
 A three-stage schedule:
 
@@ -1734,11 +1704,11 @@ warmup -> stable high/medium LR -> decay
 
 is useful when a long stable optimization phase is desirable.
 
-------------------------------------------------------------------------
+---
 
-# 10. Batch Size and Gradient Accumulation
+## 10. Batch Size and Gradient Accumulation
 
-## 10.1 Batch size
+### 10.1 Batch size
 
 A batch is the set of samples used for one gradient estimate.
 
@@ -1750,11 +1720,11 @@ Larger batches:
 - may require learning-rate changes;
 - can alter optimization/generalization behavior.
 
-## 10.2 Micro-batch
+### 10.2 Micro-batch
 
 The micro-batch is the portion processed in one forward/backward pass.
 
-## 10.3 Gradient accumulation
+### 10.3 Gradient accumulation
 
 If gradients are accumulated for `k` micro-batches before an optimizer
 step:
@@ -1768,32 +1738,32 @@ provided the implementation scales loss and gradients consistently.
 Gradient accumulation reduces activation-memory pressure but does not
 make each forward/backward pass cheaper.
 
-------------------------------------------------------------------------
+---
 
-# 11. Regularization
+## 11. Regularization
 
 Regularization reduces overfitting or constrains model behavior.
 
-## 11.1 Weight decay
+### 11.1 Weight decay
 
 Penalizes large parameter values or, under AdamW-style decoupling,
 directly shrinks parameters.
 
-## 11.2 Dropout
+### 11.2 Dropout
 
 Randomly removes activation elements during training.
 
-## 11.3 DropPath / stochastic depth
+### 11.3 DropPath / stochastic depth
 
 Randomly skips complete residual paths or blocks during training.
 
-## 11.4 Label smoothing
+### 11.4 Label smoothing
 
 Replaces hard one-hot targets with softened distributions.
 
 Useful for reducing overconfidence in some classification tasks.
 
-## 11.5 Mixup
+### 11.5 Mixup
 
 Creates interpolated training examples:
 
@@ -1802,16 +1772,16 @@ x' = lambda*x_i + (1-lambda)*x_j
 y' = lambda*y_i + (1-lambda)*y_j
 ```
 
-## 11.6 CutMix
+### 11.6 CutMix
 
 Combines spatial regions from two images and adjusts labels according to
 region proportions.
 
-------------------------------------------------------------------------
+---
 
-# 12. Normalization
+## 12. Normalization
 
-## BatchNorm
+### BatchNorm
 
 Normalizes using batch statistics.
 
@@ -1825,27 +1795,27 @@ Limitations:
 - sensitive to small batch sizes;
 - distributed synchronization can add overhead.
 
-## LayerNorm
+### LayerNorm
 
 Normalizes features within each sample.
 
 Common in transformers.
 
-## RMSNorm
+### RMSNorm
 
 Normalizes based on root-mean-square magnitude without explicit mean
 subtraction.
 
 Common in modern transformer architectures.
 
-## GroupNorm
+### GroupNorm
 
 Normalizes channels in groups and is often useful when batch sizes are
 small.
 
-------------------------------------------------------------------------
+---
 
-# 13. Mixed Precision
+## 13. Mixed Precision
 
 Common numeric formats include:
 
@@ -1861,7 +1831,7 @@ INT4
 Training commonly uses higher precision for selected operations and
 lower precision for throughput.
 
-## FP16
+### FP16
 
 Advantages:
 
@@ -1872,7 +1842,7 @@ Risk:
 
 - narrower exponent range can cause underflow/overflow.
 
-## BF16
+### BF16
 
 Advantages:
 
@@ -1883,33 +1853,33 @@ Cost:
 
 - lower mantissa precision than FP32.
 
-## FP8
+### FP8
 
 FP8 formats can substantially improve throughput and memory efficiency
 on compatible hardware, but training requires careful scaling and
 hardware/software support.
 
-## Loss scaling
+### Loss scaling
 
 Dynamic loss scaling can protect FP16 gradients from underflow.
 
-------------------------------------------------------------------------
+---
 
-# 14. Distributed Training
+## 14. Distributed Training
 
-## 14.1 Data Parallelism
+### 14.1 Data Parallelism
 
 Each worker receives different samples and maintains model replicas.
 
 Gradients are synchronized.
 
-## 14.2 DDP
+### 14.2 DDP
 
 DistributedDataParallel is a common PyTorch implementation.
 
 The effective batch size generally scales with worker count.
 
-## 14.3 FSDP
+### 14.3 FSDP
 
 Fully Sharded Data Parallel shards parameters, gradients, and optimizer
 state across workers.
@@ -1922,7 +1892,7 @@ lower per-GPU memory footprint
 
 at the cost of communication and implementation complexity.
 
-## 14.4 ZeRO
+### 14.4 ZeRO
 
 ZeRO reduces redundant optimizer/gradient/parameter memory.
 
@@ -1934,19 +1904,19 @@ ZeRO-2 -> shard optimizer + gradients
 ZeRO-3 -> shard optimizer + gradients + parameters
 ```
 
-## 14.5 Tensor Parallelism
+### 14.5 Tensor Parallelism
 
 Splits individual layers/tensors across devices.
 
 Useful for models too large for one device.
 
-## 14.6 Pipeline Parallelism
+### 14.6 Pipeline Parallelism
 
 Splits model layers into stages across devices.
 
 Micro-batches flow through stages to improve device utilization.
 
-## 14.7 3D parallelism
+### 14.7 3D parallelism
 
 Large models can combine:
 
@@ -1967,11 +1937,11 @@ The correct strategy depends on:
 - accelerator memory;
 - communication topology.
 
-------------------------------------------------------------------------
+---
 
-# 15. Parameter-Efficient Fine-Tuning
+## 15. Parameter-Efficient Fine-Tuning
 
-## 15.1 LoRA
+### 15.1 LoRA
 
 Low-Rank Adaptation freezes the base weights and trains low-rank update
 matrices.
@@ -1991,7 +1961,7 @@ Advantages:
 - smaller adapters;
 - efficient specialization.
 
-## 15.2 QLoRA
+### 15.2 QLoRA
 
 QLoRA combines quantized base-model weights with LoRA adapters.
 
@@ -2002,11 +1972,11 @@ Important distinction:
 
 **QLoRA is a fine-tuning strategy, not merely a file format.**
 
-------------------------------------------------------------------------
+---
 
-# 16. LLM Post-Training
+## 16. LLM Post-Training
 
-## Supervised Fine-Tuning (SFT)
+### Supervised Fine-Tuning (SFT)
 
 The model learns from prompt/response or instruction/response examples.
 
@@ -2028,39 +1998,39 @@ High-quality SFT data should emphasize:
 - task diversity;
 - difficult edge cases.
 
-## Preference optimization
+### Preference optimization
 
 Methods such as DPO learn from preferred versus rejected responses.
 
 The purpose is to optimize behavior relative to preference data without
 requiring the same reinforcement-learning pipeline as PPO.
 
-## PPO / RLHF
+### PPO / RLHF
 
 PPO-based RLHF uses reward modeling and reinforcement learning.
 
 It is powerful but substantially more complex than SFT and preference
 optimization.
 
-------------------------------------------------------------------------
+---
 
-# 17. Loss Functions
+## 17. Loss Functions
 
-## Classification
+### Classification
 
 - Cross Entropy;
 - Binary Cross Entropy;
 - Focal Loss;
 - Label-smoothed Cross Entropy.
 
-## Regression
+### Regression
 
 - MSE;
 - MAE;
 - Huber;
 - Log-Cosh.
 
-## Vision restoration
+### Vision restoration
 
 - L1;
 - L2;
@@ -2070,31 +2040,31 @@ optimization.
 - frequency-domain losses;
 - adversarial losses.
 
-## Metric learning
+### Metric learning
 
 - contrastive loss;
 - triplet loss;
 - InfoNCE.
 
-## Ranking
+### Ranking
 
 - pairwise hinge;
 - RankNet;
 - ListNet;
 - differentiable ranking objectives.
 
-### Important principle
+#### Important principle
 
 A training loss is an optimization objective, not necessarily the final
 evaluation metric.
 
-------------------------------------------------------------------------
+---
 
-# 18. Evaluation Metrics
+## 18. Evaluation Metrics
 
-## 18.1 Classification
+### 18.1 Classification
 
-### Accuracy
+#### Accuracy
 
 ``` text
 (TP + TN) / (TP + TN + FP + FN)
@@ -2102,48 +2072,48 @@ evaluation metric.
 
 Useful when classes and error costs are reasonably balanced.
 
-### Precision
+#### Precision
 
 ``` text
 TP / (TP + FP)
 ```
 
-### Recall
+#### Recall
 
 ``` text
 TP / (TP + FN)
 ```
 
-### F1
+#### F1
 
 ``` text
 2 * Precision * Recall / (Precision + Recall)
 ```
 
-### ROC-AUC
+#### ROC-AUC
 
 Measures ranking quality across classification thresholds.
 
-### PR-AUC
+#### PR-AUC
 
 Often more informative under strong class imbalance.
 
-------------------------------------------------------------------------
+---
 
-## 18.2 Detection
+### 18.2 Detection
 
-### IoU
+#### IoU
 
 ``` text
 intersection / union
 ```
 
-### GIoU / DIoU / CIoU
+#### GIoU / DIoU / CIoU
 
 Extensions that incorporate geometric relationships beyond simple
 overlap.
 
-### mAP
+#### mAP
 
 Mean Average Precision aggregates precision-recall performance across
 classes and specified IoU thresholds.
@@ -2157,39 +2127,39 @@ mAP@0.5:0.95
 
 These are not equivalent metrics.
 
-------------------------------------------------------------------------
+---
 
-## 18.3 Segmentation
+### 18.3 Segmentation
 
-### IoU / Jaccard
+#### IoU / Jaccard
 
 ``` text
 TP / (TP + FP + FN)
 ```
 
-### Dice
+#### Dice
 
 ``` text
 2TP / (2TP + FP + FN)
 ```
 
-### Pixel accuracy
+#### Pixel accuracy
 
 Can be misleading for heavily imbalanced backgrounds.
 
-### Boundary metrics
+#### Boundary metrics
 
 Useful when boundary precision is more important than area overlap.
 
-------------------------------------------------------------------------
+---
 
-## 18.4 Image restoration
+### 18.4 Image restoration
 
-### MSE
+#### MSE (Image restoration)
 
 Penalizes squared reconstruction error.
 
-### PSNR
+#### PSNR
 
 ``` text
 10 log10(MAX² / MSE)
@@ -2197,37 +2167,37 @@ Penalizes squared reconstruction error.
 
 Higher is generally better.
 
-### SSIM
+#### SSIM
 
 Measures structural similarity using luminance, contrast, and structural
 terms.
 
-### MS-SSIM
+#### MS-SSIM
 
 Extends SSIM across scales.
 
-### LPIPS
+#### LPIPS
 
 Uses deep feature representations to estimate perceptual distance.
 
 Lower is generally better.
 
-### NIMA
+#### NIMA
 
 Predicts aesthetic/technical quality distributions rather than direct
 pixel fidelity.
 
-### NIQE / BRISQUE
+#### NIQE / BRISQUE
 
 No-reference image-quality metrics. They measure statistical quality
 characteristics and should not be interpreted as perfect proxies for
 human preference.
 
-------------------------------------------------------------------------
+---
 
-## 18.5 Generative models
+### 18.5 Generative models
 
-### FID
+#### FID
 
 Compares distributions of feature embeddings from real and generated
 samples.
@@ -2240,24 +2210,24 @@ Lower is generally better, but FID is sensitive to:
 - implementation;
 - domain mismatch.
 
-### KID
+#### KID
 
 Kernel-based distribution distance with an unbiased estimator.
 
-### CLIP-based metrics
+#### CLIP-based metrics
 
 Can estimate image-text semantic alignment but should not be treated as
 complete measures of image quality.
 
-### Precision / Recall for generative distributions
+#### Precision / Recall for generative distributions
 
 Can separately characterize fidelity and diversity.
 
-------------------------------------------------------------------------
+---
 
-## 18.6 Language models
+### 18.6 Language models
 
-### Perplexity
+#### Perplexity
 
 Measures average predictive uncertainty:
 
@@ -2270,16 +2240,16 @@ Lower is generally better on a fixed evaluation distribution.
 Perplexity alone does not measure instruction following, factuality,
 reasoning, safety, or user usefulness.
 
-### Exact Match
+#### Exact Match
 
 Useful for structured answer tasks.
 
-### BLEU / ROUGE
+#### BLEU / ROUGE
 
 Useful for some text-generation comparisons but imperfect proxies for
 semantic quality.
 
-### Human evaluation
+#### Human evaluation
 
 Still important for:
 
@@ -2290,51 +2260,51 @@ Still important for:
 - factuality;
 - safety.
 
-------------------------------------------------------------------------
+---
 
-## 18.7 Time-series and forecasting
+### 18.7 Time-series and forecasting
 
-### MAE
+#### MAE
 
 ``` text
 mean(|y-y_hat|)
 ```
 
-### MSE
+#### MSE (Time-series and forecasting)
 
 ``` text
 mean((y-y_hat)^2)
 ```
 
-### RMSE
+#### RMSE
 
 Square root of MSE.
 
-### MAPE
+#### MAPE
 
 Can behave poorly when actual values are near zero.
 
-### sMAPE
+#### sMAPE
 
 Provides a more symmetric percentage-style error but still has
 interpretation limitations.
 
-### Directional accuracy
+#### Directional accuracy
 
 Measures whether predicted direction matches actual direction.
 
-### Sharpe ratio
+#### Sharpe ratio
 
 A portfolio-level risk-adjusted performance measure, not a generic
 model-accuracy metric.
 
-------------------------------------------------------------------------
+---
 
-# 19. Dataset Engineering
+## 19. Dataset Engineering
 
-## 19.1 Deduplication
+### 19.1 Deduplication
 
-### Exact deduplication
+#### Exact deduplication
 
 Cryptographic hashes identify byte-identical files.
 
@@ -2343,24 +2313,24 @@ Examples:
 - SHA-256;
 - SHA-512.
 
-### Near-duplicate text
+#### Near-duplicate text
 
 MinHash and LSH can efficiently identify candidate similar documents.
 
-### Perceptual image deduplication
+#### Perceptual image deduplication
 
 pHash and related methods identify visually similar images.
 
-### Semantic deduplication
+#### Semantic deduplication
 
 Embedding similarity can identify semantically similar content.
 
 No single threshold is universally correct. Thresholds must be validated
 for the dataset and task.
 
-------------------------------------------------------------------------
+---
 
-# 20. Class Imbalance
+## 20. Class Imbalance
 
 Approaches include:
 
@@ -2378,9 +2348,9 @@ Approaches include:
 Oversampling does not create genuinely new information unless the
 transformation adds useful variation.
 
-------------------------------------------------------------------------
+---
 
-# 21. Augmentation
+## 21. Augmentation
 
 Augmentation should preserve task-relevant semantics.
 
@@ -2418,11 +2388,11 @@ Examples:
 Never apply an augmentation that changes the target semantics unless the
 label/target is transformed consistently.
 
-------------------------------------------------------------------------
+---
 
-# 22. Sampling and Curriculum
+## 22. Sampling and Curriculum
 
-## Temperature sampling
+### Temperature sampling
 
 For multiple datasets:
 
@@ -2440,7 +2410,7 @@ Sampling can be used to:
 - rebalance tasks;
 - implement curriculum strategies.
 
-## Curriculum learning
+### Curriculum learning
 
 Training examples can be ordered from:
 
@@ -2453,9 +2423,9 @@ or from broad foundational data toward specialized examples.
 Curriculum is not universally beneficial; it should be validated
 experimentally.
 
-------------------------------------------------------------------------
+---
 
-# 23. Sharding and Streaming
+## 23. Sharding and Streaming
 
 Large datasets should be designed around the training access pattern.
 
@@ -2488,40 +2458,40 @@ batch latency
 prefetch depth
 ```
 
-------------------------------------------------------------------------
+---
 
-# 24. Data Splitting Best Practices
+## 24. Data Splitting Best Practices
 
-## Random split
+### Random split
 
 Appropriate only when samples are sufficiently independent.
 
-## Stratified split
+### Stratified split
 
 Preserves approximate class proportions.
 
-## Group split
+### Group split
 
 Keeps correlated entities in one partition.
 
-## Temporal split
+### Temporal split
 
 Training occurs on past data and validation/test occurs on future data.
 
-## Spatial split
+### Spatial split
 
 Useful when neighboring spatial regions are correlated.
 
-## Cross-validation
+### Cross-validation
 
 Useful when data is limited, but must respect grouping and temporal
 constraints.
 
-------------------------------------------------------------------------
+---
 
-# 25. Training Pathology
+## 25. Training Pathology
 
-## Overfitting
+### Overfitting
 
 Typical pattern:
 
@@ -2540,7 +2510,7 @@ Possible responses:
 - better split;
 - remove leakage.
 
-## Underfitting
+### Underfitting
 
 Typical pattern:
 
@@ -2557,7 +2527,7 @@ Possible responses:
 - improved features;
 - less restrictive regularization.
 
-## Vanishing gradients
+### Vanishing gradients
 
 Gradients become too small for effective learning.
 
@@ -2569,7 +2539,7 @@ Possible mitigations:
 - architecture changes;
 - initialization improvements.
 
-## Exploding gradients
+### Exploding gradients
 
 Gradients become excessively large.
 
@@ -2581,7 +2551,7 @@ Possible mitigations:
 - architecture changes;
 - numerical stabilization.
 
-## NaN divergence
+### NaN divergence
 
 Potential causes:
 
@@ -2596,7 +2566,7 @@ Potential causes:
 Debug systematically rather than changing many parameters
 simultaneously.
 
-## CUDA OOM
+### CUDA OOM
 
 Potential causes:
 
@@ -2622,9 +2592,9 @@ Possible mitigations:
 - fewer workers;
 - memory-aware validation.
 
-------------------------------------------------------------------------
+---
 
-# 26. Reproducibility
+## 26. Reproducibility
 
 Record:
 
@@ -2648,9 +2618,9 @@ checkpoint
 
 A training result without provenance is difficult to reproduce or audit.
 
-------------------------------------------------------------------------
+---
 
-# 27. Checkpointing
+## 27. Checkpointing
 
 A robust checkpoint should preserve enough state to resume training
 consistently.
@@ -2674,9 +2644,9 @@ code revision
 A deployment weight file is generally much smaller in scope than a full
 resumable checkpoint.
 
-------------------------------------------------------------------------
+---
 
-# 28. Hyperparameter Search
+## 28. Hyperparameter Search
 
 Common strategies:
 
@@ -2697,9 +2667,9 @@ Do not compare runs fairly unless:
 - compute budget is understood;
 - preprocessing is equivalent.
 
-------------------------------------------------------------------------
+---
 
-# 29. Model Selection
+## 29. Model Selection
 
 Choose models based on the complete constraint set:
 
@@ -2717,9 +2687,9 @@ maintenance requirements
 
 A larger or newer model is not automatically better.
 
-------------------------------------------------------------------------
+---
 
-# 30. Quantization
+## 30. Quantization
 
 Quantization reduces numerical precision.
 
@@ -2751,9 +2721,9 @@ quantization effects.
 
 Post-training quantization applies quantization after training.
 
-------------------------------------------------------------------------
+---
 
-# 31. Knowledge for an AI Training Helper
+## 31. Knowledge for an AI Training Helper
 
 A high-quality AI Helper should reason across four layers:
 
@@ -2795,9 +2765,9 @@ Runtime tools should provide:
 
 The final answer combines both.
 
-------------------------------------------------------------------------
+---
 
-# 32. AI Helper Decision Rules
+## 32. AI Helper Decision Rules
 
 When answering a technical question:
 
@@ -2814,9 +2784,9 @@ When answering a technical question:
 11. Distinguish documented fact from heuristic recommendation.
 12. If evidence is insufficient, say so.
 
-------------------------------------------------------------------------
+---
 
-# 33. Common AI Training Misconceptions
+## 33. Common AI Training Misconceptions
 
 ### "More data always improves the model."
 
@@ -2864,9 +2834,9 @@ ecosystem.
 False. A resumable checkpoint may contain optimizer, scheduler, scaler,
 RNG, and training metadata.
 
-------------------------------------------------------------------------
+---
 
-# 34. Comparison Knowledge the AI Helper Should Master
+## 34. Comparison Knowledge the AI Helper Should Master
 
 The training corpus should explicitly teach comparisons such as:
 
@@ -2911,11 +2881,11 @@ MAE vs RMSE
 The correct answer must always be conditional on the task and
 constraints.
 
-------------------------------------------------------------------------
+---
 
-# 35. General Recommendations by Scenario
+## 35. General Recommendations by Scenario
 
-## Large image restoration dataset
+### Large image restoration dataset
 
 Consider:
 
@@ -2931,7 +2901,7 @@ group-aware splitting
 perceptual + pixel metrics
 ```
 
-## Large tabular dataset
+### Large tabular dataset
 
 Consider:
 
@@ -2947,7 +2917,7 @@ predicate filtering
 partitioning
 ```
 
-## LLM instruction/SFT dataset
+### LLM instruction/SFT dataset
 
 A practical source representation is:
 
@@ -2970,7 +2940,7 @@ quality flags
 The final training framework may transform this into tokenized
 binary/sharded representations.
 
-## Scientific N-dimensional data
+### Scientific N-dimensional data
 
 Consider:
 
@@ -2982,7 +2952,7 @@ HDF5 / NetCDF
 
 depending on ecosystem and access pattern.
 
-## Local LLM inference
+### Local LLM inference
 
 Consider:
 
@@ -2992,7 +2962,7 @@ GGUF
 
 when the target runtime supports it.
 
-## Cross-platform inference
+### Cross-platform inference
 
 Consider:
 
@@ -3002,7 +2972,7 @@ ONNX
 
 when the model operators and target runtime are compatible.
 
-## NVIDIA production inference
+### NVIDIA production inference
 
 Consider:
 
@@ -3013,9 +2983,9 @@ TensorRT
 when hardware-specific optimization justifies compilation and
 portability constraints are acceptable.
 
-------------------------------------------------------------------------
+---
 
-# 36. General AI Knowledge Safety and Reliability Rules
+## 36. General AI Knowledge Safety and Reliability Rules
 
 A training assistant should:
 
@@ -3032,9 +3002,9 @@ A training assistant should:
 - never recommend executing untrusted pickle-based checkpoints
     blindly.
 
-------------------------------------------------------------------------
+---
 
-# 37. Recommended Knowledge-Base Metadata
+## 37. Recommended Knowledge-Base Metadata
 
 Every extracted concept should be representable using metadata such as:
 
@@ -3076,9 +3046,9 @@ common_wrong_answer:
 correction:
 ```
 
-------------------------------------------------------------------------
+---
 
-# 38. Final General AI Training Continuum
+## 38. Final General AI Training Continuum
 
 ``` text
                     RAW DATA
@@ -3144,9 +3114,9 @@ correction:
              +-------------------+
 ```
 
-------------------------------------------------------------------------
+---
 
-# 39. Summary
+## 39. Summary
 
 The central principle of modern AI engineering is **constraint-aware
 system design**.
@@ -3199,9 +3169,9 @@ Runtime telemetry and APIs provide active environment state.
 Together these form a reliable, context-aware AI training assistant rather than a
 static chatbot.
 
-------------------------------------------------------------------------
+---
 
-# Appendix A: Training-Corpus Coverage Checklist
+## Appendix A: Training-Corpus Coverage Checklist
 
 This document is intended to provide excellent general coverage of:
 
@@ -3293,92 +3263,52 @@ This document is intended to provide excellent general coverage of:
 - [x] deployment trade-offs
 - [x] AI Helper reasoning principles
 
-------------------------------------------------------------------------
+---
 
-# Appendix B: Important Terminology Distinctions
+## Appendix B: Important Terminology Distinctions
 
 The training corpus should preserve these distinctions:
 
-  ------------------------------------------------------------------------
-  Term A                  Must not be treated as  Key distinction
-                          identical to
-  ----------------------- ----------------------- ------------------------
-  Dataset                 Dataset format          Dataset is the data;
-                                                  format is its
-                                                  representation
+- **Dataset**: Must not be treated as identical to: Dataset format; Key
+  distinction: Dataset is the data; format is its representation
+- **Dataset**: Must not be treated as identical to: Training split; Key
+  distinction: Dataset may contain multiple splits
+- **Checkpoint**: Must not be treated as identical to: Model weights; Key
+  distinction: Checkpoint can contain full training state
+- **Weights**: Must not be treated as identical to: Architecture; Key
+  distinction: Weights are parameters; architecture defines computation
+- **ONNX**: Must not be treated as identical to: Safetensors; Key distinction:
+  ONNX represents a computational graph; Safetensors stores tensors
+- **GGUF**: Must not be treated as identical to: Universal model format; Key
+  distinction: GGUF is primarily an LLM inference ecosystem format
+- **Loss**: Must not be treated as identical to: Metric; Key distinction: Loss
+  is optimized; metric evaluates
+- **Validation**: Must not be treated as identical to: Test; Key distinction:
+  Validation influences development; test should remain isolated
+- **Batch size**: Must not be treated as identical to: Micro-batch; Key
+  distinction: A micro-batch may be accumulated before optimizer update
+- **Epoch**: Must not be treated as identical to: Optimizer step; Key
+  distinction: One epoch traverses a dataset; one optimizer step updates
+  parameters
+- **Precision**: Must not be treated as identical to: Quantization; Key
+  distinction: Precision describes numerical representation; quantization is a
+  broader conversion/compression process
+- **Data parallelism**: Must not be treated as identical to: Model parallelism;
+  Key distinction: Data parallelism replicates model computation across data;
+  model parallelism partitions the model
+- **LoRA**: Must not be treated as identical to: Quantization; Key distinction:
+  LoRA changes trainable parameterization; quantization changes numerical
+  representation
+- **SFT**: Must not be treated as identical to: RLHF; Key distinction: SFT is
+  supervised learning; RLHF uses preference/reward optimization
+- **PSNR**: Must not be treated as identical to: Perceptual quality; Key
+  distinction: PSNR measures pixel error, not human preference
+- **FID**: Must not be treated as identical to: Human quality; Key distinction:
+  FID is a distributional statistic, not a complete human-evaluation substitute
 
-  Dataset                 Training split          Dataset may contain
-                                                  multiple splits
+---
 
-  Checkpoint              Model weights           Checkpoint can contain
-                                                  full training state
-
-  Weights                 Architecture            Weights are parameters;
-                                                  architecture defines
-                                                  computation
-
-  ONNX                    Safetensors             ONNX represents a
-                                                  computational graph;
-                                                  Safetensors stores
-                                                  tensors
-
-  GGUF                    Universal model format  GGUF is primarily an LLM
-                                                  inference ecosystem
-                                                  format
-
-  Loss                    Metric                  Loss is optimized;
-                                                  metric evaluates
-
-  Validation              Test                    Validation influences
-                                                  development; test should
-                                                  remain isolated
-
-  Batch size              Micro-batch             A micro-batch may be
-                                                  accumulated before
-                                                  optimizer update
-
-  Epoch                   Optimizer step          One epoch traverses a
-                                                  dataset; one optimizer
-                                                  step updates parameters
-
-  Precision               Quantization            Precision describes
-                                                  numerical
-                                                  representation;
-                                                  quantization is a
-                                                  broader
-                                                  conversion/compression
-                                                  process
-
-  Data parallelism        Model parallelism       Data parallelism
-                                                  replicates model
-                                                  computation across data;
-                                                  model parallelism
-                                                  partitions the model
-
-  LoRA                    Quantization            LoRA changes trainable
-                                                  parameterization;
-                                                  quantization changes
-                                                  numerical representation
-
-  SFT                     RLHF                    SFT is supervised
-                                                  learning; RLHF uses
-                                                  preference/reward
-                                                  optimization
-
-  PSNR                    Perceptual quality      PSNR measures pixel
-                                                  error, not human
-                                                  preference
-
-FID                     Human quality           FID is a distributional
-                                                  statistic, not a
-                                                  complete
-                                                  human-evaluation
-                                                  substitute
-  ------------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# Appendix C: Required Behavior for Derived AI-Helper Training Examples
+## Appendix C: Required Behavior for Derived AI-Helper Training Examples
 
 Derived SFT examples should teach the model to:
 
@@ -3397,9 +3327,9 @@ Derived SFT examples should teach the model to:
 12. never invent a Studio feature merely because the general technology
     exists.
 
-------------------------------------------------------------------------
+---
 
-# Appendix D: Source Authority Boundary
+## Appendix D: Source Authority Boundary
 
 For an intelligent AI training assistant:
 
@@ -3423,6 +3353,6 @@ USER CONTEXT
 The assistant should prefer the most authoritative and current source
 available for the specific question.
 
-------------------------------------------------------------------------
+---
 
-# Document End
+## Document End

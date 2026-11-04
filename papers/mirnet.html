@@ -2,612 +2,322 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: High-Fidelity MIRNet v2 Enhancement - LemGendary AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-    </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High-Fidelity MIRNet v2 Enhancement via SOTA Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="restoration-master.html">Restoration Hub</a>
-                <a href="restoration-suite.html">Suite Overview</a>
-                <a href="nafnet.html">NAFNet</a>
-                <a href="mprnet.html">MPRNet</a>
-                <a href="mirnet.html" class="active">MIRNet</a>
-                <a href="ffanet.html">FFANet</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="restoration-master.html" class="tab-link">Restoration Master</a>
+<a href="restoration-suite.html" class="tab-link">Restoration Suite</a>
+<a href="nafnet.html" class="tab-link">NAFNet</a>
+<a href="mprnet.html" class="tab-link">MPRNet</a>
+<a href="mirnet.html" class="tab-link active">MIRNet v2</a>
+<a href="ffanet.html" class="tab-link">FFANet</a>
+<a href="ultrazoom.html" class="tab-link">UltraZoom</a>
+<a href="universal-hybrid.html" class="tab-link">Hybrid Suite</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>High-Fidelity MIRNet v2 Enhancement via SOTA Infrastructure</h1>
+<p class="subtitle">Category 04 RESTORATION | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Paper Revision</strong>: 2.6.0 - Dynamic VRAM Sync (2026 Specialization)</span>
+<span><strong>Target <code>[TARGET]</code> Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-<li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
-                <li><a href="#section-1">1. Abstract</a></li>
-                <li><a href="#section-1-1">1.1 What MIRNet Does (In Plain English)</a></li>
-                <li><a href="#section-3">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
-                    <ul class="sub-item">
-                        <li><a href="#21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</a></li>
-                        <li><a href="#22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-5">3. Shared Foundations</a>
-                    <ul class="sub-item">
-                        <li><a href="#hardware">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
-                        <li><a href="#math-opt">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
-                        <li><a href="#cloud">3.3 Kaggle Cloud Execution Protocols</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-7">4. Model Deep-Dives</a>
-                    <ul class="sub-item">
-                        <li><a href="#mirnet-low-light">4.1 MIRNet v2 Low-Light Enhancement</a></li>
-                        <li><a href="#mirnet-exposure">4.2 MIRNet v2 Exposure Correction</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-9">5. Challenges &amp; Resilience Architecture</a>
-                </li>
-                <li><a href="#section-11">6. Deployment Strategy</a>
-                </li>
-                <li><a href="#section-13">7. SOTA Architectural Performance Matrix</a>
-                </li>
-                <li><a href="#conclusion">8. Conclusion</a>
-                </li>
-            </ul>
-</nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Architecture of LemGendary AI</h1>
-        <p class="subtitle">High-Fidelity MIRNet v2 Enhancement via SOTA Infrastructure</p>
-        <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Version: 16.9.16-STABLE</span>
-                <span>Category Restoration</span>
-            </div>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
 
-<section id="section-1">
-<h2>1. Abstract</h2>
-            <p>The <strong>LemGendary Training Suite</strong> has achieved its ultimate evolution by migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art) Architectures</strong>, spearheaded by <strong>MIRNet v2</strong> (Multi-Scale Residual Network). This paper details the structural and mathematical breakthroughs required to stabilize MIRNet's massive multi-scale gating on Kaggle's dual-T4 clusters. By engineering rigorous contiguous-memory enforcement, strict precision clamps, and PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked unprecedented convergence—setting a new benchmark for browser-based image illumination enhancement.</p>
-</section>
-
-<section id="section-1-1">
-<h2>1.1 What MIRNet Does (In Plain English)</h2>
-<p>Imagine taking photos in almost pitch-black darkness or on an intensely sunny beach where parts of the image are completely blown out:</p>
-<ul>
-    <li><strong>Dual-Track Illumination Recovery:</strong> MIRNet v2 operates across two difficult lighting regimes: pulling sharp, colorful images out of near-black shadows, and recovering highlight texture from overexposed skies.</li>
-    <li><strong>Parallel Multi-Scale Streams:</strong> Rather than shrinking the image down and guessing missing fine details on the way back up, MIRNet processes full-resolution, medium, and low-scale streams in parallel, allowing crisp textures and broad exposure corrections to communicate continuously.</li>
-    <li><strong>Zero Grainy Noise Amplification:</strong> It brightens dim subjects naturally without blowing up the ugly multi-colored sensor grain typical of night-mode camera processing.</li>
+<li><a href="#sec-1-abstract">1. Abstract</a>
+<ul class="sub-item">
+<li><a href="#sec-11-what-mirnet-does-in-plain-english">1.1 What MIRNet Does (In Plain English)</a></li>
 </ul>
-<h3>Visual Demonstration: Lighting Correction Profiles</h3>
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Correction Manifold</th>
-                <th>Extreme Lighting Problem</th>
-                <th>MIRNet v2 Enhanced Output</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Low-Light (<code>mirnet_lowlight</code>)</strong></td>
-                <td>Severe darkness, lost dynamic range, heavy ISO noise</td>
-                <td>Natural illumination, clean shadows &amp; restored color fidelity</td>
-            </tr>
-            <tr>
-                <td><strong>Exposure (<code>mirnet_exposure</code>)</strong></td>
-                <td>Blown-out white highlights &amp; harsh contrast gradients</td>
-                <td>Recovered highlight textures &amp; balanced mid-tone contrast</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+</li>
+<li><a href="#sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">2. Visual Taxonomy: The LemGendary Restoration Subset</a>
+<ul class="sub-item">
+<li><a href="#sec-21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</a></li>
+<li><a href="#sec-22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-shared-foundations">3. Shared Foundations</a>
+<ul class="sub-item">
+<li><a href="#sec-31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</a></li>
+<li><a href="#sec-32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</a></li>
+<li><a href="#sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a>
+<ul class="sub-item">
+<li><a href="#sec-41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</a></li>
+<li><a href="#sec-42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy">6. Deployment Strategy</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
+
+</ul>
+</nav>
+
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>LemGendary Model Training Suite</strong> has achieved its ultimate evolution by
+migrating from legacy proxy models to production-grade <strong>SOTA (State-of-the-Art)
+Architectures</strong>, spearheaded by <strong>MIRNet v2</strong> (Multi-Scale Residual Network).
+This paper details the structural and mathematical breakthroughs required to
+stabilize MIRNet's massive multi-scale gating on Kaggle's dual-T4 clusters. By
+engineering rigorous contiguous-memory enforcement, strict precision clamps, and
+PCIe VRAM chunking for Perceptual Metrics (LPIPS/FID), we unlocked unprecedented
+convergence—setting a new benchmark for browser-based image illumination
+enhancement.</p>
 </section>
 
-<section id="section-3">
-<h2>2. Visual Taxonomy <span class="score-badge-neutral">[THEORETICAL]</span>: The LemGendary Restoration Subset</h2>
-            <p>The LemGendary MIRNet is explicitly built to handle the most mathematically disruptive illumination artifacts in digital photography: extreme low-light environments and blown-out overexposures.</p>
-            <p>Unlike standard UNet approaches that operate linearly, MIRNet maintains parallel high-to-low resolution streams, exchanging multi-scale features bidirectionally across the network to preserve exact spatial details while correcting global illumination.</p>
-            
-            <h3 id="21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</h3>
-            <p>By unifying diverse low-illumination and night subsets into <code>LemGendizedMirNetLowLight</code>, the MIRNet backbone is trained to cleanly restore dynamic range, amplify features, and suppress severe sensor noise natively.</p>
-
-            <h3 id="22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</h3>
-            <p>By unifying diverse overexposed and dynamic range subsets into <code>LemGendizedMirNetExposure</code>, the MIRNet backbone is trained to cleanly restore blown-out highlights and balance overall contrast gradients natively.</p>
-
-            <hr />
-            <hr />
-
-            <div class="visual-taxonomy">
-                <div class="quadrant">
-                    <img src="../assets/mirnet_lowlight_example.png" alt="Low Light Enhancement" class="img-full">
-                    <div class="quadrant-info" class="p-15">
-                        <h4>Low-Light Manifold</h4>
-                        <p>Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.</p>
-                    </div>
-                </div>
-                <div class="quadrant">
-                    <img src="../assets/mirnet_exposure_example.png" alt="Exposure Correction" class="img-full">
-                    <div class="quadrant-info" class="p-15">
-                        <h4>Exposure Manifold</h4>
-                        <p>Recovering blown-out highlights and balancing overall dynamic range in overexposed photography.</p>
-                    </div>
-                </div>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<section id="sec-11-what-mirnet-does-in-plain-english">
+<h2>1.1 What MIRNet Does (In Plain English)</h2>
+<p>Imagine taking photos in almost pitch-black darkness or on an intensely sunny
+beach where parts of the image are completely blown out:</p>
+<ul>
+<li><strong>Dual-Track Illumination Recovery:</strong> MIRNet v2 operates across two difficult
+lighting regimes: pulling sharp, colorful images out of near-black shadows,
+and recovering highlight texture from overexposed skies.</li>
+<li><strong>Parallel Multi-Scale Streams:</strong> Rather than shrinking the image down and
+guessing missing fine details on the way back up, MIRNet processes
+full-resolution, medium, and low-scale streams in parallel, allowing crisp
+textures and broad exposure corrections to communicate continuously.</li>
+<li><strong>Zero Grainy Noise Amplification:</strong> It brightens dim subjects naturally
+without blowing up the ugly multi-colored sensor grain typical of night-mode
+camera processing.</li>
+</ul>
+<h3 id="visual-demonstration-lighting-correction-profiles">Visual Demonstration: Lighting Correction Profiles</h3>
+<ul>
+<li><strong>Low-Light (<code>mirnet_lowlight</code>)</strong>: Extreme Lighting Problem: Severe darkness,
+lost dynamic range, heavy ISO noise; MIRNet v2 Enhanced Output: Natural
+illumination, clean shadows &amp; restored color fidelity</li>
+<li><strong>Exposure (<code>mirnet_exposure</code>)</strong>: Extreme Lighting Problem: Blown-out white
+highlights &amp; harsh contrast gradients; MIRNet v2 Enhanced Output: Recovered
+highlight textures &amp; balanced mid-tone contrast</li>
+</ul>
 </section>
 
-<section id="section-5">
+<section id="sec-2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset">
+<h2>2. Visual Taxonomy <code>[THEORETICAL]</code>: The LemGendary Restoration Subset</h2>
+<p>The LemGendary MIRNet is explicitly built to handle the most mathematically
+disruptive illumination artifacts in digital photography: extreme low-light
+environments and blown-out overexposures.</p>
+<p>Unlike standard UNet approaches that operate linearly, MIRNet maintains parallel
+high-to-low resolution streams, exchanging multi-scale features bidirectionally
+across the network to preserve exact spatial details while correcting global
+illumination.</p>
+<h3 id="sec-21-low-light-manifold-mirnet_lowlight">2.1 Low-Light Manifold (mirnet_lowlight)</h3>
+<p>By unifying diverse low-illumination and night subsets into
+<code>LemGendizedMirNetLowLight</code>, the MIRNet backbone is trained to cleanly restore
+dynamic range, amplify features, and suppress severe sensor noise natively.</p>
+<p><img src="../assets/mirnet_lowlight_example.png" alt="Low Light Enhancement">
+Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.</p>
+<h3 id="sec-22-exposure-manifold-mirnet_exposure">2.2 Exposure Manifold (mirnet_exposure)</h3>
+<p>By unifying diverse overexposed and dynamic range subsets into
+<code>LemGendizedMirNetExposure</code>, the MIRNet backbone is trained to cleanly restore
+blown-out highlights and balance overall contrast gradients natively.</p>
+<p><img src="../assets/mirnet_exposure_example.png" alt="Exposure Correction">
+Recovering blown-out highlights and balancing overall dynamic range in
+overexposed photography.</p>
+</section>
+
+<section id="sec-3-shared-foundations">
 <h2>3. Shared Foundations</h2>
-            
-            <h3 id="hardware">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
-            <p>Training massive architectures like MIRNet (31M+ parameters) at high resolutions requires absolute synchronization on multi-GPU Kaggle environments and constrained local hardware.</p>
-            
-            <h4>The Headroom-Aware Memory-Sentinel</h4>
-            <p>The Sentinel has evolved to actively probe the hardware environment using <code>torch.cuda.mem_get_info()</code>. This ensures that even on 4GB hardware, the MIRNet architecture is seated with a perfectly calculated physical batch size, preventing kernel-level address misalignments and system-wide paging.</p>
-
-            <h3 id="math-opt">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
-            <p>While PSNR measures absolute mathematical pixel differences, it is notoriously poor at determining if an image "looks good." The 2026 upgrade integrated advanced perceptual loops:</p>
-            <ul>
-                <li><strong>LPIPS (Learned Perceptual Image Patch Similarity)</strong>: Feeds predicted inputs against ground truth through a massive VGG-16 backbone to evaluate deep conceptual feature layout.</li>
-                <li><strong>FID (Frechet Inception Distance)</strong>: Analyzes macro-distribution geometry through an InceptionV3 neural matrix.</li>
-            </ul>
-
-            <h3 id="cloud">3.3 Kaggle Cloud Execution Protocols</h3>
-            <ul>
-                <li><strong>Single-GPU Specialization</strong>: We actively deprecate the second GPU in Kaggle instances to double VRAM stability linearly on <code>cuda:0</code> because splitting MIRNet's parallel streams across PCIe buses inherently throttles Kaggle VMs.</li>
-                <li><strong>Registry-First Dynamic Unification</strong>: All asset handles and Kaggle URLs are resolved from the <code>unified_models_v2.yaml</code> registry, ensuring the pipeline is robust against local/cloud path shifts.</li>
-            </ul>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="sec-31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
+<p>Training massive architectures like MIRNet (31M+ parameters) at high resolutions
+requires absolute synchronization on multi-GPU Kaggle environments and
+constrained local hardware.</p>
+<h4 id="the-headroom-aware-memory-sentinel">The Headroom-Aware Memory-Sentinel</h4>
+<p>The Sentinel has evolved to actively probe the hardware environment using
+<code>torch.cuda.mem_get_info()</code>. This ensures that even on 4GB hardware, the MIRNet
+architecture is seated with a perfectly calculated physical batch size,
+preventing kernel-level address misalignments and system-wide paging.</p>
+<h3 id="sec-32-mathematical-optimization-high-fidelity-perceptual-engines">3.2 Mathematical Optimization: High-Fidelity Perceptual Engines</h3>
+<p>While PSNR measures absolute mathematical pixel differences, it is notoriously
+poor at determining if an image &quot;looks good.&quot; The 2026 upgrade integrated
+advanced perceptual loops:</p>
+<ul>
+<li><strong>LPIPS (Learned Perceptual Image Patch Similarity)</strong>: Feeds predicted inputs
+against ground truth through a massive VGG-16 backbone to evaluate deep
+conceptual feature layout.</li>
+<li><strong>FID (Frechet Inception Distance)</strong>: Analyzes macro-distribution geometry
+through an InceptionV3 neural matrix.</li>
+</ul>
+<h3 id="sec-33-kaggle-cloud-execution-protocols">3.3 Kaggle Cloud Execution Protocols</h3>
+<ul>
+<li><strong>Single-GPU Specialization</strong>: We actively deprecate the second GPU in Kaggle
+instances to double VRAM stability linearly on <code>cuda:0</code> because splitting
+MIRNet's parallel streams across PCIe buses inherently throttles Kaggle VMs.</li>
+<li><strong>Registry-First Dynamic Unification</strong>: All asset handles and Kaggle URLs are
+resolved from the <code>unified_models_v2.yaml</code> registry, ensuring the pipeline is
+robust against local/cloud path shifts.</li>
+</ul>
 </section>
 
-<section id="section-7">
+<section id="sec-4-model-deep-dives">
 <h2>4. Model Deep-Dives</h2>
-
-            <h3 id="mirnet-low-light">4.1 MIRNet v2 Low-Light Enhancement</h3>
-
-            <h4>Low-Light Model Info</h4>
-            <ul>
-                <li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
-                <li><strong>Input Resolution</strong>: 256x256</li>
-                <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
-                <li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
-            </ul>
-
-            <h4>Low-Light Manifold Info</h4>
-            <ul>
-                <li><strong>Dataset</strong>: <code>LemGendizedMirNetLowLight</code></li>
-                <li><strong>Total Samples</strong>: 15,070 (merged from Exdark, Learning to See in the Dark, LOL, LOL v2, Low Light Image Enhancement Datasets, Smartphone Image Denoising Dataset)</li>
-                <li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict manifold alignment against extreme darkness degradation.</li>
-            </ul>
-
-            <h4>Low-Light Performance Metrics</h4>
-            <ul>
-                <li><strong>Best PSNR</strong>: 33.89 dB</li>
-                <li><strong>Best SSIM</strong>: 0.9702</li>
-                <li><strong>Best LPIPS</strong>: 0.0759</li>
-                <li><strong>Best FID</strong>: 7.7552</li>
-            </ul>
-
-            <h4>Low-Light Training Curve</h4>
-            <div class="card">
-                <img alt="MIRNet Low-Light Training Curve" src="../assets/mirnet_lowlight_training.png" class="img-full">
-                <p class="sample-caption"><em>Figure 1: Training Convergence for MIRNet v2 Low-Light Enhancement.</em></p>
-            </div>
-
-            <h4>Low-Light Specific Issues and Optimizations</h4>
-            <p>MIRNet requires high VRAM to maintain parallel feature streams. To prevent OOM errors during high-resolution backpropagation, strict <code>Batch Size 1</code> constraints combined with Multi-Step Gradient Accumulation were enforced, allowing deep optimization without system crash.</p>
-
-            <hr>
-
-            <h3 id="mirnet-exposure">4.2 MIRNet v2 Exposure Correction</h3>
-
-            <h4>Exposure Model Info</h4>
-            <ul>
-                <li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
-                <li><strong>Input Resolution</strong>: 256x256</li>
-                <li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
-            </ul>
-
-            <h4>Exposure Manifold Info</h4>
-            <ul>
-                <li><strong>Dataset</strong>: <code>LemGendizedMirNetExposure</code></li>
-                <li><strong>Total Samples</strong>: 1,416,459 (merged from DPED, Adobe Fivek)</li>
-                <li><strong>Primary Task</strong>: Multi-scale illumination adjustment guided by L1 Loss.</li>
-            </ul>
-
-            <h4>Exposure Performance Metrics</h4>
-            <ul>
-                <li><strong>Best PSNR</strong>: 23.18 dB</li>
-                <li><strong>Best SSIM</strong>: 0.9551</li>
-                <li><strong>Best LPIPS</strong>: 0.1143</li>
-                <li><strong>Best FID</strong>: 1.6751</li>
-            </ul>
-
-            <h4>Exposure Training Curve</h4>
-            <div class="card">
-                <img alt="MIRNet Exposure Training Curve" src="../assets/mirnet_exposure_training.png" class="img-full">
-                <p class="sample-caption"><em>Figure 2: Training Convergence for MIRNet v2 Exposure Correction.</em></p>
-            </div>
-
-            <h4>Exposure Specific Issues and Optimizations</h4>
-            <p>Correcting overexposure without dulling midtones requires precise gradient scaling. Because MSE excessively blurs specular highlights, the architecture was explicitly transitioned to <code>L1 + LPIPS</code> loss to retain sharp pixel intensity boundaries and preserve deep perceptual textures during dynamic range compression.</p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="sec-41-mirnet-v2-low-light-enhancement">4.1 MIRNet v2 Low-Light Enhancement</h3>
+<h4 id="low-light-model-info">Low-Light Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
+<li><strong>Input Resolution</strong>: 256x256</li>
+<li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+<li><strong>Latency</strong>: Sub-50ms inference bound on target local GPU hardware</li>
+</ul>
+<h4 id="low-light-manifold-info">Low-Light Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedMirNetLowLight</code></li>
+<li><strong>Total Samples</strong>: 15,070 (merged from Exdark, Learning to See in the Dark,
+LOL, LOL v2, Low Light Image Enhancement Datasets, Smartphone Image Denoising
+Dataset)</li>
+<li><strong>Primary Task</strong>: Predict restored pixels using L1 Loss to enforce strict
+manifold alignment against extreme darkness degradation.</li>
+</ul>
+<h4 id="low-light-performance-metrics">Low-Light Performance Metrics</h4>
+<ul>
+<li><strong>Best PSNR</strong>: <code>[MEASURED]</code> 33.89 dB</li>
+<li><strong>Best SSIM</strong>: 0.9702</li>
+<li><strong>Best LPIPS</strong>: 0.0759</li>
+<li><strong>Best FID</strong>: 7.7552</li>
+</ul>
+<h4 id="low-light-training-curve">Low-Light Training Curve</h4>
+<p><img src="../assets/mirnet_lowlight_training.png" alt="MIRNet Low-Light Training Curve">
+<em>Figure 1: Training Convergence for MIRNet v2 Low-Light Enhancement.</em></p>
+<h4 id="low-light-specific-issues-and-optimizations">Low-Light Specific Issues and Optimizations</h4>
+<p>MIRNet requires high VRAM to maintain parallel feature streams. To prevent OOM
+errors during high-resolution backpropagation, strict <code>Batch Size 1</code> constraints
+combined with Multi-Step Gradient Accumulation were enforced, allowing deep
+optimization without system crash.</p>
+<h3 id="sec-42-mirnet-v2-exposure-correction">4.2 MIRNet v2 Exposure Correction</h3>
+<h4 id="exposure-model-info">Exposure Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: MIRNet (Standard Backbone)</li>
+<li><strong>Input Resolution</strong>: 256x256</li>
+<li><strong>Precision</strong>: ONNX FP16 (Edge) / PyTorch FP32 (Training)</li>
+</ul>
+<h4 id="exposure-manifold-info">Exposure Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedMirNetExposure</code></li>
+<li><strong>Total Samples</strong>: 1,416,459 (merged from DPED, Adobe Fivek)</li>
+<li><strong>Primary Task</strong>: Multi-scale illumination adjustment guided by L1 Loss.</li>
+</ul>
+<h4 id="exposure-performance-metrics">Exposure Performance Metrics</h4>
+<ul>
+<li><strong>Best PSNR</strong>: <code>[MEASURED]</code> 23.18 dB</li>
+<li><strong>Best SSIM</strong>: 0.9551</li>
+<li><strong>Best LPIPS</strong>: 0.1143</li>
+<li><strong>Best FID</strong>: 1.6751</li>
+</ul>
+<h4 id="exposure-training-curve">Exposure Training Curve</h4>
+<p><img src="../assets/mirnet_exposure_training.png" alt="MIRNet Exposure Training Curve">
+<em>Figure 2: Training Convergence for MIRNet v2 Exposure Correction.</em></p>
+<h4 id="exposure-specific-issues-and-optimizations">Exposure Specific Issues and Optimizations</h4>
+<p>Correcting overexposure without dulling midtones requires precise gradient
+scaling. Because MSE excessively blurs specular highlights, the architecture was
+explicitly transitioned to <code>L1 + LPIPS</code> loss to retain sharp pixel intensity
+boundaries and preserve deep perceptual textures during dynamic range
+compression.</p>
 </section>
 
-<section id="section-9">
+<section id="sec-5-challenges--resilience-architecture">
 <h2>5. Challenges &amp; Resilience Architecture</h2>
-
-            <h3>The Parallel Stream Memory Exhaustion</h3>
-            <p><strong>Issue</strong>: MIRNet v2 maintains multiple resolution streams concurrently and merges them via Dual-Attention Gating. On Kaggle's 15GB T4 instances, this multi-scale memory footprint instantly triggered <code>CUDA Out of Memory</code> when scaled beyond a batch size of 2.</p>
-            <p><strong>Fix</strong>: Engineered the <strong>Survival Profile</strong>. The environment dynamically detects VRAM constraints and enforces a <strong>Physical Batch Size 1</strong> strategy coupled with massive <strong>Gradient Accumulation</strong>, maintaining the mathematical integrity without exploding VRAM.</p>
-
-            <h3>The Contiguous View Kernel Crash</h3>
-            <p><strong>Issue</strong>: When interacting with partial dataset views, PyTorch passed fragmented tensors into MIRNet's channel-attention blocks, causing <code>misaligned address</code> crashes.</p>
-            <p><strong>Fix</strong>: Patched <code>models/core_restoration.py</code> with rigorous <code>.contiguous()</code> clamps. Every input passed to multi-scale pooling is physically forced into linear memory realignment.</p>
-
-            <h3>Persistent I/O Synchronization (v5.8)</h3>
-            <p><strong>Issue</strong>: On systems with massive multitask datasets, PyTorch dataloader workers would hang during initialization.</p>
-            <p><strong>Fix</strong>: Engineered the <strong>Persistent Mission Manifest</strong>. Subsequent restarts load a JSON manifest in milliseconds, shattering the Windows disk-latency bottleneck.</p>
-
-            <h3>Validation Sharding (30% Fixed Audit)</h3>
-            <p><strong>Issue</strong>: High-Fidelity Perceptual Metrics (InceptionV3 FID, VGG LPIPS) require immense computational overhead, destroying mission velocity during MIRNet's deep validation loops.</p>
-            <p><strong>Fix</strong>: Implemented <strong>Validation Sharding</strong>. The pipeline now evaluates a fixed <strong>30% random-seeded subset</strong> of the validation loader to accelerate cycles while retaining stable LPIPS/FID curves.</p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="the-parallel-stream-memory-exhaustion">The Parallel Stream Memory Exhaustion</h3>
+<p><strong>Issue</strong>: MIRNet v2 maintains multiple resolution streams concurrently and
+merges them via Dual-Attention Gating. On Kaggle's 15GB T4 instances, this
+multi-scale memory footprint instantly triggered <code>CUDA Out of Memory</code> when
+scaled beyond a batch size of 2.
+<strong>Fix</strong>: Engineered the <strong>Survival Profile</strong>. The environment dynamically
+detects VRAM constraints and enforces a <strong>Physical Batch Size 1</strong> strategy
+coupled with massive <strong>Gradient Accumulation</strong>, maintaining the mathematical
+integrity without exploding VRAM.</p>
+<h3 id="the-contiguous-view-kernel-crash">The Contiguous View Kernel Crash</h3>
+<p><strong>Issue</strong>: When interacting with partial dataset views, PyTorch passed
+fragmented tensors into MIRNet's channel-attention blocks, causing
+<code>misaligned address</code> crashes.
+<strong>Fix</strong>: Patched <code>models/core_restoration.py</code> with rigorous <code>.contiguous()</code>
+clamps. Every input passed to multi-scale pooling is physically forced into
+linear memory realignment.</p>
+<h3 id="persistent-io-synchronization-v58">Persistent I/O Synchronization (v5.8)</h3>
+<p><strong>Issue</strong>: On systems with massive multitask datasets, PyTorch dataloader
+workers would hang during initialization.
+<strong>Fix</strong>: Engineered the <strong>Persistent Mission Manifest</strong>. Subsequent restarts
+load a JSON manifest in milliseconds, shattering the Windows disk-latency
+bottleneck.</p>
+<h3 id="validation-sharding-30-fixed-audit">Validation Sharding (30% Fixed Audit)</h3>
+<p><strong>Issue</strong>: High-Fidelity Perceptual Metrics (InceptionV3 FID, VGG LPIPS) require
+immense computational overhead, destroying mission velocity during MIRNet's deep
+validation loops.
+<strong>Fix</strong>: Implemented <strong>Validation Sharding</strong>. The pipeline now evaluates a fixed
+<strong>30% random-seeded subset</strong> of the validation loader to accelerate cycles while
+retaining stable LPIPS/FID curves.</p>
 </section>
 
-<section id="section-11">
+<section id="sec-6-deployment-strategy">
 <h2>6. Deployment Strategy</h2>
-
-            <h3>Standalone Exporters</h3>
-            <p>The [CURRENT] checkpoints saved under <code>DataParallel</code> are intelligently parsed and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated on local standalone PCs.</p>
-
-            <h3>The Ghost-Severing Protocol</h3>
-            <p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically constrained to a self-contained payload architecture. Any orphaned <code>.onnx.data</code> graph fragments are physically deleted, ensuring a single, isolated payload powers the web instance natively.</p>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="standalone-exporters">Standalone Exporters</h3>
+<p>The [CURRENT] checkpoints saved under <code>DataParallel</code> are intelligently parsed
+and mapped cleanly onto raw CPUs, allowing Kaggle multi-GPU runs to be evaluated
+on local standalone PCs.</p>
+<h3 id="the-ghost-severing-protocol">The Ghost-Severing Protocol</h3>
+<p><strong>Fix</strong>: Implemented the <strong>Ghost Severing Protocol</strong>. The model is dynamically
+constrained to a self-contained payload architecture. Any orphaned <code>.onnx.data</code>
+graph fragments are physically deleted, ensuring a single, isolated payload
+powers the web instance natively.</p>
 </section>
 
-<section id="section-13">
+<section id="sec-7-sota-architectural-performance-matrix">
 <h2>7. SOTA Architectural Performance Matrix</h2>
-            <div class="table-result-scroll">
-                <table class="table-result">
-                    <thead>
-                        <tr>
-                            <th>Architecture</th>
-                            <th>Paradigm</th>
-                            <th>Parameters</th>
-                            <th>GPU Footprint (1080p)</th>
-                            <th>PSNR Target <span class="score-badge-neutral">[TARGET]</span></th>
-                            <th>Perceptual Integrity (LPIPS)</th>
-                            <th>WebGPU Viability</th>
-                <th>Status &amp; Verification</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>DnCNN</strong></td>
-                            <td><em>Legacy CNN</em></td>
-                            <td>0.5M</td>
-                            <td>&lt; 1 GB</td>
-                            <td>~28.0dB</td>
-                            <td>0.29 (VGG)</td>
-                            <td><span class="val-good">Highly Optimal</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>U-Net</strong></td>
-                            <td><em>Feature Pyramids</em></td>
-                            <td>13M</td>
-                            <td>~ 3 GB</td>
-                            <td>~30.2dB</td>
-                            <td>0.17 (VGG)</td>
-                            <td><span class="val-good">Optimal</span></td>
-                <td><span class="score-badge-neutral">Baseline [MEASURED]</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Restormer</strong></td>
-                            <td><em>Swin-Transformer MDTA</em></td>
-                            <td>26M</td>
-                            <td>~ 14 GB</td>
-                            <td>~32.4dB</td>
-                            <td>0.05 (VGG)</td>
-                            <td><span class="val-bad">Highly Degraded (Opset)</span></td>
-                        </tr>
-                        <tr class="row-highlight">
-                            <td class="cell-accent"><strong>LemGendary MIRNet v2</strong></td>
-                            <td class="cell-accent"><em>Multi-Scale Gating (Ours)</em></td>
-                            <td class="cell-accent"><strong>31M</strong></td>
-                            <td class="cell-accent"><strong>~ 11 GB</strong></td>
-                            <td class="cell-accent"><strong>~33.8dB+</strong></td>
-                            <td class="cell-accent"><strong>&lt; 0.08 (VGG)</strong></td>
-                            <td><span class="td-accent-bold">Production Grade</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><strong>DnCNN</strong>: Paradigm: <em>Legacy CNN</em>; Parameters: 0.5M; GPU Footprint (1080p): &lt;
+1 GB; PSNR Target: ~28.0dB; Perceptual Integrity (LPIPS): 0.29 (VGG); WebGPU
+Viability: Highly Optimal</li>
+<li><strong>U-Net</strong>: Paradigm: <em>Feature Pyramids</em>; Parameters: 13M; GPU Footprint
+(1080p): ~ 3 GB; PSNR Target: ~30.2dB; Perceptual Integrity (LPIPS): 0.17
+(VGG); WebGPU Viability: Optimal</li>
+<li><strong>Restormer</strong>: Paradigm: <em>Swin-Transformer MDTA</em>; Parameters: 26M; GPU
+Footprint (1080p): ~ 14 GB; PSNR Target: ~32.4dB; Perceptual Integrity
+(LPIPS): 0.05 (VGG); WebGPU Viability: Highly Degraded (Opset)</li>
+<li><strong>LemGendary MIRNet v2</strong>: Paradigm: <em>Multi-Scale Gating (Ours)</em>; Parameters:
+<strong>31M</strong>; GPU Footprint (1080p): <strong>~ 11 GB</strong>; PSNR Target: <strong>~33.8dB+</strong>;
+Perceptual Integrity (LPIPS): <strong>&lt; 0.08 (VGG)</strong>; WebGPU Viability: <strong>Production
+Grade</strong></li>
+</ul>
 </section>
 
-<section id="conclusion">
+<section id="sec-8-conclusion">
 <h2>8. Conclusion</h2>
-            <p>The stabilization of SOTA Backbones represents the final engineering milestone of the LemGendary project. By mastering multi-scale gating memory pressures and enforcing contiguous tensor mappings, we built a framework capable of handling MIRNet v2's massive parameter requirements.</p>
-            <p>The resulting Low-Light and Exposure models prove that studio-grade illumination restoration can be generated automatically in the cloud and deployed instantly via WebGPU, without resorting to expensive multi-pass compositing.</p>
-        
+<p>The stabilization of SOTA Backbones represents the final engineering milestone
+of the LemGendary project. By mastering multi-scale gating memory pressures and
+enforcing contiguous tensor mappings, we built a framework capable of handling
+MIRNet v2's massive parameter requirements.</p>
+<p>The resulting Low-Light and Exposure models prove that studio-grade illumination
+restoration can be generated automatically in the cloud and deployed instantly
+via WebGPU, without resorting to expensive multi-pass compositing.</p>
+<h3 id="related-ecosystem-documentation">Related Ecosystem Documentation</h3>
+<ul>
+<li><a href="dataset-compiler.html">Dataset Compiler Suite</a> (Manifold: <code>LemGendizedMirnetLarge</code>)</li>
+<li><a href="training-suite-master.html">Training Suite Architecture</a> (Tri-Format ONNX / PT
+Checkpoint Lifecycle)</li>
+<li><a href="ai-studio-manual.html">AI Studio GUI Manual</a> (Interactive Training Panel Controls)</li>
+<li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a> (System
+Governance &amp; Specifications)</li>
+</ul>
+</section>
 
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
-                <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
-                <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
-                    <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedMirnetLarge)</a></li>
-                    <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
-                    <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
-                    <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
-                </ul>
-            </div>
-        </section>
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_MIRNET.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

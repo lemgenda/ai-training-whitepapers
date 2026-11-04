@@ -2,569 +2,417 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master CLI Operations Manual - LemGendary AI Ecosystem</title>
-    <meta name="description"
-        content="Authoritative Master Command-Line Interface Operations Manual for the LemGendary AI Ecosystem and all seven projects.">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LemGendary Ecosystem: Master CLI Operations Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="manuals-hub.html">Manuals Hub</a>
-                <a href="ai-studio-manual.html">AI Studio GUI Manual</a>
-                <a href="cli-manual.html" class="active">Master CLI Manual</a>
-                <a href="api-manual.html">Master API Manual</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
+<a href="ai-studio-manual.html" class="tab-link">AI Studio GUI Manual</a>
+<a href="cli-manual.html" class="tab-link active">Master CLI Manual</a>
+<a href="api-manual.html" class="tab-link">Master API Manual</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>LemGendary Ecosystem: Master CLI Operations Manual</h1>
+<p class="subtitle">Category 00 | LemGendary AI Documentation Hub</p>
+<div class="meta">
+<span><strong>Version</strong>: <code>v16.9.44-STABLE</code></span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="../index.html" class="toc-link-accent">Back
-                        to Index</a></li>
-                <li><a href="#section-1">1. Executive Overview</a></li>
-                <li><a href="#section-2">2. Environment Manager CLI (<code>lem-env</code>)</a>
-                    <ul class="sub-item">
-                        <li><a href="#section-2-1">2.1 Global Options &amp; Invocation</a></li>
-                        <li><a href="#section-2-2">2.2 Hardware Probing (<code>probe</code>)</a></li>
-                        <li><a href="#section-2-3">2.3 Ecosystem Health Audit (<code>audit</code>)</a></li>
-                        <li><a href="#section-2-4">2.4 Smart Clean Install Pipeline (<code>install</code>)</a></li>
-                        <li><a href="#section-2-5">2.5 Safe Bottom-Up Package Upgrades (<code>update</code>)</a></li>
-                        <li><a href="#section-2-6">2.6 Manifest Synchronization (<code>sync</code>)</a></li>
-                        <li><a href="#section-2-7">2.7 Multi-Gate Validation Engine (<code>validate</code>)</a></li>
-                        <li><a href="#section-2-8">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</a></li>
-                        <li><a href="#section-2-9">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</a>
-                        </li>
-                        <li><a href="#section-2-10">2.10 Git Hook Installation (<code>setup-hooks</code>)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-3">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a>
-                </li>
-                <li><a href="#section-4">4. AI Studio Desktop GUI CLI &amp; Toolchain</a></li>
-                <li><a href="#section-5">5. Datasets Compilation Suite CLI</a></li>
-                <li><a href="#section-6">6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</a>
-                    <ul class="sub-item">
-                        <li><a href="#section-6-1">6.1 Invocation Syntax &amp; Global Help</a></li>
-                        <li><a href="#section-6-2">6.2 Model Training (<code>train</code>)</a></li>
-                        <li><a href="#section-6-3">6.3 Checkpoint Evaluation (<code>eval</code>)</a></li>
-                        <li><a href="#section-6-4">6.4 Model Compilation &amp; Export (<code>export</code>)</a></li>
-                        <li><a href="#section-6-5">6.5 Notebook Generation (<code>notebooks</code>)</a></li>
-                        <li><a href="#section-6-6">6.6 Checkpoint Management (<code>checkpoints</code>)</a></li>
-                        <li><a href="#section-6-7">6.7 Canonical Presets (<code>presets</code>)</a></li>
-                        <li><a href="#section-6-8">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</a></li>
-                        <li><a href="#section-6-9">6.9 Cloud Synchronization (<code>sync</code>)</a></li>
-                        <li><a href="#section-6-10">6.10 Sidecar Daemon Operations (<code>server</code>)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-7">7. Models Hub &amp; Verification Toolchain</a></li>
-                <li><a href="#section-8">8. Documentation Hub &amp; Static Validation</a></li>
-                <li><a href="#section-9">9. Exit Codes, Automation &amp; CI/CD Integration</a></li>
-                <li><a href="#companion-documentation">Companion Documentation</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-executive-overview">1. Executive Overview</a></li>
+<li><a href="#sec-2-environment-manager-cli-lem-env">2. Environment Manager CLI (<code>lem-env</code>)</a>
+<ul class="sub-item">
+<li><a href="#sec-21-global-options--invocation">2.1 Global Options &amp; Invocation</a></li>
+<li><a href="#sec-22-hardware-probing-probe">2.2 Hardware Probing (<code>probe</code>)</a></li>
+<li><a href="#sec-23-ecosystem-health-audit-audit">2.3 Ecosystem Health Audit (<code>audit</code>)</a></li>
+<li><a href="#sec-24-smart-clean-install-pipeline-install">2.4 Smart Clean Install Pipeline (<code>install</code>)</a></li>
+<li><a href="#sec-25-safe-bottom-up-package-upgrades-update">2.5 Safe Bottom-Up Package Upgrades (<code>update</code>)</a></li>
+<li><a href="#sec-26-manifest-synchronization-sync">2.6 Manifest Synchronization (<code>sync</code>)</a></li>
+<li><a href="#sec-27-multi-gate-validation-engine-validate">2.7 Multi-Gate Validation Engine (<code>validate</code>)</a></li>
+<li><a href="#sec-28-workspace-cache--residue-purge-clean">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</a></li>
+<li><a href="#sec-29-telemetry-daemon--background-server-serve">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</a></li>
+<li><a href="#sec-210-git-hook-installation-setup-hooks">2.10 Git Hook Installation (<code>setup-hooks</code>)</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-interactive-powershell-host-lemgendary_env_managerps1">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a></li>
+<li><a href="#sec-4-lemgendary-ai-studio-gui-cli--toolchain">4. LemGendary AI Studio GUI CLI &amp; Toolchain</a></li>
+<li><a href="#sec-5-datasets-compilation-suite-cli">5. Datasets Compilation Suite CLI</a>
+<ul class="sub-item">
+<li><a href="#sec-51-invocation-syntax">5.1 Invocation Syntax</a></li>
+<li><a href="#sec-52-manifold-compilation-compile">5.2 Manifold Compilation (<code>compile</code>)</a></li>
+<li><a href="#sec-53-degradation-engine-synthesis-degrade">5.3 Degradation Engine Synthesis (<code>degrade</code>)</a></li>
+<li><a href="#sec-54-audit-deduplication--hardlinks-audit">5.4 Audit, Deduplication &amp; Hardlinks (<code>audit</code>)</a></li>
+<li><a href="#sec-55-retroactive-transcoding-transcode">5.5 Retroactive Transcoding (<code>transcode</code>)</a></li>
+<li><a href="#sec-56-smart-multi-modal-generation-label-prompt-mask">5.6 Smart Multi-Modal Generation (<code>label</code>, <code>prompt</code>, <code>mask</code>)</a></li>
+<li><a href="#sec-57-variant-reduction--modernization-reduce-modernize">5.7 Variant Reduction &amp; Modernization (<code>reduce</code>, <code>modernize</code>)</a></li>
+<li><a href="#sec-58-sidecar-api-server-server">5.8 Sidecar API Server (<code>server</code>)</a></li>
+<li><a href="#sec-59-ecosystem-delegation-env">5.9 Ecosystem Delegation (<code>env</code>)</a></li>
+<li><a href="#sec-510-cloud--metadata-sync-sync-docs-config">5.10 Cloud &amp; Metadata Sync (<code>sync</code>, <code>docs</code>, <code>config</code>)</a></li>
+<li><a href="#sec-511-canonical-compiler-presets-presets">5.11 Canonical Compiler Presets (<code>presets</code>)</a></li>
+<li><a href="#sec-512-forex-universe--parquet-operations-forex">5.12 Forex Universe &amp; Parquet Operations (<code>forex</code>)</a></li>
+<li><a href="#sec-513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy">5.13 Direct Streaming Zip-to-Container Engine (<code>stream_zip_to_container.py</code>)</a></li>
+<li><a href="#sec-514-retroactive-container-migration-format-migrate--format-write">5.14 Retroactive Container Migration (<code>format migrate</code> / <code>format write</code>)</a></li>
+<li><a href="#sec-515-upstream-dataset-expansion--multi-format-ingestion-reference">5.15 Upstream Dataset Expansion &amp; Multi-Format Ingestion Reference</a></li>
+<li><a href="#sec-516-llm-dataset-compilation--quality-invariant-auditing-llm">5.16 LLM Dataset Compilation &amp; Quality Invariant Auditing (<code>llm</code>)</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-training-suite-cli-lemtrain--python-clipy">6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</a>
+<ul class="sub-item">
+<li><a href="#sec-61-invocation-syntax--global-help">6.1 Invocation Syntax &amp; Global Help</a></li>
+<li><a href="#sec-62-model-training-train">6.2 Model Training (<code>train</code>)</a></li>
+<li><a href="#sec-63-checkpoint-evaluation-eval">6.3 Checkpoint Evaluation (<code>eval</code>)</a></li>
+<li><a href="#sec-64-model-compilation--export-export">6.4 Model Compilation &amp; Export (<code>export</code>)</a></li>
+<li><a href="#sec-65-notebook-generation-notebooks">6.5 Notebook Generation (<code>notebooks</code>)</a></li>
+<li><a href="#sec-66-checkpoint-management-checkpoints">6.6 Checkpoint Management (<code>checkpoints</code>)</a></li>
+<li><a href="#sec-67-canonical-presets-presets">6.7 Canonical Presets (<code>presets</code>)</a></li>
+<li><a href="#sec-68-hardware--architecture-audit-audit">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</a></li>
+<li><a href="#sec-69-cloud-synchronization-sync">6.9 Cloud Synchronization (<code>sync</code>)</a></li>
+<li><a href="#sec-610-sidecar-daemon-operations-server">6.10 Sidecar Daemon Operations (<code>server</code>)</a></li>
+<li><a href="#sec-611-llm-causal-instruction-tuning--model-export-llm">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</a></li>
+<li><a href="#sec-612-fid-re-evaluation-python--m-trainingfid_reeval">6.12 FID Re-evaluation (<code>python -m training.fid_reeval</code>)</a></li>
+</ul>
+</li>
+<li><a href="#sec-7-models-hub--verification-toolchain">7. Models Hub &amp; Verification Toolchain</a></li>
+<li><a href="#sec-8-documentation-hub--static-validation">8. Documentation Hub &amp; Static Validation</a></li>
+<li><a href="#sec-9-exit-codes-automation--cicd-integration">9. Exit Codes, Automation &amp; CI/CD Integration</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>LemGendary Ecosystem: Master CLI Operations Manual</h1>
-        <p class="subtitle">Authoritative Command-Line Interface Reference for Ecosystem Management</p>
-        <div class="meta">
-                <span>Category 03 MANUALS</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Component: Ecosystem Toolchain</span>
-            </div>
 
+<section id="sec-1-executive-overview">
+<h2>1. Executive Overview</h2>
+<p>The LemGendary Ecosystem comprises seven specialized repositories orchestrated
+under a unified architectural contract.
+All command-line operations are standardized, deterministic, and free of
+external visual noise or emojis.
+The single authoritative command-line tool for ecosystem health, virtual
+environment lifecycles, and verification is <code>lem-env</code>,
+located in <code>lemgendary-env-manager</code>.</p>
+<p>Every toolchain command adheres strictly to semantic exit codes, making them
+directly suited for automated continuous integration,
+local terminal workflows, and cross-project orchestration.</p>
+</section>
 
-            <section id="section-1">
-                <h2>1. Executive Overview</h2>
-                <p>
-                    The LemGendary Ecosystem comprises seven specialized repositories orchestrated under a unified
-                    architectural contract.
-                    All command-line operations are standardized, deterministic, and free of external visual noise or
-                    emojis.
-                    The single authoritative command-line tool for ecosystem health, virtual environment lifecycles, and
-                    verification is <code>lem-env</code>,
-                    located in <code>lemgendary-env-manager</code>.
-                </p>
-                <p>
-                    Every toolchain command adheres strictly to semantic exit codes, making them directly suited for
-                    automated continuous integration,
-                    local terminal workflows, and cross-project orchestration.
-                </p>
-            </section>
-
-            <section id="section-2">
-                <h2>2. Environment Manager CLI (<code>lem-env</code>)</h2>
-                <p>
-                    <code>lem-env</code> is packaged as a standard Python console application using Typer and Rich. It
-                    provides the central management interface
-                    for inspecting hardware capabilities, provisioning isolated virtual environments, upgrading packages
-                    in dependency order,
-                    and enforcing strict linting and compilation gates across all seven workspaces.
-                </p>
-
-                <h3 id="section-2-1">2.1 Global Options &amp; Invocation</h3>
-                <pre><code># General invocation syntax
+<section id="sec-2-environment-manager-cli-lem-env">
+<h2>2. Environment Manager CLI (<code>lem-env</code>)</h2>
+<p><code>lem-env</code> is packaged as a standard Python console application using Typer and
+Rich. It provides the central management interface
+for inspecting hardware capabilities, provisioning isolated virtual
+environments, upgrading packages in dependency order,
+and enforcing strict linting and compilation gates across all seven workspaces.</p>
+<h3 id="sec-21-global-options--invocation">2.1 Global Options &amp; Invocation</h3>
+<pre><code class="language-bash"># General invocation syntax
 lem-env [COMMAND] [OPTIONS]
 
 # Help and discovery
-lem-env --help</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Global Option</th>
-                            <th>Type</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--help</code></td>
-                            <td>Flag</td>
-                            <td>Display comprehensive command usage, available subcommands, and flags</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3 id="section-2-2">2.2 Hardware Probing (<code>probe</code>)</h3>
-                <p>
-                    The <code>probe</code> command discovers system hardware, compute accelerators, operating system
-                    architecture, MetaTrader 5 availability,
-                    and checks for software update releases against upstream registries.
-                </p>
-                <pre><code>lem-env probe</code></pre>
-                <p>Key features:</p>
-                <ul>
-                    <li>Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Windows DirectML, and CPU
-                        fallback.</li>
-                    <li>Detects MetaTrader 5 terminal installations, install directories, and software versions.</li>
-                    <li>Queries <code>winget list</code> (installed version) and <code>winget show</code> (available
-                        version) to report both current and latest software versions with a status of
-                        <code>UP TO DATE</code>, <code>UPDATE AVAILABLE</code>, <code>NOT INSTALLED</code>, or
-                        <code>INSTALLED (not in winget)</code>.
-                    </li>
-                </ul>
-                <p>MetaTrader 5 detection priority:</p>
-                <ol>
-                    <li>Windows registry keys under <code>HKCU</code>/<code>HKLM\SOFTWARE\MetaQuotes\Terminal</code>
-                        (fast, ~5 ms)</li>
-                    <li>Well-known install paths (<code>C:\Program Files\MetaTrader 5\terminal64.exe</code>)</li>
-                    <li>PowerShell <code>Get-Package -Name '*MetaTrader*'</code> (slow fallback)</li>
-                </ol>
-                <p>When an install path is available, the version is read directly from <code>terminal64.exe</code>'s
-                    <code>FileVersion</code> metadata via PowerShell's <code>VersionInfo</code> property. This gives an
-                    authoritative version number even when winget has no record of the installation (typical for MT5,
-                    which is often installed outside winget's package database).
-                </p>
-
-                <h3 id="section-2-3">2.3 Ecosystem Health Audit (<code>audit</code>)</h3>
-                <p>
-                    The <code>audit</code> command executes an exhaustive diagnostic audit of all seven repositories in
-                    the ecosystem.
-                </p>
-                <pre><code># Full audit with per-project safety classification (~30-90s)
+lem-env --help
+</code></pre>
+<ul>
+<li><strong><code>--help</code></strong>: Type: Flag; Description: Display comprehensive command usage,
+available subcommands, and flags</li>
+</ul>
+<h3 id="sec-22-hardware-probing-probe">2.2 Hardware Probing (<code>probe</code>)</h3>
+<p>The <code>probe</code> command discovers system hardware, compute accelerators, operating
+system architecture, MetaTrader 5 availability,
+and checks for software update releases against upstream registries.</p>
+<pre><code class="language-bash">lem-env probe
+</code></pre>
+<p>Key features:</p>
+<ul>
+<li>Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Windows
+DirectML, and CPU fallback.</li>
+<li>Detects MetaTrader 5 terminal installations, install directories, and software
+versions.</li>
+<li>Queries <code>winget list</code> (installed version) and <code>winget show</code> (available
+version) to report both current and latest software versions with a status of
+<code>UP TO DATE</code>, <code>UPDATE AVAILABLE</code>, <code>NOT INSTALLED</code>, or
+<code>INSTALLED (not in winget)</code>.</li>
+</ul>
+<p>MetaTrader 5 detection priority:</p>
+<ol>
+<li>Windows registry keys under <code>HKCU</code>/<code>HKLM\SOFTWARE\MetaQuotes\Terminal</code> (fast,
+~5 ms)</li>
+<li>Well-known install paths (<code>%ProgramFiles%\MetaTrader 5\terminal64.exe</code>,
+the MetaTrader 5 installation folder under Program Files)</li>
+<li>PowerShell <code>Get-Package -Name '*MetaTrader*'</code> (slow fallback)</li>
+</ol>
+<p>When an install path is available, the version is read directly from
+<code>terminal64.exe</code>'s <code>FileVersion</code> metadata via PowerShell's <code>VersionInfo</code>
+property. This gives an authoritative version number even when winget has no
+record of the installation (typical for MT5, which is often installed outside
+winget's package database).</p>
+<h3 id="sec-23-ecosystem-health-audit-audit">2.3 Ecosystem Health Audit (<code>audit</code>)</h3>
+<p>The <code>audit</code> command executes an exhaustive diagnostic audit of all seven
+repositories in the ecosystem.</p>
+<pre><code class="language-bash"># Full audit with per-project safety classification (~30-90s)
 lem-env audit
 
 # Fast audit — skips pip dry-runs
-lem-env audit --fast</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Option</th>
-                            <th>Flag</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--fast</code></td>
-                            <td>None</td>
-                            <td>Bool</td>
-                            <td><code>False</code></td>
-                            <td>Skip per-project pip safety dry-runs. Audit completes in seconds but the Safe-↑ column
-                                in the drift matrix is left empty.</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>Diagnostic checks performed:</p>
-                <ul>
-                    <li>Toolchain prerequisites verification for Python, Git, NPM, and MetaTrader 5.</li>
-                    <li>Virtual environment presence, Python executable health, and missing package count for each
-                        repository.</li>
-                    <li>Node.js workspace health, inspecting <code>package.json</code>, <code>node_modules</code>, and
-                        declared dependencies.</li>
-                    <li>Manifest Coverage: declared vs installed vs missing vs extra vs platform-skipped counts per
-                        project.</li>
-                    <li>Python Package Drift &amp; Upgrade Status matrix. Every package declared in two or more
-                        manifests appears with:
-                        <ul>
-                            <li><strong>Pin type glyph</strong>: <code>=</code> (exact <code>==</code>), <code>~</code>
-                                (range), <code>*</code> (floating), <code>·</code> (transitive install), empty (declared
-                                but not installed)</li>
-                            <li><strong>Upgrade marker</strong>: <code>↑</code> (safe update available), <code>⊘</code>
-                                (blocked by reverse dependency), none (at latest version)</li>
-                        </ul>
-                    </li>
-                    <li>Packages Declared in Only One Manifest: full inventory of drift-invisible packages.</li>
-                    <li>NPM Package Dependency Matrix inspecting declared versus installed package versions.</li>
-                    <li>NPM Package Drift Across Workspaces.</li>
-                </ul>
-                <p>Blocked upgrades include a reason string naming the requiring package and constraint, e.g.
-                    <code>pylint requires astroid&lt;=4.1.dev0,&gt;=4.0.2</code>.
-                </p>
-
-                <h3 id="section-2-4">2.4 Smart Clean Install Pipeline (<code>install</code>)</h3>
-                <p>
-                    The <code>install</code> command runs the automated seven-step environment creation and package
-                    installation pipeline.
-                </p>
-                <pre><code># Execute clean install across all ecosystem projects
+lem-env audit --fast
+</code></pre>
+<ul>
+<li><strong><code>--fast</code></strong>: Flag: None; Type: Bool; Default: <code>False</code>; Description: Skip
+per-project pip safety dry-runs. Audit completes in seconds but the Safe-↑
+column in the drift matrix is left empty.</li>
+</ul>
+<p>Diagnostic checks performed:</p>
+<ul>
+<li>Toolchain prerequisites verification for Python, Git, NPM, and MetaTrader 5.</li>
+<li>Virtual environment presence, Python executable health, and missing package
+count for each repository.</li>
+<li>Node.js workspace health, inspecting <code>package.json</code>, <code>node_modules</code>, and
+declared dependencies.</li>
+<li>Manifest Coverage: declared vs installed vs missing vs extra vs
+platform-skipped counts per project.</li>
+<li>Python Package Drift &amp; Upgrade Status matrix. Every package declared in two or
+more manifests appears with:
+<ul>
+<li><strong>Pin type glyph</strong>: <code>=</code> (exact <code>==</code>), <code>~</code> (range), <code>*</code> (floating), <code>·</code>
+(transitive install), empty (declared but not installed)</li>
+<li><strong>Upgrade marker</strong>: <code>↑</code> (safe update available), <code>⊘</code> (blocked by reverse
+dependency), none (at latest version)</li>
+</ul>
+</li>
+<li>Packages Declared in Only One Manifest: full inventory of drift-invisible packages.</li>
+<li>NPM Package Dependency Matrix inspecting declared versus installed package versions.</li>
+<li>NPM Package Drift Across Workspaces.</li>
+</ul>
+<p>Blocked upgrades include a reason string naming the requiring package and
+constraint, e.g. <code>pylint requires astroid&lt;=4.1.dev0,&gt;=4.0.2</code>.</p>
+<h3 id="sec-24-smart-clean-install-pipeline-install">2.4 Smart Clean Install Pipeline (<code>install</code>)</h3>
+<p>The <code>install</code> command runs the automated seven-step environment creation and
+package installation pipeline.</p>
+<pre><code class="language-bash"># Execute clean install across all ecosystem projects
 lem-env install
 
 # Target a specific repository
 lem-env install --project lemgendary-training-suite
 
 # Install without purging existing virtual environments
-lem-env install --no-clean</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Option</th>
-                            <th>Flag</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--project</code></td>
-                            <td><code>-p</code></td>
-                            <td>Text</td>
-                            <td><code>None</code></td>
-                            <td>Restrict installation to a single target repository</td>
-                        </tr>
-                        <tr>
-                            <td><code>--clean / --no-clean</code></td>
-                            <td>None</td>
-                            <td>Bool</td>
-                            <td><code>True</code></td>
-                            <td>Completely purge existing <code>.venv</code> and <code>node_modules</code> before fresh
-                                recreation. The venv currently executing the pipeline is preserved automatically.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>The pipeline executes in sequential order:</p>
-                <ol>
-                    <li>Hardware discovery and backend acceleration detection.</li>
-                    <li>Global toolchain verification (Python, Git, NPM).</li>
-                    <li>Virtual environment provisioning and purge (skips the running venv).</li>
-                    <li>Python package installation using locked manifests, followed by OpenCV variant normalization.
-                    </li>
-                    <li>Node.js package installation via NPM.</li>
-                    <li>Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).</li>
-                    <li>Final ecosystem health audit generation.</li>
-                </ol>
-
-                <h3 id="section-2-5">2.5 Safe Bottom-Up Package Upgrades (<code>update</code>)</h3>
-                <p>
-                    The <code>update</code> command safely resolves outdated dependencies and upgrades them bottom-up
-                    across the dependency hierarchy:
-                    <code>lemgendary-env-manager</code> -&gt; <code>lemgendary-datasets</code> -&gt;
-                    <code>lemgendary-training-suite</code> -&gt; <code>lemgendary-ai-studio-gui</code>.
-                </p>
-                <pre><code># Inspect potential upgrades without modifying files
+lem-env install --no-clean
+</code></pre>
+<ul>
+<li><strong><code>--project</code></strong>: Flag: <code>-p</code>; Type: Text; Default: <code>None</code>; Description:
+Restrict installation to a single target repository</li>
+<li><strong><code>--clean / --no-clean</code></strong>: Flag: None; Type: Bool; Default: <code>True</code>;
+Description: Completely purge existing <code>.venv</code> and <code>node_modules</code> before fresh
+recreation. The venv currently executing the pipeline is preserved
+automatically.</li>
+</ul>
+<p>The pipeline executes in sequential order:</p>
+<ol>
+<li>Hardware discovery and backend acceleration detection.</li>
+<li>Global toolchain verification (Python, Git, NPM).</li>
+<li>Virtual environment provisioning and purge (skips the running venv).</li>
+<li>Python package installation using locked manifests, followed by OpenCV
+variant normalization.</li>
+<li>Node.js package installation via NPM.</li>
+<li>Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).</li>
+<li>Final ecosystem health audit generation.</li>
+</ol>
+<h3 id="sec-25-safe-bottom-up-package-upgrades-update">2.5 Safe Bottom-Up Package Upgrades (<code>update</code>)</h3>
+<p>The <code>update</code> command safely resolves outdated dependencies and upgrades them
+bottom-up across the dependency hierarchy:
+<code>lemgendary-env-manager</code> -&gt; <code>lemgendary-datasets</code> -&gt; <code>lemgendary-training-suite</code>
+-&gt; <code>lemgendary-ai-studio-gui</code>.</p>
+<pre><code class="language-bash"># Inspect potential upgrades without modifying files
 lem-env update --dry-run
 
 # Apply upgrades and auto-sync requirement manifests
-lem-env update</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Option</th>
-                            <th>Flag</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--project</code></td>
-                            <td><code>-p</code></td>
-                            <td>Text</td>
-                            <td><code>None</code></td>
-                            <td>Target package upgrades for a specific repository</td>
-                        </tr>
-                        <tr>
-                            <td><code>--dry-run</code></td>
-                            <td>None</td>
-                            <td>Bool</td>
-                            <td><code>False</code></td>
-                            <td>Display proposed version changes without executing installations</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>Every candidate upgrade passes through a multi-layer safety pipeline before being applied:</p>
-                <ol>
-                    <li><strong>Reverse-dependency check</strong>: <code>pip inspect --local</code> is used to build a
-                        reverse-dependency graph of every installed package. Any candidate whose target version would
-                        violate an installed package's requirement is marked <code>BLOCKED</code> with an explanation.
-                    </li>
-                    <li><strong>Constraint-preserving dry-run</strong>: Every non-target installed package is written
-                        into a temporary pip constraints file. If pip cannot resolve the target batch without
-                        downgrading or removing anything, the batch is split into per-package checks so a single bad
-                        candidate does not poison the whole set.</li>
-                    <li><strong>CUDA-aware torch handling</strong>: On CUDA hosts, <code>torch</code>,
-                        <code>torchvision</code>, and <code>torchaudio</code> are resolved against the PyTorch CUDA
-                        index (<code>download.pytorch.org/whl/cu121</code>). Only packages already installed in the
-                        project are considered; packages already at the newest CUDA build produce a
-                        <code>VERIFIED</code> event instead of a spurious <code>UPGRADED</code> event.
-                    </li>
-                    <li><strong>Snapshot + rollback</strong>: Each batch is snapshotted via <code>pip freeze</code>,
-                        applied, and verified with <code>pip check</code>. If the check fails, the batch is rolled back
-                        from the snapshot.</li>
-                </ol>
-                <p>After all pip/npm upgrades complete, centralized manifests in
-                    <code>lemgendary-env-manager/requirements/</code> are automatically re-written to reflect actual
-                    installed versions. Packages in <code>PROTECTED_FROM_SYNC</code> (<code>astroid</code>,
-                    <code>pylint</code>, <code>pydantic</code>, <code>pydantic-core</code>) are passed through untouched
-                    to prevent a transient upgrade-time drift from being permanently encoded into the manifest.
-                </p>
-
-                <h3 id="section-2-6">2.6 Manifest Synchronization (<code>sync</code>)</h3>
-                <p>
-                    The <code>sync</code> command captures currently installed packages from active virtual environments
-                    and synchronizes pinned requirement manifests
-                    under <code>lemgendary-env-manager/requirements/</code>.
-                </p>
-                <pre><code>lem-env sync</code></pre>
-                <p>Manifests maintained:</p>
-                <ul>
-                    <li><code>requirements-env-manager.txt</code></li>
-                    <li><code>requirements-datasets.txt</code></li>
-                    <li><code>requirements-training.txt</code></li>
-                    <li><code>lemgendary-ai-studio-gui.package.json</code></li>
-                </ul>
-                <p>This is called automatically by <code>install</code> and <code>update</code> — use directly only when
-                    you need to reset a project's requirements without running the full pipeline.</p>
-
-                <h3 id="section-2-7">2.7 Multi-Gate Validation Engine (<code>validate</code>)</h3>
-                <p>
-                    The <code>validate</code> command enforces strict quality, formatting, compilation, and domain
-                    integrity gates across all seven workspaces.
-                </p>
-                <pre><code># Validate entire ecosystem
+lem-env update
+</code></pre>
+<ul>
+<li><strong><code>--project</code></strong>: Flag: <code>-p</code>; Type: Text; Default: <code>None</code>; Description: Target
+package upgrades for a specific repository</li>
+<li><strong><code>--dry-run</code></strong>: Flag: None; Type: Bool; Default: <code>False</code>; Description:
+Display proposed version changes without executing installations</li>
+</ul>
+<p>Every candidate upgrade passes through a multi-layer safety pipeline before
+being applied:</p>
+<ol>
+<li><strong>Reverse-dependency check</strong>: <code>pip inspect --local</code> is used to build a
+reverse-dependency graph of every installed package. Any candidate whose
+target version would violate an installed package's requirement is marked
+<code>BLOCKED</code> with an explanation.</li>
+<li><strong>Constraint-preserving dry-run</strong>: Every non-target installed package is
+written into a temporary pip constraints file. If pip cannot resolve the
+target batch without downgrading or removing anything, the batch is split
+into per-package checks so a single bad candidate does not poison the whole
+set.</li>
+<li><strong>CUDA-aware torch handling</strong>: On CUDA hosts, <code>torch</code>, <code>torchvision</code>, and
+<code>torchaudio</code> are resolved against the PyTorch CUDA index
+(<code>download.pytorch.org/whl/cu121</code>). Only packages already installed in the
+project are considered; packages already at the newest CUDA build produce a
+<code>VERIFIED</code> event instead of a spurious <code>UPGRADED</code> event.</li>
+<li><strong>Snapshot + rollback</strong>: Each batch is snapshotted via <code>pip freeze</code>, applied,
+and verified with <code>pip check</code>. If the check fails, the batch is rolled back
+from the snapshot.</li>
+</ol>
+<p>After all pip/npm upgrades complete, centralized manifests in
+<code>lemgendary-env-manager/requirements/</code> are automatically re-written to reflect
+actual installed versions. Packages in <code>PROTECTED_FROM_SYNC</code> (<code>astroid</code>,
+<code>pylint</code>, <code>pydantic</code>, <code>pydantic-core</code>) are passed through untouched to prevent a
+transient upgrade-time drift from being permanently encoded into the manifest.</p>
+<h3 id="sec-26-manifest-synchronization-sync">2.6 Manifest Synchronization (<code>sync</code>)</h3>
+<p>The <code>sync</code> command captures currently installed packages from active virtual
+environments and synchronizes pinned requirement manifests
+under <code>lemgendary-env-manager/requirements/</code>.</p>
+<pre><code class="language-bash">lem-env sync
+</code></pre>
+<p>Manifests maintained:</p>
+<ul>
+<li><code>requirements-env-manager.txt</code></li>
+<li><code>requirements-datasets.txt</code></li>
+<li><code>requirements-training.txt</code></li>
+<li><code>lemgendary-ai-studio-gui.package.json</code></li>
+</ul>
+<p>This is called automatically by <code>install</code> and <code>update</code> — use directly only when
+you need to reset a project's requirements without running the full pipeline.</p>
+<h3 id="sec-27-multi-gate-validation-engine-validate">2.7 Multi-Gate Validation Engine (<code>validate</code>)</h3>
+<p>The <code>validate</code> command enforces strict quality, formatting, compilation, and
+domain integrity gates across all seven workspaces.</p>
+<pre><code class="language-bash"># Validate entire ecosystem
 lem-env validate
 
 # Validate specific project
-lem-env validate --project lemgendary-docs</code></pre>
-                <p>Validation gates enforced:</p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Check</th>
-                            <th>Tool</th>
-                            <th>Projects</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Python bytecode</td>
-                            <td><code>py_compile</code></td>
-                            <td>Python projects</td>
-                        </tr>
-                        <tr>
-                            <td>Zero-emoji</td>
-                            <td>Regex scan</td>
-                            <td>All projects</td>
-                        </tr>
-                        <tr>
-                            <td>JS/TS linting</td>
-                            <td>ESLint (<code>--format json</code>)</td>
-                            <td><code>lemgendary-ai-studio-gui</code></td>
-                        </tr>
-                        <tr>
-                            <td>TypeScript types</td>
-                            <td><code>tsc --noEmit</code></td>
-                            <td><code>lemgendary-ai-studio-gui</code></td>
-                        </tr>
-                        <tr>
-                            <td>JSON RFC 8259</td>
-                            <td>Python <code>json</code> (in-process)</td>
-                            <td>All 7 repos</td>
-                        </tr>
-                        <tr>
-                            <td>PowerShell syntax</td>
-                            <td><code>PSScriptAnalyzer</code> (<code>pwsh</code> preferred)</td>
-                            <td>Repositories with <code>.ps1</code></td>
-                        </tr>
-                        <tr>
-                            <td>Markdown lint</td>
-                            <td><code>markdownlint-cli</code></td>
-                            <td>All 7 repos</td>
-                        </tr>
-                        <tr>
-                            <td>YAML lint</td>
-                            <td><code>yamllint</code> (env-manager .venv)</td>
-                            <td>All 7 repos</td>
-                        </tr>
-                        <tr>
-                            <td>W3C HTML</td>
-                            <td><code>html-validate</code></td>
-                            <td><code>lemgendary-docs</code></td>
-                        </tr>
-                        <tr>
-                            <td>CSS lint</td>
-                            <td><code>stylelint</code></td>
-                            <td><code>lemgendary-docs</code></td>
-                        </tr>
-                        <tr>
-                            <td>WCAG 2.2 AA</td>
-                            <td><code>pa11y</code></td>
-                            <td><code>lemgendary-docs</code> (static HTML)</td>
-                        </tr>
-                        <tr>
-                            <td>Domain Verifications</td>
-                            <td><code>validator.py</code> ecosystem gates</td>
-                            <td>All 7 repos (doc sync, parquet schemas, weights, Tauri)</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>All Node.js validation tools are resolved locally from
-                    <code>lemgendary-env-manager/node_modules/.bin</code> via <code>_resolve_tool_cmd()</code>,
-                    eliminating global toolchain pollution.
-                </p>
-                <blockquote>
-                    <p><strong>Note on WCAG for the React app (<code>lemgendary-ai-studio-gui</code>)</strong>: The
-                        Vite/React build produces a minimal <code>index.html</code> shell with a single
-                        <code>&lt;div id="root"&gt;</code>. WCAG accessibility validation of the fully rendered UI
-                        requires a running dev server. The <code>validate</code> command runs ESLint and TypeScript
-                        checks for the GUI instead; WCAG should be run manually via
-                        <code>npx pa11y http://localhost:5173</code> against a live dev server.
-                    </p>
-                </blockquote>
-
-                <h3 id="section-2-8">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</h3>
-                <p>
-                    The <code>clean</code> command removes volatile temporary files, caches, and build artifacts to
-                    maintain absolute workspace hygiene.
-                </p>
-                <pre><code># Clean entire workspace
+lem-env validate --project lemgendary-docs
+</code></pre>
+<p>Validation gates enforced (in run order, from
+<code>env_manager/validation/registry.py</code>):</p>
+<ul>
+<li><strong>Python bytecode</strong>: Tool: <code>py_compile</code>; Projects: Python projects</li>
+<li><strong>Zero-emoji</strong>: Tool: Regex scan; Projects: All projects</li>
+<li><strong>YAML lint</strong>: Tool: <code>yamllint</code> (env-manager .venv); Projects: All 7 repos</li>
+<li><strong>JSON RFC 8259</strong>: Tool: Python <code>json</code> (in-process); Projects: All 7 repos</li>
+<li><strong>Markdown lint</strong>: Tool: <code>markdownlint-cli2</code>; Projects: All 7 repos</li>
+<li><strong>JS/TS linting</strong>: Tool: ESLint (<code>--format json</code>); Projects: Node projects
+(<code>lemgendary-ai-studio-gui</code>)</li>
+<li><strong>TypeScript types</strong>: Tool: <code>tsc --noEmit</code>; Projects: Node projects</li>
+<li><strong>W3C HTML</strong>: Tool: <code>html-validate</code>; Projects: static HTML sites
+(<code>lemgendary-docs</code>)</li>
+<li><strong>WCAG 2.2 AA</strong>: Tool: <code>pa11y</code>; Projects: static HTML sites
+(<code>lemgendary-docs</code>)</li>
+<li><strong>PowerShell analysis</strong>: Tool: <code>PSScriptAnalyzer</code> (<code>pwsh</code> preferred);
+Projects: Repositories with <code>.ps1</code></li>
+<li><strong>Pylint</strong>: Tool: <code>pylint</code> from the project's <code>.venv</code> with the project's own
+config; Projects: Python projects</li>
+<li><strong>Forbidden suppressions</strong>: Tool: in-process scan (Python directives and
+<code>warnings</code> ignore filters, TS/JS <code>@ts-*</code> and <code>eslint-disable</code> comments, Rust
+<code>allow</code> attributes); Projects: All projects</li>
+<li><strong>Absolute paths</strong>: Tool: in-process scan for hardcoded absolute paths;
+Projects: All projects</li>
+<li><strong>Domain Verifications</strong>: Tool: domain gates (README changelog, docs sync,
+docs manifests, docs suite, dataset manifests, training suite, models hub,
+git hooks); Projects: the matching repositories</li>
+<li><strong>Ecosystem SSOT</strong>: Tool: <code>ecosystem_ssot</code> (error severity): literal ports,
+Kaggle owner, docs URL or project lists that do not come from
+<code>lemgendary-env-manager/ecosystem/ecosystem.json</code>; Projects: All projects</li>
+</ul>
+<p>Gates fail closed: a missing or crashing tool is a <code>tool_error</code> finding, and the
+npx fallback (<code>npx --no</code>) never downloads packages.</p>
+<p>All Node.js validation tools are resolved locally from
+<code>lemgendary-env-manager/node_modules/.bin</code> via <code>_resolve_tool_cmd()</code>,
+eliminating global toolchain pollution.</p>
+<blockquote>
+<p><strong>Note on WCAG for the React app (<code>lemgendary-ai-studio-gui</code>)</strong>: The
+Vite/React build produces a minimal <code>index.html</code> shell with a single
+<code>&lt;div id=&quot;root&quot;&gt;</code>. WCAG accessibility validation of the fully rendered UI
+requires a running dev server. The <code>validate</code> command runs ESLint and
+TypeScript checks for the GUI instead; WCAG should be run manually via
+<code>npx pa11y http://localhost:5173</code> against a live dev server.</p>
+</blockquote>
+<h3 id="sec-28-workspace-cache--residue-purge-clean">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</h3>
+<p>The <code>clean</code> command removes volatile temporary files, caches, and build
+artifacts to maintain absolute workspace hygiene.</p>
+<pre><code class="language-bash"># Clean entire workspace
 lem-env clean
 
 # Clean specific repository
-lem-env clean --project lemgendary-training-suite</code></pre>
-                <p>Purged items include:</p>
-                <ul>
-                    <li><code>__pycache__</code> directories and <code>.pyc</code> bytecode files.</li>
-                    <li><code>.pytest_cache</code>, <code>.mypy_cache</code>, and <code>.ruff_cache</code>.</li>
-                    <li>Temporary build residues (<code>dist/</code>, <code>build/</code>, <code>*.egg-info</code>).
-                    </li>
-                    <li>Staging artifacts (<code>.staging_*</code>, <code>staging_*</code>,
-                        <code>.kaggle-partial</code>, <code>.tmp</code>, <code>.log</code>).
-                    </li>
-                </ul>
-
-                <h3 id="section-2-9">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</h3>
-                <p>
-                    The <code>serve</code> command launches the FastAPI REST API and WebSocket real-time telemetry
-                    server.
-                </p>
-                <pre><code># Start server on default address
+lem-env clean --project lemgendary-training-suite
+</code></pre>
+<p>Purged items include:</p>
+<ul>
+<li><code>__pycache__</code> directories and <code>.pyc</code> bytecode files.</li>
+<li><code>.pytest_cache</code>, <code>.mypy_cache</code>, and <code>.ruff_cache</code>.</li>
+<li>Temporary build residues (<code>dist/</code>, <code>build/</code>, <code>*.egg-info</code>).</li>
+<li>Staging artifacts (<code>.staging_*</code>, <code>staging_*</code>, <code>.kaggle-partial</code>, <code>.tmp</code>, <code>.log</code>).</li>
+</ul>
+<h3 id="sec-29-telemetry-daemon--background-server-serve">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</h3>
+<p>The <code>serve</code> command launches the FastAPI REST API and WebSocket real-time
+telemetry server.</p>
+<pre><code class="language-bash"># Start server on default address
 lem-env serve
 
 # Start on custom interface and port
-lem-env serve --host 0.0.0.0 --port 8000</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Option</th>
-                            <th>Flag</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--host</code></td>
-                            <td><code>-h</code></td>
-                            <td>Text</td>
-                            <td><code>127.0.0.1</code></td>
-                            <td>Network interface address to bind the HTTP listener</td>
-                        </tr>
-                        <tr>
-                            <td><code>--port</code></td>
-                            <td><code>-p</code></td>
-                            <td>Int</td>
-                            <td><code>8000</code></td>
-                            <td>TCP port for incoming REST and WebSocket connections</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>Server lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan handler,
-                    ensuring the background event-drain task is cancelled cleanly on shutdown.</p>
-
-                <h3 id="section-2-10">2.10 Git Hook Installation (<code>setup-hooks</code>)</h3>
-                <p>
-                    The <code>setup-hooks</code> command installs or repairs standardized pre-commit hooks across all
-                    ecosystem projects.
-                </p>
-                <pre><code># Install hooks across all projects
+lem-env serve --host 0.0.0.0 --port 8000
+</code></pre>
+<ul>
+<li><strong><code>--host</code></strong>: Flag: <code>-h</code>; Type: Text; Default: <code>127.0.0.1</code>; Description:
+Network interface address to bind the HTTP listener</li>
+<li><strong><code>--port</code></strong>: Flag: <code>-p</code>; Type: Int; Default: <code>8000</code>; Description: TCP port
+for incoming REST and WebSocket connections</li>
+</ul>
+<p>Server lifecycle is managed via FastAPI's <code>@asynccontextmanager</code> lifespan
+handler, ensuring the background event-drain task is cancelled cleanly on
+shutdown.</p>
+<h3 id="sec-210-git-hook-installation-setup-hooks">2.10 Git Hook Installation (<code>setup-hooks</code>)</h3>
+<p>The <code>setup-hooks</code> command (with canonical alias <code>hooks</code>) installs or repairs
+standardized pre-commit hooks across all ecosystem projects.</p>
+<pre><code class="language-bash"># Install hooks across all projects
 lem-env setup-hooks
+# Or using the concise alias:
+lem-env hooks
 
 # Install for a single project
-lem-env setup-hooks --project lemgendary-datasets</code></pre>
-                <p>The installed hook delegates validation to <code>lem-env validate --project &lt;name&gt;</code> and
-                    blocks the commit if any gate fails. This ensures every repository runs the same validation pipeline
-                    regardless of local toolchain state.</p>
-            </section>
+lem-env setup-hooks --project lemgendary-datasets
+</code></pre>
+<p>The installed hook delegates validation to <code>lem-env validate --project &lt;name&gt;</code>
+and blocks the commit if any gate fails. This ensures every repository runs the
+same validation pipeline regardless of local toolchain state.</p>
+</section>
 
-            <section id="section-3">
-                <h2>3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</h2>
-                <p>
-                    For Windows terminal operators, <code>lemgendary_env_manager.ps1</code> provides an interactive,
-                    keyboard-driven management console.
-                </p>
-                <p>Execution syntax:</p>
-                <pre><code>powershell -ExecutionPolicy Bypass -File .\lemgendary_env_manager.ps1</code></pre>
-                <p>Interactive Menu Matrix:</p>
-                <ul>
-                    <li><code>[1] Probe System &amp; Hardware Accelerators</code>: Executes hardware discovery and
-                        checks for updates.</li>
-                    <li><code>[2] Run Full Ecosystem Health Audit</code>: Displays toolchain, virtual environment,
-                        manifest coverage, drift matrix, single-manifest inventory, and NPM dependency matrix.</li>
-                    <li><code>[3] Execute Smart Clean Install Pipeline</code>: Purges environments and installs clean
-                        dependencies.</li>
-                    <li><code>[4] Run Safe Package Updates</code>: Executes bottom-up dependency upgrades and syncs
-                        manifests.</li>
-                    <li><code>[5] Validate Projects</code>: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG 2.2 AA,
-                        and domain gates.</li>
-                    <li><code>[6] Start/Stop Background API Server</code>: Launches or stops the FastAPI server as a
-                        background PowerShell job with live WebSocket streaming.</li>
-                    <li><code>[Q] Quit</code>: Gracefully terminates the management console.</li>
-                </ul>
-            </section>
+<section id="sec-3-interactive-powershell-host-lemgendary_env_managerps1">
+<h2>3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</h2>
+<p>For Windows terminal operators, <code>lemgendary_env_manager.ps1</code> provides an
+interactive, keyboard-driven management console.</p>
+<p>Execution syntax:</p>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\lemgendary_env_manager.ps1
+</code></pre>
+<p>Interactive Menu Matrix:</p>
+<ul>
+<li><code>[1] Probe System &amp; Hardware Accelerators</code>: Executes hardware discovery and
+checks for updates.</li>
+<li><code>[2] Run Full Ecosystem Health Audit</code>: Displays toolchain, virtual
+environment, manifest coverage, drift matrix, single-manifest inventory, and
+NPM dependency matrix.</li>
+<li><code>[3] Execute Smart Clean Install Pipeline</code>: Purges environments and installs
+clean dependencies.</li>
+<li><code>[4] Run Safe Package Updates</code>: Executes bottom-up dependency upgrades and
+syncs manifests.</li>
+<li><code>[5] Validate Projects</code>: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG
+2.2 AA, and domain gates.</li>
+<li><code>[6] Start/Stop Background API Server</code>: Launches or stops the FastAPI server
+as a background PowerShell job with live WebSocket streaming.</li>
+<li><code>[Q] Quit</code>: Gracefully terminates the management console.</li>
+</ul>
+</section>
 
-            <section id="section-4">
-                <h2>4. AI Studio Desktop GUI CLI &amp; Toolchain</h2>
-                <p>
-                    The desktop application <code>lemgendary-ai-studio-gui</code> utilizes Node.js, React 18, Vite, and
-                    Tauri v2.
-                </p>
-                <p>CLI Operations:</p>
-                <pre><code># Navigate to GUI directory
+<section id="sec-4-lemgendary-ai-studio-gui-cli--toolchain">
+<h2>4. LemGendary AI Studio GUI CLI &amp; Toolchain</h2>
+<p>The desktop application <code>lemgendary-ai-studio-gui</code> utilizes Node.js, React 18,
+Vite, and Tauri v2.</p>
+<p>CLI Operations:</p>
+<pre><code class="language-bash"># Navigate to GUI directory
 cd lemgendary-ai-studio-gui
 
 # Start development frontend server
@@ -583,17 +431,21 @@ npm run build
 cargo tauri dev
 
 # Build native desktop installer
-cargo tauri build</code></pre>
-            </section>
+cargo tauri build
+</code></pre>
+</section>
 
-            <section id="section-5">
-                <h2>5. Datasets Compilation Suite CLI</h2>
-                <p>
-                    The <code>lemgendary-datasets</code> repository provides the unified <code>lemgendary</code> CLI (<code>cli.py</code>), exposing a full suite of compiler, synthesis, audit, transcoding, and server operations. All commands feature transparent hybrid routing: when the sidecar API daemon is active on <code>127.0.0.1:8100</code>, commands submit tasks to the API and render live WebSocket logs to Rich Console; when stopped or when <code>--no-server</code> is passed, commands fall back cleanly to direct in-process execution.
-                </p>
-
-                <h3>5.1 Invocation Syntax</h3>
-                <pre><code># Navigate to datasets workspace
+<section id="sec-5-datasets-compilation-suite-cli">
+<h2>5. Datasets Compilation Suite CLI</h2>
+<p>The <code>lemgendary-datasets</code> repository provides the unified <code>lemgendary</code> CLI
+(<code>cli.py</code>), exposing a full suite of compiler, synthesis, audit, transcoding,
+and server operations. All commands feature transparent hybrid routing: when the
+sidecar API daemon is active on <code>127.0.0.1:8100</code>, commands submit tasks to the
+API and render live WebSocket logs to Rich Console; when stopped or when
+<code>--no-server</code> is passed, commands fall back cleanly to direct in-process
+execution.</p>
+<h3 id="sec-51-invocation-syntax">5.1 Invocation Syntax</h3>
+<pre><code class="language-bash"># Navigate to datasets workspace
 cd lemgendary-datasets
 
 # General syntax
@@ -601,20 +453,20 @@ python cli.py [COMMAND] [OPTIONS]
 
 # Help and discovery
 python cli.py --help
-python cli.py [COMMAND] --help</code></pre>
-
-                <h3>5.2 Manifold Compilation (<code>compile</code>)</h3>
-                <p>
-                    Compiles raw image and market data into production-ready dataset manifolds with optional multi-container emission and quality gates:
-                </p>
-                <pre><code># Standard compilation with default WebP q=92
+python cli.py [COMMAND] --help
+</code></pre>
+<h3 id="sec-52-manifold-compilation-compile">5.2 Manifold Compilation (<code>compile</code>)</h3>
+<p>Compiles raw image and market data into production-ready dataset manifolds with
+optional multi-container emission and quality gates:</p>
+<pre><code class="language-bash"># Standard compilation with default WebP q=92
 python cli.py compile --model nima_aesthetic --max-gb 50
 
 # Compile using canonical compiler preset (Phase 8)
 python cli.py compile --model nima_aesthetic --preset quality-vision
 
 # Concurrently emit WebP directory and MosaicML Streaming (MDS) container
-python cli.py compile --model nima_aesthetic --image-format webp --image-quality 92 --also-format mds
+python cli.py compile --model nima_aesthetic --image-format webp \
+  --image-quality 92 --also-format mds
 
 # High-throughput compile bypassing aesthetic vetting and labeling
 python cli.py compile --model nafnet_deblurring --workers 16 --no-vetting --no-labeling
@@ -623,200 +475,91 @@ python cli.py compile --model nafnet_deblurring --workers 16 --no-vetting --no-l
 python cli.py compile --model upn_v2 --also-format mds --force-duplicate
 
 # Force in-process compilation bypassing active API server
-python cli.py compile --model nima_technical --no-server</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--model</code>, <code>-m</code></td>
-                            <td>String</td>
-                            <td><code>None</code></td>
-                            <td>Dataset registry key in <code>unified_data.yaml</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>--preset</code>, <code>-p</code></td>
-                            <td>String</td>
-                            <td><code>None</code></td>
-                            <td>Predefined compiler preset profile (<code>quality-vision</code>, <code>restoration-hardlinked</code>, <code>detection-variable</code>, <code>cloud-archival</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--max-gb</code></td>
-                            <td>Float</td>
-                            <td>Config</td>
-                            <td>Maximum size allocation threshold in gigabytes</td>
-                        </tr>
-                        <tr>
-                            <td><code>--workers</code></td>
-                            <td>Integer</td>
-                            <td>Auto</td>
-                            <td>Number of parallel worker threads/processes</td>
-                        </tr>
-                        <tr>
-                            <td><code>--image-format</code></td>
-                            <td>String</td>
-                            <td><code>webp</code></td>
-                            <td>Target format: <code>webp</code>, <code>jpeg</code>, <code>png</code>, <code>keep</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>--image-quality</code></td>
-                            <td>Integer</td>
-                            <td><code>92</code></td>
-                            <td>Target image compression quality (1-100)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--target-quality</code></td>
-                            <td>Integer</td>
-                            <td><code>95</code></td>
-                            <td>Restoration target ground-truth quality</td>
-                        </tr>
-                        <tr>
-                            <td><code>--mask-format</code></td>
-                            <td>String</td>
-                            <td><code>webp-lossless</code></td>
-                            <td>Segmentation mask format</td>
-                        </tr>
-                        <tr>
-                            <td><code>--also-format</code></td>
-                            <td>String</td>
-                            <td><code>None</code></td>
-                            <td>Comma-separated containers: <code>mds</code>, <code>litdata</code>, <code>wds</code>, <code>parquet</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>--no-vetting</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Bypass NIMA aesthetic score gate</td>
-                        </tr>
-                        <tr>
-                            <td><code>--no-labeling</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Bypass YOLO detection auto-labeling</td>
-                        </tr>
-                        <tr>
-                            <td><code>--no-hash</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Bypass pHash/dHash perceptual deduplication</td>
-                        </tr>
-                        <tr>
-                            <td><code>--no-server</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Force local in-process execution</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>5.3 Degradation Engine Synthesis (<code>degrade</code>)</h3>
-                <p>
-                    Derives paired synthetic restoration manifolds from clean ground-truth sources using mathematical physical kernels:
-                </p>
-                <pre><code># Motion blur and heteroscedastic sensor noise synthesis
-python cli.py degrade --source raw-sets/div2k --output LemGendizedNafNetDebluringSynthetic --profile motion-blur+iso-noise
+python cli.py compile --model nima_technical --no-server
+</code></pre>
+<ul>
+<li><strong><code>--model</code>, <code>-m</code></strong>: Type: String; Default: <code>None</code>; Description: Dataset
+registry key in <code>unified_data.yaml</code></li>
+<li><strong><code>--preset</code>, <code>-p</code></strong>: Type: String; Default: <code>None</code>; Description: Predefined
+compiler preset profile (<code>quality-vision</code>, <code>restoration-hardlinked</code>,
+<code>detection-variable</code>, <code>cloud-archival</code>)</li>
+<li><strong><code>--max-gb</code></strong>: Type: Float; Default: Config; Description: Maximum size
+allocation threshold in gigabytes</li>
+<li><strong><code>--workers</code></strong>: Type: Integer; Default: Auto; Description: Number of parallel
+worker threads/processes</li>
+<li><strong><code>--image-format</code></strong>: Type: String; Default: <code>webp</code>; Description: Target
+format: <code>webp</code>, <code>jpeg</code>, <code>png</code>, <code>keep</code></li>
+<li><strong><code>--image-quality</code></strong>: Type: Integer; Default: <code>92</code>; Description: Target image
+compression quality (1-100)</li>
+<li><strong><code>--target-quality</code></strong>: Type: Integer; Default: <code>95</code>; Description: Restoration
+target ground-truth quality</li>
+<li><strong><code>--mask-format</code></strong>: Type: String; Default: <code>webp-lossless</code>; Description:
+Segmentation mask format</li>
+<li><strong><code>--also-format</code></strong>: Type: String; Default: <code>None</code>; Description:
+Comma-separated containers: <code>mds</code>, <code>litdata</code>, <code>wds</code>, <code>parquet</code></li>
+<li><strong><code>--no-vetting</code></strong>: Type: Flag; Default: <code>False</code>; Description: Bypass NIMA
+aesthetic score gate</li>
+<li><strong><code>--no-labeling</code></strong>: Type: Flag; Default: <code>False</code>; Description: Bypass YOLO
+detection auto-labeling</li>
+<li><strong><code>--no-hash</code></strong>: Type: Flag; Default: <code>False</code>; Description: Bypass pHash/dHash
+perceptual deduplication</li>
+<li><strong><code>--no-server</code></strong>: Type: Flag; Default: <code>False</code>; Description: Force local
+in-process execution</li>
+</ul>
+<h3 id="sec-53-degradation-engine-synthesis-degrade">5.3 Degradation Engine Synthesis (<code>degrade</code>)</h3>
+<p>Derives paired synthetic restoration manifolds from clean ground-truth sources
+using mathematical physical kernels:</p>
+<pre><code class="language-bash"># Motion blur and heteroscedastic sensor noise synthesis
+python cli.py degrade --source raw-sets/div2k \
+  --output LemGendizedNafNetDebluringSynthetic --profile motion-blur+iso-noise
 
 # Atmospheric haze synthesis on custom manifold directory
-python cli.py degrade --source ../LemGendaryDatasets/LemGendizedNimaAesthetic --output LemGendizedHazySynthetic --profile rainy-haze --intensity high
+python cli.py degrade --source ../LemGendaryDatasets/LemGendizedNimaAesthetic \
+  --output LemGendizedHazySynthetic --profile rainy-haze --intensity high
 
 # Dry-run validation
-python cli.py degrade --source raw-sets/div2k --output LemGendizedTest --profile vintage-film --dry-run</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--source</code>, <code>-s</code></td>
-                            <td>String</td>
-                            <td>Required</td>
-                            <td>Source dataset folder or registered manifold name</td>
-                        </tr>
-                        <tr>
-                            <td><code>--output</code>, <code>-o</code></td>
-                            <td>String</td>
-                            <td>Required</td>
-                            <td>Destination synthetic manifold folder name</td>
-                        </tr>
-                        <tr>
-                            <td><code>--profile</code>, <code>-p</code></td>
-                            <td>String</td>
-                            <td><code>motion-blur+iso-noise</code></td>
-                            <td>Profile token or composite expression</td>
-                        </tr>
-                        <tr>
-                            <td><code>--intensity</code></td>
-                            <td>String</td>
-                            <td><code>medium</code></td>
-                            <td>Intensity preset: <code>low</code>, <code>medium</code>, <code>high</code></td>
-                        </tr>
-                        <tr>
-                            <td><code>--pairs</code></td>
-                            <td>Integer</td>
-                            <td><code>None</code></td>
-                            <td>Maximum sample pair count cap</td>
-                        </tr>
-                        <tr>
-                            <td><code>--val-split</code></td>
-                            <td>Float</td>
-                            <td><code>0.12</code></td>
-                            <td>Validation set split ratio</td>
-                        </tr>
-                        <tr>
-                            <td><code>--seed</code></td>
-                            <td>Integer</td>
-                            <td><code>42</code></td>
-                            <td>Deterministic random number seed</td>
-                        </tr>
-                        <tr>
-                            <td><code>--image-format</code></td>
-                            <td>String</td>
-                            <td><code>webp</code></td>
-                            <td>Target output format for degraded images</td>
-                        </tr>
-                        <tr>
-                            <td><code>--dry-run</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Simulate derivation plan without writing files</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>5.4 Audit, Deduplication &amp; Hardlinks (<code>audit</code>)</h3>
-                <p>
-                    Performs image integrity auditing, magic byte sniffing, aspect ratio filtering, perceptual hashing, and NTFS hardlink fraction accounting:
-                </p>
-                <pre><code># Audit registered manifold
+python cli.py degrade --source raw-sets/div2k --output LemGendizedTest \
+  --profile vintage-film --dry-run
+</code></pre>
+<ul>
+<li><strong><code>--source</code>, <code>-s</code></strong>: Type: String; Default: Required; Description: Source
+dataset folder or registered manifold name</li>
+<li><strong><code>--output</code>, <code>-o</code></strong>: Type: String; Default: Required; Description:
+Destination synthetic manifold folder name</li>
+<li><strong><code>--profile</code>, <code>-p</code></strong>: Type: String; Default: <code>motion-blur+iso-noise</code>;
+Description: Profile token or composite expression</li>
+<li><strong><code>--intensity</code></strong>: Type: String; Default: <code>medium</code>; Description: Intensity
+preset: <code>low</code>, <code>medium</code>, <code>high</code></li>
+<li><strong><code>--pairs</code></strong>: Type: Integer; Default: <code>None</code>; Description: Maximum sample
+pair count cap</li>
+<li><strong><code>--val-split</code></strong>: Type: Float; Default: <code>0.12</code>; Description: Validation set
+split ratio</li>
+<li><strong><code>--seed</code></strong>: Type: Integer; Default: <code>42</code>; Description: Deterministic random
+number seed</li>
+<li><strong><code>--image-format</code></strong>: Type: String; Default: <code>webp</code>; Description: Target
+output format for degraded images</li>
+<li><strong><code>--dry-run</code></strong>: Type: Flag; Default: <code>False</code>; Description: Simulate
+derivation plan without writing files</li>
+</ul>
+<h3 id="sec-54-audit-deduplication--hardlinks-audit">5.4 Audit, Deduplication &amp; Hardlinks (<code>audit</code>)</h3>
+<p>Performs image integrity auditing, magic byte sniffing, aspect ratio filtering,
+perceptual hashing, and NTFS hardlink fraction accounting:</p>
+<pre><code class="language-bash"># Audit registered manifold
 python cli.py audit --model nima_aesthetic
 
 # Audit arbitrary filesystem directory with sample cap
-python cli.py audit --manifold ../LemGendaryDatasets/LemGendizedUpnV2 --sample 1000</code></pre>
-
-                <h3>5.5 Retroactive Transcoding (<code>transcode</code>)</h3>
-                <p>
-                    In-place atomic transcoding of existing manifold image sets to WebP with zero intermediate files:
-                </p>
-                <pre><code>python cli.py transcode --model nima_technical --image-format webp --image-quality 92</code></pre>
-
-                <h3>5.6 Smart Multi-Modal Generation (<code>label</code>, <code>prompt</code>, <code>mask</code>)</h3>
-                <p>
-                    Runs GPU/CPU inference backends over compiled manifolds to generate labels, diffusion prompts, or segmentation masks:
-                </p>
-                <pre><code># Multi-strategy label generation
+python cli.py audit --manifold ../LemGendaryDatasets/LemGendizedUpnV2 --sample 1000
+</code></pre>
+<h3 id="sec-55-retroactive-transcoding-transcode">5.5 Retroactive Transcoding (<code>transcode</code>)</h3>
+<p>In-place atomic transcoding of existing manifold image sets to WebP with zero
+intermediate files:</p>
+<pre><code class="language-bash">python cli.py transcode --model nima_technical --image-format webp \
+  --image-quality 92
+</code></pre>
+<h3 id="sec-56-smart-multi-modal-generation-label-prompt-mask">5.6 Smart Multi-Modal Generation (<code>label</code>, <code>prompt</code>, <code>mask</code>)</h3>
+<p>Runs GPU/CPU inference backends over compiled manifolds to generate labels,
+diffusion prompts, or segmentation masks:</p>
+<pre><code class="language-bash"># Multi-strategy label generation
 python cli.py label --model parsenet --strategy parsenet_segmentation
 python cli.py label --model nima_aesthetic --strategy blip_caption --device cuda
 
@@ -824,10 +567,23 @@ python cli.py label --model nima_aesthetic --strategy blip_caption --device cuda
 python cli.py prompt --model diffusion_master --template diffusers-v1
 
 # Mask generation
-python cli.py mask --model parsenet --strategy sam --device cuda</code></pre>
+python cli.py mask --model parsenet --strategy sam --device cuda
+</code></pre>
+<h3 id="sec-57-variant-reduction--modernization-reduce-modernize">5.7 Variant Reduction &amp; Modernization (<code>reduce</code>, <code>modernize</code>)</h3>
+<pre><code class="language-bash"># Modernization queue inspection and management
+python cli.py modernize queue
 
-                <h3>5.7 Variant Reduction &amp; Modernization (<code>reduce</code>, <code>modernize</code>)</h3>
-                <pre><code># Create downsampled reduced manifold variant
+# Run batch modernization and WebP transcoding
+python cli.py modernize run --workers 8 --push-kaggle
+
+# Scale reduction (spatial downsampling) for a specific manifold
+python cli.py modernize reduce --manifold LemGendizedClassificationMaster \
+  --scale-factor 0.25
+
+# Batch regenerate manifolds index and dataset-metadata.json files
+python cli.py modernize regen
+
+# Create downsampled reduced manifold variant (legacy CLI syntax)
 python cli.py reduce --max-gb 10
 
 # Retire legacy `Large` suffix locally and in registry
@@ -836,161 +592,101 @@ python cli.py modernize --all --yes
 python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
 
 # Full modernization: suffix retirement, WebP transcoding, and modern container conversion
-python cli.py modernize --datasets nima_aesthetic --image-format webp --also-format webdataset</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Parameter</th>
-                            <th>Type</th>
-                            <th>Default</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>--all</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Select all eligible manifolds for modernization</td>
-                        </tr>
-                        <tr>
-                            <td><code>--yes</code>, <code>-y</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Skip interactive confirmation gate</td>
-                        </tr>
-                        <tr>
-                            <td><code>--dry-run</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Simulate modernization plan without file modification</td>
-                        </tr>
-                        <tr>
-                            <td><code>--datasets</code></td>
-                            <td>String</td>
-                            <td><code>None</code></td>
-                            <td>Comma-separated list of folder names, base names, or keys</td>
-                        </tr>
-                        <tr>
-                            <td><code>--skip-kaggle</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Skip Kaggle re-upload (local creation and metadata preserved)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--image-format</code></td>
-                            <td>String</td>
-                            <td><code>webp</code></td>
-                            <td>Target format for image transcoding (<code>webp</code>, <code>jpeg</code>, <code>png</code>, <code>keep</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--image-quality</code></td>
-                            <td>Integer</td>
-                            <td><code>92</code></td>
-                            <td>Compression quality for image transcoding (1-100)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--target-quality</code></td>
-                            <td>Integer</td>
-                            <td><code>95</code></td>
-                            <td>Quality floor for ground-truth restoration target transcoding</td>
-                        </tr>
-                        <tr>
-                            <td><code>--mask-format</code></td>
-                            <td>String</td>
-                            <td><code>webp-lossless</code></td>
-                            <td>Format for mask transcoding (<code>webp-lossless</code>, <code>png</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--also-format</code></td>
-                            <td>String</td>
-                            <td><code>webdataset</code></td>
-                            <td>Target container format (<code>webdataset</code>, <code>mds</code>, <code>litdata</code>, <code>parquet</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>--shard-ext</code></td>
-                            <td>String</td>
-                            <td><code>data</code></td>
-                            <td>WebDataset shard file extension without dot (<code>data</code>, <code>tar</code>). Obfuscates shards to prevent Kaggle extraction freezes.</td>
-                        </tr>
-                        <tr>
-                            <td><code>--skip-transcode</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Skip WebP image transcoding phase</td>
-                        </tr>
-                        <tr>
-                            <td><code>--skip-container</code></td>
-                            <td>Flag</td>
-                            <td><code>False</code></td>
-                            <td>Skip container format conversion phase</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>5.8 Sidecar API Server (<code>server</code>)</h3>
-                <p>
-                    Controls the local FastAPI and WebSocket daemon on <code>127.0.0.1:8100</code>:
-                </p>
-                <pre><code># Launch background server daemon
+python cli.py modernize --datasets nima_aesthetic --image-format webp \
+  --also-format webdataset
+</code></pre>
+<ul>
+<li><strong><code>--all</code></strong>: Type: Flag; Default: <code>False</code>; Description: Select all eligible
+manifolds for modernization</li>
+<li><strong><code>--yes</code>, <code>-y</code></strong>: Type: Flag; Default: <code>False</code>; Description: Skip interactive
+confirmation gate</li>
+<li><strong><code>--dry-run</code></strong>: Type: Flag; Default: <code>False</code>; Description: Simulate
+modernization plan without file modification</li>
+<li><strong><code>--datasets</code></strong>: Type: String; Default: <code>None</code>; Description: Comma-separated
+list of folder names, base names, or keys</li>
+<li><strong><code>--skip-kaggle</code></strong>: Type: Flag; Default: <code>False</code>; Description: Skip Kaggle
+re-upload (local creation and metadata preserved)</li>
+<li><strong><code>--image-format</code></strong>: Type: String; Default: <code>webp</code>; Description: Target
+format for image transcoding (<code>webp</code>, <code>jpeg</code>, <code>png</code>, <code>keep</code>)</li>
+<li><strong><code>--image-quality</code></strong>: Type: Integer; Default: <code>92</code>; Description: Compression
+quality for image transcoding (1-100)</li>
+<li><strong><code>--target-quality</code></strong>: Type: Integer; Default: <code>95</code>; Description: Quality
+floor for ground-truth restoration target transcoding</li>
+<li><strong><code>--mask-format</code></strong>: Type: String; Default: <code>webp-lossless</code>; Description:
+Format for mask transcoding (<code>webp-lossless</code>, <code>png</code>)</li>
+<li><strong><code>--also-format</code></strong>: Type: String; Default: <code>webdataset</code>; Description: Target
+container format (<code>webdataset</code>, <code>mds</code>, <code>litdata</code>, <code>parquet</code>)</li>
+<li><strong><code>--skip-transcode</code></strong>: Type: Flag; Default: <code>False</code>; Description: Skip WebP
+image transcoding phase</li>
+<li><strong><code>--skip-container</code></strong>: Type: Flag; Default: <code>False</code>; Description: Skip
+container format conversion phase</li>
+</ul>
+<h3 id="sec-58-sidecar-api-server-server">5.8 Sidecar API Server (<code>server</code>)</h3>
+<p>Controls the local FastAPI and WebSocket daemon on <code>127.0.0.1:8100</code>:</p>
+<pre><code class="language-bash"># Launch background server daemon
 python cli.py server start --background
 
 # Inspect server status, uptime, and hardware sensors
 python cli.py server status
 
 # Gracefully terminate server daemon
-python cli.py server stop</code></pre>
+python cli.py server stop
+</code></pre>
+<h3 id="sec-59-ecosystem-delegation-env">5.9 Ecosystem Delegation (<code>env</code>)</h3>
+<p>Delegates environment lifecycle and code validation directly to <code>lem-env</code>:</p>
+<pre><code class="language-bash"># Execute full multi-gate validation suite
+# Run dataset compiler unit tests
+python cli.py test
+python cli.py test --pattern test_llm*.py
 
-                <h3>5.9 Ecosystem Delegation (<code>env</code>)</h3>
-                <p>
-                    Delegates environment lifecycle and code validation directly to <code>lem-env</code>:
-                </p>
-                <pre><code># Execute full multi-gate validation suite
+# Execute full multi-gate validation suite
 python cli.py env validate
 
 # Probe ecosystem health (fast mode)
 python cli.py env status
 
 # Provision clean virtual environment
-python cli.py env install</code></pre>
-
-                <h3>5.10 Cloud &amp; Metadata Sync (<code>sync</code>, <code>docs</code>, <code>config</code>)</h3>
-                <pre><code># Kaggle dataset push and pull
+python cli.py env install
+</code></pre>
+<h3 id="sec-510-cloud--metadata-sync-sync-docs-config">5.10 Cloud &amp; Metadata Sync (<code>sync</code>, <code>docs</code>, <code>config</code>)</h3>
+<pre><code class="language-bash"># Kaggle dataset push and pull
 python cli.py sync push --model nima_aesthetic
 python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
+
+# Update Kaggle metadata across all manifolds or a single manifold
+python cli.py sync metadata --all
+python cli.py sync metadata --model nima_aesthetic
 
 # Documentation regeneration
 python cli.py docs regen
 
 # Schema validation
-python cli.py config validate</code></pre>
-
-                <h3>5.11 Canonical Compiler Presets (<code>presets</code>)</h3>
-                <p>
-                    Inspects canonical compilation profiles defined in <code>presets.yaml</code>:
-                </p>
-                <pre><code># Display formatted table of available compiler presets
-python cli.py presets list</code></pre>
-                <p>
-                    The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
-                </p>
-
-                <h3>5.12 Forex Universe &amp; Parquet Operations (<code>forex</code>)</h3>
-                <p>
-                    Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays from legacy <code>.npy</code> containers into compressed, partitioned PyArrow Parquet manifolds with embedded schema metadata:
-                </p>
-                <pre><code># Convert NPY market array files into Parquet
-python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --output ../LemGendaryDatasets/LemGendizedForex
+python cli.py config validate
+</code></pre>
+<h3 id="sec-511-canonical-compiler-presets-presets">5.11 Canonical Compiler Presets (<code>presets</code>)</h3>
+<p>Inspects canonical compilation profiles defined in <code>presets.yaml</code>:</p>
+<pre><code class="language-bash"># Display formatted table of available compiler presets
+python cli.py presets list
+</code></pre>
+<p>The output provides a matrix of target formats, image quality percentages,
+aesthetic vetting gates, and auto-labeling toggles for each profile.</p>
+<h3 id="sec-512-forex-universe--parquet-operations-forex">5.12 Forex Universe &amp; Parquet Operations (<code>forex</code>)</h3>
+<p>Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays
+from legacy <code>.npy</code> containers into compressed, partitioned PyArrow Parquet
+manifolds with embedded schema metadata:</p>
+<pre><code class="language-bash"># Convert NPY market array files into Parquet
+python cli.py forex convert --source ../raw-market-data/forex_manifold.npy \
+  --output ../LemGendaryDatasets/LemGendizedForex
 
 # Embed column descriptions and metadata into Parquet tables
-python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet</code></pre>
-
-                <h3 id="section-5-13">5.13 Direct Streaming Zip-to-Container Engine (<code>stream_zip_to_container.py</code>)</h3>
-                <p>
-                    Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX WebDataset <code>.tar</code> shards with on-the-fly 12-thread WebP transcoding, eliminating NTFS MFT file allocation overhead and real-time antivirus filter driver slowdowns:
-                </p>
-                <pre><code># Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
+python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet
+</code></pre>
+<h3 id="sec-513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy">5.13 Direct Streaming Zip-to-Container Engine (<code>stream_zip_to_container.py</code>)</h3>
+<p>Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX
+WebDataset <code>.tar</code> shards with on-the-fly 12-thread WebP transcoding, eliminating
+NTFS MFT file allocation overhead and real-time antivirus filter driver
+slowdowns:</p>
+<pre><code class="language-bash"># Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
 python tools/stream_zip_to_container.py \
     --zip ../LemGendaryDatasets/lemgendizedmirnetexposure.zip \
     --target ../LemGendaryDatasets/LemGendizedMirNetExposure \
@@ -1002,76 +698,31 @@ python tools/stream_zip_to_container.py \
     --zip ../LemGendaryDatasets/lemgendizedupnv2.zip \
     --target ../LemGendaryDatasets/LemGendizedUpnV2 \
     --shard-size 5000 \
-    --delete-zip</code></pre>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Parameter</th>
-                                <th>Type</th>
-                                <th>Default</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>--zip</code></td>
-                                <td>Path</td>
-                                <td>Required</td>
-                                <td>Path to the source multi-gigabyte <code>.zip</code> archive</td>
-                            </tr>
-                            <tr>
-                                <td><code>--target</code></td>
-                                <td>Path</td>
-                                <td>Required</td>
-                                <td>Destination modernized manifold directory</td>
-                            </tr>
-                            <tr>
-                                <td><code>--format</code></td>
-                                <td>Choice</td>
-                                <td><code>webdataset</code></td>
-                                <td>Target container format (<code>webdataset</code>)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--shard-size</code></td>
-                                <td>Integer</td>
-                                <td><code>5000</code></td>
-                                <td>Number of samples per tar shard (~500 MB)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--no-webp</code></td>
-                                <td>Flag</td>
-                                <td><code>False</code></td>
-                                <td>Disable WebP transcoding (preserves original bytes)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--workers</code></td>
-                                <td>Integer</td>
-                                <td><code>None</code> (auto: 12)</td>
-                                <td>Number of worker threads for parallel transcoding</td>
-                            </tr>
-                            <tr>
-                                <td><code>--delete-zip</code></td>
-                                <td>Flag</td>
-                                <td><code>False</code></td>
-                                <td>Unlink source <code>.zip</code> archive upon verified completion</td>
-                            </tr>
-                            <tr>
-                                <td><code>--delete-legacy-dir</code></td>
-                                <td>Path</td>
-                                <td><code>None</code></td>
-                                <td>Path to legacy uncompressed folder to purge</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3 id="section-5-14">5.14 Retroactive Container Migration (<code>format migrate</code> / <code>format write</code>)</h3>
-                <p>
-                    Converts already modernized datasets with loose WebP images and <code>index.json</code> into streaming container shards, with optional purging of loose files to eliminate cluster slack:
-                </p>
-                <pre><code># Convert existing directory to WebDataset shards and purge loose directory layout
+    --delete-zip
+</code></pre>
+<ul>
+<li><strong><code>--zip</code></strong>: Type: Path; Default: Required; Description: Path to the source
+multi-gigabyte <code>.zip</code> archive</li>
+<li><strong><code>--target</code></strong>: Type: Path; Default: Required; Description: Destination
+modernized manifold directory</li>
+<li><strong><code>--format</code></strong>: Type: Choice; Default: <code>webdataset</code>; Description: Target
+container format (<code>webdataset</code>)</li>
+<li><strong><code>--shard-size</code></strong>: Type: Integer; Default: <code>5000</code>; Description: Number of
+samples per tar shard (~500 MB)</li>
+<li><strong><code>--no-webp</code></strong>: Type: Flag; Default: <code>False</code>; Description: Disable WebP
+transcoding (preserves original bytes)</li>
+<li><strong><code>--workers</code></strong>: Type: Integer; Default: <code>None</code> (auto: 12); Description:
+Number of worker threads for parallel transcoding</li>
+<li><strong><code>--delete-zip</code></strong>: Type: Flag; Default: <code>False</code>; Description: Unlink source
+<code>.zip</code> archive upon verified completion</li>
+<li><strong><code>--delete-legacy-dir</code></strong>: Type: Path; Default: <code>None</code>; Description: Path to
+legacy uncompressed folder to purge</li>
+</ul>
+<h3 id="sec-514-retroactive-container-migration-format-migrate--format-write">5.14 Retroactive Container Migration (<code>format migrate</code> / <code>format write</code>)</h3>
+<p>Converts already modernized datasets with loose WebP images and <code>index.json</code>
+into streaming container shards, with optional purging of loose files to
+eliminate cluster slack:</p>
+<pre><code class="language-bash"># Convert existing directory to WebDataset shards and purge loose directory layout
 python cli.py format migrate \
     --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
     --to webdataset \
@@ -1083,13 +734,13 @@ python tools/migrate_manifold_format.py \
     --manifold ../LemGendaryDatasets/LemGendizedFilmRestorer \
     --to webdataset \
     --accept-space-loss \
-    --purge-source</code></pre>
-
-                <h3 id="section-5-15">5.15 Upstream Dataset Expansion &amp; Multi-Format Ingestion Reference</h3>
-                <p>
-                    The dataset compiler allows expanding any manifold simply by appending new source references to <code>unified_data.yaml</code> under the target dataset's <code>refs:</code> array:
-                </p>
-                <pre><code>datasets:
+    --purge-source
+</code></pre>
+<h3 id="sec-515-upstream-dataset-expansion--multi-format-ingestion-reference">5.15 Upstream Dataset Expansion &amp; Multi-Format Ingestion Reference</h3>
+<p>The dataset compiler allows expanding any manifold simply by appending new
+source references to <code>unified_data.yaml</code> under the target dataset's <code>refs:</code>
+array:</p>
+<pre><code class="language-yaml">datasets:
   nima_aesthetic:
     name: NimaAesthetic
     canonical_format: webdataset
@@ -1099,202 +750,139 @@ python tools/migrate_manifold_format.py \
       - ref: hf://chaofengc/IQA-PyTorch-Datasets:spaq.tgz
       - ref: gd://1A2B3C4D5E6F7G8H9I0J
       - ref: gh://owner/research-dataset
-      - ref: manifold://NafNetDebluring</code></pre>
-
-                <h4>Supported Upstream Source Protocols</h4>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Protocol Prefix</th>
-                                <th>Handler Submodule</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>kaggle://&lt;owner&gt;/&lt;slug&gt;</code></td>
-                                <td><code>sources/kaggle.py</code></td>
-                                <td>Authenticated KaggleHub and Kaggle API dataset download with auto-unpack</td>
-                            </tr>
-                            <tr>
-                                <td><code>hf://&lt;org&gt;/&lt;repo&gt;[:&lt;file&gt;]</code></td>
-                                <td><code>sources/hf.py</code></td>
-                                <td>Hugging Face Hub snapshot or archive (<code>.tgz</code>, <code>.tar.gz</code>) download</td>
-                            </tr>
-                            <tr>
-                                <td><code>gd://&lt;id&gt;</code></td>
-                                <td><code>sources/gd.py</code></td>
-                                <td>Google Drive multi-threaded chunked download</td>
-                            </tr>
-                            <tr>
-                                <td><code>gh://&lt;owner&gt;/&lt;repo&gt;</code></td>
-                                <td><code>sources/gh.py</code></td>
-                                <td>GitHub repository archive or release asset synchronization</td>
-                            </tr>
-                            <tr>
-                                <td><code>manifold://&lt;Name&gt;</code></td>
-                                <td><code>core/manifold_compile.py</code></td>
-                                <td>Zero-copy sibling manifold recirculation without duplicating files</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h4>Supported Input Annotation &amp; Image Formats</h4>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Input Format</th>
-                                <th>Converter Submodule</th>
-                                <th>Parsing Engine &amp; Capabilities</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>MATLAB (<code>.mat</code>)</strong></td>
-                                <td><code>converters/matlab.py</code></td>
-                                <td><code>scipy.io.loadmat(mat_path, spmatrix=False)</code> extracting structs, keys, and coordinate arrays</td>
-                            </tr>
-                            <tr>
-                                <td><strong>COCO JSON (<code>.json</code>)</strong></td>
-                                <td><code>converters/coco.py</code></td>
-                                <td>MS-COCO bounding boxes, categories, and polygon masks</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Pascal VOC (<code>.xml</code>)</strong></td>
-                                <td><code>converters/xml.py</code></td>
-                                <td>XML node traversal extracting class names and bounding coordinates</td>
-                            </tr>
-                            <tr>
-                                <td><strong>YOLO TXT (<code>.txt</code>)</strong></td>
-                                <td><code>converters/yolo.py</code></td>
-                                <td>Space-delimited bounding boxes (<code>class xc yc w h</code>)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Apache Parquet (<code>.parquet</code>)</strong></td>
-                                <td><code>converters/parquet.py</code></td>
-                                <td>Columnar table schemas with embedded image bytes or URLs</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Images</strong></td>
-                                <td><code>_fast_scan</code></td>
-                                <td><code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>, <code>.npy</code></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h4>Compilation Trigger</h4>
-                <p>
-                    Once sources are added, run compilation to automatically download missing sets, prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly into modern WebP containers:
-                </p>
-                <pre><code># Ingest all configured sources, vet, and emit canonical modern container shards
-python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12</code></pre>
-
-                <h3 id="section-5-16">5.16 LLM Dataset Compilation &amp; Quality Invariant Auditing (<code>llm</code>)</h3>
-                <p>The LLM compiler module (<code>tools.llm_helper</code>) provides high-velocity generic compilation and validation for instruction tuning datasets:</p>
-                <pre><code># Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
+      - ref: manifold://NafNetDebluring
+</code></pre>
+<h4 id="supported-upstream-source-protocols">Supported Upstream Source Protocols</h4>
+<ul>
+<li><strong><code>kaggle://&lt;owner&gt;/&lt;slug&gt;</code></strong>: Handler Submodule: <code>sources/kaggle.py</code>;
+Description: Authenticated KaggleHub and Kaggle API dataset download with
+auto-unpack</li>
+<li><strong><code>hf://&lt;org&gt;/&lt;repo&gt;[:&lt;file&gt;]</code></strong>: Handler Submodule: <code>sources/hf.py</code>;
+Description: Hugging Face Hub snapshot or archive (<code>.tgz</code>, <code>.tar.gz</code>) download</li>
+<li><strong><code>gd://&lt;id&gt;</code></strong>: Handler Submodule: <code>sources/gd.py</code>; Description: Google Drive
+multi-threaded chunked download</li>
+<li><strong><code>gh://&lt;owner&gt;/&lt;repo&gt;</code></strong>: Handler Submodule: <code>sources/gh.py</code>; Description:
+GitHub repository archive or release asset synchronization</li>
+<li><strong><code>manifold://&lt;Name&gt;</code></strong>: Handler Submodule: <code>core/manifold_compile.py</code>;
+Description: Zero-copy sibling manifold recirculation without duplicating
+files</li>
+</ul>
+<h4 id="supported-input-annotation--image-formats">Supported Input Annotation &amp; Image Formats</h4>
+<ul>
+<li><strong>MATLAB (<code>.mat</code>)</strong>: Converter Submodule: <code>converters/matlab.py</code>; Parsing
+Engine &amp; Capabilities: <code>scipy.io.loadmat(mat_path, spmatrix=False)</code> extracting
+structs, keys, and coordinate arrays</li>
+<li><strong>COCO JSON (<code>.json</code>)</strong>: Converter Submodule: <code>converters/coco.py</code>; Parsing
+Engine &amp; Capabilities: MS-COCO bounding boxes, categories, and polygon masks</li>
+<li><strong>Pascal VOC (<code>.xml</code>)</strong>: Converter Submodule: <code>converters/xml.py</code>; Parsing
+Engine &amp; Capabilities: XML node traversal extracting class names and bounding
+coordinates</li>
+<li><strong>YOLO TXT (<code>.txt</code>)</strong>: Converter Submodule: <code>converters/yolo.py</code>; Parsing
+Engine &amp; Capabilities: Space-delimited bounding boxes (<code>class xc yc w h</code>)</li>
+<li><strong>Apache Parquet (<code>.parquet</code>)</strong>: Converter Submodule: <code>converters/parquet.py</code>;
+Parsing Engine &amp; Capabilities: Columnar table schemas with embedded image
+bytes or URLs</li>
+<li><strong>Images</strong>: Converter Submodule: <code>_fast_scan</code>; Parsing Engine &amp; Capabilities:
+<code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.webp</code>, <code>.safetensors</code>, <code>.tiff</code>, <code>.tif</code>, <code>.bmp</code>,
+<code>.npy</code></li>
+</ul>
+<h4 id="compilation-trigger">Compilation Trigger</h4>
+<p>Once sources are added, run compilation to automatically download missing sets,
+prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly
+into modern WebP containers:</p>
+<pre><code class="language-bash"># Ingest all configured sources, vet, and emit canonical modern container shards
+python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12
+</code></pre>
+<h3 id="sec-516-llm-dataset-compilation--quality-invariant-auditing-llm">5.16 LLM Dataset Compilation &amp; Quality Invariant Auditing (<code>llm</code>)</h3>
+<p>The LLM compiler module (<code>tools.llm_helper</code>) provides high-velocity generic
+compilation and validation for instruction tuning datasets:</p>
+<pre><code class="language-bash"># Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
 python cli.py llm compile --dataset test_llm --no-server
 
 # Compile via local FastAPI sidecar daemon with live WebSocket log streaming
 python cli.py llm compile --dataset test_llm
 
 # Audit any JSONL dataset file against the 4 LemGendary Quality Invariants
-python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/test_llm_train.jsonl</code></pre>
+python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/test_llm_train.jsonl
+</code></pre>
+<h4 id="quality-invariant-checks-enforced">Quality Invariant Checks Enforced</h4>
+<ol>
+<li><strong>Zero-Emoji Rule</strong>: Verifies total absence of Unicode emojis across all
+system, user, and assistant turns.</li>
+<li><strong>ChatML 3-Turn Schema</strong>: Enforces strict <code>[system, user, assistant]</code> message
+structure with non-empty strings.</li>
+<li><strong>Epistemic Certainty Tags</strong>: Enforces presence of <code>[CONFIRMED]</code>,
+<code>[PROBABLE]</code>, or <code>[ILLUSTRATIVE]</code> tags in diagnostic and troubleshooting
+outputs.</li>
+<li><strong>Duplicate Detection</strong>: Identifies exact and fuzzy duplicate prompt
+collisions across the manifold.</li>
+</ol>
+</section>
 
-                <h4>Quality Invariant Checks Enforced</h4>
-                <ol>
-                    <li><strong>Zero-Emoji Rule</strong>: Verifies total absence of Unicode emojis across all system, user, and assistant turns.</li>
-                    <li><strong>ChatML 3-Turn Schema</strong>: Enforces strict <code>[system, user, assistant]</code> message structure with non-empty strings.</li>
-                    <li><strong>Epistemic Certainty Tags</strong>: Enforces presence of <code>[CONFIRMED]</code>, <code>[PROBABLE]</code>, or <code>[ILLUSTRATIVE]</code> tags in diagnostic and troubleshooting outputs.</li>
-                    <li><strong>Duplicate Detection</strong>: Identifies exact and fuzzy duplicate prompt collisions across the manifold.</li>
-                </ol>
-            </section>
-
-            <section id="section-6">
-                <h2>6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</h2>
-                <p>
-                    The <code>lemgendary-training-suite</code> repository provides the canonical <code>lemtrain</code> Typer CLI (accessible via <code>python cli.py</code> or console entrypoint <code>lemtrain</code>). It coordinates in-process model training, deterministic evaluations, multi-target model compilation, notebook generation, checkpoint management, system audits, cloud synchronization, and the background sidecar daemon.
-                </p>
-
-                <h3 id="section-6-1">6.1 Invocation Syntax &amp; Global Help</h3>
-                <pre><code># Display global help and command groups
+<section id="sec-6-training-suite-cli-lemtrain--python-clipy">
+<h2>6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</h2>
+<p>The <code>lemgendary-training-suite</code> repository provides the canonical <code>lemtrain</code>
+Typer CLI (accessible via <code>python cli.py</code> or console entrypoint <code>lemtrain</code>). It
+coordinates in-process model training, deterministic evaluations, multi-target
+model compilation, notebook generation, checkpoint management, system audits,
+cloud synchronization, and the background sidecar daemon.</p>
+<h3 id="sec-61-invocation-syntax--global-help">6.1 Invocation Syntax &amp; Global Help</h3>
+<pre><code class="language-bash"># Display global help and command groups
 python cli.py --help
 
 # Display suite version
-python cli.py version</code></pre>
-
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Command</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>train</code></td>
-                            <td>Train a neural architecture in-process using presets or custom hyperparameters</td>
-                        </tr>
-                        <tr>
-                            <td><code>eval</code></td>
-                            <td>Evaluate a trained model checkpoint under torch.no_grad()</td>
-                        </tr>
-                        <tr>
-                            <td><code>export</code></td>
-                            <td>Compile models to FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, or MT5</td>
-                        </tr>
-                        <tr>
-                            <td><code>notebooks</code></td>
-                            <td>Generate reproducible Kaggle and Google Colab training notebooks</td>
-                        </tr>
-                        <tr>
-                            <td><code>checkpoints</code></td>
-                            <td>List, inspect metadata, and prune model checkpoints</td>
-                        </tr>
-                        <tr>
-                            <td><code>presets</code></td>
-                            <td>Enumerate and inspect canonical training presets (<code>presets.yaml</code>)</td>
-                        </tr>
-                        <tr>
-                            <td><code>audit</code></td>
-                            <td>Audit host resources, model topologies, and judicial PLCC/SRCC rank correlations</td>
-                        </tr>
-                        <tr>
-                            <td><code>sync</code></td>
-                            <td>Synchronize model checkpoints and artifacts to remote targets (GDrive, Kaggle, GitHub)</td>
-                        </tr>
-                        <tr>
-                            <td><code>server</code></td>
-                            <td>Control FastAPI sidecar daemon (<code>start</code>, <code>stop</code>, <code>status</code>, <code>openapi</code>)</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3 id="section-6-2">6.2 Model Training (<code>train</code>)</h3>
-                <p>
-                    Executes in-process model training with automatic hardware discovery, SentinelGuard VRAM protection, and SOTA governance:
-                </p>
-                <pre><code># In-process training run using a canonical preset
+python cli.py version
+</code></pre>
+<ul>
+<li><strong><code>train</code></strong>: Description: Train a neural architecture in-process using presets
+or custom hyperparameters</li>
+<li><strong><code>test-all</code></strong>: Description: Run a 1-epoch diagnostic smoke test across all 22
+registered neural architectures</li>
+<li><strong><code>eval</code></strong>: Description: Evaluate a trained model checkpoint under
+torch.no_grad()</li>
+<li><strong><code>export</code></strong>: Description: Compile models to FP32 ONNX, FP16 ONNX, PyTorch
+standalone, WebGPU, or MT5</li>
+<li><strong><code>notebooks</code></strong>: Description: Generate reproducible Kaggle and Google Colab
+training notebooks</li>
+<li><strong><code>checkpoints</code></strong>: Description: List, inspect metadata, and prune model
+checkpoints</li>
+<li><strong><code>presets</code></strong>: Description: Enumerate and inspect canonical training presets
+(<code>presets.yaml</code>)</li>
+<li><strong><code>audit</code></strong>: Description: Audit host resources, model topologies, and judicial
+PLCC/SRCC rank correlations</li>
+<li><strong><code>sync</code></strong>: Description: Synchronize model checkpoints and artifacts to remote
+targets (GDrive, Kaggle, GitHub)</li>
+<li><strong><code>server</code></strong>: Description: Control FastAPI sidecar daemon (<code>start</code>, <code>stop</code>,
+<code>status</code>, <code>openapi</code>)</li>
+</ul>
+<h3 id="sec-62-model-training-train">6.2 Model Training (<code>train</code>)</h3>
+<p>Executes in-process model training with automatic hardware discovery,
+SentinelGuard VRAM protection, and SOTA governance:</p>
+<pre><code class="language-bash"># In-process training run using a canonical preset
 python cli.py train mirnet_exposure --preset quick-sota --epochs 50
 
 # Custom hyperparameter overrides
-python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean</code></pre>
+python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean
+</code></pre>
+<h4 id="fleet-diagnostic-smoke-test-test-all">Fleet Diagnostic Smoke Test (<code>test-all</code>)</h4>
+<p>Executes a rapid 1-epoch diagnostic smoke test sequentially across all 22
+registered neural architectures using <code>tools/train_all.py</code>:</p>
+<pre><code class="language-bash"># Run 1-epoch diagnostic test across all models
+lemtrain test-all
 
-                <h3 id="section-6-3">6.3 Checkpoint Evaluation (<code>eval</code>)</h3>
-                <p>
-                    Runs deterministic validation under <code>torch.no_grad()</code> computing task-specific quality metrics:
-                </p>
-                <pre><code># Deterministic evaluation of a checkpoint
-python cli.py eval mirnet_exposure --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16</code></pre>
-
-                <h3 id="section-6-4">6.4 Model Compilation &amp; Export (<code>export</code>)</h3>
-                <p>
-                    Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:
-                </p>
-                <pre><code># Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
+# Override test epochs
+lemtrain test-all --epochs 2
+</code></pre>
+<h3 id="sec-63-checkpoint-evaluation-eval">6.3 Checkpoint Evaluation (<code>eval</code>)</h3>
+<p>Runs deterministic validation under <code>torch.no_grad()</code> computing task-specific
+quality metrics:</p>
+<pre><code class="language-bash"># Deterministic evaluation of a checkpoint
+python cli.py eval mirnet_exposure \
+  --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
+</code></pre>
+<h3 id="sec-64-model-compilation--export-export">6.4 Model Compilation &amp; Export (<code>export</code>)</h3>
+<p>Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:</p>
+<pre><code class="language-bash"># Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
 python cli.py export mirnet_exposure --format all
 
 # Single-target export
@@ -1304,13 +892,13 @@ python cli.py export mirnet_exposure --format webgpu
 python -m training.export.universal_exporter --model yolov8n --stage-dist
 
 # Stage existing binaries into dist/kaggle/ without re-exporting
-python -m training.export.universal_exporter --model yolov8n --stage-only</code></pre>
-
-                <h3 id="section-6-5">6.5 Notebook Generation (<code>notebooks</code>)</h3>
-                <p>
-                    Generates reproducible standalone Jupyter training, inference, and usage notebooks for Kaggle and Google Colab environments from the Training Suite Single Source of Truth:
-                </p>
-                <pre><code># List all registered architectures available for notebook compilation
+python -m training.export.universal_exporter --model yolov8n --stage-only
+</code></pre>
+<h3 id="sec-65-notebook-generation-notebooks">6.5 Notebook Generation (<code>notebooks</code>)</h3>
+<p>Generates reproducible standalone Jupyter training, inference, and usage
+notebooks for Kaggle and Google Colab environments from the Training Suite
+Single Source of Truth:</p>
+<pre><code class="language-bash"># List all registered architectures available for notebook compilation
 lemtrain notebooks list
 
 # Generate Kaggle and Google Colab training &amp; usage notebooks for a specific model
@@ -1323,60 +911,30 @@ lemtrain notebooks generate --model forex_predictor --platform kaggle --kind tra
 lemtrain notebooks generate --all
 
 # Specify custom output export directory
-lemtrain notebooks generate --model nima_aesthetic_mobile --output-dir custom_notebooks/</code></pre>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Parameter</th>
-                                <th>Type</th>
-                                <th>Default</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>--model</code>, <code>-m</code></td>
-                                <td>String</td>
-                                <td><code>None</code></td>
-                                <td>Target neural architecture key (e.g., <code>forex_predictor</code>, <code>codeformer</code>)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--all</code>, <code>-a</code></td>
-                                <td>Flag</td>
-                                <td><code>False</code></td>
-                                <td>Batch generate notebooks across all 22 registered model architectures</td>
-                            </tr>
-                            <tr>
-                                <td><code>--platform</code>, <code>-p</code></td>
-                                <td>Choice</td>
-                                <td><code>all</code></td>
-                                <td>Target cloud execution platform (<code>kaggle</code>, <code>colab</code>, <code>all</code>)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--kind</code>, <code>-k</code></td>
-                                <td>List</td>
-                                <td><code>all</code></td>
-                                <td>Notebook kinds to generate (<code>training</code>, <code>inference</code>, <code>usage</code>)</td>
-                            </tr>
-                            <tr>
-                                <td><code>--output-dir</code>, <code>-o</code></td>
-                                <td>Path</td>
-                                <td><code>LemGendaryModels</code></td>
-                                <td>Custom directory to persist generated <code>.ipynb</code> files</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <p>All generated notebooks are automatically distributed and mirrored across <code>LemGendaryModels/&lt;model_key&gt;/</code>, <code>LemGendaryDatasets/&lt;manifold&gt;/</code>, <code>kaggle_training/</code>, and <code>colab_training/</code>.</p>
-
-                <h3 id="section-6-6">6.6 Checkpoint Management (<code>checkpoints</code>)</h3>
-                <p>
-                    Manages checkpoint storage, inspections, and disk pruning:
-                </p>
-                <pre><code># List discovered checkpoints with size and epoch metadata
+lemtrain notebooks generate --model nima_aesthetic_mobile --output-dir custom_notebooks/
+</code></pre>
+<ul>
+<li><strong><code>--model</code>, <code>-m</code></strong>: Type: String; Default: <code>None</code>; Description: Target neural
+architecture key (e.g., <code>forex_predictor</code>, <code>codeformer</code>)</li>
+<li><strong><code>--all</code>, <code>-a</code></strong>: Type: Flag; Default: <code>False</code>; Description: Batch generate
+notebooks across all 22 registered model architectures</li>
+<li><strong><code>--platform</code>, <code>-p</code></strong>: Type: Choice; Default: <code>all</code>; Description: Target
+cloud execution platform (<code>kaggle</code>, <code>colab</code>, <code>all</code>)</li>
+<li><strong><code>--kind</code>, <code>-k</code></strong>: Type: List; Default: <code>all</code>; Description: Notebook kinds to
+generate (<code>training</code>, <code>inference</code>, <code>usage</code>)</li>
+<li><strong><code>--output-dir</code>, <code>-o</code></strong>: Type: Path; Default: <code>LemGendaryModels</code>;
+Description: Custom directory to persist generated <code>.ipynb</code> files</li>
+</ul>
+<p>All generated notebooks are automatically distributed and mirrored across:</p>
+<ol>
+<li><code>LemGendaryModels/&lt;model_key&gt;/</code> (canonical model folder)</li>
+<li><code>LemGendaryDatasets/&lt;manifold&gt;/</code> (matching dataset manifold)</li>
+<li><code>kaggle_training/</code> (workspace-level Kaggle staging directory)</li>
+<li><code>colab_training/</code> (workspace-level Colab staging directory)</li>
+</ol>
+<h3 id="sec-66-checkpoint-management-checkpoints">6.6 Checkpoint Management (<code>checkpoints</code>)</h3>
+<p>Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup blending:</p>
+<pre><code class="language-bash"># List discovered checkpoints with size and epoch metadata
 python cli.py checkpoints list mirnet_exposure
 
 # Inspect specific checkpoint tensor state dict
@@ -1386,54 +944,56 @@ python cli.py checkpoints inspect checkpoints/mirnet_exposure/best.pth
 python cli.py checkpoints prune mirnet_exposure --keep 3
 
 # Blend specialized vault checkpoints using Pareto Model Soup
-python cli.py soup codeformer --weights 0.6,0.4 --output checkpoints/codeformer/best_soup.pth</code></pre>
-
-                <h3 id="section-6-7">6.7 Canonical Presets (<code>presets</code>)</h3>
-                <p>
-                    Inspects canonical training profiles defined in <code>presets.yaml</code>:
-                </p>
-                <pre><code># List all canonical profiles defined in presets.yaml
+python cli.py soup codeformer --weights 0.6,0.4 --output checkpoints/codeformer/best_soup.pth
+</code></pre>
+<h3 id="sec-67-canonical-presets-presets">6.7 Canonical Presets (<code>presets</code>)</h3>
+<p>Inspects canonical training profiles defined in <code>presets.yaml</code>:</p>
+<pre><code class="language-bash"># List all canonical profiles defined in presets.yaml
 python cli.py presets list
 
 # Inspect specific preset parameters
-python cli.py presets show quick-sota</code></pre>
-
-                <h3 id="section-6-8">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</h3>
-                <p>
-                    Audits system resources, model topologies, and judicial rank correlations:
-                </p>
-                <pre><code># Host hardware and VRAM headroom audit
+python cli.py presets show quick-sota
+</code></pre>
+<h3 id="sec-68-hardware--architecture-audit-audit">6.8 Hardware &amp; Architecture Audit (<code>audit</code>)</h3>
+<p>Audits system resources, model topologies, and judicial rank correlations:</p>
+<pre><code class="language-bash"># Host hardware and VRAM headroom audit
 python cli.py audit system
 
 # Model parameter, layer topology, and memory audit
 python cli.py audit model mirnet_exposure
 
 # Judicial rank correlation audit (PLCC and SRCC)
-python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset test_data/</code></pre>
-
-                <h3 id="section-6-9">6.9 Cloud Synchronization (<code>sync</code>)</h3>
-                <p>
-                    Transfers model artifacts, checkpoints, and variations between local storage and remote cloud providers (Kaggle Models Hub and Google Drive) with strict payload isolation audits and YAML-driven metadata synchronization:
-                </p>
-                <pre><code># Push single model across all 4 canonical variations (pytorch/default, pytorch/fp32, onnx/fp16, onnx/fp32)
+python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset test_data/
+</code></pre>
+<h3 id="sec-69-cloud-synchronization-sync">6.9 Cloud Synchronization (<code>sync</code>)</h3>
+<p>Transfers model artifacts, checkpoints, and variations between local storage and
+remote cloud providers (Kaggle Models Hub and Google Drive) with strict payload
+isolation audits and YAML-driven metadata synchronization:</p>
+<pre><code class="language-bash"># Push single model across all 4 canonical variations (pytorch/default,
+# pytorch/fp32, onnx/fp16, onnx/fp32)
 lemtrain sync push yolov8n
 
 # Push specific isolated variation to Kaggle Models Hub
 lemtrain sync push yolov8n --variation pytorch/default
 
 # Push with custom username override and custom release version notes
-lemtrain sync push yolov8n --username lemtreursi --notes "Automated SOTA Release: yolov8n"
+lemtrain sync push yolov8n --username lemtreursi \
+  --notes "Automated SOTA Release: yolov8n"
 
-# Push all 23 registered models to Kaggle Models Hub with metadata, checkpoints, and isolated variations
+# Push all 23 registered models to Kaggle Models Hub with metadata, checkpoints,
+# and isolated variations
 lemtrain sync push --all
 
-# Perform a dry-run validation of metadata and isolation across all models without uploading
+# Perform a dry-run validation of metadata and isolation across all models
+# without uploading
 lemtrain sync push --all --dry-run
 
-# Pull all 4 isolated variations for a target model from Kaggle Models Hub into canonical directories
+# Pull all 4 isolated variations for a target model from Kaggle Models Hub into
+# canonical directories
 lemtrain sync pull yolov8n
 
-# Pull specific variation (e.g. pytorch/default checkpoints or onnx/fp16 deployment binary)
+# Pull specific variation (e.g. pytorch/default checkpoints or onnx/fp16
+# deployment binary)
 lemtrain sync pull yolov8n --variation pytorch/default
 
 # Force re-download even if already present locally
@@ -1443,13 +1003,11 @@ lemtrain sync pull yolov8n --force
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10
 
 # Probe remote cloud storage connection
-python cli.py sync probe --target kaggle</code></pre>
-
-                <h3 id="section-6-10">6.10 Sidecar Daemon Operations (<code>server</code>)</h3>
-                <p>
-                    Controls the background FastAPI sidecar service running on <code>127.0.0.1:8200</code>:
-                </p>
-                <pre><code># Launch background sidecar daemon on port 8200
+python cli.py sync probe --target kaggle
+</code></pre>
+<h3 id="sec-610-sidecar-daemon-operations-server">6.10 Sidecar Daemon Operations (<code>server</code>)</h3>
+<p>Controls the background FastAPI sidecar service running on <code>127.0.0.1:8200</code>:</p>
+<pre><code class="language-bash"># Launch background sidecar daemon on port 8200
 python cli.py server start --daemon
 
 # Check daemon health, port, and PID
@@ -1459,42 +1017,70 @@ python cli.py server status
 python cli.py server openapi --output openapi.json
 
 # Terminate running daemon process
-python cli.py server stop</code></pre>
-
-                <h3 id="section-6-11">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</h3>
-                <p>Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM architectures registered in <code>unified_models_v2.yaml</code>:</p>
-                <pre><code># Fine-tune causal LLM on instruction dataset (in-process)
-python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 --lr 0.0002 --env local
+python cli.py server stop
+</code></pre>
+<h3 id="sec-611-llm-causal-instruction-tuning--model-export-llm">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</h3>
+<p>Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM
+architectures registered in <code>unified_models_v2.yaml</code>:</p>
+<pre><code class="language-bash"># Fine-tune causal LLM on instruction dataset (in-process)
+python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 \
+  --lr 0.0002 --env local
 
 # Fine-tune generic LLM proof-of-concept manifold
 python cli.py llm train test_llm --epochs 1 --batch-size 2 --env local
 
 # Compile and export tri-format deployment binaries
-python cli.py llm export ai_helper_lemgend --target qlora_adapter --target merged_safetensors --target gguf_fp16</code></pre>
+python cli.py llm export ai_helper_lemgend --target qlora_adapter \
+  --target merged_safetensors --target gguf_fp16
+</code></pre>
+<h4 id="tri-format-llm-binary-specifications">Tri-Format LLM Binary Specifications</h4>
+<ul>
+<li><strong>QLoRA Adapter</strong>: Standalone Low-Rank Adaptation weights
+(adapter_model.safetensors, adapter_config.json).</li>
+<li><strong>Merged Safetensors</strong>: Full floating-point FP16 weights merged into base
+architecture for high-throughput vLLM and HuggingFace inference.</li>
+<li><strong>GGUF / ONNX Quantized</strong>: Integer-quantized format (q4_k_m.gguf or INT8 ONNX)
+optimized for edge deployment on consumer hardware.</li>
+</ul>
+<h3 id="sec-612-fid-re-evaluation-python--m-trainingfid_reeval">6.12 FID Re-evaluation (<code>python -m training.fid_reeval</code>)</h3>
+<p>Re-measures FID (<code>feature=2048</code>, chunks of at most two) for the four models whose
+historical FID rows were rewritten by a removed tool (<code>codeformer</code>,
+<code>ffanet_indoor</code>, <code>mprnet_deraining</code>, <code>mirnet_lowlight</code>). Run it from the
+<code>lemgendary-training-suite</code> root:</p>
+<pre><code class="language-bash"># Record the formula-rewritten metrics.csv rows as unverified (no GPU)
+python -m training.fid_reeval mark-unverified --all --dry-run
+python -m training.fid_reeval mark-unverified --all
 
-                <h4>Tri-Format LLM Binary Specifications</h4>
-                <ul>
-                    <li><strong>QLoRA Adapter</strong>: Standalone Low-Rank Adaptation weights (<code>adapter_model.safetensors</code>, <code>adapter_config.json</code>).</li>
-                    <li><strong>Merged Safetensors</strong>: Full floating-point FP16 weights merged into base architecture for high-throughput vLLM and HuggingFace inference.</li>
-                    <li><strong>GGUF / ONNX Quantized</strong>: Integer-quantized format (<code>q4_k_m.gguf</code> or INT8 ONNX) optimized for edge deployment on consumer hardware.</li>
-                </ul>
+# Check all inputs on CPU, then measure (default: checkpoints/best.pth)
+python -m training.fid_reeval measure --model codeformer --dry-run
+python -m training.fid_reeval measure --model codeformer --device cuda \
+  --batch-size 4 --note "re-evaluation of best.pth"
 
-                <h4>Fleet Diagnostic Smoke Test (<code>test-all</code>)</h4>
-                <p>Executes an automated diagnostic smoke pass across all 23 neural architectures:</p>
-                <pre><code># Run 1-epoch fleet diagnostic
-lemtrain test-all
+# Summarise the ledgers
+python -m training.fid_reeval status --all
+</code></pre>
+<ul>
+<li><strong><code>measure</code></strong>: <code>--model</code> (any registry key), <code>--checkpoint</code>,
+<code>--datasets-root</code>, <code>--models-root</code> (default
+<code>&lt;workspace&gt;/LemGendaryModels</code>), <code>--env local|kaggle|colab</code>,
+<code>--device auto|cpu|cuda|cuda:N</code>, <code>--batch-size</code> (default 4),
+<code>--num-workers</code>, <code>--non-strict</code> (allow missing or extra keys; noted in the
+row), <code>--note</code>, <code>--dry-run</code>.</li>
+<li><strong><code>mark-unverified</code></strong> and <strong><code>status</code></strong>: <code>--model</code> (one of the four models) or
+<code>--all</code>, <code>--models-root</code>; <code>mark-unverified</code> also takes <code>--dry-run</code>.</li>
+<li><strong>Output</strong>: rows are appended to
+<code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code>; <code>metrics.csv</code>, checkpoints and
+rung state are never written.</li>
+<li><strong>Exit codes</strong>: <code>0</code> success, <code>2</code> bad input or ledger, <code>3</code> FID invariant
+failure or missing FID backend.</li>
+</ul>
+</section>
 
-# Override test epochs
-lemtrain test-all --epochs 2</code></pre>
-            </section>
-
-            <section id="section-7">
-                <h2>7. Models Hub &amp; Verification Toolchain</h2>
-                <p>
-                    The <code>LemGendaryModels</code> repository hosts trained neural checkpoints and model cards.
-                </p>
-                <p>Validation and inspection:</p>
-                <pre><code># Model validation is executed centrally via Environment Manager:
+<section id="sec-7-models-hub--verification-toolchain">
+<h2>7. Models Hub &amp; Verification Toolchain</h2>
+<p>The <code>LemGendaryModels</code> repository hosts trained neural checkpoints and model cards.</p>
+<p>Validation and inspection:</p>
+<pre><code class="language-bash"># Model validation is executed centrally via Environment Manager:
 lem-env validate --project LemGendaryModels
 
 # Regenerate all 23 model README cards and validate/stage variations
@@ -1507,78 +1093,59 @@ python -m training.doc_generator --model yolov8n --stage-variations
 python -m training.hub_readme_generator
 
 # Check model checkpoint integrity directly
-python -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"</code></pre>
-            </section>
+python \
+  -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"
+</code></pre>
+</section>
 
-            <section id="section-8">
-                <h2>8. Documentation Hub &amp; Static Validation</h2>
-                <p>
-                    The <code>lemgendary-docs</code> repository contains technical research whitepapers, HTML
-                    documentation, and operational manuals.
-                </p>
-                <p>Operations:</p>
-                <pre><code># Documentation validation is executed centrally via Environment Manager:
+<section id="sec-8-documentation-hub--static-validation">
+<h2>8. Documentation Hub &amp; Static Validation</h2>
+<p>The <code>lemgendary-docs</code> repository contains technical research whitepapers, HTML
+documentation, and operational manuals.</p>
+<p>Operations:</p>
+<pre><code class="language-bash"># Documentation validation is executed centrally via Environment Manager:
 lem-env validate --project lemgendary-docs
 
 # Serve documentation hub locally using Python HTTP server
-python -m http.server 8080 --directory lemgendary-docs</code></pre>
-            </section>
+python -m http.server 8080 --directory lemgendary-docs
+</code></pre>
+</section>
 
-            <section id="section-9">
-                <h2>9. Exit Codes, Automation &amp; CI/CD Integration</h2>
-                <p>
-                    All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:
-                </p>
-                <table class="reference-table">
-                    <thead>
-                        <tr>
-                            <th>Exit Code</th>
-                            <th>Meaning</th>
-                            <th>Operator Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>0</code></td>
-                            <td>Success</td>
-                            <td>Operation completed successfully with zero violations or errors</td>
-                        </tr>
-                        <tr>
-                            <td><code>1</code></td>
-                            <td>General Failure</td>
-                            <td>Unhandled exception or syntax failure during execution</td>
-                        </tr>
-                        <tr>
-                            <td><code>2</code></td>
-                            <td>Validation Error</td>
-                            <td>One or more quality, linting, or domain gates failed verification</td>
-                        </tr>
-                        <tr>
-                            <td><code>3</code></td>
-                            <td>Missing Prerequisites</td>
-                            <td>Required toolchain component (Python, Git, NPM) is not installed</td>
-                        </tr>
-                        <tr>
-                            <td><code>4</code></td>
-                            <td>Network / IO Error</td>
-                            <td>Failed to reach remote registry or download necessary assets</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p>Continuous Integration Workflow Example:</p>
-                <pre><code># Standard CI/CD verification pipeline
+<section id="sec-9-exit-codes-automation--cicd-integration">
+<h2>9. Exit Codes, Automation &amp; CI/CD Integration</h2>
+<p>All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:</p>
+<ul>
+<li><strong><code>0</code></strong>: Meaning: Success; Operator Action: Operation completed successfully
+with zero violations or errors</li>
+<li><strong><code>1</code></strong>: Meaning: General Failure; Operator Action: Unhandled exception or
+syntax failure during execution</li>
+<li><strong><code>2</code></strong>: Meaning: Validation Error; Operator Action: One or more quality,
+linting, or domain gates failed verification</li>
+<li><strong><code>3</code></strong>: Meaning: Missing Prerequisites; Operator Action: Required toolchain
+component (Python, Git, NPM) is not installed</li>
+<li><strong><code>4</code></strong>: Meaning: Network / IO Error; Operator Action: Failed to reach remote
+registry or download necessary assets</li>
+</ul>
+<p>Continuous Integration Workflow Example:</p>
+<pre><code class="language-bash"># Standard CI/CD verification pipeline
 lem-env audit --fast || exit 1
-lem-env validate || exit 2</code></pre>
-            </section>
+lem-env validate || exit 2
+</code></pre>
+</section>
 
-            <section id="companion-documentation">
-                <h2>Companion Documentation</h2>
-                <ul>
-                    <li><a href="env_manager.html">Technical Whitepaper (HTML)</a></li>
-                    <li><a href="api-manual.html">Master REST &amp; WebSocket API Specification (HTML)</a></li>
-                </ul>
-            </section>
-        
-</main>
+<section id="companion-documentation">
+<h2>Companion Documentation</h2>
+<ul>
+<li><a href="env_manager.html">Technical Whitepaper (Markdown)</a></li>
+<li><a href="../papers/env_manager.html">Technical Whitepaper (HTML)</a></li>
+<li><a href="api-manual.html">Master REST &amp; WebSocket API Specification (Markdown)</a></li>
+<li><a href="../papers/api-manual.html">Master REST &amp; WebSocket API Specification (HTML)</a></li>
+</ul>
+</section>
+
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/MANUAL_CLI.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

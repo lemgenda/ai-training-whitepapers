@@ -2,170 +2,380 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canonical Glossary &amp; Terminology Specification - LemGendary AI</title>
-    <meta name="description" content="Official single source of truth for terminology, mathematical primitives, architectural definitions, and system invariants across the LemGendary AI Ecosystem.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LemGendary Ecosystem: Canonical Glossary &amp; Terminology</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="glossary.html" class="active">Canonical Glossary</a>
-                <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="manuals-hub.html">Manuals Hub</a>
-                <a href="general-ai-training-knowledge.html">General AI Knowledge</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="glossary.html" class="tab-link active">Canonical Glossary</a>
+<a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+<a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
+<a href="general-ai-training-knowledge.html" class="tab-link">General AI Knowledge</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>LemGendary Ecosystem: Canonical Glossary &amp; Terminology Specification</h1>
+<p class="subtitle">Category 12 GLOSSARY | LemGendary AI Documentation Hub</p>
+<div class="meta">
+<span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
+<span><strong>Version</strong>: <code>v16.9.68-STABLE</code> (LemGendary AI Documentation Hub)</span>
+<span><strong>Last audited</strong>: 2026-11-03</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#section-abstract">1. Abstract &amp; Scope</a></li>
-                <li><a href="#section-taxonomy">2. Core Taxonomy: Dataset vs. Manifold</a>
-                    <ul class="sub-item">
-                        <li><a href="#tax-dataset">2.1 Dataset (Raw Set)</a></li>
-                        <li><a href="#tax-manifold">2.2 Manifold (Compiled Training Manifold)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-compiler">3. Compiler &amp; Storage Primitives</a></li>
-                <li><a href="#section-training">4. Master Training Suite &amp; Optimization</a></li>
-                <li><a href="#section-pathology">5. Training Pathology &amp; Diagnostics</a></li>
-                <li><a href="#section-env">6. Environment &amp; Infrastructure</a></li>
-                <li><a href="#section-matrix">7. Authoritative "Do Not Confuse With" Matrix</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-core-taxonomy-dataset-vs-manifold">2. Core Taxonomy: Dataset vs. Manifold</a>
+<ul class="sub-item">
+<li><a href="#sec-21-dataset-raw-set">2.1 Dataset (Raw Set)</a></li>
+<li><a href="#sec-22-manifold-compiled-training-manifold">2.2 Manifold (Compiled Training
+Manifold)</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-compiler--storage-primitives">3. Compiler &amp; Storage Primitives</a>
+<ul class="sub-item">
+<li><a href="#sec-39-task-taxonomy">3.9 Task Taxonomy</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-model-training-suite--optimization">4. Model Training Suite &amp; Optimization</a>
+<ul class="sub-item">
+<li><a href="#sec-45-ratchet-violation">4.5 Ratchet Violation</a></li>
+<li><a href="#sec-46-epoch-budget">4.6 Epoch Budget</a></li>
+<li><a href="#sec-47-stochastic-weight-averaging-swa">4.7 Stochastic Weight Averaging (SWA)</a></li>
+<li><a href="#sec-48-fid-provenance-ledger">4.8 FID Provenance Ledger</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-training-pathology--diagnostics">5. Training Pathology &amp; Diagnostics</a></li>
+<li><a href="#sec-6-environment--infrastructure">6. Environment &amp; Infrastructure</a>
+<ul class="sub-item">
+<li><a href="#sec-63-origin-guard">6.3 Origin Guard</a></li>
+<li><a href="#sec-64-client-header">6.4 Client Header</a></li>
+</ul>
+</li>
+<li><a href="#sec-7-bug-reporting">7. Bug Reporting</a>
+<ul class="sub-item">
+<li><a href="#sec-71-bug-report-tool">7.1 Bug Report Tool</a></li>
+<li><a href="#sec-72-bug-report-archive">7.2 Bug Report Archive</a></li>
+<li><a href="#sec-73-screenshot-annotator">7.3 Screenshot Annotator</a></li>
+<li><a href="#sec-74-telemetry-csv">7.4 Telemetry CSV</a></li>
+</ul>
+</li>
+<li><a href="#sec-8-authoritative-do-not-confuse-with-matrix">8. Authoritative &quot;Do Not Confuse With&quot;
+Matrix</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Canonical Glossary &amp; Terminology Specification</h1>
-        <p class="subtitle">Single Source of Truth (SSOT) for System Primitives, Architectural Boundaries, and Operational Invariants</p>
-        <div class="meta">
-                <span>Category 12 GLOSSARY</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Component: System Invariants</span>
-            </div>
 
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>This specification is the single source of truth (SSOT) for the terminology,
+mathematical primitives, architectural definitions and system invariants used
+across the LemGendary AI Ecosystem. It removes semantic ambiguity across
+machine learning pipelines, desktop operators, agentic reasoning models and
+technical documentation. Every entry carries a strict operational definition
+and cross-reference boundaries.</p>
+</section>
 
-            <section id="section-abstract">
-                <h2>1. Abstract &amp; Scope</h2>
-                <p>This authoritative specification establishes the single source of truth (SSOT) for all terminology, mathematical primitives, architectural definitions, and system invariants utilized across the LemGendary AI Ecosystem. Designed to eliminate semantic ambiguity across machine learning pipelines, desktop operators, agentic reasoning models, and technical documentation, every entry in this glossary carries strict operational definitions and cross-reference boundaries.</p>
-            </section>
+<section id="sec-2-core-taxonomy-dataset-vs-manifold">
+<h2>2. Core Taxonomy: Dataset vs. Manifold</h2>
+<p>The distinction between a raw dataset and a compiled manifold is an inviolable
+architectural invariant across the ecosystem:</p>
+<h3 id="sec-21-dataset-raw-set">2.1 Dataset (Raw Set)</h3>
+<ul>
+<li><strong>Definition</strong>: A collection of uncurated, heterogeneous source data from
+external repositories (for example HuggingFace, Kaggle, GitHub, Google Drive
+or local filesystem drops).</li>
+<li><strong>Location</strong>: Stored strictly under <code>raw-sets/&lt;source-name&gt;/</code> or in
+ephemeral fetch caches.</li>
+<li><strong>Characteristics</strong>:
+<ul>
+<li>Unstandardized file formats (loose JPEGs, PNGs, BMPs, TARs, ZIPs).</li>
+<li>Arbitrary spatial resolutions, varying aspect ratios and uncalibrated
+colour spaces.</li>
+<li>Incomplete, missing or malformed label structures.</li>
+<li>Mutable: raw files may be updated, pruned or re-downloaded from upstream
+remotes.</li>
+</ul>
+</li>
+<li><strong>Usage</strong>: Raw datasets are <strong>never</strong> ingested directly by the LemGendary
+Model Training Suite.</li>
+</ul>
+<h3 id="sec-22-manifold-compiled-training-manifold">2.2 Manifold (Compiled Training Manifold)</h3>
+<ul>
+<li><strong>Definition</strong>: A deterministic, vetted, hardware-aligned data
+representation compiled specifically for machine learning ingestion.</li>
+<li><strong>Location</strong>: Stored in the LemGendary Compiled Manifolds Repo
+(<code>../LemGendaryDatasets/LemGendized&lt;Name&gt;/</code>).</li>
+<li><strong>Characteristics</strong>:
+<ul>
+<li><strong>Unified Invariants</strong>: Strict resolution floors ($\ge 224\text{px}$
+restoration, $\ge 512\text{px}$ diffusion), standardized WebP encoding
+($q=92$ images, $q=95$ targets, lossless masks) and deterministic split
+assignments (<code>train</code>, <code>val</code>, <code>test</code>).</li>
+<li><strong>Immutable Provenance</strong>: Every manifold contains self-documenting
+manifests: <code>dataset_info.yaml</code>, <code>index.json</code>, <code>classes.txt</code> and
+<code>manifold_registry.db</code>.</li>
+<li><strong>Zero Redundancy</strong>: Identity image targets use physical NTFS/POSIX
+hardlink deduplication (<code>os.link</code>), so no cluster space is wasted.</li>
+<li><strong>High-Throughput Alignment</strong>: Built for $\mathcal{O}(1)$ flat directory
+indexation and optional concurrent multi-container sharding (LitData,
+WebDataset, Parquet).</li>
+</ul>
+</li>
+</ul>
+</section>
 
-            <section id="section-taxonomy">
-                <h2>2. Core Taxonomy: Dataset vs. Manifold</h2>
-                <p>The distinction between a raw dataset and a compiled manifold is an inviolable architectural invariant across the ecosystem:</p>
+<section id="sec-3-compiler--storage-primitives">
+<h2>3. Compiler &amp; Storage Primitives</h2>
+<h3 id="sec-31-mathcalo1-physical-skip-indexing">3.1 $\mathcal{O}(1)$ Physical Skip-Indexing</h3>
+<p>A high-velocity filesystem technique where a single flat <code>os.scandir</code>
+traversal during pipeline initialization populates an in-memory string hash
+set ($\mathcal{S}_{\text{disk}}$) of existing files. Verifying whether a sample
+has already been compiled executes in $\mathcal{O}(1)$ average-case dictionary
+lookup time, bypassing recursive $\mathcal{O}(N \cdot d)$ disk seek overhead.</p>
+<h3 id="sec-32-zero-ipc-threadpool">3.2 Zero-IPC ThreadPool</h3>
+<p>An execution model utilizing Python's <code>ThreadPoolExecutor</code> within a single
+virtual memory space for pure I/O operations (image decoding, transcoding, and
+disk writing). By executing within a shared memory space, it avoids
+inter-process serialization and pickling overhead (measured near-zero IPC
+serialization overhead relative to multi-process queue IPC under standard
+Python I/O worker benchmarks).</p>
+<h3 id="sec-33-ntfs-cluster-slack-space-recovery">3.3 NTFS Cluster Slack Space Recovery</h3>
+<p>Standard NTFS filesystems allocate physical disk space in
+$4,096\text{-byte}$ clusters. Loose sliding-window arrays waste up to
+$4\text{ KB}$ per file in cluster slack. The compiler's columnar Parquet +
+Zstandard architecture aggregates temporal records into contiguous row groups,
+achieving compression ratios up to $99.3\%$ on highly repetitive tick-level
+financial datasets (measured against raw uncompressed CSV dumps in the
+MetaTrader 5 Forex benchmark suite).</p>
+<h3 id="sec-34-hardlink-deduplication-identity-mapping">3.4 Hardlink Deduplication (Identity Mapping)</h3>
+<p>An optimization for image restoration where the clean ground-truth target
+matches the degraded input. Instead of duplicating multi-megabyte image bytes
+across directories, the compiler issues NTFS hardlinks referencing identical
+physical disk clusters, saving hundreds of gigabytes per manifold.</p>
+<h3 id="sec-35-lossless-mask-transcoding">3.5 Lossless Mask Transcoding</h3>
+<p>A format constraint requiring all segmentation masks (<code>masks/</code>) to be encoded
+strictly via WebP lossless compression. Lossy compression introduces subtle
+edge-quantization artifacts that corrupt discrete integer class labels.</p>
+<h3 id="sec-36-two-tier-modernization-resumption">3.6 Two-Tier Modernization Resumption</h3>
+<p>An architectural design in <code>tools/modernize_manifold.py</code> combining high-level
+manifest validation (<code>dataset_info.yaml</code> + <code>index.json</code>) with file-level delta
+verification. Interrupted modernization runs bypass already-transcoded <code>.webp</code>
+images and metadata in seconds, resuming only uncompleted files.</p>
+<h3 id="sec-37-webdataset-data-shard-convention">3.7 WebDataset <code>.data</code> Shard Convention</h3>
+<p>The canonical shard file extension for all WebDataset archives in the
+LemGendary ecosystem. Shards are valid POSIX <code>ustar</code> tar archives internally,
+but use <code>.data</code> instead of <code>.tar</code> to bypass Kaggle backend archive-sniffing
+heuristics that would otherwise recursively expand multi-gigabyte containers
+into millions of loose files, causing inode exhaustion and attachment latency
+measured in hours. The LemGendary Model Training Suite discovers and decodes
+<code>.data</code> and <code>.tar</code> shards transparently via POSIX magic byte inspection.</p>
+<h3 id="sec-38-dynamic-cuda-index-selection">3.8 Dynamic CUDA Index Selection</h3>
+<p>A runtime algorithm implemented in
+<code>env_manager.system_probe.select_cuda_torch_index()</code> that reads the NVIDIA
+driver version and returns the newest compatible PyTorch wheel index (<code>cu126</code>,
+then <code>cu121</code>, then <code>cu118</code>). It eliminates hard-coded CUDA index pins and
+ensures the correct build is installed regardless of driver version.</p>
+<h3 id="sec-39-task-taxonomy">3.9 Task Taxonomy</h3>
+<p>The file <code>lemgendary-datasets/task_taxonomy.json</code> (schema
+<code>task_taxonomy.schema.json</code>), the single source of task ids such as <code>pose</code>,
+<code>segmentation</code>, <code>restoration</code> or <code>detection</code>. For each task it gives the split
+folder the task adds (<code>layout_dir</code>), the default label and mask strategies and
+the name patterns of the fallback heuristic. Every entry in <code>unified_data.yaml</code>
+names its <code>task</code>; an entry with <code>task_confirmed: false</code> waits for the owner to
+confirm it. The compiler writes the task id as <code>task_type</code> into each
+manifold's <code>dataset_info.yaml</code>, which the LemGendary Model Training Suite reads.</p>
+</section>
 
-                <h3 id="tax-dataset">2.1 Dataset (Raw Set)</h3>
-                <ul>
-                    <li><strong>Definition</strong>: A collection of uncurated, heterogeneous source data originating from external repositories (e.g. HuggingFace, Kaggle, GitHub, Google Drive, or local filesystem drops).</li>
-                    <li><strong>Location</strong>: Stored strictly under <code>raw-sets/&lt;source-name&gt;/</code> or fetched ephemeral caches.</li>
-                    <li><strong>Characteristics</strong>: Unstandardized file formats (loose JPEGs, PNGs, BMPs, TARs, ZIPs); arbitrary spatial resolutions, varying aspect ratios, and uncalibrated colour spaces; incomplete or malformed label structures. Mutable: raw files may be updated, pruned, or re-downloaded from upstream remotes.</li>
-                    <li><strong>Usage</strong>: Raw datasets are <strong>never</strong> ingested directly by the Master Training Suite.</li>
-                </ul>
+<section id="sec-4-model-training-suite--optimization">
+<h2>4. Model Training Suite &amp; Optimization</h2>
+<h3 id="sec-41-spatial-resolution-ladder">4.1 Spatial Resolution Ladder</h3>
+<p>A multi-stage curriculum learning schedule in which image resolution scales up
+during training (for example $256\text{px} \to 384\text{px} \to 512\text{px}
+\to 640\text{px}$). Early epochs capture global structure at high batch
+velocity before later rungs fine-tune high-frequency detail.</p>
+<h3 id="sec-42-nuclear-hardened-architecture">4.2 Nuclear-Hardened Architecture</h3>
+<p>A resilience design pattern in <code>lemgendary-training-suite</code> that combines
+validation across hardware backends, dynamic gradient scaling, automated
+checkpoint verification and zero-suppression error telemetry.</p>
+<h3 id="sec-43-directional-accuracy-da">4.3 Directional Accuracy (DA)</h3>
+<p>The primary evaluation metric for financial time-series forecasting: the
+percentage of time steps where the predicted sign of the price delta matches
+the actual market trajectory:</p>
+<div class="math-block">$$\text{DA} = \frac{1}{N} \sum_{t=1}^{N} \mathbb{I}\left( \text{sgn}(\hat{y}_t - y_{t-1}) = \text{sgn}(y_t - y_{t-1}) \right) \times 100\%$$</div>
+<h3 id="sec-44-earth-movers-distance-emd-loss">4.4 Earth Mover's Distance (EMD) Loss</h3>
+<p>The objective function for probabilistic aesthetic quality distributions
+(NIMA). It penalizes misclassifications in proportion to the distance between
+ordinal rating bins ($1\text{ to }10$):</p>
+<div class="math-block">$$\text{EMD}(p, \hat{p}) = \left( \frac{1}{K} \sum_{k=1}^{K} \left| \text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k) \right|^r \right)^{1/r}$$</div>
+<h3 id="sec-45-ratchet-violation">4.5 Ratchet Violation</h3>
+<p>The error raised when a curriculum transition would step backwards.
+<code>RatchetViolation</code> (a <code>ValueError</code> in <code>training/ratchet.py</code>) enforces the
+Monotonic Ratchet pair rule: resolution never decreases, and within one
+resolution step the data fraction never decreases; when the resolution steps
+up, the fraction may reset. Every governor transition goes through
+<code>SmartTrainingGovernor._commit_rung</code>, which raises <code>RatchetViolation</code> instead
+of applying a backward step. A transition from $(r_t, f_t)$ to
+$(r_{t+1}, f_{t+1})$ is allowed only if:</p>
+<div class="math-block">$$r_{t+1} \ge r_t \land \left(r_{t+1} = r_t \Rightarrow f_{t+1} \ge f_t\right)$$</div>
+<p>On regression the governor holds the rung and cools the learning rate; it
+never recoils fraction or resolution.</p>
+<h3 id="sec-46-epoch-budget">4.6 Epoch Budget</h3>
+<p>The bounded number of epochs a training run may use. After every epoch,
+<code>EpochBudgetPolicy</code> (<code>training/epoch_budget.py</code>) decides whether to continue,
+extend or stop, and records the stop reason (<code>converged</code>, <code>early_stop</code>,
+<code>budget_reached</code> or <code>extension_limit</code>). Extensions are opt-in through the
+<code>training_budget</code> section of <code>config.yaml</code> (<code>extension_epochs</code>,
+<code>max_extension_epochs</code>; the shipped ceiling is 0, which makes the configured
+budget a hard cap). With budget $E$ and extension ceiling $E_{\max}$:</p>
+<div class="math-block">$$E_{\text{trained}} \le E + E_{\max}$$</div>
+<h3 id="sec-47-stochastic-weight-averaging-swa">4.7 Stochastic Weight Averaging (SWA)</h3>
+<p>A running mean of the model weights over the last epochs of a run, computed
+with <code>torch.optim.swa_utils</code> (<code>AveragedModel</code>, optional <code>SWALR</code>, <code>update_bn</code>).
+In the LemGendary Model Training Suite it is set in the <code>swa</code> section of
+<code>config.yaml</code> and is <strong>off by default</strong>. The averaged weights are written as
+<code>checkpoints/vault_swa.pth</code>, an ingredient for the Pareto Model Soup; they
+never move the curriculum rungs. Not to be confused with Mini-SWA or
+Metric-Specific SWA (MS-SWA), which are not implemented.</p>
+<h3 id="sec-48-fid-provenance-ledger">4.8 FID Provenance Ledger</h3>
+<p>The append-only file <code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> written by
+<code>python -m training.fid_reeval</code>. Each row records where a FID value came from:
+<code>unverified</code> rows mark <code>metrics.csv</code> values rewritten by the removed
+<code>tools/recalibrate_fid.py</code>; <code>reevaluated</code> rows hold a FID re-measured from a
+checkpoint with <code>feature=2048</code> and chunks of at most two, with the image count
+and the checkpoint SHA-256. <code>metrics.csv</code> itself is never rewritten.</p>
+</section>
 
-                <h3 id="tax-manifold">2.2 Manifold (Compiled Training Manifold)</h3>
-                <ul>
-                    <li><strong>Definition</strong>: A deterministic, mathematically vetted, hardware-aligned topological data representation compiled specifically for machine learning ingestion.</li>
-                    <li><strong>Location</strong>: Stored in <code>../LemGendaryDatasets/LemGendized&lt;Name&gt;/</code>.</li>
-                    <li><strong>Unified Invariants</strong>: Strict resolution floors (&ge; 224px restoration, &ge; 512px diffusion), standardized WebP encoding (<i>q</i>=92 images, <i>q</i>=95 targets, lossless masks), and deterministic split assignments (<code>train</code>, <code>val</code>, <code>test</code>).</li>
-                    <li><strong>Immutable Provenance</strong>: Every manifold contains terminal self-documenting manifests: <code>dataset_info.yaml</code>, <code>index.json</code>, <code>classes.txt</code>, and <code>manifold_registry.db</code>.</li>
-                    <li><strong>Zero Redundancy</strong>: Identity image targets leverage physical NTFS/POSIX hardlink deduplication (<code>os.link</code>), guaranteeing zero cluster waste.</li>
-                </ul>
-            </section>
+<section id="sec-5-training-pathology--diagnostics">
+<h2>5. Training Pathology &amp; Diagnostics</h2>
+<h3 id="sec-51-pathology-reasoning-trace">5.1 Pathology Reasoning Trace</h3>
+<p>A structured diagnostic narrative generated from empirical training failure
+modes. It models the causal chain: Observational Symptom $\to$ Diagnostic
+Telemetry $\to$ Root Cause Analysis $\to$ Mitigation Strategy.</p>
+<h3 id="sec-52-latent-disconnect">5.2 Latent Disconnect</h3>
+<p>A training pathology where the restoration backbone converges to a trivial
+spatial average (for example solid grey or blur) while the loss curves report
+apparent convergence, which indicates a loss-term imbalance or improper
+normalization.</p>
+<h3 id="sec-53-catastrophic-gradient-collapse">5.3 Catastrophic Gradient Collapse</h3>
+<p>An unrecoverable parameter destabilization, typically caused by exploding
+gradient spikes ($\|\mathbf{g}\| &gt; 10^4$) or unhandled NaN inputs, that needs
+an automated checkpoint rewind and a learning rate penalty.</p>
+</section>
 
-            <section id="section-compiler">
-                <h2>3. Compiler &amp; Storage Primitives</h2>
-                <ul>
-                    <li><strong><i>O(1)</i> Physical Skip-Indexing</strong>: A high-velocity filesystem technique where a single flat <code>os.scandir</code> traversal during pipeline initialization populates an in-memory string hash set of existing files. Verifying whether a sample has already been compiled executes in <i>O(1)</i> average-case dictionary lookup time, bypassing recursive disk seek overhead.</li>
-                    <li><strong>Zero-IPC ThreadPool</strong>: An execution model utilizing Python's <code>ThreadPoolExecutor</code> within a single virtual memory space for pure I/O operations (image decoding, transcoding, and disk writing). By executing within a shared memory space, it avoids inter-process serialization and pickling overhead (measured near-zero IPC serialization overhead relative to multi-process queue IPC under standard Python I/O worker benchmarks).</li>
-                    <li><strong>NTFS Cluster Slack Space Recovery</strong>: Standard NTFS filesystems allocate physical disk space in 4,096-byte clusters. Loose sliding-window arrays waste up to 4 KB per file in cluster slack. The compiler's columnar Parquet + Zstandard architecture aggregates temporal records into contiguous row groups, achieving compression ratios up to 99.3% on highly repetitive tick-level financial datasets (measured against raw uncompressed CSV dumps in the MetaTrader 5 Forex benchmark suite).</li>
-                    <li><strong>Hardlink Deduplication (Identity Mapping)</strong>: An optimization for image restoration where the clean ground-truth target matches the degraded input. Instead of duplicating multi-megabyte image bytes across directories, the compiler issues NTFS hardlinks referencing identical physical disk clusters, saving hundreds of gigabytes per manifold.</li>
-                    <li><strong>Lossless Mask Transcoding</strong>: A format constraint requiring all segmentation masks (<code>masks/</code>) to be encoded strictly via WebP lossless compression. Lossy compression introduces subtle edge-quantization artifacts that corrupt discrete integer class labels.</li>
-                    <li><strong>Two-Tier Modernization Resumption</strong>: An architectural design in <code>tools/modernize_manifold.py</code> combining high-level manifest validation (<code>dataset_info.yaml</code> + <code>index.json</code>) with file-level delta verification. Interrupted modernization runs bypass already-transcoded <code>.webp</code> images and metadata in seconds, resuming only uncompleted files.</li>
-                    <li><strong>WebDataset <code>.data</code> Shard Convention</strong>: The canonical shard file extension for all WebDataset archives in the LemGendary ecosystem. Shards are valid POSIX <code>ustar</code> tar archives internally, but use <code>.data</code> instead of <code>.tar</code> to bypass Kaggle backend archive-sniffing heuristics that would otherwise recursively expand multi-gigabyte containers into millions of loose files, causing inode exhaustion and attachment latency measured in hours. The training suite discovers and decodes <code>.data</code> and <code>.tar</code> shards transparently via POSIX magic byte inspection.</li>
-                    <li><strong>Dynamic CUDA Index Selection</strong>: A runtime algorithm implemented in <code>env_manager.system_probe.select_cuda_torch_index()</code> that reads the driver-reported maximum supported CUDA version from <code>nvidia-smi</code> and returns the newest compatible PyTorch wheel index (<code>cu130</code>, <code>cu128</code>, <code>cu126</code>, then <code>cu121</code>). Eliminates hard-coded CUDA index pins and ensures the correct build is installed regardless of driver version.</li>
-                </ul>
-            </section>
+<section id="sec-6-environment--infrastructure">
+<h2>6. Environment &amp; Infrastructure</h2>
+<h3 id="sec-61-deterministic-environment-reconciliation">6.1 Deterministic Environment Reconciliation</h3>
+<p>The automated synchronization of local <code>.venv</code> packages against central
+manifests (<code>requirements-*.txt</code>). It identifies version drift and resolves
+transitive dependencies without polluting the global Python. Code compliance
+validation runs through <strong>Ruff</strong> (<code>ruff&gt;=0.9.0</code>), which replaced the former
+Pylint and astroid toolchain.</p>
+<h3 id="sec-62-sidecar-rest-daemon">6.2 Sidecar REST Daemon</h3>
+<p>An asynchronous FastAPI service on a dedicated local port (<code>8000</code> for the
+LemGendary Environment Manager, <code>8100</code> for the LemGendary Dataset Compiler
+Suite and <code>8200</code> for the LemGendary Model Training Suite). Each sidecar binds
+to <code>127.0.0.1</code> and provides headless API access, hardware health telemetry and
+WebSocket log broadcasting.</p>
+<h3 id="sec-63-origin-guard">6.3 Origin Guard</h3>
+<p>The browser-origin middleware shared by all three sidecars
+(<code>env_manager/security.py</code>, <code>api/security.py</code>,
+<code>training/server/security.py</code>). Only the LemGendary AI Studio GUI may call a
+sidecar from a browser. A request whose <code>Origin</code> header is not in the
+allow-list (<code>tauri://localhost</code>, <code>http://tauri.localhost</code>,
+<code>https://tauri.localhost</code>, <code>http://localhost:1420</code>, <code>http://127.0.0.1:1420</code>) is
+refused with HTTP 403, and WebSocket handshakes follow the same rule. Requests
+without an <code>Origin</code> header (CLI, scripts, tests) are allowed.</p>
+<h3 id="sec-64-client-header">6.4 Client Header</h3>
+<p>The custom request header <code>X-LemGendary-Client: ai-studio-gui</code>. A browser
+request (one that carries <code>Origin</code>) using <code>POST</code>, <code>PUT</code>, <code>PATCH</code> or <code>DELETE</code>
+must send it, or the Origin Guard refuses it. Because a custom header forces a
+CORS preflight, other web pages on the same machine cannot submit cross-site
+form posts to a sidecar.</p>
+</section>
 
-            <section id="section-training">
-                <h2>4. Master Training Suite &amp; Optimization</h2>
-                <ul>
-                    <li><strong>Spatial Resolution Ladder</strong>: A multi-stage curriculum learning schedule where image resolution progressively scales during training (e.g. 128px &rarr; 256px &rarr; 512px). It allows early epochs to capture global structural features at high batch velocities before fine-tuning high-frequency details.</li>
-                    <li><strong>Nuclear-Hardened Architecture</strong>: A resilience design pattern in <code>lemgendary-training-suite</code> enforcing comprehensive validation across hardware backends, dynamic gradient scaling, automated checkpoint verification, and zero-suppression error telemetry.</li>
-                    <li><strong>Directional Accuracy (DA)</strong>: The primary evaluation metric for financial time-series forecasting, defined as the percentage of temporal steps where the predicted sign of price delta matches the actual market trajectory:
-                        $$\text{DA} = \frac{1}{N} \sum_{t=1}^{N} \mathbb{I}\left( \text{sgn}(\hat{y}_t - y_{t-1}) = \text{sgn}(y_t - y_{t-1}) \right) \times 100\%$$
-                    </li>
-                    <li><strong>Earth Mover's Distance (EMD) Loss</strong>: The objective function utilized for probabilistic aesthetic quality distributions (NIMA), penalizing misclassifications proportionally to the distance between ordinal rating bins (1 to 10):
-                        $$\text{EMD}(p, \hat{p}) = \left( \frac{1}{K} \sum_{k=1}^{K} |\text{CDF}_p(k) - \text{CDF}_{\hat{p}}(k)|^r \right)^{1/r}$$
-                    </li>
-                </ul>
-            </section>
+<section id="sec-7-bug-reporting">
+<h2>7. Bug Reporting</h2>
+<h3 id="sec-71-bug-report-tool">7.1 Bug Report Tool</h3>
+<p>The LemGendary AI Studio GUI feature behind the header button
+<code>header-btn-report-issue</code>. The user enters an email address, the module, and a
+description of at least 50 characters, and may attach up to 5 screenshots and
+the Telemetry CSV. The GUI posts the form as <code>multipart/form-data</code> to
+<code>POST /api/bug-report</code> on the LemGendary Environment Manager (port <code>8000</code>),
+which saves a Bug Report Archive and opens the user's own mail client through
+a <code>mailto:</code> link. No SMTP password ships with the application. In the desktop
+app on Windows the user can also record the app window (H.264 MP4, up to 60 s,
+854x480 at 24 fps) and attach it as <code>recording.mp4</code>; other platforms report
+that recording is not supported yet.</p>
+<h3 id="sec-72-bug-report-archive">7.2 Bug Report Archive</h3>
+<p>The ZIP file that <code>POST /api/bug-report</code> writes under <code>bug-reports/</code> in the
+workspace root. It holds <code>report.csv</code> (one row: timestamp, report ID, email,
+module, current tab, app version, description and attachment flags), the
+screenshots (<code>screenshot_N.png</code> or <code>.webp</code>, at most 5, 5 MB each), the
+optional <code>telemetry.csv</code> (at most 2 MB) and an optional recording (<code>.webm</code> or
+<code>.mp4</code>, at most 50 MB). The whole report is limited to
+80 MB. A <code>mailto:</code> link cannot carry files, so the user attaches the archive to
+the prepared message by hand.</p>
+<h3 id="sec-73-screenshot-annotator">7.3 Screenshot Annotator</h3>
+<p>The GUI dialog (<code>ScreenshotAnnotator.tsx</code>) that captures the application
+window and lets the user draw one highlight rectangle over the problem area
+before the image is attached to a bug report.</p>
+<h3 id="sec-74-telemetry-csv">7.4 Telemetry CSV</h3>
+<p>The pipeline event log that the GUI attaches to a bug report as
+<code>telemetry.csv</code> unless the user clears &quot;Attach telemetry&quot;. It is RFC 4180 CSV
+with CRLF line breaks and the columns <code>timestamp</code>, <code>status</code>, <code>source</code> and
+<code>message</code>; <code>source</code> is the sidecar origin of the event when known, otherwise
+its step name.</p>
+</section>
 
-            <section id="section-pathology">
-                <h2>5. Training Pathology &amp; Diagnostics</h2>
-                <ul>
-                    <li><strong>Pathology Reasoning Trace</strong>: A structured, synthetic diagnostic narrative generated from empirical training failure modes. It models the causal chain: Observational Symptom &rarr; Diagnostic Telemetry &rarr; Root Cause Analysis &rarr; Automated Mitigation Strategy.</li>
-                    <li><strong>Latent Disconnect</strong>: A training pathology where the restoration backbone converges to a trivial spatial average (e.g., solid grey or blur) while loss curves report apparent convergence, indicating loss-term imbalance or improper normalizations.</li>
-                    <li><strong>Catastrophic Gradient Collapse</strong>: An unrecoverable parameter destabilization typically caused by exploding gradient spikes or unhandled NaN inputs, requiring automated checkpoint rewind and learning rate penalization.</li>
-                </ul>
-            </section>
+<section id="sec-8-authoritative-do-not-confuse-with-matrix">
+<h2>8. Authoritative &quot;Do Not Confuse With&quot; Matrix</h2>
+<ul>
+<li><strong>Dataset vs. Manifold</strong>: Datasets are raw, mutable, heterogeneous source
+drops; Manifolds are compiled, deterministic, immutable, hardware-aligned
+training data.</li>
+<li><strong>Reconciliation vs. Clean Install</strong>: Reconciliation inspects and patches
+package drift in place; Clean Install removes <code>.venv</code> and rebuilds the
+toolchain from the first hardware probing stage.</li>
+<li><strong>Container Format vs. Directory Layout</strong>: Container formats (LitData,
+WebDataset <code>.data</code>) pack data into contiguous shards for cloud streaming; a
+directory layout preserves the raw filesystem hierarchy and hardlink
+deduplication. MosaicML MDS is deprecated; all production shards are
+WebDataset <code>.data</code> archives.</li>
+<li><strong>Hardlink Deduplication vs. Perceptual Deduplication</strong>: Hardlink
+deduplication maps identical target files to the same physical cluster;
+perceptual deduplication flags visually similar images through pHash/dHash
+Hamming distances.</li>
+<li><strong>Image Transcoding vs. Synthetic Degradation</strong>: Transcoding converts image
+encodings (for example PNG $\to$ WebP $q=92$) and preserves visual fidelity;
+degradation corrupts images with blur, noise or haze kernels to generate
+paired training samples.</li>
+<li><strong>Sidecar API vs. CLI Tool</strong>: A sidecar is a background daemon that streams
+WebSocket events to the GUI; a CLI is a direct local command that runs in
+process or delegates to the sidecar.</li>
+<li><strong>Origin Guard vs. Client Header</strong>: The Origin Guard decides which browser
+origins may call a sidecar at all; the Client Header is the extra proof a
+browser request needs for state-changing methods.</li>
+<li><strong>Bug Report Archive vs. Telemetry CSV</strong>: The archive is the whole ZIP saved
+on disk; the Telemetry CSV is one optional file inside it.</li>
+<li><strong>Ratchet Violation vs. Epoch Budget stop</strong>: A Ratchet Violation rejects a
+backward curriculum step and is a guard error; an Epoch Budget stop is a
+normal end of training with a recorded reason.</li>
+</ul>
+</section>
 
-            <section id="section-env">
-                <h2>6. Environment &amp; Infrastructure</h2>
-                <ul>
-                    <li><strong>Deterministic Environment Reconciliation</strong>: The automated synchronization of local <code>.venv</code> packages against central manifests (<code>requirements-*.txt</code>), identifying version drifts and resolving transitive dependencies without global Python pollution. Code compliance validation runs via <strong>Ruff</strong> (<code>ruff&gt;=0.9.0</code>), replacing the former Pylint and astroid toolchain with sub-150 ms execution and full Python 3.12 rule coverage.</li>
-                    <li><strong>Sidecar REST Daemon</strong>: An asynchronous FastAPI service operating on dedicated local ports (<code>8000</code> for Environment Manager, <code>8100</code> for Dataset Compiler, and <code>8200</code> for Master Training Suite) that provides headless API access, hardware health telemetry, and WebSocket log broadcasting.</li>
-                </ul>
-            </section>
-
-            <section id="section-matrix">
-                <h2>7. Authoritative "Do Not Confuse With" Matrix</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Term A</th>
-                                <th>Term B</th>
-                                <th>Key Architectural Difference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Dataset</strong></td>
-                                <td><strong>Manifold</strong></td>
-                                <td>Datasets are raw, mutable, heterogeneous source drops; Manifolds are compiled, deterministic, immutable, hardware-aligned training topologies.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Reconciliation</strong></td>
-                                <td><strong>Clean Install</strong></td>
-                                <td>Reconciliation inspects and patches delta package drifts in-place; Clean Install nukes <code>.venv</code> and rebuilds the toolchain from stage 1 hardware probing.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Container Format</strong></td>
-                                <td><strong>Directory Layout</strong></td>
-                                <td>Container formats (LitData, WebDataset <code>.data</code>) pack data into contiguous shards for cloud streaming; Directory layout preserves raw filesystem hierarchy and hardlink deduplication. MosaicML MDS is deprecated; all production shards are WebDataset <code>.data</code> archives.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Hardlink Deduplication</strong></td>
-                                <td><strong>Perceptual Deduplication</strong></td>
-                                <td>Hardlink dedup maps identical target files to the exact same physical NTFS cluster; Perceptual dedup flags visually similar images via pHash/dHash hamming distances.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Image Transcoding</strong></td>
-                                <td><strong>Synthetic Degradation</strong></td>
-                                <td>Transcoding converts image file encodings (e.g. PNG &rarr; WebP <i>q</i>=92) preserving visual fidelity; Degradation mathematically corrupts images with blur/noise/haze kernels to generate paired training pairs.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sidecar API</strong></td>
-                                <td><strong>CLI Tool</strong></td>
-                                <td>Sidecar is an active background daemon streaming WebSocket events to GUI/remote clients; CLI is a direct local command executing in-process or delegating to the sidecar.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/GLOSSARY.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

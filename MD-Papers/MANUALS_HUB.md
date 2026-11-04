@@ -1,12 +1,10 @@
-<!-- markdownlint-disable MD051 MD013 -->
-# LemGendary Ecosystem: Master Operations Manuals Hub
+# Master Operations Manuals Hub
 
-**Author**: Lem Treursic  
-**Category**: Category 03 MANUALS  
-**Hub Version**: `v16.9.27-STABLE`  
-**Runtime Baseline**: `v16.9.16-STABLE`  
-**Last Reviewed / Verified**: 2026-10-17  
-**Status**: Canonical  
+## Category 03 MANUALS | LemGendary Ecosystem
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Runtime
+Baseline**: `v16.9.16-STABLE` · **Last Reviewed / Verified**: 2026-10-17 ·
+**Status**: Canonical
 
 ---
 
@@ -24,44 +22,62 @@
 
 ## 1. Abstract
 
-The LemGendary AI Ecosystem is governed by three interoperable control planes: the **AI Studio Desktop GUI** (presentation tier), the **Master CLI Suite** (scripted pipeline dispatch), and the **Master Sidecar API** (asynchronous REST, WebSocket, and IPC services). This manual hub establishes the authoritative operating procedures, communication contracts, and error remediation pathways for operators running data synthesis, hyperparameter tuning, model training, and checkpoint validation across universal hardware.
+The LemGendary AI Ecosystem is governed by three interoperable control planes:
+the **LemGendary AI Studio GUI** (presentation tier), the **Master CLI Suite**
+(scripted pipeline dispatch), and the **Master Sidecar API** (asynchronous REST,
+WebSocket, and IPC services). This manual hub establishes the authoritative
+operating procedures, communication contracts, and error remediation pathways
+for operators running data synthesis, hyperparameter tuning, model training, and
+checkpoint validation across universal hardware.
 
 ---
 
 ## 2. Interface Control Boundaries
 
-| Interface Plane | Primary Role | Target Protocol | Authoritative Manual |
-| :--- | :--- | :--- | :--- |
-| **Desktop GUI** | Visual orchestration, reactive monitoring | Tauri v2 IPC / WebSocket | [AI Studio GUI Operator Manual](./MANUAL_AI_STUDIO_GUI.md) |
-| **Master CLI** | Automated environment probing, headless training | Direct Python execution | [Master CLI Operations Manual](./MANUAL_CLI.md) |
-| **Master API** | Multi-sidecar background daemons, telemetry streaming | HTTP REST / WebSocket | [Master API Manual](./MANUAL_API.md) |
+* **Desktop GUI**: Primary Role: Visual orchestration, reactive monitoring;
+  Target Protocol: Tauri v2 IPC / WebSocket; Authoritative Manual: [AI Studio
+  GUI Operator Manual](./MANUAL_AI_STUDIO_GUI.md)
+* **Master CLI**: Primary Role: Automated environment probing, headless
+  training; Target Protocol: Direct Python execution; Authoritative Manual:
+  [Master CLI Operations Manual](./MANUAL_CLI.md)
+* **Master API**: Primary Role: Multi-sidecar background daemons, telemetry
+  streaming; Target Protocol: HTTP REST / WebSocket; Authoritative Manual:
+  [Master API Manual](./MANUAL_API.md)
 
 ---
 
 ## 3. Desktop GUI Operational Protocol
 
-The AI Studio Desktop GUI serves as the primary visual cockpit for machine learning engineers. Built on Tauri v2 and React 18, it offers millisecond-latency UI updates without the memory penalty of traditional web containers. Key capabilities include hardware discovery, synthesis control, and training management.
+The LemGendary AI Studio GUI serves as the primary visual cockpit for machine
+learning engineers. Built on Tauri v2 and React 18, it offers
+millisecond-latency UI updates without the memory penalty of traditional web
+containers. Key capabilities include hardware discovery, synthesis control, and
+training management.
 
 ---
 
 ## 4. Unified CLI Dispatch Matrix
 
-Headless, cloud, and batch scripting operations use deterministic command-line utilities including `lem-env`, `lemtrain`, and `compiler.py`.
+Headless, cloud, and batch scripting operations use deterministic command-line
+utilities including `lem-env`, `lemtrain`, and `compiler.py`.
 
 ---
 
 ## 5. Sidecar Telemetry & IPC Protocols
 
-Asynchronous daemons operate across ports 8000 (Env Manager), 8100 (Compiler), and 8200 (Training Engine), backed by ACID SQLite persistent job databases.
+Asynchronous daemons operate across ports 8000 (Env Manager), 8100 (Compiler),
+and 8200 (Training Engine), backed by ACID SQLite persistent job databases.
 
 ---
 
 ## 6. Cross-Project Automation (CPA)
 
-Cross-Project Automation guarantees that actions triggered in one repository cleanly propagate throughout the entire ecosystem without manual re-linking.
+Cross-Project Automation guarantees that actions triggered in one repository
+cleanly propagate throughout the entire ecosystem without manual re-linking.
 
 ---
 
 ## 7. Conclusion
 
-The Master Operations Manuals Hub establishes clear operational guidelines across all user-facing and programmatic entrypoints.
+The Master Operations Manuals Hub establishes clear operational guidelines
+across all user-facing and programmatic entrypoints.

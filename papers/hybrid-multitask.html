@@ -2,197 +2,203 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MultiTask Restorer (11-Head MoE) - LemGendary AI</title>
-    <meta name="description" content="Top-2 Sparse Mixture-of-Experts Architecture for Universal Multi-Pathology Restoration">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MultiTask Restorer (11-Head MoE)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="universal-hybrid.html">Hybrid Suite Hub</a>
-  <a href="hybrid-upn-v2.html">UPN v2</a>
-  <a href="hybrid-film-restorer.html">Film Restorer</a>
-  <a href="hybrid-multitask.html" class="active">MultiTask 11-Head</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="universal-hybrid.html" class="tab-link">Hybrid Suite</a>
+<a href="hybrid-upn-v2.html" class="tab-link">UPN v2</a>
+<a href="hybrid-film-restorer.html" class="tab-link">Film Restorer</a>
+<a href="hybrid-multitask.html" class="tab-link active">MultiTask Restorer</a>
+<a href="restoration-master.html" class="tab-link">Restoration Master</a>
+<a href="ultrazoom.html" class="tab-link">UltraZoom</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>MultiTask Restorer (11-Head MoE)</h1>
+<p class="subtitle">Category 05 HYBRID | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 / Apple Silicon / T4</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-    <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-    <li><a href="#abstract">1. Abstract</a></li>
-    <li><a href="#plain-english">1.1 What MultiTask Restorer Does (In Plain English)</a></li>
-    <li><a href="#visual-taxonomy">2. Visual Taxonomy: Shared Backbone &amp; MoE Router</a></li>
-    <li><a href="#shared-foundations">3. Shared Foundations: 11 Heads &amp; Dynamic Weight Average</a></li>
-    <li><a href="#model-deep-dives">4. Model Deep-Dives</a></li>
-    <li><a href="#challenges">5. Challenges &amp; Resilience Architecture</a></li>
-    <li><a href="#deployment">6. Deployment Strategy &amp; Production Acceleration</a></li>
-    <li><a href="#sota-matrix">7. SOTA Architectural Performance Matrix</a></li>
-    <li><a href="#conclusion">8. Conclusion</a></li>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-multitask-restorer-does-in-plain-english">1.1 What MultiTask Restorer Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-shared-backbone--moe-router">2. Visual Taxonomy: Shared Backbone &amp; MoE Router</a></li>
+<li><a href="#sec-3-shared-foundations-11-specialized-heads--dynamic-weight-average">3. Shared Foundations: 11 Specialized Heads &amp; Dynamic Weight Average</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
+
 </ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-    <h1>MultiTask Restorer (11-Head MoE)</h1>
-    <p class="subtitle">Top-2 Sparse Mixture-of-Experts Architecture for Universal Multi-Pathology Restoration</p>
-    <div class="meta">
-        <span>By Lem Treursic</span>
-        <span>Category 05 HYBRID</span>
-        <span>Version 16.9.16-STABLE</span>
-        <span>Hardware: NVIDIA / Apple Silicon / T4</span>
-    </div>
 
-    <section id="abstract">
-        <h2>1. Abstract</h2>
-        <p>The <strong>MultiTask Restorer</strong> is an enterprise-scale universal restoration architecture combining a shared ConvNeXt/Vision-Transformer encoder with a <strong>Top-2 Sparse Mixture-of-Experts (MoE)</strong> routing mechanism. Rather than maintaining eleven distinct monolithic models, the system dynamically routes input patches to two out of eleven specialized expert decoders based on local degradation entropy. This yields a single compact model (&lt; 180MB) that achieves state-of-the-art results across eleven restoration tasks simultaneously.</p>
-    </section>
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>MultiTask Restorer</strong> is an enterprise-scale universal restoration
+architecture combining a shared ConvNeXt/Vision-Transformer encoder with a
+<strong>Top-2 Sparse Mixture-of-Experts (MoE)</strong> routing mechanism. Rather than
+maintaining eleven distinct monolithic models, the system dynamically routes
+input patches to two out of eleven specialized expert decoders based on local
+degradation entropy. This yields a single compact model (&lt; 180MB) that
+achieves state-of-the-art results across eleven restoration tasks
+simultaneously.</p>
+</section>
 
-    <section id="plain-english">
-        <h2>1.1 What MultiTask Restorer Does (In Plain English)</h2>
-        <p>Imagine a Swiss Army knife for image restoration that carries 11 specialized repair tools in one sleek package:</p>
-        <ul>
-            <li><strong>11 Restoration Tools in One:</strong> Instead of running 11 separate heavy AI models, it packs deblurring, denoising, rain removal, haze clearing, low-light brightening, JPEG artifact removal, and super-resolution into a single network.</li>
-            <li><strong>Smart Task Routing:</strong> An intelligent internal router inspects each picture patch and activates only the 2 most relevant expert tools, preserving computer speed while maximizing repair quality.</li>
-            <li><strong>Balanced Performance:</strong> Operates smoothly on consumer laptops without overheating or crashing VRAM.</li>
-        </ul>
-    </section>
+<section id="sec-11-what-multitask-restorer-does-in-plain-english">
+<h2>1.1 What MultiTask Restorer Does (In Plain English)</h2>
+<p>Imagine a Swiss Army knife for image restoration that carries 11 specialized
+repair tools in one sleek package:</p>
+<ul>
+<li><strong>11 Restoration Tools in One:</strong> Instead of running 11 separate heavy AI
+models, it packs deblurring, denoising, rain removal, haze clearing, low-light
+brightening, JPEG artifact removal, and super-resolution into a single
+network.</li>
+<li><strong>Smart Task Routing:</strong> An intelligent internal router inspects each picture
+patch and activates only the 2 most relevant expert tools, preserving computer
+speed while maximizing repair quality.</li>
+<li><strong>Balanced Performance:</strong> Operates smoothly on consumer laptops without
+overheating or crashing VRAM.</li>
+</ul>
+</section>
 
-    <section id="visual-taxonomy">
-        <h2>2. Visual Taxonomy: Shared Backbone &amp; MoE Router</h2>
-        <p>Let \(X\) be an input image tensor. A shared hierarchical feature extractor computes multi-scale representations \(F = \mathcal{E}_{	\text{shared}}(X)\) <span class="score-badge-neutral">[THEORETICAL]</span>. A lightweight gating network \(\mathcal{G}\) assigns routing probabilities across all 11 expert heads:</p>
-        <p>\[G(F) = 	\text{Softmax}(	\text{KeepTop2}(W_g F + \epsilon))\]</p>
-        <p>Only the two highest-scoring experts are activated per patch, reducing computational complexity from \(\mathcal{O}(11 \cdot C)\) to \(\mathcal{O}(2 \cdot C)\).</p>
-    </section>
+<section id="sec-2-visual-taxonomy-shared-backbone--moe-router">
+<h2>2. Visual Taxonomy: Shared Backbone &amp; MoE Router</h2>
+<p>Let $X$ be an input image tensor. A shared hierarchical feature extractor
+computes multi-scale representations $F = \mathcal{E}_{ \text{shared}}(X)$
+<code>[THEORETICAL]</code>. A lightweight gating network $\mathcal{G}$ assigns routing
+probabilities across all 11 expert heads:</p>
+<div class="math-block">$$G(F) =  \text{Softmax}( \text{KeepTop2}(W_g F + \epsilon))$$</div>
+<p>Only the two highest-scoring experts are activated per patch, reducing
+computational complexity from $\mathcal{O}(11 \cdot C)$ to
+$\mathcal{O}(2 \cdot C)$.</p>
+</section>
 
-    <section id="shared-foundations">
-        <h2>3. Shared Foundations: 11 Heads &amp; Dynamic Weight Average</h2>
-        <p>The eleven expert heads target distinct physical image pathologies: (1) Motion/Defocus Deblur, (2) Gaussian/Sensor Denoise, (3) Progressive Deraining, (4) Koschmieder Dehazing, (5) Retinex Low-Light, (6) DCT JPEG Deblocking, (7) Sub-Pixel Super-Resolution (x2/x4), (8) Reflection Removal, (9) Shadow Elimination, (10) Chromatic Aberration Correction, (11) Lens Undistortion.</p>
-        <p>To prevent negative transfer between disparate objectives, training uses Dynamic Weight Average (DWA):</p>
-        <p>\[\lambda_k(t) = \frac{K \exp(w_k(t-1) / T)}{\sum_i \exp(w_i(t-1) / T)}, \quad w_k(t-1) = \frac{\mathcal{L}_k(t-1)}{\mathcal{L}_k(t-2)}\]</p>
-        <p>This autonomously accelerates lagging tasks and dampens well-converged objectives.</p>
-    </section>
+<section id="sec-3-shared-foundations-11-specialized-heads--dynamic-weight-average">
+<h2>3. Shared Foundations: 11 Specialized Heads &amp; Dynamic Weight Average</h2>
+<p>The eleven expert heads target distinct physical image pathologies: (1)
+Motion/Defocus Deblur, (2) Gaussian/Sensor Denoise, (3) Progressive Deraining,
+(4) Koschmieder Dehazing, (5) Retinex Low-Light, (6) DCT JPEG Deblocking, (7)
+Sub-Pixel Super-Resolution (x2/x4), (8) Reflection Removal, (9) Shadow
+Elimination, (10) Chromatic Aberration Correction, (11) Lens Undistortion.</p>
+<p>To prevent negative transfer between disparate objectives, training uses Dynamic
+Weight Average (DWA):</p>
+<div class="math-block">$$\lambda_k(t) = \frac{K \exp(w_k(t-1) / T)}{\sum_i \exp(w_i(t-1) / T)}, \quad w_k(t-1) = \frac{\mathcal{L}_k(t-1)}{\mathcal{L}_k(t-2)}$$</div>
+<p>This autonomously accelerates lagging tasks and dampens well-converged objectives.</p>
+</section>
 
-    <section id="model-deep-dives">
-        <h2>4. Model Deep-Dives</h2>
-        <h3>MultiTask 11-Head MoE Restoration Engine</h3>
-        <h4>4.1 Model Description, Purpose and Usage</h4>
-        <p>Combines 11 specialized restoration decoders under a single shared backbone, utilizing sparse Top-2 MoE routing to deliver universal restoration with minimal memory footprint.</p>
-        <h4>4.2 Model Info</h4>
-        <ul>
-            <li><strong>Architecture</strong>: 11-Head MoE (ConvNeXt Backbone + Top-2 Sparse Routing)</li>
-            <li><strong>Input Resolution</strong>: 512x512</li>
-            <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
-            <li><strong>Latency</strong>: 42.1ms on NVIDIA GTX 1650 <span class="score-badge-green">[MEASURED]</span></li>
-        </ul>
-        <h4>4.3 Manifold Info</h4>
-        <ul>
-            <li><strong>Dataset</strong>: <code>LemGendizedMultitaskRestorationPro</code></li>
-            <li><strong>Total Samples</strong>: 180,000 multi-pathology samples</li>
-            <li><strong>Primary Task</strong>: Universal multi-degradation restoration</li>
-        </ul>
-        <h4>4.4 Performance Metrics</h4>
-        <ul>
-            <li><strong>Current Training Epochs</strong>: 32 <span class="score-badge-neutral">[CURRENT]</span></li>
-            <li><strong>GoPro Deblur PSNR</strong>: 33.72 dB <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 33.50 dB <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Denoise PSNR</strong>: 39.85 dB <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 39.00 dB <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Derain PSNR</strong>: 32.10 dB <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 31.80 dB <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Current Learning Rate</strong>: 0.000040</li>
-        </ul>
-    </section>
+<section id="sec-4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+<h3 id="multitask-11-head-moe-restoration-engine">MultiTask 11-Head MoE Restoration Engine</h3>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<p>Combines 11 specialized restoration decoders under a single shared backbone,
+utilizing sparse Top-2 MoE routing to deliver universal restoration with minimal
+memory footprint.</p>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: 11-Head MoE (ConvNeXt Backbone + Top-2 Sparse Routing)</li>
+<li><strong>Input Resolution</strong>: 512x512</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: 42.1ms on NVIDIA GTX 1650 <code>[MEASURED]</code></li>
+</ul>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedMultitaskRestorationPro</code></li>
+<li><strong>Total Samples</strong>: 180,000 multi-pathology samples</li>
+<li><strong>Primary Task</strong>: Universal multi-degradation restoration</li>
+</ul>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 32 <code>[CURRENT]</code></li>
+<li><strong>GoPro Deblur PSNR</strong>: 33.72 dB <code>[MEASURED]</code> (Target: $\ge 33.50 \text{ dB}$ <code>[TARGET]</code>)</li>
+<li><strong>Denoise PSNR</strong>: 39.85 dB <code>[MEASURED]</code> (Target: $\ge 39.00 \text{ dB}$ <code>[TARGET]</code>)</li>
+<li><strong>Derain PSNR</strong>: 32.10 dB <code>[MEASURED]</code> (Target: $\ge 31.80 \text{ dB}$ <code>[TARGET]</code>)</li>
+<li><strong>Current Learning Rate</strong>: 0.000040</li>
+</ul>
+</section>
 
-    <section id="challenges">
-        <h2>5. Challenges &amp; Resilience Architecture</h2>
-        <ul>
-            <li><strong>Expert Load Imbalance</strong>: Gating networks naturally collapse onto one or two dominant experts. Auxiliary load-balancing losses penalize gate variance to ensure uniform gradient flow across all 11 heads.</li>
-            <li><strong>Negative Gradient Transfer</strong>: Conflicting task gradients are projected onto orthogonal sub-manifolds via Projecting Conflicting Gradients (PCGrad).</li>
-            <li><strong>Sparse Routing Overhead</strong>: Fixed-shape ONNX Opset 17 static branching preserves deterministic memory allocation on edge runtimes.</li>
-        </ul>
-    </section>
+<section id="sec-5-challenges--resilience-architecture">
+<h2>5. Challenges &amp; Resilience Architecture</h2>
+<ul>
+<li><strong>Expert Load Imbalance</strong>: Gating networks naturally collapse onto one or two
+dominant experts. Auxiliary load-balancing losses penalize gate variance to
+ensure uniform gradient flow across all 11 heads.</li>
+<li><strong>Negative Gradient Transfer</strong>: Conflicting task gradients are projected onto
+orthogonal sub-manifolds via Projecting Conflicting Gradients (PCGrad).</li>
+<li><strong>Sparse Routing Overhead</strong>: Fixed-shape ONNX Opset 17 static branching
+preserves deterministic memory allocation on edge runtimes.</li>
+</ul>
+</section>
 
-    <section id="deployment">
-        <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
-        <ul>
-            <li><strong>Production FP16 Engine (<code>multitask.onnx</code>)</strong>: Embedded self-contained weights for high-throughput browser and desktop restoration.</li>
-            <li><strong>High-Precision FP32 Export (<code>multitask_FP32.onnx</code> + <code>.onnx.data</code>)</strong>: External binary sidecar for archival lab scanning pipelines.</li>
-            <li><strong>Lifecycle Governance</strong>: 15-minute intra-epoch checkpointing (<code>progress.pth</code>), end-of-epoch persistence (<code>latest.pth</code>), and target archiving (<code>vault_psnr.pth</code>).</li>
-        </ul>
-    </section>
+<section id="sec-6-deployment-strategy--production-acceleration">
+<h2>6. Deployment Strategy &amp; Production Acceleration</h2>
+<ul>
+<li><strong>Production FP16 Engine (<code>multitask.onnx</code>)</strong>: Embedded self-contained weights
+for high-throughput browser and desktop restoration.</li>
+<li><strong>High-Precision FP32 Export (<code>multitask_FP32.onnx</code> + <code>.onnx.data</code>)</strong>:
+External binary sidecar for archival lab scanning pipelines.</li>
+<li><strong>Lifecycle Governance</strong>: 15-minute intra-epoch checkpointing
+(<code>progress.pth</code>), end-of-epoch persistence (<code>latest.pth</code>), and target
+archiving (<code>vault_psnr.pth</code>).</li>
+</ul>
+</section>
 
-    <section id="sota-matrix">
-        <h2>7. SOTA Architectural Performance Matrix</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Task Objective</th>
-                        <th>Target Metric</th>
-                        <th>Single-Task SOTA</th>
-                        <th>MultiTask MoE</th>
-                        <th>Relative Delta</th>
-                        <th>Status &amp; Verification</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>GoPro Deblurring</td>
-                        <td>PSNR (dB)</td>
-                        <td>33.84</td>
-                        <td>33.72</td>
-                        <td>-0.12 dB (99.6%)</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>SIDD Denoising</td>
-                        <td>PSNR (dB)</td>
-                        <td>40.12</td>
-                        <td>39.85</td>
-                        <td>-0.27 dB (99.3%)</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>Rain100L Deraining</td>
-                        <td>PSNR (dB)</td>
-                        <td>32.40</td>
-                        <td>32.10</td>
-                        <td>-0.30 dB (99.1%)</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>SOTS Dehazing</td>
-                        <td>PSNR (dB)</td>
-                        <td>34.15</td>
-                        <td>33.90</td>
-                        <td>-0.25 dB (99.3%)</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Unified SOTA Target</strong></td>
-                        <td>Average Delta</td>
-                        <td>Baseline</td>
-                        <td><strong>Within 1.0%</strong></td>
-                        <td><strong>&gt; 99.0% Parity</strong></td>
-                        <td><span class="score-badge-neutral">Target [TARGET]</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+<section id="sec-7-sota-architectural-performance-matrix">
+<h2>7. SOTA Architectural Performance Matrix</h2>
+<ul>
+<li><strong>GoPro Deblurring</strong>: Target Metric: PSNR (dB); Single-Task SOTA: 33.84;
+MultiTask MoE: 33.72; Relative Delta: -0.12 dB (99.6%); Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>SIDD Denoising</strong>: Target Metric: PSNR (dB); Single-Task SOTA: 40.12;
+MultiTask MoE: 39.85; Relative Delta: -0.27 dB (99.3%); Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>Rain100L Deraining</strong>: Target Metric: PSNR (dB); Single-Task SOTA: 32.40;
+MultiTask MoE: 32.10; Relative Delta: -0.30 dB (99.1%); Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>SOTS Dehazing</strong>: Target Metric: PSNR (dB); Single-Task SOTA: 34.15;
+MultiTask MoE: 33.90; Relative Delta: -0.25 dB (99.3%); Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>Unified SOTA Target</strong>: Target Metric: Average Delta; Single-Task SOTA:
+Baseline; MultiTask MoE: <strong>Within 1.0%</strong>; Relative Delta: <strong>&gt; 99.0%
+Parity</strong>; Status &amp; Verification: <strong>Target <code>[TARGET]</code></strong></li>
+</ul>
+</section>
 
-    <section id="conclusion">
-        <h2>8. Conclusion</h2>
-        <p>The MultiTask Restorer demonstrates that a single well-governed Mixture-of-Experts architecture can match dedicated single-task networks across 11 complex visual restoration domains while saving over 80% storage and VRAM footprint.</p>
+<section id="sec-8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The MultiTask Restorer demonstrates that a single well-governed
+Mixture-of-Experts architecture can match dedicated single-task networks across
+11 complex visual restoration domains while saving over 80% storage and VRAM
+footprint.</p>
+<h3 id="related-ecosystem-documentation">Related Ecosystem Documentation</h3>
+<ul>
+<li><a href="dataset-compiler.html">Dataset Compiler Suite</a> (Manifold: <code>LemGendizedMultitaskRestorationPro</code>)</li>
+<li><a href="training-suite-master.html">Training Suite Architecture</a> (Tri-Format ONNX / PT
+Checkpoint Lifecycle)</li>
+<li><a href="ai-studio-manual.html">AI Studio GUI Manual</a> (Interactive Training Panel Controls)</li>
+<li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a> (System
+Governance &amp; Specifications)</li>
+</ul>
+</section>
 
-        <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
-            <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
-            <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
-                <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedMultitaskRestorationPro)</a></li>
-                <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
-                <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
-                <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
-            </ul>
-        </div>
-    </section>
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_MULTITASK.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

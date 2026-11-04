@@ -1,107 +1,418 @@
-# LemGendary AI Studio Desktop GUI: Control ID Registry & Operational Boundaries
+# LemGendary AI Studio GUI: Control ID Registry & Operational Boundaries
 
-## Category 04 CONTROLS | LemGendary AI Documentation Hub
+## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
+
+**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-04 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
+[Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
 ---
 
-## 1. Abstract & Scope
+## Table of Contents
 
-This authoritative specification establishes the formal machine-readable Control ID Registry and operational boundary matrix for the LemGendary AI Studio Desktop GUI (`lemgendary-ai-studio-gui`). To enable automated end-to-end testing, accessibility compliance (WCAG 2.1 AA), and strict contract binding between the Tauri/TypeScript frontend and backend FastAPI sidecars (`port 8000` & `port 8100`), every interactive widget, input control, action button, telemetry stream, and visual card is assigned a unique, immutable control identifier.
+- [1. Abstract](#1-abstract)
+- [2. Control ID Taxonomy & Schema](#2-control-id-taxonomy--schema)
+- [3. Master Interactive Controls
+  Dictionary](#3-master-interactive-controls-dictionary)
+  - [3.1 Header & Sidebar](#31-header--sidebar)
+  - [3.2 Report Issue Dialog & Annotator](#32-report-issue-dialog--annotator)
+  - [3.3 Test & Diagnostic Orchestrator](#33-test--diagnostic-orchestrator)
+  - [3.4 Run Pipeline & Clean Install](#34-run-pipeline--clean-install)
+  - [3.5 Dataset Compiler Suite](#35-dataset-compiler-suite)
+  - [3.6 Model Training Suite](#36-model-training-suite)
+  - [3.7 Health & Version Drift](#37-health--version-drift)
+  - [3.8 Config & Secrets](#38-config--secrets)
+  - [3.9 Dialogs, Status Regions &
+    Headings](#39-dialogs-status-regions--headings)
+  - [3.10 Controls Without an ID](#310-controls-without-an-id)
+  - [3.11 Changes Since the Previous
+    Registry](#311-changes-since-the-previous-registry)
+- [4. End-to-End Operational Workflows](#4-end-to-end-operational-workflows)
+  - [4.1 Workflow 1: Environment Provisioning & Health
+    Audit](#41-workflow-1-environment-provisioning--health-audit)
+  - [4.1.1 WebSocket Event Lifecycle
+    Recovery](#411-websocket-event-lifecycle-recovery)
+  - [4.2 Workflow 2: Manifold Compilation](#42-workflow-2-manifold-compilation)
+  - [4.3 Workflow 3: Reporting an Issue](#43-workflow-3-reporting-an-issue)
+- [5. Operational Boundaries & Platform
+  Availability](#5-operational-boundaries--platform-availability)
+
+---
+
+## 1. Abstract
+
+This registry lists every element of the LemGendary AI Studio GUI
+(`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
+element type, the sidecar endpoint it calls and its behaviour. It is recounted
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.38`, including
+the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
+from their props, with a template such as `train-btn-start-{model_key}` counted
+once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+and 59 to dialogs, status regions, landmarks and headings (section 3.9).
+Automated tests, accessibility checks and the bug report module select use these
+IDs, so an ID changes only together with this registry.
+
+The GUI talks to three local sidecars: the LemGendary Environment Manager on
+port 8000, the LemGendary Dataset Compiler Suite on port 8100 and the LemGendary
+Model Training Suite on port 8200.
 
 ---
 
 ## 2. Control ID Taxonomy & Schema
 
-All GUI elements follow a structured hyphenated taxonomy:
+New IDs follow a hyphenated pattern:
 
-$$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
+$$
+\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}
+$$
 
-* **`[view]`**: Top-level route context (`dash`, `pipe`, `proj`, `health`, `telem`, `comp`, `train`).
-* **`[component]`**: Sub-container or card (`header`, `sidebar`, `card`, `table`, `modal`).
-* **`[element]`**: Structural HTML element type (`btn`, `input`, `select`, `toggle`, `badge`, `log`).
-* **`[action]`**: Operational intent (`refresh`, `execute`, `reconcile`, `compile`, `filter`).
+- **`[view]` or `[component]`**: `header`, `dash`, `pipeline`, `comp`, `custom`,
+  `reduce`, `train`, `health`, `test-modal`, `bug-modal`, `annotator`.
+- **`[element]`**: `btn`, `select`, `input`, `dialog`, `tab`.
+- **`[action]`**: what the control does, for example `run-pipeline`,
+  `clean-confirm`, `submit`.
+
+Older IDs keep their shipped names (`preset-select`, `custom-name-input`,
+`training-toolbar-push-all-models-btn`) because tests depend on them. Repeated
+controls are templates: `{model_key}` is a model key from
+`unified_models_v2.yaml`, `{dataset_key}` a manifold key, `{tab_id}` one of
+`dashboard`, `datasets`, `training`, `pipeline`, `health`, `{n}` a position
+starting at 1 and `{secret_id}` the id of a stored credential.
+
+Endpoint notation: `GET /api/hardware` (8000) means the Environment Manager
+route on port 8000. Every request goes through `sidecarFetch` in
+`src/api/http.ts`, which adds the header `X-LemGendary-Client: ai-studio-gui`;
+the sidecars refuse browser writes without it. "None" means the control only
+changes GUI state.
 
 ---
 
 ## 3. Master Interactive Controls Dictionary
 
-| Control ID | UI Component / Label | Element Type | Bound Sidecar Endpoint | Expected Behavior |
-| :--- | :--- | :--- | :--- | :--- |
-| `dash-nav-sidebar` | Sidebar Navigation Container | `<nav>` | — | Houses top-level route switches. |
-| `header-btn-test-modal` | "Run Tests" | `<button>` | — | Opens the Test & Diagnostic Orchestrator modal for fleet smoke tests and unit test suites. |
-| `test-modal-tab-fleet` | "Fleet 1-Epoch Smoke Test" Tab | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test pass across all 23 neural architectures. |
-| `test-modal-tab-training` | "Training Suite Unit Tests" Tab | `<button>` | `POST /api/training/unit-test-run` (8200) | Executes in-process Training Suite unit tests. |
-| `test-modal-tab-dataset` | "Dataset Compiler Tests" Tab | `<button>` | `POST /api/llm/test-suite` (8100) | Executes in-process Dataset Compiler unit test suite. |
-| `test-modal-btn-run-fleet` | "Run Fleet Diagnostic (All 23 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Initiates fleet diagnostic run across all registered models. |
-| `test-modal-btn-run-training-unit` | "Run Training Unit Tests" | `<button>` | `POST /api/training/unit-test-run` (8200) | Runs Training Suite unit test discovery sweep. |
-| `test-modal-btn-run-dataset-unit` | "Run Dataset Compiler Tests" | `<button>` | `POST /api/llm/test-suite` (8100) | Runs Dataset Compiler unit test discovery sweep. |
-| `test-modal-output-console` | Test Output Console | `<pre>` | — | Displays live execution logs and test summary outcomes. |
-| `dash-btn-refresh-audit` | "Refresh Audit" | `<button>` | `GET /api/health` (8000) | Triggers asynchronous system probe and updates all status cards. |
-| `dash-badge-sidecar-status` | Connection Status Indicator | `<span>` | `WS /ws/telemetry` (8000) | Displays emerald glow for online or rose alert for offline. |
-| `dash-card-hardware` | System & Hardware Architecture | `<div>` | `GET /api/hardware` (8000) | Renders CPU core counts, total RAM, and detected GPU adapters. |
-| `dash-btn-clean-install` | "Execute Full Clean Install Pipeline" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates the 7-stage deterministic provisioning sequence. |
-| `pipe-stage-1-hardware` | Stage 1: Hardware Discovery | `<li>` | `GET /api/hardware` (8000) | Queries DXGI and NVML interfaces for compute acceleration. |
-| `pipe-stage-4-reqs` | Stage 4: Requirements Sync | `<li>` | `POST /api/pipeline/run` (8000) | Copies requirements manifests and executes pip install. |
-| `pipe-stage-6-verify` | Stage 6: Codebase Verification | `<li>` | `POST /api/pipeline/run` (8000) | Compiles scripts via `py_compile` and audits zero-emoji rules. |
-| `proj-card-training` | `lemgendary-training-suite` Card | `<div>` | `GET /api/projects` (8000) | Details virtual environment path, packages, and health status. |
-| `proj-btn-reconcile-datasets` | "Reconcile lemgendary-datasets" | `<button>` | `POST /api/services/start-all` (8000) | Reconciles dataset compiler dependencies against manifest. |
-| `health-table-drift` | Cross-Project Version Drift Table | `<table>` | `GET /api/health/drift` (8000) | Renders comparative grid of shared dependencies. |
-| `drift-badge-sync` | "[SYNC]" Status Badge | `<span>` | — | Indicates identical package versions across all active repositories. |
-| `drift-badge-alert` | "[DRIFT]" Alert Badge | `<span>` | — | Highlights version discrepancies across projects. |
-| `telem-log-stream` | Monospace Telemetry Terminal | `<pre>` | `WS /ws/log` (8000) | Renders high-velocity log stream from active sub-processes. |
-| `comp-select-manifold` | Manifold Target Selector | `<select>` | `GET /api/gui/datasets/with-stats` (8100) | Populates list of 22 canonical training manifolds. |
-| `comp-toggle-transcode` | "Enable WebP Transcoding" | `<input type=checkbox>` | `POST /api/gui/quick-compile` (8100) | Activates $q=92$ WebP image and lossless mask encoding. |
-| `comp-btn-compile` | "Compile Manifold" | `<button>` | `POST /api/gui/quick-compile` (8100) | Dispatches dataset compilation job to the dataset sidecar. |
-| `comp-mode-standard` | "Standard Manifold Compilation" | `<button>` | — | Switches compilation interface to standard preset mode. |
-| `comp-mode-custom` | "Custom Multi-Source Compilation" | `<button>` | — | Switches compilation interface to custom multi-source mode. |
-| `comp-input-custom-name` | "Custom Manifold Name" | `<input type=text>` | — | Specifies unique identifier for custom dataset synthesis. |
-| `comp-select-custom-task` | "Domain Task" | `<select>` | — | Selects target ML domain (restoration, detection, segmentation). |
-| `comp-select-custom-format` | "Container Architecture" | `<select>` | — | Selects target format (WebDataset, Parquet, MDS, LitData). |
-| `comp-textarea-sources` | "Source Repositories & Dataset URLs" | `<textarea>` | — | Multi-line input for Kaggle, HF, GD, GH repositories. |
-| `comp-btn-custom-compile` | "Compile Custom Dataset" | `<button>` | `POST /api/gui/custom-compile` (8100) | Dispatches multi-source aggregation and sharding job. |
-| `comp-tab-kaggle-download` | "Download from Kaggle" Subtab | `<button>` | — | Activates Kaggle cloud download controls. |
-| `comp-tab-kaggle-upload` | "Upload to Kaggle" Subtab | `<button>` | — | Activates Kaggle manifold upload controls. |
-| `comp-select-kaggle-registry` | "Select Registry Dataset" | `<select>` | `GET /api/kaggle/registry-datasets` (8100) | Lists 20 canonical Kaggle-bound production manifolds. |
-| `comp-input-kaggle-custom-ref` | "Kaggle Dataset Link or Slug" | `<input type=text>` | — | Input for direct Kaggle URLs or owner/dataset references. |
-| `comp-btn-kaggle-download` | "Download from Kaggle" | `<button>` | `POST /api/kaggle/download` (8100) | Queues download and extraction of Kaggle datasets. |
-| `comp-select-kaggle-upload` | "Local Compiled Manifold" | `<select>` | — | Selects compiled local manifold for packaging. |
-| `comp-btn-kaggle-upload` | "Upload to Kaggle" | `<button>` | `POST /api/kaggle/upload` (8100) | Packages and streams local manifold to Kaggle. |
-| `comp-btn-update-all-kaggle` | "Update All Kaggle Metadata" | `<button>` | `POST /api/kaggle/update-metadata` (8100) | Bulk pushes metadata to Kaggle for all 20 canonical manifolds. |
-| `comp-btn-regen-manifolds` | "Regenerate Manifolds Index" | `<button>` | `POST /api/modernize/regenerate-manifolds` (8100) | Regenerates master manifolds.json and dataset-metadata.json files. |
-| `comp-subtab-catalog` | "Manifolds Catalog" Subtab | `<button>` | — | Shows the 21 production manifold cards with WebP/PNG breakdown. |
-| `comp-subtab-modernize` | "Modernization Queue & Transcode" Subtab | `<button>` | — | Activates legacy format scan and batch WebP transcode queue. |
-| `comp-subtab-reduce` | "Scale Reduction (Downsample)" Subtab | `<button>` | — | Activates spatial downsample and dataset scaling derivation view. |
-| `comp-btn-scan-modernize-queue` | "Scan Queue" | `<button>` | `GET /api/modernize/queue` (8100) | Scans local datasets and builds transcode modernization queue. |
-| `comp-btn-batch-modernize-all` | "Batch Modernize All" | `<button>` | `POST /api/modernize/run` (8100) | Dispatches batch modernization job across queued manifolds. |
-| `comp-slider-modernize-workers` | "Parallel Workers Slider" | `<input type=range>` | — | Configures worker thread count for parallel WebP transcoding. |
-| `comp-select-reduce-manifold` | "Target Manifold Selector" | `<select>` | — | Chooses dataset manifold for scale reduction / downsampling. |
-| `comp-btn-dispatch-reduce` | "Dispatch Reduction" | `<button>` | `POST /api/modernize/reduce` (8100) | Initiates downsampling derivation job for selected manifold. |
-| `train-select-model` | Model Architecture Dropdown | `<select>` | `GET /api/gui/models/with-stats` (8200) | Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.). |
-| `train-btn-launch` | "Launch Master Training" | `<button>` | `POST /api/gui/quick-train` (8200) | Dispatches training worker with spatial resolution ladder. |
-| `train-btn-unit-test-all` | "Run 1-Epoch Diagnostic (All 23 Models)" | `<button>` | `POST /api/training/unit-test-all` (8200) | Dispatches 1-epoch diagnostic smoke test across all models. |
-| `train-btn-generate-all-notebooks` | "Generate All Notebooks" | `<button>` | `POST /api/notebooks/generate-all` (8200) | Batch generates notebooks across all 23 registered architectures. |
-| `training-toolbar-push-all-models-btn` | "Push All Models to Kaggle" | `<button>` | `POST /api/training/kaggle/push-all` (8200) | Stages and publishes all registered model checkpoints, variations, and metadata to Kaggle Models Hub. |
-| `train-card-btn-push` | "Push Model" | `<button>` | `POST /api/training/kaggle/push` (8200) | Stages isolated variations and publishes model weights and YAML metadata to Kaggle Models Hub. |
-| `train-card-btn-pull` | "Pull Model" | `<button>` | `POST /api/training/kaggle/pull` (8200) | Downloads 4 canonical isolated variations from Kaggle Models Hub into local model directories. |
-| `train-btn-refresh-models` | "Refresh Models" | `<button>` | `GET /api/gui/models/with-stats` (8200) | Polls sidecar to synchronize model weights status and metrics. |
-| `train-card-btn-eval` | "Evaluate Model" | `<button>` | `POST /api/training/evaluate` (8200) | Evaluates checkpoint against validation benchmark criteria. |
-| `train-card-btn-export` | "Export Binaries" | `<button>` | `POST /api/training/export` (8200) | Compiles model to ONNX, PyTorch, and WebGPU binary formats. |
-| `train-modal-tab-upload` | "Upload Checkpoints" Tab | `<button>` | — | Stages and uploads local model checkpoints directly to Kaggle Models. |
-| `health-btn-safe-upgrade` | "Safe Package Upgrade" | `<button>` | `POST /api/update` (8000) | Safely upgrades outdated packages with rollback validation. |
-| `health-btn-upgrade-dry-run` | "Upgrade Dry Run" | `<button>` | `POST /api/update` (8000) | Previews dependency upgrade plan without altering disk state. |
-| `health-btn-deep-clean` | "Deep Cache Purge" | `<button>` | `POST /api/clean` (8000) | Purges build caches, **pycache**, and staging residues. |
-| `health-btn-install-hooks` | "Install Git Hooks" | `<button>` | `POST /api/hooks/install` (8000) | Installs or repairs standardized pre-commit validation hooks. |
-| `health-btn-validate-ecosystem` | "Run Ecosystem Validation" | `<button>` | `POST /api/validate` (8000) | Runs full multi-gate ecosystem code validation suite. |
-| `pipe-step-progress-bar` | Step Progress Bar | `<div role=progressbar>` | `WS /ws/log` (8000) | Radix UI animated progress bar mounted by `TelemetryProgressTracker.tsx` during active step execution; unmounts upon receipt of any terminal event (`success`, `warning`, `error`). |
-| `pipe-step-status-badge` | Step Status Badge | `<span>` | — | Displays `RUNNING`, `PASSED`, `WARNING`, or `FAILED` state; guarded by `isLatestCompleted` to prevent false `RUNNING` display after step completion. |
-| `pipe-btn-run-step-1` | "Run Stage 1" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 1 (Hardware Discovery) as an isolated single-step run. |
-| `pipe-btn-run-step-2` | "Run Stage 2" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 2 (Virtual Environment Setup) as an isolated single-step run. |
-| `pipe-btn-run-step-3` | "Run Stage 3" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 3 (Requirements Sync) as an isolated single-step run. |
-| `pipe-btn-run-step-4` | "Run Stage 4" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 4 (Package Installation) as an isolated single-step run. |
-| `pipe-btn-run-step-5` | "Run Stage 5" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 5 (Dependency Audit) as an isolated single-step run. |
-| `pipe-btn-run-step-6` | "Run Stage 6" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 6 (Codebase Verification) as an isolated single-step run. |
-| `pipe-btn-run-step-7` | "Run Stage 7" | `<button>` | `POST /api/pipeline/run` (8000) | Initiates Stage 7 (Health Matrix) as an isolated single-step run. |
-| `pipe-stage-7-health` | Stage 7: Health Matrix | `<li>` | `GET /api/health` (8000) | Runs ecosystem-wide health audit across all 5 projects and reports `overall_healthy`. |
+Each entry reads: ID (element type): label. Endpoint. Behaviour.
+
+### 3.1 Header & Sidebar
+
+- `header-btn-report-issue` (`button`): "Report Issue". None. Opens the Report
+  Issue dialog (section 3.2) with the module set to the current tab.
+- `header-btn-test-modal` (`button`): "Tests & Diagnostics". None. Opens the
+  Test & Diagnostic Orchestrator (section 3.3).
+- `dash-btn-refresh-audit` (`button`): "Refresh Audit". `GET /api/hardware`,
+  `GET /api/health` and `GET /api/pipeline/status` (8000) plus the liveness
+  probes. Reloads hardware, health and pipeline state; shows "Refreshing..."
+  while busy.
+- `tab-{tab_id}` (`button`): sidebar tab ("Dashboard", "LemGendary Dataset
+  Compiler Suite", "LemGendary Model Training Suite", "Clean Install Pipeline",
+  "Health & Version Drift"). None. Switches the workspace view; the dot shows
+  whether the sidecar behind the view is online.
+
+### 3.2 Report Issue Dialog & Annotator
+
+- `bug-modal-email` (`input type=email`): "Your email". None. Reply address, at
+  most 254 characters, checked on submit.
+- `bug-modal-module` (`select`): "Module". None. One option per sidebar tab;
+  preselected from the current tab.
+- `bug-modal-description` (`textarea`): "What happened?". None. 50 to 10,000
+  characters; the counter below shows the length.
+- `bug-modal-telemetry` (`input type=checkbox`): "Attach telemetry". None. On by
+  default; attaches the recent log events as a CSV file
+  (`timestamp,status,source,message`).
+- `bug-modal-btn-add-screenshot` (`button`): "Capture screenshot". None. Opens
+  the annotator; disabled when 5 screenshots are attached.
+- `bug-modal-btn-remove-screenshot-{n}` (`button`): "Remove". None. Removes
+  screenshot `{n}` from the strip.
+- `bug-modal-btn-start-recording` (`button`): "Start recording". Native
+  `recording_start`. Desktop app only; hides the dialog and shows the recording
+  control bar.
+- `bug-modal-btn-remove-recording` (`button`): "Remove recording". None. Shown
+  only when a recording is attached; discards it.
+- `recording-btn-pause` (`button`): "Pause". Native `recording_pause`. Shown in
+  `recording-control-bar` while recording.
+- `recording-btn-resume` (`button`): "Continue". Native `recording_resume`.
+  Shown while paused.
+- `recording-btn-stop` (`button`): "Stop and attach". Native `recording_stop`.
+  Returns to the dialog with the MP4 attached as `recording.mp4`.
+- `bug-modal-btn-cancel` (`button`): "Cancel". None. Closes the dialog.
+- `bug-modal-btn-submit` (`button type=submit`): "Send report".
+  `POST /api/bug-report` (8000), multipart. Validates the form, sends it and
+  shows the success view; 422 errors appear under the matching field.
+- `bug-modal-btn-done` (`button`): "Done". None. Closes the success view and
+  resets the form.
+- `bug-modal-btn-copy-address` (`button`): "Copy address". None. Copies the
+  recipient address to the clipboard.
+- `bug-modal-btn-copy-subject` (`button`): "Copy subject". None. Copies the mail
+  subject to the clipboard.
+- `annotator-canvas` (`canvas`): screenshot of the app. None. Drag to draw one
+  highlight rectangle; a new drag replaces it.
+- `annotator-btn-cancel` (`button`): "Cancel". None. Discards the capture.
+- `annotator-btn-retake` (`button`): "Retake". None. Captures the app window
+  again.
+- `annotator-btn-save` (`button`): "Save". None. Exports the annotated image as
+  WebP (PNG where WebP export is not supported), at most 5 MB, and adds it to
+  the strip.
+
+### 3.3 Test & Diagnostic Orchestrator
+
+- `test-modal-btn-close` (`button`): "X". None. Closes the dialog; Escape does
+  the same.
+- `test-modal-tab-fleet` (`button`): "Fleet 1-Epoch Smoke Test". None. Selects
+  the fleet tab.
+- `test-modal-tab-training` (`button`): "Training Suite Unit Tests". None.
+  Selects the training tab.
+- `test-modal-tab-dataset` (`button`): "Dataset Compiler Tests". None. Selects
+  the dataset tab.
+- `test-modal-btn-run-fleet` (`button`): "Run Fleet Diagnostic (All 23 Models)".
+  `POST /api/training/unit-test-all` (8200). Queues the 1-epoch smoke test; the
+  console shows `QUEUED` and the job id.
+- `test-modal-btn-run-training-unit` (`button`): "Run Training Unit Tests".
+  `POST /api/training/unit-test-run` (8200). Runs the Training Suite unit tests
+  in-process and prints the summary.
+- `test-modal-btn-run-dataset-unit` (`button`): "Run Dataset Compiler Tests".
+  `POST /api/llm/test-suite` (8100). Runs the Dataset Compiler test suite
+  in-process and prints the summary.
+
+### 3.4 Run Pipeline & Clean Install
+
+- `dash-btn-run-pipeline` (`button`): "Run Pipeline". `POST /api/pipeline/run`
+  (8000) with `clean: false`. Runs the 7-step pipeline without deleting
+  environments; disabled while the Environment Manager is offline.
+- `pipeline-btn-clean-install` (`button`): "Clean Install...". None. Opens the
+  clean install confirmation dialog.
+- `pipeline-btn-clean-cancel` (`button`): "Cancel". None. Closes the dialog
+  without a request; it has focus when the dialog opens.
+- `pipeline-btn-clean-confirm` (`button`): "Delete and reinstall".
+  `POST /api/pipeline/run` (8000) with `clean: true`. Deletes the virtual
+  environments and `node_modules` of all projects, then reinstalls them.
+
+### 3.5 Dataset Compiler Suite
+
+- `comp-mode-standard`, `comp-mode-custom` (`button`, `aria-pressed`):
+  "Standard Preset" and "Custom Multi-Source" compile mode switch. None. Shows
+  the standard or the custom multi-source compilation form.
+- `comp-btn-update-all-kaggle` (`button`): "Update All Kaggle Metadata".
+  `POST /api/kaggle/update-metadata` (8100) with `all_datasets: true`. Pushes
+  metadata for every registered Kaggle dataset.
+- `comp-btn-regen-manifolds` (`button`): "Regen Index".
+  `POST /api/modernize/regenerate-manifolds` (8100). Rebuilds `manifolds.json`
+  and the dataset metadata files.
+- `comp-btn-refresh-catalog` (`button`): "Refresh Catalog".
+  `GET /api/gui/datasets/with-stats` (8100). Reloads the manifold catalog.
+- `comp-select-manifold` (`select`): target manifold.
+  `GET /api/gui/datasets/with-stats` (8100) fills it. Chooses the manifold for a
+  standard compile.
+- `preset-select` (`select`): compiler preset. `GET /api/gui/presets` (8100)
+  fills it. "Server default" omits `preset` so the sidecar applies its default;
+  offline only that option is shown.
+- `comp-btn-compile` (`button`): "Compile Manifold".
+  `POST /api/gui/quick-compile` (8100) with `model` and `preset`. Starts a
+  compile job; an unknown preset shows the server's 422 detail.
+- `custom-name-input` (`input type=text`): custom manifold name. None. Name of
+  the new manifold.
+- `custom-task-select` (`select`): domain task. None. Restoration, detection or
+  another task type.
+- `custom-format-select` (`select`): container format. None. WebDataset,
+  Parquet, MDS or LitData.
+- `custom-preset-select` (`select`): compiler preset for the custom compile.
+  `GET /api/gui/presets` (8100) fills it.
+- `custom-shard-size` (`input type=number`): shard size. None. Samples per
+  shard.
+- `custom-purge-check` (`input type=checkbox`): purge loose files. None. Removes
+  loose source images after sharding.
+- `custom-sources-area` (`textarea`): source repositories and URLs. None. One
+  Kaggle, Hugging Face, Google Drive or GitHub source per line; submitted with
+  `POST /api/gui/custom-compile` (8100).
+- `comp-input-kaggle-custom-ref` (`input type=text`): Kaggle dataset slug or
+  URL. `POST /api/kaggle/download` (8100) on "Ingest from Kaggle". Downloads a
+  public or private Kaggle dataset into `LemGendaryDatasets`.
+- `comp-btn-meta-{dataset_key}` (`button`): "Update Metadata".
+  `POST /api/kaggle/update-metadata` (8100). Pushes the metadata of one manifold
+  without uploading data.
+- `comp-btn-pull-{dataset_key}` (`button`): "Download".
+  `POST /api/kaggle/download` (8100). Downloads the manifold's shards.
+- `comp-btn-push-{dataset_key}` (`button`): "Upload". `POST /api/kaggle/upload`
+  (8100). Packages and uploads the local shards.
+- `reduce-manifold-select` (`select`): manifold to reduce. None. Chooses the
+  source manifold for scale reduction.
+- `reduce-scale-select` (`select`): sampling scale. None. 10, 25, 50 or 75
+  percent; sent with `POST /api/modernize/reduce` (8100).
+
+### 3.6 Model Training Suite
+
+- `train-btn-generate-all-notebooks` (`button`): "Generate All Notebooks".
+  `POST /api/notebooks/generate-all` (8200). Writes notebooks for every
+  registered model.
+- `training-toolbar-push-all-models-btn` (`button`): "Push All Models to
+  Kaggle". `POST /api/training/kaggle/push-all` (8200). Stages and publishes all
+  model variations.
+- `train-btn-refresh-models` (`button`): "Refresh Models".
+  `GET /api/gui/models/with-stats` (8200). Reloads models with their latest
+  metrics in one request.
+- `train-btn-start-{model_key}` (`button`): "Local Training".
+  `POST /api/gui/quick-train` (8200) with `model_key` and `batch_size`. Starts
+  local training.
+- `train-btn-stop-{model_key}` (`button`): "Stop Training".
+  `POST /api/jobs/{job_id}/cancel` (8200). Cancels the local job; the job is
+  cleared only when the sidecar confirms `cancelled`.
+- `train-btn-cloud-{model_key}` (`button`): "Cloud Training". None. Opens the
+  Cloud & Registry Dispatch dialog (`POST /api/training/kaggle/train` on
+  launch).
+- `train-btn-pub-model-{model_key}` (`button`): "Push Model".
+  `POST /api/training/kaggle/push` (8200). Publishes the model variations to
+  Kaggle Models.
+- `train-btn-pull-model-{model_key}` (`button`): "Pull Model".
+  `POST /api/training/kaggle/pull` (8200). Downloads the published variations.
+- `train-btn-gen-nb-{model_key}` (`button`): "Training Notebook".
+  `POST /api/notebooks/generate` (8200) with `kinds: ["training"]`.
+- `train-btn-usage-nb-{model_key}` (`button`): "Usage Notebook".
+  `POST /api/notebooks/generate` (8200) with `kinds: ["usage"]`.
+- `train-btn-eval-{model_key}` (`button`): "Evaluate Model".
+  `POST /api/training/evaluate` (8200). Evaluates the checkpoint locally.
+- `train-btn-export-{model_key}` (`button`): "Export Binaries".
+  `POST /api/training/export` (8200). Exports the model binaries.
+- `cloud-modal-tab-kaggle`, `cloud-modal-tab-colab`, `train-modal-tab-upload`
+  (`button`, `role="tab"`): "Kaggle GPU Cloud", "Google Colab FUSE" and "Kaggle
+  Models Hub" in the Cloud & Registry Dispatch dialog. None. Switch the panel
+  `cloud-modal-panel`.
+- `gpu-select` (`select`): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.
+- `variation-select` (`select`): variation to check. None. Filters the isolation
+  report from `GET /api/models/{model_key}/variations/validate` (8200).
+
+### 3.7 Health & Version Drift
+
+- `health-btn-safe-upgrade` (`button`): "Safe Package Upgrade".
+  `POST /api/update` (8000). Starts a background upgrade job and returns its
+  `job_id`; 409 means an update or the pipeline is already running.
+- `health-btn-upgrade-dry-run` (`button`): "Upgrade Dry Run". `POST /api/update`
+  (8000) with `dry_run: true`. Lists planned upgrades without changing anything.
+- `health-btn-deep-clean` (`button`): "Deep Cache Purge". `POST /api/clean`
+  (8000). Removes `__pycache__`, build remnants and staging residues.
+- `health-btn-install-hooks` (`button`): "Install Git Hooks".
+  `POST /api/hooks/install` (8000). Installs the pre-commit hooks.
+- `health-btn-validate-ecosystem` (`button`): "Run Ecosystem Validation".
+  `POST /api/validate` (8000). Runs the validation gates for all projects.
+
+### 3.8 Config & Secrets
+
+- `config-editor-tab-manifests`, `config-editor-tab-secrets` (`button`,
+  `role="tab"`): "Registry Manifests" and "Secrets & Tokens Vault". None. Switch
+  the panel `config-editor-panel`.
+- `manifest-select` (`select`): manifest file. `GET /api/manifests/registry`
+  fills it; `GET /api/manifests/read` (8000) loads the chosen file.
+- `new-service-select` (`select`): "Target Service". None. Service of a new
+  credential.
+- `new-label-input` (`input type=text`): "Label / Description". None.
+- `new-username-input` (`input type=text`): "Username / Account ID". None.
+- `new-server-input` (`input type=text`): "Broker Server". None. Shown for
+  MetaTrader 5 credentials.
+- `new-secret-input` (`input type=password`): "Secret Token / API Key /
+  Password". None. Write-only; sent with `POST /api/secrets` (8000) on save.
+- `replace-secret-{secret_id}` (`input type=password`): replacement value.
+  `POST /api/secrets` (8000) on save. Blank keeps the stored value; a value
+  replaces it. The GUI never reads a stored value back: `GET /api/secrets`
+  returns only `has_value` and the last 4 characters (`value_hint`).
+
+### 3.9 Dialogs, Status Regions & Headings
+
+Dialogs and forms:
+
+- `bug-modal-dialog`, `annotator-dialog`, `pipeline-dialog-clean-install`:
+  shared `Modal` dialogs (`role="dialog"`, `aria-modal`, focus trap; Escape
+  closes the innermost one). Each title has the ID `{dialog_id}-title`.
+- `bug-modal-form`: the Report Issue form.
+- `test-modal`, `cloud-modal`, `config-editor-modal`: the Test & Diagnostic
+  Orchestrator, Cloud Training and Config & Secrets dialogs (shared `Modal`).
+- `test-modal-panel`, `cloud-modal-panel`, `config-editor-panel`: the tab
+  panels (`role="tabpanel"`) of the shared `Tabs` component, labelled by the
+  active tab.
+- Confirmation dialogs (`ConfirmDialog`, focus starts on Cancel; buttons
+  `{dialog_id}-cancel` and `{dialog_id}-confirm`, text `{dialog_id}-desc`):
+  `dash-dialog-stop-service` (Stop Service), `health-dialog-confirm` (Safe
+  Package Upgrade and Deep Cache Purge), `config-dialog-delete-secret` (delete a
+  credential), `config-dialog-discard-edits` (close or leave the manifest editor
+  with unsaved edits) and `config-dialog-discard-manifest` (switch manifests
+  with unsaved edits).
+- `pipeline-dialog-clean-install-desc`: lists what a clean install deletes.
+
+Status and error regions:
+
+- `bug-modal-error`, `bug-modal-email-error`, `bug-modal-module-error`,
+  `bug-modal-description-error`, `bug-modal-other-error`,
+  `bug-modal-screenshot-error`, `bug-modal-recording-error`, `annotator-error`:
+  error messages (`role="alert"`).
+- `bug-modal-description-counter`, `annotator-status`, `bug-modal-copy-status`:
+  live status text.
+- `bug-modal-screenshot-{n}`: thumbnail `{n}` in the screenshot strip.
+- `bug-modal-recording-slot`: the recording field set; outside the desktop app
+  it is disabled with the note "Screen recording is available in the desktop
+  app".
+- `bug-modal-recording-summary`: the attached clip (length, resolution, size);
+  `bug-modal-recorder-error`: recorder failures (`role="alert"`).
+- `recording-control-bar` (`role="region"`, "Screen recording"),
+  `recording-control-status`, `recording-control-time`: the floating bar shown
+  while recording (state and elapsed time against the 60 s limit).
+- `bug-modal-success`, `bug-modal-archive-path`, `bug-modal-recipient`,
+  `bug-modal-subject`, `bug-modal-note-mail`, `bug-modal-note-folder`: the
+  success view (archive name and relative path, recipient, subject, and notes
+  when the mail client or the reports folder did not open).
+- `test-modal-output-console`: test output (`pre`).
+
+Landmarks and headings:
+
+- `main-content` (main view), `telemetry-panel-anchor` (training telemetry).
+- `test-modal-title`, `config-editor-modal-title`, `cloud-modal-title`,
+  `pipeline-panel-title`, `service-tiles-heading`,
+  `service-card-title-{service_id}`, `proj-title-{project}`, `hw-card-title`,
+  `hw-card-title-offline`, `health-offline-title`, `toolchain-prereq-title`,
+  `drift-matrix-title`, `gui-dependencies-title`, `maintenance-actions-title`,
+  `telemetry-stream-heading`, `telemetry-card-heading`.
+
+### 3.10 Controls Without an ID
+
+These controls work but have no `id` yet; tests find them by role and label: the
+"Config & Secrets" and "LemGendary AI Documentation Hub" header buttons, the
+Start Service and Stop Service buttons on the sidecar tiles, the per-step run
+buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
+Reduction sub-tabs, the modernization
+queue buttons, the scale reduction dispatch button, the "Ingest from Kaggle"
+button and the telemetry console tabs.
+
+### 3.11 Changes Since the Previous Registry
+
+The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
+removed and 98 added.
+
+Renamed (old ID to current ID): `comp-input-custom-name` to `custom-name-input`,
+`comp-select-custom-task` to `custom-task-select`, `comp-select-custom-format`
+to `custom-format-select`, `comp-textarea-sources` to `custom-sources-area`,
+`comp-select-reduce-manifold` to `reduce-manifold-select`,
+`dash-btn-clean-install` to `dash-btn-run-pipeline` (non-destructive; the
+destructive run moved to `pipeline-btn-clean-confirm`), `train-card-btn-eval` to
+`train-btn-eval-{model_key}`, `train-card-btn-export` to
+`train-btn-export-{model_key}`, `train-card-btn-push` to
+`train-btn-pub-model-{model_key}`, `train-card-btn-pull` to
+`train-btn-pull-model-{model_key}`, `dash-nav-sidebar` to `tab-{tab_id}`.
+
+Removed because the feature no longer exists: `train-select-model`,
+`train-btn-launch` (training starts per card), `train-btn-unit-test-all` (moved
+into the Test & Diagnostic Orchestrator), `comp-toggle-transcode`, the Kaggle
+sub-tab controls (`comp-tab-kaggle-download`, `comp-tab-kaggle-upload`,
+`comp-select-kaggle-registry`, `comp-select-kaggle-upload`,
+`comp-btn-kaggle-upload`, replaced by the card actions in section 3.5),
+`comp-slider-modernize-workers` and the pipeline stage list items
+`pipe-stage-*`.
+
+Removed because the control has no ID (section 3.10; `comp-mode-standard`,
+`comp-mode-custom`, `comp-input-kaggle-custom-ref` and `train-modal-tab-upload`
+exist again since v2.10.28, sections 3.5 and 3.6):
+`comp-btn-custom-compile`, `comp-subtab-catalog`,
+`comp-subtab-modernize`, `comp-subtab-reduce`, `comp-btn-scan-modernize-queue`,
+`comp-btn-batch-modernize-all`, `comp-btn-dispatch-reduce`,
+`comp-input-kaggle-custom-ref`, `comp-btn-kaggle-download`,
+`pipe-btn-run-step-1` to `pipe-btn-run-step-7`, `pipe-step-status-badge`,
+`pipe-step-progress-bar`, `health-table-drift`, `drift-badge-sync`,
+`drift-badge-alert`, `telem-log-stream`, `dash-card-hardware`,
+`dash-badge-sidecar-status`, `proj-card-training`, `proj-btn-reconcile-datasets`
+and `train-modal-tab-upload`.
 
 ---
 
@@ -109,47 +420,83 @@ $$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$
 
 ### 4.1 Workflow 1: Environment Provisioning & Health Audit
 
-1. Operator launches LemGendary AI Studio Desktop GUI.
-2. Operator observes `dash-badge-sidecar-status` confirming emerald connection state.
-3. Operator clicks `dash-btn-clean-install`.
-4. The GUI displays progressive completion across badges `pipe-stage-1-hardware` through `pipe-stage-7-health`, with `pipe-step-progress-bar` active on each running step.
-5. When the pipeline emits a terminal event (`success`, `warning`, or `error`), `App.tsx` fires `loadData()` immediately and a 1,500 ms safety poll against `/api/pipeline/status` resolves any race conditions. `pipe-step-status-badge` transitions to `PASSED` or `WARNING`.
-6. Upon completion, `health-table-drift` updates, confirming 100% synchronized `[SYNC]` badges.
+1. The operator starts the LemGendary AI Studio GUI. The sidebar dots and the
+   sidecar tiles show which sidecars answer their liveness probe
+   (`GET /api/ping` on 8000, `GET /api/health` on 8100 and 8200).
+2. The operator clicks `dash-btn-run-pipeline`. The GUI sends
+   `POST /api/pipeline/run` (8000) with `clean: false`.
+3. Progress arrives over the Environment Manager log socket (`WS /ws/log`,
+   8000). Each step card shows its status and a progress bar while it runs.
+4. On a terminal event (`success`, `warning` or `error`) the GUI reloads its
+   data and, after 1,500 ms, reads `GET /api/pipeline/status` (8000) once more
+   to catch late messages.
+5. The Health view shows the result of `GET /api/health` (8000), including the
+   cross-project version drift matrix.
+
+For a clean reinstall the operator clicks `pipeline-btn-clean-install`, reads
+the list of what will be deleted and confirms with `pipeline-btn-clean-confirm`,
+which sends `clean: true`.
 
 ### 4.1.1 WebSocket Event Lifecycle Recovery
 
-The GUI intercepts the following terminal status values from the sidecar WebSocket stream and takes the corresponding actions:
+The GUI reacts to these terminal `status` values from the log stream:
 
-| WebSocket `status` Value | GUI Transition | Controls Affected |
-| :--- | :--- | :--- |
-| `success` | `isRunningPipeline` set to `false`; `loadData()` called | `pipe-step-status-badge` (`PASSED`), `pipe-step-progress-bar` (unmounted) |
-| `warning` | `isRunningPipeline` set to `false`; `loadData()` called | `pipe-step-status-badge` (`WARNING`), `pipe-step-progress-bar` (unmounted) |
-| `error` | `isRunningPipeline` set to `false`; error state surfaced | `pipe-step-status-badge` (`FAILED`), `pipe-step-progress-bar` (unmounted) |
+- `success`: the pipeline is marked as finished and the data is reloaded; the
+  step card shows `PASSED`.
+- `warning`: the same, and the step card shows `WARNING`.
+- `error`: the pipeline is marked as finished and the error is shown; the step
+  card shows `FAILED`.
 
-A 1,500 ms safety polling reconciliation via `GET /api/pipeline/status` fires after every terminal event to handle late-arriving WebSocket messages and ensure UI state is always synchronized with backend reality.
+In all three cases the progress bar is removed and the 1,500 ms status read from
+step 4 runs.
 
-### 4.2 Workflow 2: Manifold Compilation with WebP Transcoding
+### 4.2 Workflow 2: Manifold Compilation
 
-1. Operator navigates to Dataset Compiler View (`comp-nav-tab`).
-2. Operator selects `comp-select-manifold` (e.g. `nima_aesthetic`).
-3. Operator verifies `comp-toggle-transcode` is enabled (WebP $q=92$).
-4. Operator clicks `comp-btn-compile`.
-5. The GUI establishes a live WebSocket connection to `ws://127.0.0.1:8100/api/ws/jobs/{id}/logs`, rendering real-time image conversion velocity (img/sec) and ETA countdowns directly in `telem-log-stream`.
+1. The operator opens the Dataset Compiler view (`tab-datasets`).
+2. The operator picks a manifold in `comp-select-manifold` and a preset in
+   `preset-select` (or keeps "Server default").
+3. The operator clicks `comp-btn-compile`. The GUI sends
+   `POST /api/gui/quick-compile` (8100) and shows the returned job `id`.
+4. Job progress arrives over the Dataset Compiler event socket
+   (`WS /api/ws/events`, 8100) and appears in the shared log panel.
+
+### 4.3 Workflow 3: Reporting an Issue
+
+1. The operator clicks `header-btn-report-issue`. The module is preselected from
+   the current tab.
+2. The operator enters an email and a description of at least 50 characters and
+   keeps or clears `bug-modal-telemetry`.
+3. Optionally the operator clicks `bug-modal-btn-add-screenshot`, draws a
+   highlight in `annotator-canvas` and clicks `annotator-btn-save` (up to 5
+   screenshots). In the desktop app the operator can also click
+   `bug-modal-btn-start-recording`, reproduce the problem and click
+   `recording-btn-stop` (at most 60 s).
+4. The operator clicks `bug-modal-btn-submit`. The Environment Manager
+   (`POST /api/bug-report`, 8000) saves a ZIP report in the `bug-reports` folder
+   of the workspace, opens the mail client with recipient and subject filled in
+   and opens the folder.
+5. The success view shows the archive path; the operator attaches the ZIP to the
+   mail. If the mail client did not open, `bug-modal-btn-copy-address` and
+   `bug-modal-btn-copy-subject` copy the details.
 
 ---
 
 ## 5. Operational Boundaries & Platform Availability
 
-The Desktop GUI enforces strict hardware and platform execution boundaries:
+The desktop app runs on Windows, Linux and macOS. What each platform can do
+depends on the sidecars and the hardware:
 
-| Capability | Windows 10/11 (CUDA 12+) | Linux (CUDA 12+) | Windows (DirectML) | macOS / CPU Fallback |
-| :--- | :---: | :---: | :---: | :---: |
-| **Sidecar REST Daemon** | Supported | Supported | Supported | Supported |
-| **Clean Install Pipeline** | Full Support | Full Support | Restricted (DirectX) | Restricted |
-| **WebP Transcoding** | $\mathcal{O}(1)$ Multi-Threaded | $\mathcal{O}(1)$ Multi-Threaded | Multi-Threaded | Single-Threaded |
-| **Hardlink Deduplication** | Supported (NTFS `os.link`) | Supported (POSIX `os.link`) | Supported (NTFS) | Unsupported (FAT/ExFAT) |
-| **Model Training (FP16/BF16)** | Full GPU Acceleration | Full GPU Acceleration | Unsupported | Unsupported (CPU Only) |
-| **Spatial Ladder Scaling** | Full GPU Tensor Core | Full GPU Tensor Core | Degraded Throughput | Blocked (Excessive Latency) |
-
-> [!CAUTION]
-> Training operations on CPU or uncalibrated DirectML backends will automatically be blocked by the GUI validation gate to prevent thermal runaway and severe memory stalls.
+- **Sidecar REST services**: all platforms.
+- **Run Pipeline and Clean Install**: full support on Windows and Linux;
+  restricted on Windows with DirectML only and on macOS.
+- **WebP transcoding**: multi-threaded on Windows and Linux; single-threaded on
+  the CPU fallback.
+- **Hardlink deduplication**: NTFS and POSIX file systems (`os.link`); not on
+  FAT or exFAT.
+- **Model training with FP16 or BF16**: CUDA GPUs on Windows and Linux; not on
+  DirectML or CPU only.
+- **Spatial ladder scaling**: full speed on CUDA GPUs; slower on DirectML; not
+  practical on CPU.
+- **Screen recording in bug reports**: desktop app on Windows (Windows
+  Graphics Capture, app window only); macOS and Linux report "not supported on
+  this platform yet"; not available in the browser build.

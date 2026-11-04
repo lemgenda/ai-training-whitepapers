@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
-# Architecture of LemGendary AI: Latent Diffusion & Score-Based Generative Architectures
+# Latent Diffusion & Score-Based Generative Architectures
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 10 FOUNDATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 10 FOUNDATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -22,13 +21,27 @@
 
 ## 1. Abstract
 
-The **LemGendary Latent Diffusion Engine** implements score-based generative modeling over continuous latent representations. Rather than executing stochastic reverse-diffusion in high-dimensional pixel space $\mathbb{R}^{H \times W \times 3}$, the model operates within the spatial latent manifold of a pre-trained Autoencoder (KL-divergence or VQ-regularized). Paired with cross-attention text conditioners, classifier-free guidance, and fast stochastic Euler Ancestral (Euler-A) or deterministic DDIM sampling schedulers, the system synthesizes high-fidelity photographic content in as few as 20 sampling steps.
+The **LemGendary Latent Diffusion Engine** implements score-based generative
+modeling over continuous latent representations. Rather than executing
+stochastic reverse-diffusion in high-dimensional pixel space
+$\mathbb{R}^{H \times W \times 3}$, the model operates within the spatial latent
+manifold of a pre-trained Autoencoder (KL-divergence or VQ-regularized). Paired
+with cross-attention text conditioners, classifier-free guidance, and fast
+stochastic Euler Ancestral (Euler-A) or deterministic DDIM sampling schedulers,
+the system synthesizes high-fidelity photographic content in as few as 20
+sampling steps.
 
 ---
 
 ## 2. Latent Space Compression
 
-A convolutional autoencoder encodes pixel inputs $x \in \mathbb{R}^{H \times W \times 3}$ into latent tensors $z = \mathcal{E}(x) \in \mathbb{R}^{h \times w \times c}$ with spatial downsampling factor $f = H/h = 8$ (yielding an $8 \times 8 = 64\times$ spatial area reduction prior to channel expansion). The reverse diffusion process operates strictly in this compressed manifold, drastically minimizing intermediate activation memory.
+A convolutional autoencoder encodes pixel inputs
+$x \in \mathbb{R}^{H \times W \times 3}$ into latent tensors
+$z = \mathcal{E}(x) \in \mathbb{R}^{h \times w \times c}$ with spatial
+downsampling factor $f = H/h = 8$ (yielding an $8 \times 8 = 64\times$ spatial
+area reduction prior to channel expansion). The reverse diffusion process
+operates strictly in this compressed manifold, drastically minimizing
+intermediate activation memory.
 
 ---
 
@@ -36,19 +49,29 @@ A convolutional autoencoder encodes pixel inputs $x \in \mathbb{R}^{H \times W \
 
 Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential equation:
 
-$$dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw$$
+$$
+dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw
+$$
 
-The U-Net / DiT backbone is trained to predict the added noise via reweighted mean squared error:
+The U-Net / DiT backbone is trained to predict the added noise via reweighted
+mean squared error:
 
-$$\mathcal{L}_{\text{simple}} = \mathbb{E}_{z_0, \epsilon, t} \left[ \|\epsilon - \epsilon_\theta(z_t, t, c)\|^2 \right]$$
+$$
+\mathcal{L}_{\text{simple}} = \mathbb{E}_{z_0, \epsilon, t} \left[ \|\epsilon -
+\epsilon_\theta(z_t, t, c)\|^2 \right]
+$$
 
 ---
 
 ## 4. Classifier-Free Guidance (CFG)
 
-Conditioned generation balances prompt alignment against sample diversity via Classifier-Free Guidance:
+Conditioned generation balances prompt alignment against sample diversity via
+Classifier-Free Guidance:
 
-$$\tilde{\epsilon}_\theta(z_t, c) = \epsilon_\theta(z_t, \emptyset) + s \cdot \left( \epsilon_\theta(z_t, c) - \epsilon_\theta(z_t, \emptyset) \right)$$
+$$
+\tilde{\epsilon}_\theta(z_t, c) = \epsilon_\theta(z_t, \emptyset) + s \cdot
+\left( \epsilon_\theta(z_t, c) - \epsilon_\theta(z_t, \emptyset) \right)
+$$
 
 where $s \in [5.0, 9.0]$ is the guidance scale.
 
@@ -56,21 +79,26 @@ where $s \in [5.0, 9.0]$ is the guidance scale.
 
 ## 5. Fast Schedulers (DDIM & Euler-A)
 
-Deterministic DDIM and stochastic Euler Ancestral schedulers invert the probability flow ODE, reducing generation from 1000 DDPM steps to 20-30 discrete evaluation steps.
+Deterministic DDIM and stochastic Euler Ancestral schedulers invert the
+probability flow ODE, reducing generation from 1000 DDPM steps to 20-30 discrete
+evaluation steps.
 
 ---
 
 ## 6. Architecture & Training Parameters
 
-| Hyperparameter | Specification Value | Design Rationale |
-| :--- | :--- | :--- |
-| Latent Channels ($c$) | 4 | Optimal perceptual compression ratio |
-| U-Net Base Channels | 320 | Channel multiplier [1, 2, 4, 4] |
-| Conditioning Dimension | 768 / 1024 | Frozen CLIP ViT-L/14 or OpenCLIP text encoder |
-| Precision | FP16 / BF16 mixed | Accelerated Tensor Core throughput |
+* **Latent Channels ($c$)**: Specification Value: 4; Design Rationale: Optimal
+  perceptual compression ratio
+* **U-Net Base Channels**: Specification Value: 320; Design Rationale: Channel
+  multiplier [1, 2, 4, 4]
+* **Conditioning Dimension**: Specification Value: 768 / 1024; Design Rationale:
+  Frozen CLIP ViT-L/14 or OpenCLIP text encoder
+* **Precision**: Specification Value: FP16 / BF16 mixed; Design Rationale:
+  Accelerated Tensor Core throughput
 
 ---
 
 ## 7. Conclusion
 
-Latent Diffusion serves as the generative foundation for generative synthesis and guided inpainting across the ecosystem.
+Latent Diffusion serves as the generative foundation for generative synthesis
+and guided inpainting across the ecosystem.

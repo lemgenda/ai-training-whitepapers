@@ -2,723 +2,528 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUI Control ID Registry &amp; Operational Boundaries - LemGendary AI</title>
-    <meta name="description" content="Authoritative machine-readable control ID dictionary, interactive operator manual mappings, and platform execution boundaries for LemGendary AI Studio Desktop GUI.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LemGendary AI Studio GUI: Control ID Registry</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="current-state.html">Current State</a>
-                <a href="env_manager.html">Env Manager</a>
-                <a href="dataset-compiler.html">Dataset Compiler</a>
-                <a href="degradation-engine.html">Degradation Engine</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
-                <a href="gui-control-registry.html" class="active">GUI Registry</a>
-                <a href="versioning-policy.html">Versioning Policy</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+<a href="current-state.html" class="tab-link">Current State</a>
+<a href="env_manager.html" class="tab-link">Env Manager</a>
+<a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
+<a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
+<a href="training-suite-master.html" class="tab-link">Training Suite</a>
+<a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
+<a href="gui-control-registry.html" class="tab-link active">GUI Registry</a>
+<a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</h1>
+<p class="subtitle">Category 03.4 CONTROLS | LemGendary AI Documentation Hub</p>
+<div class="meta">
+<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Companion</strong>: <a href="ai-studio-manual.html">Operator Manual</a></span>
+<span><a href="ai-studio-whitepaper.html">Architectural Whitepaper</a></span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#section-abstract">1. Abstract &amp; Scope</a></li>
-                <li><a href="#section-taxonomy">2. Control ID Taxonomy &amp; Schema</a></li>
-                <li><a href="#section-dictionary">3. Master Interactive Controls Dictionary</a></li>
-                <li><a href="#section-workflows">4. End-to-End Operational Workflows</a></li>
-                <li><a href="#section-boundaries">5. Operational Boundaries &amp; Platform Availability</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+<li><a href="ai-studio-manual.html" class="toc-link-secondary">Operator Manual</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-control-id-taxonomy--schema">2. Control ID Taxonomy &amp; Schema</a></li>
+<li><a href="#sec-3-master-interactive-controls-dictionary">3. Master Interactive Controls
+Dictionary</a>
+<ul class="sub-item">
+<li><a href="#sec-31-header--sidebar">3.1 Header &amp; Sidebar</a></li>
+<li><a href="#sec-32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</a></li>
+<li><a href="#sec-33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</a></li>
+<li><a href="#sec-34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</a></li>
+<li><a href="#sec-35-dataset-compiler-suite">3.5 Dataset Compiler Suite</a></li>
+<li><a href="#sec-36-model-training-suite">3.6 Model Training Suite</a></li>
+<li><a href="#sec-37-health--version-drift">3.7 Health &amp; Version Drift</a></li>
+<li><a href="#sec-38-config--secrets">3.8 Config &amp; Secrets</a></li>
+<li><a href="#sec-39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp;
+Headings</a></li>
+<li><a href="#sec-310-controls-without-an-id">3.10 Controls Without an ID</a></li>
+<li><a href="#sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous
+Registry</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-end-to-end-operational-workflows">4. End-to-End Operational Workflows</a>
+<ul class="sub-item">
+<li><a href="#sec-41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health
+Audit</a></li>
+<li><a href="#sec-411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle
+Recovery</a></li>
+<li><a href="#sec-42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</a></li>
+<li><a href="#sec-43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-operational-boundaries--platform-availability">5. Operational Boundaries &amp; Platform
+Availability</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>GUI Control ID Registry &amp; Operational Boundaries</h1>
-        <p class="subtitle">Authoritative Machine-Readable Taxonomy, Automation Control Dictionary, and Platform Feature Gates</p>
-        <div class="meta">
-                <span>Category 03.4 CONTROLS</span>
-                <span>Version 16.9.16-STABLE</span>
-                <span>Component: AI Studio GUI</span>
-            </div>
 
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>This registry lists every element of the LemGendary AI Studio GUI
+(<code>lemgendary-ai-studio-gui</code>) that carries an <code>id</code> attribute, with its label,
+element type, the sidecar endpoint it calls and its behaviour. It is recounted
+from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.38</code>, including
+the IDs that the shared <code>Modal</code>, <code>ConfirmDialog</code> and <code>Tabs</code> components build
+from their props, with a template such as <code>train-btn-start-{model_key}</code> counted
+once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+and 59 to dialogs, status regions, landmarks and headings (section 3.9).
+Automated tests, accessibility checks and the bug report module select use these
+IDs, so an ID changes only together with this registry.</p>
+<p>The GUI talks to three local sidecars: the LemGendary Environment Manager on
+port 8000, the LemGendary Dataset Compiler Suite on port 8100 and the LemGendary
+Model Training Suite on port 8200.</p>
+</section>
 
-            <section id="section-abstract">
-                <h2>1. Abstract &amp; Scope</h2>
-                <p>This authoritative specification establishes the formal machine-readable Control ID Registry and operational boundary matrix for the LemGendary AI Studio Desktop GUI (<code>lemgendary-ai-studio-gui</code>). To enable automated end-to-end testing, accessibility compliance (WCAG 2.1 AA), and strict contract binding between the Tauri/TypeScript frontend and backend FastAPI sidecars (<code>port 8000</code> &amp; <code>port 8100</code>), every interactive widget, input control, action button, telemetry stream, and visual card is assigned a unique, immutable control identifier.</p>
-            </section>
+<section id="sec-2-control-id-taxonomy--schema">
+<h2>2. Control ID Taxonomy &amp; Schema</h2>
+<p>New IDs follow a hyphenated pattern:</p>
+<div class="math-block">$$\mathbf{[view]\text{-}[component]\text{-}[element]\text{-}[action]}$$</div>
+<ul>
+<li><strong><code>[view]</code> or <code>[component]</code></strong>: <code>header</code>, <code>dash</code>, <code>pipeline</code>, <code>comp</code>, <code>custom</code>,
+<code>reduce</code>, <code>train</code>, <code>health</code>, <code>test-modal</code>, <code>bug-modal</code>, <code>annotator</code>.</li>
+<li><strong><code>[element]</code></strong>: <code>btn</code>, <code>select</code>, <code>input</code>, <code>dialog</code>, <code>tab</code>.</li>
+<li><strong><code>[action]</code></strong>: what the control does, for example <code>run-pipeline</code>,
+<code>clean-confirm</code>, <code>submit</code>.</li>
+</ul>
+<p>Older IDs keep their shipped names (<code>preset-select</code>, <code>custom-name-input</code>,
+<code>training-toolbar-push-all-models-btn</code>) because tests depend on them. Repeated
+controls are templates: <code>{model_key}</code> is a model key from
+<code>unified_models_v2.yaml</code>, <code>{dataset_key}</code> a manifold key, <code>{tab_id}</code> one of
+<code>dashboard</code>, <code>datasets</code>, <code>training</code>, <code>pipeline</code>, <code>health</code>, <code>{n}</code> a position
+starting at 1 and <code>{secret_id}</code> the id of a stored credential.</p>
+<p>Endpoint notation: <code>GET /api/hardware</code> (8000) means the Environment Manager
+route on port 8000. Every request goes through <code>sidecarFetch</code> in
+<code>src/api/http.ts</code>, which adds the header <code>X-LemGendary-Client: ai-studio-gui</code>;
+the sidecars refuse browser writes without it. &quot;None&quot; means the control only
+changes GUI state.</p>
+</section>
 
-            <section id="section-taxonomy">
-                <h2>2. Control ID Taxonomy &amp; Schema</h2>
-                <p>All GUI elements follow a structured hyphenated taxonomy:</p>
-                <pre><code>[view]-[component]-[element]-[action]</code></pre>
-                <ul>
-                    <li><strong>[view]</strong>: Top-level route context (<code>dash</code>, <code>pipe</code>, <code>proj</code>, <code>health</code>, <code>telem</code>, <code>comp</code>, <code>train</code>).</li>
-                    <li><strong>[component]</strong>: Sub-container or card (<code>header</code>, <code>sidebar</code>, <code>card</code>, <code>table</code>, <code>modal</code>).</li>
-                    <li><strong>[element]</strong>: Structural HTML element type (<code>btn</code>, <code>input</code>, <code>select</code>, <code>toggle</code>, <code>badge</code>, <code>log</code>).</li>
-                    <li><strong>[action]</strong>: Operational intent (<code>refresh</code>, <code>execute</code>, <code>reconcile</code>, <code>compile</code>, <code>filter</code>).</li>
-                </ul>
-            </section>
+<section id="sec-3-master-interactive-controls-dictionary">
+<h2>3. Master Interactive Controls Dictionary</h2>
+<p>Each entry reads: ID (element type): label. Endpoint. Behaviour.</p>
+<h3 id="sec-31-header--sidebar">3.1 Header &amp; Sidebar</h3>
+<ul>
+<li><code>header-btn-report-issue</code> (<code>button</code>): &quot;Report Issue&quot;. None. Opens the Report
+Issue dialog (section 3.2) with the module set to the current tab.</li>
+<li><code>header-btn-test-modal</code> (<code>button</code>): &quot;Tests &amp; Diagnostics&quot;. None. Opens the
+Test &amp; Diagnostic Orchestrator (section 3.3).</li>
+<li><code>dash-btn-refresh-audit</code> (<code>button</code>): &quot;Refresh Audit&quot;. <code>GET /api/hardware</code>,
+<code>GET /api/health</code> and <code>GET /api/pipeline/status</code> (8000) plus the liveness
+probes. Reloads hardware, health and pipeline state; shows &quot;Refreshing...&quot;
+while busy.</li>
+<li><code>tab-{tab_id}</code> (<code>button</code>): sidebar tab (&quot;Dashboard&quot;, &quot;LemGendary Dataset
+Compiler Suite&quot;, &quot;LemGendary Model Training Suite&quot;, &quot;Clean Install Pipeline&quot;,
+&quot;Health &amp; Version Drift&quot;). None. Switches the workspace view; the dot shows
+whether the sidecar behind the view is online.</li>
+</ul>
+<h3 id="sec-32-report-issue-dialog--annotator">3.2 Report Issue Dialog &amp; Annotator</h3>
+<ul>
+<li><code>bug-modal-email</code> (<code>input type=email</code>): &quot;Your email&quot;. None. Reply address, at
+most 254 characters, checked on submit.</li>
+<li><code>bug-modal-module</code> (<code>select</code>): &quot;Module&quot;. None. One option per sidebar tab;
+preselected from the current tab.</li>
+<li><code>bug-modal-description</code> (<code>textarea</code>): &quot;What happened?&quot;. None. 50 to 10,000
+characters; the counter below shows the length.</li>
+<li><code>bug-modal-telemetry</code> (<code>input type=checkbox</code>): &quot;Attach telemetry&quot;. None. On by
+default; attaches the recent log events as a CSV file
+(<code>timestamp,status,source,message</code>).</li>
+<li><code>bug-modal-btn-add-screenshot</code> (<code>button</code>): &quot;Capture screenshot&quot;. None. Opens
+the annotator; disabled when 5 screenshots are attached.</li>
+<li><code>bug-modal-btn-remove-screenshot-{n}</code> (<code>button</code>): &quot;Remove&quot;. None. Removes
+screenshot <code>{n}</code> from the strip.</li>
+<li><code>bug-modal-btn-start-recording</code> (<code>button</code>): &quot;Start recording&quot;. Native
+<code>recording_start</code>. Desktop app only; hides the dialog and shows the recording
+control bar.</li>
+<li><code>bug-modal-btn-remove-recording</code> (<code>button</code>): &quot;Remove recording&quot;. None. Shown
+only when a recording is attached; discards it.</li>
+<li><code>recording-btn-pause</code> (<code>button</code>): &quot;Pause&quot;. Native <code>recording_pause</code>. Shown in
+<code>recording-control-bar</code> while recording.</li>
+<li><code>recording-btn-resume</code> (<code>button</code>): &quot;Continue&quot;. Native <code>recording_resume</code>.
+Shown while paused.</li>
+<li><code>recording-btn-stop</code> (<code>button</code>): &quot;Stop and attach&quot;. Native <code>recording_stop</code>.
+Returns to the dialog with the MP4 attached as <code>recording.mp4</code>.</li>
+<li><code>bug-modal-btn-cancel</code> (<code>button</code>): &quot;Cancel&quot;. None. Closes the dialog.</li>
+<li><code>bug-modal-btn-submit</code> (<code>button type=submit</code>): &quot;Send report&quot;.
+<code>POST /api/bug-report</code> (8000), multipart. Validates the form, sends it and
+shows the success view; 422 errors appear under the matching field.</li>
+<li><code>bug-modal-btn-done</code> (<code>button</code>): &quot;Done&quot;. None. Closes the success view and
+resets the form.</li>
+<li><code>bug-modal-btn-copy-address</code> (<code>button</code>): &quot;Copy address&quot;. None. Copies the
+recipient address to the clipboard.</li>
+<li><code>bug-modal-btn-copy-subject</code> (<code>button</code>): &quot;Copy subject&quot;. None. Copies the mail
+subject to the clipboard.</li>
+<li><code>annotator-canvas</code> (<code>canvas</code>): screenshot of the app. None. Drag to draw one
+highlight rectangle; a new drag replaces it.</li>
+<li><code>annotator-btn-cancel</code> (<code>button</code>): &quot;Cancel&quot;. None. Discards the capture.</li>
+<li><code>annotator-btn-retake</code> (<code>button</code>): &quot;Retake&quot;. None. Captures the app window
+again.</li>
+<li><code>annotator-btn-save</code> (<code>button</code>): &quot;Save&quot;. None. Exports the annotated image as
+WebP (PNG where WebP export is not supported), at most 5 MB, and adds it to
+the strip.</li>
+</ul>
+<h3 id="sec-33-test--diagnostic-orchestrator">3.3 Test &amp; Diagnostic Orchestrator</h3>
+<ul>
+<li><code>test-modal-btn-close</code> (<code>button</code>): &quot;X&quot;. None. Closes the dialog; Escape does
+the same.</li>
+<li><code>test-modal-tab-fleet</code> (<code>button</code>): &quot;Fleet 1-Epoch Smoke Test&quot;. None. Selects
+the fleet tab.</li>
+<li><code>test-modal-tab-training</code> (<code>button</code>): &quot;Training Suite Unit Tests&quot;. None.
+Selects the training tab.</li>
+<li><code>test-modal-tab-dataset</code> (<code>button</code>): &quot;Dataset Compiler Tests&quot;. None. Selects
+the dataset tab.</li>
+<li><code>test-modal-btn-run-fleet</code> (<code>button</code>): &quot;Run Fleet Diagnostic (All 23 Models)&quot;.
+<code>POST /api/training/unit-test-all</code> (8200). Queues the 1-epoch smoke test; the
+console shows <code>QUEUED</code> and the job id.</li>
+<li><code>test-modal-btn-run-training-unit</code> (<code>button</code>): &quot;Run Training Unit Tests&quot;.
+<code>POST /api/training/unit-test-run</code> (8200). Runs the Training Suite unit tests
+in-process and prints the summary.</li>
+<li><code>test-modal-btn-run-dataset-unit</code> (<code>button</code>): &quot;Run Dataset Compiler Tests&quot;.
+<code>POST /api/llm/test-suite</code> (8100). Runs the Dataset Compiler test suite
+in-process and prints the summary.</li>
+</ul>
+<h3 id="sec-34-run-pipeline--clean-install">3.4 Run Pipeline &amp; Clean Install</h3>
+<ul>
+<li><code>dash-btn-run-pipeline</code> (<code>button</code>): &quot;Run Pipeline&quot;. <code>POST /api/pipeline/run</code>
+(8000) with <code>clean: false</code>. Runs the 7-step pipeline without deleting
+environments; disabled while the Environment Manager is offline.</li>
+<li><code>pipeline-btn-clean-install</code> (<code>button</code>): &quot;Clean Install...&quot;. None. Opens the
+clean install confirmation dialog.</li>
+<li><code>pipeline-btn-clean-cancel</code> (<code>button</code>): &quot;Cancel&quot;. None. Closes the dialog
+without a request; it has focus when the dialog opens.</li>
+<li><code>pipeline-btn-clean-confirm</code> (<code>button</code>): &quot;Delete and reinstall&quot;.
+<code>POST /api/pipeline/run</code> (8000) with <code>clean: true</code>. Deletes the virtual
+environments and <code>node_modules</code> of all projects, then reinstalls them.</li>
+</ul>
+<h3 id="sec-35-dataset-compiler-suite">3.5 Dataset Compiler Suite</h3>
+<ul>
+<li><code>comp-mode-standard</code>, <code>comp-mode-custom</code> (<code>button</code>, <code>aria-pressed</code>):
+&quot;Standard Preset&quot; and &quot;Custom Multi-Source&quot; compile mode switch. None. Shows
+the standard or the custom multi-source compilation form.</li>
+<li><code>comp-btn-update-all-kaggle</code> (<code>button</code>): &quot;Update All Kaggle Metadata&quot;.
+<code>POST /api/kaggle/update-metadata</code> (8100) with <code>all_datasets: true</code>. Pushes
+metadata for every registered Kaggle dataset.</li>
+<li><code>comp-btn-regen-manifolds</code> (<code>button</code>): &quot;Regen Index&quot;.
+<code>POST /api/modernize/regenerate-manifolds</code> (8100). Rebuilds <code>manifolds.json</code>
+and the dataset metadata files.</li>
+<li><code>comp-btn-refresh-catalog</code> (<code>button</code>): &quot;Refresh Catalog&quot;.
+<code>GET /api/gui/datasets/with-stats</code> (8100). Reloads the manifold catalog.</li>
+<li><code>comp-select-manifold</code> (<code>select</code>): target manifold.
+<code>GET /api/gui/datasets/with-stats</code> (8100) fills it. Chooses the manifold for a
+standard compile.</li>
+<li><code>preset-select</code> (<code>select</code>): compiler preset. <code>GET /api/gui/presets</code> (8100)
+fills it. &quot;Server default&quot; omits <code>preset</code> so the sidecar applies its default;
+offline only that option is shown.</li>
+<li><code>comp-btn-compile</code> (<code>button</code>): &quot;Compile Manifold&quot;.
+<code>POST /api/gui/quick-compile</code> (8100) with <code>model</code> and <code>preset</code>. Starts a
+compile job; an unknown preset shows the server's 422 detail.</li>
+<li><code>custom-name-input</code> (<code>input type=text</code>): custom manifold name. None. Name of
+the new manifold.</li>
+<li><code>custom-task-select</code> (<code>select</code>): domain task. None. Restoration, detection or
+another task type.</li>
+<li><code>custom-format-select</code> (<code>select</code>): container format. None. WebDataset,
+Parquet, MDS or LitData.</li>
+<li><code>custom-preset-select</code> (<code>select</code>): compiler preset for the custom compile.
+<code>GET /api/gui/presets</code> (8100) fills it.</li>
+<li><code>custom-shard-size</code> (<code>input type=number</code>): shard size. None. Samples per
+shard.</li>
+<li><code>custom-purge-check</code> (<code>input type=checkbox</code>): purge loose files. None. Removes
+loose source images after sharding.</li>
+<li><code>custom-sources-area</code> (<code>textarea</code>): source repositories and URLs. None. One
+Kaggle, Hugging Face, Google Drive or GitHub source per line; submitted with
+<code>POST /api/gui/custom-compile</code> (8100).</li>
+<li><code>comp-input-kaggle-custom-ref</code> (<code>input type=text</code>): Kaggle dataset slug or
+URL. <code>POST /api/kaggle/download</code> (8100) on &quot;Ingest from Kaggle&quot;. Downloads a
+public or private Kaggle dataset into <code>LemGendaryDatasets</code>.</li>
+<li><code>comp-btn-meta-{dataset_key}</code> (<code>button</code>): &quot;Update Metadata&quot;.
+<code>POST /api/kaggle/update-metadata</code> (8100). Pushes the metadata of one manifold
+without uploading data.</li>
+<li><code>comp-btn-pull-{dataset_key}</code> (<code>button</code>): &quot;Download&quot;.
+<code>POST /api/kaggle/download</code> (8100). Downloads the manifold's shards.</li>
+<li><code>comp-btn-push-{dataset_key}</code> (<code>button</code>): &quot;Upload&quot;. <code>POST /api/kaggle/upload</code>
+(8100). Packages and uploads the local shards.</li>
+<li><code>reduce-manifold-select</code> (<code>select</code>): manifold to reduce. None. Chooses the
+source manifold for scale reduction.</li>
+<li><code>reduce-scale-select</code> (<code>select</code>): sampling scale. None. 10, 25, 50 or 75
+percent; sent with <code>POST /api/modernize/reduce</code> (8100).</li>
+</ul>
+<h3 id="sec-36-model-training-suite">3.6 Model Training Suite</h3>
+<ul>
+<li><code>train-btn-generate-all-notebooks</code> (<code>button</code>): &quot;Generate All Notebooks&quot;.
+<code>POST /api/notebooks/generate-all</code> (8200). Writes notebooks for every
+registered model.</li>
+<li><code>training-toolbar-push-all-models-btn</code> (<code>button</code>): &quot;Push All Models to
+Kaggle&quot;. <code>POST /api/training/kaggle/push-all</code> (8200). Stages and publishes all
+model variations.</li>
+<li><code>train-btn-refresh-models</code> (<code>button</code>): &quot;Refresh Models&quot;.
+<code>GET /api/gui/models/with-stats</code> (8200). Reloads models with their latest
+metrics in one request.</li>
+<li><code>train-btn-start-{model_key}</code> (<code>button</code>): &quot;Local Training&quot;.
+<code>POST /api/gui/quick-train</code> (8200) with <code>model_key</code> and <code>batch_size</code>. Starts
+local training.</li>
+<li><code>train-btn-stop-{model_key}</code> (<code>button</code>): &quot;Stop Training&quot;.
+<code>POST /api/jobs/{job_id}/cancel</code> (8200). Cancels the local job; the job is
+cleared only when the sidecar confirms <code>cancelled</code>.</li>
+<li><code>train-btn-cloud-{model_key}</code> (<code>button</code>): &quot;Cloud Training&quot;. None. Opens the
+Cloud &amp; Registry Dispatch dialog (<code>POST /api/training/kaggle/train</code> on
+launch).</li>
+<li><code>train-btn-pub-model-{model_key}</code> (<code>button</code>): &quot;Push Model&quot;.
+<code>POST /api/training/kaggle/push</code> (8200). Publishes the model variations to
+Kaggle Models.</li>
+<li><code>train-btn-pull-model-{model_key}</code> (<code>button</code>): &quot;Pull Model&quot;.
+<code>POST /api/training/kaggle/pull</code> (8200). Downloads the published variations.</li>
+<li><code>train-btn-gen-nb-{model_key}</code> (<code>button</code>): &quot;Training Notebook&quot;.
+<code>POST /api/notebooks/generate</code> (8200) with <code>kinds: [&quot;training&quot;]</code>.</li>
+<li><code>train-btn-usage-nb-{model_key}</code> (<code>button</code>): &quot;Usage Notebook&quot;.
+<code>POST /api/notebooks/generate</code> (8200) with <code>kinds: [&quot;usage&quot;]</code>.</li>
+<li><code>train-btn-eval-{model_key}</code> (<code>button</code>): &quot;Evaluate Model&quot;.
+<code>POST /api/training/evaluate</code> (8200). Evaluates the checkpoint locally.</li>
+<li><code>train-btn-export-{model_key}</code> (<code>button</code>): &quot;Export Binaries&quot;.
+<code>POST /api/training/export</code> (8200). Exports the model binaries.</li>
+<li><code>cloud-modal-tab-kaggle</code>, <code>cloud-modal-tab-colab</code>, <code>train-modal-tab-upload</code>
+(<code>button</code>, <code>role=&quot;tab&quot;</code>): &quot;Kaggle GPU Cloud&quot;, &quot;Google Colab FUSE&quot; and &quot;Kaggle
+Models Hub&quot; in the Cloud &amp; Registry Dispatch dialog. None. Switch the panel
+<code>cloud-modal-panel</code>.</li>
+<li><code>gpu-select</code> (<code>select</code>): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.</li>
+<li><code>variation-select</code> (<code>select</code>): variation to check. None. Filters the isolation
+report from <code>GET /api/models/{model_key}/variations/validate</code> (8200).</li>
+</ul>
+<h3 id="sec-37-health--version-drift">3.7 Health &amp; Version Drift</h3>
+<ul>
+<li><code>health-btn-safe-upgrade</code> (<code>button</code>): &quot;Safe Package Upgrade&quot;.
+<code>POST /api/update</code> (8000). Starts a background upgrade job and returns its
+<code>job_id</code>; 409 means an update or the pipeline is already running.</li>
+<li><code>health-btn-upgrade-dry-run</code> (<code>button</code>): &quot;Upgrade Dry Run&quot;. <code>POST /api/update</code>
+(8000) with <code>dry_run: true</code>. Lists planned upgrades without changing anything.</li>
+<li><code>health-btn-deep-clean</code> (<code>button</code>): &quot;Deep Cache Purge&quot;. <code>POST /api/clean</code>
+(8000). Removes <code>__pycache__</code>, build remnants and staging residues.</li>
+<li><code>health-btn-install-hooks</code> (<code>button</code>): &quot;Install Git Hooks&quot;.
+<code>POST /api/hooks/install</code> (8000). Installs the pre-commit hooks.</li>
+<li><code>health-btn-validate-ecosystem</code> (<code>button</code>): &quot;Run Ecosystem Validation&quot;.
+<code>POST /api/validate</code> (8000). Runs the validation gates for all projects.</li>
+</ul>
+<h3 id="sec-38-config--secrets">3.8 Config &amp; Secrets</h3>
+<ul>
+<li><code>config-editor-tab-manifests</code>, <code>config-editor-tab-secrets</code> (<code>button</code>,
+<code>role=&quot;tab&quot;</code>): &quot;Registry Manifests&quot; and &quot;Secrets &amp; Tokens Vault&quot;. None. Switch
+the panel <code>config-editor-panel</code>.</li>
+<li><code>manifest-select</code> (<code>select</code>): manifest file. <code>GET /api/manifests/registry</code>
+fills it; <code>GET /api/manifests/read</code> (8000) loads the chosen file.</li>
+<li><code>new-service-select</code> (<code>select</code>): &quot;Target Service&quot;. None. Service of a new
+credential.</li>
+<li><code>new-label-input</code> (<code>input type=text</code>): &quot;Label / Description&quot;. None.</li>
+<li><code>new-username-input</code> (<code>input type=text</code>): &quot;Username / Account ID&quot;. None.</li>
+<li><code>new-server-input</code> (<code>input type=text</code>): &quot;Broker Server&quot;. None. Shown for
+MetaTrader 5 credentials.</li>
+<li><code>new-secret-input</code> (<code>input type=password</code>): &quot;Secret Token / API Key /
+Password&quot;. None. Write-only; sent with <code>POST /api/secrets</code> (8000) on save.</li>
+<li><code>replace-secret-{secret_id}</code> (<code>input type=password</code>): replacement value.
+<code>POST /api/secrets</code> (8000) on save. Blank keeps the stored value; a value
+replaces it. The GUI never reads a stored value back: <code>GET /api/secrets</code>
+returns only <code>has_value</code> and the last 4 characters (<code>value_hint</code>).</li>
+</ul>
+<h3 id="sec-39-dialogs-status-regions--headings">3.9 Dialogs, Status Regions &amp; Headings</h3>
+<p>Dialogs and forms:</p>
+<ul>
+<li><code>bug-modal-dialog</code>, <code>annotator-dialog</code>, <code>pipeline-dialog-clean-install</code>:
+shared <code>Modal</code> dialogs (<code>role=&quot;dialog&quot;</code>, <code>aria-modal</code>, focus trap; Escape
+closes the innermost one). Each title has the ID <code>{dialog_id}-title</code>.</li>
+<li><code>bug-modal-form</code>: the Report Issue form.</li>
+<li><code>test-modal</code>, <code>cloud-modal</code>, <code>config-editor-modal</code>: the Test &amp; Diagnostic
+Orchestrator, Cloud Training and Config &amp; Secrets dialogs (shared <code>Modal</code>).</li>
+<li><code>test-modal-panel</code>, <code>cloud-modal-panel</code>, <code>config-editor-panel</code>: the tab
+panels (<code>role=&quot;tabpanel&quot;</code>) of the shared <code>Tabs</code> component, labelled by the
+active tab.</li>
+<li>Confirmation dialogs (<code>ConfirmDialog</code>, focus starts on Cancel; buttons
+<code>{dialog_id}-cancel</code> and <code>{dialog_id}-confirm</code>, text <code>{dialog_id}-desc</code>):
+<code>dash-dialog-stop-service</code> (Stop Service), <code>health-dialog-confirm</code> (Safe
+Package Upgrade and Deep Cache Purge), <code>config-dialog-delete-secret</code> (delete a
+credential), <code>config-dialog-discard-edits</code> (close or leave the manifest editor
+with unsaved edits) and <code>config-dialog-discard-manifest</code> (switch manifests
+with unsaved edits).</li>
+<li><code>pipeline-dialog-clean-install-desc</code>: lists what a clean install deletes.</li>
+</ul>
+<p>Status and error regions:</p>
+<ul>
+<li><code>bug-modal-error</code>, <code>bug-modal-email-error</code>, <code>bug-modal-module-error</code>,
+<code>bug-modal-description-error</code>, <code>bug-modal-other-error</code>,
+<code>bug-modal-screenshot-error</code>, <code>bug-modal-recording-error</code>, <code>annotator-error</code>:
+error messages (<code>role=&quot;alert&quot;</code>).</li>
+<li><code>bug-modal-description-counter</code>, <code>annotator-status</code>, <code>bug-modal-copy-status</code>:
+live status text.</li>
+<li><code>bug-modal-screenshot-{n}</code>: thumbnail <code>{n}</code> in the screenshot strip.</li>
+<li><code>bug-modal-recording-slot</code>: the recording field set; outside the desktop app
+it is disabled with the note &quot;Screen recording is available in the desktop
+app&quot;.</li>
+<li><code>bug-modal-recording-summary</code>: the attached clip (length, resolution, size);
+<code>bug-modal-recorder-error</code>: recorder failures (<code>role=&quot;alert&quot;</code>).</li>
+<li><code>recording-control-bar</code> (<code>role=&quot;region&quot;</code>, &quot;Screen recording&quot;),
+<code>recording-control-status</code>, <code>recording-control-time</code>: the floating bar shown
+while recording (state and elapsed time against the 60 s limit).</li>
+<li><code>bug-modal-success</code>, <code>bug-modal-archive-path</code>, <code>bug-modal-recipient</code>,
+<code>bug-modal-subject</code>, <code>bug-modal-note-mail</code>, <code>bug-modal-note-folder</code>: the
+success view (archive name and relative path, recipient, subject, and notes
+when the mail client or the reports folder did not open).</li>
+<li><code>test-modal-output-console</code>: test output (<code>pre</code>).</li>
+</ul>
+<p>Landmarks and headings:</p>
+<ul>
+<li><code>main-content</code> (main view), <code>telemetry-panel-anchor</code> (training telemetry).</li>
+<li><code>test-modal-title</code>, <code>config-editor-modal-title</code>, <code>cloud-modal-title</code>,
+<code>pipeline-panel-title</code>, <code>service-tiles-heading</code>,
+<code>service-card-title-{service_id}</code>, <code>proj-title-{project}</code>, <code>hw-card-title</code>,
+<code>hw-card-title-offline</code>, <code>health-offline-title</code>, <code>toolchain-prereq-title</code>,
+<code>drift-matrix-title</code>, <code>gui-dependencies-title</code>, <code>maintenance-actions-title</code>,
+<code>telemetry-stream-heading</code>, <code>telemetry-card-heading</code>.</li>
+</ul>
+<h3 id="sec-310-controls-without-an-id">3.10 Controls Without an ID</h3>
+<p>These controls work but have no <code>id</code> yet; tests find them by role and label: the
+&quot;Config &amp; Secrets&quot; and &quot;LemGendary AI Documentation Hub&quot; header buttons, the
+Start Service and Stop Service buttons on the sidecar tiles, the per-step run
+buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
+Reduction sub-tabs, the modernization
+queue buttons, the scale reduction dispatch button, the &quot;Ingest from Kaggle&quot;
+button and the telemetry console tabs.</p>
+<h3 id="sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
+<p>The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
+removed and 98 added.</p>
+<p>Renamed (old ID to current ID): <code>comp-input-custom-name</code> to <code>custom-name-input</code>,
+<code>comp-select-custom-task</code> to <code>custom-task-select</code>, <code>comp-select-custom-format</code>
+to <code>custom-format-select</code>, <code>comp-textarea-sources</code> to <code>custom-sources-area</code>,
+<code>comp-select-reduce-manifold</code> to <code>reduce-manifold-select</code>,
+<code>dash-btn-clean-install</code> to <code>dash-btn-run-pipeline</code> (non-destructive; the
+destructive run moved to <code>pipeline-btn-clean-confirm</code>), <code>train-card-btn-eval</code> to
+<code>train-btn-eval-{model_key}</code>, <code>train-card-btn-export</code> to
+<code>train-btn-export-{model_key}</code>, <code>train-card-btn-push</code> to
+<code>train-btn-pub-model-{model_key}</code>, <code>train-card-btn-pull</code> to
+<code>train-btn-pull-model-{model_key}</code>, <code>dash-nav-sidebar</code> to <code>tab-{tab_id}</code>.</p>
+<p>Removed because the feature no longer exists: <code>train-select-model</code>,
+<code>train-btn-launch</code> (training starts per card), <code>train-btn-unit-test-all</code> (moved
+into the Test &amp; Diagnostic Orchestrator), <code>comp-toggle-transcode</code>, the Kaggle
+sub-tab controls (<code>comp-tab-kaggle-download</code>, <code>comp-tab-kaggle-upload</code>,
+<code>comp-select-kaggle-registry</code>, <code>comp-select-kaggle-upload</code>,
+<code>comp-btn-kaggle-upload</code>, replaced by the card actions in section 3.5),
+<code>comp-slider-modernize-workers</code> and the pipeline stage list items
+<code>pipe-stage-*</code>.</p>
+<p>Removed because the control has no ID (section 3.10; <code>comp-mode-standard</code>,
+<code>comp-mode-custom</code>, <code>comp-input-kaggle-custom-ref</code> and <code>train-modal-tab-upload</code>
+exist again since v2.10.28, sections 3.5 and 3.6):
+<code>comp-btn-custom-compile</code>, <code>comp-subtab-catalog</code>,
+<code>comp-subtab-modernize</code>, <code>comp-subtab-reduce</code>, <code>comp-btn-scan-modernize-queue</code>,
+<code>comp-btn-batch-modernize-all</code>, <code>comp-btn-dispatch-reduce</code>,
+<code>comp-input-kaggle-custom-ref</code>, <code>comp-btn-kaggle-download</code>,
+<code>pipe-btn-run-step-1</code> to <code>pipe-btn-run-step-7</code>, <code>pipe-step-status-badge</code>,
+<code>pipe-step-progress-bar</code>, <code>health-table-drift</code>, <code>drift-badge-sync</code>,
+<code>drift-badge-alert</code>, <code>telem-log-stream</code>, <code>dash-card-hardware</code>,
+<code>dash-badge-sidecar-status</code>, <code>proj-card-training</code>, <code>proj-btn-reconcile-datasets</code>
+and <code>train-modal-tab-upload</code>.</p>
+</section>
 
-            <section id="section-dictionary">
-                <h2>3. Master Interactive Controls Dictionary</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Control ID</th>
-                                <th>UI Component / Label</th>
-                                <th>Element Type</th>
-                                <th>Bound Sidecar Endpoint</th>
-                                <th>Expected Behavior</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>dash-nav-sidebar</code></td>
-                                <td>Sidebar Navigation Container</td>
-                                <td><code>&lt;nav&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Houses top-level route switches.</td>
-                            </tr>
-                            <tr>
-                                <td><code>header-btn-test-modal</code></td>
-                                <td>&quot;Run Tests&quot;</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Opens the Test &amp; Diagnostic Orchestrator modal for fleet smoke tests and unit test suites.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-tab-fleet</code></td>
-                                <td>&quot;Fleet 1-Epoch Smoke Test&quot; Tab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/unit-test-all</code> (8200)</td>
-                                <td>Dispatches 1-epoch diagnostic smoke test pass across all 23 neural architectures.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-tab-training</code></td>
-                                <td>&quot;Training Suite Unit Tests&quot; Tab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/unit-test-run</code> (8200)</td>
-                                <td>Executes in-process Training Suite unit tests.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-tab-dataset</code></td>
-                                <td>&quot;Dataset Compiler Tests&quot; Tab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/llm/test-suite</code> (8100)</td>
-                                <td>Executes in-process Dataset Compiler unit test suite.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-btn-run-fleet</code></td>
-                                <td>&quot;Run Fleet Diagnostic (All 23 Models)&quot;</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/unit-test-all</code> (8200)</td>
-                                <td>Initiates fleet diagnostic run across all registered models.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-btn-run-training-unit</code></td>
-                                <td>&quot;Run Training Unit Tests&quot;</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/unit-test-run</code> (8200)</td>
-                                <td>Runs Training Suite unit test discovery sweep.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-btn-run-dataset-unit</code></td>
-                                <td>&quot;Run Dataset Compiler Tests&quot;</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/llm/test-suite</code> (8100)</td>
-                                <td>Runs Dataset Compiler unit test discovery sweep.</td>
-                            </tr>
-                            <tr>
-                                <td><code>test-modal-output-console</code></td>
-                                <td>Test Output Console</td>
-                                <td><code>&lt;pre&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Displays live execution logs and test summary outcomes.</td>
-                            </tr>
-                            <tr>
-                                <td><code>dash-btn-refresh-audit</code></td>
-                                <td>Refresh Audit</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>GET /api/health</code> (8000)</td>
-                                <td>Triggers asynchronous system probe and updates all status cards.</td>
-                            </tr>
-                            <tr>
-                                <td><code>dash-badge-sidecar-status</code></td>
-                                <td>Connection Status Indicator</td>
-                                <td><code>&lt;span&gt;</code></td>
-                                <td><code>WS /ws/telemetry</code> (8000)</td>
-                                <td>Displays emerald glow for online or rose alert for offline.</td>
-                            </tr>
-                            <tr>
-                                <td><code>dash-card-hardware</code></td>
-                                <td>System &amp; Hardware Architecture</td>
-                                <td><code>&lt;div&gt;</code></td>
-                                <td><code>GET /api/hardware</code> (8000)</td>
-                                <td>Renders CPU core counts, total RAM, and detected GPU adapters.</td>
-                            </tr>
-                            <tr>
-                                <td><code>dash-btn-clean-install</code></td>
-                                <td>Execute Full Clean Install Pipeline</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates the 7-stage deterministic provisioning sequence.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-stage-1-hardware</code></td>
-                                <td>Stage 1: Hardware Discovery</td>
-                                <td><code>&lt;li&gt;</code></td>
-                                <td><code>GET /api/hardware</code> (8000)</td>
-                                <td>Queries DXGI and NVML interfaces for compute acceleration.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-stage-4-reqs</code></td>
-                                <td>Stage 4: Requirements Sync</td>
-                                <td><code>&lt;li&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Copies requirements manifests and executes pip install.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-stage-6-verify</code></td>
-                                <td>Stage 6: Codebase Verification</td>
-                                <td><code>&lt;li&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Compiles scripts via py_compile and audits zero-emoji rules.</td>
-                            </tr>
-                            <tr>
-                                <td><code>proj-card-training</code></td>
-                                <td>lemgendary-training-suite Card</td>
-                                <td><code>&lt;div&gt;</code></td>
-                                <td><code>GET /api/projects</code> (8000)</td>
-                                <td>Details virtual environment path, packages, and health status.</td>
-                            </tr>
-                            <tr>
-                                <td><code>proj-btn-reconcile-datasets</code></td>
-                                <td>Reconcile lemgendary-datasets</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/services/start-all</code> (8000)</td>
-                                <td>Reconciles dataset compiler dependencies against manifest.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-table-drift</code></td>
-                                <td>Cross-Project Version Drift Table</td>
-                                <td><code>&lt;table&gt;</code></td>
-                                <td><code>GET /api/health/drift</code> (8000)</td>
-                                <td>Renders comparative grid of shared dependencies.</td>
-                            </tr>
-                            <tr>
-                                <td><code>drift-badge-sync</code></td>
-                                <td>[SYNC] Status Badge</td>
-                                <td><code>&lt;span&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Indicates identical package versions across all active repositories.</td>
-                            </tr>
-                            <tr>
-                                <td><code>drift-badge-alert</code></td>
-                                <td>[DRIFT] Alert Badge</td>
-                                <td><code>&lt;span&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Highlights version discrepancies across projects.</td>
-                            </tr>
-                            <tr>
-                                <td><code>telem-log-stream</code></td>
-                                <td>Monospace Telemetry Terminal</td>
-                                <td><code>&lt;pre&gt;</code></td>
-                                <td><code>WS /ws/log</code> (8000)</td>
-                                <td>Renders high-velocity log stream from active sub-processes.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-manifold</code></td>
-                                <td>Manifold Target Selector</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td><code>GET /api/gui/datasets/with-stats</code> (8100)</td>
-                                <td>Populates list of 22 canonical training manifolds.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-toggle-transcode</code></td>
-                                <td>Enable WebP Transcoding</td>
-                                <td><code>&lt;input type=checkbox&gt;</code></td>
-                                <td><code>POST /api/gui/quick-compile</code> (8100)</td>
-                                <td>Activates <i>q</i>=92 WebP image and lossless mask encoding.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-compile</code></td>
-                                <td>Compile Manifold</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/gui/quick-compile</code> (8100)</td>
-                                <td>Dispatches dataset compilation job to the dataset sidecar.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-mode-standard</code></td>
-                                <td>Standard Manifold Compilation</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Switches compilation interface to standard preset mode.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-mode-custom</code></td>
-                                <td>Custom Multi-Source Compilation</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Switches compilation interface to custom multi-source mode.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-input-custom-name</code></td>
-                                <td>Custom Manifold Name</td>
-                                <td><code>&lt;input type=text&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Specifies unique identifier for custom dataset synthesis.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-custom-task</code></td>
-                                <td>Domain Task</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Selects target ML domain (restoration, detection, segmentation).</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-custom-format</code></td>
-                                <td>Container Architecture</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Selects target format (WebDataset, Parquet, MDS, LitData).</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-textarea-sources</code></td>
-                                <td>Source Repositories &amp; Dataset URLs</td>
-                                <td><code>&lt;textarea&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Multi-line input for Kaggle, HF, GD, GH repositories.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-custom-compile</code></td>
-                                <td>Compile Custom Dataset</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/gui/custom-compile</code> (8100)</td>
-                                <td>Dispatches multi-source aggregation and sharding job.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-tab-kaggle-download</code></td>
-                                <td>Download from Kaggle Subtab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Activates Kaggle cloud download controls.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-tab-kaggle-upload</code></td>
-                                <td>Upload to Kaggle Subtab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Activates Kaggle manifold upload controls.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-kaggle-registry</code></td>
-                                <td>Select Registry Dataset</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td><code>GET /api/kaggle/registry-datasets</code> (8100)</td>
-                                <td>Lists 20 canonical Kaggle-bound production manifolds.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-input-kaggle-custom-ref</code></td>
-                                <td>Kaggle Dataset Link or Slug</td>
-                                <td><code>&lt;input type=text&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Input for direct Kaggle URLs or owner/dataset references.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-kaggle-download</code></td>
-                                <td>Download from Kaggle</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/kaggle/download</code> (8100)</td>
-                                <td>Queues download and extraction of Kaggle datasets.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-kaggle-upload</code></td>
-                                <td>Local Compiled Manifold</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Selects compiled local manifold for packaging.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-kaggle-upload</code></td>
-                                <td>Upload to Kaggle</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/kaggle/upload</code> (8100)</td>
-                                <td>Packages and streams local manifold to Kaggle.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-update-all-kaggle</code></td>
-                                <td>Update All Kaggle Metadata</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/kaggle/update-metadata</code> (8100)</td>
-                                <td>Bulk pushes metadata to Kaggle for all 20 canonical manifolds.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-regen-manifolds</code></td>
-                                <td>Regenerate Manifolds Index</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/modernize/regenerate-manifolds</code> (8100)</td>
-                                <td>Regenerates master manifolds.json and dataset-metadata.json files.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-subtab-catalog</code></td>
-                                <td>Manifolds Catalog Subtab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Shows the 21 production manifold cards with WebP/PNG breakdown.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-subtab-modernize</code></td>
-                                <td>Modernization Queue &amp; Transcode Subtab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Activates legacy format scan and batch WebP transcode queue.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-subtab-reduce</code></td>
-                                <td>Scale Reduction (Downsample) Subtab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Activates spatial downsample and dataset scaling derivation view.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-scan-modernize-queue</code></td>
-                                <td>Scan Queue</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>GET /api/modernize/queue</code> (8100)</td>
-                                <td>Scans local datasets and builds transcode modernization queue.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-batch-modernize-all</code></td>
-                                <td>Batch Modernize All</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/modernize/run</code> (8100)</td>
-                                <td>Dispatches batch modernization job across queued manifolds.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-slider-modernize-workers</code></td>
-                                <td>Parallel Workers Slider</td>
-                                <td><code>&lt;input type=range&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Configures worker thread count for parallel WebP transcoding.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-select-reduce-manifold</code></td>
-                                <td>Target Manifold Selector</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Chooses dataset manifold for scale reduction / downsampling.</td>
-                            </tr>
-                            <tr>
-                                <td><code>comp-btn-dispatch-reduce</code></td>
-                                <td>Dispatch Reduction</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/modernize/reduce</code> (8100)</td>
-                                <td>Initiates downsampling derivation job for selected manifold.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-select-model</code></td>
-                                <td>Model Architecture Dropdown</td>
-                                <td><code>&lt;select&gt;</code></td>
-                                <td><code>GET /api/gui/models/with-stats</code> (8200)</td>
-                                <td>Selects target backbone (NAFNet, MIRNet, MPRNet, NIMA, etc.).</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-btn-launch</code></td>
-                                <td>Launch Master Training</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/gui/quick-train</code> (8200)</td>
-                                <td>Dispatches training worker with spatial resolution ladder.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-btn-unit-test-all</code></td>
-                                <td>Run 1-Epoch Diagnostic (All 23 Models)</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/unit-test-all</code> (8200)</td>
-                                <td>Dispatches 1-epoch diagnostic smoke test across all models.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-btn-generate-all-notebooks</code></td>
-                                <td>Generate All Notebooks</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/notebooks/generate-all</code> (8200)</td>
-                                <td>Batch generates notebooks across all 23 registered architectures.</td>
-                            </tr>
-                            <tr>
-                                <td><code>training-toolbar-push-all-models-btn</code></td>
-                                <td>Push All Models to Kaggle</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/kaggle/push-all</code> (8200)</td>
-                                <td>Stages and publishes all registered model checkpoints, variations, and metadata to Kaggle Models Hub.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-card-btn-push</code></td>
-                                <td>Push Model</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/kaggle/push</code> (8200)</td>
-                                <td>Stages isolated variations and publishes model weights and YAML metadata to Kaggle Models Hub.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-card-btn-pull</code></td>
-                                <td>Pull Model</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/kaggle/pull</code> (8200)</td>
-                                <td>Downloads 4 canonical isolated variations from Kaggle Models Hub into local model directories.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-btn-refresh-models</code></td>
-                                <td>Refresh Models</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>GET /api/gui/models/with-stats</code> (8200)</td>
-                                <td>Polls sidecar to synchronize model weights status and metrics.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-card-btn-eval</code></td>
-                                <td>Evaluate Model</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/evaluate</code> (8200)</td>
-                                <td>Evaluates checkpoint against validation benchmark criteria.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-card-btn-export</code></td>
-                                <td>Export Binaries</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/training/export</code> (8200)</td>
-                                <td>Compiles model to ONNX, PyTorch, and WebGPU binary formats.</td>
-                            </tr>
-                            <tr>
-                                <td><code>train-modal-tab-upload</code></td>
-                                <td>Upload Checkpoints Tab</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Stages and uploads local model checkpoints directly to Kaggle Models.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-btn-safe-upgrade</code></td>
-                                <td>Safe Package Upgrade</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/update</code> (8000)</td>
-                                <td>Safely upgrades outdated packages with rollback validation.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-btn-upgrade-dry-run</code></td>
-                                <td>Upgrade Dry Run</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/update</code> (8000)</td>
-                                <td>Previews dependency upgrade plan without altering disk state.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-btn-deep-clean</code></td>
-                                <td>Deep Cache Purge</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/clean</code> (8000)</td>
-                                <td>Purges build caches, __pycache__, and staging residues.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-btn-install-hooks</code></td>
-                                <td>Install Git Hooks</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/hooks/install</code> (8000)</td>
-                                <td>Installs or repairs standardized pre-commit validation hooks.</td>
-                            </tr>
-                            <tr>
-                                <td><code>health-btn-validate-ecosystem</code></td>
-                                <td>Run Ecosystem Validation</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/validate</code> (8000)</td>
-                                <td>Runs full multi-gate ecosystem code validation suite.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-step-progress-bar</code></td>
-                                <td>Step Progress Bar</td>
-                                <td><code>&lt;div role=progressbar&gt;</code></td>
-                                <td><code>WS /ws/log</code> (8000)</td>
-                                <td>Radix UI animated progress bar mounted by TelemetryProgressTracker.tsx during active step execution; unmounts upon receipt of any terminal event (success, warning, error).</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-step-status-badge</code></td>
-                                <td>Step Status Badge</td>
-                                <td><code>&lt;span&gt;</code></td>
-                                <td>&mdash;</td>
-                                <td>Displays RUNNING, PASSED, WARNING, or FAILED state; guarded by isLatestCompleted to prevent false RUNNING display after step completion.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-1</code></td>
-                                <td>Run Stage 1</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 1 (Hardware Discovery) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-2</code></td>
-                                <td>Run Stage 2</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 2 (Virtual Environment Setup) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-3</code></td>
-                                <td>Run Stage 3</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 3 (Requirements Sync) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-4</code></td>
-                                <td>Run Stage 4</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 4 (Package Installation) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-5</code></td>
-                                <td>Run Stage 5</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 5 (Dependency Audit) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-6</code></td>
-                                <td>Run Stage 6</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 6 (Codebase Verification) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-btn-run-step-7</code></td>
-                                <td>Run Stage 7</td>
-                                <td><code>&lt;button&gt;</code></td>
-                                <td><code>POST /api/pipeline/run</code> (8000)</td>
-                                <td>Initiates Stage 7 (Health Matrix) as an isolated single-step run.</td>
-                            </tr>
-                            <tr>
-                                <td><code>pipe-stage-7-health</code></td>
-                                <td>Stage 7: Health Matrix</td>
-                                <td><code>&lt;li&gt;</code></td>
-                                <td><code>GET /api/health</code> (8000)</td>
-                                <td>Runs ecosystem-wide health audit across all 5 projects and reports overall_healthy.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+<section id="sec-4-end-to-end-operational-workflows">
+<h2>4. End-to-End Operational Workflows</h2>
+<h3 id="sec-41-workflow-1-environment-provisioning--health-audit">4.1 Workflow 1: Environment Provisioning &amp; Health Audit</h3>
+<ol>
+<li>The operator starts the LemGendary AI Studio GUI. The sidebar dots and the
+sidecar tiles show which sidecars answer their liveness probe
+(<code>GET /api/ping</code> on 8000, <code>GET /api/health</code> on 8100 and 8200).</li>
+<li>The operator clicks <code>dash-btn-run-pipeline</code>. The GUI sends
+<code>POST /api/pipeline/run</code> (8000) with <code>clean: false</code>.</li>
+<li>Progress arrives over the Environment Manager log socket (<code>WS /ws/log</code>,
+8000). Each step card shows its status and a progress bar while it runs.</li>
+<li>On a terminal event (<code>success</code>, <code>warning</code> or <code>error</code>) the GUI reloads its
+data and, after 1,500 ms, reads <code>GET /api/pipeline/status</code> (8000) once more
+to catch late messages.</li>
+<li>The Health view shows the result of <code>GET /api/health</code> (8000), including the
+cross-project version drift matrix.</li>
+</ol>
+<p>For a clean reinstall the operator clicks <code>pipeline-btn-clean-install</code>, reads
+the list of what will be deleted and confirms with <code>pipeline-btn-clean-confirm</code>,
+which sends <code>clean: true</code>.</p>
+<h3 id="sec-411-websocket-event-lifecycle-recovery">4.1.1 WebSocket Event Lifecycle Recovery</h3>
+<p>The GUI reacts to these terminal <code>status</code> values from the log stream:</p>
+<ul>
+<li><code>success</code>: the pipeline is marked as finished and the data is reloaded; the
+step card shows <code>PASSED</code>.</li>
+<li><code>warning</code>: the same, and the step card shows <code>WARNING</code>.</li>
+<li><code>error</code>: the pipeline is marked as finished and the error is shown; the step
+card shows <code>FAILED</code>.</li>
+</ul>
+<p>In all three cases the progress bar is removed and the 1,500 ms status read from
+step 4 runs.</p>
+<h3 id="sec-42-workflow-2-manifold-compilation">4.2 Workflow 2: Manifold Compilation</h3>
+<ol>
+<li>The operator opens the Dataset Compiler view (<code>tab-datasets</code>).</li>
+<li>The operator picks a manifold in <code>comp-select-manifold</code> and a preset in
+<code>preset-select</code> (or keeps &quot;Server default&quot;).</li>
+<li>The operator clicks <code>comp-btn-compile</code>. The GUI sends
+<code>POST /api/gui/quick-compile</code> (8100) and shows the returned job <code>id</code>.</li>
+<li>Job progress arrives over the Dataset Compiler event socket
+(<code>WS /api/ws/events</code>, 8100) and appears in the shared log panel.</li>
+</ol>
+<h3 id="sec-43-workflow-3-reporting-an-issue">4.3 Workflow 3: Reporting an Issue</h3>
+<ol>
+<li>The operator clicks <code>header-btn-report-issue</code>. The module is preselected from
+the current tab.</li>
+<li>The operator enters an email and a description of at least 50 characters and
+keeps or clears <code>bug-modal-telemetry</code>.</li>
+<li>Optionally the operator clicks <code>bug-modal-btn-add-screenshot</code>, draws a
+highlight in <code>annotator-canvas</code> and clicks <code>annotator-btn-save</code> (up to 5
+screenshots). In the desktop app the operator can also click
+<code>bug-modal-btn-start-recording</code>, reproduce the problem and click
+<code>recording-btn-stop</code> (at most 60 s).</li>
+<li>The operator clicks <code>bug-modal-btn-submit</code>. The Environment Manager
+(<code>POST /api/bug-report</code>, 8000) saves a ZIP report in the <code>bug-reports</code> folder
+of the workspace, opens the mail client with recipient and subject filled in
+and opens the folder.</li>
+<li>The success view shows the archive path; the operator attaches the ZIP to the
+mail. If the mail client did not open, <code>bug-modal-btn-copy-address</code> and
+<code>bug-modal-btn-copy-subject</code> copy the details.</li>
+</ol>
+</section>
 
-            <section id="section-workflows">
-                <h2>4. End-to-End Operational Workflows</h2>
-                <h3>4.1 Workflow 1: Environment Provisioning &amp; Health Audit</h3>
-                <ol>
-                    <li>Operator launches LemGendary AI Studio Desktop GUI.</li>
-                    <li>Operator observes <code>dash-badge-sidecar-status</code> confirming emerald connection state.</li>
-                    <li>Operator clicks <code>dash-btn-clean-install</code>.</li>
-                    <li>The GUI displays progressive completion across badges <code>pipe-stage-1-hardware</code> through <code>pipe-stage-7-health</code>, with <code>pipe-step-progress-bar</code> active on each running step.</li>
-                    <li>When the pipeline emits a terminal event (<code>success</code>, <code>warning</code>, or <code>error</code>), <code>App.tsx</code> fires <code>loadData()</code> immediately and a 1,500 ms safety poll against <code>/api/pipeline/status</code> resolves any race conditions. <code>pipe-step-status-badge</code> transitions to <code>PASSED</code> or <code>WARNING</code>.</li>
-                    <li>Upon completion, <code>health-table-drift</code> updates, confirming 100% synchronized <code>[SYNC]</code> badges.</li>
-                </ol>
+<section id="sec-5-operational-boundaries--platform-availability">
+<h2>5. Operational Boundaries &amp; Platform Availability</h2>
+<p>The desktop app runs on Windows, Linux and macOS. What each platform can do
+depends on the sidecars and the hardware:</p>
+<ul>
+<li><strong>Sidecar REST services</strong>: all platforms.</li>
+<li><strong>Run Pipeline and Clean Install</strong>: full support on Windows and Linux;
+restricted on Windows with DirectML only and on macOS.</li>
+<li><strong>WebP transcoding</strong>: multi-threaded on Windows and Linux; single-threaded on
+the CPU fallback.</li>
+<li><strong>Hardlink deduplication</strong>: NTFS and POSIX file systems (<code>os.link</code>); not on
+FAT or exFAT.</li>
+<li><strong>Model training with FP16 or BF16</strong>: CUDA GPUs on Windows and Linux; not on
+DirectML or CPU only.</li>
+<li><strong>Spatial ladder scaling</strong>: full speed on CUDA GPUs; slower on DirectML; not
+practical on CPU.</li>
+<li><strong>Screen recording in bug reports</strong>: desktop app on Windows (Windows
+Graphics Capture, app window only); macOS and Linux report &quot;not supported on
+this platform yet&quot;; not available in the browser build.</li>
+</ul>
+</section>
 
-                <h3>4.1.1 WebSocket Event Lifecycle Recovery</h3>
-                <p>The GUI intercepts the following terminal status values from the sidecar WebSocket stream and takes the corresponding actions:</p>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>WebSocket <code>status</code> Value</th>
-                                <th>GUI Transition</th>
-                                <th>Controls Affected</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>success</code></td>
-                                <td><code>isRunningPipeline</code> set to <code>false</code>; <code>loadData()</code> called</td>
-                                <td><code>pipe-step-status-badge</code> (<code>PASSED</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
-                            </tr>
-                            <tr>
-                                <td><code>warning</code></td>
-                                <td><code>isRunningPipeline</code> set to <code>false</code>; <code>loadData()</code> called</td>
-                                <td><code>pipe-step-status-badge</code> (<code>WARNING</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
-                            </tr>
-                            <tr>
-                                <td><code>error</code></td>
-                                <td><code>isRunningPipeline</code> set to <code>false</code>; error state surfaced</td>
-                                <td><code>pipe-step-status-badge</code> (<code>FAILED</code>), <code>pipe-step-progress-bar</code> (unmounted)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p>A 1,500 ms safety polling reconciliation via <code>GET /api/pipeline/status</code> fires after every terminal event to handle late-arriving WebSocket messages and ensure UI state is always synchronized with backend reality.</p>
-
-                <h3>4.2 Workflow 2: Manifold Compilation with WebP Transcoding</h3>
-                <ol>
-                    <li>Operator navigates to Dataset Compiler View (<code>comp-nav-tab</code>).</li>
-                    <li>Operator selects <code>comp-select-manifold</code> (e.g. <code>nima_aesthetic</code>).</li>
-                    <li>Operator verifies <code>comp-toggle-transcode</code> is enabled (WebP <i>q</i>=92).</li>
-                    <li>Operator clicks <code>comp-btn-compile</code>.</li>
-                    <li>The GUI establishes a live WebSocket connection to <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>, rendering real-time image conversion velocity (img/sec) and ETA countdowns directly in <code>telem-log-stream</code>.</li>
-                </ol>
-            </section>
-
-            <section id="section-boundaries">
-                <h2>5. Operational Boundaries &amp; Platform Availability</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Capability</th>
-                                <th>Windows 10/11 (CUDA 12+)</th>
-                                <th>Linux (CUDA 12+)</th>
-                                <th>Windows (DirectML)</th>
-                                <th>macOS / CPU Fallback</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Sidecar REST Daemon</strong></td>
-                                <td>Supported</td>
-                                <td>Supported</td>
-                                <td>Supported</td>
-                                <td>Supported</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Clean Install Pipeline</strong></td>
-                                <td>Full Support</td>
-                                <td>Full Support</td>
-                                <td>Restricted (DirectX)</td>
-                                <td>Restricted</td>
-                            </tr>
-                            <tr>
-                                <td><strong>WebP Transcoding</strong></td>
-                                <td><i>O(1)</i> Multi-Threaded</td>
-                                <td><i>O(1)</i> Multi-Threaded</td>
-                                <td>Multi-Threaded</td>
-                                <td>Single-Threaded</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Hardlink Deduplication</strong></td>
-                                <td>Supported (NTFS <code>os.link</code>)</td>
-                                <td>Supported (POSIX <code>os.link</code>)</td>
-                                <td>Supported (NTFS)</td>
-                                <td>Unsupported (FAT/ExFAT)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Model Training (FP16/BF16)</strong></td>
-                                <td>Full GPU Acceleration</td>
-                                <td>Full GPU Acceleration</td>
-                                <td>Unsupported</td>
-                                <td>Unsupported (CPU Only)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Spatial Ladder Scaling</strong></td>
-                                <td>Full GPU Tensor Core</td>
-                                <td>Full GPU Tensor Core</td>
-                                <td>Degraded Throughput</td>
-                                <td>Blocked (Excessive Latency)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/GUI_CONTROL_REGISTRY.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

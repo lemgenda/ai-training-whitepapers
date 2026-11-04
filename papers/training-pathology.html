@@ -2,1375 +2,1548 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuclear Stability: Training Pathology Master Guide - LemGendary AI</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuclear Stability: AI Training Pathology Master Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="training-pathology.html" class="active">Training Pathology</a>
-                <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="manuals-hub.html">Manuals Hub</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+<a href="training-suite-master.html" class="tab-link">Training Suite</a>
+<a href="training-pathology.html" class="tab-link active">Training Pathology</a>
+<a href="general-ai-training-knowledge.html" class="tab-link">General AI Training</a>
+<a href="ai-helper-troubleshooting-knowledge.html" class="tab-link">AI Helper Troubleshooting</a>
+<a href="manuals-hub.html" class="tab-link">Manuals Hub</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>Nuclear Stability: AI Training Pathology Master Guide</h1>
+<p class="subtitle">Category 02 | Pathology Companion to the LemGendary Model Training Suite</p>
+<div class="meta">
+<span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.107-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Paper Revision</strong>: 1.6.0 - SWA and FID Re-evaluation Sync (2026-11-03)</span>
+<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-<li><a href="ai-helper-troubleshooting-knowledge.html">AI Helper Troubleshooting Scenarios</a></li>
-        <li><a href="../index.html" class="toc-link-accent">← Back to Index</a></li>
-                <li><a href="#section-1">1. Abstract</a></li>
-                <li><a href="#section-2">2. The Diagnostic Master Table</a></li>
-                <li><a href="#section-3">3. The "Fast Audit" Framework</a>
-                </li>
-                <li><a href="#section-5">4. Modern 2026 Pathologies</a>
-                    <ul class="sub-item">
-                        <li><a href="#mixed-precision">Mixed Precision Underflow (FP16/FP8)</a></li>
-                        <li><a href="#momentum-decay">Optimizer Momentum Decay</a></li>
-                        <li><a href="#governor-loop">The "Governor Loop" (Artificial Plateau Exploit)</a></li>
-                        <li><a href="#polarity-inversion">Live Polarity Inversion (Negative Manifold)</a></li>
-                        <li><a href="#dataparallel-misalignment">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)</a></li>
-                        <li><a href="#microbatch-rank-starvation">Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)</a></li>
-                        <li><a href="#spatial-pooling-dilution">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)</a></li>
-                        <li><a href="#silent-epoch-limit">Silent Epoch Limit Termination (The Raw Exit Pathology)</a></li>
-                        <li><a href="#vram-fragmentation">The Persistent Worker VRAM Fragmentation (Kaggle OOM)</a></li>
-                        <li><a href="#catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</a></li>
-                        <li><a href="#metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</a></li>
-                        <li><a href="#financial-pip-mismatch">Multi-Asset Pip Magnitude Mismatch &amp; Temperature Sharpening Collapse</a></li>
-                        <li><a href="#windows-multiprocessing">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing</a></li>
-                        <li><a href="#checkpoint-resumption-desync">Checkpoint Resumption Fraction Desynchronization</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-7">5. High-Fidelity Strategy &amp; Historical Evolution Taxonomy</a>
-                    <ul class="sub-item">
-                        <li><a href="#blur-pathology">The "Low-Resolution Blur" Pathology</a></li>
-                        <li><a href="#sentinel-drift">Memory-Sentinel Drift</a></li>
-                        <li><a href="#atomic-audit">Atomic Hardware Re-Auditing</a></li>
-                        <li><a href="#serial-shield">The Serial Recovery Shield (v17.2)</a></li>
-                        <li><a href="#iron-clamp">The Sub-Nuclear 4GB Lockdown (v22.0)</a></li>
-                        <li><a href="#false-positive-spike">The False-Positive Spike (Absolute Energy Floor)</a></li>
-                        <li><a href="#premature-sota">Premature SOTA Termination</a></li>
-                        <li><a href="#manifold-fragility">Manifold Fragility (Glass Manifold Effect)</a></li>
-                        <li><a href="#thermal-glass-manifold-collapse">Thermal Glass Manifold Collapse (The Stress Loop)</a></li>
-                        <li><a href="#csv-lie">The "CSV Lie" Pathology</a></li>
-                        <li><a href="#infinite-cooling">The Infinite Cooling Loop</a></li>
-                        <li><a href="#permanent-stress">The Permanent Stress Pathology</a></li>
-                        <li><a href="#max-stress-freeze">The Max Stress LR Freeze (v16 Bug)</a></li>
-                        <li><a href="#amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</a></li>
-                        <li><a href="#onecyclelr-desynchronization">OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)</a></li>
-                        <li><a href="#premature-spatial-retreat">Premature Spatial Retreat (The Over-Aggressive Recoil)</a></li>
-                        <li><a href="#static-loss-hyperparameter-saturation">Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)</a></li>
-                        <li><a href="#false-alarm-jolt-collapse">The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)</a></li>
-                        <li><a href="#cpu-validation-thrashing">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</a></li>
-                        <li><a href="#checkpoint-fraction-desync">Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)</a></li>
-                    </ul>
-                </li>
-                <li><a href="#section-9">6. Best Practices Checklist</a>
-                </li>
-                <li><a href="#section-11">7. Multi-Model Pipeline Strategy</a>
-                </li>
-                <li><a href="#section-13">8. Mapping Pathologies to Pipeline Stages</a>
-                </li>
-                <li><a href="#section-15">9. Nuclear Audit: Optimization Checklist</a>
-                </li>
-                <li><a href="#section-17">10. SOTA Suite Optimization Task List</a>
-                </li>
-                <li><a href="#section-19">11. SOTA Transformation: Before vs. After</a>
-                </li>
-                <li><a href="#conclusion">12. Conclusion: The Indestructible Paradigm</a>
-                </li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-2-the-diagnostic-master-table">2. The Diagnostic Master Table</a></li>
+<li><a href="#sec-3-the-fast-audit-framework">3. The &quot;Fast Audit&quot; Framework</a>
+<ul class="sub-item">
+<li><a href="#sec-31-gradient-global-norm">3.1. Gradient Global Norm</a></li>
+<li><a href="#sec-32-activation-sparsity">3.2. Activation Sparsity</a></li>
+<li><a href="#sec-33-weight-to-update-ratio">3.3. Weight-to-Update Ratio</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-modern-2026-pathologies">4. Modern 2026 Pathologies</a>
+<ul class="sub-item">
+<li><a href="#mixed-precision-underflow-fp16fp8">Mixed Precision Underflow (FP16/FP8)</a></li>
+<li><a href="#optimizer-momentum-decay">Optimizer Momentum Decay</a></li>
+<li><a href="#the-governor-loop-artificial-plateau-exploit">The &quot;Governor Loop&quot; (Artificial Plateau
+Exploit)</a></li>
+<li><a href="#live-polarity-inversion-negative-manifold">Live Polarity Inversion (Negative
+Manifold)</a></li>
+<li><a href="#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce
+Fault)</a></li>
+<li><a href="#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck">Micro-Batch Pairwise Ranking Starvation (The Single-Pair
+Bottleneck)</a></li>
+<li><a href="#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing
+Defect)</a></li>
+<li><a href="#silent-epoch-limit-termination-the-raw-exit-pathology">Silent Epoch Limit Termination (The Raw Exit
+Pathology)</a></li>
+<li><a href="#the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom">The Persistent Worker VRAM Fragmentation (Kaggle T4/P100
+OOM)</a></li>
+<li><a href="#the-catastrophic-model-wipe-unsafe-folder-initialization">The Catastrophic Model Wipe (Unsafe Folder
+Initialization)</a></li>
+<li><a href="#metric-asymmetry-the-manifold-plateau">Metric Asymmetry (The Manifold
+Plateau)</a></li>
+<li><a href="#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial">Multi-Asset Pip Mismatch &amp; Temperature Sharpening Collapse
+(Financial)</a></li>
+<li><a href="#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing (Pathology
+24)</a></li>
+<li><a href="#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25">Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology
+25)</a></li>
+<li><a href="#the-unbounded-horizon-open-ended-epoch-loop-pathology-26">The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
+26)</a></li>
+<li><a href="#fabricated-metric-history-fid-rescaling-pathology-27">Fabricated Metric History (FID Rescaling) (Pathology
+27)</a></li>
+<li><a href="#variable-length-ragged-tensor-validation-collation-collapse-pathology-28">Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
+28)</a></li>
+<li><a href="#cpu-bound-execution--silent-accelerator-starvation-pathology-29">CPU-Bound Execution &amp; Silent Accelerator Starvation (Pathology
+29)</a></li>
+<li><a href="#vision-curriculum-cross-domain-contamination-pathology-30">Vision-Curriculum Cross-Domain Contamination (Pathology
+30)</a></li>
+<li><a href="#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31">Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
+31)</a></li>
+<li><a href="#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32">Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
+32)</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-high-fidelity-strategy--historical-evolution-taxonomy">5. High-Fidelity Strategy &amp; Historical Evolution
+Taxonomy</a>
+<ul class="sub-item">
+<li><a href="#the-low-resolution-blur-pathology-milestone-v1628">The &quot;Low-Resolution Blur&quot; Pathology (Milestone
+v16.2.8)</a></li>
+<li><a href="#memory-sentinel-drift">Memory-Sentinel Drift</a></li>
+<li><a href="#atomic-hardware-re-auditing">Atomic Hardware Re-Auditing</a></li>
+<li><a href="#the-serial-recovery-shield-prototype-v172">The Serial Recovery Shield (Prototype
+v17.2)</a></li>
+<li><a href="#the-sub-nuclear-4gb-lockdown-design-study-v220">The Sub-Nuclear 4GB Lockdown (Design Study
+v22.0)</a></li>
+<li><a href="#the-false-positive-spike-absolute-energy-floor">The False-Positive Spike (Absolute Energy
+Floor)</a></li>
+<li><a href="#premature-sota-termination-ladder-guard-v180">Premature SOTA Termination (Ladder Guard
+v18.0)</a></li>
+<li><a href="#manifold-fragility-glass-manifold-effect">Manifold Fragility (Glass Manifold
+Effect)</a></li>
+<li><a href="#thermal-glass-manifold-collapse-the-stress-loop">Thermal Glass Manifold Collapse (The Stress
+Loop)</a></li>
+<li><a href="#the-csv-lie-pathology">The &quot;CSV Lie&quot; Pathology</a></li>
+<li><a href="#the-infinite-cooling-loop">The Infinite Cooling Loop</a></li>
+<li><a href="#the-permanent-stress-pathology">The Permanent Stress Pathology</a></li>
+<li><a href="#the-max-stress-lr-freeze-v16-bug">The Max Stress LR Freeze (v16 Bug)</a></li>
+<li><a href="#the-amnesiac-double-jolt-cooldown-persistence">The Amnesiac Double-Jolt (Cooldown
+Persistence)</a></li>
+<li><a href="#onecyclelr-desynchronization-velocity-bomb--stagnation-loop">OneCycleLR Desynchronization (Velocity Bomb / Stagnation
+Loop)</a></li>
+<li><a href="#premature-spatial-retreat-the-over-aggressive-recoil">Premature Spatial Retreat (The Over-Aggressive
+Recoil)</a></li>
+<li><a href="#static-loss-hyperparameter-saturation-mid-training-edit-barrier">Static Loss Hyperparameter Saturation (Mid-Training Edit
+Barrier)</a></li>
+<li><a href="#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization">The False-Alarm Jolt Collapse Loop (Manifold Scale
+Desynchronization)</a></li>
+<li><a href="#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation
+Bottleneck)</a></li>
+<li><a href="#checkpoint-fraction-desynchronization-the-preemption-recoil-loop">Checkpoint Fraction Desynchronization (The Preemption Recoil
+Loop)</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-best-practices-checklist">6. Best Practices Checklist</a></li>
+<li><a href="#sec-7-multi-model-pipeline-strategy">7. Multi-Model Pipeline Strategy</a></li>
+<li><a href="#sec-8-mapping-pathologies-to-pipeline-stages">8. Mapping Pathologies to Pipeline
+Stages</a></li>
+<li><a href="#sec-9-nuclear-audit-optimization-checklist">9. Nuclear Audit: Optimization
+Checklist</a>
+<ul class="sub-item">
+<li><a href="#high-velocity-dos">High-Velocity &quot;DO's&quot;</a></li>
+<li><a href="#critical-fixs">Critical &quot;FIX's&quot;</a></li>
+</ul>
+</li>
+<li><a href="#sec-10-sota-suite-optimization-task-list">10. SOTA Suite Optimization Task List</a></li>
+<li><a href="#sec-11-sota-transformation-before-vs-after">11. SOTA Transformation: Before vs.
+After</a></li>
+<li><a href="#sec-12-conclusion-the-indestructible-paradigm">12. Conclusion: The Indestructible
+Paradigm</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Nuclear Stability: AI Training Pathology Master Guide</h1>
-        <p class="subtitle">A technical roadmap for recognizing and remediating convergence failures in production-grade restoration models.</p>
-        <div class="meta">
-                <span>By Lem Treursic</span>
-                <span>Version: 1.4.0 (Governor v17 Hardened)</span>
-                <span>Category 02</span>
-            </div>
 
-<section id="section-1">
-            <h2>1. Abstract</h2>
-            <div class="abstract-box">
-                <p>The <strong>LemGendary Training Suite</strong> operates at the intersection of high-fidelity restoration, technical quality assessment, and autonomous deep learning. However, the pursuit of SOTA performance is frequently obstructed by complex training pathologies ranging from classical vanishing gradients to modern micro-batch pairwise ranking starvation and spatial average pooling feature dilution. This whitepaper establishes a comprehensive diagnostic and remediation framework—the <strong>"Nuclear Stability" protocol</strong>. By cataloging 25 distinct pathologies and mapping them to specific architectural progression stages, we provide a mathematical and operational roadmap for achieving indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM cloud GPU clusters.</p>
-            </div>
-        </section>
-
-        <section id="section-2">
-            <h2>2. The Diagnostic Master Table</h2>
-            <p>A front-line framework for recognizing and remediating training failures in the LemGendary ecosystem.</p>
-            
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Issue</th>
-                            <th>When & Why it Happens</th>
-                            <th>Recognition Metrics</th>
-                            <th>Remediation Strategy</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Vanishing Gradients</strong></td>
-                            <td>Deep networks with sigmoid/tanh; saturation in early layers prevents updates.</td>
-                            <td>Early layers near zero in <code>Gradient Histograms</code>; failure to learn even with high LR.</td>
-                            <td>Switch to <strong>ReLU/GELU</strong>; implement <strong>Normalization</strong>; add <strong>Residual Connections</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Exploding Gradients</strong></td>
-                            <td>Unstable weight updates in deep/recurrent networks; poor initialization.</td>
-                            <td>Massive vertical spikes or <code>NaN</code> in loss curve; global norm > 10.0.</td>
-                            <td><strong>Gradient Clipping</strong>; lower Learning Rate; use <strong>He Initialization</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Dying ReLUs</strong></td>
-                            <td>High LR causes neurons to output zero permanently; weights become stuck.</td>
-                            <td>Significant portion of layer outputting exactly zero in <code>Activation Histograms</code>.</td>
-                            <td>Use <strong>Leaky ReLU</strong> or <strong>ELU</strong>; reduce LR; use <strong>Batch Normalization</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Overfitting</strong></td>
-                            <td>Model memorizes noise; capacity is too high for the dataset size.</td>
-                            <td>Training loss drops while <code>Validation loss</code> rises (Divergence).</td>
-                            <td><strong>Data Augmentation</strong>; <strong>Dropout</strong> (0.2–0.5); <strong>Weight Decay (L2)</strong>; <strong>Overfitting Rescue Protocol</strong> (Governor dynamic dataset expansion).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>NaN Divergence</strong></td>
-                            <td>Numerical instability in Mixed Precision (FP16/FP8); log(0) or division by zero.</td>
-                            <td>Loss becomes <code>NaN</code> or <code>Inf</code> within 10–50 steps.</td>
-                            <td><strong>Loss Scaling</strong>; check for <code>eps</code> stability; use <strong>FP32</strong> for loss calculation.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mode Collapse</strong></td>
-                            <td>Generator finds a single output that "fools" the discriminator in GANs.</td>
-                            <td>Model generates identical images regardless of noise input.</td>
-                            <td><strong>Mini-batch Discrimination</strong>; <strong>Unrolled GANs</strong>; <strong>Wasserstein Loss (WGAN-GP)</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Training Plateau</strong></td>
-                            <td>Optimizer stuck in flat regions or local minima.</td>
-                            <td>Loss curve is flat for many epochs despite no convergence.</td>
-                            <td><strong>LR Scheduler</strong> (Cosine/Plateau); try <strong>SWA</strong> (Stochastic Weight Averaging).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Internal Covariate Shift</strong></td>
-                            <td>Distribution of layer inputs changes during training, slowing convergence.</td>
-                            <td>Training loss fluctuates wildly between batches (Jitter).</td>
-                            <td><strong>Batch/Layer Normalization</strong>; implement <strong>Skip Connections</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Catastrophic Forgetting</strong></td>
-                            <td>Fine-tuning on new data overwrites weights for original tasks.</td>
-                            <td>Accuracy on original validation set drops sharply after fine-tuning.</td>
-                            <td><strong>Elastic Weight Consolidation (EWC)</strong>; <strong>Replay Buffer</strong>; lower LR.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Label Noise Sensitivity</strong></td>
-                            <td>Model overfits to mislabeled samples, causing high variance.</td>
-                            <td>Random, huge spikes in training loss that don't affect validation trends.</td>
-                            <td><strong>Robust Loss Functions</strong> (MAE over MSE); <strong>Label Smoothing</strong>; <strong>SALI</strong> vetting.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Regression Boundary Collapse</strong></td>
-                            <td>Continuous parameter variables (e.g. angle $\theta \in [0, \pi]$) saturate gradients at extremes.</td>
-                            <td>Continuous regression MAE flatlines; predictions clamp to extreme boundary outputs.</td>
-                            <td>Switch to <strong>SmoothL1 (Huber) Loss</strong> and implement <strong>$\pi$-boundary normalization</strong> to scale gradients symmetrically.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Multi-Task Gradient Conflict</strong></td>
-                            <td>Dual-task models (Restoration + Colorization) clash on visual style vs. sharp structure.</td>
-                            <td>PSNR improves but restored color is washed out or noise removal is imperfect.</td>
-                            <td>Combine <strong>L1 + Perceptual Loss (LPIPS)</strong> and implement <strong>Global Residual Connections (`out + x`)</strong> to learn delta differences.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>MoE Routing Collapse</strong></td>
-                            <td>Multi-task models (e.g., Multi-Task Restorer) trained on composite datasets where specific task labels are missing or unified under a generic category.</td>
-                            <td>Routing weight vectors permanently lock to a single head index; secondary heads fail to learn.</td>
-                            <td>Implement <strong>Dynamic Filename Task Ingestion</strong> to extract task targets directly from file metadata/filenames.</td>
-                        </tr>
-                    
-                    <tr>
-                        <td><strong>Micro-Batch Rank Starvation</strong></td>
-                        <td>Small physical VRAM forces micro-batch $b=2$; pairwise ranking loss evaluates only $\binom{2}{2}=1$ pair per step, starving rank gradients.</td>
-                        <td><strong>PLCC/SRCC Divergence</strong>: PLCC reaches target ($\ge 0.91$) via EMD, but SRCC stagnates at $\sim 0.81$ with high pairwise variance.</td>
-                        <td>Implement <strong>Differentiable Soft-Spearman Loss</strong> ($\mathcal{L}_{\text{soft\_spearman}}$) and <strong>Cross-Microbatch Rank Memory Bank</strong> ($N=32/64$) to evaluate $\binom{32}{2}=496$ pairs per backward pass.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Spatial Pooling Dilution</strong></td>
-                        <td>Global Average Pooling (GAP) averages activations over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers occupying $5\%\text{--}15\%$ area.</td>
-                        <td><strong>Micro-Defect Blindness</strong>: Model classifies large blurred scenes well but misses localized micro-noise, compression artifacts, or anatomical triggers.</td>
-                        <td>Implement <strong>Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong> and <strong>GeM Pooling</strong> to capture localized feature variance.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Silent Epoch Limit Termination</strong></td>
-                        <td>Model hits maximum epoch budget (e.g. 300) without meeting SOTA targets; training abruptly terminates with uninformative prompt.</td>
-                        <td><strong>Abrupt Exit</strong>: Terminal prints raw exit prompt with no target audit, diagnostic guidance, or recovery options.</td>
-                        <td>Implement <strong>Universal Post-Training Target Audit & Interactive Guidance</strong> with headless Kaggle Cloud escalation.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Metric Asymmetry (The Manifold Plateau)</strong></td>
-                        <td>Model prioritizes mathematically easier global metrics (e.g., PLCC, PSNR) at the total expense of complex structural metrics (SRCC, LPIPS).</td>
-                        <td><strong>Metric Divergence</strong>: One metric reaches 100% of SOTA target while its counterpart flatlines below SOTA requirement.</td>
-                        <td>Implement <strong>Omni-Metric Autonomous Governor</strong> with <strong>Metric Deficit Engine</strong> ($\Delta_m$) to dynamically actuate specialized loss weights.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Checkpoint Fraction Desynchronization</strong></td>
-                        <td>Model expands dataset fraction (e.g. 75% &rarr; 90%) on preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior to expansion. Preemption rolls state back to 75%.</td>
-                        <td><strong>Fraction Recoil</strong>: Terminal logs report fraction expansion, but subsequent session resumes revert to previous fraction, trapping training in a fraction loop.</td>
-                        <td><strong>Atomic Fraction Persistence (v16.3.4)</strong>. Flush live <code>governor.get_state()</code> into checkpoint payload immediately upon fraction promotion and re-save both <code>_latest.pth</code> and <code>_best.pth</code>. Anchor Hub Lock to live governor state.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Multi-Asset Pip Scale Mismatch &amp; Thermal Sharpening Collapse</strong></td>
-                        <td>Multi-asset financial models trained concurrently on currencies, commodities, and indices; commodity/index volatility (1,000–8,000 pips) overpowers a clamped magnitude head (200 pips), while low-SNR temperature sharpening (&lt; 0.20) causes extreme logit sensitivity.</td>
-                        <td>Validation loss explodes to 230+, TP/SL MAE flatlines at ~1,440 pips, and Governor false-triggers Stress Protocol Level 4.0 due to fixed 100% sample fraction.</td>
-                        <td>Implement <strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong> standardizing targets to Normalized Pip Units ($[0, 100]$ NPUs); enforce <strong>Financial Governor Hardening</strong> with a strict temperature floor ($\min T = 0.75$), bounded LR jolts (&le; 1.15&times;), and <code>CURRICULUM_FOLD</code> phase classification.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing</strong></td>
-                        <td>PyTorch DataLoader with <code>num_workers &gt; 0</code> on Windows uses <code>spawn</code>, duplicating large memory-mapped sequence datasets across child processes. 4 workers consume 20+ GB, driving committed memory to 53GB / 55.5GB and exhausting physical RAM to 1.3GB.</td>
-                        <td>GPU utilization collapses to 0%; batch retrieval latency balloons from 0.27s to 3.43s/batch; committed memory exceeds 95%; task manager shows 4 child workers holding 5GB RAM each.</td>
-                        <td>Enforce <strong>Zero-Worker Execution (<code>num_workers=0</code>)</strong> for memory-mapped sequence datasets on Windows. In-process execution operates at 1.1GB RAM total, preserving 20+ GB free RAM for OS filesystem caching and accelerating batch retrieval by $12.5\times$.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)</strong></td>
-                        <td>Resuming training from an earlier checkpoint saved prior to curriculum fractional scaling (where <code>sample_fraction</code> was 1.0) overrides the active curriculum, expanding batch count by 7x (3,900 to 27,300 batches) and diluting convergence rate.</td>
-                        <td>Checkpoint telemetry reports <code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code> (instead of ~3,900), and epoch progress bar indicates 24–26+ hours remaining for Epoch 1.</td>
-                        <td>Implement <strong>Curriculum Checkpoint Fraction Override</strong> in <code>SmartTrainingGovernor.load_state</code>. For sequence curricula during early epochs (&le; 2), override legacy &ge; 0.99 fractions with configured <code>initial_fraction: 0.15</code> and synchronize DataLoader instances.</td>
-                    </tr>
-</tbody>
-                </table>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>LemGendary Model Training Suite</strong> operates at the intersection of
+high-fidelity restoration, technical quality assessment, and autonomous deep
+learning. However, the pursuit of SOTA performance is frequently obstructed by
+complex training pathologies ranging from classical vanishing gradients to
+modern micro-batch pairwise ranking starvation and spatial average pooling
+feature dilution. This whitepaper establishes a comprehensive diagnostic and
+remediation framework—the <strong>&quot;Nuclear Stability&quot; protocol</strong>. By cataloging 27
+distinct pathologies and mapping them to specific architectural progression
+stages, we provide a mathematical and operational roadmap for achieving
+indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
+cloud GPU clusters. Revision 1.6.0 aligns the guide with release
+v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
+decreases within one resolution step, and every backward step raises
+<code>RatchetViolation</code>), training ends on a bounded epoch budget, Stochastic Weight
+Averaging (SWA) is available but off by default, and the historical FID rows of
+four models are unverified until the FID re-evaluation tool has re-measured
+them. Remedies that earlier revisions described but the code does not run are
+marked as such.</p>
 </section>
 
-<section id="section-3">
-<h2>3. The "Fast Audit" Framework</h2>
-            <p>Observe these three critical metrics to recognize issues in under 5 minutes of monitoring:</p>
-            
-            <div class="quad-grid">
-                <div class="quad-card">
-                    <h3>1. Gradient Global Norm</h3>
-                    <ul>
-                        <li><strong>Healthy:</strong> Stable trend (0.1 to 5.0).</li>
-                        <li><strong>Exploding:</strong> Vertical climb to 100+ → NaN.</li>
-                        <li><strong>Vanishing:</strong> Flat line at <span class="metric-highlight">10<sup>-6</sup></span> or lower.</li>
-                    </ul>
-                </div>
-                <div class="quad-card">
-                    <h4>2. Activation Sparsity</h4>
-                    <p>Monitor the percentage of zeros in layer outputs. If a layer is <strong>>80% sparse</strong>, your initialization is too aggressive or LR is too high.</p>
-                </div>
-                <div class="quad-card" class="grid-col-span-2">
-                    <h4>3. Weight-to-Update Ratio</h4>
-                    <p>Calculate <code>|Δw| / |w|</code>. Target ratio: <span class="metric-highlight">10<sup>-3</sup></span>.</p>
-                    <p>If 10<sup>-1</sup>: updates are <strong>Violent (Exploding)</strong>. If 10<sup>-5</sup>: you are <strong>Stagnating</strong>.</p>
-                </div>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<section id="sec-2-the-diagnostic-master-table">
+<h2>2. The Diagnostic Master Table</h2>
+<p>A front-line framework for recognizing and remediating training failures in the
+LemGendary ecosystem.</p>
+<ul>
+<li><strong>Vanishing Gradients</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Deep networks with sigmoid/tanh; saturation in
+early layers prevents updates.</li>
+<li><em>Recognition Metrics</em>: Early layers near zero in <code>Gradient Histograms</code>;
+failure to learn even with high LR.</li>
+<li><em>Remediation Strategy</em>: Switch to <strong>ReLU/GELU</strong>; implement
+<strong>Normalization</strong>; add <strong>Residual Connections</strong>.</li>
+</ul>
+</li>
+<li><strong>Exploding Gradients</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Unstable weight updates in deep/recurrent networks;
+poor initialization.</li>
+<li><em>Recognition Metrics</em>: Massive vertical spikes or <code>NaN</code> in loss curve;
+global norm &gt; 10.0.</li>
+<li><em>Remediation Strategy</em>: <strong>Gradient Clipping</strong>; lower Learning Rate; use <strong>He
+Initialization</strong>.</li>
+</ul>
+</li>
+<li><strong>Dying ReLUs</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: High LR causes neurons to output zero permanently;
+weights become stuck.</li>
+<li><em>Recognition Metrics</em>: Significant portion of layer outputting exactly zero
+in <code>Activation Histograms</code>.</li>
+<li><em>Remediation Strategy</em>: Use <strong>Leaky ReLU</strong> or <strong>ELU</strong>; reduce LR; use
+<strong>Batch Normalization</strong>.</li>
+</ul>
+</li>
+<li><strong>Overfitting</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Model memorizes noise; capacity is too high for the
+dataset size.</li>
+<li><em>Recognition Metrics</em>: Training loss drops while <code>Validation loss</code> rises
+(Divergence).</li>
+<li><em>Remediation Strategy</em>: <strong>Data Augmentation</strong>; <strong>Dropout</strong> (0.2–0.5);
+<strong>Weight Decay (L2)</strong>; <strong>Overfitting Rescue Protocol</strong> (Governor dynamic
+dataset expansion).</li>
+</ul>
+</li>
+<li><strong>NaN Divergence</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Numerical instability in Mixed Precision
+(FP16/FP8); log(0) or division by zero.</li>
+<li><em>Recognition Metrics</em>: Loss becomes <code>NaN</code> or <code>Inf</code> within 10–50 steps.</li>
+<li><em>Remediation Strategy</em>: <strong>Loss Scaling</strong>; check for <code>eps</code> stability; use
+<strong>FP32</strong> for loss calculation.</li>
+</ul>
+</li>
+<li><strong>Mode Collapse</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Generator finds a single output that &quot;fools&quot; the
+discriminator in GANs.</li>
+<li><em>Recognition Metrics</em>: Model generates identical images regardless of noise
+input.</li>
+<li><em>Remediation Strategy</em>: <strong>Mini-batch Discrimination</strong>; <strong>Unrolled GANs</strong>;
+<strong>Wasserstein Loss (WGAN-GP)</strong>.</li>
+</ul>
+</li>
+<li><strong>Training Plateau</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Optimizer stuck in flat regions or local minima.</li>
+<li><em>Recognition Metrics</em>: Loss curve is flat for many epochs despite no
+convergence.</li>
+<li><em>Remediation Strategy</em>: <strong>LR Scheduler</strong> (Cosine/Plateau); try <strong>SWA</strong>
+(Stochastic Weight Averaging; in the LemGendary Model Training Suite set
+<code>swa.enabled: true</code> in <code>config.yaml</code>, off by default; the plateau-triggered
+Mini-SWA is not implemented).</li>
+</ul>
+</li>
+<li><strong>Internal Covariate Shift</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Distribution of layer inputs changes during
+training, slowing convergence.</li>
+<li><em>Recognition Metrics</em>: Training loss fluctuates wildly between batches
+(Jitter).</li>
+<li><em>Remediation Strategy</em>: <strong>Batch/Layer Normalization</strong>; implement <strong>Skip
+Connections</strong>.</li>
+</ul>
+</li>
+<li><strong>Catastrophic Forgetting</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Fine-tuning on new data overwrites weights for
+original tasks.</li>
+<li><em>Recognition Metrics</em>: Accuracy on original validation set drops sharply
+after fine-tuning.</li>
+<li><em>Remediation Strategy</em>: <strong>Elastic Weight Consolidation (EWC)</strong>; <strong>Replay
+Buffer</strong>; lower LR.</li>
+</ul>
+</li>
+<li><strong>Label Noise Sensitivity</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Model overfits to mislabeled samples, causing high
+variance.</li>
+<li><em>Recognition Metrics</em>: Random, huge spikes in training loss that don't
+affect validation trends.</li>
+<li><em>Remediation Strategy</em>: <strong>Robust Loss Functions</strong> (MAE over MSE); <strong>Label
+Smoothing</strong>; <strong>SALI</strong> vetting.</li>
+</ul>
+</li>
+<li><strong>Regression Boundary Collapse</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Continuous parameter variables (e.g. angle
+$\theta \in [0, \pi]$) saturate gradients at extremes.</li>
+<li><em>Recognition Metrics</em>: Continuous regression MAE flatlines; predictions
+clamp to extreme boundary outputs.</li>
+<li><em>Remediation Strategy</em>: Switch to <strong>SmoothL1 (Huber) Loss</strong> and implement
+<strong>$\pi$-boundary normalization</strong> to scale gradients symmetrically.</li>
+</ul>
+</li>
+<li><strong>Multi-Task Gradient Conflict</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Dual-task models (Restoration + Colorization) clash
+on visual style vs. sharp structure.</li>
+<li><em>Recognition Metrics</em>: PSNR improves but restored color is washed out or
+noise removal is imperfect.</li>
+<li><em>Remediation Strategy</em>: Combine <strong>L1 + Perceptual Loss (LPIPS)</strong> and
+implement <strong>Global Residual Connections (<code>out + x</code>)</strong> to learn delta
+differences.</li>
+</ul>
+</li>
+<li><strong>MoE Routing Collapse</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Multi-task models (e.g., Multi-Task Restorer)
+trained on composite datasets where specific task labels are missing or
+unified under a generic category.</li>
+<li><em>Recognition Metrics</em>: Routing weight vectors permanently lock to a single
+head index; secondary heads fail to learn.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Dynamic Filename Task Ingestion</strong> to
+extract task targets directly from file metadata/filenames.</li>
+</ul>
+</li>
+<li><strong>Micro-Batch Rank Starvation</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Small physical VRAM forces micro-batch $b=2$;
+pairwise ranking loss evaluates only $\binom{2}{2}=1$ pair per step,
+starving rank gradients.</li>
+<li><em>Recognition Metrics</em>: <strong>PLCC/SRCC Divergence</strong>: PLCC reaches target
+($\ge 0.91$) via EMD, but SRCC stagnates at $\sim 0.81$ with high pairwise
+variance.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Differentiable Soft-Spearman Loss</strong>
+($\mathcal{L}_{\text{soft\_spearman}}$) and <strong>Cross-Microbatch Rank Memory
+Bank</strong> ($N=32/64$) to evaluate $\binom{32}{2}=496$ pairs per backward pass.</li>
+</ul>
+</li>
+<li><strong>Spatial Pooling Dilution</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Global Average Pooling (GAP) averages activations
+over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers
+occupying $5\%\text{--}15\%$ area.</li>
+<li><em>Recognition Metrics</em>: <strong>Micro-Defect Blindness</strong>: Model classifies large
+blurred scenes well but misses localized micro-noise, compression artifacts,
+or anatomical triggers.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Spatial Statistical Pooling
+($\text{Mean} \oplus \text{Std}$)</strong> and <strong>GeM Pooling</strong> to capture localized
+feature variance.</li>
+</ul>
+</li>
+<li><strong>Silent Epoch Limit Termination</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Model hits maximum epoch budget (e.g. 300) without
+meeting SOTA targets; training abruptly terminates with uninformative
+prompt.</li>
+<li><em>Recognition Metrics</em>: <strong>Abrupt Exit</strong>: Terminal prints raw exit prompt with
+no target audit, diagnostic guidance, or recovery options.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Universal Post-Training Target Audit &amp;
+Interactive Guidance</strong> with headless Kaggle Cloud escalation.</li>
+</ul>
+</li>
+<li><strong>Metric Asymmetry (The Manifold Plateau)</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Model prioritizes mathematically easier global
+metrics (e.g., PLCC, PSNR) at the total expense of complex structural
+metrics (SRCC, LPIPS).</li>
+<li><em>Recognition Metrics</em>: <strong>Metric Divergence</strong>: One metric reaches 100% of
+SOTA target while its counterpart flatlines below SOTA requirement.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Omni-Metric Autonomous Governor</strong> with
+<strong>Metric Deficit Engine</strong> ($\Delta_m$) to dynamically actuate specialized
+loss weights.</li>
+</ul>
+</li>
+<li><strong>Checkpoint Fraction Desynchronization</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Model expands dataset fraction (e.g. 75% → 90%) on
+preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior
+to expansion. Preemption rolls state back to 75%.</li>
+<li><em>Recognition Metrics</em>: <strong>Fraction Recoil</strong>: Terminal logs report fraction
+expansion, but subsequent session resumes revert to previous fraction,
+trapping training in a fraction loop.</li>
+<li><em>Remediation Strategy</em>: <strong>Atomic Fraction Persistence (v16.3.4)</strong>. Flush
+live <code>governor.get_state()</code> into checkpoint payload immediately upon
+fraction promotion and re-save both <code>_latest.pth</code> and <code>_best.pth</code>. Anchor
+Hub Lock to live governor state.</li>
+</ul>
+</li>
+<li><strong>Multi-Asset Pip Scale Mismatch &amp; Thermal Sharpening Collapse</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Multi-asset financial models trained concurrently
+on currencies, commodities, and indices; commodity/index volatility
+(1,000–8,000 pips) overpowers a clamped magnitude head (200 pips), while
+low-SNR temperature sharpening (&lt; 0.20) causes extreme logit sensitivity.</li>
+<li><em>Recognition Metrics</em>: Validation loss explodes to 230+, TP/SL MAE flatlines
+at ~1,440 pips, and Governor false-triggers Stress Protocol Level 4.0 due to
+fixed 100% sample fraction.</li>
+<li><em>Remediation Strategy</em>: Implement <strong>Multi-Asset Pip Scale Normalization
+(<code>PAIR_PIP_SCALE</code>)</strong> standardizing targets to Normalized Pip Units
+($[0, 100]$ NPUs); enforce <strong>Financial Governor Hardening</strong> with a strict
+temperature floor ($\min T = 0.75$), bounded LR jolts ($\le 1.15\times$),
+and <code>CURRICULUM_FOLD</code> phase classification.</li>
+</ul>
+</li>
+<li><strong>Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: PyTorch DataLoader with <code>num_workers &gt; 0</code> on
+Windows uses <code>spawn</code>, duplicating large memory-mapped sequence datasets
+across child processes. 4 workers consume 20+ GB, driving committed memory
+to 53GB / 55.5GB and exhausting physical RAM to 1.3GB.</li>
+<li><em>Recognition Metrics</em>: GPU utilization collapses to 0%; batch retrieval
+latency balloons from 0.27s to 3.43s/batch; committed memory exceeds 95%;
+task manager shows 4 child workers holding 5GB RAM each.</li>
+<li><em>Remediation Strategy</em>: Enforce <strong>Zero-Worker Execution (<code>num_workers=0</code>)</strong>
+for memory-mapped sequence datasets on Windows. In-process execution
+operates at 1.1GB RAM total, preserving 20+ GB free RAM for OS filesystem
+caching and accelerating batch retrieval by $12.5\times$.</li>
+</ul>
+</li>
+<li><strong>Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: Resuming training from an earlier checkpoint saved
+prior to curriculum fractional scaling (where <code>sample_fraction</code> was 1.0)
+overrides the active curriculum, expanding batch count by 7x (3,900 to
+27,300 batches) and diluting convergence rate.</li>
+<li><em>Recognition Metrics</em>: Checkpoint telemetry reports
+<code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code> (instead of ~3,900), and
+epoch progress bar indicates 24–26+ hours remaining for Epoch 1.</li>
+<li><em>Remediation Strategy</em>: Keep the restored fraction (v16.9.67). Lowering a
+saved fraction at the same resolution breaks the Monotonic Ratchet, so the
+earlier <strong>Curriculum Checkpoint Fraction Override</strong> was removed. Start a
+clean run (<code>--clean</code> / <code>--fresh</code>) when a legacy checkpoint's fraction is
+unwanted.</li>
+</ul>
+</li>
+<li><strong>Unbounded Epoch Horizon</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: An open-ended loop extends the epoch budget
+whenever it is reached and ignores the governor's early-stop signal.</li>
+<li><em>Recognition Metrics</em>: A <code>--epochs 1</code> diagnostic run never finishes; epoch
+counters pass the configured budget in 10-epoch blocks.</li>
+<li><em>Remediation Strategy</em>: <strong>Bounded Epoch Budget</strong> (v16.9.65): the budget is a
+hard cap, early stop is honoured, and extensions are opt-in up to
+<code>training_budget.max_extension_epochs</code>.</li>
+</ul>
+</li>
+<li><strong>Fabricated Metric History</strong>
+<ul>
+<li><em>When &amp; Why it Happens</em>: A tool rewrites logged metrics with formulas to
+smooth charts (for example FID rescaling).</li>
+<li><em>Recognition Metrics</em>: <code>metrics.csv</code> values that no checkpoint evaluation
+produced; abrupt jumps between legacy and rescaled rows.</li>
+<li><em>Remediation Strategy</em>: Remove the tool, mark the rows as unverified and
+re-evaluate from the checkpoints (FID with <code>feature=2048</code>, chunks of at most
+two; <code>python -m training.fid_reeval</code>).</li>
+</ul>
+</li>
+</ul>
 </section>
 
-<section id="section-5">
+<section id="sec-3-the-fast-audit-framework">
+<h2>3. The &quot;Fast Audit&quot; Framework</h2>
+<p>Observe these three critical metrics to recognize issues in under 5 minutes of
+monitoring:</p>
+<h3 id="sec-31-gradient-global-norm">3.1. Gradient Global Norm</h3>
+<ul>
+<li><strong>Healthy:</strong> Stable trend (0.1 to 5.0).</li>
+<li><strong>Exploding:</strong> Vertical climb to 100+ → NaN.</li>
+<li><strong>Vanishing:</strong> Flat line at 10^-6 or lower.</li>
+</ul>
+<h3 id="sec-32-activation-sparsity">3.2. Activation Sparsity</h3>
+<p>Monitor the percentage of zeros in layer outputs. If a layer is <strong>&gt;80% sparse</strong>,
+your initialization is too aggressive or LR is too high.</p>
+<h3 id="sec-33-weight-to-update-ratio">3.3. Weight-to-Update Ratio</h3>
+<p>Calculate <code>|Δw| / |w|</code>. Target ratio: 10^-3.</p>
+<p>If 10^-1: updates are <strong>Violent (Exploding)</strong>. If 10^-5: you are <strong>Stagnating</strong>.</p>
+</section>
+
+<section id="sec-4-modern-2026-pathologies">
 <h2>4. Modern 2026 Pathologies</h2>
-            
-            <h3 id="mixed-precision">Mixed Precision Underflow (FP16/FP8)</h3>
-            <p><strong>The Issue:</strong> Gradients are so small they become zero in 16-bit or 8-bit precision.</p>
-            <p><strong>Remedy:</strong> Increase <code>Loss Scale</code> or switch to <strong>BFloat16</strong> which has a larger dynamic range.</p>
-
-            <h3 id="momentum-decay">Optimizer Momentum Decay</h3>
-            <p><strong>The Issue:</strong> Adam/AdamW can lose "energy" in flat manifolds, leading to premature plateaus.</p>
-            <p><strong>Remedy:</strong> Reset optimizer state; use <strong>Lookahead Optimizer</strong>; or increase Momentum parameters.</p>
-
-            <h3 id="governor-loop">The "Governor Loop" (Artificial Plateau Exploit)</h3>
-            <p><strong>The Issue:</strong> The model fails to reach the Absolute SOTA, but avoids a hard regression rollback by briefly spiking just high enough to reset the Governor's localized drift counter. It spins indefinitely, wasting compute.</p>
-            <p><strong>Identification:</strong> Model stagnates for 20+ epochs with periodic, massive quality spikes that fall just short of the SOTA.</p>
-            <p><strong>Remedy:</strong> Implement an <strong>Absolute Patience Limit</strong> (e.g., 15 epochs) that acts as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback regardless of minor drift resets.</p>
-
-            <h3 id="polarity-inversion">Live Polarity Inversion (Negative Manifold)</h3>
-            <p><strong>The Issue:</strong> The model's classification head physically inverts mid-epoch, mapping correct features to inverse targets (e.g., scoring bad images as good). The model may still mathematically satisfy loss metrics while producing physically fraudulent results.</p>
-            <p><strong>Identification:</strong> The <code>SRCC</code> or <code>PLCC</code> correlation metrics suddenly turn negative (<code>&lt; 0.0</code>) despite high theoretical quality scores.</p>
-            <p><strong>Remedy:</strong> Integrate a <strong>Live Polarity Shield</strong> into the telemetry engine to actively monitor <code>SRCC</code> and <code>PLCC</code> during the epoch, instantly triggering a SOTA rollback if a negative correlation is detected.</p>
-
-            <h3 id="dataparallel-misalignment">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)</h3>
-            <p><strong>The Issue:</strong> When running PyTorch <code>DataParallel</code> on Turing-class GPUs (e.g. Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to broadcast them to replica GPUs (<code>_broadcast_coalesced</code>). If any parameter high up in the model architecture has an odd size (e.g. an <code>out_channels=3</code> output bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment boundary for <em>every single parameter</em> that follows it. While most operations tolerate unaligned memory, heavily vectorized cuDNN algorithms (like <code>conv2d</code> and <code>conv_transpose2d</code>) will immediately crash with a fatal <code>CUDA error: misaligned address</code> or <code>unable to find an engine to execute this computation</code>.</p>
-            <p><strong>Identification:</strong> Model successfully trains on a single GPU but crashes with <code>misaligned address</code> during the forward pass specifically on <code>replica 1</code> or higher. Tracebacks point directly to standard cuDNN operations.</p>
-            <p><strong>Remedy:</strong> <strong>Global Alignment Monkey-Patch</strong>. Do not alter the model's <code>__init__</code> order (as this permanently corrupts the Optimizer state). Instead, inject a global monkey-patch over <code>nn.Conv2d.forward</code> and <code>nn.ConvTranspose2d.forward</code> that dynamically checks the raw memory pointer (<code>weight.data_ptr() % 16</code>). If the pointer is unaligned (indicating a DataParallel replica buffer), intercept the execution and force a <code>.clone()</code> to instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator before passing it to <code>F.conv2d</code>.</p>
-            <h3 id="microbatch-rank-starvation">Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: In technical and aesthetic quality scoring (NIMA architectures), models are supervised with both pointwise distribution loss (EMD) and pairwise ranking margin loss:
-                    $$\mathcal{L}_{\text{rank}} = \frac{1}{|\mathcal{P}|} \sum_{(i,j) \in \mathcal{P}} \text{ReLU}\left(m - \text{sign}(t_i - t_j)(p_i - p_j)\right)$$
-                    When hardware VRAM constraints (GTX 1650 4GB @ 512px) enforce micro-batch size $b=2$ with gradient accumulation $K=12$ ($N_{\text{eff}}=24$), pairwise combinations within each forward pass collapse to $|\mathcal{P}| = \binom{2}{2} = 1$ pair. Across 12 micro-batches, only $12 \times 1 = 12$ pairs are compared, whereas a unified 24-sample batch evaluates $\binom{24}{2} = 276$ pairs ($95.6\%$ ranking information loss). EMD loss optimizes linear correlation ($\text{PLCC} \ge 0.91$), but monotonic ranking supervision is starved, causing $\text{SRCC}$ to plateau at $\sim 0.81$.</li>
-                <li><strong>Identification</strong>: Training runs display strong $\text{PLCC} \ge 0.9102$ alongside stagnant $\text{SRCC} \approx 0.815\text{--}0.818$ across 150+ epochs, with high validation rank margin variance.</li>
-                <li><strong>Remedy</strong>: 
-                    <ol>
-                        <li><strong>Differentiable Soft-Spearman Loss</strong>: Replace sparse hinge penalties with continuous sigmoid-ranked correlation:
-                            $$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$
-                        </li>
-                        <li><strong>Cross-Microbatch Rank Memory Bank</strong>: Maintain a detached FIFO queue ($N=32/64$) to compute soft ranking across $\binom{32}{2} = 496$ sample pairs on every forward step, backpropagating gradients exclusively through the active micro-batch.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h3 id="spatial-pooling-dilution">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: Standard Global Average Pooling ($\text{GAP}$) collapses a $H \times W \times C$ spatial activation tensor to $1 \times 1 \times C$ by averaging all spatial locations:
-                    $$\text{GAP}(x)_c = \frac{1}{H \cdot W} \sum_{h=1}^H \sum_{w=1}^W x_{c,h,w}$$
-                    For fine-grained tasks like micro-defect detection (compression blocking, localized noise, sensor blur) and safety filtering (<code>universal_nsfw_classification</code>), critical features occupy only $5\%\text{--}15\%$ of the image canvas. Averaging across the entire background dilutes the activation magnitude by $85\%\text{--}95\%$, preventing the classifier from learning decisive decision boundaries.</li>
-                <li><strong>Identification</strong>: High false negatives on localized micro-defects or small NSFW triggers; models require excessive global contrast to trigger classification responses.</li>
-                <li><strong>Remedy</strong>: <strong>Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong> and <strong>GeM Pooling</strong>:
-                    $$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$
-                    $$\text{GeM}(x)_c = \left(\frac{1}{H \cdot W} \sum_{h,w} x_{c,h,w}^p\right)^{1/p}, \quad p \ge 3.0$$
-                    Statistical pooling preserves localized peak activation variance alongside scene-level context without adding convolutional FLOPs.</li>
-            </ul>
-
-            <h3 id="silent-epoch-limit">Silent Epoch Limit Termination (The Raw Exit Pathology)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: When a model finishes its total epoch budget (e.g. 300 epochs) without breaching SOTA benchmarks, training scripts traditionally exit silently to a generic terminal prompt. Operators are left without diagnostic context regarding hardware bottlenecks, metric trade-offs, or actionable next steps.</li>
-                <li><strong>Identification</strong>: The terminal prints <code>Press Enter to return...</code> immediately after the last epoch without reporting SOTA benchmark gaps or offering continuation options.</li>
-                <li><strong>Remedy</strong>: <strong>Universal Post-Training Target Audit & Interactive Guidance</strong>. Upon reaching the epoch ceiling without SOTA attainment:
-                    <ol>
-                        <li>Print a structured benchmark audit comparing achieved metrics against <code>sota_targets</code>.</li>
-                        <li>Emit diagnostic analysis identifying hardware micro-batch limits and manifold properties.</li>
-                        <li>Offer an interactive action matrix allowing operators to transition to Kaggle Cloud Hub, export ONNX binaries, or extend local training in-process.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h3 id="vram-fragmentation">The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: In constrained environments like Kaggle (16GB T4/P100), PyTorch DataLoader workers (when <code>persistent_workers=True</code>) hold onto fragmented C++ VRAM allocations even after the training iterator terminates. When the validation dataloader spawns, the fragmented VRAM causes an immediate Out-Of-Memory exception, crashing the script.</li>
-                <li><strong>Identification</strong>: Training loop completes successfully, but the script immediately crashes with <code>CUDA Out of memory</code> the exact second the validation phase begins.</li>
-                <li><strong>Remedy</strong>: <strong>GC Teardown & Worker Capping</strong>. Set <code>persistent_workers=False</code> and limit <code>num_workers</code> to a safe threshold (e.g., 2) based on <code>is_constrained_env</code>. Inject explicit <code>gc.collect()</code> and <code>torch.cuda.empty_cache()</code> teardown sequences exactly between the training and validation phases to force the C++ allocator to flush the VRAM footprint.</li>
-            </ul>
-
-            <h3 id="catastrophic-model-wipe">The Catastrophic Model Wipe (Unsafe Folder Initialization)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: To prevent overlapping legacy checkpoints, <code>shutil.rmtree</code> was historically used to purge the output directory before a fresh start. However, if this targets <code>LemGendaryModels/&lt;model_name&gt;</code>, it destroys all existing checkpoints, metrics, and ONNX binaries if it fails to correctly detect active repository state (e.g., ignoring hidden <code>.git</code> structures).</li>
-                <li><strong>Identification</strong>: Previous SOTA <code>.pth</code> models and <code>metrics.csv</code> are entirely wiped upon initiating a new training session or notebook.</li>
-                <li><strong>Remedy</strong>: <strong>Safe Non-Destructive Export Instantiation</strong>. Replace all overarching <code>rmtree</code> calls with precise <code>os.makedirs(exist_ok=True)</code> directory creations. Models must incrementally append to <code>metrics.csv</code> and overwrite specific checkpoint files (<code>_latest.pth</code>, <code>_best.pth</code>) rather than destroying their parent container.</li>
-            </ul>
-
-            <h3 id="metric-asymmetry">Metric Asymmetry (The Manifold Plateau)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: During multi-objective optimization, the model discovers a "lazy" minima where it optimizes a mathematically simpler metric (like global intensity PSNR or linear correlation PLCC) while completely ignoring complex structural metrics (like perceptual LPIPS or rank-order SRCC).</li>
-                <li><strong>Identification</strong>: One metric successfully breaches the 100% SOTA target line, while its counterpart plateaus aggressively (e.g. SRCC hard-locks at 0.81 while PLCC reaches 0.92).</li>
-                <li><strong>Remedy</strong>: <strong>Omni-Metric Autonomous Governor</strong>. The <code>SmartTrainingGovernor</code> must calculate exact real-time metric deficits $\Delta_{m} = \max(0, \text{Target}_m - \text{Current}_m)$ and dynamically shift the loss actuators:
-                    <ol>
-                        <li>Boost <code>soft_spearman_weight</code> up to <code>2.0</code> if SRCC is lagging.</li>
-                        <li>Increase <code>lpips_weight</code> dynamically if perceptual geometry is lagging behind PSNR.</li>
-                        <li>Modulate <code>dir_weight</code> versus <code>mag_weight</code> in Forex manifolds if Directional Accuracy plateaus.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h3 id="financial-pip-mismatch">Multi-Asset Pip Magnitude Mismatch &amp; Temperature Sharpening Collapse (Financial Manifolds)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: In multi-asset financial models trained concurrently across currencies, commodities, and indices, pip magnitude scales differ by orders of magnitude (e.g. EURUSD moves 15–50 pips, whereas Spot Gold moves 1,500–3,000 pips and NASDAQ moves 4,000–8,000 pips). When models employ a clamped magnitude head (e.g. 200 pips) without cross-asset normalization, commodity errors generate an irreducible ~1,400 pip loss gradient per batch, inflating validation loss from ~9.3 to 232+ and locking TP/SL MAE at 1,415–1,440 pips. Simultaneously, applying image-domain temperature sharpening down to $T \le 0.14$ scales low signal-to-noise financial logits by $7\times$, causing severe probability overconfidence and gradient explosions. Furthermore, because causal time-series data cannot be randomly subsampled (fixed sample fraction = 1.0), the Governor diagnoses false dataset exhaustion and deploys destructive Level 4.0 Stress Protocols.</li>
-                <li><strong>Identification</strong>: Validation loss explodes to 230+ while training loss remains low (~9.3); TP/SL MAE flatlines at ~1,415–1,440 pips; <code>softmax_temp</code> drops to 0.14 or below; and Governor logs report <code>[RESCUE] [OVERFITTING] Dataset exhausted. Deploying Stress Protocol (Level 4.0)</code>.</li>
-                <li><strong>Remedy</strong>:
-                    <ol>
-                        <li><strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong>: Standardize all prediction targets and magnitude outputs into Normalized Pip Units ($\text{NPU} = \text{Raw Pips} / \text{PAIR\_PIP\_SCALE} \in [0, 100]$), applying scaling factors: $1.0\times$ for FX Majors, $5.0\times$ for Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for Indices.</li>
-                        <li><strong>Calibrated Dual Loss</strong>: Rebalance <code>ForexDualLoss</code> with <code>direction_weight=0.5</code> and <code>magnitude_weight=0.02</code> ($\delta=2.0$ Huber on NPUs), returning loss values to the clean $0.05\text{--}1.0$ numerical range.</li>
-                        <li><strong>Governor Financial Safeguards</strong>: Enforce a strict temperature floor ($\min T = 0.75$), constrain Stress Protocol regularization (&le; 2.0), limit differential LR jolts to &le; 1.15&times;, and classify financial training phases as <code>CURRICULUM_FOLD</code>.</li>
-                    </ol>
-                </li>
-            </ul>
-
-            <h3 id="windows-multiprocessing">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing (Pathology 24)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: On Windows platforms, PyTorch <code>DataLoader</code> with <code>num_workers &gt; 0</code> cannot leverage UNIX <code>fork()</code> with Copy-On-Write memory semantics; it must use <code>multiprocessing.spawn</code>. When training on extensive multi-timeframe sequence manifolds (e.g. 16-symbol Forex arrays across 8 years), each child worker process unpickles the dataset sample index and establishes isolated file descriptors for memory-mapped <code>.npy</code> files. Each worker allocates 4.5–5.5 GB of RAM. Spawning 4 workers consumes 20+ GB of physical RAM, driving committed memory to 53.0 GB / 55.5 GB on a 32 GB workstation. Available RAM collapses to 1.3 GB, forcing Windows into continuous pagefile disk thrashing. Every sample read triggers disk I/O page faults, inflating batch latency from 0.27s to 3.43s and starving the GPU (0% utilization).</li>
-                <li><strong>Identification</strong>: Task Manager displays 4 <code>python.exe</code> worker processes holding ~5 GB RAM each; committed memory approaches the pagefile limit (&gt; 95%); batch retrieval time stalls at 3.4–4.0s/batch; and GPU utilization drops to 0%.</li>
-                <li><strong>Remedy</strong>: <strong>Zero-Worker Windows In-Process Execution (<code>num_workers=0</code>)</strong>. Enforce <code>num_workers = 0</code> on Windows for memory-mapped sequence datasets. Execution runs directly in the parent process at 1.1 GB total RAM, leaving 20+ GB of physical memory free. The Windows filesystem cache retains <code>.npy</code> array blocks resident in RAM, eliminating pagefile swapping and accelerating batch retrieval by $12.5\times$ (0.275s/batch).</li>
-            </ul>
-
-            <h3 id="checkpoint-resumption-desync">Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution) (Pathology 25)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: When <code>SmartTrainingGovernor</code> saves progress checkpoints (<code>_progress.pth</code>), it serializes the active <code>sample_fraction</code>. If a run is interrupted and resumed from an older checkpoint generated before fractional curriculum fixes (where the sample fraction was hardcoded to 1.0), the checkpoint restoration logic blindly restores <code>current_fraction = 1.0</code>. This expands the training dataloader from the intended curriculum fraction (e.g. 15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning rates across 7 million samples.</li>
-                <li><strong>Identification</strong>: Resumption telemetry logs report <code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code>, and <code>Iteration 1362/27300</code> despite configuration specifying <code>initial_fraction: 0.15</code>.</li>
-                <li><strong>Remedy</strong>: <strong>Curriculum Checkpoint Fraction Override</strong>. In <code>SmartTrainingGovernor.load_state</code>, detect whether early-epoch training ($\text{epoch} \le 2$) is resuming with a legacy 100% fraction against an active fractional curriculum. Automatically override the legacy fraction with <code>initial_fraction: 0.15</code>, trigger <code>train_loader</code> re-instantiation, and proportionally scale resumption iterations to the actual loader length.</li>
-            </ul>
-            <h3>Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 26)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: Language model instruction datasets consist of heterogeneous user prompts and assistant completions with varying token sequence lengths (e.g. 294 tokens vs 367 tokens). While training data loaders utilize dynamic padding collators (<code>collate_instruction_batch</code>), validation data loaders initialized via canonical builder functions (<code>build_val_loader</code>) lacked explicit <code>collate_fn</code> propagation. PyTorch default collation (<code>default_collate</code>) defaulted to <code>torch.stack()</code>, crashing at the conclusion of Epoch 1 with <code>RuntimeError: stack expects each tensor to be equal size, but got [294] at entry 0 and [367] at entry 1</code>.</li>
-                <li><strong>Identification</strong>: Training loop executes all training batches cleanly, but crashes immediately upon transition to validation with ragged 1D tensor stacking mismatch exceptions.</li>
-                <li><strong>Remedy</strong>: <strong>Universal Collation Signature Propagation</strong>. Extend <code>build_val_loader</code> with an explicit <code>collate_fn: Any | None = None</code> parameter and propagate <code>collate_instruction_batch</code> whenever <code>task_type in ("text_instruction", "llm")</code>, padding token sequences dynamically to the longest sequence in each validation micro-batch.</li>
-            </ul>
-
-            <h3>CPU-Bound Execution and Silent Accelerator Starvation (Pathology 27)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: In environments where PyTorch is installed without pre-compiled CUDA binaries (CPU-only build, e.g. <code>torch==2.15.0+cpu</code> instead of <code>+cu126</code>), <code>torch.cuda.is_available()</code> returns <code>False</code>. The training suite falls back to CPU execution without throwing an exception. On a 1.5B parameter causal transformer with 2048 sequence length, CPU execution saturates all host threads (96% CPU utilization across 12 logical processors) while dedicated GPU memory sits idle at 0.8 / 4.0 GB and 0% GPU utilization. Batch execution latency explodes to 40-55s/batch (37+ minutes for a single validation pass).</li>
-                <li><strong>Identification</strong>: Task Manager displays 96% CPU load, 0% GPU utilization, 0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.</li>
-                <li><strong>Remedy</strong>: <strong>Hardware Sentinel Pre-Flight Enforcement</strong>. Hardware probe detects when a physical discrete GPU is present via OS hardware enumeration but PyTorch reports <code>CUDA available: False</code>. Alerts operator to install CUDA-enabled PyTorch wheels (<code>pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126</code>).</li>
-            </ul>
-
-            <h3>Vision-Curriculum Cross-Domain Contamination (Pathology 28)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: Progressive curriculum learning designed for vision models (resolution ladders: 256px -&gt; 384px -&gt; 512px; sample fraction ladders: 15% -&gt; 30% -&gt; 60% -&gt; 100%) was unrestrictively applied to Causal LLMs. For language models, sequence length is a context boundary, not a spatial resolution, and instruction datasets (~1,000 conversational samples) require 100% data exposure from Epoch 1 to preserve multi-domain conversational coherence. Vision curriculum logic artificially truncated context to 15% (138 samples) and logged spurious pixel dimensions (<code>Res: 2048px</code>).</li>
-                <li><strong>Identification</strong>: Logs emit <code>[CURRICULUM] Active training manifold: 138/923 samples (15% data fraction) | Res: 2048px</code>.</li>
-                <li><strong>Remedy</strong>: <strong>Domain-Segregated Curriculum Invariants</strong>. For <code>category == "llm"</code> and <code>text_instruction</code> task types, disable spatial resolution ladder jumping, log context window in tokens (<code>Context: 2048 tokens</code>), and dynamically resolve data fraction and effective batch size directly from <code>unified_models_v2.yaml</code>.</li>
-            </ul>
-
-            <h3>Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 29)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: Exporting autoregressive causal transformers to ONNX via legacy TorchScript tracing (<code>dynamo=False</code>) attempts to capture Python control flow into static compute graphs. In Hugging Face transformers, causal mask computation and KV-cache tracking evaluate dynamic sequence length conditions (e.g. <code>if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) &gt; 0:</code> and <code>torch.tensor([], dtype=...)</code>). Tracing emits <code>TracerWarning: Converting a tensor to a Python boolean...</code> and <code>TracerWarning: torch.tensor results are registered as constants in the trace...</code>.</li>
-                <li><strong>Identification</strong>: Export step logs multiple <code>TracerWarning</code> and <code>UserWarning: Exporting aten::index operator</code> messages during ONNX generation.</li>
-                <li><strong>Remedy</strong>: <strong>Symbolic Dynamo Export Backend Adoption</strong>. Migrate ONNX export to <code>dynamo=True</code> with dynamic shapes (<code>torch.export.Dim</code>) for batch and sequence dimensions, and disable dynamic KV-cache states (<code>use_cache = False</code>) during graph compilation to eliminate the root cause of tracer warnings without suppression.</li>
-            </ul>
-
-            <h3>Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 30)</h3>
-            <ul>
-                <li><strong>The Issue</strong>: <code>CheckpointLifecycleManager</code> records Pareto milestone checkpoints (<code>vault_&lt;metric&gt;.pth</code>) based on SOTA target metrics configured in <code>unified_models_v2.yaml</code>. For LLMs, targets are <code>eval_loss</code>, <code>perplexity</code>, and <code>token_accuracy</code>. Discrepancies between validation metric keys (<code>val_loss</code> vs <code>eval_loss</code>), missing <code>token_accuracy</code> computation, and omitting <code>perplexity</code> from <code>LOWER_IS_BETTER_METRICS</code> caused the vault tracker to bypass saving LLM milestone weights.</li>
-                <li><strong>Identification</strong>: The <code>checkpoints/</code> directory contains <code>best.pth</code> and <code>progress.pth</code>, but no <code>vault_eval_loss.pth</code>, <code>vault_perplexity.pth</code>, or <code>vault_token_accuracy.pth</code> files are generated.</li>
-                <li><strong>Remedy</strong>: <strong>Normalized LLM Vault Aliasing and Token-Level Accuracy Instrumentation</strong>. Instrument <code>validation.py</code> to evaluate non-masked autoregressive <code>token_accuracy</code>, alias <code>eval_loss</code> and <code>val_loss</code> bidirectionally in <code>CANONICAL_METRIC_ALIASES</code>, register <code>perplexity</code> in <code>LOWER_IS_BETTER_METRICS</code>, and enable Pareto model soup blending across LLM adapter checkpoints.</li>
-            </ul>
-
+<h3 id="mixed-precision-underflow-fp16fp8">Mixed Precision Underflow (FP16/FP8)</h3>
+<p><strong>The Issue:</strong> Gradients are so small they become zero in 16-bit or 8-bit
+precision.</p>
+<p><strong>Remedy:</strong> Increase <code>Loss Scale</code> or switch to <strong>BFloat16</strong> which has a larger
+dynamic range.</p>
+<h3 id="optimizer-momentum-decay">Optimizer Momentum Decay</h3>
+<p><strong>The Issue:</strong> Adam/AdamW can lose &quot;energy&quot; in flat manifolds, leading to
+premature plateaus.</p>
+<p><strong>Remedy:</strong> Reset optimizer state; use <strong>Lookahead Optimizer</strong>; or increase
+Momentum parameters.</p>
+<h3 id="the-governor-loop-artificial-plateau-exploit">The &quot;Governor Loop&quot; (Artificial Plateau Exploit)</h3>
+<p><strong>The Issue:</strong> The model fails to reach the Absolute SOTA, but avoids a hard
+regression rollback by briefly spiking just high enough to reset the Governor's
+localized drift counter. It spins indefinitely, wasting compute.</p>
+<p><strong>Identification:</strong> Model stagnates for 20+ epochs with periodic, massive
+quality spikes that fall just short of the SOTA.</p>
+<p><strong>Remedy:</strong> Implement an <strong>Absolute Patience Limit</strong> (e.g., 15 epochs) that acts
+as a Dead Man's Switch, forcibly severing the loop and executing a SOTA rollback
+regardless of minor drift resets. <strong>Status:</strong> the current code has no absolute
+patience limit; a stalled run ends through the bounded epoch budget (Pathology
+26).</p>
+<h3 id="live-polarity-inversion-negative-manifold">Live Polarity Inversion (Negative Manifold)</h3>
+<p><strong>The Issue:</strong> The model's classification head physically inverts mid-epoch,
+mapping correct features to inverse targets (e.g., scoring bad images as good).
+The model may still mathematically satisfy loss metrics while producing
+physically fraudulent results.</p>
+<p><strong>Identification:</strong> The <code>SRCC</code> or <code>PLCC</code> correlation metrics suddenly turn
+negative (<code>&lt; 0.0</code>) despite high theoretical quality scores.</p>
+<p><strong>Remedy:</strong> Integrate a <strong>Live Polarity Shield</strong> into the telemetry engine to
+actively monitor <code>SRCC</code> and <code>PLCC</code> during the epoch, instantly triggering a SOTA
+rollback if a negative correlation is detected.</p>
+<h3 id="turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault">Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)</h3>
+<p><strong>The Issue:</strong> When running PyTorch <code>DataParallel</code> on Turing-class GPUs (e.g.
+Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to
+broadcast them to replica GPUs (<code>_broadcast_coalesced</code>). If any parameter high
+up in the model architecture has an odd size (e.g. an <code>out_channels=3</code> output
+bias of exactly 3 floats / 12 bytes), it throws off the 16-byte memory alignment
+boundary for <em>every single parameter</em> that follows it. While most operations
+tolerate unaligned memory, heavily vectorized cuDNN algorithms (like <code>conv2d</code>
+and <code>conv_transpose2d</code>) will immediately crash with a fatal
+<code>CUDA error: misaligned address</code> or
+<code>unable to find an engine to execute this computation</code>.</p>
+<p><strong>Identification:</strong> Model successfully trains on a single GPU but crashes with
+<code>misaligned address</code> during the forward pass specifically on <code>replica 1</code> or
+higher. Tracebacks point directly to standard cuDNN operations.</p>
+<p><strong>Remedy:</strong> <strong>Global Alignment Monkey-Patch</strong>. Do not alter the model's
+<code>__init__</code> order (as this permanently corrupts the Optimizer state). Instead,
+inject a global monkey-patch over <code>nn.Conv2d.forward</code> and
+<code>nn.ConvTranspose2d.forward</code> that dynamically checks the raw memory pointer
+(<code>weight.data_ptr() % 16</code>). If the pointer is unaligned (indicating a
+DataParallel replica buffer), intercept the execution and force a <code>.clone()</code> to
+instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator
+before passing it to <code>F.conv2d</code>.</p>
+<h3 id="micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck">Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)</h3>
+<ul>
+<li>
+<p><strong>The Issue</strong>: In technical and aesthetic quality scoring (NIMA
+architectures), models are supervised with both pointwise distribution loss
+(EMD) and pairwise ranking margin loss:</p>
+<div class="math-block">$$\mathcal{L}_{\text{rank}} = \frac{1}{|\mathcal{P}|} \sum_{(i,j) \in \mathcal{P}} \text{ReLU}\left(m - \text{sign}(t_i - t_j)(p_i - p_j)\right)$$</div>
+<p>When hardware VRAM constraints (GTX 1650 4GB @ 512px) enforce micro-batch size
+$b=2$ with gradient accumulation $K=12$ ($N_{\text{eff}}=24$), pairwise
+combinations within each forward pass collapse to
+$|\mathcal{P}| = \binom{2}{2} = 1$ pair. Across 12 micro-batches, only
+$12 \times 1 = 12$ pairs are compared, whereas a unified 24-sample batch
+evaluates $\binom{24}{2} = 276$ pairs ($95.6\%$ ranking information loss). EMD
+loss optimizes linear correlation ($\text{PLCC} \ge 0.91$), but monotonic
+ranking supervision is starved, causing $\text{SRCC}$ to plateau at
+$\sim 0.81$.</p>
+</li>
+<li>
+<p><strong>Identification</strong>: Training runs display strong $\text{PLCC} \ge 0.9102$
+alongside stagnant $\text{SRCC} \approx 0.815\text{--}0.818$ across 150+
+epochs, with high validation rank margin variance.</p>
+</li>
+<li>
+<p><strong>Remedy</strong>:</p>
+<ol>
+<li>
+<p><strong>Differentiable Soft-Spearman Loss</strong>: Replace sparse hinge penalties
+with continuous sigmoid-ranked correlation:</p>
+<div class="math-block">$$\tilde{r}_i^p = 1 + \sum_{j \ne i} \sigma\left(\frac{p_i - p_j}{\tau}\right), \quad \mathcal{L}_{\text{soft\_spearman}} = 1 - \frac{\text{Cov}(\tilde{r}^p, \tilde{r}^t)}{\sigma(\tilde{r}^p)\sigma(\tilde{r}^t)}$$</div>
+</li>
+<li>
+<p><strong>Cross-Microbatch Rank Memory Bank</strong>: Maintain a detached FIFO queue
+($N=32/64$) to compute soft ranking across $\binom{32}{2} = 496$ sample
+pairs on every forward step, backpropagating gradients exclusively
+through the active micro-batch.</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect">Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)</h3>
+<ul>
+<li>
+<p><strong>The Issue</strong>: Standard Global Average Pooling ($\text{GAP}$) collapses a
+$H \times W \times C$ spatial activation tensor to $1 \times 1 \times C$ by
+averaging all spatial locations:</p>
+<div class="math-block">$$\text{GAP}(x)_c = \frac{1}{H \cdot W} \sum_{h=1}^H \sum_{w=1}^W x_{c,h,w}$$</div>
+<p>For fine-grained tasks like micro-defect detection (compression blocking,
+localized noise, sensor blur) and safety filtering
+(<code>universal_nsfw_classification</code>), critical features occupy only
+$5\%\text{--}15\%$ of the image canvas. Averaging across the entire background
+dilutes the activation magnitude by $85\%\text{--}95\%$, preventing the
+classifier from learning decisive decision boundaries.</p>
+</li>
+<li>
+<p><strong>Identification</strong>: High false negatives on localized micro-defects or small
+NSFW triggers; models require excessive global contrast to trigger
+classification responses.</p>
+</li>
+<li>
+<p><strong>Remedy</strong>: <strong>Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong>
+and <strong>GeM Pooling</strong>:</p>
+<div class="math-block">$$\text{Feat}(x) = \left[ \text{GAP}(x) \,\|\, \text{StdDev}_{\text{spatial}}(x) \right] \in \mathbb{R}^{2C}$$</div>
+<div class="math-block">$$\text{GeM}(x)_c = \left(\frac{1}{H \cdot W} \sum_{h,w} x_{c,h,w}^p\right)^{1/p}, \quad p \ge 3.0$$</div>
+<p>Statistical pooling preserves localized peak activation variance alongside
+scene-level context without adding convolutional FLOPs.</p>
+</li>
+</ul>
+<h3 id="silent-epoch-limit-termination-the-raw-exit-pathology">Silent Epoch Limit Termination (The Raw Exit Pathology)</h3>
+<ul>
+<li><strong>The Issue</strong>: When a model finishes its total epoch budget (e.g. 300 epochs)
+without breaching SOTA benchmarks, training scripts traditionally exit
+silently to a generic terminal prompt. Operators are left without diagnostic
+context regarding hardware bottlenecks, metric trade-offs, or actionable next
+steps.</li>
+<li><strong>Identification</strong>: The terminal prints <code>Press Enter to return...</code> immediately
+after the last epoch without reporting SOTA benchmark gaps or offering
+continuation options.</li>
+<li><strong>Remedy</strong>: <strong>Universal Post-Training Target Audit &amp; Interactive Guidance</strong>.
+Upon reaching the epoch ceiling without SOTA attainment:
+<ol>
+<li>Print a structured benchmark audit comparing achieved metrics against
+<code>sota_targets</code>.</li>
+<li>Emit diagnostic analysis identifying hardware micro-batch limits and
+manifold properties.</li>
+<li>Offer an interactive action matrix allowing operators to transition to
+Kaggle Cloud Hub, export ONNX binaries, or extend local training
+in-process.</li>
+</ol>
+</li>
+</ul>
+<h3 id="the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom">The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM)</h3>
+<ul>
+<li><strong>The Issue</strong>: In constrained environments like Kaggle (16GB T4/P100), PyTorch
+DataLoader workers (when <code>persistent_workers=True</code>) hold onto fragmented C++
+VRAM allocations even after the training iterator terminates. When the
+validation dataloader spawns, the fragmented VRAM causes an immediate
+Out-Of-Memory exception, crashing the script.</li>
+<li><strong>Identification</strong>: Training loop completes successfully, but the script
+immediately crashes with <code>CUDA Out of memory</code> the exact second the validation
+phase begins.</li>
+<li><strong>Remedy</strong>: <strong>GC Teardown &amp; Worker Capping</strong>. Set <code>persistent_workers=False</code>
+and limit <code>num_workers</code> to a safe threshold (e.g., 2) based on
+<code>is_constrained_env</code>. Inject explicit <code>gc.collect()</code> and
+<code>torch.cuda.empty_cache()</code> teardown sequences exactly between the training and
+validation phases to force the C++ allocator to flush the VRAM footprint.</li>
+</ul>
+<h3 id="the-catastrophic-model-wipe-unsafe-folder-initialization">The Catastrophic Model Wipe (Unsafe Folder Initialization)</h3>
+<ul>
+<li><strong>The Issue</strong>: To prevent overlapping legacy checkpoints, <code>shutil.rmtree</code> was
+historically used to purge the output directory before a fresh start. However,
+if this targets <code>LemGendaryModels/&lt;model_name&gt;</code>, it destroys all existing
+checkpoints, metrics, and ONNX binaries if it fails to correctly detect active
+repository state (e.g., ignoring hidden <code>.git</code> structures).</li>
+<li><strong>Identification</strong>: Previous SOTA <code>.pth</code> models and <code>metrics.csv</code> are entirely
+wiped upon initiating a new training session or notebook.</li>
+<li><strong>Remedy</strong>: <strong>Safe Non-Destructive Export Instantiation</strong>. Replace all
+overarching <code>rmtree</code> calls with precise <code>os.makedirs(exist_ok=True)</code> directory
+creations. Models must incrementally append to <code>metrics.csv</code> and overwrite
+specific checkpoint files (<code>_latest.pth</code>, <code>_best.pth</code>) rather than destroying
+their parent container.</li>
+</ul>
+<h3 id="metric-asymmetry-the-manifold-plateau">Metric Asymmetry (The Manifold Plateau)</h3>
+<ul>
+<li><strong>The Issue</strong>: During multi-objective optimization, the model discovers a
+&quot;lazy&quot; minima where it optimizes a mathematically simpler metric (like global
+intensity PSNR or linear correlation PLCC) while completely ignoring complex
+structural metrics (like perceptual LPIPS or rank-order SRCC).</li>
+<li><strong>Identification</strong>: One metric successfully breaches the 100% SOTA target
+line, while its counterpart plateaus aggressively (e.g. SRCC hard-locks at
+0.81 while PLCC reaches 0.92).</li>
+<li><strong>Remedy</strong>: <strong>Omni-Metric Autonomous Governor</strong>. The <code>SmartTrainingGovernor</code>
+must calculate exact real-time metric deficits
+$\Delta_{m} = \max(0, \text{Target}_m - \text{Current}_m)$ and dynamically
+shift the loss actuators:
+<ol>
+<li>Boost <code>soft_spearman_weight</code> up to <code>2.0</code> if SRCC is lagging.</li>
+<li>Increase <code>lpips_weight</code> dynamically if perceptual geometry is lagging
+behind PSNR.</li>
+<li>Modulate <code>dir_weight</code> versus <code>mag_weight</code> in Forex manifolds if
+Directional Accuracy plateaus.</li>
+</ol>
+</li>
+</ul>
+<h3 id="multi-asset-pip-mismatch--temperature-sharpening-collapse-financial">Multi-Asset Pip Mismatch &amp; Temperature Sharpening Collapse (Financial)</h3>
+<ul>
+<li><strong>The Issue</strong>: In multi-asset financial models trained concurrently across
+currencies, commodities, and indices, pip magnitude scales differ by orders of
+magnitude (e.g. EURUSD moves 15–50 pips, whereas Spot Gold moves 1,500–3,000
+pips and NASDAQ moves 4,000–8,000 pips). When models employ a clamped
+magnitude head (e.g. 200 pips) without cross-asset normalization, commodity
+errors generate an irreducible ~1,400 pip loss gradient per batch, inflating
+validation loss from ~9.3 to 232+ and locking TP/SL MAE at 1,415–1,440 pips.
+Simultaneously, applying image-domain temperature sharpening down to
+$T \le 0.14$ scales low signal-to-noise financial logits by $7\times$, causing
+severe probability overconfidence and gradient explosions. Furthermore,
+because causal time-series data cannot be randomly subsampled (fixed sample
+fraction = 1.0), the Governor diagnoses false dataset exhaustion and deploys
+destructive Level 4.0 Stress Protocols.</li>
+<li><strong>Identification</strong>: Validation loss explodes to 230+ while training loss
+remains low (~9.3); TP/SL MAE flatlines at ~1,415–1,440 pips; <code>softmax_temp</code>
+drops to 0.14 or below; and Governor logs report
+<code>[RESCUE] [OVERFITTING] Dataset exhausted. Deploying Stress Protocol (Level 4.0)</code>.</li>
+<li><strong>Remedy</strong>:
+<ol>
+<li><strong>Multi-Asset Pip Scale Normalization (<code>PAIR_PIP_SCALE</code>)</strong>: Standardize
+all prediction targets and magnitude outputs into Normalized Pip Units
+($\text{NPU} = \text{Raw Pips} / \text{PAIR\_PIP\_SCALE} \in [0, 100]$),
+applying scaling factors: $1.0\times$ for FX Majors, $5.0\times$ for
+Oil/Silver, $10.0\times$ for Gold, and $20.0\text{--}40.0\times$ for
+Indices.</li>
+<li><strong>Calibrated Dual Loss</strong>: Rebalance <code>ForexDualLoss</code> with
+<code>direction_weight=0.5</code> and <code>magnitude_weight=0.02</code> ($\delta=2.0$ Huber on
+NPUs), returning loss values to the clean $0.05\text{--}1.0$ numerical
+range.</li>
+<li><strong>Governor Financial Safeguards</strong>: Enforce a strict temperature floor
+($\min T = 0.75$), constrain Stress Protocol regularization ($\le 2.0$),
+limit differential LR jolts to $\le 1.15\times$, and classify financial
+training phases as <code>CURRICULUM_FOLD</code>.</li>
+</ol>
+</li>
+</ul>
+<h3 id="windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24">Windows Multiprocessing Heap Duplication &amp; Pagefile Thrashing (Pathology 24)</h3>
+<ul>
+<li><strong>The Issue</strong>: On Windows platforms, PyTorch <code>DataLoader</code> with
+<code>num_workers &gt; 0</code> cannot leverage UNIX <code>fork()</code> with Copy-On-Write memory
+semantics; it must use <code>multiprocessing.spawn</code>. When training on extensive
+multi-timeframe sequence manifolds (e.g. 16-symbol Forex arrays across 8
+years), each child worker process unpickles the dataset sample index and
+establishes isolated file descriptors for memory-mapped <code>.npy</code> files. Each
+worker allocates 4.5–5.5 GB of RAM. Spawning 4 workers consumes 20+ GB of
+physical RAM, driving committed memory to 53.0 GB / 55.5 GB on a 32 GB
+workstation. Available RAM collapses to 1.3 GB, forcing Windows into
+continuous pagefile disk thrashing. Every sample read triggers disk I/O page
+faults, inflating batch latency from 0.27s to 3.43s and starving the GPU (0%
+utilization).</li>
+<li><strong>Identification</strong>: Task Manager displays 4 <code>python.exe</code> worker processes
+holding ~5 GB RAM each; committed memory approaches the pagefile limit (&gt;
+95%); batch retrieval time stalls at 3.4–4.0s/batch; and GPU utilization drops
+to 0%.</li>
+<li><strong>Remedy</strong>: <strong>Zero-Worker Windows In-Process Execution (<code>num_workers=0</code>)</strong>.
+Enforce <code>num_workers = 0</code> on Windows for memory-mapped sequence datasets.
+Execution runs directly in the parent process at 1.1 GB total RAM, leaving 20+
+GB of physical memory free. The Windows filesystem cache retains <code>.npy</code> array
+blocks resident in RAM, eliminating pagefile swapping and accelerating batch
+retrieval by $12.5\times$ (0.275s/batch).</li>
+</ul>
+<h3 id="checkpoint-resumption-fraction-desync-ghost-loader-pathology-25">Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology 25)</h3>
+<ul>
+<li><strong>The Issue</strong>: When <code>SmartTrainingGovernor</code> saves progress checkpoints
+(<code>_progress.pth</code>), it serializes the active <code>sample_fraction</code>. If a run is
+interrupted and resumed from an older checkpoint generated before fractional
+curriculum fixes (where the sample fraction was hardcoded to 1.0), the
+checkpoint restoration logic blindly restores <code>current_fraction = 1.0</code>. This
+expands the training dataloader from the intended curriculum fraction (e.g.
+15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying
+epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning
+rates across 7 million samples.</li>
+<li><strong>Identification</strong>: Resumption telemetry logs report
+<code>Source Fraction: 100.0%</code>, <code>New Length: 27300</code>, and <code>Iteration 1362/27300</code>
+despite configuration specifying <code>initial_fraction: 0.15</code>.</li>
+<li><strong>Remedy</strong>: <strong>Keep the Restored Fraction (v16.9.67)</strong>.
+<code>SmartTrainingGovernor.load_state</code> restores the saved fraction as-is. The
+earlier <strong>Curriculum Checkpoint Fraction Override</strong>, which lowered a legacy
+100% fraction to <code>initial_fraction: 0.15</code> during early epochs, was removed:
+lowering the fraction at the same resolution breaks the Monotonic Ratchet
+(pair rule). When a legacy checkpoint's fraction is unwanted, start a clean
+run (<code>--clean</code> / <code>--fresh</code>) so training begins again at the initial fraction.</li>
+</ul>
+<h3 id="the-unbounded-horizon-open-ended-epoch-loop-pathology-26">The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology 26)</h3>
+<ul>
+<li><strong>The Issue</strong>: The engine loop ran as <code>while True</code>, ended only on 4-pillar
+completion or cancellation, and added 10 epochs whenever the budget was
+reached. The governor's early-stop flag was never read, and resumed runs were
+forced to at least 20 epochs.</li>
+<li><strong>Identification</strong>: <code>lemtrain test-all --epochs 1</code>,
+<code>/api/training/unit-test-all</code> and the fleet &quot;1-Epoch Diagnostic&quot; never finish;
+they run until they are cancelled or the Kaggle quota is exhausted.</li>
+<li><strong>Remedy</strong>: <strong>Bounded Epoch Budget (v16.9.65)</strong>. <code>EpochBudgetPolicy</code> decides
+after every epoch whether to continue, extend or stop, with the stop reasons
+<code>converged</code>, <code>early_stop</code>, <code>budget_reached</code> and <code>extension_limit</code>. The budget
+$E$ is a hard cap unless <code>training_budget.max_extension_epochs</code> ($E_{\max}$)
+is above 0, and extensions happen only while the governor reports improvement:</li>
+</ul>
+<div class="math-block">$$E_{\text{trained}} \le E + E_{\max}$$</div>
+<h3 id="fabricated-metric-history-fid-rescaling-pathology-27">Fabricated Metric History (FID Rescaling) (Pathology 27)</h3>
+<ul>
+<li><strong>The Issue</strong>: <code>tools/recalibrate_fid.py</code> rewrote historical <code>metrics.csv</code> FID
+values with formulas (for example <code>fid * 45 + lpips * 26</code>, a fixed <code>2.78</code> for
+epoch 2) and recomputed <code>Quality_Score</code> to remove a chart discontinuity
+between legacy 64-feature values and 2048-feature values.</li>
+<li><strong>Identification</strong>: FID rows that no checkpoint evaluation produced, in the
+models <code>codeformer</code>, <code>ffanet_indoor</code>, <code>mprnet_deraining</code> and
+<code>mirnet_lowlight</code>.</li>
+<li><strong>Remedy</strong>: <strong>Measured Metrics Only (v16.9.67)</strong>. The tool is removed. The
+historical FID values of the four models are <strong>unverified</strong> wherever they
+appear (model papers, <code>metrics.csv</code>, training charts), and no replacement
+numbers are published. They must be re-evaluated from the checkpoints with
+real Inception FID (<code>feature=2048</code>, micro-chunks of at most two samples) or
+excluded from charts. Since v16.9.107, <code>python -m training.fid_reeval mark-unverified</code> records the rows as <code>unverified</code> and <code>measure</code> re-measures a
+checkpoint; both append to <code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> and
+never write <code>metrics.csv</code>. The measurements need a GPU and are still open.</li>
+</ul>
+<h3 id="variable-length-ragged-tensor-validation-collation-collapse-pathology-28">Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 28)</h3>
+<ul>
+<li><strong>The Issue</strong>: Language model instruction datasets consist of heterogeneous
+user prompts and assistant completions with varying token sequence lengths
+(e.g. 294 tokens vs 367 tokens). While training data loaders utilize dynamic
+padding collators (<code>collate_instruction_batch</code>), validation data loaders
+initialized via canonical builder functions (<code>build_val_loader</code>) lacked
+explicit <code>collate_fn</code> propagation. PyTorch default collation
+(<code>default_collate</code>) defaulted to <code>torch.stack()</code>, crashing at the conclusion
+of Epoch 1 with <code>RuntimeError: stack expects each tensor to be equal size, but got [294] at entry 0 and [367] at entry 1</code>.</li>
+<li><strong>Identification</strong>: Training loop executes all training batches cleanly, but
+crashes immediately upon transition to validation with ragged 1D tensor
+stacking mismatch exceptions.</li>
+<li><strong>Remedy</strong>: <strong>Universal Collation Signature Propagation</strong>. Extend
+<code>build_val_loader</code> with an explicit <code>collate_fn: Any | None = None</code> parameter
+and propagate <code>collate_instruction_batch</code> whenever
+<code>task_type in ("text_instruction", "llm")</code>, padding token sequences
+dynamically to the longest sequence in each validation micro-batch.</li>
+</ul>
+<h3 id="cpu-bound-execution--silent-accelerator-starvation-pathology-29">CPU-Bound Execution &amp; Silent Accelerator Starvation (Pathology 29)</h3>
+<ul>
+<li><strong>The Issue</strong>: In environments where PyTorch is installed without
+pre-compiled CUDA binaries (CPU-only build, e.g. <code>torch==2.15.0+cpu</code> instead
+of <code>+cu126</code>), <code>torch.cuda.is_available()</code> returns <code>False</code>. The training suite
+falls back to CPU execution without throwing an exception. On a 1.5B
+parameter causal transformer with 2048 sequence length, CPU execution
+saturates all host threads (96% CPU utilization across 12 logical processors)
+while dedicated GPU memory sits idle at 0.8 / 4.0 GB and 0% GPU utilization.
+Batch execution latency explodes to 40-55s/batch (37+ minutes for a single
+validation pass).</li>
+<li><strong>Identification</strong>: Task Manager displays 96% CPU load, 0% GPU utilization,
+0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.</li>
+<li><strong>Remedy</strong>: <strong>Hardware Sentinel Pre-Flight Enforcement</strong>. Install
+CUDA-enabled PyTorch wheels
+(<code>pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126</code>). The local trainer has no automatic
+pre-flight check yet that compares OS GPU enumeration with
+<code>torch.cuda.is_available()</code>; check <code>lemtrain audit system</code>, which prints
+<code>CUDA Available</code>. Only the generated Kaggle notebooks probe the GPU and
+print a reinstall hint.</li>
+</ul>
+<h3 id="vision-curriculum-cross-domain-contamination-pathology-30">Vision-Curriculum Cross-Domain Contamination (Pathology 30)</h3>
+<ul>
+<li><strong>The Issue</strong>: Progressive curriculum learning designed for vision models
+(resolution ladders: 256px -&gt; 384px -&gt; 512px; sample fraction ladders: 15% -&gt;
+30% -&gt; 60% -&gt; 100%) was unrestrictively applied to Causal LLMs. For language
+models, sequence length is a context boundary, not a spatial resolution, and
+instruction datasets (~1,000 conversational samples) require 100% data
+exposure from Epoch 1 to preserve multi-domain conversational coherence.
+Vision curriculum logic artificially truncated context to 15% (138 samples)
+and logged spurious pixel dimensions (<code>Res: 2048px</code>).</li>
+<li><strong>Identification</strong>: Logs emit <code>[CURRICULUM] Active training manifold: 138/923 samples (15% data fraction) | Res: 2048px</code>.</li>
+<li><strong>Remedy</strong>: <strong>Domain-Segregated Curriculum Invariants</strong>. For
+<code>category == "llm"</code> and <code>text_instruction</code> task types, disable spatial
+resolution ladder jumping, log context window in tokens
+(<code>Context: 2048 tokens</code>), and dynamically resolve data fraction and effective
+batch size directly from <code>unified_models_v2.yaml</code>.</li>
+</ul>
+<h3 id="symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31">Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 31)</h3>
+<ul>
+<li><strong>The Issue</strong>: Exporting autoregressive causal transformers to ONNX via
+legacy TorchScript tracing (<code>dynamo=False</code>) attempts to capture Python
+control flow into static compute graphs. In Hugging Face transformers, causal
+mask computation and KV-cache tracking evaluate dynamic sequence length
+conditions (e.g. <code>if (padding_length := kv_length + kv_offset - attention_mask.shape[-1]) &gt; 0:</code> and <code>torch.tensor([], dtype=...)</code>). Tracing
+emits <code>TracerWarning: Converting a tensor to a Python boolean...</code> and
+<code>TracerWarning: torch.tensor results are registered as constants in the trace...</code>.</li>
+<li><strong>Identification</strong>: Export step logs multiple <code>TracerWarning</code> and
+<code>UserWarning: Exporting aten::index operator</code> messages during ONNX
+generation.</li>
+<li><strong>Remedy</strong>: <strong>Symbolic Dynamo Export Backend Adoption</strong>. Migrate ONNX export
+to <code>dynamo=True</code> with dynamic shapes (<code>torch.export.Dim</code>) for batch and
+sequence dimensions, and disable dynamic KV-cache states (<code>use_cache = False</code>)
+during graph compilation to eliminate the root cause of tracer warnings
+without suppression (<code>training/export/llm_exporter.py</code>).</li>
+</ul>
+<h3 id="disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32">Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 32)</h3>
+<ul>
+<li><strong>The Issue</strong>: <code>CheckpointLifecycleManager</code> records Pareto milestone
+checkpoints (<code>vault_&lt;metric&gt;.pth</code>) based on SOTA target metrics configured in
+<code>unified_models_v2.yaml</code>. For LLMs, targets are <code>eval_loss</code>, <code>perplexity</code>,
+and <code>token_accuracy</code>. Discrepancies between validation metric keys
+(<code>val_loss</code> vs <code>eval_loss</code>), missing <code>token_accuracy</code> computation, and
+omitting <code>perplexity</code> from <code>LOWER_IS_BETTER_METRICS</code> caused the vault tracker
+to bypass saving LLM milestone weights.</li>
+<li><strong>Identification</strong>: The <code>checkpoints/</code> directory contains <code>best.pth</code> and
+<code>progress.pth</code>, but no <code>vault_eval_loss.pth</code>, <code>vault_perplexity.pth</code>, or
+<code>vault_token_accuracy.pth</code> files are generated.</li>
+<li><strong>Remedy</strong>: <strong>Normalized LLM Vault Aliasing &amp; Token-Level Accuracy
+Instrumentation</strong>. Instrument <code>validation.py</code> to evaluate non-masked
+autoregressive <code>token_accuracy</code>, map <code>val_loss</code> and <code>eval_loss</code> to the one
+canonical key <code>eval_loss</code> in <code>CANONICAL_METRIC_ALIASES</code>, register
+<code>perplexity</code> in <code>LOWER_IS_BETTER_METRICS</code>, and enable Pareto model soup
+blending across LLM adapter checkpoints.</li>
+</ul>
 </section>
-        <section id="section-7">
+
+<section id="sec-5-high-fidelity-strategy--historical-evolution-taxonomy">
 <h2>5. High-Fidelity Strategy &amp; Historical Evolution Taxonomy</h2>
-            <div class="abstract-box">
-                <p><strong>Historical Evolution &amp; Version Authority Note</strong>: The strategies documented in this section reflect the chronological hardening of the LemGendary Training Suite across architectural milestones. Historical tags (<code>v16.2.8</code>, <code>v17.2</code>, <code>v18.0</code>, <code>v22.0</code>) represent historical development phases and research prototypes. In the authoritative active baseline (<strong>v16.9.16-STABLE</strong>), all of these individual mechanisms (high-fidelity resolution floors, zero-worker serial lockdown, sawtooth VRAM memory sentinels, and ladder-aware resolution jumps) have been fully consolidated into the unified <code>SmartTrainingGovernor</code> runtime engine.</p>
-            </div>
-            <h3 id="blur-pathology">The "Low-Resolution Blur" Pathology (Milestone v16.2.8)</h3>
-            <p><strong>The Issue:</strong> Initializing training at ultra-low resolutions results in the model learning to ignore high-frequency details. This leads to persistent blurring artifacts.</p>
-            <p><strong>Remedy:</strong> <strong>Mandatory High-Fidelity Floor</strong>. As of v16.2.8 (consolidated into v16.9.16-STABLE), all models must start at a minimum of <strong>224px</strong> or <strong>512px</strong> (Metric Scorers).</p>
-
-            <h3 id="sentinel-drift">Memory-Sentinel Drift</h3>
-            <p><strong>The Issue:</strong> Static batch sizes fail to account for background VRAM usage, causing "OOM-Drift" during long training runs.</p>
-            <p><strong>Remedy:</strong> <strong>Active Memory-Sentinel Probing</strong>. Decouple batch size from registry and probe hardware headroom before every resolution jump.</p>
-
-            <h3 id="atomic-audit">Atomic Hardware Re-Auditing</h3>
-            <p><strong>The Issue:</strong> Using a single batch size measurement for the entire training run is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.</p>
-            <p><strong>Identification:</strong> Under-utilization (low it/s) at low resolutions or OOM crashes immediately following a resolution jump.</p>
-            <p><strong>Remedy:</strong> <strong>Atomic Re-Audit Protocol</strong>. Trigger a fresh hardware probe on every spatial jump and at the start of every validation phase to re-calculate peak batch and accumulation.</p>
-
-            <h3 id="serial-shield">The Serial Recovery Shield (Prototype v17.2)</h3>
-            <p><strong>The Issue:</strong> On Windows, OOM recovery events involving parallel data workers often lead to kernel-level deadlocks or "Zombie" Python processes that freeze the entire training suite.</p>
-            <p><strong>Remedy:</strong> <strong>Serial Lockdown</strong>. After an OOM event, the suite must force-disable all parallel workers and revert to <strong>Serial Mode (0 workers)</strong> for the remainder of the manifold stage.</p>
-
-            <h3 id="iron-clamp">The Sub-Nuclear 4GB Lockdown (Design Study v22.0)</h3>
-            <p><strong>The Issue:</strong> 4GB cards (GTX 1650) trigger <strong>System RAM Paging</strong> when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.</p>
-            <p><strong>Identification:</strong> "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops below 0.5 img/s.</p>
-            <p><strong>Remedy:</strong> <strong>Absolute Sentinel Authority</strong>. The Memory Sentinel now acts as the absolute physical authority, overriding any hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to fit entirely within physical VRAM, preventing Windows System RAM paging.</p>
-
-            <h3 id="false-positive-spike">The False-Positive Spike (Absolute Energy Floor)</h3>
-            <p><strong>The Issue:</strong> The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x the running average). In high-fidelity restoration, the running average can drop to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike the loss to 0.03. This triggers a 30x relative spike detection, causing the Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03 being physically harmless (3% error).</p>
-            <p><strong>Identification:</strong> Console logs show <code>Sudden Loss Spike detected (0.0308 vs 0.0010)</code> resulting in <code>Manifold unstable. NPP Recoil active</code> on otherwise stable metrics.</p>
-            <p><strong>Remedy:</strong> <strong>Absolute Energy Floor</strong>. Implement an absolute mathematical threshold (e.g., <code>&gt; 0.05</code> unscaled) to the spike detection logic. A spike is now only considered dangerous if it represents a massive relative deviation <em>and</em> breaches the absolute baseline energy floor.</p>
-
-            <h3 id="premature-sota">Premature SOTA Termination (Ladder Guard v18.0)</h3>
-            <p><strong>The Issue:</strong> The training suite terminates immediately upon reaching SOTA targets at low-resolution rungs, resulting in lack of high-frequency spatial maturity.</p>
-            <p><strong>Remedy:</strong> <strong>Ladder-Aware SOTA Guard</strong>. Targets met at lower rungs now trigger an autonomous <strong>Force-Jump</strong> to the next resolution instead of mission shutdown.</p>
-
-            <h3 id="manifold-fragility">Manifold Fragility (Glass Manifold Effect)</h3>
-            <p><strong>The Issue:</strong> Rapid resolution jumps can destabilize the model's weight distribution before it has "hardened" at the new scale.</p>
-            <p><strong>Remedy:</strong> <strong>SOTA Hardening Guard (v19.0)</strong>. Enforce a mandatory <strong>2-epoch Manifold Maturity</strong> period. The model is forbidden from jumping until it has solidified weights for 2 full epochs.</p>
-
-            <h3 id="thermal-glass-manifold-collapse">Thermal Glass Manifold Collapse (The Stress Loop)</h3>
-            <p><strong>The Issue:</strong> When a model plateaus far away from its final SOTA target, the Governor assumes it is trapped and deploys the <strong>Stress Protocol</strong> by sharpening the Softmax Temperature. If the model's manifold is highly fragile (which is common immediately after setting a new SOTA), this extreme sharpening shatters the weights, causing a &gt;10% regression. The Regression Guard then rolls back to SOTA, causing an endless loop.</p>
-            <p><strong>Remedy:</strong> <strong>Strict Thermal Floors</strong>. Constrain the Governor with a strict <code>min_temp</code> in the <code>unified_models_v2.yaml</code> configuration (e.g., <code>min_temp: 0.96</code>). This physically blocks the Stress Protocol from dropping the temperature into the shattering zone.</p>
-            
-            <h3 id="csv-lie">The "CSV Lie" Pathology</h3>
-            <p><strong>The Issue:</strong> Telemetry logging natively pulls background hardware metrics instead of the Governor's internal state machine, causing visualizations to show <code>0.0</code> Dataset Stress even when the model is actively being subjected to the Stress Protocol.</p>
-            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 0.0</code> despite the training terminal outputting <code>REFINEMENT: Trapped in Plateau. Deploying Stress Protocol</code>.</p>
-            <p><strong>Remedy:</strong> <strong>Engine Synchronization</strong>. The telemetry engine (<code>telemetry.py</code>) must be hardwired to extract <code>current_epoch_governor_state['stress']</code> instead of hardware memory stress.</p>
-
-            <h3 id="infinite-cooling">The Infinite Cooling Loop</h3>
-            <p><strong>The Issue:</strong> A mathematical logic flaw in the training loop resets the <code>epochs_no_improve</code> counter to <code>0</code> whenever any action is taken by the Governor. Because the Governor frequently cools the learning rate (an action), the plateau timer never reaches its threshold (e.g., 5 epochs) to deploy the Stress Protocol.</p>
-            <p><strong>Identification:</strong> The model is completely flatlined for dozens of epochs. The learning rate is repeatedly cooled, but the dataset fraction never drops and the Stress Protocol is never deployed.</p>
-            <p><strong>Remedy:</strong> <strong>Action Hardening</strong>. The plateau timer must explicitly ignore standard learning rate adjustments (<code>lr_changed = True</code>), resetting only upon spatial jumps, dataset fraction expansions, or positive 'Jolt' multipliers.</p>
-
-            <h3 id="permanent-stress">The Permanent Stress Pathology</h3>
-            <p><strong>The Issue:</strong> A failure to deactivate the Stress Protocol. After deploying Stress to shake a model out of a plateau, the model successfully establishes a new SOTA Best Quality Score. However, the Governor leaves the noise generators on (<code>Stress: 5.0</code>) for all subsequent epochs.</p>
-            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> continuing endlessly even after the quality score breaks previous ceilings, crippling the model's ability to fine-tune.</p>
-            <p><strong>Remedy:</strong> <strong>SOTA Deactivation Gate</strong>. Patch the Governor's <code>Update Memory</code> phase in <code>optimization_engine.py</code>. When <code>current_quality &gt; self.best_quality</code>, instantly neutralize <code>self.current_stress</code> back to <code>0.0</code> so the new manifold can anchor cleanly.</p>
-
-            <h3 id="max-stress-freeze">The Max Stress LR Freeze (v16 Bug)</h3>
-            <p><strong>The Issue:</strong> A logic gap in the Governor's <code>REFINEMENT</code> phase. When <code>current_stress</code> reaches the maximum level of <code>5.0</code> and the model's quality score is still far below <code>target_quality_score * 0.90</code>, the code falls through to the <code>else</code> branch and applies <code>cooling_factor</code> (e.g., <code>0.85&times;</code>) to the LR every single epoch. After 30&ndash;40 epochs at max stress, the LR is crushed to near-zero, completely freezing the model's ability to escape the local minimum. The stress plateau is permanent because the SOTA deactivation gate only fires when quality <em>improves</em>, which is impossible with a frozen LR.</p>
-            <p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> persisting for 20+ epochs. PLCC/SRCC oscillate within a very narrow band (e.g., &plusmn;0.02). The LR column shows exponential decay (e.g., <code>5e-5 &rarr; 2e-5 &rarr; 8e-6 &rarr; ...</code>). The terminal emits <code>REFINEMENT: SOTA Precision Cooling</code> rather than any jolt message.</p>
-            <p><strong>Observed In:</strong> <code>nima_aesthetic_mobile</code> run &mdash; 86 epochs, stress=5.0 from epoch 83+, PLCC stuck at 0.47 vs target 0.60, LR decaying from 5e-5 down toward the <code>1e-5</code> absolute floor.</p>
-            <p><strong>Remedy:</strong> <strong>Max-Stress Jolt Guard (v16)</strong>. Add a new <code>elif</code> branch in <code>optimization_engine.py</code> between the stress-escalation block and the cooling fallback. When <code>current_stress &gt;= 5.0</code> and the model is still far from SOTA, force the <code>jolt_multiplier</code> instead of the <code>cooling_factor</code>. Additionally, track a <code>max_stress_stuck_epochs</code> counter. After <code>plateau_patience &times; 2</code> epochs in this state with no improvement, emit a <code>[STUCK]</code> signal in the governor message so the operator can make an informed decision about stopping or switching the architecture backbone. This prevents indefinite silent degradation.</p>
-
-            <h3 id="amnesiac-jolt">The Amnesiac Double-Jolt (Cooldown Persistence)</h3>
-            <p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across script restarts. If the training hub is restarted while a model is in a plateau, the Governor assumes the cooldown has expired and immediately blasts the model with another 1.5x LR Jolt, constantly destroying the manifold before it can stabilize.</p>
-            <p><strong>Identification:</strong> The terminal outputs <code>JOLT: Breaking Plateau with 1.50x LR Propulsion</code> immediately upon resuming from a checkpoint, and metrics regress heavily.</p>
-            <p><strong>Remedy:</strong> <strong>State Persistence</strong>. Ensure <code>last_jolt_epoch</code> is correctly serialized in <code>get_state()</code> and loaded in <code>load_state()</code> inside <code>optimization_engine.py</code>.</p>
-
-            <h3 id="onecyclelr-desynchronization">OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)</h3>
-            <p><strong>The Issue:</strong> Instantiating a new <code>OneCycleLR</code> scheduler in PyTorch immediately resets the optimizer's active learning rate parameter groups to the initial cycle rate (e.g., <code>1e-6</code>). When manually setting <code>scheduler.last_epoch = ...</code> without subsequent synchronization, the optimizer remains stuck at the initial low rate for the entire next epoch. Once the next epoch completes, the scheduler steps, suddenly updating the optimizer's active rate to the high scaled step value (e.g., <code>2.5e-5</code>). This creates a sequence of alternating low-learning-rate "stagnant" epochs and high-learning-rate "velocity shock" epochs that degrades the manifold.</p>
-            <p><strong>Identification:</strong> The learning rate oscillates dramatically between epochs (e.g., <code>1e-6 &rarr; 2.5e-5 &rarr; 1e-6 &rarr; 2.5e-5</code>). The stagnant low-learning-rate epochs mimic SOTA stability, but are immediately followed by catastrophic regression (10%+ drops) when the high rate kicks in.</p>
-            <p><strong>Remedy:</strong> <strong>Active Scheduler-Optimizer Synchronization</strong>. Immediately after manually setting <code>scheduler.last_epoch</code> and <code>scheduler._step_count</code> on newly instantiated schedulers, manually synchronize the optimizer's active parameter groups with <code>scheduler.get_lr()</code> and update <code>scheduler._last_lr</code>.</p>
-
-            <h3 id="premature-spatial-retreat">Premature Spatial Retreat (The Over-Aggressive Recoil)</h3>
-            <p><strong>The Issue:</strong> When dataset fraction is expanded (e.g. <code>55% -&gt; 75%</code>) on a high-resolution manifold, temporary validation variance occurs. Under legacy recoil rules (<code>epoch_count - last_res_jump_epoch &lt; 8</code>), the Governor assumes the resolution jump itself was premature and triggers a hard <strong>Spatial Retreat</strong> (dropping resolution to <code>384px @ 100% Data</code>), even if the model already achieved a peak 98%+ score at 512px.</p>
-            <p><strong>Identification:</strong> <code>metrics.csv</code> shows high accuracy/quality (e.g., 98.12%) at 512px @ 55% data, followed by a resolution drop to 384px @ 100% data where validation loss explodes further (e.g. <code>0.14</code> -&gt; <code>1.64</code>).</p>
-            <p><strong>Remedy:</strong> <strong>Proven-Manifold Protection &amp; Intra-Resolution Data Recoil (v16.0.0)</strong>. If <code>best_quality</code> on the active resolution has reached high fidelity (<code>best_quality &gt;= 0.75 * target_quality_score</code> or <code>&gt; 85.0</code>), Spatial Retreat is BLOCKED. Instead, the Governor steps <code>current_fraction</code> back to the last safe fraction (e.g. <code>75% -&gt; 55%</code>) at 512px, cools LR by 50%, and locks stabilization for 5 epochs.</p>
-
-            <h3 id="static-loss-hyperparameter-saturation">Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)</h3>
-            <p><strong>The Issue:</strong> Fixed loss hyperparameters (such as pairwise <code>rank_weight</code>, <code>rank_margin</code>, or static <code>softmax_temp</code>) in static configuration files limit late-stage convergence. Models reach a plateau near SOTA targets (<code>PLCC &gt; 0.91</code>, <code>SRCC &gt; 0.91</code>, <code>EMD &lt; 0.07</code>), but manual mid-training YAML adjustments are error-prone and disrupt automated continuous training pipelines.</p>
-            <p><strong>Identification:</strong> Model metrics stabilize at <code>PLCC ~0.87-0.88</code> and <code>SRCC ~0.79-0.80</code>, with EMD hovering around <code>0.088-0.095</code>. Manual mid-session editing of static configuration files is required to force rank loss scaling.</p>
-            <p><strong>Remedy:</strong> <strong>Autonomous SOTA Hyperparameter Adaptation (v17.5)</strong>. The <code>SmartTrainingGovernor</code> dynamically audits late-stage convergence against target SOTA benchmarks (<code>sota_targets</code>). When plateauing below target benchmarks in the <code>REFINEMENT</code> phase, it automatically escalates <code>rank_weight</code> (up to <code>1.5</code>), tightens pairwise <code>rank_margin</code> (down to <code>0.05</code>), and sharpens <code>softmax_temp</code> (down to <code>0.90</code>) on the fly, writing the updated parameters into <code>criterion.stab</code> and checkpoint state.</p>
-
-            <h3 id="false-alarm-jolt-collapse">The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)</h3>
-            <p><strong>The Issue:</strong> During late-stage plateau breaking on high-scalar quality manifolds (such as <code>nima_technical</code> where Quality Score is ~284), the <strong>Jolt Shield</strong> early collapse valve utilized a hardcoded absolute regression floor (<code>delta_q &lt; -0.015</code>). On normalized metrics [0, 1], a drop of -0.015 represents a 1.5% regression; however, on a Quality Score scale of ~284, a delta of -0.015 corresponds to an imperceptible 0.005% fluctuation. Consequently, normal exploratory weight updates under differential propulsion (2.25x Head LR) produced natural ±0.8 metric exploration steps that prematurely tripped the Jolt Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: <em>Plateau Detection (4 epochs) &rarr; Jolt Injection &rarr; False-Alarm Jolt Collapse Abort &rarr; Precision Cooling &rarr; Stagnation</em>.</p>
-            <p><strong>Identification:</strong> Terminal logs show <code>JOLT: Breaking Plateau ... (3-Epoch Window)</code> on one epoch, immediately followed on the very next epoch by <code>[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.</code> with repetitive cooling and 4-epoch plateau cycles.</p>
-            <p><strong>Remedy:</strong> <strong>Dynamic Manifold-Scaled Jolt Shield (v18.1)</strong>. Scale the early collapse threshold dynamically based on <code>prev_quality</code>: <code>collapse_threshold = -0.03 * prev_quality</code> if <code>prev_quality &gt; 1.0</code> else <code>-0.015</code>. This allows the model to sustain exploratory propulsion across its full 3-epoch window without false-alarm cancellation.</p>
-            <p><strong>Remedy 2:</strong> <strong>Financial Manifold Hardening (Forex/Commodities)</strong>. Financial models trigger Jolt panics due to extreme natural entropy and Sharpe Ratio (<code>plcc</code>) tracking. The Governor now bypasses standard Turbulence Shields for Forex, doubles Jolt Protocol intensity (2.0&times;), extends absolute plateau patience (15+ epochs), and explicitly recalibrates collapse guard thresholds to &lt; 45.0% Directional Accuracy to prevent false-positive retreats.</p>
-
-            <h3 id="cpu-validation-thrashing">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</h3>
-            <p><strong>The Issue:</strong> In high-resolution image restoration pipelines, transferring validation predictions to CPU host RAM for single-threaded <code>skimage.metrics.structural_similarity</code> calculations causes severe CPU saturation (pinned at 100%+ on dual-vCPU VMs like Kaggle) and PCIe bus ping-pong thrashing. GPUs drop to 15–25% utilization, stalling execution and causing single validation passes to take upwards of 2–3 hours. Static workspace caps further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2.</p>
-            <p><strong>Identification:</strong> Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization drops to 18–27%, GPU memory is underutilized, and validation progress moves at &gt;1.5s per iteration across thousands of micro-batches.</p>
-            <p><strong>Remedy:</strong> <strong>Zero-Copy GPU-Native Evaluation &amp; Dynamic VRAM-Tiered Batching (v19.2)</strong>:</p>
-            <ol>
-                <li><strong>GPU-Native PyTorch SSIM:</strong> Vectorized 2D Gaussian convolution SSIM (<code>compute_ssim_gpu</code>) evaluated directly on CUDA tensors in &lt; 1ms.</li>
-                <li><strong>Zero-Copy VRAM Pipeline:</strong> Eliminates host-device memory transfers for MSE, SSIM, LPIPS, and FID.</li>
-                <li><strong>Dynamic VRAM Tier Validation Cap:</strong> Scales validation batch size dynamically based on VRAM capacity (&ge; 14GB &rarr; 32, &ge; 8GB &rarr; 16, &lt; 4.5GB &rarr; 4).</li>
-                <li><strong>Dynamic CPU Worker Topology:</strong> Aligns <code>num_workers = min(cpu_count, 2)</code> on Kaggle to prevent CPU core oversubscription.</li>
-            </ol>
-
-            <h3 id="checkpoint-fraction-desync">Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)</h3>
-            <p><strong>The Issue:</strong> In cloud training environments with session quotas (e.g., Kaggle 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and expanded dataset fractions (e.g., 75% &rarr; 90%) <em>after</em> assembling the epoch checkpoint dictionary (<code>ckpt_state</code>) and saving to disk. If a preemptive shutdown occurred during the expansion epoch or before the subsequent SOTA milestone, reloading the checkpoint restored the stale governor state, silently rolling the training fraction back to 75% and trapping the model in an infinite fraction expansion loop.</p>
-            <p><strong>Identification:</strong> Training logs indicate dataset fraction expansion to 90% or 100%, but upon session restart or preemption recovery, the active dataset fraction drops back to the earlier rung (e.g., 75%).</p>
-            <p><strong>Remedy:</strong> <strong>Atomic Governor Fraction Expansion Persistence &amp; Checkpoint State Flush (v16.3.4)</strong>:</p>
-            <ol>
-                <li>Immediately after calling <code>train_ds.update_strategy(fraction=next_frac)</code> and rebuilding DataLoaders, flush the live <code>governor.get_state()</code> dictionary directly into <code>ckpt_state['governor_state']</code>.</li>
-                <li>Overwrite both <code>_latest.pth</code> and <code>_best.pth</code> on physical storage atomically so restarts cannot reload stale pre-expansion fractions.</li>
-                <li>Anchor Hub Lock skip-paths directly to live <code>governor.get_state()</code> so local progress checkpoints never persist stale governor snapshots.</li>
-            </ol>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<blockquote>
+<p>[!NOTE] <strong>Historical Evolution &amp; Version Authority Note</strong>: The strategies
+documented in this section reflect the chronological hardening of the
+LemGendary Model Training Suite across architectural milestones. Historical
+tags (<code>v16.2.8</code>, <code>v17.2</code>, <code>v18.0</code>, <code>v22.0</code>) represent historical development
+phases and research prototypes. In the authoritative active baseline
+(<strong>v16.9.68-STABLE</strong>), all of these individual mechanisms (high-fidelity
+resolution floors, zero-worker serial lockdown, sawtooth VRAM memory
+sentinels, and ladder-aware resolution jumps) have been fully consolidated
+into the unified <code>SmartTrainingGovernor</code> runtime engine.</p>
+</blockquote>
+<h3 id="the-low-resolution-blur-pathology-milestone-v1628">The &quot;Low-Resolution Blur&quot; Pathology (Milestone v16.2.8)</h3>
+<p><strong>The Issue:</strong> Initializing training at ultra-low resolutions results in the
+model learning to ignore high-frequency details. This leads to persistent
+blurring artifacts.</p>
+<p><strong>Remedy:</strong> <strong>Mandatory High-Fidelity Floor</strong>. As of v16.2.8 (consolidated into
+v16.9.16-STABLE), all models must start at a minimum of <strong>224px</strong> or <strong>512px</strong>
+(Metric Scorers).</p>
+<h3 id="memory-sentinel-drift">Memory-Sentinel Drift</h3>
+<p><strong>The Issue:</strong> Static batch sizes fail to account for background VRAM usage,
+causing &quot;OOM-Drift&quot; during long training runs.</p>
+<p><strong>Remedy:</strong> <strong>Active Memory-Sentinel Probing</strong>. Decouple batch size from
+registry and probe hardware headroom before every resolution jump.</p>
+<h3 id="atomic-hardware-re-auditing">Atomic Hardware Re-Auditing</h3>
+<p><strong>The Issue:</strong> Using a single batch size measurement for the entire training run
+is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.</p>
+<p><strong>Identification:</strong> Under-utilization (low it/s) at low resolutions or OOM
+crashes immediately following a resolution jump.</p>
+<p><strong>Remedy:</strong> <strong>Atomic Re-Audit Protocol</strong>. Trigger a fresh hardware probe on
+every spatial jump and at the start of every validation phase to re-calculate
+peak batch and accumulation.</p>
+<h3 id="the-serial-recovery-shield-prototype-v172">The Serial Recovery Shield (Prototype v17.2)</h3>
+<p><strong>The Issue:</strong> On Windows, OOM recovery events involving parallel data workers
+often lead to kernel-level deadlocks or &quot;Zombie&quot; Python processes that freeze
+the entire training suite.</p>
+<p><strong>Remedy:</strong> <strong>Serial Lockdown</strong>. After an OOM event, the suite must
+force-disable all parallel workers and revert to <strong>Serial Mode (0 workers)</strong> for
+the remainder of the manifold stage.</p>
+<h3 id="the-sub-nuclear-4gb-lockdown-design-study-v220">The Sub-Nuclear 4GB Lockdown (Design Study v22.0)</h3>
+<p><strong>The Issue:</strong> 4GB cards (GTX 1650) trigger <strong>System RAM Paging</strong> when VRAM
+usage exceeds ~3.5GB, slowing training by 10x-20x.</p>
+<p><strong>Identification:</strong> &quot;Shared GPU Memory&quot; in Task Manager exceeds 1GB; speed drops
+below 0.5 img/s.</p>
+<p><strong>Remedy:</strong> <strong>Absolute Sentinel Authority</strong>. The Memory Sentinel now acts as the
+absolute physical authority, overriding any hardcoded YAML config batch sizes.
+It dynamically clamps pixel volumes to fit entirely within physical VRAM,
+preventing Windows System RAM paging.</p>
+<h3 id="the-false-positive-spike-absolute-energy-floor">The False-Positive Spike (Absolute Energy Floor)</h3>
+<p><strong>The Issue:</strong> The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x
+the running average). In high-fidelity restoration, the running average can drop
+to microscopic levels (e.g., 0.001). A difficult high-entropy patch might spike
+the loss to 0.03. This triggers a 30x relative spike detection, causing the
+Sentinel to panic, recoil, and reset learning rates unnecessarily, despite 0.03
+being physically harmless (3% error).</p>
+<p><strong>Identification:</strong> Console logs show
+<code>Sudden Loss Spike detected (0.0308 vs 0.0010)</code> resulting in
+<code>Manifold unstable. NPP Recoil active</code> on otherwise stable metrics.</p>
+<p><strong>Remedy:</strong> <strong>Absolute Energy Floor</strong>. Implement an absolute mathematical
+threshold (e.g., <code>&gt; 0.05</code> unscaled) to the spike detection logic. A spike is now
+only considered dangerous if it represents a massive relative deviation <em>and</em>
+breaches the absolute baseline energy floor.</p>
+<h3 id="premature-sota-termination-ladder-guard-v180">Premature SOTA Termination (Ladder Guard v18.0)</h3>
+<p><strong>The Issue:</strong> The training suite terminates immediately upon reaching SOTA
+targets at low-resolution rungs, resulting in lack of high-frequency spatial
+maturity.</p>
+<p><strong>Remedy:</strong> <strong>Ladder-Aware SOTA Guard</strong>. Targets met at lower rungs now trigger
+an autonomous <strong>Force-Jump</strong> to the next resolution instead of mission shutdown.</p>
+<h3 id="manifold-fragility-glass-manifold-effect">Manifold Fragility (Glass Manifold Effect)</h3>
+<p><strong>The Issue:</strong> Rapid resolution jumps can destabilize the model's weight
+distribution before it has &quot;hardened&quot; at the new scale.</p>
+<p><strong>Remedy:</strong> <strong>SOTA Hardening Guard (v19.0)</strong>. Enforce a mandatory <strong>2-epoch
+Manifold Maturity</strong> period. The model is forbidden from jumping until it has
+solidified weights for 2 full epochs.</p>
+<h3 id="thermal-glass-manifold-collapse-the-stress-loop">Thermal Glass Manifold Collapse (The Stress Loop)</h3>
+<p><strong>The Issue:</strong> When a model plateaus far away from its final SOTA target, the
+Governor assumes it is trapped and deploys the <strong>Stress Protocol</strong> by sharpening
+the Softmax Temperature. If the model's manifold is highly fragile (which is
+common immediately after setting a new SOTA), this extreme sharpening shatters
+the weights, causing a &gt;10% regression. The Regression Guard then rolls back to
+SOTA, causing an endless loop.</p>
+<p><strong>Remedy:</strong> <strong>Strict Thermal Floors</strong>. Constrain the Governor with a strict
+<code>min_temp</code> in the <code>unified_models_v2.yaml</code> configuration (e.g.,
+<code>min_temp: 0.96</code>). This physically blocks the Stress Protocol from dropping the
+temperature into the shattering zone.</p>
+<h3 id="the-csv-lie-pathology">The &quot;CSV Lie&quot; Pathology</h3>
+<p><strong>The Issue:</strong> Telemetry logging natively pulls background hardware metrics
+instead of the Governor's internal state machine, causing visualizations to show
+<code>0.0</code> Dataset Stress even when the model is actively being subjected to the
+Stress Protocol.</p>
+<p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 0.0</code> despite the training
+terminal outputting <code>REFINEMENT: Trapped in Plateau. Deploying Stress Protocol</code>.</p>
+<p><strong>Remedy:</strong> <strong>Engine Synchronization</strong>. The telemetry engine (<code>telemetry.py</code>)
+must be hardwired to extract <code>current_epoch_governor_state['stress']</code> instead of
+hardware memory stress.</p>
+<h3 id="the-infinite-cooling-loop">The Infinite Cooling Loop</h3>
+<p><strong>The Issue:</strong> A mathematical logic flaw in the training loop resets the
+<code>epochs_no_improve</code> counter to <code>0</code> whenever any action is taken by the Governor.
+Because the Governor frequently cools the learning rate (an action), the plateau
+timer never reaches its threshold (e.g., 5 epochs) to deploy the Stress
+Protocol.</p>
+<p><strong>Identification:</strong> The model is completely flatlined for dozens of epochs. The
+learning rate is repeatedly cooled, but the dataset fraction never expands and
+the Stress Protocol is never deployed.</p>
+<p><strong>Remedy:</strong> <strong>Action Hardening</strong>. The plateau timer must explicitly ignore
+standard learning rate adjustments (<code>lr_changed = True</code>), resetting only upon
+spatial jumps, dataset fraction expansions, or positive 'Jolt' multipliers.</p>
+<h3 id="the-permanent-stress-pathology">The Permanent Stress Pathology</h3>
+<p><strong>The Issue:</strong> A failure to deactivate the Stress Protocol. After deploying
+Stress to shake a model out of a plateau, the model successfully establishes a
+new SOTA Best Quality Score. However, the Governor leaves the noise generators
+on (<code>Stress: 5.0</code>) for all subsequent epochs.</p>
+<p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> continuing endlessly even
+after the quality score breaks previous ceilings, crippling the model's ability
+to fine-tune.</p>
+<p><strong>Remedy:</strong> <strong>SOTA Deactivation Gate</strong>. Patch the Governor's <code>Update Memory</code>
+phase in <code>optimization_engine.py</code>. When <code>current_quality &gt; self.best_quality</code>,
+instantly neutralize <code>self.current_stress</code> back to <code>0.0</code> so the new manifold can
+anchor cleanly.</p>
+<h3 id="the-max-stress-lr-freeze-v16-bug">The Max Stress LR Freeze (v16 Bug)</h3>
+<p><strong>The Issue:</strong> A logic gap in the Governor's <code>REFINEMENT</code> phase. When
+<code>current_stress</code> reaches the maximum level of <code>5.0</code> and the model's quality
+score is still far below <code>target_quality_score * 0.90</code>, the code falls through
+to the <code>else</code> branch and applies <code>cooling_factor</code> (e.g., <code>0.85×</code>) to the LR
+every single epoch. After 30–40 epochs at max stress, the LR is crushed to
+near-zero, completely freezing the model's ability to escape the local minimum.
+The stress plateau is permanent because the SOTA deactivation gate only fires
+when quality <em>improves</em>, which is impossible with a frozen LR.</p>
+<p><strong>Identification:</strong> <code>metrics.csv</code> shows <code>Stress: 5.0</code> persisting for 20+ epochs.
+PLCC/SRCC oscillate within a very narrow band (e.g., ±0.02). The LR column shows
+exponential decay (e.g., <code>5e-5 → 2e-5 → 8e-6 → ...</code>). The terminal emits
+<code>REFINEMENT: SOTA Precision Cooling</code> rather than any jolt message.</p>
+<p><strong>Observed In:</strong> <code>nima_aesthetic_mobile</code> run — 86 epochs, stress=5.0 from epoch
+83+, PLCC stuck at 0.47 vs target 0.60, LR decaying from 5e-5 down toward the
+<code>1e-5</code> absolute floor.</p>
+<p><strong>Remedy:</strong> <strong>Max-Stress Jolt Guard (v16)</strong>. Add a new <code>elif</code> branch in
+<code>optimization_engine.py</code> between the stress-escalation block and the cooling
+fallback. When <code>current_stress &gt;= 5.0</code> and the model is still far from SOTA,
+force the <code>jolt_multiplier</code> instead of the <code>cooling_factor</code>. Additionally, track
+a <code>max_stress_stuck_epochs</code> counter. After <code>plateau_patience × 2</code> epochs in this
+state with no improvement, emit a <code>[STUCK]</code> signal in the governor message so
+the operator can make an informed decision about stopping or switching the
+architecture backbone. This prevents indefinite silent degradation.</p>
+<h3 id="the-amnesiac-double-jolt-cooldown-persistence">The Amnesiac Double-Jolt (Cooldown Persistence)</h3>
+<p><strong>The Issue:</strong> The Governor fails to persist the <code>last_jolt_epoch</code> timer across
+script restarts. If the training hub is restarted while a model is in a plateau,
+the Governor assumes the cooldown has expired and immediately blasts the model
+with another 1.5x LR Jolt, constantly destroying the manifold before it can
+stabilize.</p>
+<p><strong>Identification:</strong> The terminal outputs
+<code>JOLT: Breaking Plateau with 1.50x LR Propulsion</code> immediately upon resuming from
+a checkpoint, and metrics regress heavily.</p>
+<p><strong>Remedy:</strong> <strong>State Persistence</strong>. Ensure <code>last_jolt_epoch</code> is correctly
+serialized in <code>get_state()</code> and loaded in <code>load_state()</code> inside
+<code>optimization_engine.py</code>.</p>
+<h3 id="onecyclelr-desynchronization-velocity-bomb--stagnation-loop">OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop)</h3>
+<p><strong>The Issue:</strong> Instantiating a new <code>OneCycleLR</code> scheduler in PyTorch immediately
+resets the optimizer's active learning rate parameter groups to the initial
+cycle rate (e.g., <code>1e-6</code>). When manually setting <code>scheduler.last_epoch = ...</code>
+without subsequent synchronization, the optimizer remains stuck at the initial
+low rate for the entire next epoch. Once the next epoch completes, the scheduler
+steps, suddenly updating the optimizer's active rate to the high scaled step
+value (e.g., <code>2.5e-5</code>). This creates a sequence of alternating low-learning-rate
+&quot;stagnant&quot; epochs and high-learning-rate &quot;velocity shock&quot; epochs that degrades
+the manifold.</p>
+<p><strong>Identification:</strong> The learning rate oscillates dramatically between epochs
+(e.g., <code>1e-6 → 2.5e-5 → 1e-6 → 2.5e-5</code>). The stagnant low-learning-rate epochs
+mimic SOTA stability, but are immediately followed by catastrophic regression
+(10%+ drops) when the high rate kicks in.</p>
+<p><strong>Remedy:</strong> <strong>Active Scheduler-Optimizer Synchronization</strong>. Immediately after
+manually setting <code>scheduler.last_epoch</code> and <code>scheduler._step_count</code> on newly
+instantiated schedulers, manually synchronize the optimizer's active parameter
+groups with <code>scheduler.get_lr()</code> and update <code>scheduler._last_lr</code>.</p>
+<h3 id="premature-spatial-retreat-the-over-aggressive-recoil">Premature Spatial Retreat (The Over-Aggressive Recoil)</h3>
+<p><strong>The Issue:</strong> When dataset fraction is expanded (e.g. <code>55% -&gt; 75%</code>) on a
+high-resolution manifold, temporary validation variance occurs. Under legacy
+recoil rules (<code>epoch_count - last_res_jump_epoch &lt; 8</code>), the Governor assumes the
+resolution jump itself was premature and triggers a hard <strong>Spatial Retreat</strong>
+(dropping resolution to <code>384px @ 100% Data</code>), even if the model already achieved
+a peak 98%+ score at 512px.</p>
+<p><strong>Identification:</strong> <code>metrics.csv</code> shows high accuracy/quality (e.g., 98.12%) at
+512px @ 55% data, followed by a resolution drop to 384px @ 100% data where
+validation loss explodes further (e.g. <code>0.14</code> -&gt; <code>1.64</code>).</p>
+<p><strong>Remedy:</strong> <strong>Proven-Manifold Protection (hold and cool)</strong>. Spatial Retreat is
+blocked, and so is any data-fraction recoil. When the model regresses, turns
+turbulent or collapses, the governor holds the current rung (resolution and
+fraction), multiplies the learning rate by <code>cooling_factor</code> (default 0.5), sets
+the stabilization lock and starts a 5-epoch cooldown. The intra-resolution data
+recoil of v16.0.0 (e.g. <code>75% -&gt; 55%</code> at 512px) was removed because it stepped
+the fraction backwards at the same resolution. Every governor transition goes
+through <code>_commit_rung</code>, which raises <code>RatchetViolation</code> on a backward step
+(v16.9.67).</p>
+<h3 id="static-loss-hyperparameter-saturation-mid-training-edit-barrier">Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)</h3>
+<p><strong>The Issue:</strong> Fixed loss hyperparameters (such as pairwise <code>rank_weight</code>,
+<code>rank_margin</code>, or static <code>softmax_temp</code>) in static configuration files limit
+late-stage convergence. Models reach a plateau near SOTA targets (<code>PLCC &gt; 0.91</code>,
+<code>SRCC &gt; 0.91</code>, <code>EMD &lt; 0.07</code>), but manual mid-training YAML adjustments are
+error-prone and disrupt automated continuous training pipelines.</p>
+<p><strong>Identification:</strong> Model metrics stabilize at <code>PLCC ~0.87-0.88</code> and
+<code>SRCC ~0.79-0.80</code>, with EMD hovering around <code>0.088-0.095</code>. Manual mid-session
+editing of static configuration files is required to force rank loss scaling.</p>
+<p><strong>Remedy:</strong> <strong>Autonomous SOTA Hyperparameter Adaptation (v17.5)</strong>. The
+<code>SmartTrainingGovernor</code> dynamically audits late-stage convergence against target
+SOTA benchmarks (<code>sota_targets</code>). When plateauing below target benchmarks in the
+<code>REFINEMENT</code> phase, it automatically escalates <code>rank_weight</code> (up to <code>1.5</code>),
+tightens pairwise <code>rank_margin</code> (down to <code>0.05</code>), and sharpens <code>softmax_temp</code>
+(down to <code>0.90</code>) on the fly, writing the updated parameters into
+<code>criterion.stab</code> and checkpoint state.</p>
+<h3 id="the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization">The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)</h3>
+<p><strong>The Issue:</strong> During late-stage plateau breaking on high-scalar quality
+manifolds (such as <code>nima_technical</code> where Quality Score is ~284), the <strong>Jolt
+Shield</strong> early collapse valve utilized a hardcoded absolute regression floor
+(<code>delta_q &lt; -0.015</code>). On normalized metrics [0, 1], a drop of -0.015 represents
+a 1.5% regression; however, on a Quality Score scale of ~284, a delta of -0.015
+corresponds to an imperceptible 0.005% fluctuation. Consequently, normal
+exploratory weight updates under differential propulsion (2.25x Head LR)
+produced natural ±0.8 metric exploration steps that prematurely tripped the Jolt
+Shield on Epoch 1 of 3. This trapped the Governor in an infinite loop: <em>Plateau
+Detection (4 epochs) → Jolt Injection → False-Alarm Jolt Collapse Abort →
+Precision Cooling → Stagnation</em>.</p>
+<p><strong>Identification:</strong> Terminal logs show
+<code>JOLT: Breaking Plateau ... (3-Epoch Window)</code> on one epoch, immediately followed
+on the very next epoch by
+<code>[JOLT SHIELD] Early collapse triggered (Regression: -0.8957). Cooling LR.</code> with
+repetitive cooling and 4-epoch plateau cycles.</p>
+<p><strong>Remedy:</strong> <strong>Dynamic Manifold-Scaled Jolt Shield (v18.1)</strong>. Scale the early
+collapse threshold dynamically based on <code>prev_quality</code>:
+<code>collapse_threshold = -0.03 * prev_quality</code> if <code>prev_quality &gt; 1.0</code> else
+<code>-0.015</code>. This allows the model to sustain exploratory propulsion across its
+full 3-epoch window without false-alarm cancellation.</p>
+<p><strong>Remedy 2:</strong> <strong>Financial Manifold Hardening (Forex/Commodities)</strong>. Financial
+models trigger Jolt panics due to extreme natural entropy and Sharpe Ratio
+(<code>plcc</code>) tracking. The Governor now bypasses standard Turbulence Shields for
+Forex, doubles Jolt Protocol intensity (2.0×), extends absolute plateau patience
+(15+ epochs), and explicitly recalibrates collapse guard thresholds to &lt; 45.0%
+Directional Accuracy to prevent false-positive retreats.</p>
+<h3 id="single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck">Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck)</h3>
+<p><strong>The Issue:</strong> In high-resolution image restoration pipelines, transferring
+validation predictions to CPU host RAM for single-threaded
+<code>skimage.metrics.structural_similarity</code> calculations causes severe CPU
+saturation (pinned at 100%+ on dual-vCPU VMs like Kaggle) and PCIe bus ping-pong
+thrashing. GPUs drop to 15–25% utilization, stalling execution and causing
+single validation passes to take upwards of 2–3 hours. Static workspace caps
+further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2.</p>
+<p><strong>Identification:</strong> Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization
+drops to 18–27%, GPU memory is underutilized, and validation progress moves at</p>
+<blockquote>
+<p>1.5s per iteration across thousands of micro-batches.</p>
+</blockquote>
+<p><strong>Remedy:</strong> <strong>Zero-Copy GPU-Native Evaluation &amp; Dynamic VRAM-Tiered Batching
+(v19.2)</strong>:</p>
+<ol>
+<li><strong>GPU-Native PyTorch SSIM:</strong> Vectorized 2D Gaussian convolution SSIM
+(<code>compute_ssim_gpu</code>) evaluated directly on CUDA tensors in &lt; 1ms.</li>
+<li><strong>Zero-Copy VRAM Pipeline:</strong> Eliminates host-device memory transfers for MSE,
+SSIM, LPIPS, and FID.</li>
+<li><strong>Dynamic VRAM Tier Validation Cap:</strong> Scales validation batch size
+dynamically based on VRAM capacity (≥ 14GB → 32, ≥ 8GB → 16, &lt; 4.5GB → 4).</li>
+<li><strong>Dynamic CPU Worker Topology:</strong> Aligns <code>num_workers = min(cpu_count, 2)</code> on
+Kaggle to prevent CPU core oversubscription.</li>
+</ol>
+<h3 id="checkpoint-fraction-desynchronization-the-preemption-recoil-loop">Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)</h3>
+<p><strong>The Issue:</strong> In cloud training environments with session quotas (e.g., Kaggle
+12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and
+expanded dataset fractions (e.g., 75% → 90%) <em>after</em> assembling the epoch
+checkpoint dictionary (<code>ckpt_state</code>) and saving to disk. If a preemptive
+shutdown occurred during the expansion epoch or before the subsequent SOTA
+milestone, reloading the checkpoint restored the stale governor state, silently
+rolling the training fraction back to 75% and trapping the model in an infinite
+fraction expansion loop.</p>
+<p><strong>Identification:</strong> Training logs indicate dataset fraction expansion to 90% or
+100%, but upon session restart or preemption recovery, the active dataset
+fraction drops back to the earlier rung (e.g., 75%).</p>
+<p><strong>Remedy:</strong> <strong>Atomic Governor Fraction Expansion Persistence &amp; Checkpoint State
+Flush (v16.3.4)</strong>:</p>
+<ol>
+<li>Immediately after calling <code>train_ds.update_strategy(fraction=next_frac)</code> and
+rebuilding DataLoaders, flush the live <code>governor.get_state()</code> dictionary
+directly into <code>ckpt_state['governor_state']</code>.</li>
+<li>Overwrite both <code>_latest.pth</code> and <code>_best.pth</code> on physical storage atomically
+so restarts cannot reload stale pre-expansion fractions.</li>
+<li>Anchor Hub Lock skip-paths directly to live <code>governor.get_state()</code> so local
+progress checkpoints never persist stale governor snapshots.</li>
+</ol>
 </section>
 
-<section id="section-9">
+<section id="sec-6-best-practices-checklist">
 <h2>6. Best Practices Checklist</h2>
-            <ul class="checklist">
-                <li><strong>High-Fidelity Floor:</strong> Never start below 224px. Low-res warm-up is a legacy artifact.</li>
-                <li><strong>Baseline First:</strong> Build a simple model first. If a complex one fails, the issue is data.</li>
-                <li><strong>Warm-up Strategy:</strong> Use a linear warm-up for the first 5% of training.</li>
-                <li><strong>AdamW over Adam:</strong> Decouple weight decay from gradient updates.</li>
-                <li><strong>One Change at a Time:</strong> Only alter one hyperparameter per run.</li>
-            </ul>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><strong>High-Fidelity Floor:</strong> Never start below 224px. Low-res warm-up is a legacy
+artifact.</li>
+<li><strong>Baseline First:</strong> Build a simple model first. If a complex one fails, the
+issue is data.</li>
+<li><strong>Warm-up Strategy:</strong> Use a linear warm-up for the first 5% of training.</li>
+<li><strong>AdamW over Adam:</strong> Decouple weight decay from gradient updates.</li>
+<li><strong>One Change at a Time:</strong> Only alter one hyperparameter per run.</li>
+<li><strong>Monotonic Ratchet (pair rule):</strong> Never lower the resolution, and never lower
+the data fraction within one resolution step. Hold the rung and cool the
+learning rate instead.</li>
+<li><strong>Measured Metrics Only:</strong> Publish only FID values measured with
+<code>feature=2048</code>. Never rescale logged history.</li>
+</ul>
 </section>
 
-<section id="section-11">
+<section id="sec-7-multi-model-pipeline-strategy">
 <h2>7. Multi-Model Pipeline Strategy</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Model Group</th>
-                            <th>Key Models</th>
-                            <th>SOTA Goal</th>
-                            <th>Progression Strategy</th>
-                            <th>Plateau Recognition & Breakthrough</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Group A: Metric Scorers</strong></td>
-                            <td><code>nima_aesthetic</code>, <code>nima_technical</code>, <code>nima_authenticity</code></td>
-                            <td>PLCC &gt; 0.91, SRCC &gt; 0.91, RM &lt; 0.05</td>
-                            <td><strong>Res</strong>: 256→384→512<br><strong>Fraction</strong>: 0.15→0.75→1.0</td>
-                            <td><strong>Plateau</strong>: SRCC bottlenecks at ~0.81 while PLCC is ~0.91.<br><strong>Tactic</strong>: Deploy Soft-Spearman ranking loss with Rank Memory Bank ($N=32$) and transition to Kaggle GPU for batch 16/32.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Group B: Safety &amp; Categorical</strong></td>
-                            <td><code>universal_nsfw_classification</code></td>
-                            <td>Accuracy &gt; 0.98</td>
-                            <td><strong>Res</strong>: 224px (Locked)<br><strong>Fraction</strong>: 0.20 increments</td>
-                            <td><strong>Plateau</strong>: Localized trigger false negatives.<br><strong>Tactic</strong>: Activate Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$) and Focal Loss ($\gamma=2.0$).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Group C: Restoration</strong></td>
-                            <td><code>nafnet_denoising</code>, <code>film_restorer</code>, <code>ffanet_indoor</code></td>
-                            <td>PSNR &gt; 33.0, LPIPS &lt; 0.06</td>
-                            <td><strong>Res</strong>: 256→384→512 (Patch-based)<br><strong>Fraction</strong>: 0.15 increments</td>
-                            <td><strong>Plateau</strong>: SSIM improves but visual artifacts persist.<br><strong>Tactic</strong>: Increase degradation difficulty at 512px; switch to L1 + LPIPS loss.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Group D: Generative</strong></td>
-                            <td><code>diffusion_sdxl</code>, <code>diffusion_flux</code></td>
-                            <td>FID &lt; 14.5</td>
-                            <td><strong>Res</strong>: 512→768→1024<br><strong>Fraction</strong>: 0.10 increments</td>
-                            <td><strong>Plateau</strong>: Text alignment is high but FID is stagnant.<br><strong>Tactic</strong>: Switch to EMA weights and dynamic CFG scaling.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Group E: Vision-Language</strong></td>
-                            <td><code>vlm_llava</code>, <code>vlm_blip2</code></td>
-                            <td>Caption Accuracy</td>
-                            <td><strong>Res</strong>: 224→336→448<br><strong>Fraction</strong>: 0.10→0.50 (Polish)</td>
-                            <td><strong>Plateau</strong>: Model repetitive or hallucinating.<br><strong>Tactic</strong>: Reset Optimizer Momentum; apply Softmax Temperature (0.05).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Group F: Financial &amp; Time-Series</strong></td>
-                            <td><code>forex_predictor</code></td>
-                            <td>DirAcc &gt; 0.787, WinRate &gt; 0.682, PF &gt; 2.2, Sharpe &gt; 2.31, Sortino &gt; 2.94, MaxDD &lt; 9.5, TP/SL_MAE &lt; 3.8</td>
-                            <td><strong>Timeframe Ladder</strong>: M1→M5→M15→H1→H4→D1<br><strong>Batch</strong>: 64 (Effective)</td>
-                            <td><strong>Plateau</strong>: Magnitude loss overfits noisy chop.<br><strong>Tactic</strong>: Dual Forex Huber Loss with direction entropy confidence gating.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><strong>Group A: Metric Scorers</strong>
+<ul>
+<li><em>Key Models</em>: <code>nima_aesthetic_mobile</code>, <code>nima_aesthetic_efficientnet</code>,
+<code>nima_aesthetic_pro</code>, <code>nima_technical</code>, <code>nima_authenticity</code></li>
+<li><em>SOTA Goal</em>: PLCC &gt; 0.91, SRCC &gt; 0.91, RM &lt; 0.05</li>
+<li><em>Progression Strategy</em>: <strong>Res</strong>: 256→384→512 <strong>Fraction</strong>: 0.15→0.75→1.0</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: SRCC bottlenecks at ~0.81
+while PLCC is ~0.91. <strong>Tactic</strong>: Deploy Soft-Spearman ranking loss with Rank
+Memory Bank ($N=32$) and transition to Kaggle GPU for batch 16/32.</li>
+</ul>
+</li>
+<li><strong>Group B: Safety &amp; Categorical</strong>
+<ul>
+<li><em>Key Models</em>: <code>universal_nsfw_classification</code></li>
+<li><em>SOTA Goal</em>: Accuracy &gt; 0.98</li>
+<li><em>Progression Strategy</em>: <strong>Res</strong>: 224px (Locked) <strong>Fraction</strong>: 0.20
+increments</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: Localized trigger false
+negatives. <strong>Tactic</strong>: Activate Spatial Statistical Pooling
+($\text{Mean} \oplus \text{Std}$) and Focal Loss ($\gamma=2.0$).</li>
+</ul>
+</li>
+<li><strong>Group C: Restoration</strong>
+<ul>
+<li><em>Key Models</em>: <code>nafnet_denoising</code>, <code>film_restorer</code>, <code>ffanet_indoor</code></li>
+<li><em>SOTA Goal</em>: PSNR &gt; 33.0, LPIPS &lt; 0.06</li>
+<li><em>Progression Strategy</em>: <strong>Res</strong>: 256→384→512 (Patch-based) <strong>Fraction</strong>:
+0.15 start, 0.20 increments</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: SSIM improves but visual
+artifacts persist. <strong>Tactic</strong>: Increase degradation difficulty at 512px;
+switch to L1 + LPIPS loss.</li>
+</ul>
+</li>
+<li><strong>Group D: Generative</strong> (planned; not in <code>unified_models_v2.yaml</code>)
+<ul>
+<li><em>Key Models</em>: <code>diffusion_sdxl</code>, <code>diffusion_flux</code></li>
+<li><em>SOTA Goal</em>: FID &lt; 14.5</li>
+<li><em>Progression Strategy</em>: <strong>Res</strong>: 512→768→1024 <strong>Fraction</strong>: 0.10 increments</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: Text alignment is high
+but FID is stagnant. <strong>Tactic</strong>: Switch to EMA weights and dynamic CFG
+scaling.</li>
+</ul>
+</li>
+<li><strong>Group E: Vision-Language</strong> (planned; not in <code>unified_models_v2.yaml</code>)
+<ul>
+<li><em>Key Models</em>: <code>vlm_llava</code>, <code>vlm_blip2</code></li>
+<li><em>SOTA Goal</em>: Caption Accuracy</li>
+<li><em>Progression Strategy</em>: <strong>Res</strong>: 224→336→448 <strong>Fraction</strong>: 0.10→0.50
+(Polish)</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: Model repetitive or
+hallucinating. <strong>Tactic</strong>: Reset Optimizer Momentum; apply Softmax
+Temperature (0.05).</li>
+</ul>
+</li>
+<li><strong>Group F: Financial &amp; Time-Series</strong>
+<ul>
+<li><em>Key Models</em>: <code>forex_predictor</code></li>
+<li><em>SOTA Goal</em>: DirAcc ≥ 58.5%, WinRate ≥ 56.0%, Profit Factor ≥ 1.65, Sharpe ≥
+1.85, Sortino ≥ 2.10, MaxDD ≤ 12.0%, TP/SL MAE ≤ 12.5 pips (<code>sota_targets</code>
+in <code>unified_models_v2.yaml</code>)</li>
+<li><em>Progression Strategy</em>: <strong>Timeframe Ladder</strong>: M1→M5→M15→H1→H4→D1 <strong>Batch</strong>:
+64 (Effective)</li>
+<li><em>Plateau Recognition &amp; Breakthrough</em>: <strong>Plateau</strong>: Magnitude loss overfits
+noisy chop. <strong>Tactic</strong>: Dual Forex Huber Loss with direction entropy
+confidence gating.</li>
+</ul>
+</li>
+</ul>
 </section>
 
-<section id="section-13">
+<section id="sec-8-mapping-pathologies-to-pipeline-stages">
 <h2>8. Mapping Pathologies to Pipeline Stages</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Stage</th>
-                            <th>Likely Pathology</th>
-                            <th>Warning Sign</th>
-                            <th>Correction</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Foundation (224px-512px)</strong></td>
-                            <td><strong>Exploding Gradients</strong></td>
-                            <td>Loss spikes in first 50 steps.</td>
-                            <td>Linear Warm-up & Grad Clipping.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Expansion (512px-768px)</strong></td>
-                            <td><strong>Training Plateau</strong></td>
-                            <td>Loss Delta &lt; 0.001 per epoch.</td>
-                            <td><strong>LR Jolt</strong> (1.5x) or Stride Threshold (0.75).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Deepening (768px+)</strong></td>
-                            <td><strong>Vanishing Gradients</strong></td>
-                            <td>Norm falls to 10<sup>-7</sup>.</td>
-                            <td>Switch to <strong>BFloat16</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Refinement (100% Data)</strong></td>
-                            <td><strong>Overfitting</strong></td>
-                            <td>Val metric diverges from Train.</td>
-                            <td>Increase <strong>Dropout</strong> (0.3) & L2.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><strong>Foundation (224px-512px)</strong>
+<ul>
+<li><em>Likely Pathology</em>: <strong>Exploding Gradients</strong></li>
+<li><em>Warning Sign</em>: Loss spikes in first 50 steps.</li>
+<li><em>Correction</em>: Linear Warm-up &amp; Grad Clipping.</li>
+</ul>
+</li>
+<li><strong>Expansion (512px-768px)</strong>
+<ul>
+<li><em>Likely Pathology</em>: <strong>Training Plateau</strong></li>
+<li><em>Warning Sign</em>: Loss Delta &lt; 0.001 per epoch.</li>
+<li><em>Correction</em>: <strong>LR Jolt</strong> (1.5x) or Stride Threshold (0.75).</li>
+</ul>
+</li>
+<li><strong>Deepening (768px+)</strong>
+<ul>
+<li><em>Likely Pathology</em>: <strong>Vanishing Gradients</strong></li>
+<li><em>Warning Sign</em>: Norm falls to 10^-7.</li>
+<li><em>Correction</em>: Switch to <strong>BFloat16</strong>.</li>
+</ul>
+</li>
+<li><strong>Refinement (100% Data)</strong>
+<ul>
+<li><em>Likely Pathology</em>: <strong>Overfitting</strong></li>
+<li><em>Warning Sign</em>: Val metric diverges from Train.</li>
+<li><em>Correction</em>: Increase <strong>Dropout</strong> (0.3) &amp; L2.</li>
+</ul>
+</li>
+</ul>
 </section>
 
-<section id="section-15">
+<section id="sec-9-nuclear-audit-optimization-checklist">
 <h2>9. Nuclear Audit: Optimization Checklist</h2>
-            <h3>High-Velocity "DO's"</h3>
-            <ul class="checklist">
-                <li><strong>Memory-Sentinel Probing:</strong> Decouple <code>batch_size</code> from registry.</li>
-                <li><strong>NPP Loop Detection:</strong> Trust the Governor's "Recoil" logic.</li>
-                <li><strong>Atomic Save Protocol:</strong> Use the <code>.tmp</code> swap method.</li>
-            </ul>
-
-            <h3>Critical "FIX's"</h3>
-            <ul class="checklist">
-                <li><strong>Metric Rebalancing:</strong> Scale <code>METRIC_WEIGHTS['psnr']</code> to 10.</li>
-                <li><strong>Terminal Progress Guard (v17.2):</strong> Epoch-advancing logic for ≥99.9% progress.</li>
-                <li><strong>Shared Memory Guard (v18.0):</strong> Detect and clamp batch size if Dedicated VRAM is exhausted.</li>
-            </ul>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h3 id="high-velocity-dos">High-Velocity &quot;DO's&quot;</h3>
+<ul>
+<li><strong>Memory-Sentinel Probing:</strong> Decouple <code>batch_size</code> from registry.</li>
+<li><strong>NPP Loop Detection:</strong> Trust the Governor's &quot;Recoil&quot; logic.</li>
+<li><strong>Atomic Save Protocol:</strong> Use the <code>.tmp</code> swap method.</li>
+</ul>
+<h3 id="critical-fixs">Critical &quot;FIX's&quot;</h3>
+<ul>
+<li><strong>Metric Rebalancing:</strong> Scale <code>METRIC_WEIGHTS['psnr']</code> to 10.</li>
+<li><strong>Terminal Progress Guard (v17.2):</strong> Epoch-advancing logic for ≥99.9%
+progress.</li>
+<li><strong>Shared Memory Guard (v18.0):</strong> Detect and clamp batch size if Dedicated VRAM
+is exhausted.</li>
+</ul>
 </section>
 
-<section id="section-17">
+<section id="sec-10-sota-suite-optimization-task-list">
 <h2>10. SOTA Suite Optimization Task List</h2>
-            <div class="card">
-                <ul class="checklist">
-                    <li><strong>Task 1.1: Metric Rebalancing</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 1.2: LPIPS Device Agnosticism</strong> (Target: <code>losses.py</code>)</li>
-                    <li><strong>VLM Temperature Warm-up:</strong> Update <code>unified_models_v2.yaml</code> to sharpen from 0.1 to 0.05.</li>
-                    <li><strong>Terminal Progress Guard (v17.2):</strong> Implement epoch-advancing logic for checkpoints at ≥99.9% progress.</li>
-                    <li><strong>Shared Memory Guard (v18.0):</strong> Detect and clamp batch size if Dedicated VRAM is exhausted.</li>
-                    <li><strong>Task 2.1: The Propulsion Jolt</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 2.2: Hot-Reload DataLoader</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 3.1: Gradient Sentinel Injection</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 4.1: Momentum Dampening</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 4.2: VRAM De-fragmentation</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 4.3: Surgical Weight Decay</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 5.1: Emergency Shield Breakout</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 5.2: Jolt Cooldown Protocol</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 5.3: Autonomous Temp Sharpening</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 6.1: Atomic Cell Fragmentation</strong> (Target: <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 6.2: Pre-flight Hardware Sentinel</strong> (Target: <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 6.3: Multi-Path Dataset Symlinker</strong> (Target: <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 6.4: Stealth PAT Masking</strong> (Target: <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 7.1: SOTA Metric Badging</strong> (Target: <code>doc_generator.py</code>)</li>
-                    <li><strong>Task 7.2: Mermaid Topology Integration</strong> (Target: <code>doc_generator.py</code>)</li>
-                    <li><strong>Task 7.3: v16.0 Stealth Usage Snippets</strong> (Target: <code>doc_generator.py</code>)</li>
-                    <li><strong>Task 7.4: Automated Quality Vector Badges</strong> (Target: <code>doc_generator.py</code>)</li>
-                    <li><strong>Task 8.1: Atomic Git-LFS Synchronizer</strong> (Target: <code>cloud_sync.py</code>)</li>
-                    <li><strong>Task 8.2: Metrics Merge-Persistence</strong> (Target: <code>cloud_sync.py</code>)</li>
-                    <li><strong>Task 8.3: Diagnostic Stealth (Token Masking)</strong> (Target: <code>cloud_sync.py</code>)</li>
-                    <li><strong>Task 8.4: Multi-Threaded Sync Manager</strong> (Target: <code>cloud_sync.py</code>)</li>
-                    <li><strong>Task 8.5: NPP Loop Mitigation</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 9.1: Neutral Grey Fallback Shield</strong> (Target: <code>dataset.py</code>)</li>
-                    <li><strong>Task 9.2: High-Fidelity LANCZOS Scaling</strong> (Target: <code>dataset.py</code>)</li>
-                    <li><strong>Task 9.3: Stratified Label Distribution</strong> (Target: <code>dataset.py</code>)</li>
-                    <li><strong>Task 9.4: Atomic Parquet Recovery</strong> (Target: <code>data_utils.py</code>)</li>
-                    <li><strong>Task 10.1: Temperature-Aware Softmax Head</strong> (Target: <code>nima.py</code>)</li>
-                    <li><strong>Task 10.2: Dynamic Architecture Registry</strong> (Target: <code>factory.py</code>)</li>
-                    <li><strong>Task 10.3: WebGPU-Safe Tensor Permutations</strong> (Target: <code>core_restoration.py</code>)</li>
-                    <li><strong>Task 10.4: Logit Clamping Guard (±10.0)</strong> (Target: <code>nima.py</code>)</li>
-                    <li><strong>Task 11.1: SOTA Overwrite Force-Flag</strong> (Target: <code>train_all.py</code>)</li>
-                    <li><strong>Task 11.2: Persistent Failure-Report Matrix</strong> (Target: <code>train_all.py</code>)</li>
-                    <li><strong>Task 11.3: Inter-Model Driver Cooldown</strong> (Target: <code>train_all.py</code>)</li>
-                    <li><strong>Task 11.4: Global SOTA Dashboard (README Gen)</strong> (Target: <code>train_all.py</code>)</li>
-                    <li><strong>Task 12.1: Nuclear v16.0 Schema Update</strong> (Target: <code>config.yaml</code>)</li>
-                    <li><strong>Task 12.2: Governor Threshold Tuning</strong> (Target: <code>config.yaml</code>)</li>
-                    <li><strong>Task 12.3: Fleet Synchronization Flags</strong> (Target: <code>config.yaml</code>)</li>
-                    <li><strong>Task 12.4: Hardware-Specific Profiles</strong> (Target: <code>config.yaml</code>)</li>
-                    <li><strong>Task 13.1: Stale Lock (.processing) Clearance</strong> (Target: <code>train.py</code> / <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 13.2: Hub Clone Diagnostic Verbosity</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 13.3: Global Notebook Matrix Refresh</strong> (Target: <code>notebook_generator.py</code>)</li>
-                    <li><strong>Task 14.1: Ladder-Aware SOTA Guard (v18.0)</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 14.2: SOTA Hardening Guard (v19.0)</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 14.3: SOTA-Sync DataLoader Protocol</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 15.1: SOTA Benchmark Injection</strong> (Target: <code>unified_models_v2.yaml</code>)</li>
-                    <li><strong>Task 15.2: Hardware-Aware Authority Overrides</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 15.3: Global Fraction Calibration (15%)</strong> (Target: <code>optimization_engine.py</code>)</li>
-                    <li><strong>Task 16.1: Soft-Spearman Differentiable Rank Loss</strong> (Target: <code>losses.py</code>)</li>
-                    <li><strong>Task 16.2: Cross-Microbatch Rank Memory Bank</strong> (Target: <code>losses.py</code>)</li>
-                    <li><strong>Task 16.3: Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong> (Target: <code>models/nima.py</code>)</li>
-                    <li><strong>Task 16.4: Universal Post-Training Target Audit & Guidance</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 16.5: Headless Kaggle Cloud Engine</strong> (Target: <code>kaggle_cloud_manager.py</code>)</li>
-                    <li><strong>Task 16.6: Hierarchical Parent Domain UI Navigation</strong> (Target: <code>lemgendary_models_hub.ps1</code>)</li>
-                    <li><strong>Task 17.1: Walk-Forward Curriculum Orchestrator</strong> (Target: <code>train_forex_curriculum.py</code>)</li>
-                    <li><strong>Task 17.2: Adaptive Loss Sentinel for Financial Models</strong> (Target: <code>train.py</code>)</li>
-                    <li><strong>Task 17.3: Dynamic Domain-Aware Telemetry Engine</strong> (Target: <code>telemetry.py</code>)</li>
-                </ul>
-            </div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><strong>Task 1.1: Metric Rebalancing</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 1.2: LPIPS Device Agnosticism</strong> (Target: <code>losses.py</code>)</li>
+<li><strong>VLM Temperature Warm-up:</strong> Update <code>unified_models_v2.yaml</code> to sharpen from
+0.1 to 0.05.</li>
+<li><strong>Terminal Progress Guard (v17.2):</strong> Implement epoch-advancing logic for
+checkpoints at ≥99.9% progress.</li>
+<li><strong>Shared Memory Guard (v18.0):</strong> Detect and clamp batch size if Dedicated VRAM
+is exhausted.</li>
+<li><strong>Task 2.1: The Propulsion Jolt</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 2.2: Hot-Reload DataLoader</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 3.1: Gradient Sentinel Injection</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 4.1: Momentum Dampening</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 4.2: VRAM De-fragmentation</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 4.3: Surgical Weight Decay</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 5.1: Emergency Shield Breakout</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 5.2: Jolt Cooldown Protocol</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 5.3: Autonomous Temp Sharpening</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 6.1: Atomic Cell Fragmentation</strong> (Target: <code>notebook_generator.py</code>)</li>
+<li><strong>Task 6.2: Pre-flight Hardware Sentinel</strong> (Target: <code>notebook_generator.py</code>)</li>
+<li><strong>Task 6.3: Multi-Path Dataset Symlinker</strong> (Target: <code>notebook_generator.py</code>)</li>
+<li><strong>Task 6.4: Stealth PAT Masking</strong> (Target: <code>notebook_generator.py</code>)</li>
+<li><strong>Task 7.1: SOTA Metric Badging</strong> (Target: <code>doc_generator.py</code>)</li>
+<li><strong>Task 7.2: Mermaid Topology Integration</strong> (Target: <code>doc_generator.py</code>)</li>
+<li><strong>Task 7.3: v16.0 Stealth Usage Snippets</strong> (Target: <code>doc_generator.py</code>)</li>
+<li><strong>Task 7.4: Automated Quality Vector Badges</strong> (Target: <code>doc_generator.py</code>)</li>
+<li><strong>Task 8.1: Atomic Git-LFS Synchronizer</strong> (Target: <code>cloud_sync.py</code>)</li>
+<li><strong>Task 8.2: Metrics Merge-Persistence</strong> (Target: <code>cloud_sync.py</code>)</li>
+<li><strong>Task 8.3: Diagnostic Stealth (Token Masking)</strong> (Target: <code>cloud_sync.py</code>)</li>
+<li><strong>Task 8.4: Multi-Threaded Sync Manager</strong> (Target: <code>cloud_sync.py</code>)</li>
+<li><strong>Task 8.5: NPP Loop Mitigation</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 9.1: Neutral Grey Fallback Shield</strong> (Target: <code>dataset.py</code>)</li>
+<li><strong>Task 9.2: High-Fidelity LANCZOS Scaling</strong> (Target: <code>dataset.py</code>)</li>
+<li><strong>Task 9.3: Stratified Label Distribution</strong> (Target: <code>dataset.py</code>)</li>
+<li><strong>Task 9.4: Atomic Parquet Recovery</strong> (Target: <code>data_utils.py</code>)</li>
+<li><strong>Task 10.1: Temperature-Aware Softmax Head</strong> (Target: <code>nima.py</code>)</li>
+<li><strong>Task 10.2: Dynamic Architecture Registry</strong> (Target: <code>factory.py</code>)</li>
+<li><strong>Task 10.3: WebGPU-Safe Tensor Permutations</strong> (Target: <code>core_restoration.py</code>)</li>
+<li><strong>Task 10.4: Logit Clamping Guard (±10.0)</strong> (Target: <code>nima.py</code>)</li>
+<li><strong>Task 11.1: SOTA Overwrite Force-Flag</strong> (Target: <code>train_all.py</code>)</li>
+<li><strong>Task 11.2: Persistent Failure-Report Matrix</strong> (Target: <code>train_all.py</code>)</li>
+<li><strong>Task 11.3: Inter-Model Driver Cooldown</strong> (Target: <code>train_all.py</code>)</li>
+<li><strong>Task 11.4: Global SOTA Dashboard (README Gen)</strong> (Target: <code>train_all.py</code>)</li>
+<li><strong>Task 12.1: Nuclear v16.0 Schema Update</strong> (Target: <code>config.yaml</code>)</li>
+<li><strong>Task 12.2: Governor Threshold Tuning</strong> (Target: <code>config.yaml</code>)</li>
+<li><strong>Task 12.3: Fleet Synchronization Flags</strong> (Target: <code>config.yaml</code>)</li>
+<li><strong>Task 12.4: Hardware-Specific Profiles</strong> (Target: <code>config.yaml</code>)</li>
+<li><strong>Task 13.1: Stale Lock (.processing) Clearance</strong> (Target: <code>train.py</code> /
+<code>notebook_generator.py</code>)</li>
+<li><strong>Task 13.2: Hub Clone Diagnostic Verbosity</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 13.3: Global Notebook Matrix Refresh</strong> (Target:
+<code>notebook_generator.py</code>)</li>
+<li><strong>Task 14.1: Ladder-Aware SOTA Guard (v18.0)</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 14.2: SOTA Hardening Guard (v19.0)</strong> (Target: <code>optimization_engine.py</code>)</li>
+<li><strong>Task 14.3: SOTA-Sync DataLoader Protocol</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 15.1: SOTA Benchmark Injection</strong> (Target: <code>unified_models_v2.yaml</code>)</li>
+<li><strong>Task 15.2: Hardware-Aware Authority Overrides</strong> (Target: <code>train.py</code>)</li>
+<li><strong>Task 15.3: Global Fraction Calibration (15%)</strong> (Target:
+<code>optimization_engine.py</code>)</li>
+<li><strong>Task 16.1: Soft-Spearman Differentiable Rank Loss</strong> (Target: <code>losses.py</code>)</li>
+<li><strong>Task 16.2: Cross-Microbatch Rank Memory Bank</strong> (Target: <code>losses.py</code>)</li>
+<li><strong>Task 16.3: Spatial Statistical Pooling ($\text{Mean} \oplus \text{Std}$)</strong>
+(Target: <code>models/nima.py</code>)</li>
+<li><strong>Task 16.4: Universal Post-Training Target Audit &amp; Guidance</strong> (Target:
+<code>train.py</code>)</li>
+<li><strong>Task 16.5: Headless Kaggle Cloud Engine</strong> (Target:
+<code>kaggle_cloud_manager.py</code>)</li>
+<li><strong>Task 16.6: Hierarchical Parent Domain UI Navigation</strong> (Target:
+<code>lemgendary_models_hub.ps1</code>)</li>
+<li><strong>Task 17.1: Walk-Forward Curriculum Orchestrator</strong> (Target:
+<code>train_forex_curriculum.py</code>)</li>
+<li><strong>Task 17.2: Adaptive Loss Sentinel for Financial Models</strong> (Target:
+<code>train.py</code>)</li>
+<li><strong>Task 17.3: Dynamic Domain-Aware Telemetry Engine</strong> (Target: <code>telemetry.py</code>)</li>
+</ul>
 </section>
 
-<section id="section-19">
+<section id="sec-11-sota-transformation-before-vs-after">
 <h2>11. SOTA Transformation: Before vs. After</h2>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Feature</th>
-                            <th>Before (Passive)</th>
-                            <th>After (Autonomous)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Fidelity Floor</strong></td>
-                            <td>64px-112px warm-up; blurred learning.</td>
-                            <td><strong>224px-512px Mandatory Floor</strong>.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Batch Management</strong></td>
-                            <td>Static registry values; OOM risk.</td>
-                            <td><strong>Absolute Sentinel Authority</strong>: Dynamic VRAM probing overrides YAML.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fraction Baseline</strong></td>
-                            <td>50% start; slow foundational convergence.</td>
-                            <td><strong>15% Global Baseline</strong>: Hyper-light foundational scaling.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Plateau Management</strong></td>
-                            <td>Manual waiting; high stagnation risk.</td>
-                            <td><strong>Propulsion Jolt:</strong> Auto-triggers 1.5x surge.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Restoration Balance</strong></td>
-                            <td>PSNR (1) vs SSIM (40); Metric effectively ignored.</td>
-                            <td><strong>Balanced Fidelity:</strong> PSNR (10) vs SSIM (40); SOTA parity achieved.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ranking Loss Under Low VRAM</strong></td>
-                            <td>Micro-batch $b=2$ evaluates 1 pair per step; SRCC stagnates.</td>
-                            <td><strong>Soft-Spearman + Rank Memory Bank:</strong> Evaluates 496 pairs across accumulation.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Spatial Feature Pooling</strong></td>
-                            <td>Global Average Pooling dilutes small localized triggers.</td>
-                            <td><strong>Statistical Pooling ($\text{Mean} \oplus \text{Std}$):</strong> Captures localized defect variance.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cloud Escalation</strong></td>
-                            <td>Requires manual browser navigation to Kaggle site.</td>
-                            <td><strong>Headless Cloud Engine:</strong> Launch, monitor, and pull GPU jobs via PowerShell.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Post-Training UX</strong></td>
-                            <td>Silent termination with raw <code>Press Enter to return...</code>.</td>
-                            <td><strong>Target Audit & Guidance:</strong> Diagnostic breakdown with action choices.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Financial Walk-Forward</strong></td>
-                            <td>Manual dataset slicing and script restarts per pair.</td>
-                            <td><strong>Curriculum Orchestrator:</strong> Automated multi-phase 6-Fold expansion.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Telemetry Schema</strong></td>
-                            <td>Static 28-column image metric array across all domains.</td>
-                            <td><strong>Domain-Aware Telemetry:</strong> 21-column Financial auto-scaling array.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Stability Guard</strong></td>
-                            <td>Reactive (Post-epoch).</td>
-                            <td><strong>Proactive Sentinels:</strong> Real-time monitoring.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Stride Protocol</strong></td>
-                            <td>Fixed 0.90 barrier; slow early progress.</td>
-                            <td><strong>Dynamic Thresholds</strong> (0.75 / 0.90).</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hardware Auditing</strong></td>
-                            <td>Single probe at startup.</td>
-                            <td><strong>Atomic Re-Audit</strong>: Probe on every spatial jump.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4GB Stability</strong></td>
-                            <td>Parallel workers; prone to deadlocks.</td>
-                            <td><strong>Serial Shield</strong>: Forced 0 workers on low-VRAM OOM.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>VRAM Paging</strong></td>
-                            <td>Unrestricted batch; triggers System RAM paging.</td>
-                            <td><strong>Absolute Sentinel Authority</strong>: Dynamic clamping inside Dedicated VRAM.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Progress Recovery</strong></td>
-                            <td>Recursive loops on finished epochs.</td>
-                            <td><strong>Progress Guard</strong>: Auto-advances epochs at 99.9%.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SOTA Progression</strong></td>
-                            <td>Premature mission termination.</td>
-                            <td><strong>Ladder-Aware Guard</strong>: Targets trigger jumps, not shutdowns.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Manifold Maturity</strong></td>
-                            <td>High-speed resolution jumping.</td>
-                            <td><strong>Hardening Guard</strong>: Mandatory 2-epoch lock for stabilization.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Overfitting Rescue</strong></td>
-                            <td>Overfitting triggers panic recoil & data variety starvation.</td>
-                            <td><strong>Rescue Protocol</strong>: Automatically overrides cooldowns and force-expands dataset fraction (+15%) on overfitting trends.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
-
-        
-            <div class="conclusion">
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
+<ul>
+<li><strong>Fidelity Floor</strong>
+<ul>
+<li><em>Before (Passive)</em>: 64px-112px warm-up; blurred learning.</li>
+<li><em>After (Autonomous)</em>: <strong>224px-512px Mandatory Floor</strong>.</li>
+</ul>
+</li>
+<li><strong>Batch Management</strong>
+<ul>
+<li><em>Before (Passive)</em>: Static registry values; OOM risk.</li>
+<li><em>After (Autonomous)</em>: <strong>Absolute Sentinel Authority</strong>: Dynamic VRAM probing
+overrides YAML.</li>
+</ul>
+</li>
+<li><strong>Fraction Baseline</strong>
+<ul>
+<li><em>Before (Passive)</em>: 50% start; slow foundational convergence.</li>
+<li><em>After (Autonomous)</em>: <strong>15% Global Baseline</strong>: Hyper-light foundational
+scaling.</li>
+</ul>
+</li>
+<li><strong>Plateau Management</strong>
+<ul>
+<li><em>Before (Passive)</em>: Manual waiting; high stagnation risk.</li>
+<li><em>After (Autonomous)</em>: <strong>Propulsion Jolt:</strong> Auto-triggers 1.5x surge.</li>
+</ul>
+</li>
+<li><strong>Restoration Balance</strong>
+<ul>
+<li><em>Before (Passive)</em>: PSNR (1) vs SSIM (40); Metric effectively ignored.</li>
+<li><em>After (Autonomous)</em>: <strong>Balanced Fidelity:</strong> PSNR (10) vs SSIM (40); SOTA
+parity achieved.</li>
+</ul>
+</li>
+<li><strong>Ranking Loss Under Low VRAM</strong>
+<ul>
+<li><em>Before (Passive)</em>: Micro-batch $b=2$ evaluates 1 pair per step; SRCC
+stagnates.</li>
+<li><em>After (Autonomous)</em>: <strong>Soft-Spearman + Rank Memory Bank:</strong> Evaluates 496
+pairs across accumulation.</li>
+</ul>
+</li>
+<li><strong>Spatial Feature Pooling</strong>
+<ul>
+<li><em>Before (Passive)</em>: Global Average Pooling dilutes small localized triggers.</li>
+<li><em>After (Autonomous)</em>: <strong>Statistical Pooling
+($\text{Mean} \oplus \text{Std}$):</strong> Captures localized defect variance.</li>
+</ul>
+</li>
+<li><strong>Cloud Escalation</strong>
+<ul>
+<li><em>Before (Passive)</em>: Requires manual browser navigation to Kaggle site.</li>
+<li><em>After (Autonomous)</em>: <strong>Headless Cloud Engine:</strong> Launch, monitor, and pull
+GPU jobs via PowerShell.</li>
+</ul>
+</li>
+<li><strong>Post-Training UX</strong>
+<ul>
+<li><em>Before (Passive)</em>: Silent termination with raw <code>Press Enter to return...</code>.</li>
+<li><em>After (Autonomous)</em>: <strong>Target Audit &amp; Guidance:</strong> Diagnostic breakdown with
+action choices.</li>
+</ul>
+</li>
+<li><strong>Financial Walk-Forward</strong>
+<ul>
+<li><em>Before (Passive)</em>: Manual dataset slicing and script restarts per pair.</li>
+<li><em>After (Autonomous)</em>: <strong>Curriculum Orchestrator:</strong> Automated multi-phase
+6-Fold expansion.</li>
+</ul>
+</li>
+<li><strong>Telemetry Schema</strong>
+<ul>
+<li><em>Before (Passive)</em>: Static 28-column image metric array across all domains.</li>
+<li><em>After (Autonomous)</em>: <strong>Domain-Aware Telemetry:</strong> 21-column Financial
+auto-scaling array.</li>
+</ul>
+</li>
+<li><strong>Stability Guard</strong>
+<ul>
+<li><em>Before (Passive)</em>: Reactive (Post-epoch).</li>
+<li><em>After (Autonomous)</em>: <strong>Proactive Sentinels:</strong> Real-time monitoring.</li>
+</ul>
+</li>
+<li><strong>Stride Protocol</strong>
+<ul>
+<li><em>Before (Passive)</em>: Fixed 0.90 barrier; slow early progress.</li>
+<li><em>After (Autonomous)</em>: <strong>Dynamic Thresholds</strong> (0.75 / 0.90).</li>
+</ul>
+</li>
+<li><strong>Hardware Auditing</strong>
+<ul>
+<li><em>Before (Passive)</em>: Single probe at startup.</li>
+<li><em>After (Autonomous)</em>: <strong>Atomic Re-Audit</strong>: Probe on every spatial jump.</li>
+</ul>
+</li>
+<li><strong>4GB Stability</strong>
+<ul>
+<li><em>Before (Passive)</em>: Parallel workers; prone to deadlocks.</li>
+<li><em>After (Autonomous)</em>: <strong>Serial Shield</strong>: Forced 0 workers on low-VRAM OOM.</li>
+</ul>
+</li>
+<li><strong>VRAM Paging</strong>
+<ul>
+<li><em>Before (Passive)</em>: Unrestricted batch; triggers System RAM paging.</li>
+<li><em>After (Autonomous)</em>: <strong>Absolute Sentinel Authority</strong>: Dynamic clamping
+inside Dedicated VRAM.</li>
+</ul>
+</li>
+<li><strong>Progress Recovery</strong>
+<ul>
+<li><em>Before (Passive)</em>: Recursive loops on finished epochs.</li>
+<li><em>After (Autonomous)</em>: <strong>Progress Guard</strong>: Auto-advances epochs at 99.9%.</li>
+</ul>
+</li>
+<li><strong>SOTA Progression</strong>
+<ul>
+<li><em>Before (Passive)</em>: Premature mission termination.</li>
+<li><em>After (Autonomous)</em>: <strong>Ladder-Aware Guard</strong>: Targets trigger jumps, not
+shutdowns.</li>
+</ul>
+</li>
+<li><strong>Manifold Maturity</strong>
+<ul>
+<li><em>Before (Passive)</em>: High-speed resolution jumping.</li>
+<li><em>After (Autonomous)</em>: <strong>Hardening Guard</strong>: Mandatory 2-epoch lock for
+stabilization.</li>
+</ul>
+</li>
+<li><strong>Overfitting Rescue</strong>
+<ul>
+<li><em>Before (Passive)</em>: Overfitting triggers panic recoil &amp; data variety
+starvation.</li>
+<li><em>After (Autonomous)</em>: <strong>Rescue Protocol</strong>: Automatically overrides cooldowns
+and force-expands dataset fraction (+20%) on overfitting trends.</li>
+</ul>
+</li>
+</ul>
 </section>
 
-<section id="conclusion">
+<section id="sec-12-conclusion-the-indestructible-paradigm">
 <h2>12. Conclusion: The Indestructible Paradigm</h2>
-                <p>The transition from manual hyperparameter tuning to autonomous, <strong>"Nuclear-Hardened"</strong> training represents a paradigm shift in AI development. By implementing the diagnostic triggers and remediation strategies outlined in this guide, the <strong>LemGendary</strong> ecosystem has achieved a state of indestructible convergence.</p>
-                <p>The combination of real-time memory sentinels, dynamic kinetic jolt injections, and rigorous structural clamps ensures that training missions—even at extreme 1024px resolutions—are robust against the stochastic instabilities of modern hardware.</p>
-            <p class="section-footer">
-                Status: SOTA-Autonomous &amp; High-Fidelity Hardened.
-            </p>
+<p>The transition from manual hyperparameter tuning to autonomous,
+<strong>&quot;Nuclear-Hardened&quot;</strong> training represents a paradigm shift in AI development.
+By implementing the diagnostic triggers and remediation strategies outlined in
+this guide, the <strong>LemGendary</strong> ecosystem has achieved a state of indestructible
+convergence.</p>
+<p>The combination of real-time memory sentinels, dynamic kinetic jolt injections,
+and rigorous structural clamps ensures that training missions—even at extreme
+1024px resolutions—are robust against the stochastic instabilities of modern
+hardware.</p>
+<p>Status: SOTA-Autonomous &amp; High-Fidelity Hardened.</p>
 </section>
-</main>
+
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_TRAINING_PATHOLOGY.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

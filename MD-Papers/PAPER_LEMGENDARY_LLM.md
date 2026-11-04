@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD051 MD013 -->
-# Architecture of LemGendary AI: Large Language Models & Mixture-of-Experts (MoE)
+# Large Language Models & Mixture-of-Experts (MoE)
 
-**Author**: Lem Treursic  
-**Version**: 16.7.3  
-**Category**: Category 10 FOUNDATION  
-**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+## Category 10 FOUNDATION | Architecture of LemGendary AI
+
+**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
 
@@ -22,41 +21,66 @@
 
 ## 1. Abstract
 
-The **LemGendary Large Language Model (LLM) Suite** implements next-generation causal autoregressive Transformers incorporating **Rotary Position Embeddings (RoPE)**, **SwiGLU activation functions**, RMSNorm pre-normalization, and **Top-2 Sparse Mixture-of-Experts (MoE)** routing. Engineered to drive system-level automation, natural language dataset queries, and mathematical reasoning across the ecosystem, these models decouple active parameter compute from total parameter capacity, executing high-throughput token generation on consumer and enterprise hardware alike.
+The **LemGendary Large Language Model (LLM) Suite** implements next-generation
+causal autoregressive Transformers incorporating **Rotary Position Embeddings
+(RoPE)**, **SwiGLU activation functions**, RMSNorm pre-normalization,
+and **Top-2 Sparse Mixture-of-Experts (MoE)** routing. Engineered to drive
+system-level automation, natural language dataset queries, and mathematical
+reasoning across the ecosystem, these models decouple active parameter compute
+from total parameter capacity, executing high-throughput token generation on
+consumer and enterprise hardware alike.
 
 ---
 
 ## 2. Causal Decoder Architecture
 
-The network employs a decoder-only architecture where each token attends strictly to preceding tokens via causal attention masking, preventing future information leakage during training.
+The network employs a decoder-only architecture where each token attends
+strictly to preceding tokens via causal attention masking, preventing future
+information leakage during training.
 
 ---
 
 ## 3. RoPE & SwiGLU Formulations
 
-Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and key vectors in complex 2D planes to naturally capture relative distance:
+Positional encoding uses Rotary Position Embeddings (RoPE), rotating query and
+key vectors in complex 2D planes to naturally capture relative distance:
 
-$$R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots, R_{\theta_{d/2}, m})$$
+$$
+R_{\Theta, m}^d = \text{diag}(R_{\theta_1, m}, R_{\theta_2, m}, \dots,
+R_{\theta_{d/2}, m})
+$$
 
-Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear Units, Shazeer 2020), projecting inputs through independent gate ($W_1$) and value ($W_2$) matrices before down-projection ($W_3$):
+Feed-Forward networks replace standard GELU with SwiGLU (Swish Gated Linear
+Units, Shazeer 2020), projecting inputs through independent gate ($W_1$) and
+value ($W_2$) matrices before down-projection ($W_3$):
 
-$$\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left( (x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3$$
+$$
+\text{SwiGLU}(x) = \left( \text{Swish}(x W_1) \odot (x W_2) \right) W_3 = \left(
+(x W_1 \cdot \sigma(x W_1)) \odot (x W_2) \right) W_3
+$$
 
 ---
 
 ## 4. Sparse Mixture-of-Experts Routing
 
-In MoE layers, token representations are routed to the top 2 out of 8 expert FFNs via softmax gating with auxiliary load-balancing loss:
+In MoE layers, token representations are routed to the top 2 out of 8 expert
+FFNs via softmax gating with auxiliary load-balancing loss:
 
-$$y = \sum_{i \in \text{Top2}} G(x)_i \cdot \text{Expert}_i(x)$$
+$$
+y = \sum_{i \in \text{Top2}} G(x)_i \cdot \text{Expert}_i(x)
+$$
 
-$$\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i$$
+$$
+\mathcal{L}_{\text{balance}} = \alpha \cdot N \sum_{i=1}^E f_i \cdot P_i
+$$
 
 ---
 
 ## 5. KV Cache & Inference Throughput
 
-Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block allocation maximizes continuous batching throughput, significantly mitigating virtual memory fragmentation during extended context inference.
+Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block
+allocation maximizes continuous batching throughput, significantly mitigating
+virtual memory fragmentation during extended context inference.
 
 ---
 
@@ -69,42 +93,77 @@ Grouped-Query Attention (GQA) combined with PagedAttention non-contiguous block 
 
 ### 6.1 QLoRA Parameter-Efficient Fine-Tuning & Dynamic Quantization
 
-For consumer hardware deployment (e.g. NVIDIA GeForce GTX 1650 with 4GB VRAM), full parameter fine-tuning of 1.5B dense transformers is intractable. The suite deploys **QLoRA (Quantized Low-Rank Adaptation)** utilizing NF4 (NormalFloat4) weight quantization with double quantization and 16-bit LoRA adapter matrices injected across projection layers (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`):
+For consumer hardware deployment (e.g. NVIDIA GeForce GTX 1650 with 4GB VRAM),
+full parameter fine-tuning of 1.5B dense transformers is intractable. The suite
+deploys **QLoRA (Quantized Low-Rank Adaptation)** utilizing NF4 (NormalFloat4)
+weight quantization with double quantization and 16-bit LoRA adapter matrices
+injected across projection layers (`q_proj`, `k_proj`, `v_proj`, `o_proj`,
+`gate_proj`, `up_proj`, `down_proj`):
 
-$$W_{\text{eff}} = W_{\text{NF4}} + \frac{\alpha}{r} (B \cdot A)$$
+$$
+W_{\text{eff}} = W_{\text{NF4}} + \frac{\alpha}{r} (B \cdot A)
+$$
 
-where rank $r=16$, $\alpha=32$, and LoRA dropout is $0.05$.
+where rank $r=16$, $\alpha=32$, and LoRA dropout is $0.05$. NF4 loading is
+opt-in: `GenericCausalLLM` quantizes only when `load_in_4bit=True` is passed
+(default `False`); otherwise the LoRA adapters sit on a bfloat16 base on CUDA.
 
 ### 6.2 Hardware-Aware Dynamic Micro-Batch & Gradient Accumulation Scaling
 
-Memory sentinels probe free VRAM at runtime. To prevent Out-Of-Memory (OOM) faults while maintaining a stable target effective batch size ($B_{\text{eff}} = 24$), physical micro-batch size ($B_{\text{phys}}$) and gradient accumulation steps ($K_{\text{accum}}$) are resolved dynamically:
+Memory sentinels probe free VRAM at runtime. To prevent Out-Of-Memory (OOM)
+faults while maintaining a stable target effective batch size
+($B_{\text{eff}} = 24$), physical micro-batch size ($B_{\text{phys}}$) and
+gradient accumulation steps ($K_{\text{accum}}$) are resolved dynamically:
 
-$$K_{\text{accum}} = \max\left(1, \left\lfloor \frac{B_{\text{eff}}}{B_{\text{phys}}} \right\rfloor\right)$$
+$$
+K_{\text{accum}} = \max\left(1, \operatorname{round}\left(
+\frac{B_{\text{eff}}}{B_{\text{phys}}} \right)\right)
+$$
 
-On 4GB hardware, $B_{\text{phys}} = 2$ and $K_{\text{accum}} = 12$, yielding an effective batch of 24 with peak activation memory constrained below 2.8 GB.
+On 4GB hardware, $B_{\text{phys}} = 2$ and $K_{\text{accum}} = 12$, yielding an
+effective batch of 24 with peak activation memory constrained below 2.8 GB
+(a sizing target; `ai_helper_lemgend` pins `batch_size: 2` and
+`accumulation_steps: 12` in `unified_models_v2.yaml`, and the code does not
+measure the 2.8 GB bound).
 
 ### 6.3 Token Accuracy & Autoregressive Validation Formulations
 
-Validation loss ($\mathcal{L}_{\text{val}}$) is complemented by two primary evaluation metrics:
+Validation loss ($\mathcal{L}_{\text{val}}$) is complemented by two primary
+evaluation metrics:
 
 1. **Perplexity ($\text{PPL}$)**: Evaluates confidence on validation tokens:
-$$\text{PPL} = \exp\left( \frac{1}{N} \sum_{i=1}^N \mathcal{L}_i \right)$$
 
-2. **Non-Masked Token Accuracy ($\text{Acc}_{\text{token}}$)**: Evaluates next-token prediction correctness exclusively over assistant target turns, ignoring prompt tokens masked with $-100$:
-$$\text{Acc}_{\text{token}} = \frac{\sum_{i=1}^{M} \mathbb{I}\left( \hat{y}_i = y_i \right) \cdot \mathbb{I}\left( y_i \ne -100 \right)}{\sum_{i=1}^{M} \mathbb{I}\left( y_i \ne -100 \right)} \times 100\%$$
+   $$
+   \text{PPL} = \exp\left( \frac{1}{N} \sum_{i=1}^N \mathcal{L}_i \right)
+   $$
+
+2. **Non-Masked Token Accuracy ($\text{Acc}_{\text{token}}$)**: Evaluates
+   next-token prediction correctness exclusively over assistant target turns,
+   ignoring prompt tokens masked with $-100$:
+
+   $$
+   \text{Acc}_{\text{token}} = \frac{\sum_{i=1}^{M} \mathbb{I}\left(
+   \hat{y}_i = y_i \right) \cdot \mathbb{I}\left( y_i \ne -100 \right)}
+   {\sum_{i=1}^{M} \mathbb{I}\left( y_i \ne -100 \right)} \times 100\%
+   $$
 
 ### 6.4 Pareto Milestone Vault Checkpointing & Adapter Souping
 
-The `CheckpointLifecycleManager` records isolated milestone weights whenever an evaluation run sets a new historical best in any SOTA target metric:
+The `CheckpointLifecycleManager` records isolated milestone weights whenever an
+evaluation run sets a new historical best in any SOTA target metric:
 
-* vault_eval_loss.pth: Optimized for minimum cross-entropy loss.
-* vault_perplexity.pth: Optimized for minimum perplexity.
-* vault_token_accuracy.pth: Optimized for maximum token prediction accuracy.
+* `vault_eval_loss.pth`: Optimized for minimum cross-entropy loss.
+* `vault_perplexity.pth`: Optimized for minimum perplexity.
+* `vault_token_accuracy.pth`: Optimized for maximum token prediction accuracy.
 
-These adapter checkpoints form a Pareto frontier in parameter space and can be linearly blended via `ParetoModelSoup` without retraining to generate an ensembled final adapter weights binary.
+These adapter checkpoints form a Pareto frontier in parameter space and can be
+linearly blended via the Pareto Model Soup (`create_pareto_model_soup` in
+`training/export/soup.py`) without retraining to generate an ensembled final
+adapter weights binary.
 
 ---
 
 ## 7. Conclusion
 
-Sparse MoE decoders deliver unprecedented reasoning and language generation capabilities while adhering strictly to hardware memory bounds.
+Sparse MoE decoders deliver unprecedented reasoning and language generation
+capabilities while adhering strictly to hardware memory bounds.

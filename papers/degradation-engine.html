@@ -2,140 +2,325 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Degradation Engine Whitepaper - LemGendary AI</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Degradation Engine &amp; Synthetic Manifold Synthesis Whitepaper</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="ecosystem-architecture.html">Architecture Hub</a>
-                <a href="current-state.html">Current State</a>
-                <a href="env_manager.html">Env Manager</a>
-                <a href="dataset-compiler.html">Dataset Compiler</a>
-                <a href="degradation-engine.html" class="active">Degradation Engine</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
-                <a href="gui-control-registry.html">GUI Registry</a>
-                <a href="versioning-policy.html">Versioning Policy</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="ecosystem-architecture.html" class="tab-link">Architecture Hub</a>
+<a href="current-state.html" class="tab-link">Current State</a>
+<a href="env_manager.html" class="tab-link">Env Manager</a>
+<a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
+<a href="degradation-engine.html" class="tab-link active">Degradation Engine</a>
+<a href="training-suite-master.html" class="tab-link">Training Suite</a>
+<a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
+<a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
+<a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>Degradation Engine &amp; Synthetic Manifold Synthesis Whitepaper</h1>
+<p class="subtitle">Category 01.6 ENGINE | Subpage of Master Ecosystem Architecture</p>
+<div class="meta">
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">&larr; Back to Index</a></li>
-                <li><a href="#section-1">1. Abstract</a></li>
-                <li><a href="#section-2">2. High-Velocity Optimizations &amp; Physics Formulations</a></li>
-                <li><a href="#section-3">3. Hybrid Cloud &amp; Registry Integration</a></li>
-                <li><a href="#section-4">4. Multi-Modal &amp; Format Resilience</a></li>
-                <li><a href="#section-5">5. Comparative Analysis &amp; Benchmarks</a></li>
-                <li><a href="#section-6">6. Synthesis Flow &amp; Topology</a></li>
-                <li><a href="#section-7">7. Unified Models Registry</a></li>
-                <li><a href="#section-8">8. Conclusion</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">Abstract</a></li>
+<li><a href="#sec-2-high-velocity-optimizations--physics-formulations">High-Velocity Optimizations &amp; Physics Formulations</a>
+<ul class="sub-item">
+<li><a href="#sec-21-physics-based-kernel-formulations">2.1 Physics-Based Kernel Formulations</a>
+<ul class="sub-item">
+<li><a href="#sec-211-atmospheric-haze--scattering">2.1.1 Atmospheric Haze &amp; Scattering</a></li>
+<li><a href="#sec-212-heteroscedastic-sensor-noise-iso-calibrated">2.1.2 Heteroscedastic Sensor Noise (ISO-Calibrated)</a></li>
+<li><a href="#sec-213-directional-linear-motion-blur">2.1.3 Directional Linear Motion Blur</a></li>
+<li><a href="#sec-214-circular-defocus-aperture-blur">2.1.4 Circular Defocus Aperture Blur</a></li>
+<li><a href="#sec-215-low-light-photon-starvation">2.1.5 Low-Light Photon Starvation</a></li>
+<li><a href="#sec-216-precipitation-dynamics-rain-streaks--mist">2.1.6 Precipitation Dynamics (Rain Streaks &amp; Mist)</a></li>
+<li><a href="#sec-217-lossy-discrete-cosine-transform-dct-quantization">2.1.7 Lossy Discrete Cosine Transform (DCT) Quantization</a></li>
+</ul>
+</li>
+<li><a href="#sec-22-complexity-mappings--execution-efficiency">2.2 Complexity Mappings &amp; Execution Efficiency</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-hybrid-cloud--registry-integration">Hybrid Cloud &amp; Registry Integration</a>
+<ul class="sub-item">
+<li><a href="#sec-31-quantitative-parameter-supervision-labelssplitnamejson">3.1 Quantitative Parameter Supervision</a></li>
+<li><a href="#sec-32-registry-schema">3.2 Registry Schema</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-multi-modal--format-resilience">Multi-Modal &amp; Format Resilience</a>
+<ul class="sub-item">
+<li><a href="#sec-41-webp-container-standardization--quality-policies">4.1 WebP Container Standardization &amp; Quality Policies</a></li>
+<li><a href="#sec-42-zero-duplication-training-suite-bridge">4.2 Zero-Duplication Training Suite Bridge</a></li>
+</ul>
+</li>
+<li><a href="#sec-5-comparative-analysis--benchmarks">Comparative Analysis / Benchmarks</a>
+<ul class="sub-item">
+<li><a href="#sec-51-degradation-kernel-performance-matrix">5.1 Degradation Kernel Performance Matrix</a></li>
+</ul>
+</li>
+<li><a href="#sec-6-synthesis-flow--topology">Synthesis Flow &amp; Topology</a></li>
+<li><a href="#sec-7-unified-models-registry--downstream-restoration-targets">Unified Models Registry &amp; Downstream Restoration Targets</a></li>
+<li><a href="#sec-8-conclusion">Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Degradation Engine Whitepaper</h1>
-        <p class="subtitle">Synthetic Manifold Synthesis &amp; Physics-Based Optical Degradation</p>
-        <div class="meta">
-                <span>Category 01</span>
-                <span>Version: v16.9.16-STABLE</span>
-                <span>Hardware: CPU Vectorized / WebP Accelerated</span>
-            </div>
 
-<section id="section-1">
-            <h2>1. Abstract</h2>
-            <p>The LemGendary Degradation Engine (v16.4.1-MODERNIZED) is an industrial-standard synthetic image degradation and manifold derivation framework designed for Deep Learning Vision Restoration, Super-Resolution, and Artifact Removal pipelines. It unifies offline batch manifold derivation with real-time, on-the-fly training augmentation into a single, pure NumPy, SciPy, and Pillow execution engine. By deterministically simulating physical optical aberrations, atmospheric scattering, sensor noise electronics, precipitation dynamics, lossy compression artifacts, and analog film degradation, the engine synthesizes paired restoration datasets while recording exact per-sample quantitative parameter descriptors into structured JSON annotations for parameter-conditioned neural network supervision.</p>
-        </section>
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The LemGendary Degradation Engine (v16.4.1-MODERNIZED) is an industrial-standard
+synthetic image degradation and manifold derivation framework designed for Deep
+Learning Vision Restoration, Super-Resolution, and Artifact Removal pipelines.
+It unifies offline batch manifold derivation with real-time, on-the-fly training
+augmentation into a single, pure NumPy, SciPy, and Pillow execution engine. By
+deterministically simulating physical optical aberrations, atmospheric
+scattering, sensor noise electronics, precipitation dynamics, lossy compression
+artifacts, and analog film degradation, the engine synthesizes paired
+restoration datasets while recording exact per-sample quantitative parameter
+descriptors into structured JSON annotations for parameter-conditioned neural
+network supervision.</p>
+<ul>
+<li><strong>Project Repository</strong>: <a href="https://github.com/lemgenda/lemgendary-dataset-generator">LemGendary Dataset Compiler Suite</a></li>
+<li><strong>Training Suite Integration</strong>: <a href="https://github.com/lemgenda/lemgendary-model-training">lemgendary-model-training</a></li>
+</ul>
+</section>
 
-        <section id="section-2">
-            <h2>2. High-Velocity Optimizations &amp; Physics Formulations</h2>
-            <h3>2.1 Physics-Based Kernel Formulations</h3>
-            <p>The engine implements eight modular degradation kernels grounded in physical optics and signal processing:</p>
-            <ul>
-                <li><strong>Atmospheric Haze:</strong> Implements Koschmieder atmospheric scattering <code>I(x) = J(x)t(x) + A(1 - t(x))</code> with depth-gradient variation.</li>
-                <li><strong>ISOCalibrated Noise:</strong> Heteroscedastic noise modeling photon shot noise (Poisson) and sensor readout noise (Gaussian).</li>
-                <li><strong>Directional Motion Blur:</strong> Linear convolution with rotated 2D line kernels.</li>
-                <li><strong>Defocus Aperture Blur:</strong> Out-of-focus circular aperture disk filter.</li>
-                <li><strong>Low-Light Starvation:</strong> Non-linear gamma curve darkening, shadow readout noise, and Kelvin temperature shifting.</li>
-                <li><strong>Precipitation Dynamics:</strong> Wind-oriented rain streaks combined with droplet mist scattering.</li>
-                <li><strong>JPEG DCT Quantization:</strong> 8x8 block discrete cosine transform quantization and 4:2:0 subsampling simulation.</li>
-                <li><strong>Film Degradation:</strong> Analog grain, vertical emulsion scratches, dust particles, and saturation fading.</li>
-            </ul>
-        </section>
+<section id="sec-2-high-velocity-optimizations--physics-formulations">
+<h2>2. High-Velocity Optimizations &amp; Physics Formulations</h2>
+<p>The Degradation Engine implements modular degradation kernels grounded in
+physical optics, digital signal processing, and atmospheric transfer equations.</p>
+<h3 id="sec-21-physics-based-kernel-formulations">2.1 Physics-Based Kernel Formulations</h3>
+<h4 id="sec-211-atmospheric-haze--scattering">2.1.1 Atmospheric Haze &amp; Scattering</h4>
+<p>Atmospheric degradation follows the physical Koschmieder dark-channel
+atmospheric scattering model:</p>
+<div class="math-block">$$I(x) = J(x) \cdot t(x) + A \cdot (1 - t(x))$$</div>
+<p>where:</p>
+<ul>
+<li>$I(x)$ is the observed hazy image radiance at spatial coordinate $x = (u, v)$.</li>
+<li>$J(x)$ is the true scene radiance (clean ground truth target).</li>
+<li>$A$ is the global atmospheric airlight vector ($A \in [0.85, 0.95]^3$).</li>
+<li>$t(x)$ is the medium transmission map defined via the exponential attenuation law:</li>
+</ul>
+<div class="math-block">$$t(x) = \exp(-\beta \cdot d(x))$$</div>
+<p>where $\beta$ is the atmospheric scattering coefficient and $d(x)$ is the
+synthetic scene depth field incorporating spatial low-frequency perturbations:</p>
+<div class="math-block">$$d(u, v) = \text{clip}\left(1.0 - \frac{u}{H} \cdot 0.7 + 0.15 \cdot \sin\left(\frac{v}{W} \cdot 3.0 + \phi_x\right) \cdot \cos\left(\frac{u}{H} \cdot 3.0 + \phi_y\right), 0.1, 1.5\right)$$</div>
+<h4 id="sec-212-heteroscedastic-sensor-noise-iso-calibrated">2.1.2 Heteroscedastic Sensor Noise (ISO-Calibrated)</h4>
+<p>Real CMOS/CCD camera sensor noise is non-stationary and signal-dependent,
+modeled as a combination of Poissonian photon shot noise and Gaussian electronic
+readout noise:</p>
+<div class="math-block">$$I_{\text{noisy}}(x) \sim \mathcal{N}\left(I(x), \, \sigma_{\text{shot}}^2 \cdot I(x) + \sigma_{\text{read}}^2\right)$$</div>
+<p>The noise variance parameters scale non-linearly with synthetic ISO sensitivity ($S_{\text{ISO}}$):</p>
+<div class="math-block">$$\sigma_{\text{read}} = 0.002 \cdot \left(\frac{S_{\text{ISO}}}{100}\right)^{0.6}, \quad \sigma_{\text{shot}} = 0.008 \cdot \left(\frac{S_{\text{ISO}}}{100}\right)^{0.5}$$</div>
+<h4 id="sec-213-directional-linear-motion-blur">2.1.3 Directional Linear Motion Blur</h4>
+<p>Motion blur is synthesized via a 2D line convolution kernel
+$K_{\text{motion}} \in \mathbb{R}^{L \times L}$ rotated at angle $\theta$:</p>
+<div class="math-block">$$K(u, v) = \begin{cases} \frac{1}{L} &amp; \text{if } (u, v) \text{ intersects line segment of length } L \text{ at angle } \theta \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+<p>Convolving scene radiance $I$ with kernel $K_{\text{motion}}$:</p>
+<div class="math-block">$$I_{\text{blurred}} = I * K_{\text{motion}}$$</div>
+<h4 id="sec-214-circular-defocus-aperture-blur">2.1.4 Circular Defocus Aperture Blur</h4>
+<p>Optical defocus blur simulates out-of-focus camera lenses with circular aperture
+disk kernels:</p>
+<div class="math-block">$$K_{\text{defocus}}(u, v) = \begin{cases} \frac{1}{\pi R^2} &amp; \text{if } u^2 + v^2 \le R^2 \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+<h4 id="sec-215-low-light-photon-starvation">2.1.5 Low-Light Photon Starvation</h4>
+<p>Low-light degradation combines non-linear gamma curve photon compression, color
+temperature tinting, and dark shadow readout noise:</p>
+<div class="math-block">$$I_{\text{dark}} = \text{clip}\left(\left(\max(I, 0)\right)^\gamma \odot C_{\text{shift}} + \mathcal{N}(0, \sigma_{\text{readout}}^2) \odot (1 - \overline{I}), 0.0, 1.0\right)$$</div>
+<p>where $\gamma \in [1.5, 3.2]$ represents photon starvation attenuation,
+$C_{\text{shift}}$ represents ambient Kelvin color shift, and $\overline{I}$ is
+the per-pixel luminance mask.</p>
+<h4 id="sec-216-precipitation-dynamics-rain-streaks--mist">2.1.6 Precipitation Dynamics (Rain Streaks &amp; Mist)</h4>
+<p>Rain precipitation is modeled as sparse spatial impulse seeds
+$S_{\text{rain}} \in \{0, 1\}^{H \times W}$ convolved with oriented wind
+velocity kernels $K_{\text{wind}}$ and blended with fine droplet mist
+scattering:</p>
+<div class="math-block">$$I_{\text{rain}} = \left(I \odot (1 - M_{\text{streak}} \cdot 0.3) + M_{\text{streak}}\right) \cdot (1 - M_{\text{mist}}) + A_{\text{mist}} \cdot M_{\text{mist}}$$</div>
+<p>where $M_{\text{streak}} = \text{convolve}(S_{\text{rain}}, K_{\text{wind}}, \text{mode}=\text{'wrap'})$ and $M_{\text{mist}} = \kappa \cdot 0.5$.</p>
+<h4 id="sec-217-lossy-discrete-cosine-transform-dct-quantization">2.1.7 Lossy Discrete Cosine Transform (DCT) Quantization</h4>
+<p>JPEG compression artifacts are synthesized by encoding in-memory buffers through
+$8 \times 8$ block DCT quantization matrices scaled by quality factor
+$Q \in [10, 95]$ and 4:2:0 chroma subsampling.</p>
+<h3 id="sec-22-complexity-mappings--execution-efficiency">2.2 Complexity Mappings &amp; Execution Efficiency</h3>
+<ul>
+<li><strong>Linear Time Complexity ($\mathcal{O}(N \cdot H \cdot W \cdot C)$)</strong>:
+Every kernel operates in linear spatial complexity
+$\mathcal{O}(H \cdot W \cdot C)$ per image. For a dataset of $N$ samples,
+total compilation time complexity scales as:
+$$T_{\text{synth}} = \mathcal{O}(N \cdot H \cdot W \cdot C)$$</li>
+<li><strong>Constant In-Memory Footprint
+($\mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$)</strong>:
+Images are processed in parallel worker threads without allocating global
+array memory, keeping memory bounded by:
+$$\text{Mem}_{\text{peak}} = \mathcal{O}(W_{\text{threads}} \cdot H_{\text{max}} \cdot W_{\text{max}} \cdot 3)$$</li>
+</ul>
+</section>
 
-        <section id="section-3">
-            <h2>3. Hybrid Cloud &amp; Registry Integration</h2>
-            <p>Every synthesized sample pair is tracked in <code>manifold_registry.db</code> and annotated in <code>labels/&lt;split&gt;/&lt;name&gt;.json</code> with exact physical parameters (e.g., kernel length, angle, ISO variance, beta attenuation) enabling parameter-conditioned model training.</p>
-        </section>
+<section id="sec-3-hybrid-cloud--registry-integration">
+<h2>3. Hybrid Cloud &amp; Registry Integration</h2>
+<p>Derived degradation manifolds are managed via SQLite registry databases
+(<code>manifold_registry.db</code>) and structured JSON labels.</p>
+<h3 id="sec-31-quantitative-parameter-supervision-labelssplitnamejson">3.1 Quantitative Parameter Supervision (<code>labels/&lt;split&gt;/&lt;name&gt;.json</code>)</h3>
+<p>For every synthesized sample pair $(I_{\text{degraded}}, J_{\text{clean}})$, the
+engine emits an exact parameter descriptor JSON file containing physical
+conditioning metadata:</p>
+<pre><code class="language-json">{
+  &quot;sample_name&quot;: &quot;sample_000042_synth_000042&quot;,
+  &quot;source_file&quot;: &quot;sample_000042.webp&quot;,
+  &quot;split&quot;: &quot;train&quot;,
+  &quot;seed&quot;: 42000168,
+  &quot;profile&quot;: &quot;motion-blur+iso-noise&quot;,
+  &quot;degradations&quot;: [
+    {
+      &quot;type&quot;: &quot;motion_blur&quot;,
+      &quot;params&quot;: {
+        &quot;kernel_size&quot;: 15,
+        &quot;angle_deg&quot;: 45.0
+      }
+    },
+    {
+      &quot;type&quot;: &quot;iso_calibrated_noise&quot;,
+      &quot;params&quot;: {
+        &quot;iso_level&quot;: 1600,
+        &quot;sigma_read&quot;: 0.00762,
+        &quot;sigma_shot&quot;: 0.032
+      }
+    }
+  ],
+  &quot;input_dimensions&quot;: [1024, 1024],
+  &quot;image_format&quot;: &quot;webp&quot;,
+  &quot;target_format&quot;: &quot;webp&quot;
+}
+</code></pre>
+<p>This structured ground truth enables training parameter-conditioned neural
+networks (such as promptable restoration models or multi-task deblur/denoise
+heads) that accept degradation vector embeddings directly.</p>
+<h3 id="sec-32-registry-schema">3.2 Registry Schema</h3>
+<p>The registry database tracks sample provenance and audit trails:</p>
+<pre><code class="language-sql">CREATE TABLE samples (
+    id INTEGER PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL,
+    source TEXT NOT NULL,
+    task TEXT NOT NULL,
+    split TEXT NOT NULL,
+    hash TEXT,
+    perceptual_hash TEXT,
+    img_format TEXT,
+    img_size_bytes INTEGER,
+    target_size_bytes INTEGER,
+    mask_size_bytes INTEGER DEFAULT 0,
+    is_hardlinked INTEGER DEFAULT 0,
+    reject_code TEXT,
+    audit_trail TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</code></pre>
+</section>
 
-        <section id="section-4">
-            <h2>4. Multi-Modal &amp; Format Resilience</h2>
-            <p>Compiler image outputs are standardized to WebP:</p>
-            <ul>
-                <li><strong>Input / Degraded Images:</strong> WebP Lossy (Quality = 92)</li>
-                <li><strong>Ground Truth Targets:</strong> WebP High-Fidelity (Quality = 95)</li>
-                <li><strong>Segmentation / Alpha Masks:</strong> WebP Lossless</li>
-            </ul>
-            <p>The <code>DynamicOnTheFlyDegrader</code> bridge allows the Model Training Suite to import and execute degradation kernels at runtime on clean images with zero duplicate code.</p>
-        </section>
+<section id="sec-4-multi-modal--format-resilience">
+<h2>4. Multi-Modal &amp; Format Resilience</h2>
+<h3 id="sec-41-webp-container-standardization--quality-policies">4.1 WebP Container Standardization &amp; Quality Policies</h3>
+<p>The compiler enforces strict WebP standardization across all derived outputs:</p>
+<ul>
+<li><strong>Degraded Inputs (<code>images/</code>)</strong>: Format Specification: WebP Lossy; Quality
+Pin: $Q = 92$; Chroma Subsampling: 4:2:0</li>
+<li><strong>Ground Truth Targets (<code>targets/</code>)</strong>: Format Specification: WebP Lossy
+(High-Fidelity); Quality Pin: $Q = 95$; Chroma Subsampling: 4:2:0</li>
+<li><strong>Segmentation / Alpha Masks (<code>masks/</code>)</strong>: Format Specification: WebP
+Lossless; Quality Pin: Lossless; Chroma Subsampling: Exact Alpha
+Bit-Preservation</li>
+</ul>
+<h3 id="sec-42-zero-duplication-training-suite-bridge">4.2 Zero-Duplication Training Suite Bridge</h3>
+<p>The training suite imports the degradation engine directly via
+<code>DynamicOnTheFlyDegrader</code>, enabling real-time augmentation on clean image
+tensors without code duplication:</p>
+<pre><code class="language-python">from data.dataset import DynamicOnTheFlyDegrader
 
-        <section id="section-5">
-            <h2>5. Comparative Analysis &amp; Benchmarks</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Degradation Profile</th>
-                        <th>Throughput (Pairs/sec)</th>
-                        <th>Peak RAM / Worker</th>
-                        <th>Determinism</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><code>motion-blur+iso-noise</code></td>
-                        <td>428 pairs/sec</td>
-                        <td>12.4 MB</td>
-                        <td>100% Bit-Exact</td>
-                    </tr>
-                    <tr>
-                        <td><code>rainy-haze</code></td>
-                        <td>312 pairs/sec</td>
-                        <td>14.8 MB</td>
-                        <td>100% Bit-Exact</td>
-                    </tr>
-                    <tr>
-                        <td><code>lowlight-noise</code></td>
-                        <td>485 pairs/sec</td>
-                        <td>11.2 MB</td>
-                        <td>100% Bit-Exact</td>
-                    </tr>
-                    <tr>
-                        <td><code>compression-artifacts</code></td>
-                        <td>510 pairs/sec</td>
-                        <td>9.8 MB</td>
-                        <td>100% Bit-Exact</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+degrader = DynamicOnTheFlyDegrader(mode=&quot;motion-blur+iso-noise&quot;, intensity=&quot;medium&quot;)
+degraded_tensor, metadata = degrader(clean_tensor, sample_seed=sample_idx)
+</code></pre>
+</section>
 
-        <section id="section-6">
-            <h2>6. Synthesis Flow &amp; Topology</h2>
-            <p>Clean images are fed through <code>DynamicDegrader</code>, encoded via <code>ImageTranscoder</code> to WebP, logged into <code>manifold_registry.db</code>, and written atomically with structured parameter descriptors.</p>
-        </section>
+<section id="sec-5-comparative-analysis--benchmarks">
+<h2>5. Comparative Analysis / Benchmarks</h2>
+<h3 id="sec-51-degradation-kernel-performance-matrix">5.1 Degradation Kernel Performance Matrix</h3>
+<p>Benchmarked on 10,000 $1024 \times 1024$ samples on AMD Ryzen 9 7950X NVMe PCIe Gen4:</p>
+<ul>
+<li><strong><code>motion-blur+iso-noise</code></strong>: Engine Throughput (Pairs/sec): 428 pairs/sec;
+Peak Memory per Worker: 12.4 MB; Parameter Determinism: 100% Bit-Exact</li>
+<li><strong><code>rainy-haze</code></strong>: Engine Throughput (Pairs/sec): 312 pairs/sec; Peak Memory
+per Worker: 14.8 MB; Parameter Determinism: 100% Bit-Exact</li>
+<li><strong><code>lowlight-noise</code></strong>: Engine Throughput (Pairs/sec): 485 pairs/sec; Peak
+Memory per Worker: 11.2 MB; Parameter Determinism: 100% Bit-Exact</li>
+<li><strong><code>vintage-film</code></strong>: Engine Throughput (Pairs/sec): 364 pairs/sec; Peak Memory
+per Worker: 13.1 MB; Parameter Determinism: 100% Bit-Exact</li>
+<li><strong><code>compression-artifacts</code></strong>: Engine Throughput (Pairs/sec): 510 pairs/sec;
+Peak Memory per Worker: 9.8 MB; Parameter Determinism: 100% Bit-Exact</li>
+<li><strong><code>full-spectrum-restoration</code></strong>: Engine Throughput (Pairs/sec): 275 pairs/sec;
+Peak Memory per Worker: 16.2 MB; Parameter Determinism: 100% Bit-Exact</li>
+</ul>
+</section>
 
-        <section id="section-7">
-            <h2>7. Unified Models Registry</h2>
-            <p>Degradation manifolds feed downstream restoration heads including NAFNet (deblurring/denoising), MPRNet (multi-stage progressive restoration), MIRNet-v2 (low-light enhancement), FFA-Net (dehazing), DeblurGAN-v2, and DiffBIR.</p>
-        </section>
+<section id="sec-6-synthesis-flow--topology">
+<h2>6. Synthesis Flow &amp; Topology</h2>
+<pre><code class="language-mermaid">graph TD
+    A[Clean Source Images] --&gt; B[DynamicDegrader Engine]
+    B --&gt; C[Kernel Pipeline: Blur, Noise, Haze, Rain, JPEG]
+    C --&gt; D[Transcoder: WebP q=92 / q=95]
+    D --&gt; E[images/split/sample.webp]
+    D --&gt; F[targets/split/sample.webp]
+    C --&gt; G[Parameter Logger]
+    G --&gt; H[labels/split/sample.json]
+    G --&gt; I[manifold_registry.db]
+    B -.-&gt; J[Training Suite: DynamicOnTheFlyDegrader]
+    J -.-&gt; K[Real-time In-Memory Tensor Augmentation]
+</code></pre>
+</section>
 
-        <section id="section-8">
-            <h2>8. Conclusion</h2>
-            <p>The LemGendary Degradation Engine establishes a unified, deterministic, and physically accurate synthetic data generation system, eliminating code duplication across dataset compilation and model training.</p>
-        </section>
-</main>
+<section id="sec-7-unified-models-registry--downstream-restoration-targets">
+<h2>7. Unified Models Registry &amp; Downstream Restoration Targets</h2>
+<p>The Degradation Engine produces training manifolds optimized for downstream
+restoration architectures:</p>
+<ol>
+<li><strong>NAFNet (Nonlinear Activation Free Network)</strong>: Deblurring and Denoising via
+SimpleGate activations.</li>
+<li><strong>MPRNet (Multi-Stage Progressive Restoration)</strong>: Multi-stage progressive
+feature refinement with Cross-Stage Feature Fusion (CSFF).</li>
+<li><strong>MIRNet-v2 (Multi-Scale Image Restoration)</strong>: Low-light enhancement and
+spatial resolution reconstruction.</li>
+<li><strong>FFA-Net (Feature Fusion Attention Network)</strong>: Single-image dehazing via
+pixel and channel attention modules.</li>
+<li><strong>DeblurGAN-v2</strong>: High-frequency motion deblurring with relativistic
+conditional adversarial networks.</li>
+<li><strong>DiffBIR</strong>: Deep generative diffusion restoration and universal image super-resolution.</li>
+</ol>
+</section>
+
+<section id="sec-8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The LemGendary Degradation Engine establishes a unified, deterministic, and
+scientifically grounded framework for synthetic restoration manifold derivation
+and online dataloader augmentation. By marrying physically accurate optical
+transfer modeling with strict WebP container standardization and JSON
+quantitative parameter logging, the engine eliminates code duplication between
+dataset compilation and model training while delivering maximum hardware
+throughput.</p>
+</section>
+
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_DEGRADATION_ENGINE.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

@@ -2,177 +2,373 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecosystem Architecture &amp; Multi-Sidecar Topology - LemGendary AI</title>
-    <meta name="description" content="Master architecture map, multi-sidecar service topology, physical storage hierarchies, and subsystem boundaries across the LemGendary AI Ecosystem.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true, theme: 'dark'});</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LemGendary Ecosystem: Master Architecture Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: "dark" });</script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="ecosystem-architecture.html" class="active">Architecture Hub</a>
-                <a href="current-state.html">Current State</a>
-                <a href="env_manager.html">Env Manager</a>
-                <a href="dataset-compiler.html">Dataset Compiler</a>
-                <a href="degradation-engine.html">Degradation Engine</a>
-                <a href="training-suite-master.html">Training Suite</a>
-                <a href="ai-studio-whitepaper.html">Desktop GUI</a>
-                <a href="gui-control-registry.html">GUI Registry</a>
-                <a href="versioning-policy.html">Versioning Policy</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="ecosystem-architecture.html" class="tab-link active">Architecture Hub</a>
+<a href="current-state.html" class="tab-link">Current State</a>
+<a href="env_manager.html" class="tab-link">Env Manager</a>
+<a href="dataset-compiler.html" class="tab-link">Dataset Compiler</a>
+<a href="degradation-engine.html" class="tab-link">Degradation Engine</a>
+<a href="training-suite-master.html" class="tab-link">Training Suite</a>
+<a href="ai-studio-whitepaper.html" class="tab-link">Desktop GUI</a>
+<a href="gui-control-registry.html" class="tab-link">GUI Registry</a>
+<a href="versioning-policy.html" class="tab-link">Versioning Policy</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>LemGendary Ecosystem: Master Architecture Map &amp; Multi-Sidecar Topology</h1>
+<p class="subtitle">Category 01 ARCH | LemGendary AI Documentation Hub</p>
+<div class="meta">
+<span><strong>Integrated Subpages</strong>: <a href="env_manager.html">Environment Manager</a></span>
+<span><a href="dataset-compiler.html">Dataset Compiler Suite</a></span>
+<span><a href="degradation-engine.html">Physical Degradation Engine</a></span>
+<span><a href="training-suite-master.html">Master Training Suite</a></span>
+<span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
+<span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
+<span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.60</code>, Dataset Compiler Suite <code>v16.9.65</code>, Model Training Suite <code>v16.9.122</code>, AI Studio GUI <code>v2.10.38</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-04</span>
+<span><strong>Status</strong>: Canonical</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-                <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-                <li><a href="#section-abstract">1. Abstract &amp; High-Level System Topology</a></li>
-                <li><a href="#section-sidecars">2. The Multi-Sidecar Daemon Topology</a></li>
-                <li><a href="#section-boundaries">3. Repository Boundaries &amp; Subsystem Responsibilities</a></li>
-                <li><a href="#section-storage">4. Physical Storage Hierarchy</a></li>
-                <li><a href="#section-resumption">5. Fault Tolerance &amp; Resumption Guarantees</a></li>
-            </ul>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a>
+<ul class="sub-item">
+<li><a href="#sec-11-high-level-system-topology">1.1 High-Level System Topology</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-the-multi-sidecar-daemon-topology">2. The Multi-Sidecar Daemon Topology</a>
+<ul class="sub-item">
+<li><a href="#sec-21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar
+(<code>127.0.0.1:8000</code>)</a></li>
+<li><a href="#sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar
+(<code>127.0.0.1:8100</code>)</a></li>
+<li><a href="#sec-23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar
+(<code>127.0.0.1:8200</code>)</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-repository-boundaries--subsystem-responsibilities">3. Repository Boundaries &amp; Subsystem
+Responsibilities</a></li>
+<li><a href="#sec-4-physical-storage-hierarchy">4. Physical Storage Hierarchy</a></li>
+<li><a href="#sec-5-fault-tolerance--resumption-guarantees">5. Fault Tolerance &amp; Resumption
+Guarantees</a></li>
+<li><a href="#sec-6-cross-repository-security-contract">6. Cross-Repository Security
+Contract</a></li>
+<li><a href="#sec-7-bug-reporting-flow">7. Bug Reporting Flow</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
+
+</ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-        <h1>Ecosystem Architecture &amp; Multi-Sidecar Topology</h1>
-        <p class="subtitle">Master System Architecture, Microservice Communication Channels, and Subsystem Invariants</p>
-        <div class="meta">
-                <span>Category 01 ARCH</span>
-                <span>Hub Version: v16.9.27-STABLE</span>
-                <span>Runtime Baseline: v16.9.16-STABLE</span>
-                <span>Reviewed: 2026-10-18</span>
-                <span>Status: Canonical</span>
-            </div>
 
-
-            <section id="section-abstract">
-                <h2>1. Abstract &amp; High-Level System Topology</h2>
-                <p>The LemGendary AI Ecosystem is engineered as a decoupled, multi-tier distributed machine learning platform. It seamlessly binds local desktop operators, background sidecar services, high-velocity data synthesis engines, and nuclear-hardened training loops into a unified operational continuum.</p>
-                <div class="mermaid">
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning platform.
+A desktop operator cockpit (LemGendary AI Studio GUI) and command line tools
+drive three local sidecar services, the LemGendary Environment Manager (port
+8000), the LemGendary Dataset Compiler Suite (port 8100) and the LemGendary
+Model Training Suite (port 8200), which in turn run the environment, data
+synthesis and training engines on shared storage. The sidecars bind to the
+loopback interface and share one security contract: an origin allow-list, a
+client header for write requests and a strict Content Security Policy in the
+GUI. Bug reports are packaged locally by the Environment Manager and sent
+through the operator's own mail client.</p>
+<h3 id="sec-11-high-level-system-topology">1.1 High-Level System Topology</h3>
+<div class="mermaid">
 graph TD
-    subgraph UI ["Desktop Presentation Tier"]
-        GUI["LemGendary AI Studio Desktop GUI<br/>(Tauri / Rust / TypeScript)"]
-        CLI["Hybrid CLI Dispatch<br/>(lem-env / cli.py / lemtrain)"]
+    subgraph UI [&quot;Desktop Presentation Tier&quot;]
+        GUI[&quot;LemGendary AI Studio GUI&lt;br/&gt;(Tauri / Rust / TypeScript)&quot;]
+        CLI[&quot;Hybrid CLI Dispatch&lt;br/&gt;(lem-env / cli.py / lemtrain)&quot;]
     end
 
-    subgraph Sidecars ["Asynchronous Sidecar Tier"]
-        ENV_API["Environment Manager Sidecar<br/>(FastAPI / Uvicorn :8000)"]
-        COMP_API["Dataset Compiler Sidecar<br/>(FastAPI / Uvicorn :8100)"]
-        TRAIN_API["Training Suite Sidecar<br/>(FastAPI / Uvicorn :8200)"]
+    subgraph Sidecars [&quot;Asynchronous Sidecar Tier&quot;]
+        ENV_API[&quot;Environment Manager Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8000)&quot;]
+        COMP_API[&quot;Dataset Compiler Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8100)&quot;]
+        TRAIN_API[&quot;Training Suite Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8200)&quot;]
     end
 
-    subgraph Engines ["Core Execution Engines"]
-        ENV_ENG["Env Manager Core<br/>(Hardware Probe / Virtualenvs / Validation)"]
-        COMP_ENG["Dataset Compiler Core<br/>(Skip-Index / WebP Transcode / Hardlink Dedup)"]
-        TRAIN_ENG["Master Training Suite<br/>(Spatial Ladder / Loss Balancer / MoE Routing)"]
+    subgraph Engines [&quot;Core Execution Engines&quot;]
+        ENV_ENG[&quot;Env Manager Core&lt;br/&gt;(Probe / Venvs / Validation)&quot;]
+        COMP_ENG[&quot;Dataset Compiler Core&lt;br/&gt;(Skip-Index / WebP / Dedup)&quot;]
+        TRAIN_ENG[&quot;Master Training Suite&lt;br/&gt;(Spatial Ladder / Loss Balancer / MoE)&quot;]
     end
 
-    subgraph Storage ["Physical Storage & Registry Tier"]
-        RAW["Raw Sets Repository<br/>(raw-sets/)"]
-        MANIFOLDS["Compiled Manifolds<br/>(../LemGendaryDatasets/LemGendized*)"]
-        DB["Manifold Registries & Job DB<br/>(manifold_registry.db / jobs.db)"]
-        WEIGHTS["Model Checkpoints<br/>(checkpoints/ / best_weights.pt)"]
+    subgraph Storage [&quot;Physical Storage &amp; Registry Tier&quot;]
+        RAW[&quot;Raw Sets Repository&lt;br/&gt;(raw-sets/)&quot;]
+        MANIFOLDS[&quot;LemGendary Compiled Manifolds Repo&lt;br/&gt;(../LemGendaryDatasets/LemGendized*)&quot;]
+        DB[&quot;Manifold Registries &amp; Job DB&lt;br/&gt;(manifold_registry.db / jobs.db)&quot;]
+        WEIGHTS[&quot;Model Checkpoints&lt;br/&gt;(checkpoints/ / best_weights.pt)&quot;]
     end
 
-    GUI -->|HTTP REST / WebSocket| ENV_API
-    GUI -->|HTTP REST / WebSocket| COMP_API
-    GUI -->|HTTP REST / WebSocket| TRAIN_API
-    CLI -->|In-Process / HTTP Fallback| ENV_ENG
-    CLI -->|In-Process / HTTP Fallback| COMP_ENG
-    CLI -->|In-Process / HTTP Fallback| TRAIN_ENG
+    GUI --&gt;|HTTP REST / WebSocket| ENV_API
+    GUI --&gt;|HTTP REST / WebSocket| COMP_API
+    GUI --&gt;|HTTP REST / WebSocket| TRAIN_API
+    CLI --&gt;|In-Process / HTTP Fallback| ENV_ENG
+    CLI --&gt;|In-Process / HTTP Fallback| COMP_ENG
+    CLI --&gt;|In-Process / HTTP Fallback| TRAIN_ENG
 
-    ENV_API --> ENV_ENG
-    COMP_API --> COMP_ENG
-    TRAIN_API --> TRAIN_ENG
+    ENV_API --&gt; ENV_ENG
+    COMP_API --&gt; COMP_ENG
+    TRAIN_API --&gt; TRAIN_ENG
 
-    COMP_ENG -->|Ingest Raw Sources| RAW
-    COMP_ENG -->|Emit WebP / Shards| MANIFOLDS
-    COMP_ENG -->|Track Provenance| DB
+    COMP_ENG --&gt;|Ingest Raw Sources| RAW
+    COMP_ENG --&gt;|Emit WebP / Shards| MANIFOLDS
+    COMP_ENG --&gt;|Track Provenance| DB
 
-    TRAIN_ENG -->|Zero-IPC Ingestion| MANIFOLDS
-    TRAIN_ENG -->|Commit Weights| WEIGHTS
-                </div>
-            </section>
+    TRAIN_ENG --&gt;|Zero-IPC Ingestion| MANIFOLDS
+    TRAIN_ENG --&gt;|Commit Weights| WEIGHTS
+</div>
+</section>
 
-            <section id="section-sidecars">
-                <h2>2. The Multi-Sidecar Daemon Topology</h2>
-                <p>To allow desktop applications, external CLI scripts, and cloud orchestrators to control the ecosystem without blocking execution or encountering Python GIL contentions, the ecosystem deploys three specialized asynchronous sidecar daemons across standardized local ports (<code>8000</code>, <code>8100</code>, and <code>8200</code>):</p>
-                <ul>
-                    <li><strong>Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</strong>: Real-time hardware discovery, virtual environment provisioning, package reconciliation, and ecosystem-wide pre-commit compliance gating. WebSocket stream at <code>ws://127.0.0.1:8000/ws/log</code>.</li>
-                    <li><strong>Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</strong>: Manifold compilation, degradation synthesis, and container export dispatching. WebSocket stream at <code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>.</li>
-                    <li><strong>Master Training Suite Sidecar (<code>127.0.0.1:8200</code>)</strong>: Headless model training dispatching, hyperparameter validation, spatial ladder scaling, and checkpoint commit orchestration. WebSocket stream at <code>ws://127.0.0.1:8200/api/ws/jobs/{job_id}/logs</code>.</li>
-                </ul>
-            </section>
+<section id="sec-2-the-multi-sidecar-daemon-topology">
+<h2>2. The Multi-Sidecar Daemon Topology</h2>
+<p>To allow desktop applications, external CLI scripts, and cloud orchestrators to
+control the ecosystem without blocking execution or encountering Python GIL
+contentions, the ecosystem deploys three specialized asynchronous sidecar
+daemons across standardized local ports (<code>8000</code>, <code>8100</code>, and <code>8200</code>).</p>
+<p>The ports, the project list, the pipeline step names and the Kaggle owner
+are defined once, in <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>
+(served by <code>GET /api/ecosystem</code>). The LemGendary Dataset Compiler Suite and
+the LemGendary Model Training Suite read it through their <code>ecosystem</code>
+loaders, the LemGendary AI Studio GUI through its snapshot
+<code>src/generated/ecosystem.json</code>, and the <code>ecosystem_ssot</code> validation gate
+(error severity since Environment Manager v16.9.52) fails validation when a
+value is written anywhere else.</p>
+<h3 id="sec-21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar (<code>127.0.0.1:8000</code>)</h3>
+<ul>
+<li><strong>Framework</strong>: FastAPI + Uvicorn with a lifespan handler that starts the other
+sidecars.</li>
+<li><strong>Responsibilities</strong>:
+<ul>
+<li>Real-time hardware discovery (<code>nvidia-smi</code>, <code>rocm-smi</code>, DirectX DXGI) and
+driver-aware PyTorch index selection (<code>cu126</code>, <code>cu121</code> or <code>cu118</code>).</li>
+<li>Virtual environment provisioning (non-destructive by default; <code>clean</code> is
+opt-in), one-way manifest sync with a downgrade guard, and version drift
+analytics.</li>
+<li>Package updates as background jobs (<code>POST /api/update</code>, <code>GET /api/update/status</code>; one at a time, <code>409</code> otherwise).</li>
+<li>Constant-time liveness probe <code>GET /api/ping</code>; <code>GET /api/health</code> is the full
+audit.</li>
+<li>Masked, write-only secrets vault and the bug report endpoint
+(<code>POST /api/bug-report</code>).</li>
+<li>Ecosystem-wide pre-commit compliance validation gating.</li>
+<li>Live log broadcasting over WebSocket: <code>ws://127.0.0.1:8000/ws/log</code>.</li>
+</ul>
+</li>
+</ul>
+<h3 id="sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</h3>
+<ul>
+<li><strong>Framework</strong>: FastAPI + Uvicorn backed by SQLite job state tracking
+(<code>.lgd_server/jobs.db</code>).</li>
+<li><strong>Responsibilities</strong>:
+<ul>
+<li>Background manifold compilation, degradation synthesis, and container export
+dispatching.</li>
+<li>Dynamic job lifecycle management (queued, active, completed, failed,
+interrupted).</li>
+<li>Real-time byte-metered transfer telemetry and WebP transcoding velocity
+streaming (<code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>).</li>
+</ul>
+</li>
+</ul>
+<h3 id="sec-23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar (<code>127.0.0.1:8200</code>)</h3>
+<ul>
+<li><strong>Framework</strong>: FastAPI + Uvicorn backed by ACID SQLite persistent job queue in
+<code>.lemtrain_server/jobs.db</code> (WAL mode).</li>
+<li><strong>Responsibilities</strong>:
+<ul>
+<li>Headless training job dispatching, hyperparameter validation, and GPU device
+orchestration.</li>
+<li>Real-time loss telemetry, spatial ladder transitions, epoch milestones, and
+checkpoint commits.</li>
+<li>Live log broadcasting over WebSocket:
+<code>ws://127.0.0.1:8200/api/ws/jobs/{job_id}/logs</code> and
+<code>ws://127.0.0.1:8200/api/ws/logs</code>.</li>
+<li>Optional local token (<code>.lemtrain_server/token</code>, header <code>X-LemTrain-Token</code>)
+and process PID management. Enforcing the token on every route is still
+open.</li>
+</ul>
+</li>
+</ul>
+</section>
 
-            <section id="section-boundaries">
-                <h2>3. Repository Boundaries &amp; Subsystem Responsibilities</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Subsystem</th>
-                                <th>Primary Repository</th>
-                                <th>Architecture Role</th>
-                                <th>Key Invariants</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Presentation</strong></td>
-                                <td><code>lemgendary-ai-studio-gui</code></td>
-                                <td>Desktop operator cockpit (Tauri / TS).</td>
-                                <td>Bound to frozen <code>openapi.json</code> contracts. Zero business logic in frontend. WebSocket lifecycle recovery guarantees no step card remains in <code>RUNNING</code> after pipeline completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Toolchain &amp; Env</strong></td>
-                                <td><code>lemgendary-env-manager</code></td>
-                                <td>Foundation manager.</td>
-                                <td>Strict isolation: Python 3.12+ required. Enforces zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>); Pylint and astroid eliminated. OpenCV variant equivalence in health auditor. Dynamic CUDA index selection (<code>select_cuda_torch_index()</code>) for driver-aware PyTorch wheel resolution.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Data Compiler</strong></td>
-                                <td><code>lemgendary-datasets</code></td>
-                                <td>Synthesis and ingestion engine.</td>
-                                <td><i>O(1)</i> skip-indexing, WebP <i>q</i>=92/95, SSOT canonical formats: WebDataset (<code>.data</code>/<code>.tar</code>), LitData (<code>.bin</code>), Parquet, Directory. MosaicML MDS deprecated and fully transcoded.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Training Suite</strong></td>
-                                <td><code>lemgendary-training-suite</code></td>
-                                <td>Model training engine.</td>
-                                <td>Zero-IPC ThreadPool dataloaders, spatial resolution ladders, nuclear-hardened checkpoints. <code>torch 2.14.1+cu126</code>, <code>transformers 5.20.1</code>, CUDA 12.6 verified on GTX 1650 (<code>sm_75</code>).</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Documentation</strong></td>
-                                <td><code>lemgendary-docs</code></td>
-                                <td>Documentation hub and whitepapers.</td>
-                                <td>WCAG 2.1 AA accessible, responsive dual-viewport HTML5, synchronized versioning.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+<section id="sec-3-repository-boundaries--subsystem-responsibilities">
+<h2>3. Repository Boundaries &amp; Subsystem Responsibilities</h2>
+<table>
+<thead>
+<tr>
+<th>Subsystem</th>
+<th>Repository</th>
+<th>Role</th>
+<th>Key Invariants</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Presentation</strong></td>
+<td><code>lemgendary-ai-studio-gui</code></td>
+<td>Operator cockpit</td>
+<td>See (1)</td>
+</tr>
+<tr>
+<td><strong>Toolchain &amp; Env</strong></td>
+<td><code>lemgendary-env-manager</code></td>
+<td>Foundation manager</td>
+<td>See (2)</td>
+</tr>
+<tr>
+<td><strong>Data Compiler</strong></td>
+<td><code>lemgendary-datasets</code></td>
+<td>Synthesis, ingestion</td>
+<td>See (3)</td>
+</tr>
+<tr>
+<td><strong>Training Suite</strong></td>
+<td><code>lemgendary-training-suite</code></td>
+<td>Model training</td>
+<td>See (4)</td>
+</tr>
+<tr>
+<td><strong>Documentation</strong></td>
+<td><code>lemgendary-docs</code></td>
+<td>Docs hub</td>
+<td>See (5)</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong>Presentation</strong> (Tauri / TypeScript): bound to the sidecars' <code>openapi.json</code>
+contracts; no business logic in the frontend. Every sidecar request goes
+through <code>sidecarFetch</code>, which adds the client header. WebSocket lifecycle
+recovery guarantees no step card remains in <code>RUNNING</code> after pipeline
+completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</li>
+<li><strong>Toolchain &amp; Env</strong>: <code>pyproject.toml</code> declares Python <code>&gt;=3.12</code>, matching
+the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
+zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>) and the
+Pylint gate with each project's <code>.pylintrc</code>. OpenCV variant equivalence in the health
+auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</code>). The
+central <code>requirements/</code> files are the manifest single source of truth.</li>
+<li><strong>Data Compiler</strong>: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
+formats WebDataset (<code>.data</code>/<code>.tar</code>), LitData (<code>.bin</code>), Parquet and
+Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to
+WebDataset and <code>mosaicml-streaming</code> was removed from the datasets
+requirements. The Environment Manager's <code>runtime_env.yaml</code> still registers
+<code>mosaicml-streaming</code> as a container runtime dependency (open).</li>
+<li><strong>Training Suite</strong>: Zero-IPC ThreadPool dataloaders, spatial resolution
+ladders under the pair-rule ratchet (resolution never decreases; the data
+fraction only rises within one resolution step and may reset when resolution
+steps up), bounded epoch budget, nuclear-hardened checkpoints.
+<code>torch==2.15.0</code> from the <code>cu126</code> wheel index, <code>transformers==5.22.1</code>.</li>
+<li><strong>Documentation</strong>: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
+generated on the approved template, Markdown and HTML kept in sync.</li>
+</ol>
+</section>
 
-            <section id="section-storage">
-                <h2>4. Physical Storage Hierarchy</h2>
-                <ul>
-                    <li><code>raw-sets/</code>: Mutable upstream source archives (TAR, ZIP, Kaggle drops).</li>
-                    <li><code>../LemGendaryDatasets/</code>: Deterministic training manifolds. Contains only suffix-free modernized datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and preserved legacy folders.</li>
-                    <li><code>checkpoints/</code>: Epoch-specific model weight tensors (<code>.pt</code>, <code>.safetensors</code>) and optimizer states.</li>
-                    <li><code>.lgd_server/</code>: Ephemeral daemon state (<code>server.pid</code>, <code>token</code>, <code>jobs.db</code>, job logs).</li>
-                </ul>
-            </section>
+<section id="sec-4-physical-storage-hierarchy">
+<h2>4. Physical Storage Hierarchy</h2>
+<p>The ecosystem maintains strict directory isolation across local storage volumes:</p>
+<ul>
+<li><code>raw-sets/</code>: Mutable upstream source archives (TAR, ZIP, Kaggle drops).</li>
+<li><code>../LemGendaryDatasets/</code> (LemGendary Compiled Manifolds Repo):
+Deterministic training manifolds. Contains only suffix-free modernized
+datasets (e.g. <code>LemGendizedNimaAesthetic/</code>) and
+preserved legacy folders.</li>
+<li><code>checkpoints/</code>: Epoch-specific model weight tensors (<code>.pt</code>, <code>.safetensors</code>)
+and optimizer states.</li>
+<li><code>.lgd_server/</code> and <code>.lemtrain_server/</code>: Ephemeral daemon state of the dataset
+and training sidecars (<code>server.pid</code>, <code>token</code>, <code>jobs.db</code>, job logs).</li>
+<li><code>bug-reports/</code>: Bug report archives at the workspace root, outside every
+repository.</li>
+</ul>
+</section>
 
-            <section id="section-resumption">
-                <h2>5. Fault Tolerance &amp; Resumption Guarantees</h2>
-                <ol>
-                    <li><strong>Compilation Interruption</strong>: If a compilation job halts midway, the SQLite transaction register and <i>O(1)</i> skip-indexer allow immediate resumption without re-processing existing files.</li>
-                    <li><strong>Modernization Interruption</strong>: <code>tools/modernize_manifold.py</code> validates terminal manifests and skips already-transcoded <code>.webp</code> images in seconds.</li>
-                    <li><strong>Training Crash Recovery</strong>: <code>lemgendary-training-suite</code> saves emergency state dumps upon unhandled exceptions and rewinds learning rate schedules on gradient collapse.</li>
-                </ol>
-            </section>
-        
-</main>
+<section id="sec-5-fault-tolerance--resumption-guarantees">
+<h2>5. Fault Tolerance &amp; Resumption Guarantees</h2>
+<ol>
+<li><strong>Compilation Interruption</strong>: If a compilation job halts midway, the SQLite
+transaction register and $\mathcal{O}(1)$ skip-indexer allow immediate
+resumption without re-processing existing files.</li>
+<li><strong>Modernization Interruption</strong>: <code>tools/modernize_manifold.py</code> validates
+terminal manifests and skips already-transcoded <code>.webp</code> images in seconds.</li>
+<li><strong>Training Crash Recovery</strong>: <code>lemgendary-training-suite</code> saves emergency
+state dumps upon unhandled exceptions and rewinds learning rate schedules on
+gradient collapse.</li>
+<li><strong>Environment Safety</strong>: A default pipeline run keeps valid virtual
+environments and running sidecars; a manifest sync that would lower a pin
+leaves both files unchanged and reports drift.</li>
+</ol>
+</section>
+
+<section id="sec-6-cross-repository-security-contract">
+<h2>6. Cross-Repository Security Contract</h2>
+<p>All three sidecars and the GUI implement the same contract, each sidecar in a
+single module (<code>env_manager/security.py</code>, <code>api/security.py</code>,
+<code>training/server/security.py</code>):</p>
+<ul>
+<li><strong>Loopback Binding</strong>: each sidecar listens on <code>127.0.0.1</code> by default.</li>
+<li><strong>Origin Allow-List</strong>: only AI Studio GUI origins are accepted
+(<code>tauri://localhost</code>, <code>http://tauri.localhost</code>, <code>https://tauri.localhost</code>,
+<code>http://localhost:1420</code>, <code>http://127.0.0.1:1420</code>). Any other <code>Origin</code> gets
+<code>403</code>, WebSocket handshakes from a foreign origin are refused, and CORS lists
+the same origins with <code>allow_credentials=False</code>.</li>
+<li><strong>Client Header</strong>: browser requests that use <code>POST</code>, <code>PUT</code>, <code>PATCH</code> or
+<code>DELETE</code> must send <code>X-LemGendary-Client: ai-studio-gui</code>, which forces a CORS
+preflight. The GUI adds it to every sidecar request in one helper
+(<code>sidecarFetch</code> in <code>src/api/http.ts</code>). Requests without an <code>Origin</code> (CLI,
+scripts, tests) are not affected.</li>
+<li><strong>Content Security Policy</strong>: the Tauri configuration sets <code>default-src 'self'</code>, <code>script-src 'self'</code>, <code>object-src 'none'</code> and <code>frame-src 'none'</code>, and
+limits <code>connect-src</code> to Tauri IPC, the three sidecar ports on <code>127.0.0.1</code> and
+<code>localhost</code>, and <code>https://fonts.gstatic.com</code>. A separate <code>devCsp</code> adds what
+the Vite dev server needs.</li>
+<li><strong>Secrets</strong>: the Environment Manager returns secrets masked (<code>has_value</code>,
+<code>value_hint</code>) and accepts them write-only; secret files are ignored by git in
+every repository.</li>
+</ul>
+</section>
+
+<section id="sec-7-bug-reporting-flow">
+<h2>7. Bug Reporting Flow</h2>
+<ol>
+<li>The operator opens &quot;Report Issue&quot; in the AI Studio GUI, writes a description,
+picks the module and adds up to 5 annotated screenshots, optionally a
+recording of the app window (desktop app on Windows, MP4, at most 60 s) and,
+optionally, the recent telemetry as CSV.</li>
+<li>The GUI posts the multipart form to the Environment Manager
+(<code>POST /api/bug-report</code>).</li>
+<li>The Environment Manager checks fields, sizes and file signatures, writes
+<code>report.csv</code> and saves <code>bug_report_&lt;timestamp&gt;_&lt;id&gt;.zip</code> to <code>bug-reports/</code> at
+the workspace root.</li>
+<li>It opens the operator's mail client (<code>mailto:</code> with recipient and subject)
+and reveals the archive in the file manager. The operator attaches the ZIP
+and sends it; no SMTP credentials exist anywhere in the ecosystem.</li>
+</ol>
+</section>
+
+<section id="sec-8-conclusion">
+<h2>8. Conclusion</h2>
+<p>The ecosystem separates presentation, sidecar services, execution engines and
+storage into independent repositories with defined contracts. Three loopback
+sidecars share one security contract, the GUI talks to them only through
+generated API contracts and a single request helper, and environment, data and
+training state stays recoverable after interruptions.</p>
+</section>
+
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/ECOSYSTEM_ARCHITECTURE.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

@@ -2,217 +2,234 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architecture of LemGendary AI: UPN v2 - Universal Parameterized Network - LemGendary AI</title>
-    <meta name="description" content="Continuous Latent Steering and Multi-Degradation Feature Modulation via AdaIN">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPN v2: Universal Parameterized Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="toc-fixed-layout">
-<div id="tabs-top" class="tabs-top-bar">
-  <a href="../index.html" class="nav-brand-icon" aria-label="Back to Index"><img src="../assets/lemgenda-icon.svg" alt="LemGenda Icon" /></a>
-  <a href="universal-hybrid.html">Hybrid Suite Hub</a>
-  <a href="hybrid-upn-v2.html" class="active">UPN v2</a>
-  <a href="hybrid-film-restorer.html">Film Restorer</a>
-  <a href="hybrid-multitask.html">MultiTask 11-Head</a>
-  <a href="https://lemgenda.hr" target="_blank" rel="noopener noreferrer" class="nav-brand-logo" aria-label="LemGenda Website"><img src="../assets/lemgenda-logo.svg" alt="LemGenda" /></a>
+<body>
+<div class="container">
+<div class="tabs-nav">
+<a href="../index.html" class="tab-link">Hub Index</a>
+<a href="universal-hybrid.html" class="tab-link">Hybrid Suite</a>
+<a href="hybrid-upn-v2.html" class="tab-link active">UPN v2</a>
+<a href="hybrid-film-restorer.html" class="tab-link">Film Restorer</a>
+<a href="hybrid-multitask.html" class="tab-link">MultiTask Restorer</a>
+<a href="restoration-master.html" class="tab-link">Restoration Master</a>
+<a href="ultrazoom.html" class="tab-link">UltraZoom</a>
 </div>
-<nav id="toc" class="toc-fixed-bar">
-<h2>Contents</h2>
+<header>
+<h1>UPN v2: Universal Parameterized Network</h1>
+<p class="subtitle">Category 05 HYBRID | Architecture of LemGendary AI</p>
+<div class="meta">
+<span><strong>Author</strong>: Lem Treursic</span>
+<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 / Apple Silicon / T4</span>
+</div>
+</header>
+<nav class="toc-sidebar" aria-label="Table of Contents">
+<a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
+<h4>Table of Contents</h4>
 <ul>
-    <li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
-    <li><a href="#abstract">1. Abstract</a></li>
-    <li><a href="#plain-english">1.1 What UPN v2 Does (In Plain English)</a></li>
-    <li><a href="#visual-taxonomy">2. Visual Taxonomy: Parameterized Latent Steering</a></li>
-    <li><a href="#shared-foundations">3. Shared Foundations: Feature Modulation &amp; Optimization</a></li>
-    <li><a href="#model-deep-dives">4. Model Deep-Dives</a></li>
-    <li><a href="#challenges">5. Challenges &amp; Resilience Architecture</a></li>
-    <li><a href="#deployment">6. Deployment Strategy &amp; Production Acceleration</a></li>
-    <li><a href="#sota-matrix">7. SOTA Architectural Performance Matrix</a></li>
-    <li><a href="#conclusion">8. Conclusion</a></li>
+<li><a href="../index.html" class="toc-link-accent">Back to Index</a></li>
+
+<li><a href="#sec-1-abstract">1. Abstract</a></li>
+<li><a href="#sec-11-what-upn-v2-does-in-plain-english">1.1 What UPN v2 Does (In Plain English)</a></li>
+<li><a href="#sec-2-visual-taxonomy-parameterized-latent-steering">2. Visual Taxonomy: Parameterized Latent Steering</a></li>
+<li><a href="#sec-3-shared-foundations-feature-modulation--multi-objective-optimization">3. Shared Foundations: Feature Modulation &amp; Multi-Objective Optimization</a></li>
+<li><a href="#sec-4-model-deep-dives">4. Model Deep-Dives</a></li>
+<li><a href="#sec-5-challenges--resilience-architecture">5. Challenges &amp; Resilience Architecture</a></li>
+<li><a href="#sec-6-deployment-strategy--production-acceleration">6. Deployment Strategy &amp; Production Acceleration</a></li>
+<li><a href="#sec-7-sota-architectural-performance-matrix">7. SOTA Architectural Performance Matrix</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
+
 </ul>
 </nav>
-<main id="content" class="toc-fixed-content">
-    <h1>UPN v2: Universal Parameterized Network</h1>
-    <p class="subtitle">Continuous Latent Steering and Multi-Degradation Feature Modulation via AdaIN</p>
-    <div class="meta">
-        <span>By Lem Treursic</span>
-        <span>Category 05 HYBRID</span>
-        <span>Version 16.9.16-STABLE</span>
-        <span>Hardware: NVIDIA / Apple Silicon / T4</span>
-    </div>
 
-    <section id="abstract">
-        <h2>1. Abstract</h2>
-        <p>The <strong>Universal Parameterized Network v2 (UPN v2)</strong> represents a breakthrough in blind image restoration by replacing discrete task-specific checkpoints with a continuous, steered manifold regressor. Rather than retraining or switching networks between deblurring, denoising, and compression removal, UPN v2 accepts a multi-dimensional continuous degradation vector \(\mathbf{z} \in [0, 1]^K\). This conditioning vector modulates internal intermediate feature activations via Adaptive Instance Normalization (AdaIN) and Feature Modulation Blocks (FMB), enabling smooth, real-time parametric control over restoration strength directly inside edge inference runtimes.</p>
-    </section>
+<section id="sec-1-abstract">
+<h2>1. Abstract</h2>
+<p>The <strong>Universal Parameterized Network v2 (UPN v2)</strong> represents a breakthrough in
+blind image restoration by replacing discrete task-specific checkpoints with a
+continuous, steered manifold regressor. Rather than retraining or switching
+networks between deblurring, denoising, and compression removal, UPN v2 accepts
+a multi-dimensional continuous degradation vector $\mathbf{z} \in [0, 1]^K$.
+This conditioning vector modulates internal intermediate feature activations via
+Adaptive Instance Normalization (AdaIN) and Feature Modulation Blocks (FMB),
+enabling smooth, real-time parametric control over restoration strength directly
+inside edge inference runtimes.</p>
+</section>
 
-    <section id="plain-english">
-        <h2>1.1 What UPN v2 Does (In Plain English)</h2>
-        <p>Imagine having a single universal digital darkroom knob. Traditionally, if an image has both motion blur, sensor grain, and low lighting, you have to run three separate AI models that slow down your computer and make the photo look artificial. <strong>UPN v2 (Universal Parameterized Network) is an all-in-one restoration engine</strong>:</p>
-        <ul>
-            <li><strong>Continuous Slider Control:</strong> You can steer the restoration using continuous parameters—adjusting noise removal, deblurring intensity, and illumination enhancement simultaneously in a single pass.</li>
-            <li><strong>Space-Recovery Architecture:</strong> It preserves original camera colors and fine background details while surgically eliminating unwanted defects.</li>
-            <li><strong>High-Throughput Execution:</strong> Because it handles multiple degradation types in a single neural network, it processes high-resolution images up to 5x faster than chaining separate tools.</li>
-        </ul>
-        <h3>Multi-Degradation Recovery &amp; Metrics</h3>
-        <p><strong>Input:</strong> Simultaneous motion blur, Gaussian sensor noise, and underexposed shadow clipping.<br>
-        <strong>Output:</strong> Sharpened edges, eliminated sensor grain, and naturally balanced foliage illumination in 18.0ms on RTX 3060 (256x256 preview) / 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) <span class="score-badge-green">[MEASURED]</span>.</p>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr><th>Multi-Degraded Input</th><th>UPN v2 Single-Pass Output</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><img src="../assets/upn_v2_before.png" alt="Multi-Degraded Input" /></td>
-                        <td><img src="../assets/upn_v2_after.png" alt="UPN v2 Restored Output" /></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Convergence reached PSNR 35.18 dB and SSIM 0.967 across 285 WebDataset streaming shards.</p>
-        <p><img src="../assets/upn_v2_training.png" alt="UPN v2 Training Convergence Curve" /></p>
-    </section>
+<section id="sec-11-what-upn-v2-does-in-plain-english">
+<h2>1.1 What UPN v2 Does (In Plain English)</h2>
+<p>Imagine having a single universal digital darkroom knob. Traditionally, if an
+image has both motion blur, sensor grain, and low lighting, you have to run
+three separate AI models that slow down your computer and make the photo look
+artificial. <strong>UPN v2 (Universal Parameterized Network) is an all-in-one
+restoration engine</strong>:</p>
+<ul>
+<li><strong>Continuous Slider Control:</strong> You can steer the restoration using continuous
+parameters—adjusting noise removal, deblurring intensity, and illumination
+enhancement simultaneously in a single pass.</li>
+<li><strong>Space-Recovery Architecture:</strong> It preserves original camera colors and fine
+background details while surgically eliminating unwanted defects.</li>
+<li><strong>High-Throughput Execution:</strong> Because it handles multiple degradation types
+in a single neural network, it processes high-resolution images up to 5x
+faster than chaining separate tools.</li>
+</ul>
+<h3 id="multi-degradation-recovery--metrics">Multi-Degradation Recovery &amp; Metrics</h3>
+<ul>
+<li>
+<p><strong>Input:</strong> Simultaneous motion blur, Gaussian sensor noise, and underexposed
+shadow clipping.</p>
+</li>
+<li>
+<p><strong>Output:</strong> Sharpened edges, eliminated sensor grain, and naturally balanced
+foliage illumination in 18.0ms on RTX 3060 (256x256 preview) / 31.0ms on
+NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) <code>[MEASURED]</code>.</p>
+</li>
+<li>
+<p><strong>Multi-Degraded Input</strong>: <img src="../assets/upn_v2_before.png" alt="Multi-Degraded Input"></p>
+</li>
+<li>
+<p><strong>UPN v2 Single-Pass Output</strong>: <img src="../assets/upn_v2_after.png" alt="UPN v2 Restored
+Output"></p>
+</li>
+<li>
+<p><strong>Convergence:</strong> PSNR reached 35.18 dB <code>[MEASURED]</code> and SSIM reached 0.967
+<code>[MEASURED]</code> across 285 WebDataset streaming shards.</p>
+</li>
+</ul>
+<p><img src="../assets/upn_v2_training.png" alt="UPN v2 Training Convergence Curve"></p>
+</section>
 
-    <section id="visual-taxonomy">
-        <h2>2. Visual Taxonomy: Parameterized Latent Steering</h2>
-        <p>Conventional restoration architectures treat degradation as a static problem. UPN v2 formulates restoration as a parameterized mapping <span class="score-badge-neutral">[THEORETICAL]</span>:</p>
-        <p>\[\hat{I} = \mathcal{F}_{\theta}(I_{\text{degraded}}, \mathbf{z})\]</p>
-        <p>where \(\mathbf{z} = [z_{\text{blur}}, z_{\text{noise}}, z_{\text{jpeg}}, z_{\text{haze}}]^T\) is continuous. When an operator adjusts a UI slider in the AI Studio Desktop GUI, \(\mathbf{z}\) updates smoothly, allowing the network to linearly interpolate across complex degradation manifolds without visual popping or artifact discontinuities.</p>
-    </section>
+<section id="sec-2-visual-taxonomy-parameterized-latent-steering">
+<h2>2. Visual Taxonomy: Parameterized Latent Steering</h2>
+<p>Conventional restoration architectures treat degradation as a static problem.
+UPN v2 formulates restoration as a parameterized mapping <code>[THEORETICAL]</code>:</p>
+<div class="math-block">$$\hat{I} = \mathcal{F}_{\theta}(I_{ \text{degraded}}, \mathbf{z})$$</div>
+<p>where $\mathbf{z} = [z_{ \text{blur}}, z_{ \text{noise}}, z_{ \text{jpeg}}, z_{ \text{haze}}]^T$ is continuous. When an operator adjusts a UI slider in the
+LemGendary AI Studio GUI, $\mathbf{z}$ updates smoothly, allowing the network to
+linearly interpolate across complex degradation manifolds without visual popping
+or artifact discontinuities.</p>
+</section>
 
-    <section id="shared-foundations">
-        <h2>3. Shared Foundations: Feature Modulation &amp; Optimization</h2>
-        <p>The core structural element of UPN v2 is the Feature Modulation Block (FMB). Let \(F \in \mathbb{R}^{C \times H \times W}\) denote intermediate feature representations:</p>
-        <p>\[\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)} \right) + \beta(\mathbf{z})\]</p>
-        <p>where \(\gamma(\cdot)\) and \(\beta(\cdot)\) are affine projection networks that map \(\mathbf{z}\) to channel-wise scale and bias vectors. Training couples spatial errors, perceptual discrepancies, and parameter gradient smoothness:</p>
-        <p>\[\mathcal{L}_{\text{total}} = \rho(\hat{I} - I_{\text{clean}}) + \lambda_{\text{perc}} \mathcal{L}_{\text{VGG}}(\hat{I}, I_{\text{clean}}) + \lambda_{\text{grad}} \|
-\nabla_{\mathbf{z}} \mathcal{F}_{\theta}(I, \mathbf{z})\|_2\]</p>
-        <p>The gradient penalty ensures that minute changes in the steering parameter \(\mathbf{z}\) yield smooth, Lipschitz-bounded modifications to the restored output.</p>
-    </section>
+<section id="sec-3-shared-foundations-feature-modulation--multi-objective-optimization">
+<h2>3. Shared Foundations: Feature Modulation &amp; Multi-Objective Optimization</h2>
+<p>The core structural element of UPN v2 is the Feature Modulation Block (FMB). Let
+$F \in \mathbb{R}^{C  \times H  \times W}$ denote intermediate feature
+representations:</p>
+<div class="math-block">$$\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)} \right) + \beta(\mathbf{z})$$</div>
+<p>where $\gamma(\cdot)$ and $\beta(\cdot)$ are affine projection networks that map
+$\mathbf{z}$ to channel-wise scale and bias vectors. Training couples spatial
+errors, perceptual discrepancies, and parameter gradient smoothness:</p>
+<div class="math-block">$$\mathcal{L}_{\text{total}} = \rho(\hat{I} - I_{ \text{clean}}) + \lambda_{ \text{perc}} \mathcal{L}_{ \text{VGG}}(\hat{I}, I_{ \text{clean}}) + \lambda_{ \text{grad}} \| \nabla_{\mathbf{z}} \mathcal{F}_{\theta}(I, \mathbf{z})\|_2$$</div>
+<p>The gradient penalty ensures that minute changes in the steering parameter
+$\mathbf{z}$ yield smooth, Lipschitz-bounded modifications to the restored
+output.</p>
+</section>
 
-    <section id="model-deep-dives">
-        <h2>4. Model Deep-Dives</h2>
-        <h3>UPN v2 Parametric Restoration Engine</h3>
-        <h4>4.1 Model Description, Purpose and Usage</h4>
-        <p>UPN v2 unifies blind restoration across diverse pathologies into a single continuous-steering model, replacing discrete model chaining with real-time parametric control.</p>
-        <h4>4.2 Model Info</h4>
-        <ul>
-            <li><strong>Architecture</strong>: UPN v2 (AdaIN-FMB + Multi-Scale Feature Modulation)</li>
-            <li><strong>Input Resolution</strong>: 512x512</li>
-            <li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
-            <li><strong>Latency</strong>: 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) / 18.0ms on RTX 3060 (256x256 preview) <span class="score-badge-green">[MEASURED]</span></li>
-        </ul>
-        <h4>4.3 Manifold Info</h4>
-        <ul>
-            <li><strong>Dataset</strong>: <code>LemGendizedUpnV2</code></li>
-            <li><strong>Total Samples</strong>: 285 WebDataset streaming shards (1.06 TB NTFS hardlink deduplicated)</li>
-            <li><strong>Primary Task</strong>: Parametric latent steering across compound degradation vectors</li>
-        </ul>
-        <h4>4.4 Performance Metrics</h4>
-        <ul>
-            <li><strong>Current Training Epochs</strong>: 35 <span class="score-badge-neutral">[CURRENT]</span></li>
-            <li><strong>Best PSNR</strong>: 35.18 dB <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 34.50 dB <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Best SSIM</strong>: 0.967 <span class="score-badge-green">[MEASURED]</span> (Target: &ge; 0.960 <span class="score-badge-neutral">[TARGET]</span>)</li>
-            <li><strong>Current Learning Rate</strong>: 0.000045</li>
-        </ul>
-    </section>
+<section id="sec-4-model-deep-dives">
+<h2>4. Model Deep-Dives</h2>
+<h3 id="upn-v2-parametric-restoration-engine">UPN v2 Parametric Restoration Engine</h3>
+<h4 id="sec-41-model-description-purpose-and-usage">4.1 Model Description, Purpose and Usage</h4>
+<p>UPN v2 unifies blind restoration across diverse pathologies into a single
+continuous-steering model, replacing discrete model chaining with real-time
+parametric control.</p>
+<h4 id="sec-42-model-info">4.2 Model Info</h4>
+<ul>
+<li><strong>Architecture</strong>: UPN v2 (AdaIN-FMB + Multi-Scale Feature Modulation)</li>
+<li><strong>Input Resolution</strong>: 512x512</li>
+<li><strong>Precision</strong>: ONNX FP16 / PyTorch FP32</li>
+<li><strong>Latency</strong>: 31.0ms on NVIDIA GTX 1650 (512x512 full resolution, FP16 ONNX) /
+18.0ms on RTX 3060 (256x256 preview) <code>[MEASURED]</code></li>
+</ul>
+<h4 id="sec-43-manifold-info">4.3 Manifold Info</h4>
+<ul>
+<li><strong>Dataset</strong>: <code>LemGendizedUpnV2</code></li>
+<li><strong>Total Samples</strong>: 285 WebDataset streaming shards (1.06 TB NTFS hardlink deduplicated)</li>
+<li><strong>Primary Task</strong>: Parametric latent steering across compound degradation vectors</li>
+</ul>
+<h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
+<ul>
+<li><strong>Current Training Epochs</strong>: 35 <code>[CURRENT]</code></li>
+<li><strong>Best PSNR</strong>: 35.18 dB <code>[MEASURED]</code> (Target: $\ge 34.50 \text{ dB}$ <code>[TARGET]</code>)</li>
+<li><strong>Best SSIM</strong>: 0.967 <code>[MEASURED]</code> (Target: $\ge 0.960$ <code>[TARGET]</code>)</li>
+<li><strong>Current Learning Rate</strong>: 0.000045</li>
+</ul>
+</section>
 
-    <section id="challenges">
-        <h2>5. Challenges &amp; Resilience Architecture</h2>
-        <ul>
-            <li><strong>Degradation Competition</strong>: When multiple degradations are present simultaneously, naive AdaIN scales can exhibit interference. Feature Modulation Blocks isolate channel subspaces per degradation dimension to enforce orthogonal corrections.</li>
-            <li><strong>Lipschitz Continuity</strong>: Unconstrained steering parameters risk rapid flickering under dynamic slider manipulation. Explicit gradient regularizers ensure strictly bounded output transitions.</li>
-            <li><strong>Hardlink Dedup Protection</strong>: The Dataset Compiler protects the 1.06 TB manifold from container format duplication through automated hardlink audit gates.</li>
-        </ul>
-    </section>
+<section id="sec-5-challenges--resilience-architecture">
+<h2>5. Challenges &amp; Resilience Architecture</h2>
+<ul>
+<li><strong>Degradation Competition</strong>: When multiple degradations are present
+simultaneously, naive AdaIN scales can exhibit interference. Feature
+Modulation Blocks isolate channel subspaces per degradation dimension to
+enforce orthogonal corrections.</li>
+<li><strong>Lipschitz Continuity</strong>: Unconstrained steering parameters risk rapid
+flickering under dynamic slider manipulation. Explicit gradient regularizers
+ensure strictly bounded output transitions.</li>
+<li><strong>Hardlink Dedup Protection</strong>: The Dataset Compiler protects the 1.06 TB
+manifold from container format duplication through automated hardlink audit
+gates.</li>
+</ul>
+</section>
 
-    <section id="deployment">
-        <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
-        <p>Through fixed-shape ONNX Opset 17 export, UPN v2 executes on consumer WebGPU runtimes with bounded memory consumption:</p>
-        <ul>
-            <li><strong>Production FP16 Engine (<code>upn_v2.onnx</code>)</strong>: Self-contained weights executing in sub-35ms latency on edge hardware <span class="score-badge-green">[MEASURED]</span>.</li>
-            <li><strong>High-Precision FP32 Export (<code>upn_v2_FP32.onnx</code> + <code>.onnx.data</code>)</strong>: External sidecar export for scientific verification.</li>
-            <li><strong>Uniform Buffer Steering</strong>: The conditioning vector \(\mathbf{z}\) is bound directly to WebGPU uniform buffers, delivering 60 FPS viewport manipulation.</li>
-        </ul>
-    </section>
+<section id="sec-6-deployment-strategy--production-acceleration">
+<h2>6. Deployment Strategy &amp; Production Acceleration</h2>
+<p>Through fixed-shape ONNX Opset 17 export, UPN v2 executes on consumer WebGPU
+runtimes with bounded memory consumption:</p>
+<ul>
+<li><strong>Production FP16 Engine (<code>upn_v2.onnx</code>)</strong>: Self-contained weights executing
+in sub-35ms latency on edge hardware <code>[MEASURED]</code>.</li>
+<li><strong>High-Precision FP32 Export (<code>upn_v2_FP32.onnx</code> + <code>.onnx.data</code>)</strong>: External
+sidecar export for scientific verification.</li>
+<li><strong>Uniform Buffer Steering</strong>: The conditioning vector $\mathbf{z}$ is bound
+directly to WebGPU uniform buffers, delivering 60 FPS viewport manipulation.</li>
+</ul>
+</section>
 
-    <section id="sota-matrix">
-        <h2>7. SOTA Architectural Performance Matrix</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Degradation Mode</th>
-                        <th>Conditioning \(\mathbf{z}\)</th>
-                        <th>PSNR (dB)</th>
-                        <th>SSIM</th>
-                        <th>Inference (GTX 1650)</th>
-                        <th>Status &amp; Verification</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Gaussian Noise (\(\sigma = 25\))</td>
-                        <td>\([0.0, 1.0, 0.0, 0.0]\)</td>
-                        <td>32.14</td>
-                        <td>0.932</td>
-                        <td>31 ms</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>Motion Blur (\(\kappa = 15\))</td>
-                        <td>\([1.0, 0.0, 0.0, 0.0]\)</td>
-                        <td>31.85</td>
-                        <td>0.928</td>
-                        <td>31 ms</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>JPEG Compression (\(Q = 20\))</td>
-                        <td>\([0.0, 0.0, 1.0, 0.0]\)</td>
-                        <td>30.72</td>
-                        <td>0.915</td>
-                        <td>31 ms</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td>Combined Compound</td>
-                        <td>\([0.8, 0.6, 0.4, 0.0]\)</td>
-                        <td>29.94</td>
-                        <td>0.902</td>
-                        <td>31 ms</td>
-                        <td><span class="score-badge-green">Measured [MEASURED]</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Compound SOTA Target</strong></td>
-                        <td>Continuous</td>
-                        <td><strong>&ge; 31.00</strong></td>
-                        <td><strong>&ge; 0.920</strong></td>
-                        <td><strong>&le; 35 ms</strong></td>
-                        <td><span class="score-badge-neutral">Target [TARGET]</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+<section id="sec-7-sota-architectural-performance-matrix">
+<h2>7. SOTA Architectural Performance Matrix</h2>
+<ul>
+<li><strong>Gaussian Noise ($\sigma = 25$)</strong>: Conditioning $\mathbf{z}$:
+$[0.0, 1.0, 0.0, 0.0]$; PSNR (dB): 32.14; SSIM: 0.932; Inference (GTX 1650):
+31 ms; Status &amp; Verification: Measured <code>[MEASURED]</code></li>
+<li><strong>Motion Blur ($\kappa = 15$)</strong>: Conditioning $\mathbf{z}$:
+$[1.0, 0.0, 0.0, 0.0]$; PSNR (dB): 31.85; SSIM: 0.928; Inference (GTX 1650):
+31 ms; Status &amp; Verification: Measured <code>[MEASURED]</code></li>
+<li><strong>JPEG Compression ($Q = 20$)</strong>: Conditioning $\mathbf{z}$:
+$[0.0, 0.0, 1.0, 0.0]$; PSNR (dB): 30.72; SSIM: 0.915; Inference (GTX 1650):
+31 ms; Status &amp; Verification: Measured <code>[MEASURED]</code></li>
+<li><strong>Combined Compound</strong>: Conditioning $\mathbf{z}$: $[0.8, 0.6, 0.4, 0.0]$; PSNR
+(dB): 29.94; SSIM: 0.902; Inference (GTX 1650): 31 ms; Status &amp; Verification:
+Measured <code>[MEASURED]</code></li>
+<li><strong>Compound SOTA Target</strong>: Conditioning $\mathbf{z}$: Continuous; PSNR (dB):
+<strong>$\ge 31.00$</strong>; SSIM: <strong>$\ge 0.920$</strong>; Inference (GTX 1650):
+<strong>$\le 35 \text{ ms}$</strong>; Status &amp; Verification: <strong>Target <code>[TARGET]</code></strong></li>
+</ul>
+</section>
 
-    <section id="conclusion">
-        <h2>8. Conclusion</h2>
-        <p>UPN v2 establishes a unified paradigm for universal image restoration, demonstrating that continuous latent steering achieves parity with dedicated single-task networks while dramatically reducing deployment footprint.</p>
+<section id="sec-8-conclusion">
+<h2>8. Conclusion</h2>
+<p>UPN v2 establishes a unified paradigm for universal image restoration,
+demonstrating that continuous latent steering achieves parity with dedicated
+single-task networks while dramatically reducing deployment footprint.</p>
+<h3 id="related-ecosystem-documentation">Related Ecosystem Documentation</h3>
+<ul>
+<li><a href="dataset-compiler.html">Dataset Compiler Suite</a> (Manifold: <code>LemGendizedUpnV2</code>)</li>
+<li><a href="training-suite-master.html">Training Suite Architecture</a> (Tri-Format ONNX / PT
+Checkpoint Lifecycle)</li>
+<li><a href="ai-studio-manual.html">AI Studio GUI Manual</a> (Interactive Training Panel Controls)</li>
+<li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a> (System
+Governance &amp; Specifications)</li>
+</ul>
+</section>
 
-        <div class="card doc-cross-links" style="margin-top: 24px; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px;">
-            <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--accent-color);">Related Ecosystem Documentation</h3>
-            <ul style="font-size: 13px; list-style: none; padding-left: 0; display: flex; flex-wrap: wrap; gap: 16px;">
-                <li><a href="dataset-compiler.html">Dataset Compiler Suite (LemGendizedUpnV2)</a></li>
-                <li><a href="training-suite-master.html">Training Suite Architecture &amp; Checkpoint Governance</a></li>
-                <li><a href="ai-studio-manual.html">Desktop GUI Control Manual</a></li>
-                <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></li>
-            </ul>
-        </div>
-    </section>
-</main>
+<footer>
+<p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_LEMGENDARY_UPN_V2.md</code>.</p>
+</footer>
+</div>
 </body>
 </html>

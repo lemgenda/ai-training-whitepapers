@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "services": [
+    {"id": "env-manager", "project": "lemgendary-env-manager", "port": 9100},
+    {"id": "dataset-compiler", "project": "lemgendary-datasets", "port": 9110},
+    {"id": "training-suite", "project": "lemgendary-training-suite", "port": 9120}
+  ]
+}

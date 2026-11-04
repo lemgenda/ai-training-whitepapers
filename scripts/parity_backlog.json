@@ -1,0 +1,8 @@
+{
+  "description": "Known MD/HTML parity drift. Recorded on 2026-11-03 (docs v16.9.70) with 88 entries; all entries were resolved in v16.9.71 to v16.9.77 (pages on the approved template, MD/HTML pairs resynchronized), so the backlog is empty and every audit finding fails. scripts/audit_docs.py reports listed entries as backlog and fails a listed entry with no finding left as stale. Never add entries to hide new drift.",
+  "backlog": {
+    "heading-parity": [],
+    "template": [],
+    "text-similarity": []
+  }
+}

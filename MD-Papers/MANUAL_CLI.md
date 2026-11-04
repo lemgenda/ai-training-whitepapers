@@ -2,6 +2,8 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
+**Version**: `v16.9.44-STABLE`
+
 ---
 
 ## Table of Contents
@@ -19,7 +21,7 @@
   - [2.9 Telemetry Daemon & Background Server (`serve`)](#29-telemetry-daemon--background-server-serve)
   - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
-- [4. AI Studio Desktop GUI CLI & Toolchain](#4-ai-studio-desktop-gui-cli--toolchain)
+- [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
   - [5.1 Invocation Syntax](#51-invocation-syntax)
   - [5.2 Manifold Compilation (`compile`)](#52-manifold-compilation-compile)
@@ -49,6 +51,7 @@
   - [6.9 Cloud Synchronization (`sync`)](#69-cloud-synchronization-sync)
   - [6.10 Sidecar Daemon Operations (`server`)](#610-sidecar-daemon-operations-server)
   - [6.11 LLM Causal Instruction Tuning & Model Export (`llm`)](#611-llm-causal-instruction-tuning--model-export-llm)
+  - [6.12 FID Re-evaluation (`python -m training.fid_reeval`)](#612-fid-re-evaluation-python--m-trainingfid_reeval)
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
 - [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
@@ -57,20 +60,26 @@
 
 ## 1. Executive Overview
 
-The LemGendary Ecosystem comprises seven specialized repositories orchestrated under a unified architectural contract.
-All command-line operations are standardized, deterministic, and free of external visual noise or emojis.
-The single authoritative command-line tool for ecosystem health, virtual environment lifecycles, and verification is `lem-env`,
+The LemGendary Ecosystem comprises seven specialized repositories orchestrated
+under a unified architectural contract.
+All command-line operations are standardized, deterministic, and free of
+external visual noise or emojis.
+The single authoritative command-line tool for ecosystem health, virtual
+environment lifecycles, and verification is `lem-env`,
 located in `lemgendary-env-manager`.
 
-Every toolchain command adheres strictly to semantic exit codes, making them directly suited for automated continuous integration,
+Every toolchain command adheres strictly to semantic exit codes, making them
+directly suited for automated continuous integration,
 local terminal workflows, and cross-project orchestration.
 
 ---
 
 ## 2. Environment Manager CLI (`lem-env`)
 
-`lem-env` is packaged as a standard Python console application using Typer and Rich. It provides the central management interface
-for inspecting hardware capabilities, provisioning isolated virtual environments, upgrading packages in dependency order,
+`lem-env` is packaged as a standard Python console application using Typer and
+Rich. It provides the central management interface
+for inspecting hardware capabilities, provisioning isolated virtual
+environments, upgrading packages in dependency order,
 and enforcing strict linting and compilation gates across all seven workspaces.
 
 ### 2.1 Global Options & Invocation
@@ -83,15 +92,15 @@ lem-env [COMMAND] [OPTIONS]
 lem-env --help
 ```
 
-| Global Option | Type | Description |
-| :--- | :--- | :--- |
-| `--help` | Flag | Display comprehensive command usage, available subcommands, and flags |
+- **`--help`**: Type: Flag; Description: Display comprehensive command usage,
+  available subcommands, and flags
 
 ---
 
 ### 2.2 Hardware Probing (`probe`)
 
-The `probe` command discovers system hardware, compute accelerators, operating system architecture, MetaTrader 5 availability,
+The `probe` command discovers system hardware, compute accelerators, operating
+system architecture, MetaTrader 5 availability,
 and checks for software update releases against upstream registries.
 
 ```bash
@@ -100,23 +109,35 @@ lem-env probe
 
 Key features:
 
-- Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Windows DirectML, and CPU fallback.
-- Detects MetaTrader 5 terminal installations, install directories, and software versions.
-- Queries `winget list` (installed version) and `winget show` (available version) to report both current and latest software versions with a status of `UP TO DATE`, `UPDATE AVAILABLE`, `NOT INSTALLED`, or `INSTALLED (not in winget)`.
+- Detects GPU acceleration backends including NVIDIA CUDA, AMD ROCm, Windows
+  DirectML, and CPU fallback.
+- Detects MetaTrader 5 terminal installations, install directories, and software
+  versions.
+- Queries `winget list` (installed version) and `winget show` (available
+  version) to report both current and latest software versions with a status of
+  `UP TO DATE`, `UPDATE AVAILABLE`, `NOT INSTALLED`, or
+  `INSTALLED (not in winget)`.
 
 MetaTrader 5 detection priority:
 
-1. Windows registry keys under `HKCU`/`HKLM\SOFTWARE\MetaQuotes\Terminal` (fast, ~5 ms)
-2. Well-known install paths (`C:\Program Files\MetaTrader 5\terminal64.exe`)
+1. Windows registry keys under `HKCU`/`HKLM\SOFTWARE\MetaQuotes\Terminal` (fast,
+   ~5 ms)
+2. Well-known install paths (`%ProgramFiles%\MetaTrader 5\terminal64.exe`,
+   the MetaTrader 5 installation folder under Program Files)
 3. PowerShell `Get-Package -Name '*MetaTrader*'` (slow fallback)
 
-When an install path is available, the version is read directly from `terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo` property. This gives an authoritative version number even when winget has no record of the installation (typical for MT5, which is often installed outside winget's package database).
+When an install path is available, the version is read directly from
+`terminal64.exe`'s `FileVersion` metadata via PowerShell's `VersionInfo`
+property. This gives an authoritative version number even when winget has no
+record of the installation (typical for MT5, which is often installed outside
+winget's package database).
 
 ---
 
 ### 2.3 Ecosystem Health Audit (`audit`)
 
-The `audit` command executes an exhaustive diagnostic audit of all seven repositories in the ecosystem.
+The `audit` command executes an exhaustive diagnostic audit of all seven
+repositories in the ecosystem.
 
 ```bash
 # Full audit with per-project safety classification (~30-90s)
@@ -126,30 +147,38 @@ lem-env audit
 lem-env audit --fast
 ```
 
-| Option | Flag | Type | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `--fast` | None | Bool | `False` | Skip per-project pip safety dry-runs. Audit completes in seconds but the Safe-↑ column in the drift matrix is left empty. |
+- **`--fast`**: Flag: None; Type: Bool; Default: `False`; Description: Skip
+  per-project pip safety dry-runs. Audit completes in seconds but the Safe-↑
+  column in the drift matrix is left empty.
 
 Diagnostic checks performed:
 
 - Toolchain prerequisites verification for Python, Git, NPM, and MetaTrader 5.
-- Virtual environment presence, Python executable health, and missing package count for each repository.
-- Node.js workspace health, inspecting `package.json`, `node_modules`, and declared dependencies.
-- Manifest Coverage: declared vs installed vs missing vs extra vs platform-skipped counts per project.
-- Python Package Drift & Upgrade Status matrix. Every package declared in two or more manifests appears with:
-  - **Pin type glyph**: `=` (exact `==`), `~` (range), `*` (floating), `·` (transitive install), empty (declared but not installed)
-  - **Upgrade marker**: `↑` (safe update available), `⊘` (blocked by reverse dependency), none (at latest version)
+- Virtual environment presence, Python executable health, and missing package
+  count for each repository.
+- Node.js workspace health, inspecting `package.json`, `node_modules`, and
+  declared dependencies.
+- Manifest Coverage: declared vs installed vs missing vs extra vs
+  platform-skipped counts per project.
+- Python Package Drift & Upgrade Status matrix. Every package declared in two or
+  more manifests appears with:
+  - **Pin type glyph**: `=` (exact `==`), `~` (range), `*` (floating), `·`
+    (transitive install), empty (declared but not installed)
+  - **Upgrade marker**: `↑` (safe update available), `⊘` (blocked by reverse
+    dependency), none (at latest version)
 - Packages Declared in Only One Manifest: full inventory of drift-invisible packages.
 - NPM Package Dependency Matrix inspecting declared versus installed package versions.
 - NPM Package Drift Across Workspaces.
 
-Blocked upgrades include a reason string naming the requiring package and constraint, e.g. `pylint requires astroid<=4.1.dev0,>=4.0.2`.
+Blocked upgrades include a reason string naming the requiring package and
+constraint, e.g. `pylint requires astroid<=4.1.dev0,>=4.0.2`.
 
 ---
 
 ### 2.4 Smart Clean Install Pipeline (`install`)
 
-The `install` command runs the automated seven-step environment creation and package installation pipeline.
+The `install` command runs the automated seven-step environment creation and
+package installation pipeline.
 
 ```bash
 # Execute clean install across all ecosystem projects
@@ -162,17 +191,20 @@ lem-env install --project lemgendary-training-suite
 lem-env install --no-clean
 ```
 
-| Option | Flag | Type | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `--project` | `-p` | Text | `None` | Restrict installation to a single target repository |
-| `--clean / --no-clean` | None | Bool | `True` | Completely purge existing `.venv` and `node_modules` before fresh recreation. The venv currently executing the pipeline is preserved automatically. |
+- **`--project`**: Flag: `-p`; Type: Text; Default: `None`; Description:
+  Restrict installation to a single target repository
+- **`--clean / --no-clean`**: Flag: None; Type: Bool; Default: `True`;
+  Description: Completely purge existing `.venv` and `node_modules` before fresh
+  recreation. The venv currently executing the pipeline is preserved
+  automatically.
 
 The pipeline executes in sequential order:
 
 1. Hardware discovery and backend acceleration detection.
 2. Global toolchain verification (Python, Git, NPM).
 3. Virtual environment provisioning and purge (skips the running venv).
-4. Python package installation using locked manifests, followed by OpenCV variant normalization.
+4. Python package installation using locked manifests, followed by OpenCV
+   variant normalization.
 5. Node.js package installation via NPM.
 6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).
 7. Final ecosystem health audit generation.
@@ -181,8 +213,10 @@ The pipeline executes in sequential order:
 
 ### 2.5 Safe Bottom-Up Package Upgrades (`update`)
 
-The `update` command safely resolves outdated dependencies and upgrades them bottom-up across the dependency hierarchy:
-`lemgendary-env-manager` -> `lemgendary-datasets` -> `lemgendary-training-suite` -> `lemgendary-ai-studio-gui`.
+The `update` command safely resolves outdated dependencies and upgrades them
+bottom-up across the dependency hierarchy:
+`lemgendary-env-manager` -> `lemgendary-datasets` -> `lemgendary-training-suite`
+-> `lemgendary-ai-studio-gui`.
 
 ```bash
 # Inspect potential upgrades without modifying files
@@ -192,25 +226,44 @@ lem-env update --dry-run
 lem-env update
 ```
 
-| Option | Flag | Type | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `--project` | `-p` | Text | `None` | Target package upgrades for a specific repository |
-| `--dry-run` | None | Bool | `False` | Display proposed version changes without executing installations |
+- **`--project`**: Flag: `-p`; Type: Text; Default: `None`; Description: Target
+  package upgrades for a specific repository
+- **`--dry-run`**: Flag: None; Type: Bool; Default: `False`; Description:
+  Display proposed version changes without executing installations
 
-Every candidate upgrade passes through a multi-layer safety pipeline before being applied:
+Every candidate upgrade passes through a multi-layer safety pipeline before
+being applied:
 
-1. **Reverse-dependency check**: `pip inspect --local` is used to build a reverse-dependency graph of every installed package. Any candidate whose target version would violate an installed package's requirement is marked `BLOCKED` with an explanation.
-2. **Constraint-preserving dry-run**: Every non-target installed package is written into a temporary pip constraints file. If pip cannot resolve the target batch without downgrading or removing anything, the batch is split into per-package checks so a single bad candidate does not poison the whole set.
-3. **CUDA-aware torch handling**: On CUDA hosts, `torch`, `torchvision`, and `torchaudio` are resolved against the PyTorch CUDA index (`download.pytorch.org/whl/cu121`). Only packages already installed in the project are considered; packages already at the newest CUDA build produce a `VERIFIED` event instead of a spurious `UPGRADED` event.
-4. **Snapshot + rollback**: Each batch is snapshotted via `pip freeze`, applied, and verified with `pip check`. If the check fails, the batch is rolled back from the snapshot.
+1. **Reverse-dependency check**: `pip inspect --local` is used to build a
+   reverse-dependency graph of every installed package. Any candidate whose
+   target version would violate an installed package's requirement is marked
+   `BLOCKED` with an explanation.
+2. **Constraint-preserving dry-run**: Every non-target installed package is
+   written into a temporary pip constraints file. If pip cannot resolve the
+   target batch without downgrading or removing anything, the batch is split
+   into per-package checks so a single bad candidate does not poison the whole
+   set.
+3. **CUDA-aware torch handling**: On CUDA hosts, `torch`, `torchvision`, and
+   `torchaudio` are resolved against the PyTorch CUDA index
+   (`download.pytorch.org/whl/cu121`). Only packages already installed in the
+   project are considered; packages already at the newest CUDA build produce a
+   `VERIFIED` event instead of a spurious `UPGRADED` event.
+4. **Snapshot + rollback**: Each batch is snapshotted via `pip freeze`, applied,
+   and verified with `pip check`. If the check fails, the batch is rolled back
+   from the snapshot.
 
-After all pip/npm upgrades complete, centralized manifests in `lemgendary-env-manager/requirements/` are automatically re-written to reflect actual installed versions. Packages in `PROTECTED_FROM_SYNC` (`astroid`, `pylint`, `pydantic`, `pydantic-core`) are passed through untouched to prevent a transient upgrade-time drift from being permanently encoded into the manifest.
+After all pip/npm upgrades complete, centralized manifests in
+`lemgendary-env-manager/requirements/` are automatically re-written to reflect
+actual installed versions. Packages in `PROTECTED_FROM_SYNC` (`astroid`,
+`pylint`, `pydantic`, `pydantic-core`) are passed through untouched to prevent a
+transient upgrade-time drift from being permanently encoded into the manifest.
 
 ---
 
 ### 2.6 Manifest Synchronization (`sync`)
 
-The `sync` command captures currently installed packages from active virtual environments and synchronizes pinned requirement manifests
+The `sync` command captures currently installed packages from active virtual
+environments and synchronizes pinned requirement manifests
 under `lemgendary-env-manager/requirements/`.
 
 ```bash
@@ -224,13 +277,15 @@ Manifests maintained:
 - `requirements-training.txt`
 - `lemgendary-ai-studio-gui.package.json`
 
-This is called automatically by `install` and `update` — use directly only when you need to reset a project's requirements without running the full pipeline.
+This is called automatically by `install` and `update` — use directly only when
+you need to reset a project's requirements without running the full pipeline.
 
 ---
 
 ### 2.7 Multi-Gate Validation Engine (`validate`)
 
-The `validate` command enforces strict quality, formatting, compilation, and domain integrity gates across all seven workspaces.
+The `validate` command enforces strict quality, formatting, compilation, and
+domain integrity gates across all seven workspaces.
 
 ```bash
 # Validate entire ecosystem
@@ -240,32 +295,57 @@ lem-env validate
 lem-env validate --project lemgendary-docs
 ```
 
-Validation gates enforced:
+Validation gates enforced (in run order, from
+`env_manager/validation/registry.py`):
 
-| Check | Tool | Projects |
-| :--- | :--- | :--- |
-| Python bytecode | `py_compile` | Python projects |
-| Zero-emoji | Regex scan | All projects |
-| JS/TS linting | ESLint (`--format json`) | `lemgendary-ai-studio-gui` |
-| TypeScript types | `tsc --noEmit` | `lemgendary-ai-studio-gui` |
-| JSON RFC 8259 | Python `json` (in-process) | All 7 repos |
-| PowerShell syntax | `PSScriptAnalyzer` (`pwsh` preferred) | Repositories with `.ps1` |
-| Markdown lint | `markdownlint-cli` | All 7 repos |
-| YAML lint | `yamllint` (env-manager .venv) | All 7 repos |
-| W3C HTML | `html-validate` | `lemgendary-docs` |
-| CSS lint | `stylelint` | `lemgendary-docs` |
-| WCAG 2.2 AA | `pa11y` | `lemgendary-docs` (static HTML) |
-| Domain Verifications | `validator.py` ecosystem gates | All 7 repos (doc sync, parquet schemas, weights, Tauri) |
+- **Python bytecode**: Tool: `py_compile`; Projects: Python projects
+- **Zero-emoji**: Tool: Regex scan; Projects: All projects
+- **YAML lint**: Tool: `yamllint` (env-manager .venv); Projects: All 7 repos
+- **JSON RFC 8259**: Tool: Python `json` (in-process); Projects: All 7 repos
+- **Markdown lint**: Tool: `markdownlint-cli2`; Projects: All 7 repos
+- **JS/TS linting**: Tool: ESLint (`--format json`); Projects: Node projects
+  (`lemgendary-ai-studio-gui`)
+- **TypeScript types**: Tool: `tsc --noEmit`; Projects: Node projects
+- **W3C HTML**: Tool: `html-validate`; Projects: static HTML sites
+  (`lemgendary-docs`)
+- **WCAG 2.2 AA**: Tool: `pa11y`; Projects: static HTML sites
+  (`lemgendary-docs`)
+- **PowerShell analysis**: Tool: `PSScriptAnalyzer` (`pwsh` preferred);
+  Projects: Repositories with `.ps1`
+- **Pylint**: Tool: `pylint` from the project's `.venv` with the project's own
+  config; Projects: Python projects
+- **Forbidden suppressions**: Tool: in-process scan (Python directives and
+  `warnings` ignore filters, TS/JS `@ts-*` and `eslint-disable` comments, Rust
+  `allow` attributes); Projects: All projects
+- **Absolute paths**: Tool: in-process scan for hardcoded absolute paths;
+  Projects: All projects
+- **Domain Verifications**: Tool: domain gates (README changelog, docs sync,
+  docs manifests, docs suite, dataset manifests, training suite, models hub,
+  git hooks); Projects: the matching repositories
+- **Ecosystem SSOT**: Tool: `ecosystem_ssot` (error severity): literal ports,
+  Kaggle owner, docs URL or project lists that do not come from
+  `lemgendary-env-manager/ecosystem/ecosystem.json`; Projects: All projects
 
-All Node.js validation tools are resolved locally from `lemgendary-env-manager/node_modules/.bin` via `_resolve_tool_cmd()`, eliminating global toolchain pollution.
+Gates fail closed: a missing or crashing tool is a `tool_error` finding, and the
+npx fallback (`npx --no`) never downloads packages.
 
-> **Note on WCAG for the React app (`lemgendary-ai-studio-gui`)**: The Vite/React build produces a minimal `index.html` shell with a single `<div id="root">`. WCAG accessibility validation of the fully rendered UI requires a running dev server. The `validate` command runs ESLint and TypeScript checks for the GUI instead; WCAG should be run manually via `npx pa11y http://localhost:5173` against a live dev server.
+All Node.js validation tools are resolved locally from
+`lemgendary-env-manager/node_modules/.bin` via `_resolve_tool_cmd()`,
+eliminating global toolchain pollution.
+
+> **Note on WCAG for the React app (`lemgendary-ai-studio-gui`)**: The
+> Vite/React build produces a minimal `index.html` shell with a single
+> `<div id="root">`. WCAG accessibility validation of the fully rendered UI
+> requires a running dev server. The `validate` command runs ESLint and
+> TypeScript checks for the GUI instead; WCAG should be run manually via
+> `npx pa11y http://localhost:5173` against a live dev server.
 
 ---
 
 ### 2.8 Workspace Cache & Residue Purge (`clean`)
 
-The `clean` command removes volatile temporary files, caches, and build artifacts to maintain absolute workspace hygiene.
+The `clean` command removes volatile temporary files, caches, and build
+artifacts to maintain absolute workspace hygiene.
 
 ```bash
 # Clean entire workspace
@@ -286,7 +366,8 @@ Purged items include:
 
 ### 2.9 Telemetry Daemon & Background Server (`serve`)
 
-The `serve` command launches the FastAPI REST API and WebSocket real-time telemetry server.
+The `serve` command launches the FastAPI REST API and WebSocket real-time
+telemetry server.
 
 ```bash
 # Start server on default address
@@ -296,18 +377,21 @@ lem-env serve
 lem-env serve --host 0.0.0.0 --port 8000
 ```
 
-| Option | Flag | Type | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `--host` | `-h` | Text | `127.0.0.1` | Network interface address to bind the HTTP listener |
-| `--port` | `-p` | Int | `8000` | TCP port for incoming REST and WebSocket connections |
+- **`--host`**: Flag: `-h`; Type: Text; Default: `127.0.0.1`; Description:
+  Network interface address to bind the HTTP listener
+- **`--port`**: Flag: `-p`; Type: Int; Default: `8000`; Description: TCP port
+  for incoming REST and WebSocket connections
 
-Server lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan handler, ensuring the background event-drain task is cancelled cleanly on shutdown.
+Server lifecycle is managed via FastAPI's `@asynccontextmanager` lifespan
+handler, ensuring the background event-drain task is cancelled cleanly on
+shutdown.
 
 ---
 
 ### 2.10 Git Hook Installation (`setup-hooks`)
 
-The `setup-hooks` command (with canonical alias `hooks`) installs or repairs standardized pre-commit hooks across all ecosystem projects.
+The `setup-hooks` command (with canonical alias `hooks`) installs or repairs
+standardized pre-commit hooks across all ecosystem projects.
 
 ```bash
 # Install hooks across all projects
@@ -319,13 +403,16 @@ lem-env hooks
 lem-env setup-hooks --project lemgendary-datasets
 ```
 
-The installed hook delegates validation to `lem-env validate --project <name>` and blocks the commit if any gate fails. This ensures every repository runs the same validation pipeline regardless of local toolchain state.
+The installed hook delegates validation to `lem-env validate --project <name>`
+and blocks the commit if any gate fails. This ensures every repository runs the
+same validation pipeline regardless of local toolchain state.
 
 ---
 
 ## 3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)
 
-For Windows terminal operators, `lemgendary_env_manager.ps1` provides an interactive, keyboard-driven management console.
+For Windows terminal operators, `lemgendary_env_manager.ps1` provides an
+interactive, keyboard-driven management console.
 
 Execution syntax:
 
@@ -335,19 +422,27 @@ powershell -ExecutionPolicy Bypass -File .\lemgendary_env_manager.ps1
 
 Interactive Menu Matrix:
 
-- `[1] Probe System & Hardware Accelerators`: Executes hardware discovery and checks for updates.
-- `[2] Run Full Ecosystem Health Audit`: Displays toolchain, virtual environment, manifest coverage, drift matrix, single-manifest inventory, and NPM dependency matrix.
-- `[3] Execute Smart Clean Install Pipeline`: Purges environments and installs clean dependencies.
-- `[4] Run Safe Package Updates`: Executes bottom-up dependency upgrades and syncs manifests.
-- `[5] Validate Projects`: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG 2.2 AA, and domain gates.
-- `[6] Start/Stop Background API Server`: Launches or stops the FastAPI server as a background PowerShell job with live WebSocket streaming.
+- `[1] Probe System & Hardware Accelerators`: Executes hardware discovery and
+  checks for updates.
+- `[2] Run Full Ecosystem Health Audit`: Displays toolchain, virtual
+  environment, manifest coverage, drift matrix, single-manifest inventory, and
+  NPM dependency matrix.
+- `[3] Execute Smart Clean Install Pipeline`: Purges environments and installs
+  clean dependencies.
+- `[4] Run Safe Package Updates`: Executes bottom-up dependency upgrades and
+  syncs manifests.
+- `[5] Validate Projects`: Enforces py_compile, ESLint, YAML, JSON, W3C, WCAG
+  2.2 AA, and domain gates.
+- `[6] Start/Stop Background API Server`: Launches or stops the FastAPI server
+  as a background PowerShell job with live WebSocket streaming.
 - `[Q] Quit`: Gracefully terminates the management console.
 
 ---
 
-## 4. AI Studio Desktop GUI CLI & Toolchain
+## 4. LemGendary AI Studio GUI CLI & Toolchain
 
-The desktop application `lemgendary-ai-studio-gui` utilizes Node.js, React 18, Vite, and Tauri v2.
+The desktop application `lemgendary-ai-studio-gui` utilizes Node.js, React 18,
+Vite, and Tauri v2.
 
 CLI Operations:
 
@@ -378,7 +473,13 @@ cargo tauri build
 
 ## 5. Datasets Compilation Suite CLI
 
-The `lemgendary-datasets` repository provides the unified `lemgendary` CLI (`cli.py`), exposing a full suite of compiler, synthesis, audit, transcoding, and server operations. All commands feature transparent hybrid routing: when the sidecar API daemon is active on `127.0.0.1:8100`, commands submit tasks to the API and render live WebSocket logs to Rich Console; when stopped or when `--no-server` is passed, commands fall back cleanly to direct in-process execution.
+The `lemgendary-datasets` repository provides the unified `lemgendary` CLI
+(`cli.py`), exposing a full suite of compiler, synthesis, audit, transcoding,
+and server operations. All commands feature transparent hybrid routing: when the
+sidecar API daemon is active on `127.0.0.1:8100`, commands submit tasks to the
+API and render live WebSocket logs to Rich Console; when stopped or when
+`--no-server` is passed, commands fall back cleanly to direct in-process
+execution.
 
 ### 5.1 Invocation Syntax
 
@@ -396,7 +497,8 @@ python cli.py [COMMAND] --help
 
 ### 5.2 Manifold Compilation (`compile`)
 
-Compiles raw image and market data into production-ready dataset manifolds with optional multi-container emission and quality gates:
+Compiles raw image and market data into production-ready dataset manifolds with
+optional multi-container emission and quality gates:
 
 ```bash
 # Standard compilation with default WebP q=92
@@ -406,7 +508,8 @@ python cli.py compile --model nima_aesthetic --max-gb 50
 python cli.py compile --model nima_aesthetic --preset quality-vision
 
 # Concurrently emit WebP directory and MosaicML Streaming (MDS) container
-python cli.py compile --model nima_aesthetic --image-format webp --image-quality 92 --also-format mds
+python cli.py compile --model nima_aesthetic --image-format webp \
+  --image-quality 92 --also-format mds
 
 # High-throughput compile bypassing aesthetic vetting and labeling
 python cli.py compile --model nafnet_deblurring --workers 16 --no-vetting --no-labeling
@@ -418,52 +521,76 @@ python cli.py compile --model upn_v2 --also-format mds --force-duplicate
 python cli.py compile --model nima_technical --no-server
 ```
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--model`, `-m` | String | `None` | Dataset registry key in `unified_data.yaml` |
-| `--preset`, `-p` | String | `None` | Predefined compiler preset profile (`quality-vision`, `restoration-hardlinked`, `detection-variable`, `cloud-archival`) |
-| `--max-gb` | Float | Config | Maximum size allocation threshold in gigabytes |
-| `--workers` | Integer | Auto | Number of parallel worker threads/processes |
-| `--image-format` | String | `webp` | Target format: `webp`, `jpeg`, `png`, `keep` |
-| `--image-quality` | Integer | `92` | Target image compression quality (1-100) |
-| `--target-quality` | Integer | `95` | Restoration target ground-truth quality |
-| `--mask-format` | String | `webp-lossless` | Segmentation mask format |
-| `--also-format` | String | `None` | Comma-separated containers: `mds`, `litdata`, `wds`, `parquet` |
-| `--no-vetting` | Flag | `False` | Bypass NIMA aesthetic score gate |
-| `--no-labeling` | Flag | `False` | Bypass YOLO detection auto-labeling |
-| `--no-hash` | Flag | `False` | Bypass pHash/dHash perceptual deduplication |
-| `--no-server` | Flag | `False` | Force local in-process execution |
+- **`--model`, `-m`**: Type: String; Default: `None`; Description: Dataset
+  registry key in `unified_data.yaml`
+- **`--preset`, `-p`**: Type: String; Default: `None`; Description: Predefined
+  compiler preset profile (`quality-vision`, `restoration-hardlinked`,
+  `detection-variable`, `cloud-archival`)
+- **`--max-gb`**: Type: Float; Default: Config; Description: Maximum size
+  allocation threshold in gigabytes
+- **`--workers`**: Type: Integer; Default: Auto; Description: Number of parallel
+  worker threads/processes
+- **`--image-format`**: Type: String; Default: `webp`; Description: Target
+  format: `webp`, `jpeg`, `png`, `keep`
+- **`--image-quality`**: Type: Integer; Default: `92`; Description: Target image
+  compression quality (1-100)
+- **`--target-quality`**: Type: Integer; Default: `95`; Description: Restoration
+  target ground-truth quality
+- **`--mask-format`**: Type: String; Default: `webp-lossless`; Description:
+  Segmentation mask format
+- **`--also-format`**: Type: String; Default: `None`; Description:
+  Comma-separated containers: `mds`, `litdata`, `wds`, `parquet`
+- **`--no-vetting`**: Type: Flag; Default: `False`; Description: Bypass NIMA
+  aesthetic score gate
+- **`--no-labeling`**: Type: Flag; Default: `False`; Description: Bypass YOLO
+  detection auto-labeling
+- **`--no-hash`**: Type: Flag; Default: `False`; Description: Bypass pHash/dHash
+  perceptual deduplication
+- **`--no-server`**: Type: Flag; Default: `False`; Description: Force local
+  in-process execution
 
 ### 5.3 Degradation Engine Synthesis (`degrade`)
 
-Derives paired synthetic restoration manifolds from clean ground-truth sources using mathematical physical kernels:
+Derives paired synthetic restoration manifolds from clean ground-truth sources
+using mathematical physical kernels:
 
 ```bash
 # Motion blur and heteroscedastic sensor noise synthesis
-python cli.py degrade --source raw-sets/div2k --output LemGendizedNafNetDebluringSynthetic --profile motion-blur+iso-noise
+python cli.py degrade --source raw-sets/div2k \
+  --output LemGendizedNafNetDebluringSynthetic --profile motion-blur+iso-noise
 
 # Atmospheric haze synthesis on custom manifold directory
-python cli.py degrade --source ../LemGendaryDatasets/LemGendizedNimaAesthetic --output LemGendizedHazySynthetic --profile rainy-haze --intensity high
+python cli.py degrade --source ../LemGendaryDatasets/LemGendizedNimaAesthetic \
+  --output LemGendizedHazySynthetic --profile rainy-haze --intensity high
 
 # Dry-run validation
-python cli.py degrade --source raw-sets/div2k --output LemGendizedTest --profile vintage-film --dry-run
+python cli.py degrade --source raw-sets/div2k --output LemGendizedTest \
+  --profile vintage-film --dry-run
 ```
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--source`, `-s` | String | Required | Source dataset folder or registered manifold name |
-| `--output`, `-o` | String | Required | Destination synthetic manifold folder name |
-| `--profile`, `-p` | String | `motion-blur+iso-noise` | Profile token or composite expression |
-| `--intensity` | String | `medium` | Intensity preset: `low`, `medium`, `high` |
-| `--pairs` | Integer | `None` | Maximum sample pair count cap |
-| `--val-split` | Float | `0.12` | Validation set split ratio |
-| `--seed` | Integer | `42` | Deterministic random number seed |
-| `--image-format` | String | `webp` | Target output format for degraded images |
-| `--dry-run` | Flag | `False` | Simulate derivation plan without writing files |
+- **`--source`, `-s`**: Type: String; Default: Required; Description: Source
+  dataset folder or registered manifold name
+- **`--output`, `-o`**: Type: String; Default: Required; Description:
+  Destination synthetic manifold folder name
+- **`--profile`, `-p`**: Type: String; Default: `motion-blur+iso-noise`;
+  Description: Profile token or composite expression
+- **`--intensity`**: Type: String; Default: `medium`; Description: Intensity
+  preset: `low`, `medium`, `high`
+- **`--pairs`**: Type: Integer; Default: `None`; Description: Maximum sample
+  pair count cap
+- **`--val-split`**: Type: Float; Default: `0.12`; Description: Validation set
+  split ratio
+- **`--seed`**: Type: Integer; Default: `42`; Description: Deterministic random
+  number seed
+- **`--image-format`**: Type: String; Default: `webp`; Description: Target
+  output format for degraded images
+- **`--dry-run`**: Type: Flag; Default: `False`; Description: Simulate
+  derivation plan without writing files
 
 ### 5.4 Audit, Deduplication & Hardlinks (`audit`)
 
-Performs image integrity auditing, magic byte sniffing, aspect ratio filtering, perceptual hashing, and NTFS hardlink fraction accounting:
+Performs image integrity auditing, magic byte sniffing, aspect ratio filtering,
+perceptual hashing, and NTFS hardlink fraction accounting:
 
 ```bash
 # Audit registered manifold
@@ -475,15 +602,18 @@ python cli.py audit --manifold ../LemGendaryDatasets/LemGendizedUpnV2 --sample 1
 
 ### 5.5 Retroactive Transcoding (`transcode`)
 
-In-place atomic transcoding of existing manifold image sets to WebP with zero intermediate files:
+In-place atomic transcoding of existing manifold image sets to WebP with zero
+intermediate files:
 
 ```bash
-python cli.py transcode --model nima_technical --image-format webp --image-quality 92
+python cli.py transcode --model nima_technical --image-format webp \
+  --image-quality 92
 ```
 
 ### 5.6 Smart Multi-Modal Generation (`label`, `prompt`, `mask`)
 
-Runs GPU/CPU inference backends over compiled manifolds to generate labels, diffusion prompts, or segmentation masks:
+Runs GPU/CPU inference backends over compiled manifolds to generate labels,
+diffusion prompts, or segmentation masks:
 
 ```bash
 # Multi-strategy label generation
@@ -507,7 +637,8 @@ python cli.py modernize queue
 python cli.py modernize run --workers 8 --push-kaggle
 
 # Scale reduction (spatial downsampling) for a specific manifold
-python cli.py modernize reduce --manifold LemGendizedClassificationMaster --scale-factor 0.25
+python cli.py modernize reduce --manifold LemGendizedClassificationMaster \
+  --scale-factor 0.25
 
 # Batch regenerate manifolds index and dataset-metadata.json files
 python cli.py modernize regen
@@ -521,23 +652,34 @@ python cli.py modernize --all --yes
 python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
 
 # Full modernization: suffix retirement, WebP transcoding, and modern container conversion
-python cli.py modernize --datasets nima_aesthetic --image-format webp --also-format webdataset
+python cli.py modernize --datasets nima_aesthetic --image-format webp \
+  --also-format webdataset
 ```
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--all` | Flag | `False` | Select all eligible manifolds for modernization |
-| `--yes`, `-y` | Flag | `False` | Skip interactive confirmation gate |
-| `--dry-run` | Flag | `False` | Simulate modernization plan without file modification |
-| `--datasets` | String | `None` | Comma-separated list of folder names, base names, or keys |
-| `--skip-kaggle` | Flag | `False` | Skip Kaggle re-upload (local creation and metadata preserved) |
-| `--image-format` | String | `webp` | Target format for image transcoding (`webp`, `jpeg`, `png`, `keep`) |
-| `--image-quality` | Integer | `92` | Compression quality for image transcoding (1-100) |
-| `--target-quality` | Integer | `95` | Quality floor for ground-truth restoration target transcoding |
-| `--mask-format` | String | `webp-lossless` | Format for mask transcoding (`webp-lossless`, `png`) |
-| `--also-format` | String | `webdataset` | Target container format (`webdataset`, `mds`, `litdata`, `parquet`) |
-| `--skip-transcode` | Flag | `False` | Skip WebP image transcoding phase |
-| `--skip-container` | Flag | `False` | Skip container format conversion phase |
+- **`--all`**: Type: Flag; Default: `False`; Description: Select all eligible
+  manifolds for modernization
+- **`--yes`, `-y`**: Type: Flag; Default: `False`; Description: Skip interactive
+  confirmation gate
+- **`--dry-run`**: Type: Flag; Default: `False`; Description: Simulate
+  modernization plan without file modification
+- **`--datasets`**: Type: String; Default: `None`; Description: Comma-separated
+  list of folder names, base names, or keys
+- **`--skip-kaggle`**: Type: Flag; Default: `False`; Description: Skip Kaggle
+  re-upload (local creation and metadata preserved)
+- **`--image-format`**: Type: String; Default: `webp`; Description: Target
+  format for image transcoding (`webp`, `jpeg`, `png`, `keep`)
+- **`--image-quality`**: Type: Integer; Default: `92`; Description: Compression
+  quality for image transcoding (1-100)
+- **`--target-quality`**: Type: Integer; Default: `95`; Description: Quality
+  floor for ground-truth restoration target transcoding
+- **`--mask-format`**: Type: String; Default: `webp-lossless`; Description:
+  Format for mask transcoding (`webp-lossless`, `png`)
+- **`--also-format`**: Type: String; Default: `webdataset`; Description: Target
+  container format (`webdataset`, `mds`, `litdata`, `parquet`)
+- **`--skip-transcode`**: Type: Flag; Default: `False`; Description: Skip WebP
+  image transcoding phase
+- **`--skip-container`**: Type: Flag; Default: `False`; Description: Skip
+  container format conversion phase
 
 ### 5.8 Sidecar API Server (`server`)
 
@@ -601,15 +743,19 @@ Inspects canonical compilation profiles defined in `presets.yaml`:
 python cli.py presets list
 ```
 
-The output provides a matrix of target formats, image quality percentages, aesthetic vetting gates, and auto-labeling toggles for each profile.
+The output provides a matrix of target formats, image quality percentages,
+aesthetic vetting gates, and auto-labeling toggles for each profile.
 
 ### 5.12 Forex Universe & Parquet Operations (`forex`)
 
-Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays from legacy `.npy` containers into compressed, partitioned PyArrow Parquet manifolds with embedded schema metadata:
+Converts historical multi-symbol tick and M1/M15/H1/H4/D1 time-series arrays
+from legacy `.npy` containers into compressed, partitioned PyArrow Parquet
+manifolds with embedded schema metadata:
 
 ```bash
 # Convert NPY market array files into Parquet
-python cli.py forex convert --source ../raw-market-data/forex_manifold.npy --output ../LemGendaryDatasets/LemGendizedForex
+python cli.py forex convert --source ../raw-market-data/forex_manifold.npy \
+  --output ../LemGendaryDatasets/LemGendizedForex
 
 # Embed column descriptions and metadata into Parquet tables
 python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_universe.parquet
@@ -617,7 +763,10 @@ python cli.py forex embed --target ../LemGendaryDatasets/LemGendizedForex/forex_
 
 ### 5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)
 
-Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX WebDataset `.tar` shards with on-the-fly 12-thread WebP transcoding, eliminating NTFS MFT file allocation overhead and real-time antivirus filter driver slowdowns:
+Directly streams multi-gigabyte legacy dataset zip archives into canonical POSIX
+WebDataset `.tar` shards with on-the-fly 12-thread WebP transcoding, eliminating
+NTFS MFT file allocation overhead and real-time antivirus filter driver
+slowdowns:
 
 ```bash
 # Stream paired restoration dataset directly to WebDataset shards with WebP transcoding
@@ -635,20 +784,28 @@ python tools/stream_zip_to_container.py \
     --delete-zip
 ```
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--zip` | Path | Required | Path to the source multi-gigabyte `.zip` archive |
-| `--target` | Path | Required | Destination modernized manifold directory |
-| `--format` | Choice | `webdataset` | Target container format (`webdataset`) |
-| `--shard-size` | Integer | `5000` | Number of samples per tar shard (~500 MB) |
-| `--no-webp` | Flag | `False` | Disable WebP transcoding (preserves original bytes) |
-| `--workers` | Integer | `None` (auto: 12) | Number of worker threads for parallel transcoding |
-| `--delete-zip` | Flag | `False` | Unlink source `.zip` archive upon verified completion |
-| `--delete-legacy-dir` | Path | `None` | Path to legacy uncompressed folder to purge |
+- **`--zip`**: Type: Path; Default: Required; Description: Path to the source
+  multi-gigabyte `.zip` archive
+- **`--target`**: Type: Path; Default: Required; Description: Destination
+  modernized manifold directory
+- **`--format`**: Type: Choice; Default: `webdataset`; Description: Target
+  container format (`webdataset`)
+- **`--shard-size`**: Type: Integer; Default: `5000`; Description: Number of
+  samples per tar shard (~500 MB)
+- **`--no-webp`**: Type: Flag; Default: `False`; Description: Disable WebP
+  transcoding (preserves original bytes)
+- **`--workers`**: Type: Integer; Default: `None` (auto: 12); Description:
+  Number of worker threads for parallel transcoding
+- **`--delete-zip`**: Type: Flag; Default: `False`; Description: Unlink source
+  `.zip` archive upon verified completion
+- **`--delete-legacy-dir`**: Type: Path; Default: `None`; Description: Path to
+  legacy uncompressed folder to purge
 
 ### 5.14 Retroactive Container Migration (`format migrate` / `format write`)
 
-Converts already modernized datasets with loose WebP images and `index.json` into streaming container shards, with optional purging of loose files to eliminate cluster slack:
+Converts already modernized datasets with loose WebP images and `index.json`
+into streaming container shards, with optional purging of loose files to
+eliminate cluster slack:
 
 ```bash
 # Convert existing directory to WebDataset shards and purge loose directory layout
@@ -668,7 +825,9 @@ python tools/migrate_manifold_format.py \
 
 ### 5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference
 
-The dataset compiler allows expanding any manifold simply by appending new source references to `unified_data.yaml` under the target dataset's `refs:` array:
+The dataset compiler allows expanding any manifold simply by appending new
+source references to `unified_data.yaml` under the target dataset's `refs:`
+array:
 
 ```yaml
 datasets:
@@ -686,28 +845,43 @@ datasets:
 
 #### Supported Upstream Source Protocols
 
-| Protocol Prefix | Handler Submodule | Description |
-| :--- | :--- | :--- |
-| `kaggle://<owner>/<slug>` | `sources/kaggle.py` | Authenticated KaggleHub and Kaggle API dataset download with auto-unpack |
-| `hf://<org>/<repo>[:<file>]` | `sources/hf.py` | Hugging Face Hub snapshot or archive (`.tgz`, `.tar.gz`) download |
-| `gd://<id>` | `sources/gd.py` | Google Drive multi-threaded chunked download |
-| `gh://<owner>/<repo>` | `sources/gh.py` | GitHub repository archive or release asset synchronization |
-| `manifold://<Name>` | `core/manifold_compile.py` | Zero-copy sibling manifold recirculation without duplicating files |
+- **`kaggle://<owner>/<slug>`**: Handler Submodule: `sources/kaggle.py`;
+  Description: Authenticated KaggleHub and Kaggle API dataset download with
+  auto-unpack
+- **`hf://<org>/<repo>[:<file>]`**: Handler Submodule: `sources/hf.py`;
+  Description: Hugging Face Hub snapshot or archive (`.tgz`, `.tar.gz`) download
+- **`gd://<id>`**: Handler Submodule: `sources/gd.py`; Description: Google Drive
+  multi-threaded chunked download
+- **`gh://<owner>/<repo>`**: Handler Submodule: `sources/gh.py`; Description:
+  GitHub repository archive or release asset synchronization
+- **`manifold://<Name>`**: Handler Submodule: `core/manifold_compile.py`;
+  Description: Zero-copy sibling manifold recirculation without duplicating
+  files
 
 #### Supported Input Annotation & Image Formats
 
-| Input Format | Converter Submodule | Parsing Engine & Capabilities |
-| :--- | :--- | :--- |
-| **MATLAB (`.mat`)** | `converters/matlab.py` | `scipy.io.loadmat(mat_path, spmatrix=False)` extracting structs, keys, and coordinate arrays |
-| **COCO JSON (`.json`)** | `converters/coco.py` | MS-COCO bounding boxes, categories, and polygon masks |
-| **Pascal VOC (`.xml`)** | `converters/xml.py` | XML node traversal extracting class names and bounding coordinates |
-| **YOLO TXT (`.txt`)** | `converters/yolo.py` | Space-delimited bounding boxes (`class xc yc w h`) |
-| **Apache Parquet (`.parquet`)** | `converters/parquet.py` | Columnar table schemas with embedded image bytes or URLs |
-| **Images** | `_fast_scan` | `.jpg`, `.jpeg`, `.png`, `.webp`, `.safetensors`, `.tiff`, `.tif`, `.bmp`, `.npy` |
+- **MATLAB (`.mat`)**: Converter Submodule: `converters/matlab.py`; Parsing
+  Engine & Capabilities: `scipy.io.loadmat(mat_path, spmatrix=False)` extracting
+  structs, keys, and coordinate arrays
+- **COCO JSON (`.json`)**: Converter Submodule: `converters/coco.py`; Parsing
+  Engine & Capabilities: MS-COCO bounding boxes, categories, and polygon masks
+- **Pascal VOC (`.xml`)**: Converter Submodule: `converters/xml.py`; Parsing
+  Engine & Capabilities: XML node traversal extracting class names and bounding
+  coordinates
+- **YOLO TXT (`.txt`)**: Converter Submodule: `converters/yolo.py`; Parsing
+  Engine & Capabilities: Space-delimited bounding boxes (`class xc yc w h`)
+- **Apache Parquet (`.parquet`)**: Converter Submodule: `converters/parquet.py`;
+  Parsing Engine & Capabilities: Columnar table schemas with embedded image
+  bytes or URLs
+- **Images**: Converter Submodule: `_fast_scan`; Parsing Engine & Capabilities:
+  `.jpg`, `.jpeg`, `.png`, `.webp`, `.safetensors`, `.tiff`, `.tif`, `.bmp`,
+  `.npy`
 
 #### Compilation Trigger
 
-Once sources are added, run compilation to automatically download missing sets, prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly into modern WebP containers:
+Once sources are added, run compilation to automatically download missing sets,
+prune corrupt files, vet quality, resize via Lanczos-3, and transcode directly
+into modern WebP containers:
 
 ```bash
 # Ingest all configured sources, vet, and emit canonical modern container shards
@@ -718,7 +892,8 @@ python cli.py compile --model nima_aesthetic --also-format webdataset --workers 
 
 ### 5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)
 
-The LLM compiler module (`tools.llm_helper`) provides high-velocity generic compilation and validation for instruction tuning datasets:
+The LLM compiler module (`tools.llm_helper`) provides high-velocity generic
+compilation and validation for instruction tuning datasets:
 
 ```bash
 # Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
@@ -733,16 +908,25 @@ python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/
 
 #### Quality Invariant Checks Enforced
 
-1. **Zero-Emoji Rule**: Verifies total absence of Unicode emojis across all system, user, and assistant turns.
-2. **ChatML 3-Turn Schema**: Enforces strict `[system, user, assistant]` message structure with non-empty strings.
-3. **Epistemic Certainty Tags**: Enforces presence of `[CONFIRMED]`, `[PROBABLE]`, or `[ILLUSTRATIVE]` tags in diagnostic and troubleshooting outputs.
-4. **Duplicate Detection**: Identifies exact and fuzzy duplicate prompt collisions across the manifold.
+1. **Zero-Emoji Rule**: Verifies total absence of Unicode emojis across all
+   system, user, and assistant turns.
+2. **ChatML 3-Turn Schema**: Enforces strict `[system, user, assistant]` message
+   structure with non-empty strings.
+3. **Epistemic Certainty Tags**: Enforces presence of `[CONFIRMED]`,
+   `[PROBABLE]`, or `[ILLUSTRATIVE]` tags in diagnostic and troubleshooting
+   outputs.
+4. **Duplicate Detection**: Identifies exact and fuzzy duplicate prompt
+   collisions across the manifold.
 
 ---
 
 ## 6. Training Suite CLI (`lemtrain` / `python cli.py`)
 
-The `lemgendary-training-suite` repository provides the canonical `lemtrain` Typer CLI (accessible via `python cli.py` or console entrypoint `lemtrain`). It coordinates in-process model training, deterministic evaluations, multi-target model compilation, notebook generation, checkpoint management, system audits, cloud synchronization, and the background sidecar daemon.
+The `lemgendary-training-suite` repository provides the canonical `lemtrain`
+Typer CLI (accessible via `python cli.py` or console entrypoint `lemtrain`). It
+coordinates in-process model training, deterministic evaluations, multi-target
+model compilation, notebook generation, checkpoint management, system audits,
+cloud synchronization, and the background sidecar daemon.
 
 ### 6.1 Invocation Syntax & Global Help
 
@@ -754,22 +938,31 @@ python cli.py --help
 python cli.py version
 ```
 
-| Command | Description |
-| :--- | :--- |
-| `train` | Train a neural architecture in-process using presets or custom hyperparameters |
-| `test-all` | Run a 1-epoch diagnostic smoke test across all 22 registered neural architectures |
-| `eval` | Evaluate a trained model checkpoint under torch.no_grad() |
-| `export` | Compile models to FP32 ONNX, FP16 ONNX, PyTorch standalone, WebGPU, or MT5 |
-| `notebooks` | Generate reproducible Kaggle and Google Colab training notebooks |
-| `checkpoints` | List, inspect metadata, and prune model checkpoints |
-| `presets` | Enumerate and inspect canonical training presets (`presets.yaml`) |
-| `audit` | Audit host resources, model topologies, and judicial PLCC/SRCC rank correlations |
-| `sync` | Synchronize model checkpoints and artifacts to remote targets (GDrive, Kaggle, GitHub) |
-| `server` | Control FastAPI sidecar daemon (`start`, `stop`, `status`, `openapi`) |
+- **`train`**: Description: Train a neural architecture in-process using presets
+  or custom hyperparameters
+- **`test-all`**: Description: Run a 1-epoch diagnostic smoke test across all 22
+  registered neural architectures
+- **`eval`**: Description: Evaluate a trained model checkpoint under
+  torch.no_grad()
+- **`export`**: Description: Compile models to FP32 ONNX, FP16 ONNX, PyTorch
+  standalone, WebGPU, or MT5
+- **`notebooks`**: Description: Generate reproducible Kaggle and Google Colab
+  training notebooks
+- **`checkpoints`**: Description: List, inspect metadata, and prune model
+  checkpoints
+- **`presets`**: Description: Enumerate and inspect canonical training presets
+  (`presets.yaml`)
+- **`audit`**: Description: Audit host resources, model topologies, and judicial
+  PLCC/SRCC rank correlations
+- **`sync`**: Description: Synchronize model checkpoints and artifacts to remote
+  targets (GDrive, Kaggle, GitHub)
+- **`server`**: Description: Control FastAPI sidecar daemon (`start`, `stop`,
+  `status`, `openapi`)
 
 ### 6.2 Model Training (`train`)
 
-Executes in-process model training with automatic hardware discovery, SentinelGuard VRAM protection, and SOTA governance:
+Executes in-process model training with automatic hardware discovery,
+SentinelGuard VRAM protection, and SOTA governance:
 
 ```bash
 # In-process training run using a canonical preset
@@ -781,7 +974,8 @@ python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --c
 
 #### Fleet Diagnostic Smoke Test (`test-all`)
 
-Executes a rapid 1-epoch diagnostic smoke test sequentially across all 22 registered neural architectures using `tools/train_all.py`:
+Executes a rapid 1-epoch diagnostic smoke test sequentially across all 22
+registered neural architectures using `tools/train_all.py`:
 
 ```bash
 # Run 1-epoch diagnostic test across all models
@@ -793,11 +987,13 @@ lemtrain test-all --epochs 2
 
 ### 6.3 Checkpoint Evaluation (`eval`)
 
-Runs deterministic validation under `torch.no_grad()` computing task-specific quality metrics:
+Runs deterministic validation under `torch.no_grad()` computing task-specific
+quality metrics:
 
 ```bash
 # Deterministic evaluation of a checkpoint
-python cli.py eval mirnet_exposure --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
+python cli.py eval mirnet_exposure \
+  --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
 ```
 
 ### 6.4 Model Compilation & Export (`export`)
@@ -820,7 +1016,9 @@ python -m training.export.universal_exporter --model yolov8n --stage-only
 
 ### 6.5 Notebook Generation (`notebooks`)
 
-Generates reproducible standalone Jupyter training, inference, and usage notebooks for Kaggle and Google Colab environments from the Training Suite Single Source of Truth:
+Generates reproducible standalone Jupyter training, inference, and usage
+notebooks for Kaggle and Google Colab environments from the Training Suite
+Single Source of Truth:
 
 ```bash
 # List all registered architectures available for notebook compilation
@@ -839,13 +1037,16 @@ lemtrain notebooks generate --all
 lemtrain notebooks generate --model nima_aesthetic_mobile --output-dir custom_notebooks/
 ```
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `--model`, `-m` | String | `None` | Target neural architecture key (e.g., `forex_predictor`, `codeformer`) |
-| `--all`, `-a` | Flag | `False` | Batch generate notebooks across all 22 registered model architectures |
-| `--platform`, `-p` | Choice | `all` | Target cloud execution platform (`kaggle`, `colab`, `all`) |
-| `--kind`, `-k` | List | `all` | Notebook kinds to generate (`training`, `inference`, `usage`) |
-| `--output-dir`, `-o` | Path | `LemGendaryModels` | Custom directory to persist generated `.ipynb` files |
+- **`--model`, `-m`**: Type: String; Default: `None`; Description: Target neural
+  architecture key (e.g., `forex_predictor`, `codeformer`)
+- **`--all`, `-a`**: Type: Flag; Default: `False`; Description: Batch generate
+  notebooks across all 22 registered model architectures
+- **`--platform`, `-p`**: Type: Choice; Default: `all`; Description: Target
+  cloud execution platform (`kaggle`, `colab`, `all`)
+- **`--kind`, `-k`**: Type: List; Default: `all`; Description: Notebook kinds to
+  generate (`training`, `inference`, `usage`)
+- **`--output-dir`, `-o`**: Type: Path; Default: `LemGendaryModels`;
+  Description: Custom directory to persist generated `.ipynb` files
 
 All generated notebooks are automatically distributed and mirrored across:
 
@@ -901,28 +1102,36 @@ python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset 
 
 ### 6.9 Cloud Synchronization (`sync`)
 
-Transfers model artifacts, checkpoints, and variations between local storage and remote cloud providers (Kaggle Models Hub and Google Drive) with strict payload isolation audits and YAML-driven metadata synchronization:
+Transfers model artifacts, checkpoints, and variations between local storage and
+remote cloud providers (Kaggle Models Hub and Google Drive) with strict payload
+isolation audits and YAML-driven metadata synchronization:
 
 ```bash
-# Push single model across all 4 canonical variations (pytorch/default, pytorch/fp32, onnx/fp16, onnx/fp32)
+# Push single model across all 4 canonical variations (pytorch/default,
+# pytorch/fp32, onnx/fp16, onnx/fp32)
 lemtrain sync push yolov8n
 
 # Push specific isolated variation to Kaggle Models Hub
 lemtrain sync push yolov8n --variation pytorch/default
 
 # Push with custom username override and custom release version notes
-lemtrain sync push yolov8n --username lemtreursi --notes "Automated SOTA Release: yolov8n"
+lemtrain sync push yolov8n --username lemtreursi \
+  --notes "Automated SOTA Release: yolov8n"
 
-# Push all 23 registered models to Kaggle Models Hub with metadata, checkpoints, and isolated variations
+# Push all 23 registered models to Kaggle Models Hub with metadata, checkpoints,
+# and isolated variations
 lemtrain sync push --all
 
-# Perform a dry-run validation of metadata and isolation across all models without uploading
+# Perform a dry-run validation of metadata and isolation across all models
+# without uploading
 lemtrain sync push --all --dry-run
 
-# Pull all 4 isolated variations for a target model from Kaggle Models Hub into canonical directories
+# Pull all 4 isolated variations for a target model from Kaggle Models Hub into
+# canonical directories
 lemtrain sync pull yolov8n
 
-# Pull specific variation (e.g. pytorch/default checkpoints or onnx/fp16 deployment binary)
+# Pull specific variation (e.g. pytorch/default checkpoints or onnx/fp16
+# deployment binary)
 lemtrain sync pull yolov8n --variation pytorch/default
 
 # Force re-download even if already present locally
@@ -957,24 +1166,65 @@ python cli.py server stop
 
 ### 6.11 LLM Causal Instruction Tuning & Model Export (`llm`)
 
-Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM architectures registered in `unified_models_v2.yaml`:
+Dispatches QLoRA instruction fine-tuning and tri-format export for causal LLM
+architectures registered in `unified_models_v2.yaml`:
 
 ```bash
 # Fine-tune causal LLM on instruction dataset (in-process)
-python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 --lr 0.0002 --env local
+python cli.py llm train ai_helper_lemgend --epochs 3 --batch-size 2 \
+  --lr 0.0002 --env local
 
 # Fine-tune generic LLM proof-of-concept manifold
 python cli.py llm train test_llm --epochs 1 --batch-size 2 --env local
 
 # Compile and export tri-format deployment binaries
-python cli.py llm export ai_helper_lemgend --target qlora_adapter --target merged_safetensors --target gguf_fp16
+python cli.py llm export ai_helper_lemgend --target qlora_adapter \
+  --target merged_safetensors --target gguf_fp16
 ```
 
 #### Tri-Format LLM Binary Specifications
 
-- **QLoRA Adapter**: Standalone Low-Rank Adaptation weights (adapter_model.safetensors, adapter_config.json).
-- **Merged Safetensors**: Full floating-point FP16 weights merged into base architecture for high-throughput vLLM and HuggingFace inference.
-- **GGUF / ONNX Quantized**: Integer-quantized format (q4_k_m.gguf or INT8 ONNX) optimized for edge deployment on consumer hardware.
+- **QLoRA Adapter**: Standalone Low-Rank Adaptation weights
+  (adapter_model.safetensors, adapter_config.json).
+- **Merged Safetensors**: Full floating-point FP16 weights merged into base
+  architecture for high-throughput vLLM and HuggingFace inference.
+- **GGUF / ONNX Quantized**: Integer-quantized format (q4_k_m.gguf or INT8 ONNX)
+  optimized for edge deployment on consumer hardware.
+
+### 6.12 FID Re-evaluation (`python -m training.fid_reeval`)
+
+Re-measures FID (`feature=2048`, chunks of at most two) for the four models whose
+historical FID rows were rewritten by a removed tool (`codeformer`,
+`ffanet_indoor`, `mprnet_deraining`, `mirnet_lowlight`). Run it from the
+`lemgendary-training-suite` root:
+
+```bash
+# Record the formula-rewritten metrics.csv rows as unverified (no GPU)
+python -m training.fid_reeval mark-unverified --all --dry-run
+python -m training.fid_reeval mark-unverified --all
+
+# Check all inputs on CPU, then measure (default: checkpoints/best.pth)
+python -m training.fid_reeval measure --model codeformer --dry-run
+python -m training.fid_reeval measure --model codeformer --device cuda \
+  --batch-size 4 --note "re-evaluation of best.pth"
+
+# Summarise the ledgers
+python -m training.fid_reeval status --all
+```
+
+- **`measure`**: `--model` (any registry key), `--checkpoint`,
+  `--datasets-root`, `--models-root` (default
+  `<workspace>/LemGendaryModels`), `--env local|kaggle|colab`,
+  `--device auto|cpu|cuda|cuda:N`, `--batch-size` (default 4),
+  `--num-workers`, `--non-strict` (allow missing or extra keys; noted in the
+  row), `--note`, `--dry-run`.
+- **`mark-unverified`** and **`status`**: `--model` (one of the four models) or
+  `--all`, `--models-root`; `mark-unverified` also takes `--dry-run`.
+- **Output**: rows are appended to
+  `LemGendaryModels/<model>/fid_provenance.csv`; `metrics.csv`, checkpoints and
+  rung state are never written.
+- **Exit codes**: `0` success, `2` bad input or ledger, `3` FID invariant
+  failure or missing FID backend.
 
 ---
 
@@ -998,14 +1248,16 @@ python -m training.doc_generator --model yolov8n --stage-variations
 python -m training.hub_readme_generator
 
 # Check model checkpoint integrity directly
-python -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"
+python \
+  -c "import torch; print(torch.load('NAFNet/checkpoints/nafnet_weights.pth', map_location='cpu').keys())"
 ```
 
 ---
 
 ## 8. Documentation Hub & Static Validation
 
-The `lemgendary-docs` repository contains technical research whitepapers, HTML documentation, and operational manuals.
+The `lemgendary-docs` repository contains technical research whitepapers, HTML
+documentation, and operational manuals.
 
 Operations:
 
@@ -1023,13 +1275,16 @@ python -m http.server 8080 --directory lemgendary-docs
 
 All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:
 
-| Exit Code | Meaning | Operator Action |
-| :--- | :--- | :--- |
-| `0` | Success | Operation completed successfully with zero violations or errors |
-| `1` | General Failure | Unhandled exception or syntax failure during execution |
-| `2` | Validation Error | One or more quality, linting, or domain gates failed verification |
-| `3` | Missing Prerequisites | Required toolchain component (Python, Git, NPM) is not installed |
-| `4` | Network / IO Error | Failed to reach remote registry or download necessary assets |
+- **`0`**: Meaning: Success; Operator Action: Operation completed successfully
+  with zero violations or errors
+- **`1`**: Meaning: General Failure; Operator Action: Unhandled exception or
+  syntax failure during execution
+- **`2`**: Meaning: Validation Error; Operator Action: One or more quality,
+  linting, or domain gates failed verification
+- **`3`**: Meaning: Missing Prerequisites; Operator Action: Required toolchain
+  component (Python, Git, NPM) is not installed
+- **`4`**: Meaning: Network / IO Error; Operator Action: Failed to reach remote
+  registry or download necessary assets
 
 Continuous Integration Workflow Example:
 
@@ -1044,6 +1299,6 @@ lem-env validate || exit 2
 ## Companion Documentation
 
 - [Technical Whitepaper (Markdown)](PAPER_ENV_MANAGER.md)
-- [Technical Whitepaper (HTML)](env_manager.html)
+- [Technical Whitepaper (HTML)](../papers/env_manager.html)
 - [Master REST & WebSocket API Specification (Markdown)](MANUAL_API.md)
-- [Master REST & WebSocket API Specification (HTML)](api-manual.html)
+- [Master REST & WebSocket API Specification (HTML)](../papers/api-manual.html)
