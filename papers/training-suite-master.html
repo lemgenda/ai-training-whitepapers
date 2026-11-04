@@ -115,6 +115,8 @@ v16.9.101)</a></li>
 (v16.9.107)</a></li>
 <li><a href="#sec-234-version-single-source-lint--review-fixes-v169122">2.34. Version Single Source, Lint &amp; Review Fixes
 (v16.9.122)</a></li>
+<li><a href="#sec-235-causal-language-model-instruction-tuning--dynamic-vram-probing">2.35. Causal Language Model Instruction Tuning &amp; Dynamic VRAM
+Probing</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -1437,6 +1439,32 @@ chunks of at most two.</li>
 <li><strong>Remediation status</strong>: <code>REVIEW_REPORT.md</code> of the LemGendary Model Training
 Suite lists the status of every review finding. Owner decisions, such as the
 optional API token and the unread resolution caps, keep today's behaviour.</li>
+</ul>
+<h3 id="sec-235-causal-language-model-instruction-tuning--dynamic-vram-probing">2.35. Causal Language Model Instruction Tuning &amp; Dynamic VRAM Probing</h3>
+<ul>
+<li>**Dynamic Instruction Tuning Runtime (<code>GenericCausalLLM</code>)**: Causal decoder
+models (e.g. <code>ai_helper_lemgend</code>, based on <code>Qwen2.5-Coder-1.5B-Instruct</code>)
+execute instruction tuning via native <code>train_step(batch)</code> and
+<code>eval_step(batch)</code> methods that accept collated dictionary structures
+(<code>input_ids</code>, <code>attention_mask</code>, <code>labels</code>).</li>
+<li><strong>Dynamic VRAM Safety Probing &amp; Gradient Accumulation Decoupling</strong>: Unlike
+vision models that scale resolution ladders, LLM execution is bounded by
+sequence length (context window) and KV-cache activation overhead. When
+<code>batch_size</code> is <code>auto</code>, <code>audit_hardware_vram</code> computes the micro-batch size
+from real-time free GPU memory (70% of free VRAM at about 0.45 GB per
+2048-token sample, rounded down to a power of two, at most 32); a configured
+<code>batch_size</code> is used as is (<code>ai_helper_lemgend</code>: 2). <code>SmartTrainingGovernor</code>
+scales gradient accumulation steps
+($K = \max(1, \operatorname{round}(B_{\text{eff}} / B_{\text{phys}}))$) to
+preserve the target effective batch size ($B_{\text{eff}} = 24$) on consumer
+GPUs (e.g. GTX 1650 4GB).</li>
+<li><strong>Universal LLM Milestone Vault Persistence</strong>: <code>CheckpointLifecycleManager</code>
+tracks LLM-specific SOTA target metrics (<code>eval_loss</code>, <code>perplexity</code>,
+<code>token_accuracy</code>) and persists isolated milestone checkpoints
+(<code>vault_eval_loss.pth</code>, <code>vault_perplexity.pth</code>, <code>vault_token_accuracy.pth</code>).
+These checkpoints feed directly into the Pareto Model Soup
+(<code>create_pareto_model_soup</code>, Section 2.27) for linear adapter weight
+blending.</li>
 </ul>
 </section>
 

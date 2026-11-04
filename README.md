@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.81`
+**Version**: `v16.9.82`
 
 ---
 
@@ -57,6 +57,32 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.82 - Merge of `main`: LLM Whitepapers from the Owner
+
+* **Merge** - `origin/main` commit `8645505` (owner's LLM pathology, QLoRA
+  and vault milestone additions, released on `main` as v16.9.64) is merged
+  into this branch. All of its text is kept; it is placed in the
+  restructured papers, wrapped to 80 columns and mirrored in the HTML pages.
+* **Renumbering** - the owner's Training Suite Section 2.25 is now Section
+  2.35 (2.25 to 2.34 already exist), and the owner's Pathologies 26 to 30
+  are now Pathologies 28 to 32 (26 and 27 already exist). Table of contents
+  entries are added in Markdown and HTML.
+* **Facts checked against the LemGendary Model Training Suite (`main`)** -
+  the gradient accumulation formula uses `round`, not floor
+  (`update_batch_and_accumulation`); NF4 loading is opt-in
+  (`load_in_4bit=True`, default `False`); the soup entry point is
+  `create_pareto_model_soup` (there is no `ParetoModelSoup` class);
+  `audit_hardware_vram` uses a fixed heuristic (70% of free VRAM, about
+  0.45 GB per 2048-token sample) when `batch_size` is `auto`; the 2.8 GB
+  activation bound is a sizing target the code does not measure; the trainer
+  has no automatic CPU-only-wheel pre-flight check (only the Kaggle
+  notebooks probe the GPU); the LLM ONNX export uses `dynamo=True` with
+  `torch.export.Dim` and `use_cache = False` (the Markdown text had the
+  older dynamic-axes remedy; the HTML text was already right).
+* **Version** - hub version v16.9.82 in `README.md`, `index.html`, manifest,
+  both capability registries, `VERSIONING_POLICY.md` and
+  `LEMGENDARY_CURRENT_STATE.md` (+ HTML).
 
 ### v16.9.81 - Final Refresh to the Current Component Releases
 
@@ -550,6 +576,23 @@
 * **HTML Template** - The three HTML pages are generated from the Markdown with
   the approved template (`header`, `nav.toc-sidebar`, `section`, `footer`) and
   validate with the W3C Nu validator; Markdown passes markdownlint.
+
+### v16.9.64 - LLM Training Pathology, Hardware Probing & Vault Whitepapers
+
+* **Training Pathology Master Guide (`PAPER_TRAINING_PATHOLOGY.md`)** -
+  Documented Pathologies 26 through 30 (numbered 28 to 32 since v16.9.82)
+  covering variable-length validation collation collapse, CPU-bound
+  accelerator starvation, vision-curriculum cross-contamination, symbolic
+  tracing artifacts on dynamic causal masks, and disconnected LLM milestone
+  vault tracking.
+* **Causal LLM Whitepaper Expansion (`PAPER_LEMGENDARY_LLM.md`)** - Added
+  mathematical formulations for QLoRA dynamic quantization, hardware-aware
+  gradient accumulation decoupling, autoregressive non-masked token accuracy,
+  and Pareto milestone vault ensembling.
+* **Training Suite Master Guide (`PAPER_TRAINING_SUITE.md`)** - Added Section
+  2.25 (Section 2.35 since v16.9.82) formalizing causal language model
+  instruction tuning, empirical VRAM safety boundaries, and vault milestone
+  persistence.
 
 ### v16.9.63 - Tripartite Sidecar Termination & UI Control Alignment
 

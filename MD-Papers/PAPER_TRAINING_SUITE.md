@@ -86,6 +86,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     (v16.9.107)](#233-fid-re-evaluation-tool--provenance-ledger-v169107)
   - [2.34. Version Single Source, Lint & Review Fixes
     (v16.9.122)](#234-version-single-source-lint--review-fixes-v169122)
+  - [2.35. Causal Language Model Instruction Tuning & Dynamic VRAM
+    Probing](#235-causal-language-model-instruction-tuning--dynamic-vram-probing)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -1394,6 +1396,34 @@ python -m training.fid_reeval status --all
 - **Remediation status**: `REVIEW_REPORT.md` of the LemGendary Model Training
   Suite lists the status of every review finding. Owner decisions, such as the
   optional API token and the unread resolution caps, keep today's behaviour.
+
+---
+
+### 2.35. Causal Language Model Instruction Tuning & Dynamic VRAM Probing
+
+- **Dynamic Instruction Tuning Runtime (`GenericCausalLLM`)**: Causal decoder
+  models (e.g. `ai_helper_lemgend`, based on `Qwen2.5-Coder-1.5B-Instruct`)
+  execute instruction tuning via native `train_step(batch)` and
+  `eval_step(batch)` methods that accept collated dictionary structures
+  (`input_ids`, `attention_mask`, `labels`).
+- **Dynamic VRAM Safety Probing & Gradient Accumulation Decoupling**: Unlike
+  vision models that scale resolution ladders, LLM execution is bounded by
+  sequence length (context window) and KV-cache activation overhead. When
+  `batch_size` is `auto`, `audit_hardware_vram` computes the micro-batch size
+  from real-time free GPU memory (70% of free VRAM at about 0.45 GB per
+  2048-token sample, rounded down to a power of two, at most 32); a configured
+  `batch_size` is used as is (`ai_helper_lemgend`: 2). `SmartTrainingGovernor`
+  scales gradient accumulation steps
+  ($K = \max(1, \operatorname{round}(B_{\text{eff}} / B_{\text{phys}}))$) to
+  preserve the target effective batch size ($B_{\text{eff}} = 24$) on consumer
+  GPUs (e.g. GTX 1650 4GB).
+- **Universal LLM Milestone Vault Persistence**: `CheckpointLifecycleManager`
+  tracks LLM-specific SOTA target metrics (`eval_loss`, `perplexity`,
+  `token_accuracy`) and persists isolated milestone checkpoints
+  (`vault_eval_loss.pth`, `vault_perplexity.pth`, `vault_token_accuracy.pth`).
+  These checkpoints feed directly into the Pareto Model Soup
+  (`create_pareto_model_soup`, Section 2.27) for linear adapter weight
+  blending.
 
 ---
 

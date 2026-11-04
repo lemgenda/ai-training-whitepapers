@@ -53,6 +53,16 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
   - [Fabricated Metric History (FID Rescaling) (Pathology
     27)](#fabricated-metric-history-fid-rescaling-pathology-27)
+  - [Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
+    28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
+  - [CPU-Bound Execution & Silent Accelerator Starvation (Pathology
+    29)](#cpu-bound-execution--silent-accelerator-starvation-pathology-29)
+  - [Vision-Curriculum Cross-Domain Contamination (Pathology
+    30)](#vision-curriculum-cross-domain-contamination-pathology-30)
+  - [Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
+    31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
+  - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
+    32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
 - [5. High-Fidelity Strategy & Historical Evolution
   Taxonomy](#5-high-fidelity-strategy--historical-evolution-taxonomy)
   - [The "Low-Resolution Blur" Pathology (Milestone
@@ -695,6 +705,105 @@ $$
   mark-unverified` records the rows as `unverified` and `measure` re-measures a
   checkpoint; both append to `LemGendaryModels/<model>/fid_provenance.csv` and
   never write `metrics.csv`. The measurements need a GPU and are still open.
+
+### Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 28)
+
+- **The Issue**: Language model instruction datasets consist of heterogeneous
+  user prompts and assistant completions with varying token sequence lengths
+  (e.g. 294 tokens vs 367 tokens). While training data loaders utilize dynamic
+  padding collators (`collate_instruction_batch`), validation data loaders
+  initialized via canonical builder functions (`build_val_loader`) lacked
+  explicit `collate_fn` propagation. PyTorch default collation
+  (`default_collate`) defaulted to `torch.stack()`, crashing at the conclusion
+  of Epoch 1 with `RuntimeError: stack expects each tensor to be equal size, but
+  got [294] at entry 0 and [367] at entry 1`.
+- **Identification**: Training loop executes all training batches cleanly, but
+  crashes immediately upon transition to validation with ragged 1D tensor
+  stacking mismatch exceptions.
+- **Remedy**: **Universal Collation Signature Propagation**. Extend
+  `build_val_loader` with an explicit `collate_fn: Any | None = None` parameter
+  and propagate `collate_instruction_batch` whenever
+  `task_type in ("text_instruction", "llm")`, padding token sequences
+  dynamically to the longest sequence in each validation micro-batch.
+
+### CPU-Bound Execution & Silent Accelerator Starvation (Pathology 29)
+
+- **The Issue**: In environments where PyTorch is installed without
+  pre-compiled CUDA binaries (CPU-only build, e.g. `torch==2.15.0+cpu` instead
+  of `+cu126`), `torch.cuda.is_available()` returns `False`. The training suite
+  falls back to CPU execution without throwing an exception. On a 1.5B
+  parameter causal transformer with 2048 sequence length, CPU execution
+  saturates all host threads (96% CPU utilization across 12 logical processors)
+  while dedicated GPU memory sits idle at 0.8 / 4.0 GB and 0% GPU utilization.
+  Batch execution latency explodes to 40-55s/batch (37+ minutes for a single
+  validation pass).
+- **Identification**: Task Manager displays 96% CPU load, 0% GPU utilization,
+  0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.
+- **Remedy**: **Hardware Sentinel Pre-Flight Enforcement**. Install
+  CUDA-enabled PyTorch wheels
+  (`pip install torch torchvision --index-url
+  https://download.pytorch.org/whl/cu126`). The local trainer has no automatic
+  pre-flight check yet that compares OS GPU enumeration with
+  `torch.cuda.is_available()`; check `lemtrain audit system`, which prints
+  `CUDA Available`. Only the generated Kaggle notebooks probe the GPU and
+  print a reinstall hint.
+
+### Vision-Curriculum Cross-Domain Contamination (Pathology 30)
+
+- **The Issue**: Progressive curriculum learning designed for vision models
+  (resolution ladders: 256px -> 384px -> 512px; sample fraction ladders: 15% ->
+  30% -> 60% -> 100%) was unrestrictively applied to Causal LLMs. For language
+  models, sequence length is a context boundary, not a spatial resolution, and
+  instruction datasets (~1,000 conversational samples) require 100% data
+  exposure from Epoch 1 to preserve multi-domain conversational coherence.
+  Vision curriculum logic artificially truncated context to 15% (138 samples)
+  and logged spurious pixel dimensions (`Res: 2048px`).
+- **Identification**: Logs emit `[CURRICULUM] Active training manifold:
+  138/923 samples (15% data fraction) | Res: 2048px`.
+- **Remedy**: **Domain-Segregated Curriculum Invariants**. For
+  `category == "llm"` and `text_instruction` task types, disable spatial
+  resolution ladder jumping, log context window in tokens
+  (`Context: 2048 tokens`), and dynamically resolve data fraction and effective
+  batch size directly from `unified_models_v2.yaml`.
+
+### Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 31)
+
+- **The Issue**: Exporting autoregressive causal transformers to ONNX via
+  legacy TorchScript tracing (`dynamo=False`) attempts to capture Python
+  control flow into static compute graphs. In Hugging Face transformers, causal
+  mask computation and KV-cache tracking evaluate dynamic sequence length
+  conditions (e.g. `if (padding_length := kv_length + kv_offset -
+  attention_mask.shape[-1]) > 0:` and `torch.tensor([], dtype=...)`). Tracing
+  emits `TracerWarning: Converting a tensor to a Python boolean...` and
+  `TracerWarning: torch.tensor results are registered as constants in the
+  trace...`.
+- **Identification**: Export step logs multiple `TracerWarning` and
+  `UserWarning: Exporting aten::index operator` messages during ONNX
+  generation.
+- **Remedy**: **Symbolic Dynamo Export Backend Adoption**. Migrate ONNX export
+  to `dynamo=True` with dynamic shapes (`torch.export.Dim`) for batch and
+  sequence dimensions, and disable dynamic KV-cache states (`use_cache = False`)
+  during graph compilation to eliminate the root cause of tracer warnings
+  without suppression (`training/export/llm_exporter.py`).
+
+### Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 32)
+
+- **The Issue**: `CheckpointLifecycleManager` records Pareto milestone
+  checkpoints (`vault_<metric>.pth`) based on SOTA target metrics configured in
+  `unified_models_v2.yaml`. For LLMs, targets are `eval_loss`, `perplexity`,
+  and `token_accuracy`. Discrepancies between validation metric keys
+  (`val_loss` vs `eval_loss`), missing `token_accuracy` computation, and
+  omitting `perplexity` from `LOWER_IS_BETTER_METRICS` caused the vault tracker
+  to bypass saving LLM milestone weights.
+- **Identification**: The `checkpoints/` directory contains `best.pth` and
+  `progress.pth`, but no `vault_eval_loss.pth`, `vault_perplexity.pth`, or
+  `vault_token_accuracy.pth` files are generated.
+- **Remedy**: **Normalized LLM Vault Aliasing & Token-Level Accuracy
+  Instrumentation**. Instrument `validation.py` to evaluate non-masked
+  autoregressive `token_accuracy`, map `val_loss` and `eval_loss` to the one
+  canonical key `eval_loss` in `CANONICAL_METRIC_ALIASES`, register
+  `perplexity` in `LOWER_IS_BETTER_METRICS`, and enable Pareto model soup
+  blending across LLM adapter checkpoints.
 
 ---
 

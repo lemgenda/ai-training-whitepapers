@@ -115,6 +115,55 @@ virtual memory fragmentation during extended context inference.</p>
 </tr>
 </tbody>
 </table>
+<h3>6.1 QLoRA Parameter-Efficient Fine-Tuning &amp; Dynamic Quantization</h3>
+<p>For consumer hardware deployment (e.g. NVIDIA GeForce GTX 1650 with 4GB VRAM),
+full parameter fine-tuning of 1.5B dense transformers is intractable. The suite
+deploys <strong>QLoRA (Quantized Low-Rank Adaptation)</strong> utilizing NF4 (NormalFloat4)
+weight quantization with double quantization and 16-bit LoRA adapter matrices
+injected across projection layers (<code>q_proj</code>, <code>k_proj</code>, <code>v_proj</code>, <code>o_proj</code>,
+<code>gate_proj</code>, <code>up_proj</code>, <code>down_proj</code>):</p>
+<div class="math-block">$$W_{\text{eff}} = W_{\text{NF4}} + \frac{\alpha}{r} (B \cdot A)$$</div>
+<p>where rank $r=16$, $\alpha=32$, and LoRA dropout is $0.05$. NF4 loading is
+opt-in: <code>GenericCausalLLM</code> quantizes only when <code>load_in_4bit=True</code> is passed
+(default <code>False</code>); otherwise the LoRA adapters sit on a bfloat16 base on CUDA.</p>
+<h3>6.2 Hardware-Aware Dynamic Micro-Batch &amp; Gradient Accumulation Scaling</h3>
+<p>Memory sentinels probe free VRAM at runtime. To prevent Out-Of-Memory (OOM)
+faults while maintaining a stable target effective batch size
+($B_{\text{eff}} = 24$), physical micro-batch size ($B_{\text{phys}}$) and
+gradient accumulation steps ($K_{\text{accum}}$) are resolved dynamically:</p>
+<div class="math-block">$$K_{\text{accum}} = \max\left(1, \operatorname{round}\left( \frac{B_{\text{eff}}}{B_{\text{phys}}} \right)\right)$$</div>
+<p>On 4GB hardware, $B_{\text{phys}} = 2$ and $K_{\text{accum}} = 12$, yielding an
+effective batch of 24 with peak activation memory constrained below 2.8 GB
+(a sizing target; <code>ai_helper_lemgend</code> pins <code>batch_size: 2</code> and
+<code>accumulation_steps: 12</code> in <code>unified_models_v2.yaml</code>, and the code does not
+measure the 2.8 GB bound).</p>
+<h3>6.3 Token Accuracy &amp; Autoregressive Validation Formulations</h3>
+<p>Validation loss ($\mathcal{L}_{\text{val}}$) is complemented by two primary
+evaluation metrics:</p>
+<ol>
+<li>
+<p><strong>Perplexity ($\text{PPL}$)</strong>: Evaluates confidence on validation tokens:</p>
+<div class="math-block">$$\text{PPL} = \exp\left( \frac{1}{N} \sum_{i=1}^N \mathcal{L}_i \right)$$</div>
+</li>
+<li>
+<p><strong>Non-Masked Token Accuracy ($\text{Acc}_{\text{token}}$)</strong>: Evaluates
+next-token prediction correctness exclusively over assistant target turns,
+ignoring prompt tokens masked with $-100$:</p>
+<div class="math-block">$$\text{Acc}_{\text{token}} = \frac{\sum_{i=1}^{M} \mathbb{I}\left( \hat{y}_i = y_i \right) \cdot \mathbb{I}\left( y_i \ne -100 \right)}{\sum_{i=1}^{M} \mathbb{I}\left( y_i \ne -100 \right)} \times 100\%$$</div>
+</li>
+</ol>
+<h3>6.4 Pareto Milestone Vault Checkpointing &amp; Adapter Souping</h3>
+<p>The <code>CheckpointLifecycleManager</code> records isolated milestone weights whenever an
+evaluation run sets a new historical best in any SOTA target metric:</p>
+<ul>
+<li><code>vault_eval_loss.pth</code>: Optimized for minimum cross-entropy loss.</li>
+<li><code>vault_perplexity.pth</code>: Optimized for minimum perplexity.</li>
+<li><code>vault_token_accuracy.pth</code>: Optimized for maximum token prediction accuracy.</li>
+</ul>
+<p>These adapter checkpoints form a Pareto frontier in parameter space and can be
+linearly blended via the Pareto Model Soup (<code>create_pareto_model_soup</code> in
+<code>training/export/soup.py</code>) without retraining to generate an ensembled final
+adapter weights binary.</p>
 </section>
 
 <section id="sec-7-conclusion">
