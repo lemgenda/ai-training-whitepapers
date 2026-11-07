@@ -121,6 +121,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     Masking](#74-multi-turn-chatml-loss-formulation--assistant-only-prompt-masking)
   - [7.5. Tri-Format Deployment Export: PyTorch, ONNX FP32/FP16 & Edge
     Quantization](#75-tri-format-deployment-export-pytorch-onnx-fp32fp16--edge-quantization)
+  - [7.6. Edge Hardware Optimization Profile (4GB VRAM
+    Containment)](#76-edge-hardware-optimization-profile-4gb-vram-containment)
 - [8. Conclusion](#8-conclusion)
   - [8.1. Implementation Status](#81-implementation-status)
 
@@ -1778,6 +1780,27 @@ compiles universal deployment artifacts across three formats:
   (`model_fp32.onnx`, `model_fp16.onnx`) and quantized GGUF binaries
   (`q4_k_m.gguf`) for real-time edge inference on consumer CPUs, NPUs, and
   desktop runtimes.
+
+### 7.6. Edge Hardware Optimization Profile (4GB VRAM Containment)
+
+To execute fine-tuning of 1.5B+ parameter causal language models on consumer
+workstations constrained to 4 GB VRAM (e.g. NVIDIA GeForce GTX 1650), the
+training suite deploys a multi-tier memory containment profile:
+
+- **NF4 Quantization**: Encodes frozen base model parameters into 4-bit
+  NormalFloat tensors, slashing baseline memory footprints to ~900 MB.
+- **Activation Gradient Checkpointing**: Recomputes intermediate layer states on
+  the backward pass via `gradient_checkpointing_enable(use_reentrant=False)`,
+  preventing activation VRAM blowouts.
+- **SDPA Execution**: Adopts native C++ Scaled Dot-Product Attention
+  (`attn_implementation="sdpa"`), eliminating memory overhead from quadratic
+  dense attention matrices.
+- **Paged 8-bit AdamW Optimization**: Integrates
+  `bitsandbytes.optim.PagedAdamW8bit`, automatically paging optimizer momentum
+  and variance states across CUDA unified memory when VRAM boundaries approach
+  saturation.
+- **Curriculum Context Clamping**: Constrains sequence lengths to 512 tokens with
+  micro-batch size 1 and 16 accumulation steps for edge training.
 
 ---
 

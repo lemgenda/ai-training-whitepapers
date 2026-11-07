@@ -162,6 +162,7 @@ Manifolds</a></li>
 Masking</a></li>
 <li><a href="#sec-75-tri-format-deployment-export-pytorch-onnx-fp32fp16--edge-quantization">7.5. Tri-Format Deployment Export: PyTorch, ONNX FP32/FP16 &amp; Edge
 Quantization</a></li>
+<li><a href="#sec-76-edge-hardware-optimization-profile-4gb-vram-containment">7.6. Edge Hardware Optimization Profile (4GB VRAM Containment)</a></li>
 </ul>
 </li>
 <li><a href="#sec-8-conclusion">8. Conclusion</a>
@@ -1788,6 +1789,27 @@ optimized for native vLLM and HuggingFace pipelines.</li>
 (<code>model_fp32.onnx</code>, <code>model_fp16.onnx</code>) and quantized GGUF binaries
 (<code>q4_k_m.gguf</code>) for real-time edge inference on consumer CPUs, NPUs, and
 desktop runtimes.</li>
+</ul>
+
+<h3 id="sec-76-edge-hardware-optimization-profile-4gb-vram-containment">7.6. Edge Hardware Optimization Profile (4GB VRAM Containment)</h3>
+<p>To execute fine-tuning of 1.5B+ parameter causal language models on consumer
+workstations constrained to 4 GB VRAM (e.g. NVIDIA GeForce GTX 1650), the
+training suite deploys a multi-tier memory containment profile:</p>
+<ul>
+<li><strong>NF4 Quantization</strong>: Encodes frozen base model parameters into 4-bit
+NormalFloat tensors, slashing baseline memory footprints to ~900 MB.</li>
+<li><strong>Activation Gradient Checkpointing</strong>: Recomputes intermediate layer states on
+the backward pass via <code>gradient_checkpointing_enable(use_reentrant=False)</code>,
+preventing activation VRAM blowouts.</li>
+<li><strong>SDPA Execution</strong>: Adopts native C++ Scaled Dot-Product Attention
+(<code>attn_implementation="sdpa"</code>), eliminating memory overhead from quadratic
+dense attention matrices.</li>
+<li><strong>Paged 8-bit AdamW Optimization</strong>: Integrates
+<code>bitsandbytes.optim.PagedAdamW8bit</code>, automatically paging optimizer momentum
+and variance states across CUDA unified memory when VRAM boundaries approach
+saturation.</li>
+<li><strong>Curriculum Context Clamping</strong>: Constrains sequence lengths to 512 tokens with
+micro-batch size 1 and 16 accumulation steps for edge training.</li>
 </ul>
 </section>
 

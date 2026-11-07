@@ -63,6 +63,10 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
   - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
     32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
+  - [Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
+    33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
+  - [PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology
+    34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
 - [5. High-Fidelity Strategy & Historical Evolution
   Taxonomy](#5-high-fidelity-strategy--historical-evolution-taxonomy)
   - [The "Low-Resolution Blur" Pathology (Milestone
@@ -804,6 +808,44 @@ $$
   canonical key `eval_loss` in `CANONICAL_METRIC_ALIASES`, register
   `perplexity` in `LOWER_IS_BETTER_METRICS`, and enable Pareto model soup
   blending across LLM adapter checkpoints.
+
+### Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology 33)
+
+- **The Issue**: When resuming training for an LLM that was previously initialized
+  or trained in unquantized FP32 (e.g. CPU fallback), linear projection weights
+  in `progress.pth` possess 2D tensor dimensions (e.g. `[1536, 1536]` or
+  `[8960, 1536]`). Upon transitioning to 4-bit NF4 quantization on CUDA,
+  `bitsandbytes` stores weights in packed 1D columns (e.g. `[1179648, 1]`).
+  Standard `load_state_dict` triggers a fatal
+  `RuntimeError: Error(s) in loading state_dict for ...: size mismatch`.
+- **Identification**: Logs emit `size mismatch for model.base_model...`
+  indicating dimension collisions between 2D float weights and 1D packed
+  `bitsandbytes` quantized weights.
+- **Remedy**: **Resilient Checkpoint State Recovery**. Wrap
+  `train.raw_model.load_state_dict` in `STATE_RESTORE_ERRORS` within
+  `training/context_resume.py`. On precision or quantization mismatch, log a
+  diagnostic warning and proceed with freshly initialized quantized base weights
+  while preserving curriculum metrics.
+
+### PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology 34)
+
+- **The Issue**: On edge GPUs with 4 GB physical VRAM (e.g. NVIDIA GTX 1650),
+  ambient OS, display managers, and hardware-accelerated host applications (e.g.
+  Chrome, Photoshop) claim ~450–600 MB of Dedicated VRAM. While a 1.5B 4-bit
+  model fits in ~1,600 MB at rest, processing long sequence lengths (e.g. 1024
+  tokens) with standard AdamW and uncheckpointed activations pushes total
+  allocation past the 4 GB boundary. The WDDM GPU driver dynamically pages active
+  tensor allocations over the PCIe 3.0 bus to system RAM, causing batch step
+  latency to balloon from ~1.5s up to 25s+ per iteration.
+- **Identification**: `nvidia-smi` reports 100% GPU utilization with VRAM pegged
+  at >3,600 MB, high CPU/PCIe bus activity, and fluctuating batch times (13.9s ->
+  22.7s).
+- **Remedy**: **Multi-Tier VRAM Containment Profile**. Deploy 4-bit NF4 base
+  quantization via `BitsAndBytesConfig`, enable activation gradient checkpointing
+  (`gradient_checkpointing_enable(use_reentrant=False)`), wire
+  `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus lockups,
+  and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
+  accumulation steps for edge training.
 
 ---
 

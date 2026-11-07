@@ -875,6 +875,46 @@ canonical key <code>eval_loss</code> in <code>CANONICAL_METRIC_ALIASES</code>, r
 <code>perplexity</code> in <code>LOWER_IS_BETTER_METRICS</code>, and enable Pareto model soup
 blending across LLM adapter checkpoints.</li>
 </ul>
+
+<h3 id="unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33">Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology 33)</h3>
+<ul>
+<li><strong>The Issue</strong>: When resuming training for an LLM that was previously initialized
+or trained in unquantized FP32 (e.g. CPU fallback), linear projection weights
+in <code>progress.pth</code> possess 2D tensor dimensions (e.g. <code>[1536, 1536]</code> or
+<code>[8960, 1536]</code>). Upon transitioning to 4-bit NF4 quantization on CUDA,
+<code>bitsandbytes</code> stores weights in packed 1D columns (e.g. <code>[1179648, 1]</code>).
+Standard <code>load_state_dict</code> triggers a fatal
+<code>RuntimeError: Error(s) in loading state_dict for ...: size mismatch</code>.</li>
+<li><strong>Identification</strong>: Logs emit <code>size mismatch for model.base_model...</code>
+indicating dimension collisions between 2D float weights and 1D packed
+<code>bitsandbytes</code> quantized weights.</li>
+<li><strong>Remedy</strong>: <strong>Resilient Checkpoint State Recovery</strong>. Wrap
+<code>train.raw_model.load_state_dict</code> in <code>STATE_RESTORE_ERRORS</code> within
+<code>training/context_resume.py</code>. On precision or quantization mismatch, log a
+diagnostic warning and proceed with freshly initialized quantized base weights
+while preserving curriculum metrics.</li>
+</ul>
+
+<h3 id="pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34">PCIe Paging Thrashing &amp; Host VRAM Starvation on 4GB Accelerators (Pathology 34)</h3>
+<ul>
+<li><strong>The Issue</strong>: On edge GPUs with 4 GB physical VRAM (e.g. NVIDIA GTX 1650),
+ambient OS, display managers, and hardware-accelerated host applications (e.g.
+Chrome, Photoshop) claim ~450–600 MB of Dedicated VRAM. While a 1.5B 4-bit
+model fits in ~1,600 MB at rest, processing long sequence lengths (e.g. 1024
+tokens) with standard AdamW and uncheckpointed activations pushes total
+allocation past the 4 GB boundary. The WDDM GPU driver dynamically pages active
+tensor allocations over the PCIe 3.0 bus to system RAM, causing batch step
+latency to balloon from ~1.5s up to 25s+ per iteration.</li>
+<li><strong>Identification</strong>: <code>nvidia-smi</code> reports 100% GPU utilization with VRAM pegged
+at &gt;3,600 MB, high CPU/PCIe bus activity, and fluctuating batch times (13.9s -&gt;
+22.7s).</li>
+<li><strong>Remedy</strong>: <strong>Multi-Tier VRAM Containment Profile</strong>. Deploy 4-bit NF4 base
+quantization via <code>BitsAndBytesConfig</code>, enable activation gradient checkpointing
+(<code>gradient_checkpointing_enable(use_reentrant=False)</code>), wire
+<code>bitsandbytes.optim.PagedAdamW8bit</code> for dynamic host paging without bus lockups,
+and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
+accumulation steps for edge training.</li>
+</ul>
 </section>
 
 <section id="sec-5-high-fidelity-strategy--historical-evolution-taxonomy">

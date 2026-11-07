@@ -175,6 +175,30 @@ adhere to Three-Way Partitioning (Train / Val / Test):
   unseen test splits, recording `test_loss`, `test_perplexity`, and
   `test_token_accuracy` in the final `TrainingSummary`.
 
+### 6.6 Edge Hardware Optimization: 4-Bit NF4 QLoRA, SDPA & Paged AdamW
+
+To execute fine-tuning of 1.5B+ parameter causal language models on consumer
+workstations constrained to 4 GB VRAM (e.g. NVIDIA GeForce GTX 1650), the
+training suite deploys a multi-tier memory containment profile:
+
+1. **NormalFloat-4 (NF4) Quantization**: Employs `bitsandbytes` 4-bit normal
+   quantization with double quantization (`bnb_4bit_use_double_quant=True`),
+   compressing FP32/BF16 base foundation weights from 3.1 GB to ~900 MB while
+   retaining near-lossless numerical fidelity.
+2. **Low-Rank Adaptation (QLoRA)**: Injects rank $r=16$, $\alpha=32$ adapters
+   across all projection matrices ($q$, $k$, $v$, $o$, $\text{gate}$,
+   $\text{up}$, $\text{down}$), training $<1\%$ of total network weights.
+3. **Gradient Checkpointing & SDPA**: Recomputes activations during backward
+   passes via `model.gradient_checkpointing_enable(use_reentrant=False)` and
+   substitutes manual attention matrices with PyTorch Scaled Dot-Product
+   Attention (`attn_implementation="sdpa"`).
+4. **Paged 8-bit AdamW**: Leverages `bitsandbytes.optim.PagedAdamW8bit` to
+   compress optimizer states to 8 bits and dynamically page optimizer states
+   across CUDA unified memory when VRAM boundaries approach saturation.
+5. **Sequence Clamping**: Constrains micro-batch to 1 and sequence length to 512
+   tokens with 16 gradient accumulation steps, eliminating $O(N^2)$ memory spikes
+   and preserving stable throughput on edge accelerators.
+
 ---
 
 ## 7. Conclusion

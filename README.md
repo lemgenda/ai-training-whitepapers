@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.84`
+**Version**: `v16.9.85`
 
 ---
 
@@ -57,6 +57,16 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.85 - Edge GPU 4GB VRAM Containment & Causal LLM Quantization Hardening
+
+* `MD-Papers/PAPER_LEMGENDARY_LLM.md`: documented 4-bit NF4 QLoRA quantization,
+  SDPA execution, gradient checkpointing, and Paged 8-bit AdamW containment profile.
+* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md`: catalogued Pathology 33 (Unquantized
+  Checkpoint Resume Shape Mismatch on 4-bit Backbones) and Pathology 34 (PCIe
+  Paging Thrashing & Host VRAM Starvation on 4GB Accelerators).
+* `MD-Papers/PAPER_TRAINING_SUITE.md`: detailed Section 7.6 Edge Hardware
+  Optimization Profile for sub-4GB consumer accelerators.
 
 ### v16.9.84 - Three-Way Split (Train/Val/Test) & Held-Out Test Evaluation
 

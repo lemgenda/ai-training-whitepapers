@@ -178,6 +178,30 @@ or ID leakage into training or validation splits.</li>
 unseen test splits, recording <code>test_loss</code>, <code>test_perplexity</code>, and
 <code>test_token_accuracy</code> in the final <code>TrainingSummary</code>.</li>
 </ul>
+
+<h3>6.6 Edge Hardware Optimization: 4-Bit NF4 QLoRA, SDPA &amp; Paged AdamW</h3>
+<p>To execute fine-tuning of 1.5B+ parameter causal language models on consumer
+workstations constrained to 4 GB VRAM (e.g. NVIDIA GeForce GTX 1650), the
+training suite deploys a multi-tier memory containment profile:</p>
+<ol>
+<li><strong>NormalFloat-4 (NF4) Quantization</strong>: Employs <code>bitsandbytes</code> 4-bit normal
+quantization with double quantization (<code>bnb_4bit_use_double_quant=True</code>),
+compressing FP32/BF16 base foundation weights from 3.1 GB to ~900 MB while
+retaining near-lossless numerical fidelity.</li>
+<li><strong>Low-Rank Adaptation (QLoRA)</strong>: Injects rank <em>r</em>=16, &alpha;=32 adapters
+across all projection matrices (<em>q</em>, <em>k</em>, <em>v</em>, <em>o</em>, gate,
+up, down), training &lt;1% of total network weights.</li>
+<li><strong>Gradient Checkpointing &amp; SDPA</strong>: Recomputes activations during backward
+passes via <code>model.gradient_checkpointing_enable(use_reentrant=False)</code> and
+substitutes manual attention matrices with PyTorch Scaled Dot-Product
+Attention (<code>attn_implementation="sdpa"</code>).</li>
+<li><strong>Paged 8-bit AdamW</strong>: Leverages <code>bitsandbytes.optim.PagedAdamW8bit</code> to
+compress optimizer states to 8 bits and dynamically page optimizer states
+across CUDA unified memory when VRAM boundaries approach saturation.</li>
+<li><strong>Sequence Clamping</strong>: Constrains micro-batch to 1 and sequence length to 512
+tokens with 16 gradient accumulation steps, eliminating <em>O</em>(<em>N</em><sup>2</sup>) memory spikes
+and preserving stable throughput on edge accelerators.</li>
+</ol>
 </section>
 
 <section id="sec-7-conclusion">
