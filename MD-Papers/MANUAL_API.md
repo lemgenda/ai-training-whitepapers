@@ -608,10 +608,8 @@ Response:
 
 #### `GET /api/secrets`
 
-Retrieves all stored ecosystem secrets from `.secrets.yaml`. Automatically seeds
-defaults from existing credential files (`.kaggle_users`, `.GOOGLE_DRIVE`,
-`.GITHUB_PAT`, `.huggingface_token`, `.mt5_credentials`, `.SATURN_PAT`) if
-`.secrets.yaml` does not yet exist.
+Retrieves all stored ecosystem secrets from `.secrets.yaml` (the Single Source
+of Truth). Values are masked before transmission.
 
 Response:
 
@@ -634,10 +632,9 @@ Response:
 
 #### `POST /api/secrets`
 
-Atomically writes the ecosystem secrets registry to `.secrets.yaml` and
-propagates mandatory authentication credentials (such as Kaggle tokens) across
-dependent projects (`lemgendary-datasets`, `lemgendary-training-suite`, and
-`lemgendary-env-manager`).
+Atomically writes the ecosystem secrets registry to `.secrets.yaml` as the
+Single Source of Truth and synchronizes the active Kaggle credentials to the
+user's `~/.kaggle/kaggle.json` CLI configuration.
 
 Request body:
 
@@ -1599,7 +1596,7 @@ token authentication:
 - **`GET`**: Endpoint: `/api/sources`; Auth: None; Description: Catalog local
   `raw-sets` and configured upstream datasets
 - **`GET`**: Endpoint: `/api/kaggle/status`; Auth: None; Description: Check
-  Kaggle credentials (`.kaggle_token`, `~/.kaggle/kaggle.json`, env)
+  Kaggle credentials (`.secrets.yaml`, `~/.kaggle/kaggle.json`, env)
 - **`GET`**: Endpoint: `/api/kaggle/registry-datasets`; Auth: None; Description:
   Enumerate 20 canonical Kaggle-bound production manifolds with local status
 - **`POST`**: Endpoint: `/api/kaggle/download`; Auth: None; Description: Ingest

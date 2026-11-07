@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.82`
+**Version**: `v16.9.83`
 
 ---
 
@@ -57,6 +57,14 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.83 - Master API Manual .secrets.yaml SSOT Alignment
+
+* `MD-Papers/MANUAL_API.md` and `papers/api-manual.html`: updated `GET
+  /api/secrets` and `POST /api/secrets` specifications to establish
+  `.secrets.yaml` as the authoritative Single Source of Truth across the
+  ecosystem, removing references to legacy token dotfiles. Aligned
+  `/api/kaggle/status` credential reporting with `.secrets.yaml`.
 
 ### v16.9.82 - Merge of `main`: LLM Whitepapers from the Owner
 
