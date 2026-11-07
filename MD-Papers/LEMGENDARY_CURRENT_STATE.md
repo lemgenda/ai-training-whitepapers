@@ -118,7 +118,7 @@ repository is the source of the release version.
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
   optional SWA, FID re-evaluation tool.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.65-STABLE`): shard synthesis,
+- **LemGendary Dataset Compiler Suite** (`v16.9.71-STABLE`): shard synthesis,
   WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
@@ -139,8 +139,8 @@ repository is the source of the release version.
 The package metadata matches the README releases: the LemGendary Model
 Training Suite writes its version only in `pyproject.toml` (`16.9.122`);
 `training/version.py` reads it for the CLI, the sidecar, the health route and
-`openapi.json`, and `config.yaml` has no version key (since v16.9.122). The
-LemGendary Dataset Compiler Suite `core/cli_args.py` reports `16.9.65` (one
+`openapi.json`, and `config.yaml` has no version key (since v16.9.128). The
+LemGendary Dataset Compiler Suite `core/cli_args.py` reports `16.9.71` (one
 version string since v16.9.52).
 
 ---

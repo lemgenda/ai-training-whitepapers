@@ -161,6 +161,20 @@ linearly blended via the Pareto Model Soup (`create_pareto_model_soup` in
 `training/export/soup.py`) without retraining to generate an ensembled final
 adapter weights binary.
 
+### 6.5 Three-Way Partitioning & Held-Out Test Evaluation
+
+To guarantee generalization without data contamination, instruction manifolds
+adhere to Three-Way Partitioning (Train / Val / Test):
+
+* **Deterministic Stratification**: Splits records according to declared ratios
+  (`val_split` and `test_split`) across all seven corpus taxonomies, preventing
+  epistemic bias and domain skew.
+* **Held-Out Test Shard**: Sharded into `ai_helper_test.jsonl` with zero prompt
+  or ID leakage into training or validation splits.
+* **Post-Training Evaluation**: Evaluates the best milestone checkpoints across
+  unseen test splits, recording `test_loss`, `test_perplexity`, and
+  `test_token_accuracy` in the final `TrainingSummary`.
+
 ---
 
 ## 7. Conclusion

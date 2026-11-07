@@ -45,7 +45,7 @@ class TestAiHelperCorpus(DocsTestCase):
         """Parse every non-empty line of ``path``; fail on malformed JSON."""
         records = []
         name = os.path.basename(path)
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             for line_idx, line in enumerate(f, 1):
                 if not line.strip():
                     continue
@@ -58,14 +58,14 @@ class TestAiHelperCorpus(DocsTestCase):
     def _check_record_text(self, record):
         """No emoji, no legacy NIMA Mobile backbone and no removed routes in one record."""
         text = " ".join(m["content"] for m in record["messages"])
-        self.assertEqual(
-            len(EMOJI_PATTERN.findall(text)), 0, f"Emoji detected in {record['id']}"
-        )
+        self.assertEqual(len(EMOJI_PATTERN.findall(text)), 0, f"Emoji detected in {record['id']}")
         if "nima_aesthetic_mobile" in text.lower():
             self.assertFalse(
                 bool(re.search(r"nima_aesthetic_mobile.*MobileNetV[12]", text, re.IGNORECASE)),
-                f"Corpus {record['id']} claimed legacy MobileNet for NIMA Mobile instead of "
-                "MobileNetV3-Small",
+                (
+                    f"Corpus {record['id']} claimed legacy MobileNet for NIMA Mobile instead "
+                    "of MobileNetV3-Small"
+                ),
             )
         for forbidden in FORBIDDEN_CORPUS_TEXT:
             self.assertNotIn(forbidden, text)
@@ -87,13 +87,13 @@ class TestAiHelperCorpus(DocsTestCase):
             fpath = os.path.join(dataset_dir, fname)
             if not os.path.exists(fpath):
                 continue
-            with open(fpath, "r", encoding="utf-8") as f:
+            with open(fpath, encoding="utf-8") as f:
                 txt = f.read()
             for stale, label in STALE_LINEAGE:
                 self.assertNotIn(stale, txt, f"Found {label} in {fname}")
         if not os.path.exists(info_path):
             return
-        with open(info_path, "r", encoding="utf-8") as f:
+        with open(info_path, encoding="utf-8") as f:
             info_data = yaml.safe_load(f)
         self.assertEqual(
             info_data.get("train_samples"), train_count, "dataset_info.yaml train count mismatch"
@@ -101,9 +101,10 @@ class TestAiHelperCorpus(DocsTestCase):
         self.assertEqual(
             info_data.get("val_samples"), val_count, "dataset_info.yaml val count mismatch"
         )
+        test_cnt = info_data.get("test_samples", 0) or 0
         self.assertEqual(
             info_data.get("count"),
-            train_count + val_count,
+            train_count + val_count + test_cnt,
             "dataset_info.yaml total count mismatch",
         )
 

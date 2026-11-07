@@ -1458,13 +1458,14 @@ scales gradient accumulation steps
 ($K = \max(1, \operatorname{round}(B_{\text{eff}} / B_{\text{phys}}))$) to
 preserve the target effective batch size ($B_{\text{eff}} = 24$) on consumer
 GPUs (e.g. GTX 1650 4GB).</li>
-<li><strong>Universal LLM Milestone Vault Persistence</strong>: <code>CheckpointLifecycleManager</code>
+<li><strong>Universal LLM Milestone Vault Persistence &amp; Held-Out Test Evaluation</strong>: <code>CheckpointLifecycleManager</code>
 tracks LLM-specific SOTA target metrics (<code>eval_loss</code>, <code>perplexity</code>,
 <code>token_accuracy</code>) and persists isolated milestone checkpoints
 (<code>vault_eval_loss.pth</code>, <code>vault_perplexity.pth</code>, <code>vault_token_accuracy.pth</code>).
-These checkpoints feed directly into the Pareto Model Soup
-(<code>create_pareto_model_soup</code>, Section 2.27) for linear adapter weight
-blending.</li>
+Upon training completion, the engine executes an automated post-training evaluation pass on
+<code>ctx.data.test_loader</code> (<code>data/ai_helper_test.jsonl</code>), recording hold-out generalization
+metrics into <code>TrainingSummary</code>. These checkpoints feed directly into the Pareto Model Soup
+(<code>create_pareto_model_soup</code>, Section 2.27) for linear adapter weight blending.</li>
 </ul>
 </section>
 

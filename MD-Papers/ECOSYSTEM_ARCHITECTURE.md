@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.60`, Dataset Compiler Suite `v16.9.65`, Model Training Suite
-`v16.9.122`, AI Studio GUI `v2.10.38` · **Last Reviewed / Verified**: 2026-11-04
+Manager `v16.9.60`, Dataset Compiler Suite `v16.9.71`, Model Training Suite
+`v16.9.128`, AI Studio GUI `v2.10.38` · **Last Reviewed / Verified**: 2026-11-04
 · **Status**: Canonical
 
 ---
@@ -171,7 +171,7 @@ value is written anywhere else.
 | Subsystem | Repository | Role | Key Invariants |
 | :--- | :--- | :--- | :--- |
 | **Presentation** | `lemgendary-ai-studio-gui` | Operator cockpit | See (1) |
-| **Toolchain & Env** | `lemgendary-env-manager` | Foundation manager | See (2) |
+| **Toolchain & Env** | `lemgendary-env-manager` | Foundation mgr | See (2) |
 | **Data Compiler** | `lemgendary-datasets` | Synthesis, ingestion | See (3) |
 | **Training Suite** | `lemgendary-training-suite` | Model training | See (4) |
 | **Documentation** | `lemgendary-docs` | Docs hub | See (5) |

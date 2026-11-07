@@ -1417,13 +1417,16 @@ python -m training.fid_reeval status --all
   ($K = \max(1, \operatorname{round}(B_{\text{eff}} / B_{\text{phys}}))$) to
   preserve the target effective batch size ($B_{\text{eff}} = 24$) on consumer
   GPUs (e.g. GTX 1650 4GB).
-- **Universal LLM Milestone Vault Persistence**: `CheckpointLifecycleManager`
-  tracks LLM-specific SOTA target metrics (`eval_loss`, `perplexity`,
-  `token_accuracy`) and persists isolated milestone checkpoints
-  (`vault_eval_loss.pth`, `vault_perplexity.pth`, `vault_token_accuracy.pth`).
-  These checkpoints feed directly into the Pareto Model Soup
-  (`create_pareto_model_soup`, Section 2.27) for linear adapter weight
-  blending.
+- **Universal LLM Milestone Vault Persistence & Held-Out Test Evaluation**:
+  `CheckpointLifecycleManager` tracks LLM-specific SOTA target metrics
+  (`eval_loss`, `perplexity`, `token_accuracy`) and persists isolated
+  milestone checkpoints (`vault_eval_loss.pth`, `vault_perplexity.pth`,
+  `vault_token_accuracy.pth`). Upon training completion, the engine executes
+  an automated post-training evaluation pass on `ctx.data.test_loader`
+  (`data/ai_helper_test.jsonl`), reporting hold-out generalization metrics
+  under `test_*` into `TrainingSummary`. These checkpoints feed directly into
+  the Pareto Model Soup (`create_pareto_model_soup`, Section 2.27) for linear
+  adapter weight blending.
 
 ---
 

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.83`
+**Version**: `v16.9.84`
 
 ---
 
@@ -57,6 +57,19 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.84 - Three-Way Split (Train/Val/Test) & Held-Out Test Evaluation
+
+* `MD-Papers/PAPER_DATASET_COMPILER.md` and `papers/dataset-compiler.html`:
+  documented Three-Way Partitioning (`val_split` and `test_split`) with
+  deterministic stratification across all 7 corpus categories and held-out test
+  shard generation (`ai_helper_test.jsonl`).
+* `MD-Papers/PAPER_TRAINING_SUITE.md` and `papers/training-suite-master.html`:
+  documented held-out test set ingestion, tokenization, and automated post-training
+  evaluation metrics (`test_loss`, `test_perplexity`, `test_accuracy`).
+* `canonical_capabilities.yaml`, `canonical_capabilities.json`, and
+  `manifest/documents.json`: bumped runtime engine baseline to `v16.9.128-STABLE`
+  and dataset compiler baseline to `v16.9.71-STABLE`.
 
 ### v16.9.83 - Master API Manual .secrets.yaml SSOT Alignment
 

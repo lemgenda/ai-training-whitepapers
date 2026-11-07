@@ -139,11 +139,11 @@ index (<code>cu126</code>, <code>cu121</code>, <code>cu118</code>) from the driv
 <p>Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.</p>
 <ul>
-<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.122-STABLE</code>): PyTorch training
+<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.128-STABLE</code>): PyTorch training
 loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
 optional SWA, FID re-evaluation tool.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
-<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.65-STABLE</code>): shard synthesis,
+<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.71-STABLE</code>): shard synthesis,
 WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
 Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
@@ -153,7 +153,7 @@ registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
 <code>lemgendary_env_manager.ps1</code>.</li>
 <li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.38</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.82-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.84-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
@@ -162,10 +162,10 @@ exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
 <p>The package metadata matches the README releases: the LemGendary Model
-Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.122</code>);
+Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.128</code>);
 <code>training/version.py</code> reads it for the CLI, the sidecar, the health route and
-<code>openapi.json</code>, and <code>config.yaml</code> has no version key (since v16.9.122). The
-LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.65</code> (one
+<code>openapi.json</code>, and <code>config.yaml</code> has no version key (since v16.9.128). The
+LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.71</code> (one
 version string since v16.9.52).</p>
 </section>
 
@@ -211,7 +211,7 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.82-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.84-STABLE</code>.</p>
 </section>
 
 <section id="sec-4-tripartite-microservice-topology--port-bindings">

@@ -164,6 +164,20 @@ evaluation run sets a new historical best in any SOTA target metric:</p>
 linearly blended via the Pareto Model Soup (<code>create_pareto_model_soup</code> in
 <code>training/export/soup.py</code>) without retraining to generate an ensembled final
 adapter weights binary.</p>
+
+<h3>6.5 Three-Way Partitioning &amp; Held-Out Test Evaluation</h3>
+<p>To guarantee generalization without data contamination, instruction manifolds
+adhere to Three-Way Partitioning (Train / Val / Test):</p>
+<ul>
+<li><strong>Deterministic Stratification</strong>: Splits records according to declared ratios
+(<code>val_split</code> and <code>test_split</code>) across all seven corpus taxonomies, preventing
+epistemic bias and domain skew.</li>
+<li><strong>Held-Out Test Shard</strong>: Sharded into <code>ai_helper_test.jsonl</code> with zero prompt
+or ID leakage into training or validation splits.</li>
+<li><strong>Post-Training Evaluation</strong>: Evaluates the best milestone checkpoints across
+unseen test splits, recording <code>test_loss</code>, <code>test_perplexity</code>, and
+<code>test_token_accuracy</code> in the final <code>TrainingSummary</code>.</li>
+</ul>
 </section>
 
 <section id="sec-7-conclusion">

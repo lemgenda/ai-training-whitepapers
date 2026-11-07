@@ -955,8 +955,10 @@ ai_helper_lemgend:
   canonical_format: jsonl
   train_file: data/ai_helper_train.jsonl
   val_file: data/ai_helper_val.jsonl
+  test_file: data/ai_helper_test.jsonl
   split_strategy: stratified
-  val_split: 0.2
+  val_split: 0.15
+  test_split: 0.15
   llm_pipeline:
     schema_format: chatml_turn3
     target_samples: 1150
