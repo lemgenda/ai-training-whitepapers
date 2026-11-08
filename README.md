@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.85`
+**Version**: `v16.9.86`
 
 ---
 
@@ -19,9 +19,9 @@
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.60, LemGendary
-  Dataset Compiler Suite v16.9.65, LemGendary Model Training Suite v16.9.122,
-  LemGendary AI Studio GUI v2.10.38.
+* **Current baselines** - LemGendary Environment Manager v16.9.63, LemGendary
+  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.133,
+  LemGendary AI Studio GUI v2.10.42.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -57,6 +57,15 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.86 - PyTorch 2.15.0+cu134 Toolchain Upgrade & Component Baseline Refresh
+
+* Updated ecosystem baselines to LemGendary Environment Manager v16.9.63,
+  LemGendary Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite
+  v16.9.133, and LemGendary AI Studio GUI v2.10.42.
+* Synchronized documentation regarding PyTorch 2.15.0+cu134, TorchVision
+  0.29.2+cu134, and TorchAudio 2.11.1+cu134 runtime acceleration under CUDA
+  13.4.
 
 ### v16.9.85 - Edge GPU 4GB VRAM Containment & Causal LLM Quantization Hardening
 
