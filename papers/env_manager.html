@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.1 ENV | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.60-STABLE</code> (LemGendary Environment Manager)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v16.9.67-STABLE</code> (LemGendary Environment Manager)</span>
+<span><strong>Last audited</strong>: 2026-11-09</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -438,7 +438,13 @@ sidecar (port 8200) one after the other in the thread pool, each with a 1.5 s
 timeout, and reports their health next to the env manager itself (port 8000)
 for the <code>lemgendary-ai-studio-gui</code> status bar.</li>
 <li><strong>Service Control (<code>/api/services/{service_id}/start</code> and <code>/stop</code>)</strong>: Starts
-and stops the sidecar daemons.</li>
+and stops the sidecar daemons. In v16.9.67, process termination is hardened
+via a two-tier strategy: recording the background process PID to
+<code>server.pid</code> upon launch, and executing Windows netstat parsing that
+recognizes both explicit IP bindings (<code>127.0.0.1</code>, <code>0.0.0.0</code>, <code>[::]</code>) and
+listening wildcard tokens (<code>*:*</code>, <code>:0</code>) to terminate stubborn lingering
+processes reliably. Furthermore, test environments enforce isolation
+via <code>LEM_DISABLE_SIDECAR_AUTORUN=1</code>.</li>
 <li><strong>Governance &amp; Maintenance Endpoints (<code>/api/hooks/install</code>, <code>/api/clean</code>)</strong>:
 Provides programmatic endpoints for ecosystem-wide Git hook installation and
 recursive temporary cache/staging artifact purges with space recovery

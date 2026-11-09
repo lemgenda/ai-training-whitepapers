@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.122-STABLE` (LemGendary Model Training Suite) · **Last
-audited**: 2026-11-04
+**Version**: `v16.9.137-STABLE` (LemGendary Model Training Suite) · **Last
+audited**: 2026-11-09
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
 Guide](./PAPER_TRAINING_PATHOLOGY.md)
@@ -513,9 +513,21 @@ to 512px is therefore no longer reported as complete.
   Restoration). This permanently prevents aggressive structural tasks from
   mathematically overpowering subtle intensity-based manifolds (like
   Lowlight/Exposure) via head competition.
-- **Dynamic Regex Ingestion**: Seamlessly routes tasks like Denoise, Deblur,
-  Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction
-  of physical dataset filenames on the fly.
+- **Dynamic Regex Ingestion & Unified Class Index Normalization (v16.9.137)**:
+  Seamlessly routes tasks like Denoise, Deblur, Derain, Dehaze, SuperRes,
+  and Vintage automatically through regex extraction of physical dataset
+  filenames on the fly (`professionalmultitaskrestoration_[task]_compiled...`).
+  The `CombinedLoss` engine normalizes both DataLoader string tuples, single
+  strings, and integer tensors into strict `torch.long` tensors
+  ($\mathbf{y}_{\text{task}} \in \{0, \dots, 10\}^B$), preventing collation
+  type mismatches and driving both auxiliary cross-entropy loss and dynamic
+  perceptual weight scaling:
+  $$
+  \mathcal{L}_{\text{total}} = \mathcal{L}_1 + 0.1 \cdot
+  \mathcal{L}_{\text{CE}}(\hat{\mathbf{z}}_{\text{task}},
+  \mathbf{y}_{\text{task}}) + w_{\text{lpips}}(\mathbf{y}_{\text{task}})
+  \cdot \mathcal{L}_{\text{LPIPS}}
+  $$
 
 ### 2.6. Multi-Scale Forex Trading Architecture (`ForexPredictor`)
 

@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.60-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-04
+**Version**: `v16.9.67-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-09
 
 ---
 
@@ -41,7 +41,7 @@ audited**: 2026-11-04
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.60-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.67-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -397,7 +397,13 @@ Environment Manager daemon exposes high-density aggregated endpoints:
   timeout, and reports their health next to the env manager itself (port 8000)
   for the `lemgendary-ai-studio-gui` status bar.
 - **Service Control (`/api/services/{service_id}/start` and `/stop`)**: Starts
-  and stops the sidecar daemons.
+  and stops the sidecar daemons. In v16.9.67, process termination is hardened
+  via a two-tier strategy: recording the background process PID to
+  `server.pid` upon launch, and executing Windows netstat parsing that
+  recognizes both explicit IP bindings (`127.0.0.1`, `0.0.0.0`, `[::]`) and
+  listening wildcard tokens (`*:*`, `:0`) to terminate stubborn lingering
+  processes reliably. Furthermore, test environments enforce isolation
+  via `LEM_DISABLE_SIDECAR_AUTORUN=1`.
 - **Governance & Maintenance Endpoints (`/api/hooks/install`, `/api/clean`)**:
   Provides programmatic endpoints for ecosystem-wide Git hook installation and
   recursive temporary cache/staging artifact purges with space recovery

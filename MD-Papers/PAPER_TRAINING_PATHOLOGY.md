@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.107-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.6.0 - SWA and FID Re-evaluation Sync
-(2026-11-03) · **Last audited**: 2026-11-03
+**Author**: Lem Treursic · **Version**: `v16.9.137-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.7.0 - Multitask Restoration Target
+Normalization Sync (2026-11-09) · **Last audited**: 2026-11-09
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
@@ -48,6 +48,27 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
   - [Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology
     24)](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24)
   - [Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology
+    25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
+  - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
+    26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
+  - [Fabricated Metric History (FID Rescaling) (Pathology
+    27)](#fabricated-metric-history-fid-rescaling-pathology-27)
+  - [Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
+    28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
+  - [CPU-Bound Execution & Silent Accelerator Starvation (Pathology
+    29)](#cpu-bound-execution--silent-accelerator-starvation-pathology-29)
+  - [Vision-Curriculum Cross-Domain Contamination (Pathology
+    30)](#vision-curriculum-cross-domain-contamination-pathology-30)
+  - [Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
+    31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
+  - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
+    32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
+  - [Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
+    33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
+  - [PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology
+    34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
+  - [Multitask Target Collation Type Mismatch & Loss Crash (Pathology
+    35)](#multitask-target-collation-type-mismatch--loss-crash-pathology-35)
     25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
   - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
     26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
@@ -846,6 +867,40 @@ $$
   `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus lockups,
   and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
   accumulation steps for edge training.
+
+### Multitask Target Collation Type Mismatch & Loss Crash (Pathology 35)
+
+- **The Issue**: In multi-task image restoration models such as
+  `professional_multitask_restoration`, DataLoader pipelines ingest sample
+  metadata containing textual task tags (e.g. `"deblur"`, `"derain"`,
+  `"dehaze_indoor"`) rather than pre-indexed scalar integers. Standard PyTorch
+  DataLoader collation collects heterogeneous string targets into Python
+  tuples of strings (`tuple[str, ...]`) for each batch. When passed directly
+  to PyTorch loss functions like `nn.CrossEntropyLoss`, the engine attempts
+  to execute `torch._C._nn.cross_entropy_loss(pred, target)`, which requires
+  the target parameter to be a `torch.Tensor` of class indices or probabilities.
+  Because the target remains a string tuple, the training loop crashes at step 1
+  with:
+  `TypeError: cross_entropy_loss(): argument 'target' (position 2) must be`
+  `Tensor, not tuple`.
+- **Identification**: Training starts cleanly, allocates GPU memory, resolves
+  WebDataset/Tar readers, and prints `Initiating training pass...`, but crashes
+  on the first optimization step with `TypeError: cross_entropy_loss(): argument
+  'target' (position 2) must be Tensor, not tuple` inside `CombinedLoss.forward`
+  or `F.cross_entropy`.
+- **Remedy**: **Canonical Multitask Target Index Tensor Resolution**.
+  1. Define a centralized, authoritative registry of task head names
+     (`MULTITASK_HEAD_NAMES`) and a mapping from name to integer class index
+     (`MULTITASK_HEAD_TO_INDEX`).
+  2. Implement an idempotent resolution function
+     (`_resolve_task_index_tensor`) inside `CombinedLoss` that handles:
+     - Pre-existing scalar/1D/2D integer tensors (clamped and moved to device).
+     - Collated tuples or lists of task name strings, resolving each via
+       authoritative lookup or regex keyword parsing (`multitask_head(name)`).
+     - Individual string values, converted into a single-element batch tensor.
+  3. Ensure that `dataset_containers.py` dynamically resolves the sub-task head
+     for `professional_multitask_restoration` items from filename prefixes or
+     container sample IDs rather than falling back to a static generic label.
 
 ---
 

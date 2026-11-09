@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.86`
+**Version**: `v16.9.87`
 
 ---
 
@@ -57,6 +57,17 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.87 - Sidecar Process Lifecycle Hardening & Multitask Loss Alignment
+
+* `MD-Papers/LEMGENDARY_CURRENT_STATE.md` and `papers/current-state.html`:
+  Documented persistent `server.pid` recording upon detached sidecar launch and
+  multi-format `netstat` listening port resolution across modern Windows
+  environments.
+* `MD-Papers/PAPER_LEMGENDARY_HYBRID.md` and `papers/universal-hybrid.html`:
+  Updated Section 3.2 mathematical formulation and task ingestion details for
+  multitask loss normalization ($int64$ tensor resolution across DataLoader
+  collation string tuples).
 
 ### v16.9.86 - PyTorch 2.15.0+cu134 Toolchain Upgrade & Component Baseline Refresh
 

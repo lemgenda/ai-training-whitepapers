@@ -26,9 +26,9 @@
 <div class="meta">
 <span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
 <span><strong>Author</strong>: Lem Treursic</span>
-<span><strong>Version</strong>: <code>v16.9.107-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Paper Revision</strong>: 1.6.0 - SWA and FID Re-evaluation Sync (2026-11-03)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Version</strong>: <code>v16.9.137-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Paper Revision</strong>: 1.7.0 - Multitask Restoration Target Normalization Sync (2026-11-09)</span>
+<span><strong>Last audited</strong>: 2026-11-09</span>
 <span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
 </div>
 </header>
@@ -89,6 +89,12 @@ Plateau)</a></li>
 31)</a></li>
 <li><a href="#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32">Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
 32)</a></li>
+<li><a href="#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33">Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
+33)</a></li>
+<li><a href="#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34">PCIe Paging Thrashing &amp; Host VRAM Starvation on 4GB Accelerators (Pathology
+34)</a></li>
+<li><a href="#multitask-target-collation-type-mismatch--loss-crash-pathology-35">Multitask Target Collation Type Mismatch &amp; Loss Crash (Pathology
+35)</a></li>
 </ul>
 </li>
 <li><a href="#sec-5-high-fidelity-strategy--historical-evolution-taxonomy">5. High-Fidelity Strategy &amp; Historical Evolution
@@ -914,6 +920,19 @@ quantization via <code>BitsAndBytesConfig</code>, enable activation gradient che
 <code>bitsandbytes.optim.PagedAdamW8bit</code> for dynamic host paging without bus lockups,
 and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
 accumulation steps for edge training.</li>
+</ul>
+
+<h3 id="multitask-target-collation-type-mismatch--loss-crash-pathology-35">Multitask Target Collation Type Mismatch &amp; Loss Crash (Pathology 35)</h3>
+<ul>
+<li><strong>The Issue</strong>: In multi-task image restoration models such as <code>professional_multitask_restoration</code>, DataLoader pipelines ingest sample metadata containing textual task tags (e.g. <code>&quot;deblur&quot;</code>, <code>&quot;derain&quot;</code>, <code>&quot;dehaze_indoor&quot;</code>) rather than pre-indexed scalar integers. Standard PyTorch DataLoader collation collects heterogeneous string targets into Python tuples of strings (<code>tuple[str, ...]</code>) for each batch. When passed directly to PyTorch loss functions like <code>nn.CrossEntropyLoss</code>, the engine attempts to execute <code>torch._C._nn.cross_entropy_loss(pred, target)</code>, which requires the target parameter to be a <code>torch.Tensor</code> of class indices or probabilities. Because the target remains a string tuple, the training loop crashes at step 1 with: <code>TypeError: cross_entropy_loss(): argument 'target' (position 2) must be Tensor, not tuple</code>.</li>
+<li><strong>Identification</strong>: Training starts cleanly, allocates GPU memory, resolves WebDataset/Tar readers, and prints <code>Initiating training pass...</code>, but crashes on the first optimization step with <code>TypeError: cross_entropy_loss(): argument 'target' (position 2) must be Tensor, not tuple</code> inside <code>CombinedLoss.forward</code> or <code>F.cross_entropy</code>.</li>
+<li><strong>Remedy</strong>: <strong>Canonical Multitask Target Index Tensor Resolution</strong>.
+<ol>
+<li>Define a centralized, authoritative registry of task head names (<code>MULTITASK_HEAD_NAMES</code>) and a mapping from name to integer class index (<code>MULTITASK_HEAD_TO_INDEX</code>).</li>
+<li>Implement an idempotent resolution function (<code>_resolve_task_index_tensor</code>) inside <code>CombinedLoss</code> that normalizes scalar/1D/2D tensors, collated string tuples, and single string labels into strict <code>torch.long</code> class index tensors moved to the active device.</li>
+<li>Ensure that <code>dataset_containers.py</code> dynamically resolves the sub-task head for <code>professional_multitask_restoration</code> items from filename prefixes or container sample IDs (via <code>multitask_head(name)</code>) rather than falling back to a static generic label.</li>
+</ol>
+</li>
 </ul>
 </section>
 

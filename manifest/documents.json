@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.86-STABLE",
+  "document_baseline": "v16.9.87-STABLE",
   "last_audited": "2026-11-04",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -141,8 +141,8 @@
       "category": "Category 01.1 ENV",
       "html_path": "papers/env_manager.html",
       "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
-      "baseline_version": "v16.9.60-STABLE",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v16.9.67-STABLE",
+      "last_audited": "2026-11-09",
       "status": "Canonical"
     },
     {
@@ -441,8 +441,8 @@
       "category": "Category 02 PATHOLOGY",
       "html_path": "papers/training-pathology.html",
       "md_path": "MD-Papers/PAPER_TRAINING_PATHOLOGY.md",
-      "baseline_version": "v16.9.107-STABLE",
-      "last_audited": "2026-11-03",
+      "baseline_version": "v16.9.137-STABLE",
+      "last_audited": "2026-11-09",
       "status": "Canonical"
     },
     {
@@ -451,8 +451,8 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.122-STABLE",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v16.9.137-STABLE",
+      "last_audited": "2026-11-09",
       "status": "Canonical"
     },
     {

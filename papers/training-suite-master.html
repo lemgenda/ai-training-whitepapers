@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.122-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v16.9.137-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-09</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
 </header>
@@ -562,9 +562,10 @@ multipliers scaling from <code>0.005</code> (Face Parsing) to <code>0.050</code>
 Restoration). This permanently prevents aggressive structural tasks from
 mathematically overpowering subtle intensity-based manifolds (like
 Lowlight/Exposure) via head competition.</li>
-<li><strong>Dynamic Regex Ingestion</strong>: Seamlessly routes tasks like Denoise, Deblur,
-Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction
-of physical dataset filenames on the fly.</li>
+<li><strong>Dynamic Regex Ingestion &amp; Unified Class Index Normalization (v16.9.137)</strong>: Seamlessly routes tasks like Denoise, Deblur, Derain, Dehaze, SuperRes, and Vintage automatically through regex extraction of physical dataset filenames on the fly (<code>professionalmultitaskrestoration_[task]_compiled...</code>). The <code>CombinedLoss</code> engine normalizes both DataLoader string tuples, single strings, and integer tensors into strict <code>torch.long</code> tensors ($\mathbf{y}_{\text{task}} \in \{0, \dots, 10\}^B$), preventing collation type mismatches and driving both auxiliary cross-entropy loss and dynamic perceptual weight scaling:
+$$
+\mathcal{L}_{\text{total}} = \mathcal{L}_1 + 0.1 \cdot \mathcal{L}_{\text{CE}}(\hat{\mathbf{z}}_{\text{task}}, \mathbf{y}_{\text{task}}) + w_{\text{lpips}}(\mathbf{y}_{\text{task}}) \cdot \mathcal{L}_{\text{LPIPS}}
+$$</li>
 </ul>
 <h3 id="sec-26-multi-scale-forex-trading-architecture-forexpredictor">2.6. Multi-Scale Forex Trading Architecture (<code>ForexPredictor</code>)</h3>
 <ul>

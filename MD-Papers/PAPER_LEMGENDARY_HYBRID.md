@@ -163,13 +163,26 @@ of secondary heads.
 
 We implemented the **Dynamic Task-Index Extractor**:
 
-- Instantiates a regex-driven analysis of compiled physical image filenames via `professionalmultitaskrestoration_[task]_compiled_[manifold]_[idx].jpg`.
+- Instantiates a regex-driven analysis of compiled physical image filenames via
+  `professionalmultitaskrestoration_[task]_compiled_[manifold]_[idx].jpg`.
 - Maps physical compilation tags (`deblur`, `denoise`, `derain`,
   `dehaze_indoor`, `dehaze_outdoor`, `lowlight`, `exposure`, `superres`,
   `vintage`, `face_restorer`, and `face_parser`) natively back to task indices
   with backward-compatible substring fallbacks.
 - Passes explicit `task_idx` targets to the `CombinedLoss` CrossEntropy
   classifier during training, forcing proper multi-head optimization.
+  The `CombinedLoss` engine normalizes both collated string tuples, single
+  strings, and integer tensors into strict $\text{int64}$ target tensors
+  ($\mathbf{y}_{\text{task}} \in \{0, \dots, 10\}^B$), preventing collation
+  type mismatches and driving both auxiliary cross-entropy loss and dynamic
+  perceptual weight scaling:
+  $$
+  \mathcal{L}_{\text{total}} = \mathcal{L}_1 + 0.1 \cdot
+  \mathcal{L}_{\text{CE}}(\hat{\mathbf{z}}_{\text{task}},
+  \mathbf{y}_{\text{task}}) + \frac{1}{B} \sum_{i=1}^B
+  w_{\text{LPIPS}}[\mathbf{y}_{\text{task}, i}] \cdot \mathcal{L}_{\text{perc},
+  i}
+  $$
 
 ### 3.3 Dynamic Validation Sharding & Auto-Expansion
 

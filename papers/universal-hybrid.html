@@ -187,7 +187,13 @@ of secondary heads.</p>
 <code>vintage</code>, <code>face_restorer</code>, and <code>face_parser</code>) natively back to task indices
 with backward-compatible substring fallbacks.</li>
 <li>Passes explicit <code>task_idx</code> targets to the <code>CombinedLoss</code> CrossEntropy
-classifier during training, forcing proper multi-head optimization.</li>
+classifier during training, forcing proper multi-head optimization.
+The <code>CombinedLoss</code> engine normalizes both collated string tuples, single strings,
+and integer tensors into strict $\text{int64}$ target tensors
+($\mathbf{y}_{\text{task}} \in \{0, \dots, 10\}^B$), preventing collation type
+mismatches and driving both auxiliary cross-entropy loss and dynamic perceptual
+weight scaling:
+$$\mathcal{L}_{\text{total}} = \mathcal{L}_1 + 0.1 \cdot \mathcal{L}_{\text{CE}}(\hat{\mathbf{z}}_{\text{task}}, \mathbf{y}_{\text{task}}) + \frac{1}{B} \sum_{i=1}^B w_{\text{LPIPS}}[\mathbf{y}_{\text{task}, i}] \cdot \mathcal{L}_{\text{perc}, i}$$</li>
 </ul>
 <h3 id="sec-33-dynamic-validation-sharding--auto-expansion">3.3 Dynamic Validation Sharding &amp; Auto-Expansion</h3>
 <p>To balance computational efficiency during optimization with rigorous quality

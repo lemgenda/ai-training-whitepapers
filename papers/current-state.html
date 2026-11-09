@@ -431,7 +431,9 @@ orphaned child processes and CPU/VRAM resource leaks:</p>
 (<code>service_manager.stop_service</code>) and job cancellation (<code>jobs.py</code>) execute
 recursive tree termination (<code>taskkill /F /T /PID</code> on Windows, recursive
 signal propagation on POSIX), terminating both parent orchestrators and all
-spawned worker subprocesses.</li>
+spawned worker subprocesses. PID files (<code>server.pid</code>) are immediately
+written upon detached process creation, and listening process discovery
+features full netstat multi-format parsing for wildcard listening sockets.</li>
 <li><strong>Guaranteed Cleanup Handlers</strong>: <code>atexit</code> child process sentinels prevent
 detached PyTorch training loops, Uvicorn workers or compilation scripts from
 persisting after cancellation or abnormal exit.</li>
