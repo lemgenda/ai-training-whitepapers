@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.87`
+**Version**: `v16.9.88`
 
 ---
 
@@ -19,9 +19,9 @@
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.63, LemGendary
-  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.133,
-  LemGendary AI Studio GUI v2.10.42.
+* **Current baselines** - LemGendary Environment Manager v16.9.67, LemGendary
+  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.138,
+  LemGendary AI Studio GUI v2.10.45.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -57,6 +57,16 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
+
+* `manifest/documents.json`, `canonical_capabilities.json`, `canonical_capabilities.yaml`:
+  Synchronized Model Training Suite baseline to `v16.9.138-STABLE` and AI Studio
+  GUI baseline to `v2.10.45` with audit timestamp `2026-11-10`.
+* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and `papers/training-pathology.html`:
+  Documented Pathology 36 (Static OS Worker Throttling & WebDataset Starvation)
+  covering dynamic worker sizing, memory headroom equations, and fork-safe tar
+  handle isolation.
 
 ### v16.9.87 - Sidecar Process Lifecycle Hardening & Multitask Loss Alignment
 

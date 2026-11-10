@@ -26,9 +26,9 @@
 <div class="meta">
 <span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
 <span><strong>Author</strong>: Lem Treursic</span>
-<span><strong>Version</strong>: <code>v16.9.137-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Paper Revision</strong>: 1.7.0 - Multitask Restoration Target Normalization Sync (2026-11-09)</span>
-<span><strong>Last audited</strong>: 2026-11-09</span>
+<span><strong>Version</strong>: <code>v16.9.138-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Paper Revision</strong>: 1.8.0 - Dynamic Resource Worker Allocation &amp; WebDataset Concurrency (2026-11-10)</span>
+<span><strong>Last audited</strong>: 2026-11-10</span>
 <span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
 </div>
 </header>
@@ -931,6 +931,19 @@ accumulation steps for edge training.</li>
 <li>Define a centralized, authoritative registry of task head names (<code>MULTITASK_HEAD_NAMES</code>) and a mapping from name to integer class index (<code>MULTITASK_HEAD_TO_INDEX</code>).</li>
 <li>Implement an idempotent resolution function (<code>_resolve_task_index_tensor</code>) inside <code>CombinedLoss</code> that normalizes scalar/1D/2D tensors, collated string tuples, and single string labels into strict <code>torch.long</code> class index tensors moved to the active device.</li>
 <li>Ensure that <code>dataset_containers.py</code> dynamically resolves the sub-task head for <code>professional_multitask_restoration</code> items from filename prefixes or container sample IDs (via <code>multitask_head(name)</code>) rather than falling back to a static generic label.</li>
+</ol>
+</li>
+</ul>
+
+<h3 id="static-os-worker-throttling--webdataset-starvation-pathology-36">Static OS Worker Throttling &amp; WebDataset Starvation (Pathology 36)</h3>
+<ul>
+<li><strong>The Issue</strong>: On multi-core workstations, static platform rules historically clamped DataLoader training workers on Windows to 2 and validation workers to 0, while disabling persistent workers across epochs. In high-resolution paired image restoration datasets, each sample requires extracting and decompressing multiple image files from tar archives in Python user space. A constrained worker configuration starves the accelerator, inflating iteration times to 2.3s–2.7s per batch and extending single epochs to nearly 3 hours.</li>
+<li><strong>Identification</strong>: Progress telemetry outputs 2.3 s/it to 2.7 s/it with single-epoch ETAs &gt; 2h40m; GPU compute sits at 10–25% with execution stalling while waiting for batches; CPU exhibits high single-core decompression overhead.</li>
+<li><strong>Remedy</strong>: <strong>Dynamic Resource-Aware Worker Allocation &amp; Fork-Safe WebDataset Handle Recreation</strong>.
+<ol>
+<li>Calculate training DataLoader workers dynamically using available system headroom: \(\Omega_{\text{workers}} = \min(N_{\text{cpu}} - 1, \lfloor \text{RAM}_{\text{avail}} / 1.5\text{GB} \rfloor)\) with 0 workers preserved for memory-mapped sequence arrays to honor Pathology 24.</li>
+<li>Dynamically activate <code>persistent_workers = True</code> when available memory \(\ge 16\text{GB}\).</li>
+<li>Ensure <code>WebDatasetReader</code> detects worker process boundaries (<code>os.getpid()</code>) and establishes isolated <code>tarfile</code> handles per worker.</li>
 </ol>
 </li>
 </ul>

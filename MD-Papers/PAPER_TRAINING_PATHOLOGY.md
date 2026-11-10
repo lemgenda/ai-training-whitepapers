@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.137-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.7.0 - Multitask Restoration Target
-Normalization Sync (2026-11-09) · **Last audited**: 2026-11-09
+**Author**: Lem Treursic · **Version**: `v16.9.138-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.8.0 - Dynamic Resource Worker
+Allocation & WebDataset Concurrency (2026-11-10) · **Last audited**: 2026-11-10
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
@@ -69,6 +69,8 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
   - [Multitask Target Collation Type Mismatch & Loss Crash (Pathology
     35)](#multitask-target-collation-type-mismatch--loss-crash-pathology-35)
+  - [Static OS Worker Throttling & WebDataset Starvation (Pathology
+    36)](#static-os-worker-throttling--webdataset-starvation-pathology-36)
     25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
   - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
     26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
@@ -365,6 +367,24 @@ LemGendary ecosystem.
   - *Remediation Strategy*: Remove the tool, mark the rows as unverified and
     re-evaluate from the checkpoints (FID with `feature=2048`, chunks of at most
     two; `python -m training.fid_reeval`).
+
+- **Static OS Worker Throttling & WebDataset Tar Decompression Starvation**
+  - *When & Why it Happens*: DataLoader workers clamped to 0 or 2 on Windows
+    combined with synchronous single-threaded tar extraction for paired
+    multi-image datasets (`professional_multitask_restoration`) causes CPU
+    starvation. Iteration latency explodes to 2.3s–2.7s/it, stretching epochs
+    to nearly 3 hours.
+  - *Recognition Metrics*: Training progress prints `2.3 s/it` to `2.7 s/it`
+    with `ETA > 2h40m`, GPU core compute sits low or fluctuating while CPU
+    worker threads saturate sequentially extracting and decompressing
+    WebDataset tar shards.
+  - *Remediation Strategy*: **Dynamic Resource-Aware Worker Allocation &
+    Process-Isolated WebDataset Streaming**. Dynamically calculate workers
+    based on available RAM and CPU logical threads:
+    $$\Omega_{\text{workers}} = \min\left(N_{\text{cpu}}-1,
+    \lfloor \text{RAM}_{\text{avail}} / 1.5\text{GB} \rfloor\right)$$
+    Activate `persistent_workers` when available RAM $\ge 16\text{GB}$, and
+    isolate tarfile handle descriptors across spawned processes.
 
 ---
 
@@ -901,6 +921,42 @@ $$
   3. Ensure that `dataset_containers.py` dynamically resolves the sub-task head
      for `professional_multitask_restoration` items from filename prefixes or
      container sample IDs rather than falling back to a static generic label.
+
+### Static OS Worker Throttling & WebDataset Starvation (Pathology 36)
+
+- **The Issue**: On multi-core workstations (e.g. 12+ threads, 32GB RAM),
+  static platform rules historically clamped `DataLoader` training workers
+  on Windows (`win32`) to `2` and validation workers to `0`, while disabling
+  `persistent_workers` across epoch transitions. In high-resolution paired
+  image restoration datasets (such as `LemGendizedMultitaskRestorationPro`),
+  each sample requires extracting and decompressing multiple image files
+  from `.tar` archives in Python user space. A 2-worker or 0-worker
+  configuration starves the accelerator, inflating iteration times to
+  $2.3\text{s} - 2.7\text{s}$ per batch and prolonging single epochs to
+  upwards of 3 hours:
+  $$4,358 \times 2.5\text{s} \approx 10,895\text{s} \approx 3\text{h}$$
+- **Identification**: Progress telemetry outputs `2.3 s/it` to `2.7 s/it`
+  with single-epoch ETAs $> 2\text{h}40\text{m}$; Task Manager displays
+  10-25% GPU compute utilization with the GPU stalling while waiting for
+  batches over the PCIe bus; CPU exhibits high single-core decompression
+  overhead.
+- **Remedy**: **Dynamic Resource-Aware Worker Allocation & Fork-Safe
+  WebDataset Handle Recreation**.
+  1. Calculate training DataLoader workers dynamically using available system
+     headroom:
+     $$\Omega_{\text{core}} = \max\left(1, N_{\text{cpu}} - 1\right)$$
+     $$\Omega_{\text{ram}} = \left\lfloor
+     \frac{\text{RAM}_{\text{avail\_gb}}}{1.5\text{ GB}} \right\rfloor$$
+     $$\text{num\_workers} = \min\left(\Omega_{\text{core}},
+     \Omega_{\text{ram}}, \Omega_{\text{cap}}\right)$$
+     with $\Omega_{\text{cap}} = 0$ strictly maintained for continuous
+     memory-mapped financial time-series to honor Pathology 24.
+  2. Dynamically enable `persistent_workers = True` when available system
+     memory $\ge 16\text{ GB}$, avoiding costly worker process re-initialization
+     and teardown overhead across epochs.
+  3. Ensure `WebDatasetReader` detects worker process boundaries
+     (`os.getpid()`) and establishes isolated `tarfile` file handle stacks
+     per worker to guarantee thread-safe asynchronous stream reading.
 
 ---
 
