@@ -199,6 +199,30 @@ training suite deploys a multi-tier memory containment profile:
    tokens with 16 gradient accumulation steps, eliminating $O(N^2)$ memory spikes
    and preserving stable throughput on edge accelerators.
 
+### 6.7 Tri-Format Export & Protobuf 2.00 GB Weight Externalization
+
+In accordance with the LemGendary universal multi-variation export standard,
+`AIHelperLemGend` is exported into three isolated runtime variations:
+
+* **PyTorch Standalone (`pytorch/AIHelperLemGend.pt`)**: 1.57 GB merged FP16
+  torchscript executable containing base model and LoRA adapter weights.
+* **High-Precision FP32 ONNX (`onnx_fp32/AIHelperLemGend_FP32.onnx`)**: 4.26 MB
+  ONNX computation graph paired with external 5.75 GB `AIHelperLemGend_FP32.onnx.data`
+  binary weights sidecar.
+* **Production FP16 ONNX (`onnx_fp16/AIHelperLemGend.onnx`)**: 4.28 MB ONNX
+  computation graph paired with external 2.88 GB `AIHelperLemGend.onnx.data`
+  binary weights sidecar.
+
+> [!NOTE] **Protobuf 2.00 GB Serialization Rule**:
+> The underlying Google Protocol Buffers engine enforces a strict 2,147,483,648
+> byte (2.00 GB) limit on single serialized protobuf containers. Because the
+> 1.54B parameter FP16 weights total 2.88 GB (> 2.00 GB), the weights cannot be
+> embedded into a single `.onnx` file without triggering an
+> `EncodeError: Failed to serialize proto`.
+> Both FP32 and FP16 ONNX variations therefore utilize deterministic external
+> binary data sidecars (`.onnx.data`), fully verified and supported by
+> `StrictIsolationValidator` and the Kaggle Models Hub push pipeline.
+
 ---
 
 ## 7. Conclusion

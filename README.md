@@ -20,7 +20,7 @@
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
 * **Current baselines** - LemGendary Environment Manager v16.9.67, LemGendary
-  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.138,
+  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.139,
   LemGendary AI Studio GUI v2.10.45.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and

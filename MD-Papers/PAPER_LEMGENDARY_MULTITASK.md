@@ -135,13 +135,19 @@ memory footprint.
 
 ## 6. Deployment Strategy & Production Acceleration
 
-* **Production FP16 Engine (`multitask.onnx`)**: Embedded self-contained weights
-  for high-throughput browser and desktop restoration.
-* **High-Precision FP32 Export (`multitask_FP32.onnx` + `.onnx.data`)**:
-  External binary sidecar for archival lab scanning pipelines.
+* **Production FP16 Engine (`ProfessionalMultiRestorer.onnx`)**:
+  Embedded self-contained weights (1.62 MB) for high-throughput edge and desktop
+  restoration without external data files.
+* **High-Precision FP32 Export (`ProfessionalMultiRestorer_FP32.onnx` + `.onnx.data`)**:
+  Separated 2.89 MB binary sidecar for high-precision validation and lab scanning.
+* **Symbolic Dynamic Resolution Support**: Replaced `adaptive_avg_pool2d` with bilinear
+  `F.interpolate` and global average pooling with `x.mean(dim=(-2, -1))` to enable
+  unconstrained resolution inference on any input aspect ratio.
 * **Lifecycle Governance**: 15-minute intra-epoch checkpointing
   (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target
-  archiving (`vault_psnr.pth`).
+  archiving (`vault_psnr.pth`). Multi-head validation telemetry cleanly unwraps
+  the prediction tuple `(restored_image, task_logits)` to compute authoritative
+  PSNR, SSIM, LPIPS, and FID metrics.
 
 ---
 
@@ -177,6 +183,7 @@ footprint.
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMultitaskRestorationPro`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md)
+  (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

@@ -148,13 +148,19 @@ preserves deterministic memory allocation on edge runtimes.</li>
 <section id="sec-6-deployment-strategy--production-acceleration">
 <h2>6. Deployment Strategy &amp; Production Acceleration</h2>
 <ul>
-<li><strong>Production FP16 Engine (<code>multitask.onnx</code>)</strong>: Embedded self-contained weights
-for high-throughput browser and desktop restoration.</li>
-<li><strong>High-Precision FP32 Export (<code>multitask_FP32.onnx</code> + <code>.onnx.data</code>)</strong>:
-External binary sidecar for archival lab scanning pipelines.</li>
+<li><strong>Production FP16 Engine (<code>ProfessionalMultiRestorer.onnx</code>)</strong>:
+Embedded self-contained weights (1.62 MB) for high-throughput edge and desktop
+restoration without external data files.</li>
+<li><strong>High-Precision FP32 Export (<code>ProfessionalMultiRestorer_FP32.onnx</code> + <code>.onnx.data</code>)</strong>:
+Separated 2.89 MB binary sidecar for high-precision validation and lab scanning.</li>
+<li><strong>Symbolic Dynamic Resolution Support</strong>: Replaced <code>adaptive_avg_pool2d</code> with bilinear
+<code>F.interpolate</code> and global average pooling with <code>x.mean(dim=(-2, -1))</code> to enable
+unconstrained resolution inference on any input aspect ratio.</li>
 <li><strong>Lifecycle Governance</strong>: 15-minute intra-epoch checkpointing
 (<code>progress.pth</code>), end-of-epoch persistence (<code>latest.pth</code>), and target
-archiving (<code>vault_psnr.pth</code>).</li>
+archiving (<code>vault_psnr.pth</code>). Multi-head validation telemetry cleanly unwraps
+the prediction tuple <code>(restored_image, task_logits)</code> to compute authoritative
+PSNR, SSIM, LPIPS, and FID metrics.</li>
 </ul>
 </section>
 

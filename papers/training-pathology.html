@@ -947,6 +947,32 @@ accumulation steps for edge training.</li>
 </ol>
 </li>
 </ul>
+
+<h3 id="dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-37">Dynamic Spatial Pooling &amp; Symbolic Axis Export Failure (Pathology 37)</h3>
+<ul>
+<li><strong>The Issue</strong>: Vision models with dynamic spatial resolutions (<code>H=*</code>, <code>W=*</code>) exported to ONNX via TorchScript frequently collapse on adaptive pooling operators (<code>F.adaptive_avg_pool2d(x, (32, 32))</code> or <code>nn.AdaptiveAvgPool2d(1)</code>). Because TorchScript requires concrete tensor dimensions to calculate output stride and sliding-window kernel sizes, dynamic inputs trigger: <code>Unsupported: ONNX export of operator adaptive_avg_pool2d, input size not accessible</code>.</li>
+<li><strong>Identification</strong>: Training succeeds through validation, but automated ONNX export halts with <code>torch.onnx.errors.UnsupportedOperatorError</code> during dynamic batch/resolution tracing.</li>
+<li><strong>Remedy</strong>: <strong>Resolution-Invariant Spatial Operations</strong>.
+<ol>
+<li>Replace spatial feature maps adaptive pooling with bilinear interpolation: <code>F.interpolate(x, size=(32, 32), mode="bilinear", align_corners=False)</code>, generating clean, symbolic ONNX <code>Resize</code> operators compatible with any input height and width.</li>
+<li>Replace spatial classifier pooling with tensor reduction: <code>x.mean(dim=(-2, -1))</code> to compile into standard ONNX <code>ReduceMean</code> operators.</li>
+</ol>
+</li>
+</ul>
+
+<h3 id="multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38">Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology 38)</h3>
+<ul>
+<li><strong>The Issue</strong>: Universal multitask restoration architectures return multi-head predictions as tuples (e.g. <code>(restored_image, task_logits)</code>). When validation metric engines inspect predictions without tuple-unwrapping, <code>_image_pair</code> yields <code>None</code>, recording <code>PSNR</code>, <code>SSIM</code>, <code>LPIPS</code>, and <code>FID</code> as <code>0.0000</code> in <code>metrics.csv</code>.</li>
+<li><strong>Identification</strong>: Epoch logs show zero for all image reconstruction metrics despite valid validation losses and active visual improvements.</li>
+<li><strong>Remedy</strong>: <strong>Tuple/Sequence Prediction Unwrapping</strong>. Ensure validation engines unwrap tuple and list prediction payloads (<code>preds[0]</code>) before computing perceptual metrics, preserving logits for task classification metrics.</li>
+</ul>
+
+<h3 id="protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39">Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology 39)</h3>
+<ul>
+<li><strong>The Issue</strong>: Google Protocol Buffers strictly enforces a 2,147,483,648 byte (2.00 GB) limit on single serialized protobuf messages. When exporting large models (such as 1.5B+ parameter LLMs like <code>AIHelperLemGend</code> whose FP16 weights total 2.88 GB) without external data separation, the export fails with: <code>google.protobuf.message.EncodeError: Failed to serialize proto</code>.</li>
+<li><strong>Identification</strong>: Single-file ONNX export fails on models with parameters \(\ge 1.0\text{B}\) in FP16.</li>
+<li><strong>Remedy</strong>: <strong>Deterministic Weight Externalization</strong>. Configure ONNX export with <code>save_as_external_data=True</code> for models whose tensor byte footprint exceeds 2.00 GB, producing a lightweight <code>.onnx</code> graph paired with a <code>.onnx.data</code> external binary sidecar. Models with total footprint \(&lt; 2.00\text{ GB}\) (such as vision models like <code>ProfessionalMultiRestorer</code> at 1.62 MB) must embed weights directly within the <code>.onnx</code> container.</li>
+</ul>
 </section>
 
 <section id="sec-5-high-fidelity-strategy--historical-evolution-taxonomy">

@@ -202,6 +202,31 @@ across CUDA unified memory when VRAM boundaries approach saturation.</li>
 tokens with 16 gradient accumulation steps, eliminating <em>O</em>(<em>N</em><sup>2</sup>) memory spikes
 and preserving stable throughput on edge accelerators.</li>
 </ol>
+
+<h3>6.7 Tri-Format Export &amp; Protobuf 2.00 GB Weight Externalization</h3>
+<p>In accordance with the LemGendary universal multi-variation export standard,
+<code>AIHelperLemGend</code> is exported into three isolated runtime variations:</p>
+<ul>
+<li><strong>PyTorch Standalone (<code>pytorch/AIHelperLemGend.pt</code>)</strong>: 1.57 GB merged FP16
+torchscript executable containing base model and LoRA adapter weights.</li>
+<li><strong>High-Precision FP32 ONNX (<code>onnx_fp32/AIHelperLemGend_FP32.onnx</code>)</strong>: 4.26 MB
+ONNX computation graph paired with external 5.75 GB <code>AIHelperLemGend_FP32.onnx.data</code>
+binary weights sidecar.</li>
+<li><strong>Production FP16 ONNX (<code>onnx_fp16/AIHelperLemGend.onnx</code>)</strong>: 4.28 MB ONNX
+computation graph paired with external 2.88 GB <code>AIHelperLemGend.onnx.data</code>
+binary weights sidecar.</li>
+</ul>
+<blockquote>
+<p><strong>Protobuf 2.00 GB Serialization Rule</strong>:
+The underlying Google Protocol Buffers engine enforces a strict 2,147,483,648
+byte (2.00 GB) limit on single serialized protobuf containers. Because the
+1.54B parameter FP16 weights total 2.88 GB (&gt; 2.00 GB), the weights cannot be
+embedded into a single <code>.onnx</code> file without triggering an
+<code>EncodeError: Failed to serialize proto</code>.
+Both FP32 and FP16 ONNX variations therefore utilize deterministic external
+binary data sidecars (<code>.onnx.data</code>), fully verified and supported by
+<code>StrictIsolationValidator</code> and the Kaggle Models Hub push pipeline.</p>
+</blockquote>
 </section>
 
 <section id="sec-7-conclusion">
