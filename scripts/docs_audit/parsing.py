@@ -2,8 +2,9 @@
 
 Only the facts the audit compares are extracted: headings (level and plain
 text), anchor targets, link targets, visible prose, the version line, the
-table of contents (Markdown) or sidebar (HTML ``nav.toc-sidebar``) entries and
-the level-2 sections of an HTML page.
+table of contents (Markdown) or sidebar (HTML ``nav.toc-sidebar``) entries, the
+level-2 sections of an HTML page and the bold labels that open top-level list
+items (the rows of a master table written as a list).
 """
 
 from __future__ import annotations
@@ -30,6 +31,8 @@ _SPACE = re.compile(r"\s+")
 # One ``[text](#fragment)`` entry; the text may hold one level of brackets.
 _TOC_ENTRY = re.compile(r"\[((?:[^\[\]]|\[[^\]]*\])+)\]\(#([^)\s]+)\)")
 TOC_SIDEBAR_CLASS = "toc-sidebar"
+# A top-level (unindented) list item that opens with bold text.
+_MD_LABEL_ITEM = re.compile(r"^(?:[-*+]|\d+[.)])\s+\*\*")
 
 
 @dataclass(frozen=True)
@@ -74,6 +77,7 @@ class ParsedDocument:
     elements: set[str] = field(default_factory=set)
     toc: list[TocEntry] = field(default_factory=list)
     sections: list[SectionHeading] = field(default_factory=list)
+    list_labels: list[str] = field(default_factory=list)
 
 
 def normalize_text(text: str) -> str:
@@ -169,7 +173,88 @@ def parse_markdown(source: str) -> ParsedDocument:
         for m in _TOC_ENTRY.finditer(" ".join(toc_lines))
     ]
     doc.words = _words(" ".join(prose))
+    doc.list_labels = markdown_list_labels(source)
     return doc
+
+
+def markdown_list_labels(source: str) -> list[str]:
+    """Bold labels opening top-level list items, in order.
+
+    A label may wrap over several lines; it ends at the closing ``**``.
+    Indented (nested) items, code and display math are not counted.
+    """
+    labels: list[str] = []
+    label: str | None = None
+    for _, line in markdown_content_lines(source.replace("\r\n", "\n")):
+        if label is not None:
+            label = f"{label} {line.strip()}"
+        else:
+            item = _MD_LABEL_ITEM.match(line)
+            if not item:
+                continue
+            label = line[item.end() :]
+        if "**" in label:
+            labels.append(normalize_text(strip_inline_markdown(label.split("**", 1)[0])))
+            label = None
+    return labels
+
+
+class _ListLabelCollector(HTMLParser):
+    """Collect the ``strong`` text that opens each top-level ``li``.
+
+    Lists inside navigation, code, block quotes and tables are skipped; a
+    top-level Markdown list item never renders there.
+    """
+
+    _SKIPPED = frozenset({"head", "script", "style", "nav", "pre", "blockquote", "table"})
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.labels: list[str] = []
+        self._list_depth = 0
+        self._skipped_depth = 0
+        self._awaiting_label = False
+        self._strong_depth = 0
+        self._label: list[str] | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag in self._SKIPPED:
+            self._skipped_depth += 1
+        if tag in ("ul", "ol"):
+            self._list_depth += 1
+        elif tag == "li":
+            self._awaiting_label = self._list_depth == 1 and not self._skipped_depth
+        elif tag == "strong" and self._label is not None:
+            self._strong_depth += 1
+        elif tag == "strong" and self._awaiting_label:
+            self._awaiting_label = False
+            self._label = []
+            self._strong_depth = 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self._SKIPPED and self._skipped_depth:
+            self._skipped_depth -= 1
+        if tag in ("ul", "ol") and self._list_depth:
+            self._list_depth -= 1
+        if tag == "strong" and self._label is not None:
+            self._strong_depth -= 1
+            if not self._strong_depth:
+                self.labels.append(normalize_text("".join(self._label)))
+                self._label = None
+
+    def handle_data(self, data: str) -> None:
+        if self._label is not None:
+            self._label.append(data)
+        elif self._awaiting_label and data.strip():
+            self._awaiting_label = False
+
+
+def html_list_labels(source: str) -> list[str]:
+    """Bold labels opening top-level list items of a page, in order."""
+    collector = _ListLabelCollector()
+    collector.feed(source)
+    collector.close()
+    return collector.labels
 
 
 class _HtmlCollector(HTMLParser):
@@ -298,6 +383,7 @@ def parse_html(source: str) -> ParsedDocument:
     version = _HTML_VERSION.search(source)
     if version:
         doc.version = version.group(1) or version.group(2)
+    doc.list_labels = html_list_labels(source)
     return doc
 
 

@@ -1511,28 +1511,56 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
 
 ### 4.7 Python In-Process Engine & Governance API
 
-The training suite provides foundational Python engine classes for standalone
-execution and notebook integration:
+The training suite provides foundational Python engine classes and functions
+for standalone execution and notebook integration. Run them from the
+`lemgendary-training-suite` project root with its `.venv` interpreter:
 
 ```python
-from training.core.orchestrator import TrainingOrchestrator
-from training.governance.sentinel import SentinelGuard
-from training.governance.governor import DynamicGovernor
-from training.models.registry import ModelRegistry
+from pathlib import Path
 
-# Discover registered architectures
-registry = ModelRegistry()
-model_meta = registry.get_model("mirnet_exposure")
-
-# Initialize safety sentinel guard
-sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
-
-# Create training orchestrator with dynamic loss governor
-orchestrator = TrainingOrchestrator(
-    model_name="mirnet_exposure",
-    sentinel=sentinel,
-    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+from converters.dispatch import detect_annotations
+from converters.matlab import parse_matlab
+from services.compiler_service import run_compile
+from services.migration_service import MigrationService
+from tools.stream_zip_to_container import (
+    ZipStreamOptions,
+    stream_zip_to_webdataset,
 )
+
+# 1. Direct streaming of multi-gigabyte zip archive to WebDataset shards
+options = ZipStreamOptions(
+    shard_size_samples=5000,
+    transcode_webp=True,
+    max_workers=12,
+    delete_zip=True,
+    legacy_dir=None,
+)
+success = stream_zip_to_webdataset(
+    Path("LemGendaryDatasets/lemgendizedmirnetexposure.zip"),
+    Path("LemGendaryDatasets/LemGendizedMirNetExposure"),
+    options,
+)
+
+# 2. Retroactive directory-to-container migration
+exit_code = MigrationService.migrate_containers(
+    Path("LemGendaryDatasets/LemGendizedFilmRestorer"),
+    "webdataset",
+    accept_space_loss=True,
+    purge_source=True,
+)
+
+# 3. Regular manifold compilation pipeline (CLI options as keywords)
+exit_code = run_compile(
+    model="mirnet_exposure",
+    preset="quality-vision",
+    also_format="webdataset",
+    workers=8,
+)
+
+# 4. Ingest and parse custom annotation formats (including MATLAB)
+fmt, ann_path = detect_annotations("raw-sets/custom_dataset")
+if fmt == "matlab" and ann_path:
+    mat_data, primary_key = parse_matlab(ann_path)
 ```
 
 ---
@@ -1904,7 +1932,8 @@ The dataset compilation engine supports three canonical processing pathways:
 ### 5.8 Python In-Process Engine & Streaming Pipeline APIs
 
 The dataset compiler exposes programmatic Python service classes and streaming
-utilities for automated workflows and sidecar runners:
+utilities for automated workflows and sidecar runners. Run them from the
+`lemgendary-datasets` project root with its `.venv` interpreter:
 
 ```python
 from pathlib import Path

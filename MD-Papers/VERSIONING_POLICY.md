@@ -86,10 +86,10 @@ and governed as follows:
      release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen
      OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.96-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.97-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals,
      and foundational whitepapers.
-   - Reflects the active documentation release (`v16.9.96-STABLE`, reviewed
+   - Reflects the active documentation release (`v16.9.97-STABLE`, reviewed
      2026-11-12) while governing systems against the core runtime backend engine
      baseline (`v16.9.157-STABLE`) and desktop operator client (`v2.10.57`).
 4. **Specialized Diagnostic & Clinical Specifications (`v1.x.y` / `v2.x.y`)**:
@@ -123,7 +123,7 @@ as follows:
   `src-tauri/tauri.conf.json`; Primary Interface: Tauri v2 Desktop App / Ports
   8000/8100/8200
 - **Documentation Hub**: Repository / Component: `lemgendary-docs`; Runtime
-  Version: `v16.9.96-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
+  Version: `v16.9.97-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
   Interface: Documentation Hub (`index.html`)
 - **Model Registry**: Repository / Component: `LemGendaryModels`; Runtime
   Version: `v16.9.16-STABLE`; Config Manifests: `LemGendaryModels/*/README.md`;
@@ -201,7 +201,8 @@ endpoints adhere to **Frozen Contract Governance**:
 
 ## 8. Ecosystem Enforcement & Audit Gating
 
-Version compliance is enforced at git commit time via the pre-commit compliance validator:
+Version compliance is enforced at git commit time via the pre-commit
+compliance validator:
 
 ```powershell
 lem-env validate --project lemgendary-training-suite,lemgendary-datasets,lemgendary-env-manager,lemgendary-docs

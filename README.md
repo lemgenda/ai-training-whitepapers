@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.96`
+**Version**: `v16.9.97`
 
 ---
 
@@ -60,6 +60,43 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.97 - Training Pathology Page Parity, Labelled List Item Check and Master API Python Examples
+
+* `papers/training-pathology.html`: the Section 2 master table lacked the
+  Pathology 36 row (Static OS Worker Throttling & WebDataset Tar
+  Decompression Starvation) that the Markdown has; the row is added. The
+  Pathology 35 and 36 sections of the page were older shortened wording;
+  they now follow the Markdown word for word (the three-case task index
+  resolution, the 12-thread example, the epoch-time estimate and the three
+  worker formulas).
+* `scripts/docs_audit/`: new `list-items` check. Every top-level list item
+  that opens with a bold label (the master-table rows written as lists)
+  must appear in the Markdown and the page, in the same order; a missing,
+  extra or reordered row is a finding. Labels wrapped over several lines
+  are joined; nested items and lists in the sidebar, code, block quotes
+  and tables are not counted. `tests/test_docs_audit.py` covers matching
+  rows, a missing row, reordered rows and quoted lists.
+* `MANUAL_API.md` and its page: the Section 4.7 example imported modules
+  and classes that do not exist (`training.core.orchestrator`,
+  `TrainingOrchestrator`, `training.governance.sentinel`, `DynamicGovernor`,
+  `training.models.registry`, `ModelRegistry`). It now uses
+  `get_model_registry()` from `training.registry.model_specs`,
+  `SentinelGuard` from `training.hardware.sentinel`,
+  `SmartTrainingGovernor` from `training.governance.governor`, and
+  `load_workspace_config`, `load_model_info` and `main` from
+  `training.core_loop`. The Section 5.8 example named `CompilerService`
+  and `ZipToContainerStreamer`, which do not exist, and wrong
+  `migrate_containers` arguments; it now uses `run_compile()`,
+  `ZipStreamOptions` with `stream_zip_to_webdataset()` and the static
+  `MigrationService.migrate_containers(manifold_path, to_formats, ...)`.
+  Both sections say to run from the project root with its `.venv`. Every
+  import was checked against the LemGendary Model Training Suite and the
+  LemGendary Dataset Compiler Suite sources.
+* **Version** - hub version v16.9.97 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
+  `VERSIONING_POLICY.md` Section 8 wraps its 90-column line at 80 columns
+  (markdownlint MD013).
 
 ### v16.9.96 - LemGendary Model Training Suite v16.9.157 and Environment Manager v16.9.80 Sync (Audit Phase 5b)
 

@@ -222,6 +222,33 @@ def check_text_similarity(ctx: AuditContext) -> Iterator[Finding]:
             )
 
 
+def check_list_items(ctx: AuditContext) -> Iterator[Finding]:
+    """Top-level list items with a bold label match between Markdown and HTML.
+
+    These are the rows of the master tables written as lists; a row present
+    in one file and missing in the other is a finding.
+    """
+    for doc_id, md_path, html_path in _existing_pairs(ctx):
+        md = ctx.parsed(md_path).list_labels
+        page = ctx.parsed(html_path).list_labels
+        if md == page:
+            continue
+        missing = [label for label in md if label not in page]
+        extra = [label for label in page if label not in md]
+        detail = []
+        if missing:
+            detail.append("missing from HTML: " + "; ".join(missing))
+        if extra:
+            detail.append("missing from MD: " + "; ".join(extra))
+        if not detail:
+            detail.append("same labels in a different order")
+        yield Finding(
+            "list-items",
+            doc_id,
+            f"MD {len(md)} vs HTML {len(page)} labelled list items; " + "; ".join(detail),
+        )
+
+
 def _duplicates(entries: list[TocEntry]) -> list[str]:
     targets = [entry.target for entry in entries]
     return sorted({target for target in targets if targets.count(target) > 1})
@@ -500,6 +527,11 @@ CHECKS: tuple[Check, ...] = (
         "text-similarity",
         f"MD and HTML prose similarity >= {SIMILARITY_THRESHOLD}",
         check_text_similarity,
+    ),
+    Check(
+        "list-items",
+        "MD and HTML top-level labelled list items (master-table rows) match",
+        check_list_items,
     ),
     Check(
         "toc-sidebar",

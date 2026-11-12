@@ -423,6 +423,63 @@ class TestTocSidebarAudit(SyntheticAuditCase):
         self.assert_finding(self.audit(), "alert-markers", "papers/alpha.html")
 
 
+class TestListItemAudit(SyntheticAuditCase):
+    """Labelled top-level list items (master-table rows) in Markdown and HTML."""
+
+    ROWS_MD = (
+        "- **Vanishing Gradients**\n"
+        "  - *Remediation*: residual links.\n"
+        "- **Static Worker Throttling &\n"
+        "  Tar Starvation**\n"
+        "  - *Remediation*: a bounded pool.\n"
+    )
+    ROWS_HTML = (
+        "<ul>\n<li><strong>Vanishing Gradients</strong>\n"
+        "<ul><li><em>Remediation</em>: residual links.</li></ul></li>\n"
+        "<li><strong>Static Worker Throttling &amp;\nTar Starvation</strong>\n"
+        "<ul><li><em>Remediation</em>: a bounded pool.</li></ul></li>\n</ul>"
+    )
+
+    def add_rows(self, markdown: str, page: str) -> None:
+        """Append master-table rows to the Method section of alpha."""
+        self.repo.replace("MD-Papers/ALPHA.md", "Suite.\n", f"Suite.\n\n{markdown}")
+        self.repo.replace("papers/alpha.html", "Suite.</p>", f"Suite.</p>\n{page}")
+
+    def test_matching_rows_pass(self):
+        """The same rows, one label wrapped over two lines, pass."""
+        self.add_rows(self.ROWS_MD, self.ROWS_HTML)
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+    def test_row_missing_from_html_detected(self):
+        """A row present in Markdown and missing from the page is a finding."""
+        last_row = self.ROWS_HTML.index("<li><strong>Static")
+        self.add_rows(self.ROWS_MD, self.ROWS_HTML[:last_row] + "</ul>")
+        result = self.audit()
+        self.assert_finding(result, "list-items", "alpha")
+        report = docs_audit.render(result)
+        self.assertIn("MD 2 vs HTML 1 labelled list items", report)
+        self.assertIn("missing from HTML: Static Worker Throttling & Tar Starvation", report)
+
+    def test_row_order_drift_detected(self):
+        """The same rows in another order are a finding."""
+        first, second = self.ROWS_MD.split("- **Static")
+        self.add_rows("- **Static" + second + first, self.ROWS_HTML)
+        result = self.audit()
+        self.assert_finding(result, "list-items", "alpha")
+        self.assertIn("same labels in a different order", docs_audit.render(result))
+
+    def test_nested_and_quoted_items_are_not_rows(self):
+        """Nested items and items in a block quote or the sidebar are not counted."""
+        self.repo.replace(
+            "papers/alpha.html",
+            "Suite.</p>",
+            "Suite.</p>\n<blockquote><ul><li><strong>Quoted</strong></li></ul></blockquote>",
+        )
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+
 class TestRegistryAudit(SyntheticAuditCase):
     """Capability registries against the fixture workspace, workspace lookup and CLI."""
 
