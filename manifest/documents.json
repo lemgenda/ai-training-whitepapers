@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.91-STABLE",
+  "document_baseline": "v16.9.92-STABLE",
   "last_audited": "2026-11-12",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -42,7 +42,7 @@
       "html_path": "papers/api-manual.html",
       "md_path": "MD-Papers/MANUAL_API.md",
       "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -62,7 +62,7 @@
       "html_path": "papers/cli-manual.html",
       "md_path": "MD-Papers/MANUAL_CLI.md",
       "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-10-28",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -132,7 +132,7 @@
       "html_path": "papers/ecosystem-architecture.html",
       "md_path": "MD-Papers/ECOSYSTEM_ARCHITECTURE.md",
       "baseline_version": "v16.9.65-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -141,8 +141,8 @@
       "category": "Category 01.1 ENV",
       "html_path": "papers/env_manager.html",
       "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
-      "baseline_version": "v16.9.67-STABLE",
-      "last_audited": "2026-11-09",
+      "baseline_version": "v16.9.79-STABLE",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -262,7 +262,7 @@
       "html_path": "papers/glossary.html",
       "md_path": "MD-Papers/GLOSSARY.md",
       "baseline_version": "v16.9.68-STABLE",
-      "last_audited": "2026-11-03",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {

@@ -251,8 +251,9 @@ target batch without downgrading or removing anything, the batch is split
 into per-package checks so a single bad candidate does not poison the whole
 set.</li>
 <li><strong>CUDA-aware torch handling</strong>: On CUDA hosts, <code>torch</code>, <code>torchvision</code>, and
-<code>torchaudio</code> are resolved against the PyTorch CUDA index
-(<code>download.pytorch.org/whl/cu121</code>). Only packages already installed in the
+<code>torchaudio</code> are resolved against the PyTorch CUDA index the probe picks
+from the driver version (for example <code>download.pytorch.org/whl/cu126</code>).
+Only packages already installed in the
 project are considered; packages already at the newest CUDA build produce a
 <code>VERIFIED</code> event instead of a spurious <code>UPGRADED</code> event.</li>
 <li><strong>Snapshot + rollback</strong>: Each batch is snapshotted via <code>pip freeze</code>, applied,

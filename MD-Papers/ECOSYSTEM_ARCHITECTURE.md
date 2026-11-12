@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.60`, Dataset Compiler Suite `v16.9.71`, Model Training Suite
-`v16.9.128`, AI Studio GUI `v2.10.38` · **Last Reviewed / Verified**: 2026-11-04
+Manager `v16.9.79`, Dataset Compiler Suite `v16.9.84`, Model Training Suite
+`v16.9.128`, AI Studio GUI `v2.10.57` · **Last Reviewed / Verified**: 2026-11-12
 · **Status**: Canonical
 
 ---
@@ -123,7 +123,8 @@ value is written anywhere else.
   sidecars.
 - **Responsibilities**:
   - Real-time hardware discovery (`nvidia-smi`, `rocm-smi`, DirectX DXGI) and
-    driver-aware PyTorch index selection (`cu126`, `cu121` or `cu118`).
+    driver-aware PyTorch index selection (`cu134`, `cu126`, `cu121` or
+    `cu118`; ROCm, Apple MPS and CPU hosts get their own index).
   - Virtual environment provisioning (non-destructive by default; `clean` is
     opt-in), one-way manifest sync with a downgrade guard, and version drift
     analytics.
@@ -198,7 +199,8 @@ value is written anywhere else.
    ladders under the pair-rule ratchet (resolution never decreases; the data
    fraction only rises within one resolution step and may reset when resolution
    steps up), bounded epoch budget, nuclear-hardened checkpoints.
-   `torch==2.15.0` from the `cu126` wheel index, `transformers==5.22.1`.
+   `torch==2.15.0` from the PyTorch wheel index the hardware probe picks,
+   `transformers==5.22.1`.
 5. **Documentation**: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
    generated on the approved template, Markdown and HTML kept in sync.
 

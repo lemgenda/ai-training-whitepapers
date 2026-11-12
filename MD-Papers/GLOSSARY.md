@@ -5,7 +5,7 @@
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
 **Version**: `v16.9.68-STABLE` (LemGendary AI Documentation Hub) · **Last
-audited**: 2026-11-03
+audited**: 2026-11-12
 
 ---
 
@@ -155,9 +155,9 @@ measured in hours. The LemGendary Model Training Suite discovers and decodes
 
 A runtime algorithm implemented in
 `env_manager.system_probe.select_cuda_torch_index()` that reads the NVIDIA
-driver version and returns the newest compatible PyTorch wheel index (`cu126`,
-then `cu121`, then `cu118`). It eliminates hard-coded CUDA index pins and
-ensures the correct build is installed regardless of driver version.
+driver version and returns the newest compatible PyTorch wheel index (`cu134`,
+then `cu126`, then `cu121`, then `cu118`). It eliminates hard-coded CUDA index
+pins and ensures the correct build is installed regardless of driver version.
 
 ### 3.9 Task Taxonomy
 

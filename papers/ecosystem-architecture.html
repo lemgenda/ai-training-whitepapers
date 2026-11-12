@@ -36,8 +36,8 @@
 <span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
-<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.60</code>, Dataset Compiler Suite <code>v16.9.71</code>, Model Training Suite <code>v16.9.128</code>, AI Studio GUI <code>v2.10.38</code></span>
-<span><strong>Last Reviewed / Verified</strong>: 2026-11-04</span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.79</code>, Dataset Compiler Suite <code>v16.9.84</code>, Model Training Suite <code>v16.9.128</code>, AI Studio GUI <code>v2.10.57</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-12</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
 </header>
@@ -155,7 +155,8 @@ sidecars.</li>
 <li><strong>Responsibilities</strong>:
 <ul>
 <li>Real-time hardware discovery (<code>nvidia-smi</code>, <code>rocm-smi</code>, DirectX DXGI) and
-driver-aware PyTorch index selection (<code>cu126</code>, <code>cu121</code> or <code>cu118</code>).</li>
+driver-aware PyTorch index selection (<code>cu134</code>, <code>cu126</code>, <code>cu121</code> or
+<code>cu118</code>; ROCm, Apple MPS and CPU hosts get their own index).</li>
 <li>Virtual environment provisioning (non-destructive by default; <code>clean</code> is
 opt-in), one-way manifest sync with a downgrade guard, and version drift
 analytics.</li>
@@ -271,7 +272,8 @@ requirements. The Environment Manager's <code>runtime_env.yaml</code> still regi
 ladders under the pair-rule ratchet (resolution never decreases; the data
 fraction only rises within one resolution step and may reset when resolution
 steps up), bounded epoch budget, nuclear-hardened checkpoints.
-<code>torch==2.15.0</code> from the <code>cu126</code> wheel index, <code>transformers==5.22.1</code>.</li>
+<code>torch==2.15.0</code> from the PyTorch wheel index the hardware probe picks,
+<code>transformers==5.22.1</code>.</li>
 <li><strong>Documentation</strong>: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
 generated on the approved template, Markdown and HTML kept in sync.</li>
 </ol>

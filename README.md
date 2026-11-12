@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.91`
+**Version**: `v16.9.92`
 
 ---
 
@@ -61,6 +61,32 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.92 - LemGendary Environment Manager v16.9.79 and PyTorch Index Claims (Audit DOCS-2)
+
+* `PAPER_ENV_MANAGER.md` and `papers/env_manager.html`: baseline
+  v16.9.79-STABLE (the page abstract still said v16.9.60). Documents the
+  v16.9.69 to v16.9.79 changes: the `cu134` index for drivers 610 and newer,
+  the PyPI index for Apple MPS and the probe order; no fixed
+  `--extra-index-url` in the central requirements; the 64-bit DirectML and
+  CSV `rocm-smi` probes; the `bitsandbytes` macOS marker; the write-back of
+  upgraded pins only after validation (`finalize_upgrade()`) and the npm
+  write-back; the manifest editor that opens the central manifests;
+  `pip3` detection; `sys.prefix` venv detection; the editable project
+  install; one upgrade engine with CUDA family vetting; the in-memory
+  compile check and the new and corrected validation gates.
+* PyTorch claims checked against `lemgendary-env-manager/requirements/`
+  (`torch==2.15.0`, `torchvision==0.29.2`, `torchaudio==2.11.1`,
+  `transformers==5.22.1`; the wheel index comes from the hardware probe):
+  `ECOSYSTEM_ARCHITECTURE.md` no longer names a fixed `cu126` index and lists
+  `cu134`; `GLOSSARY.md` lists `cu134`; the `MANUAL_API.md` manifest example
+  shows the pins instead of the removed `--extra-index-url` line;
+  `MANUAL_CLI.md` no longer names a fixed `cu121` index. The training suite
+  paper keeps its claims until that suite's documentation sync.
+* `ECOSYSTEM_ARCHITECTURE.md`: component versions Environment Manager
+  v16.9.79, Dataset Compiler Suite v16.9.84, AI Studio GUI v2.10.57.
+* `manifest/documents.json`: `env_manager` baseline v16.9.79-STABLE; audit
+  dates of the edited documents.
 
 ### v16.9.91 - Audit Checks for Sidebars, Alert Markers and Component Versions (Audit DOCS-4)
 

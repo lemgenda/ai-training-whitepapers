@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.67-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-09
+**Version**: `v16.9.79-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-12
 
 ---
 
@@ -41,7 +41,7 @@ audited**: 2026-11-09
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.67-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.79-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -107,20 +107,35 @@ DirectX/DirectML, CUDA, or ROCm) and cloud execution clusters (Kaggle Linux
 environments, headless HPC nodes) demands resilient registry binding.
 
 The system implements dynamic index routing based on probed hardware attributes.
-On CUDA hosts the index depends on the NVIDIA driver major version $d$
+The probe checks the backends in the order CUDA, ROCm, Apple MPS, DirectML and
+CPU. On CUDA hosts the index depends on the NVIDIA driver major version $d$
 (`select_cuda_torch_index()`); an unknown or unparseable driver version selects
 `cu126`:
 
 $$
-\text{IndexURL}(H) = \begin{cases} \text{.../whl/cu126}, & \text{if }
-H.\text{backend} = \text{CUDA} \land d \ge 560 \\ \text{.../whl/cu121}, &
-\text{if } H.\text{backend} = \text{CUDA} \land 535 \le d < 560 \\
-\text{.../whl/cu118}, & \text{if } H.\text{backend} = \text{CUDA} \land d < 535
-\\ \text{.../whl/rocm6.0}, & \text{if } H.\text{backend} = \text{ROCm} \\
-\text{.../whl/cpu}, & \text{otherwise (DirectML or CPU)} \end{cases}
+\text{IndexURL}(H) = \begin{cases} \text{.../whl/cu134}, & \text{if }
+H.\text{backend} = \text{CUDA} \land d \ge 610 \\ \text{.../whl/cu126}, &
+\text{if } H.\text{backend} = \text{CUDA} \land 560 \le d < 610 \\
+\text{.../whl/cu121}, & \text{if } H.\text{backend} = \text{CUDA} \land 535
+\le d < 560 \\ \text{.../whl/cu118}, & \text{if } H.\text{backend} =
+\text{CUDA} \land d < 535 \\ \text{.../whl/rocm6.0}, & \text{if }
+H.\text{backend} = \text{ROCm} \\ \text{PyPI}, & \text{if } H.\text{backend} =
+\text{MPS} \\ \text{.../whl/cpu}, & \text{otherwise (DirectML or CPU)}
+\end{cases}
 $$
 
-where `.../whl/` stands for `https://download.pytorch.org/whl/`.
+where `.../whl/` stands for `https://download.pytorch.org/whl/` and PyPI for
+`https://pypi.org/simple`.
+
+Since v16.9.70 the central requirements files carry no fixed `--extra-index-url`
+line: the installer passes the probed index, so CPU hosts and older drivers no
+longer receive `cu134` wheels. Since v16.9.71 macOS on arm64 reports one `mps`
+device (unified memory as VRAM), the DirectML probe reads the 64-bit adapter
+memory size from the registry (adapters above 4 GB no longer report 4095 MB) and
+skips basic, Hyper-V, remote and virtual display adapters, and `rocm-smi` output
+is read as CSV. The pinned versions (`torch==2.15.0`, `torchvision==0.29.2`,
+`torchaudio==2.11.1`) are the same on every backend; only the wheel build
+differs.
 
 ### 3.1 Sibling Surgery & Architectural Decoupling
 
@@ -161,6 +176,9 @@ This formalization guarantees that Windows-specific binary extensions (e.g.
 excluded in Linux cloud instances (`sys_platform == 'win32'`), eliminating
 silent import failures in Kaggle and Colab container runs.
 
+Since v16.9.70 `bitsandbytes` carries `; sys_platform != 'darwin'` in
+`requirements-training.txt`, so macOS installs skip it.
+
 ---
 
 ## 4. Multi-Modal & Format Resilience
@@ -196,6 +214,18 @@ is to raise the central pin and sync again. The `package.json` `version` is a
 release field, not dependency data (`NPM_RELEASE_KEYS`, since v16.9.60): the
 central npm manifests do not hold it, drift ignores it and sync keeps the
 sibling's own value.
+
+Upgrades flow back the other way only after validation. Since v16.9.72
+`finalize_upgrade()` validates the upgraded projects and, only when all pass,
+re-pins the central requirements from the venvs: only exact `==` pins are
+re-pinned, local build tags such as `+cu134` or `+cpu` are stripped, and extras,
+`>=` floors, ranges and markers are kept. Upgraded npm dependency sections flow
+from a project `package.json` back to its central manifest, which keeps no
+`version`. `lem-env update`, the GUI update job and pipeline step 6 follow this
+order. Since v16.9.79 the GUI manifest editor (`/api/manifests/registry`) opens
+the central manifests instead of the generated copies, and `POST
+/api/manifests/save` on a central manifest runs the sync to every sibling and
+returns its results as `sync`.
 
 The environment manager enforces strict schema parsing resilience:
 
@@ -247,7 +277,7 @@ Capabilities at `16.9.60`:
 | Destructive reinstall | Always | Only with `--clean` / `"clean": true` |
 
 (1) The PowerShell launcher and the git hook template are Windows-only.
-(2) `py_compile`, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
+(2) Python compile check, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
 forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
 2.2 AA and the `ecosystem_ssot` gate.
 
@@ -280,7 +310,9 @@ and Health Matrix. The list below describes what each step does.
    `pyproject.toml` declares `requires-python >=3.12`, the bootstrap
    (`MIN_PYTHON`) and the launcher ask for Python 3.12+, and a test keeps the
    values equal; the code uses Python 3.12 APIs (`Path.walk`,
-   `shutil.rmtree(onexc=...)`, `datetime.UTC`).
+   `shutil.rmtree(onexc=...)`, `datetime.UTC`). pip counts as installed when
+   `pip` or `pip3` is on PATH or `python -m pip --version` succeeds (since
+   v16.9.73).
 3. **Virtual Environments Provisioning ($v_3$)**: Identifies missing or invalid
    virtual environments across Python projects and creates isolated `.venv`
    trees. A default run keeps valid venvs and `node_modules` and stops no
@@ -288,13 +320,18 @@ and Health Matrix. The list below describes what each step does.
    `POST /api/pipeline/run`) deletes every `.venv` and `node_modules`, stops
    processes running from those venvs and reinstalls; the environment executing
    the pipeline is preserved. A failed `node_modules` purge is reported as a
-   step error.
+   step error. The running environment is recognized from `sys.prefix` (since
+   v16.9.69), which also holds on Linux and macOS, where the venv interpreter is
+   a symlink to the base Python.
 4. **Requirements Synchronization & Installation ($v_4$)**: Writes the central
    manifests to the siblings under the downgrade guard (Section 4) and installs
    wheel distributions under PEP 508 filters. Runs `npm install` for
    `lemgendary-ai-studio-gui` and `lemgendary-env-manager`. Applies OpenCV
    variant normalization after install to guarantee a single `cv2` provider per
-   project.
+   project. A project with `pyproject.toml` or `setup.py` is then installed in
+   editable mode (`pip install --no-deps --no-build-isolation -e`), so console
+   scripts such as `lem-env` exist in the venv; a failed editable install counts
+   as an install failure (since v16.9.73).
 5. **Dependency Audit & Safe Upgrades ($v_5$)**: Routes by discovery metadata:
    every Python project gets the pip path and every project with a
    `package.json` (`has_npm_manifest`) gets the npm path (`npm outdated`), so a
@@ -304,22 +341,35 @@ and Health Matrix. The list below describes what each step does.
    blocked candidates carry a reason describing the violated requirement.
    The apply phase installs exactly the vetted versions (`name==version`), and
    a failed install restores the `pip freeze` snapshot taken before it.
-   Torch-family packages on CUDA hosts are resolved against the PyTorch CUDA
-   index and filtered to the installed subset.
-6. **Codebase Verification ($v_6$)**: Executes `py_compile` bytecode
-   compilation and the registered validation gates
+   Since v16.9.72 step 5 uses the same planning and apply engine as `lem-env
+   update`. Torch-family packages on CUDA hosts are resolved against the PyTorch
+   CUDA index, filtered to the installed subset and vetted as one family:
+   reverse dependencies outside the family, then one dry-run against the CUDA
+   index.
+6. **Codebase Verification ($v_6$)**: Compiles every Python file in memory
+   (built-in `compile`, so no `__pycache__` is written) and runs the
+   registered validation gates
    (`env_manager/validation/registry.py`): yamllint, RFC 8259 JSON validation,
    markdownlint, ESLint, TypeScript check, W3C HTML validation, WCAG 2.2 AA
    accessibility audit, PowerShell analysis (`PSScriptAnalyzer`), Pylint,
    forbidden suppressions (Python directives and `warnings` filters, TS/JS
-   `@ts-*` and `eslint-disable` comments, Rust `allow` attributes), hardcoded
+   `@ts-*` and `eslint-disable` comments, Rust `allow` attributes, silent
+   `except` and empty `catch` blocks, PowerShell `SilentlyContinue`, rule
+   disables in linter configs), hardcoded
    absolute paths, ecosystem domain verifications (README changelog, docs hub,
    dataset manifests, training suite, models hub, git hooks) and
    `ecosystem_ssot` (Section 6.7). Gates fail closed: a missing or crashing
    tool is a `tool_error` finding, and the npx fallback never downloads
    packages. A new gate is one more `Gate` in the registry. The documentation
    check compares each Markdown and HTML pair by H2 count, table count and
-   length ratio; it is not a word-for-word comparison.
+   length ratio; it is not a word-for-word comparison. Changes in v16.9.74 to
+   v16.9.78: a project without its own Pylint config is linted with the
+   env-manager `.pylintrc`; ESLint warnings fail like errors and flat configs
+   get no `--ext`; `tsc` also checks `tsconfig.node.json`; html-validate and
+   pa11y run on every HTML page and name the file; the emoji scan covers every
+   text type and the `.githooks`, `.github` and `.agents` folders; the
+   documentation test suite runs as a subprocess with the docs `.venv`; and step
+   6 validates every validated project, not only those with a venv.
 7. **Health Matrix Generation ($v_7$)**: Compiles global telemetry into an
    aggregated health status matrix for desktop and CLI display, including
    manifest coverage, single-manifest package inventory, and npm workspace

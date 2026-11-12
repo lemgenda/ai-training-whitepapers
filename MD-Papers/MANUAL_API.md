@@ -293,8 +293,8 @@ Lists every centralized requirements manifest with its raw contents.
 ```json
 {
   "manifests": {
-    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
-    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-datasets.txt": "torch==2.15.0\ntorchvision==0.29.2",
+    "requirements-training.txt": "torch==2.15.0\ntorchvision==0.29.2\ntorchaudio==2.11.1",
     "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
   }
 }
