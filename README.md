@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.89`
+**Version**: `v16.9.90`
 
 ---
 
@@ -57,6 +57,23 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.90 - Training Pathology Table of Contents Repair (Audit DOCS-1)
+
+* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md`: removed the orphan fragment and
+  the duplicated Pathology 26 to 34 entries from the table of contents and
+  added the missing entries for Pathologies 37 to 39.
+* `papers/training-pathology.html`: the sidebar lists Pathologies 36 to 39,
+  which were missing.
+* Both files: Paper Revision 1.9.0 (2026-11-12). The Abstract counts 39
+  pathologies (it said 27) and cites the header release v16.9.138-STABLE
+  instead of revision 1.6.0 and v16.9.107-STABLE. The Section 5 note cites
+  v16.9.138-STABLE instead of v16.9.68-STABLE.
+* The raw `[!NOTE]` text in `papers/training-pathology.html` and
+  `papers/foundation-llm.html` is now a styled `Note:` blockquote, the
+  markup the other pages use. In both Markdown sources the `[!NOTE]` marker
+  stands on its own line, which GitHub needs to render the alert.
+* `manifest/documents.json`: `training-pathology` audited 2026-11-12.
 
 ### v16.9.89 - WCAG 2.2 AA Contrast Fixes (Audit WCAG)
 

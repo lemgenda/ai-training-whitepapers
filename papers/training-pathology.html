@@ -27,8 +27,8 @@
 <span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
 <span><strong>Author</strong>: Lem Treursic</span>
 <span><strong>Version</strong>: <code>v16.9.138-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Paper Revision</strong>: 1.8.0 - Dynamic Resource Worker Allocation &amp; WebDataset Concurrency (2026-11-10)</span>
-<span><strong>Last audited</strong>: 2026-11-10</span>
+<span><strong>Paper Revision</strong>: 1.9.0 - ONNX Export &amp; Multi-Head Validation Pathologies (2026-11-12)</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
 </div>
 </header>
@@ -95,6 +95,14 @@ Plateau)</a></li>
 34)</a></li>
 <li><a href="#multitask-target-collation-type-mismatch--loss-crash-pathology-35">Multitask Target Collation Type Mismatch &amp; Loss Crash (Pathology
 35)</a></li>
+<li><a href="#static-os-worker-throttling--webdataset-starvation-pathology-36">Static OS Worker Throttling &amp; WebDataset Starvation (Pathology
+36)</a></li>
+<li><a href="#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-37">Dynamic Spatial Pooling &amp; Symbolic Axis Export Failure (Pathology
+37)</a></li>
+<li><a href="#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38">Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology
+38)</a></li>
+<li><a href="#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39">Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology
+39)</a></li>
 </ul>
 </li>
 <li><a href="#sec-5-high-fidelity-strategy--historical-evolution-taxonomy">5. High-Fidelity Strategy &amp; Historical Evolution
@@ -164,12 +172,14 @@ learning. However, the pursuit of SOTA performance is frequently obstructed by
 complex training pathologies ranging from classical vanishing gradients to
 modern micro-batch pairwise ranking starvation and spatial average pooling
 feature dilution. This whitepaper establishes a comprehensive diagnostic and
-remediation framework—the <strong>&quot;Nuclear Stability&quot; protocol</strong>. By cataloging 27
+remediation framework—the <strong>&quot;Nuclear Stability&quot; protocol</strong>. By cataloging 39
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.6.0 aligns the guide with release
-v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+cloud GPU clusters. Revision 1.9.0 aligns the guide with release
+v16.9.138-STABLE of the LemGendary Model Training Suite and adds Pathologies 37
+to 39 (ONNX export of adaptive pooling, multi-head validation outputs and the
+2.00 GB protobuf limit). The governor obeys the
 Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
 decreases within one resolution step, and every backward step raises
 <code>RatchetViolation</code>), training ends on a bounded epoch budget, Stochastic Weight
@@ -977,13 +987,13 @@ accumulation steps for edge training.</li>
 
 <section id="sec-5-high-fidelity-strategy--historical-evolution-taxonomy">
 <h2>5. High-Fidelity Strategy &amp; Historical Evolution Taxonomy</h2>
-<blockquote>
-<p>[!NOTE] <strong>Historical Evolution &amp; Version Authority Note</strong>: The strategies
+<blockquote class="blockquote-styled">
+<p><strong>Note:</strong> <strong>Historical Evolution &amp; Version Authority Note</strong>: The strategies
 documented in this section reflect the chronological hardening of the
 LemGendary Model Training Suite across architectural milestones. Historical
 tags (<code>v16.2.8</code>, <code>v17.2</code>, <code>v18.0</code>, <code>v22.0</code>) represent historical development
 phases and research prototypes. In the authoritative active baseline
-(<strong>v16.9.68-STABLE</strong>), all of these individual mechanisms (high-fidelity
+(<strong>v16.9.138-STABLE</strong>), all of these individual mechanisms (high-fidelity
 resolution floors, zero-worker serial lockdown, sawtooth VRAM memory
 sentinels, and ladder-aware resolution jumps) have been fully consolidated
 into the unified <code>SmartTrainingGovernor</code> runtime engine.</p>

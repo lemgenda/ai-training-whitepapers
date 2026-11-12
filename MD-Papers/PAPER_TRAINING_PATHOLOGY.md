@@ -6,8 +6,8 @@
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
 **Author**: Lem Treursic · **Version**: `v16.9.138-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.8.0 - Dynamic Resource Worker
-Allocation & WebDataset Concurrency (2026-11-10) · **Last audited**: 2026-11-10
+Training Suite) · **Paper Revision**: 1.9.0 - ONNX Export & Multi-Head
+Validation Pathologies (2026-11-12) · **Last audited**: 2026-11-12
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
@@ -71,25 +71,12 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     35)](#multitask-target-collation-type-mismatch--loss-crash-pathology-35)
   - [Static OS Worker Throttling & WebDataset Starvation (Pathology
     36)](#static-os-worker-throttling--webdataset-starvation-pathology-36)
-    25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
-  - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
-    26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
-  - [Fabricated Metric History (FID Rescaling) (Pathology
-    27)](#fabricated-metric-history-fid-rescaling-pathology-27)
-  - [Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
-    28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
-  - [CPU-Bound Execution & Silent Accelerator Starvation (Pathology
-    29)](#cpu-bound-execution--silent-accelerator-starvation-pathology-29)
-  - [Vision-Curriculum Cross-Domain Contamination (Pathology
-    30)](#vision-curriculum-cross-domain-contamination-pathology-30)
-  - [Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
-    31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
-  - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
-    32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
-  - [Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
-    33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
-  - [PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology
-    34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
+  - [Dynamic Spatial Pooling & Symbolic Axis Export Failure (Pathology
+    37)](#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-37)
+  - [Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology
+    38)](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38)
+  - [Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology
+    39)](#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39)
 - [5. High-Fidelity Strategy & Historical Evolution
   Taxonomy](#5-high-fidelity-strategy--historical-evolution-taxonomy)
   - [The "Low-Resolution Blur" Pathology (Milestone
@@ -150,12 +137,14 @@ learning. However, the pursuit of SOTA performance is frequently obstructed by
 complex training pathologies ranging from classical vanishing gradients to
 modern micro-batch pairwise ranking starvation and spatial average pooling
 feature dilution. This whitepaper establishes a comprehensive diagnostic and
-remediation framework—the **"Nuclear Stability" protocol**. By cataloging 27
+remediation framework—the **"Nuclear Stability" protocol**. By cataloging 39
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.6.0 aligns the guide with release
-v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+cloud GPU clusters. Revision 1.9.0 aligns the guide with release
+v16.9.138-STABLE of the LemGendary Model Training Suite and adds Pathologies 37
+to 39 (ONNX export of adaptive pooling, multi-head validation outputs and the
+2.00 GB protobuf limit). The governor obeys the
 Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
 decreases within one resolution step, and every backward step raises
 `RatchetViolation`), training ends on a bounded epoch budget, Stochastic Weight
@@ -1011,12 +1000,13 @@ $$
 
 ## 5. High-Fidelity Strategy & Historical Evolution Taxonomy
 
-> [!NOTE] **Historical Evolution & Version Authority Note**: The strategies
+> [!NOTE]
+> **Historical Evolution & Version Authority Note**: The strategies
 > documented in this section reflect the chronological hardening of the
 > LemGendary Model Training Suite across architectural milestones. Historical
 > tags (`v16.2.8`, `v17.2`, `v18.0`, `v22.0`) represent historical development
 > phases and research prototypes. In the authoritative active baseline
-> (**v16.9.68-STABLE**), all of these individual mechanisms (high-fidelity
+> (**v16.9.138-STABLE**), all of these individual mechanisms (high-fidelity
 > resolution floors, zero-worker serial lockdown, sawtooth VRAM memory
 > sentinels, and ladder-aware resolution jumps) have been fully consolidated
 > into the unified `SmartTrainingGovernor` runtime engine.
