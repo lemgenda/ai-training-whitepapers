@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.97`
+**Version**: `v16.9.98`
 
 ---
 
@@ -60,6 +60,27 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.98 - Training Pathology Numbering
+
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.11.0. Only
+  Pathologies 24 to 39 carried a number; the guide describes 63 distinct
+  pathologies, and every one now has a number in the master table, its
+  section heading, the table of contents and the cross-references.
+  Pathologies 24 to 39 keep their numbers. The master-table rows are
+  Pathologies 1 to 19 in their order (with 24 to 27 and 36 as before), the
+  first four unnumbered Section 4 headings are 20 to 23, and the remaining
+  Section 4 and Section 5 headings are 40 to 61 in document order. Two
+  pathologies that only Sections 9 to 11 named get short sections:
+  Finished-Epoch Resume Loop (62) and Restoration Metric Weight Imbalance
+  (63). A master-table row and the section that details it share one
+  number (14 to 19, 24 to 27 and 36). The abstract states 63 (it said 39),
+  Section 2 explains the numbering and Section 8 names the numbers.
+* `LEMGENDARY_CURRENT_STATE.md` and `VERSIONING_POLICY.md` (and their
+  pages): pathology guide revision 1.11.0; the current state lists the 63
+  numbered pathologies.
+* **Version** - hub version v16.9.98 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
 
 ### v16.9.97 - Training Pathology Page Parity, Labelled List Item Check and Master API Python Examples
 
