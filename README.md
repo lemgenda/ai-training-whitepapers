@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.92`
+**Version**: `v16.9.93`
 
 ---
 
@@ -61,6 +61,21 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.93 - LemGendary Dataset Compiler Suite v16.9.84 (Audit DOCS-2)
+
+* `PAPER_DATASET_COMPILER.md` and `papers/dataset-compiler.html`: baseline
+  v16.9.84-STABLE (was v16.9.65; the audit named v16.9.75, but the suite
+  declares 16.9.84 in `core/cli_args.py`). The abstract summarizes
+  v16.9.66 to v16.9.84, and the new Section 4.11 "Sample Integrity, Shard
+  Verification & Manifold Repair" documents the v16.9.75 to v16.9.84
+  changes: no identity pairs, lossless masks and corrupt-image rejection,
+  contiguous sample groups, label geometry fixes, the audit gates and
+  `reject_log`, post-write shard verification with pair completeness, the
+  lossless MDS transcode, safe worker init and interrupt, full dedup on
+  warm-up and resume, download and Temp sweep safety, the `repair` command
+  and logged instead of swallowed errors.
+* `manifest/documents.json`: `dataset-compiler` baseline v16.9.84-STABLE.
 
 ### v16.9.92 - LemGendary Environment Manager v16.9.79 and PyTorch Index Claims (Audit DOCS-2)
 

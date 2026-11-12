@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.65-STABLE` (LemGendary Dataset Compiler Suite) · **Last
-audited**: 2026-11-04
+**Version**: `v16.9.84-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+audited**: 2026-11-12
 
 ---
 
@@ -66,6 +66,8 @@ audited**: 2026-11-04
   - [4.9 Physical Degradation Synthesis
     Engine](#49-physical-degradation-synthesis-engine)
   - [4.10 Generic LLM Dataset Compiler](#410-generic-llm-dataset-compiler)
+  - [4.11 Sample Integrity, Shard Verification & Manifold
+    Repair](#411-sample-integrity-shard-verification--manifold-repair)
 - [5. Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
   - [5.1 Technical Comparison Matrix](#51-technical-comparison-matrix)
   - [5.2 Competitor Deep-Dive: Pros, Cons &
@@ -91,7 +93,7 @@ audited**: 2026-11-04
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (release `v16.9.65-STABLE`) is the data
+The LemGendary Dataset Compiler Suite (release `v16.9.84-STABLE`) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -122,6 +124,14 @@ the arbitrary-command endpoint `POST /api/jobs/generic` is removed (37 operation
 The port, bind host, Kaggle owner and sibling folders come from
 `lemgendary-env-manager/ecosystem/ecosystem.json`, and task ids come from
 `task_taxonomy.json` (Section 3.7).
+
+The `v16.9.66` to `v16.9.74` releases move the toolchain to `torch==2.15.0` (the
+wheel index comes from the LemGendary Environment Manager hardware probe), make
+`.secrets.yaml` the authoritative credential source over stale environment
+tokens, and register the Kaggle reference of the AIHelper instruction manifold.
+The `v16.9.75` to `v16.9.84` releases reject incomplete or corrupt samples,
+verify every written shard, keep every metadata column in transcodes and add a
+manifold repair command (Section 4.11).
 
 - **Project Repository**:
   [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
@@ -1067,6 +1077,67 @@ for $n_c > 1$ and 0 otherwise.
 (severity, field, record id, issue) and exit 1 or return HTTP 400 when the
 corpus fails; unreadable or invalid JSONL is reported as such.
 
+### 4.11 Sample Integrity, Shard Verification & Manifold Repair
+
+The `v16.9.75` to `v16.9.84` releases close the data-integrity findings of the
+2026-11 audit. A sample is written whole and correct, or it is rejected and
+recorded.
+
+- **No identity pairs (v16.9.79)**: restoration, super-resolution and
+  segmentation samples without a real target are rejected before anything is
+  written; before, the degraded input (or the RGB image for segmentation) was
+  copied as its own target. Clean-only sources (ParseNet, CodeFormer) keep their
+  documented behaviour.
+- **Masks, labels and corrupt images (v16.9.76)**: `utils/image_payload.py`
+  turns raw bytes into shard payloads; zero-byte or undecodable images raise
+  `CorruptImageError` instead of being packed, and masks are stored as lossless
+  `.mask.webp` that keep their class indices. Loose and zip `masks/` and
+  `labels/` are packed with their image, and `utils/sample_group.py` writes one
+  sample (image, `.target`, `.mask`, `.txt` or `.json`) as one contiguous tar
+  member group.
+- **Label geometry (v16.9.79)**: safetensors full-frame boxes are pixel boxes
+  (they were normalized twice), Parquet pose rows use their bbox columns or the
+  box around the visible keypoints instead of `0 0 0 0`, and NPZ face keypoints
+  are normalized like every other pose source. `WebDatasetWriter` partitions
+  shards by split (`shards/<split>/`).
+- **Audit gates (v16.9.80)**: `core/sample_audit.py` runs the audit gates on the
+  compile path: file headers (magic bytes) before decoding, target size equal to
+  the input size, boxes in pixels and keypoints and polygons normalized. A
+  missing paired target is `ERR_TARGET_MISSING`, and every reject goes to the
+  registry's `reject_log` table.
+- **Shard verification (v16.9.80, v16.9.83)**: `utils/shard_audit.py` audits
+  every written shard by its headers: sample keys, zero-byte members, scattered
+  groups, unreadable tars and, in a paired set, samples without a `.target.*`
+  member. The converters and the MDS transcoder fail on any finding and keep the
+  source; `verify_archive` fails on zero-byte image or shard members.
+- **Lossless MDS transcode (v16.9.77)**: every non-image MDS column (class,
+  category, `nima_scores`, bbox, keypoints, source and others) is decoded by its
+  column encoding into the `<key>.json` sidecar, and the legacy `mds/` folder is
+  purged only when the written sample count equals the count in the MDS index.
+- **Workers, interrupt and dedup (v16.9.78)**: worker state is initialised once
+  per process under a lock; Ctrl+C cancels queued batches, commits the registry
+  and re-raises instead of calling `os._exit`; warm-up results pass the same
+  dedup and `max_gb` accounting as pool results; resumed runs seed exact and
+  perceptual hashes from the registry; perceptual dedup
+  (`enable_perceptual_dedup`) uses a bucketed `NearDupIndex`.
+- **Download safety (v16.9.82)**: a downloaded zip is streamed into new
+  WebDataset shards only when it is a legacy loose-image archive; a zip that
+  holds shards, Parquet, MDS or JSONL splits is extracted as is, and a target
+  that already has shards is never streamed into. The Temp sweep deletes only
+  `LemGendized*.zip`, and layout folders (`shards`, `data`, `images`, `targets`,
+  `labels`, `masks`, `mds`) are never unwrapped.
+- **Manifold repair (v16.9.81)**: `python cli.py repair manifold --manifold
+  PATH` (or `--model KEY`) and `python cli.py repair all [--root DIR]` print a
+  repair plan and change nothing. With `--apply` they drop samples with
+  zero-byte members, make scattered groups contiguous (each rewritten shard is
+  verified before it replaces the original), resync the `dataset_info.yaml`
+  counts, replace an absolute or staging `path` with the canonical relative one
+  and clean `index.json`. Replaced files move to `.repair_backup/<UTC
+  stamp>/<manifold>/` under the datasets root, and a second run finds nothing to
+  do. LLM manifolds now record the canonical `path` too.
+- **No swallowed errors (v16.9.75)**: the hub script's folder probes, the MT5
+  vault reader and the JSONL ingestor log errors instead of hiding them.
+
 ---
 
 ## 5. Comparative Analysis / Benchmarks
@@ -1693,4 +1764,7 @@ deterministic output. The `v16.9.23` to `v16.9.27` releases make that pipeline
 safe to drive from the AI Studio GUI: only the GUI's origins may call the
 sidecar, registry writes are atomic and never rewrite existing entries, loose
 images are removed only after their container exists, dry runs change nothing,
-and file access by the validator stays inside the dataset root.
+and file access by the validator stays inside the dataset root. The `v16.9.75`
+to `v16.9.84` releases make the output verifiable: a sample is written whole or
+rejected and logged, every shard is audited after writing, and a damaged
+manifold can be repaired in place.
