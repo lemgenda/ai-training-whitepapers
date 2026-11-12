@@ -68,7 +68,9 @@
   v16.9.157-STABLE (they said v16.9.139 and v16.9.128),
   `environment_manager_baseline` to v16.9.80-STABLE. New platform capability
   `shard_locality_sampling` (`data.locality.window_shards` and
-  `data.locality.fraction_block_size`, off by default).
+  `data.locality.fraction_block_size`, off by default). Its two behaviour
+  strings are folded YAML scalars so every YAML line stays under the
+  120-column yamllint limit.
 * `scripts/parity_backlog.json`: the last backlog entry
   (`runtime_engine_baseline`) is resolved and removed; the backlog is empty.
 * `PAPER_TRAINING_SUITE.md` and its page (v16.9.157-STABLE): new Sections
