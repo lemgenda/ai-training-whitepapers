@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.98`
+**Version**: `v16.9.99`
 
 ---
 
@@ -60,6 +60,26 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.99 - Merged Similar Training Pathologies
+
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.12.0. Five similar
+  pairs are merged into the lower number, each combined entry keeping both
+  mechanisms: NaN Divergence now covers overflow and mixed-precision
+  underflow (20 into 5), the Training Plateau row names optimizer momentum
+  decay and its remedies (21 into 7), Checkpoint Fraction Desynchronization
+  covers preemption recoil and the ghost loader in its row and section
+  (25 into 18), Memory-Sentinel Drift includes atomic hardware re-auditing
+  (45 into 44), and the 4 GB paging section covers language and vision
+  models (47 into 34). Numbers stay stable: each higher number keeps its
+  heading or row with a short "Merged into Pathology N" pointer, so
+  external references and anchors stay valid. The abstract counts 58
+  distinct pathologies (it said 63) and Section 2 explains the merges.
+* `LEMGENDARY_CURRENT_STATE.md` and `VERSIONING_POLICY.md` (and their
+  pages): pathology guide revision 1.12.0; the current state lists 58
+  distinct pathologies under 63 stable numbers.
+* **Version** - hub version v16.9.99 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
 
 ### v16.9.98 - Training Pathology Numbering
 

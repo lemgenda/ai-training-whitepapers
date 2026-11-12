@@ -86,15 +86,15 @@ and governed as follows:
      release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen
      OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.98-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.99-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals,
      and foundational whitepapers.
-   - Reflects the active documentation release (`v16.9.98-STABLE`, reviewed
+   - Reflects the active documentation release (`v16.9.99-STABLE`, reviewed
      2026-11-12) while governing systems against the core runtime backend engine
      baseline (`v16.9.157-STABLE`) and desktop operator client (`v2.10.57`).
 4. **Specialized Diagnostic & Clinical Specifications (`v1.x.y` / `v2.x.y`)**:
    - Covers clinical/diagnostic taxonomy standards such as
-     `PAPER_TRAINING_PATHOLOGY.md` (`v1.11.0`) and algorithmic papers
+     `PAPER_TRAINING_PATHOLOGY.md` (`v1.12.0`) and algorithmic papers
      (`ForexPredictor v2.7.1`).
    - These versions reflect domain-specific taxonomy releases rather than
      software runtime build numbers.
@@ -123,7 +123,7 @@ as follows:
   `src-tauri/tauri.conf.json`; Primary Interface: Tauri v2 Desktop App / Ports
   8000/8100/8200
 - **Documentation Hub**: Repository / Component: `lemgendary-docs`; Runtime
-  Version: `v16.9.98-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
+  Version: `v16.9.99-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
   Interface: Documentation Hub (`index.html`)
 - **Model Registry**: Repository / Component: `LemGendaryModels`; Runtime
   Version: `v16.9.16-STABLE`; Config Manifests: `LemGendaryModels/*/README.md`;
@@ -172,7 +172,7 @@ Specialized clinical or analytical diagnostic frameworks maintain independent
 specification versions to reflect domain-specific diagnostic taxonomies:
 
 - **Training Pathology Specification (`PAPER_TRAINING_PATHOLOGY.md`)**:
-  Maintained at **`v1.11.0` (Clinical Diagnostic Standard)**. While the training
+  Maintained at **`v1.12.0` (Clinical Diagnostic Standard)**. While the training
   suite executing these diagnostics operates at `v16.9.157`, the diagnostic
   taxonomy itself evolves according to clinical diagnostic revisions.
 - **Forex Predictive Architecture (`PAPER_FOREX_PREDICTOR.md`)**: Maintained at

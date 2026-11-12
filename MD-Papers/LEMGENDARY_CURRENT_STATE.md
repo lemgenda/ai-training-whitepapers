@@ -130,12 +130,12 @@ repository is the source of the release version.
   `lemgendary_env_manager.ps1`.
 - **LemGendary AI Studio GUI** (`v2.10.57`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.98-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.99-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
-- **Training Pathology Guide** (`1.11.0`, baseline `v16.9.157-STABLE`):
-  `PAPER_TRAINING_PATHOLOGY.md`, 63 numbered pathologies.
+- **Training Pathology Guide** (`1.12.0`, baseline `v16.9.157-STABLE`):
+  `PAPER_TRAINING_PATHOLOGY.md`, 58 distinct pathologies, 63 stable numbers.
 - **Forex Predictor Specification** (`v2.7.1`): `PAPER_FOREX_PREDICTOR.md`.
 
 The package metadata matches the README releases: the LemGendary Model
@@ -181,7 +181,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.98-STABLE`.
+together and share the document baseline `v16.9.99-STABLE`.
 
 ---
 

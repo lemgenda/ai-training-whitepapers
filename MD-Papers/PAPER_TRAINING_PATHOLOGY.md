@@ -6,7 +6,7 @@
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
 **Author**: Lem Treursic · **Version**: `v16.9.157-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.11.0 - Pathology Numbering
+Training Suite) · **Paper Revision**: 1.12.0 - Merged Similar Pathologies
 (2026-11-12) · **Last audited**: 2026-11-12
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
@@ -156,11 +156,17 @@ learning. However, the pursuit of SOTA performance is frequently obstructed by
 complex training pathologies ranging from classical vanishing gradients to
 modern micro-batch pairwise ranking starvation and spatial average pooling
 feature dilution. This whitepaper establishes a comprehensive diagnostic and
-remediation framework—the **"Nuclear Stability" protocol**. By cataloging 63
+remediation framework—the **"Nuclear Stability" protocol**. By cataloging 58
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.11.0 gives every pathology one number, used in
+cloud GPU clusters. Revision 1.12.0 merges five similar pairs into the lower
+number: NaN overflow and mixed-precision underflow (20 into 5), the training
+plateau and optimizer momentum decay (21 into 7), the two checkpoint fraction
+desynchronizations (25 into 18), memory-sentinel drift and hardware
+re-auditing (45 into 44), and the two 4 GB paging pathologies (47 into 34).
+The numbers stay valid: each merged number keeps a pointer to the pathology
+that absorbed it. Revision 1.11.0 gives every pathology one number, used in
 the master table, the section headings and cross-references: Pathologies 24 to
 39 keep their numbers, Pathologies 1 to 23 and 40 to 63 receive theirs, and a
 master-table row shares its number with the section that details it.
@@ -185,9 +191,12 @@ marked as such.
 A front-line framework for recognizing and remediating training failures in the
 LemGendary ecosystem.
 
-The guide numbers 63 pathologies. Pathologies 1 to 19, 24 to 27 and 36 have a
-row in this table; Sections 4 and 5 describe Pathologies 14 to 63 under
-numbered headings.
+The guide numbers 63 pathologies, 58 of them distinct. Numbers are stable:
+revision 1.12.0 merged five similar pairs into the lower number (20 into 5,
+21 into 7, 25 into 18, 45 into 44 and 47 into 34), and each higher number
+keeps a short "Merged into Pathology N" pointer in its place. Pathologies 1
+to 19, 24 to 27 and 36 have a row in this table; Sections 4 and 5 describe
+Pathologies 14 to 63 under numbered headings.
 
 - **Vanishing Gradients (Pathology 1)**
   - *When & Why it Happens*: Deep networks with sigmoid/tanh; saturation in
@@ -218,12 +227,17 @@ numbered headings.
   - *Remediation Strategy*: **Data Augmentation**; **Dropout** (0.2–0.5);
     **Weight Decay (L2)**; **Overfitting Rescue Protocol** (Governor dynamic
     dataset expansion).
-- **NaN Divergence (Pathology 5)**
+- **NaN Divergence: Overflow and Underflow (Pathology 5)**
   - *When & Why it Happens*: Numerical instability in Mixed Precision
-    (FP16/FP8); log(0) or division by zero.
-  - *Recognition Metrics*: Loss becomes `NaN` or `Inf` within 10–50 steps.
+    (FP16/FP8), in two sub-cases. *Overflow*: log(0) or division by zero
+    turns the loss into `NaN` or `Inf`. *Underflow* (formerly Pathology 20):
+    gradients are so small they become zero in 16-bit or 8-bit precision.
+  - *Recognition Metrics*: Overflow: loss becomes `NaN` or `Inf` within
+    10–50 steps. Underflow: gradients read exactly zero in 16-bit or 8-bit
+    precision.
   - *Remediation Strategy*: **Loss Scaling**; check for `eps` stability; use
-    **FP32** for loss calculation.
+    **FP32** for loss calculation. Against underflow, increase `Loss Scale`
+    or switch to **BFloat16**, which has a larger dynamic range.
 - **Mode Collapse (Pathology 6)**
   - *When & Why it Happens*: Generator finds a single output that "fools" the
     discriminator in GANs.
@@ -233,12 +247,15 @@ numbered headings.
     **Wasserstein Loss (WGAN-GP)**.
 - **Training Plateau (Pathology 7)**
   - *When & Why it Happens*: Optimizer stuck in flat regions or local minima.
+    Optimizer momentum decay (formerly Pathology 21) is one cause: Adam/AdamW
+    can lose "energy" in flat manifolds, leading to premature plateaus.
   - *Recognition Metrics*: Loss curve is flat for many epochs despite no
     convergence.
   - *Remediation Strategy*: **LR Scheduler** (Cosine/Plateau); try **SWA**
     (Stochastic Weight Averaging; in the LemGendary Model Training Suite set
     `swa.enabled: true` in `config.yaml`, off by default; the plateau-triggered
-    Mini-SWA is not implemented).
+    Mini-SWA is not implemented). Against momentum decay, reset optimizer
+    state; use **Lookahead Optimizer**; or increase Momentum parameters.
 - **Internal Covariate Shift (Pathology 8)**
   - *When & Why it Happens*: Distribution of layer inputs changes during
     training, slowing convergence.
@@ -321,16 +338,29 @@ numbered headings.
     **Metric Deficit Engine** ($\Delta_m$) to dynamically actuate specialized
     loss weights.
 - **Checkpoint Fraction Desynchronization (Pathology 18)**
-  - *When & Why it Happens*: Model expands dataset fraction (e.g. 75% → 90%) on
-    preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior
-    to expansion. Preemption rolls state back to 75%.
+  - *When & Why it Happens*: The checkpoint and the curriculum disagree about
+    the data fraction, in two sub-cases. *Preemption recoil*: model expands
+    dataset fraction (e.g. 75% → 90%) on preemption-prone cloud GPU
+    (Kaggle), but checkpoint serialization runs prior to expansion.
+    Preemption rolls state back to 75%. *Ghost loader dilution* (formerly
+    Pathology 25): resuming training from an earlier checkpoint saved prior
+    to curriculum fractional scaling (where `sample_fraction` was 1.0)
+    overrides the active curriculum, expanding batch count by 7x (3,900 to
+    27,300 batches) and diluting convergence rate.
   - *Recognition Metrics*: **Fraction Recoil**: Terminal logs report fraction
     expansion, but subsequent session resumes revert to previous fraction,
-    trapping training in a fraction loop.
+    trapping training in a fraction loop. **Ghost Loader**: checkpoint
+    telemetry reports `Source Fraction: 100.0%`, `New Length: 27300`
+    (instead of ~3,900), and epoch progress bar indicates 24–26+ hours
+    remaining for Epoch 1.
   - *Remediation Strategy*: **Atomic Fraction Persistence (v16.3.4)**. Flush
     live `governor.get_state()` into checkpoint payload immediately upon
     fraction promotion and re-save both `_latest.pth` and `_best.pth`. Anchor
-    Hub Lock to live governor state.
+    Hub Lock to live governor state. For a legacy checkpoint, keep the
+    restored fraction (v16.9.67). Lowering a saved fraction at the same
+    resolution breaks the Monotonic Ratchet, so the earlier **Curriculum
+    Checkpoint Fraction Override** was removed. Start a clean run (`--clean`
+    / `--fresh`) when a legacy checkpoint's fraction is unwanted.
 - **Multi-Asset Pip Scale Mismatch & Thermal Sharpening Collapse (Pathology
   19)**
   - *When & Why it Happens*: Multi-asset financial models trained concurrently
@@ -359,19 +389,7 @@ numbered headings.
     operates at 1.1GB RAM total, preserving 20+ GB free RAM for OS filesystem
     caching and accelerating batch retrieval by $12.5\times$.
 - **Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)
-  (Pathology 25)**
-  - *When & Why it Happens*: Resuming training from an earlier checkpoint saved
-    prior to curriculum fractional scaling (where `sample_fraction` was 1.0)
-    overrides the active curriculum, expanding batch count by 7x (3,900 to
-    27,300 batches) and diluting convergence rate.
-  - *Recognition Metrics*: Checkpoint telemetry reports
-    `Source Fraction: 100.0%`, `New Length: 27300` (instead of ~3,900), and
-    epoch progress bar indicates 24–26+ hours remaining for Epoch 1.
-  - *Remediation Strategy*: Keep the restored fraction (v16.9.67). Lowering a
-    saved fraction at the same resolution breaks the Monotonic Ratchet, so the
-    earlier **Curriculum Checkpoint Fraction Override** was removed. Start a
-    clean run (`--clean` / `--fresh`) when a legacy checkpoint's fraction is
-    unwanted.
+  (Pathology 25)**: Merged into Pathology 18.
 - **Unbounded Epoch Horizon (Pathology 26)**
   - *When & Why it Happens*: An open-ended loop extends the epoch budget
     whenever it is reached and ignores the governor's early-stop signal.
@@ -439,19 +457,11 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 ### Mixed Precision Underflow (FP16/FP8) (Pathology 20)
 
-**The Issue:** Gradients are so small they become zero in 16-bit or 8-bit
-precision.
-
-**Remedy:** Increase `Loss Scale` or switch to **BFloat16** which has a larger
-dynamic range.
+Merged into Pathology 5 (NaN Divergence: Overflow and Underflow, Section 2).
 
 ### Optimizer Momentum Decay (Pathology 21)
 
-**The Issue:** Adam/AdamW can lose "energy" in flat manifolds, leading to
-premature plateaus.
-
-**Remedy:** Reset optimizer state; use **Lookahead Optimizer**; or increase
-Momentum parameters.
+Merged into Pathology 7 (Training Plateau, Section 2).
 
 ### The "Governor Loop" (Artificial Plateau Exploit) (Pathology 22)
 
@@ -716,25 +726,7 @@ before passing it to `F.conv2d`.
 
 ### Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology 25)
 
-- **The Issue**: When `SmartTrainingGovernor` saves progress checkpoints
-  (`_progress.pth`), it serializes the active `sample_fraction`. If a run is
-  interrupted and resumed from an older checkpoint generated before fractional
-  curriculum fixes (where the sample fraction was hardcoded to 1.0), the
-  checkpoint restoration logic blindly restores `current_fraction = 1.0`. This
-  expands the training dataloader from the intended curriculum fraction (e.g.
-  15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying
-  epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning
-  rates across 7 million samples.
-- **Identification**: Resumption telemetry logs report
-  `Source Fraction: 100.0%`, `New Length: 27300`, and `Iteration 1362/27300`
-  despite configuration specifying `initial_fraction: 0.15`.
-- **Remedy**: **Keep the Restored Fraction (v16.9.67)**.
-  `SmartTrainingGovernor.load_state` restores the saved fraction as-is. The
-  earlier **Curriculum Checkpoint Fraction Override**, which lowered a legacy
-  100% fraction to `initial_fraction: 0.15` during early epochs, was removed:
-  lowering the fraction at the same resolution breaks the Monotonic Ratchet
-  (pair rule). When a legacy checkpoint's fraction is unwanted, start a clean
-  run (`--clean` / `--fresh`) so training begins again at the initial fraction.
+Merged into Pathology 18 (Checkpoint Fraction Desynchronization).
 
 ### The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology 26)
 
@@ -894,6 +886,10 @@ $$
 
 ### PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology 34)
 
+Two workloads hit the same 4 GB paging limit: 4-bit language models with long
+sequences, and vision models whose batches exceed the free VRAM (formerly
+Pathology 47, the Sub-Nuclear 4GB Lockdown).
+
 - **The Issue**: On edge GPUs with 4 GB physical VRAM (e.g. NVIDIA GTX 1650),
   ambient OS, display managers, and hardware-accelerated host applications (e.g.
   Chrome, Photoshop) claim ~450–600 MB of Dedicated VRAM. While a 1.5B 4-bit
@@ -911,6 +907,14 @@ $$
   `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus lockups,
   and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
   accumulation steps for edge training.
+- **The Issue (Vision Models)**: 4GB cards (GTX 1650) trigger **System RAM
+  Paging** when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.
+- **Identification (Vision Models)**: "Shared GPU Memory" in Task Manager
+  exceeds 1GB; speed drops below 0.5 img/s.
+- **Remedy (Vision Models)**: **Absolute Sentinel Authority**. The Memory
+  Sentinel now acts as the absolute physical authority, overriding any
+  hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to
+  fit entirely within physical VRAM, preventing Windows System RAM paging.
 
 ### Multitask Target Collation Type Mismatch & Loss Crash (Pathology 35)
 
@@ -1062,22 +1066,22 @@ v16.9.16-STABLE), all models must start at a minimum of **224px** or **512px**
 ### Memory-Sentinel Drift (Pathology 44)
 
 **The Issue:** Static batch sizes fail to account for background VRAM usage,
-causing "OOM-Drift" during long training runs.
-
-**Remedy:** **Active Memory-Sentinel Probing**. Decouple batch size from
-registry and probe hardware headroom before every resolution jump.
-
-### Atomic Hardware Re-Auditing (Pathology 45)
-
-**The Issue:** Using a single batch size measurement for the entire training run
-is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
+causing "OOM-Drift" during long training runs. Using a single batch size
+measurement for the entire training run is also sub-optimal (formerly
+Pathology 45, Atomic Hardware Re-Auditing). A 4GB card can fit 4 batches at
+256px but only 1 at 512px.
 
 **Identification:** Under-utilization (low it/s) at low resolutions or OOM
 crashes immediately following a resolution jump.
 
-**Remedy:** **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on
-every spatial jump and at the start of every validation phase to re-calculate
-peak batch and accumulation.
+**Remedy:** **Active Memory-Sentinel Probing** with the **Atomic Re-Audit
+Protocol**. Decouple batch size from registry and trigger a fresh hardware
+probe on every spatial jump and at the start of every validation phase to
+re-calculate peak batch and accumulation.
+
+### Atomic Hardware Re-Auditing (Pathology 45)
+
+Merged into Pathology 44 (Memory-Sentinel Drift).
 
 ### The Serial Recovery Shield (Prototype v17.2) (Pathology 46)
 
@@ -1091,16 +1095,8 @@ the remainder of the manifold stage.
 
 ### The Sub-Nuclear 4GB Lockdown (Design Study v22.0) (Pathology 47)
 
-**The Issue:** 4GB cards (GTX 1650) trigger **System RAM Paging** when VRAM
-usage exceeds ~3.5GB, slowing training by 10x-20x.
-
-**Identification:** "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops
-below 0.5 img/s.
-
-**Remedy:** **Absolute Sentinel Authority**. The Memory Sentinel now acts as the
-absolute physical authority, overriding any hardcoded YAML config batch sizes.
-It dynamically clamps pixel volumes to fit entirely within physical VRAM,
-preventing Windows System RAM paging.
+Merged into Pathology 34 (PCIe Paging Thrashing & Host VRAM Starvation on 4GB
+Accelerators).
 
 ### The False-Positive Spike (Absolute Energy Floor) (Pathology 48)
 
@@ -1369,6 +1365,10 @@ drops to 18–27%, GPU memory is underutilized, and validation progress moves at
 
 ### Checkpoint Fraction Desynchronization (The Preemption Recoil Loop) (Pathology 18)
 
+The checkpoint and the curriculum disagree about the data fraction in two
+sub-cases: preemption recoil, described first, and the ghost loader (formerly
+Pathology 25), described after it.
+
 **The Issue:** In cloud training environments with session quotas (e.g., Kaggle
 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and
 expanded dataset fractions (e.g., 75% → 90%) *after* assembling the epoch
@@ -1392,6 +1392,29 @@ Flush (v16.3.4)**:
    so restarts cannot reload stale pre-expansion fractions.
 3. Anchor Hub Lock skip-paths directly to live `governor.get_state()` so local
    progress checkpoints never persist stale governor snapshots.
+
+**Ghost Loader Sub-Case (formerly Pathology 25):** a resume from a legacy
+checkpoint restores a stale fraction instead of losing a new one.
+
+- **The Issue**: When `SmartTrainingGovernor` saves progress checkpoints
+  (`_progress.pth`), it serializes the active `sample_fraction`. If a run is
+  interrupted and resumed from an older checkpoint generated before fractional
+  curriculum fixes (where the sample fraction was hardcoded to 1.0), the
+  checkpoint restoration logic blindly restores `current_fraction = 1.0`. This
+  expands the training dataloader from the intended curriculum fraction (e.g.
+  15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying
+  epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning
+  rates across 7 million samples.
+- **Identification**: Resumption telemetry logs report
+  `Source Fraction: 100.0%`, `New Length: 27300`, and `Iteration 1362/27300`
+  despite configuration specifying `initial_fraction: 0.15`.
+- **Remedy**: **Keep the Restored Fraction (v16.9.67)**.
+  `SmartTrainingGovernor.load_state` restores the saved fraction as-is. The
+  earlier **Curriculum Checkpoint Fraction Override**, which lowered a legacy
+  100% fraction to `initial_fraction: 0.15` during early epochs, was removed:
+  lowering the fraction at the same resolution breaks the Monotonic Ratchet
+  (pair rule). When a legacy checkpoint's fraction is unwanted, start a clean
+  run (`--clean` / `--fresh`) so training begins again at the initial fraction.
 
 ### Finished-Epoch Resume Loop (Pathology 62)
 
