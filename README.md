@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.88`
+**Version**: `v16.9.89`
 
 ---
 
@@ -57,6 +57,24 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.89 - WCAG 2.2 AA Contrast Fixes (Audit WCAG)
+
+* `style.css`: new colour token `--accent-fill` (`#006ee6`, 4.8:1 against
+  white text) for the active tab pill. The accent colour `#007aff` gave white
+  text only 4.0:1: 48 of the 61 pa11y findings, one per paper page.
+* `papers/ecosystem-architecture.html`: edge labels of the Mermaid dark theme
+  had 4.43:1 contrast (11 findings); the diagram now sets
+  `edgeLabelBackground` to the code background colour.
+* `MD-Papers/PAPER_LEMGENDARY_CODEFORMER.md` and `papers/face-codeformer.html`:
+  restored two damaged formulas ($b_{\text{chunk}} \le 2$ and $20\%$
+  strides). MathJax rendered the broken input as red error text, which also
+  failed the contrast check (2 findings); the HTML list item that had
+  swallowed the next bullet is split again.
+* `requirements.txt`: regenerated from the central
+  `requirements-documentation.txt` of the LemGendary Environment Manager. It
+  now pins `pylint`, which the validator runs in this venv.
+* All 49 pages pass pa11y (WCAG2AA) with no findings.
 
 ### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
 
