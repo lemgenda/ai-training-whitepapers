@@ -27,8 +27,8 @@
 <h1>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</h1>
 <p class="subtitle">Category 03.4 CONTROLS | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v2.10.57</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Companion</strong>: <a href="ai-studio-manual.html">Operator Manual</a></span>
 <span><a href="ai-studio-whitepaper.html">Architectural Whitepaper</a></span>
 </div>
@@ -81,10 +81,10 @@ Availability</a></li>
 <p>This registry lists every element of the LemGendary AI Studio GUI
 (<code>lemgendary-ai-studio-gui</code>) that carries an <code>id</code> attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.38</code>, including
+from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.57</code>, including
 the IDs that the shared <code>Modal</code>, <code>ConfirmDialog</code> and <code>Tabs</code> components build
 from their props, with a template such as <code>train-btn-start-{model_key}</code> counted
-once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+once: 150 distinct IDs, of which 91 belong to controls (sections 3.1 to 3.8)
 and 59 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.</p>
@@ -298,11 +298,14 @@ Kaggle Models.</li>
 <code>POST /api/training/evaluate</code> (8200). Evaluates the checkpoint locally.</li>
 <li><code>train-btn-export-{model_key}</code> (<code>button</code>): &quot;Export Binaries&quot;.
 <code>POST /api/training/export</code> (8200). Exports the model binaries.</li>
+<li><code>train-btn-soup-{model_key}</code> (<code>button</code>): "Blend Soup". <code>POST /api/models/{model_key}/soup</code> (8200). Blends the checkpoints in the model's vault into one Model Soup checkpoint (uniform weights) and reports it.</li>
 <li><code>cloud-modal-tab-kaggle</code>, <code>cloud-modal-tab-colab</code>, <code>train-modal-tab-upload</code>
 (<code>button</code>, <code>role=&quot;tab&quot;</code>): &quot;Kaggle GPU Cloud&quot;, &quot;Google Colab FUSE&quot; and &quot;Kaggle
 Models Hub&quot; in the Cloud &amp; Registry Dispatch dialog. None. Switch the panel
 <code>cloud-modal-panel</code>.</li>
 <li><code>gpu-select</code> (<code>select</code>): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.</li>
+<li><code>kaggle-monitor-slug</code> (<code>input type=text</code>): "Monitor an already running kernel". None. Kernel reference <code>owner/kernel-slug</code>.</li>
+<li><code>kaggle-monitor-btn</code> (<code>button</code>): "Attach Monitor". <code>POST /api/training/kaggle/monitor</code> (8200). Attaches the Remote Cloud console to the running kernel and tracks it as the remote job; disabled until the reference has the form <code>owner/kernel-slug</code>.</li>
 <li><code>variation-select</code> (<code>select</code>): variation to check. None. Filters the isolation
 report from <code>GET /api/models/{model_key}/variations/validate</code> (8200).</li>
 </ul>
@@ -395,15 +398,18 @@ when the mail client or the reports folder did not open).</li>
 <code>telemetry-stream-heading</code>, <code>telemetry-card-heading</code>.</li>
 </ul>
 <h3 id="sec-310-controls-without-an-id">3.10 Controls Without an ID</h3>
-<p>These controls work but have no <code>id</code> yet; tests find them by role and label: the
-&quot;Config &amp; Secrets&quot; and &quot;LemGendary AI Documentation Hub&quot; header buttons, the
-Start Service and Stop Service buttons on the sidecar tiles, the per-step run
-buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
-Reduction sub-tabs, the modernization
-queue buttons, the scale reduction dispatch button, the &quot;Ingest from Kaggle&quot;
-button and the telemetry console tabs.</p>
+<p>These controls work but have no <code>id</code> yet; tests find them by role and label. The list is recounted from the <code>button</code>, <code>input</code>, <code>select</code> and <code>textarea</code> elements without an <code>id</code> in GUI release <code>v2.10.57</code>:</p>
+<ul>
+<li><strong>Header and shell</strong>: the "Config &amp; Secrets" and "LemGendary AI Documentation Hub" buttons, the help tooltip (<code>?</code>) buttons, the validation banner and error dismiss buttons and the hover pin popovers.</li>
+<li><strong>Dashboard</strong>: the quick action, Start Service and Stop Service buttons on the sidecar tiles, "Start All Services" in the mesh banner, "Start Environment Manager" on the hardware card and the health panel, the "Reconcile Environment" button on each project card, and the "Copy Stream" and "Clear Stream" buttons of the log panel.</li>
+<li><strong>Pipeline</strong>: the per-step run buttons of the pipeline step cards.</li>
+<li><strong>Dataset Compiler Suite</strong>: the Catalog, Modernization Queue and Scale Reduction sub-tabs; the manifold search box, its clear button, the status, format and task filters and "Reset Filters"; the custom compile button; the Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the modernization workers input, the push, force and dry-run check boxes, "Scan Queue", the run-all and per-row modernize buttons; and "Launch Scale Reduction".</li>
+<li><strong>Model Training Suite</strong>: the model search box, its clear button, the status, category and architecture filters and "Reset Filters"; "Start Training Suite", Retry and the clear-filters button of the training panel; the per-card batch size select; the "Docs &amp; Meta" and "Stage Variations" card actions; the Local Process, Remote Cloud and mesh telemetry console tabs with their "Copy Stream", "Clear Stream" and "Halt Local Job" buttons; the "Regen Docs &amp; Meta", "Stage Variations" and dry-run controls of the variation isolation checker; and the close button, auto-pull check box, Cancel, "Launch Cloud Training" and publish buttons of the Cloud &amp; Registry Dispatch dialog.</li>
+<li><strong>Config &amp; Secrets</strong>: the dialog close button; "Validate Syntax", the diff toggle, "Revert", "Save Manifest" and the text area of the manifest editor; and the add toggle, "Save Secrets to Ecosystem", the default check box, Cancel, "Add to Vault", the service shortcut buttons and the per-credential set-default and delete buttons of the secrets vault.</li>
+</ul>
 <h3 id="sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
-<p>The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
+<p>Since the <code>v2.10.38</code> registry three IDs were added (<code>train-btn-soup-{model_key}</code>, <code>kaggle-monitor-slug</code> and <code>kaggle-monitor-btn</code>, release <code>v2.10.55</code>) and none removed. The IDs <code>compiler-btn-validate-schema</code>, <code>comp-input-max-gb</code>, <code>comp-input-workers</code>, <code>comp-select-shard-ext</code>, <code>compiler-subtabs-tab-{catalog,queue,reduce}</code>, <code>train-select-batch-{key}</code>, <code>train-input-custom-batch-{key}</code>, <code>train-btn-docs-{key}</code>, <code>train-btn-stage-{key}</code>, <code>training-telemetry-tabs-tab-{local,remote,system}</code> and <code>config-tabs-tab-{manifests,secrets}</code> named by the 2026-11 audit do not exist in the source, so they are not listed: the Config &amp; Secrets tabs are <code>config-editor-tab-manifests</code> and <code>config-editor-tab-secrets</code> (section 3.8), and the other controls have no ID (section 3.10).</p>
+<p>Before that, the previous registry listed 75 IDs, of which 21 exist in the code. 54 were
 removed and 98 added.</p>
 <p>Renamed (old ID to current ID): <code>comp-input-custom-name</code> to <code>custom-name-input</code>,
 <code>comp-select-custom-task</code> to <code>custom-task-select</code>, <code>comp-select-custom-format</code>

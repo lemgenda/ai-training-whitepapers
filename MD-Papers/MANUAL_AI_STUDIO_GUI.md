@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-04 · **Sidecars**: LemGendary Environment Manager (port 8000),
+**Version**: `v2.10.57` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-12 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
 [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document
@@ -114,6 +114,11 @@ deployment accessible to everyone from senior machine learning researchers to
 high school students and non-technical hobbyists. When something goes wrong, the
 Report Issue button packages a description, annotated screenshots and recent
 telemetry for the maintainers (chapter 13).
+
+Release `v2.10.57` routes every failed training action to the red error banner
+instead of the green notice (v2.10.48), and `npm run verify` uses the portable
+script of the central manifest, which finds `lem-env` on Windows, macOS and
+Linux.
 
 ### The Gardening Model Rule
 
@@ -249,6 +254,12 @@ three local microservices:
 
 ![Ecosystem Sidecar Services Grid](../assets/gui/gui_service_tiles.png)
 
+Stopping a sidecar on macOS and Linux sends SIGTERM and waits up to 3 s before
+SIGKILL, so the sidecar can flush its logs; Linux falls back to `ss -tlpnH` when
+`lsof` is missing, and Windows uses `taskkill /T /F` (v2.10.54). Sibling
+projects are found from the working directory and from the executable's folders,
+so a build started outside the GUI folder still finds the sidecars.
+
 #### Ecosystem Sidecar Cards Numbered Reference
 
 1. **Environment Manager Service Card**: Identifies the primary port 8000
@@ -343,6 +354,14 @@ Universal Configuration & Secrets Vault modal, opened with the
 ![Universal Dynamic Config & Manifest
 Editor](../assets/gui/gui_config_secrets_modal.png)
 
+The Python and npm dependency manifests open the central files in
+`lemgendary-env-manager/requirements/`; saving one makes the Environment Manager
+sync it to every sibling project (Environment Manager v16.9.79). When the
+registry is unreachable the list stays empty and an offline banner shows; when a
+manifest cannot be read the editor stays empty and an error banner names the
+failure. In both cases **Validate Syntax**, **Save Manifest** and the text area
+are disabled (v2.10.47).
+
 #### Manifest Registry Editor Numbered Reference
 
 1. **Configuration Editor Modal Title**: Header identifying the central
@@ -354,7 +373,8 @@ Editor](../assets/gui/gui_config_secrets_modal.png)
 4. **Target Manifest Selector Dropdown** (`manifest-select`): Selects one of the
    ecosystem manifests reported by the Environment Manager, for example
    `unified_data.yaml` (dataset definitions), `unified_models_v2.yaml`
-   (architecture registry) and `unified_requirements.yaml` (dependency SSOT).
+   (architecture registry) and the dependency manifests
+   `lemgendary-env-manager/requirements/*.txt` (dependency SSOT).
 5. **Validate Syntax Button**: Sends the current text to the Environment Manager
    for YAML or JSON parsing without writing to disk and reports structural
    errors.
@@ -581,6 +601,11 @@ rapid re-verification:
 ![Individual Pipeline Step Execution Cards
 Grid](../assets/gui/gui_pipeline_step_cards.png)
 
+Each step pill (WAIT, RUN, DONE, FAILED) follows only that step's latest
+Environment Manager event. Compiler, training and console events no longer reset
+the pills, a single-step run no longer marks the steps before it as DONE, and a
+failed step shows a FAILED pill (v2.10.49).
+
 #### Pipeline Step Execution Cards Numbered Reference
 
 1. **Stage 1 Card Title (Hardware Discovery)**: Probes host platform, CPU
@@ -601,8 +626,8 @@ Grid](../assets/gui/gui_pipeline_step_cards.png)
    (`POST /api/pipeline/run-step`, step 3, `clean: false`), recreating missing
    or corrupted `.venv` folders idempotently.
 7. **Stage 4 Card Title (Requirements Sync & Install)**: Propagates centralized
-   dependencies from `unified_requirements.yaml`, installs binary wheels, and
-   normalizes OpenCV.
+   dependencies from `lemgendary-env-manager/requirements/*.txt`, installs
+   binary wheels, and normalizes OpenCV.
 8. **Stage 4 Run Step Action Button**: Dispatches isolated execution of Step 4
    (`POST /api/pipeline/run-step`, step 4, `clean: false`), synchronizing
    packages and installing missing dependencies.
@@ -737,9 +762,10 @@ Callout bindings (control type; endpoint or action):
   validity and manifest conformance.
 - **3. Packages Metric** (Metric Row; `pip list` / manifest scan): Displays
   total installed package count and synchronization status.
-- **4. Reconcile Button** (Action Button;
-  `POST /api/pipeline/reconcile?project={name}`): Recreates `.venv` and
-  reconciles missing wheels for selected project.
+- **4. Reconcile Button** (Action Button; `POST /api/pipeline/run` with
+  `target_project` and `clean: false`): Runs the non-destructive pipeline for
+  the selected project; valid `.venv` folders are kept and missing wheels are
+  reconciled.
 
 ---
 
@@ -980,6 +1006,15 @@ readiness, and interactive SOTA target inspection:
 ![Registered Neural Architectures Telemetry
 Card](../assets/gui/gui_architecture_telemetry.png)
 
+The PyTorch, ONNX FP32 and ONNX FP16 badges follow their own readiness flags
+(`pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready`); a flag the Training
+Suite does not send shows the badge as not ready with a "not reported" tooltip
+(v2.10.51). While the Training Suite sidecar is offline, every card action
+except Stop Training is disabled (v2.10.52). **Blend Soup**
+(`train-btn-soup-{model_key}`, `POST /api/models/{model_key}/soup`) blends the
+checkpoints in the model's vault into one Model Soup checkpoint with uniform
+weights (v2.10.55).
+
 #### Architecture Telemetry Card Numbered Reference
 
 1. **Model Identity, Help Glyph & Target Pin**: Displays canonical model title
@@ -1172,6 +1207,10 @@ local training, remote cloud execution, and ecosystem mesh daemons:
 ![Redesigned Three-Tab Real-Time Telemetry
 Console](../assets/gui/gui_telemetry_console.png)
 
+The Local Process and Remote Cloud streams follow the newest line when events
+arrive or their tab is shown (v2.10.53). Live log events and progress ticks
+share one event buffer with one rule for collapsing progress ticks (v2.10.55).
+
 #### Telemetry Console Numbered Reference
 
 1. **Local Training Telemetry Subtab**: Focuses the local training worker log
@@ -1293,6 +1332,14 @@ isolated multi-variation publishing workflow:
 
 ![Model Export, Binary Packaging & Kaggle Models Hub Registry
 Dispatch](../assets/gui/gui_model_export_publish.png)
+
+The Kaggle tab can also attach to a kernel that is already running: enter
+`owner/kernel-slug` in `kaggle-monitor-slug` and press **Attach Monitor**
+(`kaggle-monitor-btn`, `POST /api/training/kaggle/monitor`); the kernel is then
+tracked as the remote job (v2.10.55). A running cloud job is restored when the
+Training panel opens, and the remote job is polled (`GET /api/jobs/{job_id}`)
+until it completes, fails or is cancelled, which shows a notice or an error
+(v2.10.50).
 
 #### Cloud & Registry Dispatch Numbered Reference
 

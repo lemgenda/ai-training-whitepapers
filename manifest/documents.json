@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.93-STABLE",
+  "document_baseline": "v16.9.94-STABLE",
   "last_audited": "2026-11-12",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -21,8 +21,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/ai-studio-manual.html",
       "md_path": "MD-Papers/MANUAL_AI_STUDIO_GUI.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.57",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -31,8 +31,8 @@
       "category": "Category 01.4 GUI",
       "html_path": "papers/ai-studio-whitepaper.html",
       "md_path": "MD-Papers/PAPER_AI_STUDIO_GUI.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.57",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -271,8 +271,8 @@
       "category": "Category 03.4 CONTROLS",
       "html_path": "papers/gui-control-registry.html",
       "md_path": "MD-Papers/GUI_CONTROL_REGISTRY.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.57",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {

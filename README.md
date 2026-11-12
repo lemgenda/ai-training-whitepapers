@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.93`
+**Version**: `v16.9.94`
 
 ---
 
@@ -61,6 +61,37 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.94 - LemGendary AI Studio GUI v2.10.57 Control Registry, Manual and Whitepaper (Audit DOCS-3)
+
+* `GUI_CONTROL_REGISTRY.md` and its page: recounted against the
+  `lemgendary-ai-studio-gui` source of v2.10.57: 150 distinct IDs (91
+  controls). Added `train-btn-soup-{model_key}`, `kaggle-monitor-slug` and
+  `kaggle-monitor-btn`. Section 3.10 now lists every control without an ID
+  by area (it missed, among others, the card "Docs & Meta" and "Stage
+  Variations" actions, the batch size select, the filters and the manifest
+  editor buttons). The IDs the 2026-11 audit asked to add
+  (`compiler-btn-validate-schema`, `comp-input-max-gb`,
+  `train-select-batch-{key}`, `config-tabs-tab-manifests` and others) do not
+  exist in the source; section 3.11 records this.
+* `MANUAL_AI_STUDIO_GUI.md` and its page: the Reconcile button exists
+  ("Reconcile Environment" on each project card), but it calls
+  `POST /api/pipeline/run` with `target_project` and `clean: false`, not the
+  nonexistent `POST /api/pipeline/reconcile`, and keeps valid `.venv`
+  folders. `unified_requirements.yaml` replaced with
+  `lemgendary-env-manager/requirements/*.txt`. Documents the v2.10.47 to
+  v2.10.57 features: manifest editor guards and central manifests, the red
+  error banner for failed actions, per-step pipeline pills, remote job
+  restore and polling, per-format variation badges, card actions disabled
+  while the training sidecar is offline, telemetry auto-scroll, sidecar
+  stop with SIGTERM before SIGKILL, Blend Soup, Attach Monitor and the
+  portable verify script.
+* `PAPER_AI_STUDIO_GUI.md` and its page: v2.10.57; the drift matrix reads
+  the central requirements files; the v2.10.47 to v2.10.55 architecture
+  changes are listed in Section 6.9.
+* `canonical_capabilities.json` and `.yaml`: `model_soup` is available in
+  the GUI since v2.10.57 (`train-btn-soup-{model_key}`).
+* `manifest/documents.json`: the three GUI documents at baseline v2.10.57.
 
 ### v16.9.93 - LemGendary Dataset Compiler Suite v16.9.84 (Audit DOCS-2)
 

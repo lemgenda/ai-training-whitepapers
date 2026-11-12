@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-04
+**Version**: `v2.10.57` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-12
 
 ---
 
@@ -49,7 +49,7 @@
 
 ## 1. Abstract
 
-The LemGendary AI Studio GUI (client version `v2.10.38`) is a hardware-aware
+The LemGendary AI Studio GUI (client version `v2.10.57`) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
@@ -66,7 +66,7 @@ hands it to the operator's own mail client.
 > **Dual Versioning Architecture**: The desktop application and its backends use
 > separate version tracks:
 >
-> 1. **LemGendary AI Studio GUI (`v2.10.38`)**: Governs the Tauri v2 desktop
+> 1. **LemGendary AI Studio GUI (`v2.10.57`)**: Governs the Tauri v2 desktop
 >    application, the React 18 frontend and the Operator Manual
 >    ([`MANUAL_AI_STUDIO_GUI.md`](./MANUAL_AI_STUDIO_GUI.md)). `package.json`
 >    holds this version and `tauri.conf.json` reads it from there.
@@ -374,9 +374,10 @@ The Health view embeds operational controls backed by the LemGendary Environment
 Manager, together with a dependency audit across the Python virtual environments
 and the GUI's npm packages:
 
-- **Cross-Project Python Drift Matrix**: Compares `unified_requirements.yaml`
-  with the installed wheels in `lemgendary-env-manager`, `lemgendary-datasets`
-  and `lemgendary-training-suite`.
+- **Cross-Project Python Drift Matrix**: Compares the central manifests
+  `lemgendary-env-manager/requirements/*.txt` with the installed wheels in
+  `lemgendary-env-manager`, `lemgendary-datasets` and
+  `lemgendary-training-suite`.
 - **Desktop GUI Project Packages (NPM) Audit**: Reads `package.json` and
   `node_modules` of `lemgendary-ai-studio-gui`, including `@tauri-apps/api`,
   `@tauri-apps/plugin-shell`, `@radix-ui/react-progress`, `modern-screenshot`,
@@ -433,6 +434,33 @@ state transitions without prop drilling:
   Model Training Suite sends `null` for values it has not measured or does not
   know. The model card shows Parameters as `N/A` only for `null` (`0` is
   `0 M`) and a `null` SOTA goal as a dash.
+- **Manifest Editor Guards (v2.10.47)**: an unreachable manifest registry leaves
+  the list empty instead of six placeholder manifests, and a failed read leaves
+  the editor empty with `loadError` set; the offline or error banner shows and
+  editing is disabled.
+- **Action Feedback (v2.10.48)**: every failed training action goes through
+  `reportFailure` (red `statusError` banner) and every success through
+  `reportSuccess`; each action clears both banners when it starts.
+- **Pipeline Progress (v2.10.49)**: `derivePipelineProgress` gives each step its
+  own state (WAIT, RUN, DONE, FAILED) from that step's latest Environment
+  Manager event; the store's `pipelineRun` records the scope (`"full"` or a step
+  number) and start time of the run.
+- **Job Polling (v2.10.50)**: `useJobStatusPoll` polls `GET /api/jobs/{job_id}`
+  until a terminal status for both the local and the remote job, and a running
+  cloud job is restored into `remoteJob` on mount.
+- **Per-Format Readiness (v2.10.51)**: optional `pytorch_ready`,
+  `onnx_fp32_ready` and `onnx_fp16_ready` flags on `ModelItem` drive the
+  variation badges; the LemGendary Model Training Suite must send them for a
+  badge to turn green.
+- **One Event Buffer (v2.10.53, v2.10.55)**: `addEvent` uses `appendLiveEvent`
+  and `EVENT_BUFFER_LIMIT`, the live log socket appends through `addEvent`, and
+  the shared `useScrollToBottom` hook keeps the telemetry streams at the newest
+  line.
+- **Process Control (v2.10.54)**: `src-tauri/src/process_control.rs` stops a
+  service with SIGTERM and up to 3 s before SIGKILL on macOS and Linux (with an
+  `ss -tlpnH` fallback when `lsof` is missing) and `taskkill /T /F` on Windows;
+  `src-tauri/src/workspace_paths.rs` finds the sibling projects from the working
+  directory and the executable's folders.
 - **Control ID Registry**: Interactive controls carry stable DOM IDs listed in
   [`GUI_CONTROL_REGISTRY.md`](./GUI_CONTROL_REGISTRY.md); the registry is
   rebuilt from the `id` attributes in the source.

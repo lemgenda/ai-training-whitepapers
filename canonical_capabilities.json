@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.93-STABLE",
+  "document_baseline": "v16.9.94-STABLE",
   "runtime_engine_baseline": "v16.9.139-STABLE",
   "desktop_client_baseline": "v2.10.57",
   "dataset_compiler_baseline": "v16.9.84-STABLE",
@@ -1437,7 +1437,9 @@
       "baseline": "v16.9.68-STABLE",
       "control_planes": {
         "gui": {
-          "available": false
+          "available": true,
+          "client_baseline": "v2.10.57",
+          "control": "train-btn-soup-{model_key} (Blend Soup model card action)"
         },
         "cli": {
           "available": true,

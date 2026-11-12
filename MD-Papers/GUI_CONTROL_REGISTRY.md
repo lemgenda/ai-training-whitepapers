@@ -2,8 +2,8 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-04 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
+**Version**: `v2.10.57` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-12 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
 ---
@@ -44,10 +44,10 @@
 This registry lists every element of the LemGendary AI Studio GUI
 (`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.38`, including
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.57`, including
 the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
 from their props, with a template such as `train-btn-start-{model_key}` counted
-once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
+once: 150 distinct IDs, of which 91 belong to controls (sections 3.1 to 3.8)
 and 59 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
@@ -269,11 +269,20 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `POST /api/training/evaluate` (8200). Evaluates the checkpoint locally.
 - `train-btn-export-{model_key}` (`button`): "Export Binaries".
   `POST /api/training/export` (8200). Exports the model binaries.
+- `train-btn-soup-{model_key}` (`button`): "Blend Soup". `POST
+  /api/models/{model_key}/soup` (8200). Blends the checkpoints in the model's
+  vault into one Model Soup checkpoint (uniform weights) and reports it.
 - `cloud-modal-tab-kaggle`, `cloud-modal-tab-colab`, `train-modal-tab-upload`
   (`button`, `role="tab"`): "Kaggle GPU Cloud", "Google Colab FUSE" and "Kaggle
   Models Hub" in the Cloud & Registry Dispatch dialog. None. Switch the panel
   `cloud-modal-panel`.
 - `gpu-select` (`select`): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.
+- `kaggle-monitor-slug` (`input type=text`): "Monitor an already running
+  kernel". None. Kernel reference `owner/kernel-slug`.
+- `kaggle-monitor-btn` (`button`): "Attach Monitor". `POST
+  /api/training/kaggle/monitor` (8200). Attaches the Remote Cloud console to the
+  running kernel and tracks it as the remote job; disabled until the reference
+  has the form `owner/kernel-slug`.
 - `variation-select` (`select`): variation to check. None. Filters the isolation
   report from `GET /api/models/{model_key}/variations/validate` (8200).
 
@@ -368,18 +377,57 @@ Landmarks and headings:
 
 ### 3.10 Controls Without an ID
 
-These controls work but have no `id` yet; tests find them by role and label: the
-"Config & Secrets" and "LemGendary AI Documentation Hub" header buttons, the
-Start Service and Stop Service buttons on the sidecar tiles, the per-step run
-buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
-Reduction sub-tabs, the modernization
-queue buttons, the scale reduction dispatch button, the "Ingest from Kaggle"
-button and the telemetry console tabs.
+These controls work but have no `id` yet; tests find them by role and label. The
+list is recounted from the `button`, `input`, `select` and `textarea` elements
+without an `id` in GUI release `v2.10.57`:
+
+- **Header and shell**: the "Config & Secrets" and "LemGendary AI Documentation
+  Hub" buttons, the help tooltip (`?`) buttons, the validation banner and error
+  dismiss buttons and the hover pin popovers.
+- **Dashboard**: the quick action, Start Service and Stop Service buttons on the
+  sidecar tiles, "Start All Services" in the mesh banner, "Start Environment
+  Manager" on the hardware card and the health panel, the "Reconcile
+  Environment" button on each project card, and the "Copy Stream" and "Clear
+  Stream" buttons of the log panel.
+- **Pipeline**: the per-step run buttons of the pipeline step cards.
+- **Dataset Compiler Suite**: the Catalog, Modernization Queue and Scale
+  Reduction sub-tabs; the manifold search box, its clear button, the status,
+  format and task filters and "Reset Filters"; the custom compile button; the
+  Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the
+  modernization workers input, the push, force and dry-run check boxes, "Scan
+  Queue", the run-all and per-row modernize buttons; and "Launch Scale
+  Reduction".
+- **Model Training Suite**: the model search box, its clear button, the status,
+  category and architecture filters and "Reset Filters"; "Start Training Suite",
+  Retry and the clear-filters button of the training panel; the per-card batch
+  size select; the "Docs & Meta" and "Stage Variations" card actions; the Local
+  Process, Remote Cloud and mesh telemetry console tabs with their "Copy
+  Stream", "Clear Stream" and "Halt Local Job" buttons; the "Regen Docs & Meta",
+  "Stage Variations" and dry-run controls of the variation isolation checker;
+  and the close button, auto-pull check box, Cancel, "Launch Cloud Training" and
+  publish buttons of the Cloud & Registry Dispatch dialog.
+- **Config & Secrets**: the dialog close button; "Validate Syntax", the diff
+  toggle, "Revert", "Save Manifest" and the text area of the manifest editor;
+  and the add toggle, "Save Secrets to Ecosystem", the default check box,
+  Cancel, "Add to Vault", the service shortcut buttons and the per-credential
+  set-default and delete buttons of the secrets vault.
 
 ### 3.11 Changes Since the Previous Registry
 
-The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
-removed and 98 added.
+Since the `v2.10.38` registry three IDs were added
+(`train-btn-soup-{model_key}`, `kaggle-monitor-slug` and `kaggle-monitor-btn`,
+release `v2.10.55`) and none removed. The IDs `compiler-btn-validate-schema`,
+`comp-input-max-gb`, `comp-input-workers`, `comp-select-shard-ext`,
+`compiler-subtabs-tab-{catalog,queue,reduce}`, `train-select-batch-{key}`,
+`train-input-custom-batch-{key}`, `train-btn-docs-{key}`,
+`train-btn-stage-{key}`, `training-telemetry-tabs-tab-{local,remote,system}` and
+`config-tabs-tab-{manifests,secrets}` named by the 2026-11 audit do not exist in
+the source, so they are not listed: the Config & Secrets tabs are
+`config-editor-tab-manifests` and `config-editor-tab-secrets` (section 3.8), and
+the other controls have no ID (section 3.10).
+
+Before that, the previous registry listed 75 IDs, of which 21 exist in the
+code. 54 were removed and 98 added.
 
 Renamed (old ID to current ID): `comp-input-custom-name` to `custom-name-input`,
 `comp-select-custom-task` to `custom-task-select`, `comp-select-custom-format`
