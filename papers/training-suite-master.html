@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.137-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-09</span>
+<span><strong>Version</strong>: <code>v16.9.157-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
 </header>
@@ -87,8 +87,7 @@ Publishing</a></li>
 (v16.9.26)</a></li>
 <li><a href="#sec-220-validation-batch-telemetry--live-telemetry-progress-synchronization-v16928">2.20. Validation Batch Telemetry &amp; Live Telemetry Progress Synchronization
 (v16.9.28)</a></li>
-<li><a href="#sec-221-modernized-pytorch-cu126--transformers-v5-stack-integration">2.21. Modernized PyTorch cu126 &amp; Transformers v5 Stack
-Integration</a></li>
+<li><a href="#sec-221-pytorch--transformers-v5-stack-integration">2.21. PyTorch &amp; Transformers v5 Stack Integration</a></li>
 <li><a href="#sec-222-turing-non-tensor-core-hardware-cudnn-bug-remediation">2.22. Turing Non-Tensor-Core Hardware cuDNN Bug
 Remediation</a></li>
 <li><a href="#sec-223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization">2.23. Multi-Task SOTA Metric Ingestion &amp; Perceptual Telemetry
@@ -117,6 +116,10 @@ v16.9.101)</a></li>
 (v16.9.122)</a></li>
 <li><a href="#sec-235-causal-language-model-instruction-tuning--dynamic-vram-probing">2.35. Causal Language Model Instruction Tuning &amp; Dynamic VRAM
 Probing</a></li>
+<li><a href="#sec-236-container-targets-resume--platform-fixes-v169140-to-v169147">2.36. Container Targets, Resume &amp; Platform Fixes (v16.9.140 to v16.9.147)</a></li>
+<li><a href="#sec-237-shard-io-offset-cache--locality-sampling-v169148-to-v169154">2.37. Shard I/O, Offset Cache &amp; Locality Sampling (v16.9.148 to v16.9.154)</a></li>
+<li><a href="#sec-238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152">2.38. Quality Score, Optimizer Groups &amp; Batch Invariant (v16.9.144 to v16.9.152)</a></li>
+<li><a href="#sec-239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157">2.39. Task-Type Resolver &amp; Optional Dependency Adapter (v16.9.155 to v16.9.157)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -179,7 +182,7 @@ Quantization</a></li>
 <p>The LemGendary Model Training Suite is the orchestration layer that trains,
 evaluates and exports the vision, restoration, quality-assessment, financial
 time-series and causal LLM models of the LemGendary ecosystem. This paper
-documents release v16.9.122-STABLE. It covers the curriculum governor and its
+documents release v16.9.157-STABLE. It covers the curriculum governor and its
 Monotonic Ratchet (pair rule, enforced by a <code>RatchetViolation</code> guard), the
 bounded epoch budget with an honoured early stop, the 4-pillar completion
 invariant, publication-grade FID evaluation (<code>feature=2048</code>, chunks of at most
@@ -188,7 +191,12 @@ Averaging (SWA, off by default, Section 2.32) and the sidecar security model.
 Features that earlier revisions described but the code does not run are marked
 as not active or not implemented (Section 8.1). Historical FID rows of four
 models are unverified (Section 2.28); the FID re-evaluation tool (Section 2.33)
-can re-measure their checkpoints.</p>
+can re-measure their checkpoints. Releases v16.9.140 to v16.9.157 decode
+container targets for every task, resume mid-epoch deterministically, read
+shards by byte offset, score restoration models with one quality formula
+($\text{PSNR} + 20 \cdot \text{SSIM} - 20 \cdot \text{LPIPS}$, FID as a
+separate gate) and keep the effective batch exact across resolution jumps
+(Sections 2.36 to 2.39).</p>
 </section>
 
 <section id="sec-2-high-fidelity-nuclear-hardening">
@@ -278,9 +286,9 @@ checkpoint (Section 2.27). With optional Stochastic Weight Averaging (Section
 2.32) the averaged weights are one more vault, <code>vault_swa.pth</code>. Whether a
 blend beats its donors is not checked automatically and must be measured per
 model.</li>
-<li><strong>Universal Quality Scorecarding</strong>: The trainer dynamically compounds PSNR,
-SSIM, LPIPS, and FID for all restoration models, mathematically verifying
-ultimate convergence against academic SOTA benchmarks.</li>
+<li><strong>Universal Quality Scorecarding</strong>: Restoration, enhancement and face
+models are scored with PSNR, SSIM and LPIPS on every epoch; FID is a
+separate publication gate checked against the SOTA targets (Section 2.38).</li>
 <li><strong>Continuous Parameter Predictor Calibration</strong>: Standardized validation MAE
 telemetry for continuous parameter predictors (like <code>upn_v2</code>), recording MAE
 directly into <code>metrics.csv</code>.</li>
@@ -1019,37 +1027,33 @@ high-contrast visual confirmation of the evaluation phase.</li>
 </ul>
 </li>
 </ul>
-<h3 id="sec-221-modernized-pytorch-cu126--transformers-v5-stack-integration">2.21. Modernized PyTorch cu126 &amp; Transformers v5 Stack Integration</h3>
+<h3 id="sec-221-pytorch--transformers-v5-stack-integration">2.21. PyTorch &amp; Transformers v5 Stack Integration</h3>
 <ul>
-<li><strong>CUDA 12.6 Wheel Stack (<code>torch 2.14.1+cu126</code>)</strong>: The suite operates on the
-modernized PyTorch 2.14.1 CUDA 12.6 stack, paired with
-<code>torchvision 0.29.1+cu126</code>, <code>torchaudio 2.11.0+cu126</code>, <code>sympy 1.14.0</code>, and
-<code>numpy 2.1.3</code>. This moves past legacy CUDA 12.1 pins while maintaining 100%
-binary stability across Windows and Linux.</li>
-<li><strong>Transformers v5 Ecosystem Alignment</strong>: Adopts <code>transformers&gt;=5.0.0,&lt;6.0.0</code>
-(active: <code>v5.20.1</code>) alongside <code>tokenizers&gt;=0.23.0</code> and
-<code>huggingface-hub&gt;=1.0.0</code>. Delivers optimized weight loading, direct
-safetensors ingestion, faster Rust tokenizer execution, and reduced CPU peak
-RAM during large foundation model initialization.</li>
-<li><strong>Driver-Aware Dynamic CUDA Selection</strong>: The training pipeline integrates
-<code>system_probe.select_cuda_torch_index()</code>, querying host NVIDIA driver
-capabilities dynamically via <code>nvidia-smi</code> and choosing the latest compatible
-PyTorch wheel index (<code>cu130</code>, <code>cu128</code>, <code>cu126</code>, or fallback <code>cu121</code>).</li>
-<li><strong>Physical Hardware Verification (GTX 1650, Driver 610.74)</strong>: All 9 physical
-execution gates confirmed passing on local edge hardware:
-<ul>
-<li>FP32 matmul, FP16 autocast, and Conv2D forward/backward execution verified
-on CUDA.</li>
-<li>Turing architecture detection correctly skips unsupported BF16 formats and
-enforces FP16/FP32 precision paths.</li>
-<li><code>torch.compile</code> eager fallback validated on Windows.</li>
-<li>ONNX Dynamo export validated via <code>onnxscript</code> and <code>onnxruntime</code> (max diff
-1.78e-07).</li>
-<li>Offline Transformers v5 smoke test (tokenizer, BERT forward pass, GPT-2
-generation, safetensors serialization) validated on GPU.</li>
-<li>Torchvision CUDA NMS and bilinear interpolation confirmed operational.</li>
-</ul>
-</li>
+<li><strong>Pinned Stack</strong>: the central
+<code>lemgendary-env-manager/requirements/requirements-training.txt</code> pins
+<code>torch==2.15.0</code>, <code>torchvision==0.29.2</code>, <code>torchaudio==2.11.1</code>,
+<code>numpy==2.5.4</code>, <code>transformers==5.22.1</code> and <code>huggingface-hub&gt;=1.0.0</code>;
+<code>bitsandbytes==0.50.2</code> is pinned only off macOS and stays optional (Section
+2.39). The requirements files pin no wheel index.</li>
+<li><strong>Driver-Aware Wheel Index</strong>: the LemGendary Environment Manager picks the
+PyTorch index from its hardware probe (<code>select_cuda_torch_index()</code> in
+<code>env_manager/probe/models.py</code>): <code>cu134</code> for NVIDIA driver 610 or newer,
+<code>cu126</code> for 560, <code>cu121</code> for 535 and <code>cu118</code> for older drivers, <code>cu126</code>
+when the driver version is unknown, and ROCm, PyPI (Apple MPS) or CPU
+wheels on other hosts. The training suite does not select an index itself.</li>
+<li><strong>Transformers v5</strong>: the foundation and LLM paths use the Transformers v5
+API with direct safetensors loading and the Rust tokenizers.</li>
+<li><strong>Hardware Verification (earlier stack)</strong>: an NVIDIA GeForce GTX 1650
+(Turing, Driver 610.74) passed 9 execution gates with the earlier
+<code>torch 2.14.1+cu126</code> wheels: FP32 matmul, FP16 autocast and Conv2D
+forward/backward on CUDA; Turing detection skips BF16 and keeps the
+FP16/FP32 paths; <code>torch.compile</code> eager fallback on Windows; ONNX Dynamo
+export via <code>onnxscript</code> and <code>onnxruntime</code> (max diff 1.78e-07); an offline
+Transformers v5 smoke test (tokenizer, BERT forward pass, GPT-2
+generation, safetensors serialization) on GPU; and Torchvision CUDA NMS
+and bilinear interpolation.</li>
+<li><strong>Current Stack Not Re-Verified</strong>: for driver 610.74 the probe now selects
+<code>cu134</code> with <code>torch==2.15.0</code>; the gates have not been re-run on that stack.</li>
 </ul>
 <h3 id="sec-222-turing-non-tensor-core-hardware-cudnn-bug-remediation">2.22. Turing Non-Tensor-Core Hardware cuDNN Bug Remediation</h3>
 <p>NVIDIA GeForce GTX 16xx series GPUs (TU116 / TU117 Turing architectures without
@@ -1439,12 +1443,14 @@ deleted (D-12), and the <code>lemtrain</code> script targets
 <code>training.cli.lemtrain:app</code> (D-06). A test pins FID to 2048 features and
 chunks of at most two.</li>
 <li><strong>Remediation status</strong>: <code>REVIEW_REPORT.md</code> of the LemGendary Model Training
-Suite lists the status of every review finding. Owner decisions, such as the
-optional API token and the unread resolution caps, keep today's behaviour.</li>
+Suite lists the status of every review finding as of v16.9.123. Owner
+decisions, such as the optional API token and the unread resolution caps,
+keep today's behaviour. Later fixes (v16.9.140 to v16.9.157) are recorded in
+the suite's README changelog and in Sections 2.36 to 2.39.</li>
 </ul>
 <h3 id="sec-235-causal-language-model-instruction-tuning--dynamic-vram-probing">2.35. Causal Language Model Instruction Tuning &amp; Dynamic VRAM Probing</h3>
 <ul>
-<li>**Dynamic Instruction Tuning Runtime (<code>GenericCausalLLM</code>)**: Causal decoder
+<li><strong>Dynamic Instruction Tuning Runtime (<code>GenericCausalLLM</code>)</strong>: Causal decoder
 models (e.g. <code>ai_helper_lemgend</code>, based on <code>Qwen2.5-Coder-1.5B-Instruct</code>)
 execute instruction tuning via native <code>train_step(batch)</code> and
 <code>eval_step(batch)</code> methods that accept collated dictionary structures
@@ -1468,6 +1474,198 @@ Upon training completion, the engine executes an automated post-training evaluat
 <code>ctx.data.test_loader</code> (<code>data/ai_helper_test.jsonl</code>), recording hold-out generalization
 metrics into <code>TrainingSummary</code>. These checkpoints feed directly into the Pareto Model Soup
 (<code>create_pareto_model_soup</code>, Section 2.27) for linear adapter weight blending.</li>
+</ul>
+<h3 id="sec-236-container-targets-resume--platform-fixes-v169140-to-v169147">2.36. Container Targets, Resume &amp; Platform Fixes (v16.9.140 to v16.9.147)</h3>
+<p>Releases v16.9.140 to v16.9.147 fix how samples become training targets, how
+the governor learning rate meets the scheduler, and how a run resumes on every
+platform (audit plan Sections 3.1 to 3.4).</p>
+<ul>
+<li><strong>Container Targets for Both Shard Layouts</strong>: <code>data/container_targets.py</code>
+holds one target builder per task, mixed into <code>MultiTaskDataset</code> as
+<code>ContainerTargetsMixin</code> for WebDataset, Parquet, MDS and LitData samples.
+Both shard layouts decode: labels in the <code>.json</code> sidecar (published
+manifolds) and <code>.txt</code> label sidecars with lossless <code>.mask.webp</code> masks
+(current compiler output). <code>data/sample_labels.py</code> parses labels for
+directory and container samples alike. A task without a builder raises
+<code>RuntimeError</code>, and a segmentation sample without a mask raises instead of
+training on zeros.</li>
+<li><strong>Face Targets</strong>: a RetinaFace target has 15 values, <code>[conf, cx, cy, w, h]</code>
+and 10 landmark coordinates. A label without landmarks sets them to
+<code>LANDMARK_ABSENT</code> (-1), and the face loss leaves those coordinates out of
+the landmark term, so a box-only label trains the box and the confidence.</li>
+<li><strong>No Identity Pairs</strong>: an unpaired restoration sample gets a synthesised
+degradation as its input (film damage for <code>film_restorer</code>), never a copy of
+its target. The UltraZoom input is the aligned target crop downscaled by 2
+with antialiased bicubic resampling. UPN v2 samples get a synthetic
+degradation with random parameters, as in directory mode.</li>
+<li><strong>Prompt Masking</strong>: chat-template encoding of instruction data sets every
+prompt token (all turns before the final assistant reply) to <code>IGNORE_INDEX</code>
+(-100) in the labels, so only the reply is supervised (Section 7.4).</li>
+<li><strong>LPIPS Term</strong>: <code>build_criterion</code> turns on the LPIPS perceptual term for
+models whose registry <code>loss_fn</code> is <code>l1_lpips</code> (<code>film_restorer</code>,
+<code>ffanet_indoor</code>, <code>ffanet_outdoor</code>); before, the term was always 0.</li>
+<li><strong>Governor LR over the Scheduler</strong>: <code>training/training/lr_scaling.py</code>
+applies a governor multiplier as the ratio between the new multiplier
+$m_{\text{new}}$ and the multiplier applied before, $m_{\text{applied}}$, to
+each group rate $\eta_g$ and to the scheduler base rate
+$\eta_g^{\text{base}}$, so cosine decay and governor cooling compose. The
+applied multiplier is stored in the param group and survives a resume;
+<code>head_lr_multiplier</code> applies to groups tagged <code>group: head</code> (Section 2.38).</li>
+</ul>
+<div class="math-block">$$\eta_g \leftarrow \eta_g \cdot \frac{m_{\text{new}}}{m_{\text{applied}}}, \qquad \eta_g^{\text{base}} \leftarrow \eta_g^{\text{base}} \cdot \frac{m_{\text{new}}}{m_{\text{applied}}}$$</div>
+<ul>
+<li><strong>Deterministic Mid-Epoch Resume</strong>: <code>ResumableBatchSampler</code>
+(<code>training/data/resumable_sampler.py</code>) draws each epoch's permutation from
+<code>seed + epoch</code> (seed 42), shards it per DDP rank and can start at batch
+$K$. A resumed epoch keeps the interrupted run's sample order and skips the
+finished batches by slicing the index list. Progress checkpoints save the
+AMP <code>GradScaler</code> state, and the scaler is created before the resume, so a
+resumed fp16 run keeps its loss scale.</li>
+<li><strong>Distributed Backend and Workers</strong>: <code>select_backend</code>
+(<code>training/parallel/ddp.py</code>) picks NCCL only with CUDA on a platform that
+ships it (not Windows), else Gloo. macOS starts loader workers with spawn
+like Windows and gets the spawn-aware worker budget
+(<code>training/data/workers.py</code>).</li>
+<li><strong>Process Cleanup</strong>: on POSIX, cleanup signals the child's process group
+(torchrun ranks, loader workers) and falls back to the child alone,
+matching <code>taskkill /T</code> on Windows (<code>training/utils/interrupt.py</code>).
+<code>venv_site_packages</code> resolves the venv layout of each platform.</li>
+<li><strong>Per-Format Readiness</strong>: <code>GET /api/gui/models/with-stats</code> reports
+<code>pytorch_ready</code>, <code>onnx_fp32_ready</code> and <code>onnx_fp16_ready</code> for every model
+(v16.9.147); the Master API Reference Manual defines the flags.</li>
+</ul>
+<h3 id="sec-237-shard-io-offset-cache--locality-sampling-v169148-to-v169154">2.37. Shard I/O, Offset Cache &amp; Locality Sampling (v16.9.148 to v16.9.154)</h3>
+<ul>
+<li><strong>Byte-Offset Reads</strong>: <code>training/data/containers/tar_offsets.py</code> records
+<code>(name, offset, size)</code> of every member of an uncompressed shard. A member
+is read with one <code>seek</code> and one <code>read</code> instead of
+<code>tarfile.extractfile(name)</code>, whose reverse linear name scan costs
+$\mathcal{O}(M)$ in a shard of $M$ members; the offset lookup is
+$\mathcal{O}(1)$. Compressed shards keep the <code>tarfile</code> path, and a short
+read (a shard changed after indexing) raises <code>OSError</code> and drops the
+handle.</li>
+<li><strong>Offset Cache</strong>: <code>ShardOffsetCache</code> keeps the tables in
+<code>.shard_offsets.json</code> next to the shards, or in a temp-dir fallback when
+the shard folder is read-only (Kaggle <code>/kaggle/input</code>). An entry is reused
+only while the shard's size and mtime match and every member lies inside
+the file; otherwise the shard is rescanned.</li>
+<li><strong>Bounded Handles</strong>: <code>HandlePool</code>
+(<code>training/data/containers/handle_pool.py</code>) keeps at most 16 shard handles
+per process (<code>max_open_handles</code>) and closes the least recently used one.
+Handles are never pickled, and a forked worker closes inherited handles.</li>
+<li><strong>Measured Read Cost</strong>: on four 5,000-member shards (CPU, warm page cache)
+a sample took 188.6 us with <code>tarfile</code> reads and 29.7 us with offset reads;
+the index took 314 ms by header scan and 132 ms from the cache (training
+suite changelog v16.9.148).</li>
+<li><strong>Label 0</strong>: a falsy JSON sidecar label (class <code>0</code>, score <code>0.0</code>) no longer
+falls through to the next key.</li>
+<li><strong>Zero-Rebuild Curriculum Transitions</strong>: a fraction or resolution change
+re-slices the cached sample list, and the offset index travels with the
+pickled reader, so <code>update_strategy</code>, item reads and respawned loader
+workers never call <code>scan_tar_members</code> or <code>tarfile.open</code>.
+<code>tests/unit/test_curriculum_rebuild.py</code> pins this and checks that each
+larger fraction keeps every sample of the smaller one.</li>
+<li><strong>Locality Sampler (opt-in)</strong>: <code>training/data/locality.py</code> reads the
+<code>data.locality</code> section of <code>config.yaml</code>; <code>window_shards</code> and
+<code>fraction_block_size</code> default to 0, which is off. With <code>window_shards</code>
+set, the train sampler shuffles the shards per epoch and the samples
+inside windows of that many shards; the order is drawn from
+<code>seed + epoch</code>, splits across DDP ranks and resumes mid-epoch. On 50
+shards of 1,000 samples with a window of 4, a 16-sample batch touches 3.9
+shards instead of 13.8. With <code>fraction_block_size</code> set, a curriculum
+fraction is built from shuffled contiguous blocks inside each shard in a
+fixed block order, so the subsets stay nested across fraction steps
+(Monotonic Ratchet).</li>
+</ul>
+<h3 id="sec-238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152">2.38. Quality Score, Optimizer Groups &amp; Batch Invariant (v16.9.144 to v16.9.152)</h3>
+<ul>
+<li><strong>One Quality Score</strong>: <code>training/governance/quality_score.py</code> is the only
+definition of the scalar score, used for the epoch score and for the
+curriculum target. Restoration, enhancement and face task types score the
+<code>ROBOTS.md</code> formula on every epoch; other tasks keep the weighted sum of
+their SOTA targets. Metrics the epoch did not measure are skipped (a
+missing FID used to count as 0 and added a phantom 100 points).</li>
+</ul>
+<div class="math-block">$$\text{Quality Score} = \text{PSNR} + (\text{SSIM} \times 20) - (\text{LPIPS} \times 20)$$</div>
+<ul>
+<li><strong>FID as a Separate Gate</strong>: FID was measured every fifth epoch and added
+$(100 - \text{FID})$ only then, so the score jumped by 60 to 90 points on
+FID epochs and <code>best.pth</code> followed that cadence. FID now stays out of the
+score; it still gates publication (Pillar 1) and triggers <code>vault_fid.pth</code>
+from its own column.</li>
+<li><strong>Scheme Tagging</strong>: governor state carries <code>quality_scheme</code>
+(<code>robots_psnr_ssim_lpips_v1</code> or <code>weighted_targets_v1</code>). A restoration
+checkpoint without the tag was scored on the old scale, so its best scores
+are not reused (logged warning), and <code>metrics.csv</code> rows are rescored from
+their PSNR, SSIM and LPIPS columns (<code>csv_row_quality</code>). The 600 to 555
+<code>governor.quality_anchor_recalibration</code> of Section 2.34 has no effect on
+the new scale.</li>
+<li><strong>Four Optimizer Groups</strong>: <code>training/training/param_groups.py</code> builds up
+to four param groups, backbone and head, each with and without weight
+decay, tagged <code>group: "backbone"</code> or <code>group: "head"</code>. The head is named by
+a model's <code>head_param_prefixes</code>, else it is the last top-level child with
+trainable parameters (when there are at least two). Group 0 is still the
+backbone decay group, and <code>head_lr_multiplier</code> now takes effect.</li>
+<li><strong>Old Checkpoint Migration</strong>: <code>restore_optimizer_state</code> migrates the old
+two-group layout: each parameter keeps its Adam moments and step, each new
+group takes the hyperparameters of the group it came from, and the
+scheduler's per-group lists are widened, so the LR curve continues. A
+state that does not match keeps the fresh optimizer and logs a warning.</li>
+<li><strong>Exact-Divisor Batch Rule</strong>: the effective batch
+$B_{\text{eff}} = b_{\text{micro}} \times k$ ($k$ accumulation steps) stays
+exactly equal whenever the micro-batch shrinks to a budget
+$b_{\text{safe}}$: the new micro-batch is the largest divisor of
+$B_{\text{eff}}$ within the budget (<code>fit_batch_to_budget</code>). The rule
+applies after a resolution jump, on the resume VRAM clamp and in the OOM
+throttle (Section 2.39). The first setup still rounds
+$B_{\text{target}} / b$ (Section 2.35).</li>
+</ul>
+<div class="math-block">$$b_{\text{micro}}' = \max\{\, d \le b_{\text{safe}} : d \mid B_{\text{eff}} \,\}, \qquad k' = \frac{B_{\text{eff}}}{b_{\text{micro}}'}, \qquad b_{\text{micro}}' \times k' = B_{\text{eff}}$$</div>
+<ul>
+<li><strong>VRAM Refit on Resolution Jumps</strong>: after a jump the engine re-runs the
+VRAM audit at the new resolution (<code>training/training/batch_budget.py</code>) and
+fits the micro-batch to it; BatchNorm buffers and the train/eval mode are
+restored after the probe. The refit only shrinks the batch and runs only
+on CUDA. With an effective batch that has few divisors, the micro-batch
+can drop to 1.</li>
+<li><strong>Spatial Ladder Memory Analysis</strong>: activation memory scales with the
+pixels held at once, so chunked evaluation bounds the peak by the chunk
+and not by the dataset size $N$. Along the restoration ladder
+<code>256px -&gt; 384px -&gt; 512px -&gt; 640px</code>, $H \cdot W$ grows by 2.25, 1.78 and
+1.56 per step, 6.25 in total, so the micro-batch that fits at 256 px needs
+about $1/6.25$ of the memory budget per sample at 640 px. Under the
+exact-divisor rule an effective batch of 24 with a budget of 5 trains at
+4 x 6 and with a budget of 2 at 2 x 12.</li>
+</ul>
+<div class="math-block">$$\text{Mem}_{\text{total}} = \mathcal{O}(N \cdot H \cdot W \cdot C) \quad \text{vs} \quad \text{Mem}_{\text{peak}} = \mathcal{O}(b_{\text{chunk}} \cdot H \cdot W \cdot C)$$</div>
+<ul>
+<li><strong>Rung Entry Fraction</strong>: <code>rung_entry_fraction</code> decides the data fraction a
+new rung starts at (<code>optimization.initial_fraction</code>, then
+<code>governor.manifold.initial_fraction</code>, then 0.15). A SOTA-forced jump used
+to enter at a hardcoded 50%; both jump kinds now use it, through
+<code>_commit_rung</code> and its pair rule (Section 2.25).</li>
+</ul>
+<h3 id="sec-239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157">2.39. Task-Type Resolver &amp; Optional Dependency Adapter (v16.9.155 to v16.9.157)</h3>
+<ul>
+<li><strong>Single Task-Type Resolver</strong>: <code>training/registry/task_type.py</code>
+(<code>resolve_task_type</code>) resolves a registry entry's task type from
+<code>task_type</code>, then <code>dataset_type</code>, then <code>category</code> (the first non-empty
+value wins, a list resolves to its first entry), and <code>restoration</code> when
+none is declared. The run spec, the checkpoint lifecycle, the governor and
+the epoch quality scorer call it; a snapshot test checks every registry
+model against the three resolvers it replaced.</li>
+<li><strong>Exact-Divisor OOM Throttle</strong>: a mid-epoch OOM halves the micro-batch
+through <code>fit_batch_to_budget</code> (never below <code>min_batch</code>), so the effective
+batch stays equal. It used to round the accumulation and drift (7 x 1
+became 3 x 2).</li>
+<li><strong>Sampler Order State</strong>: shuffle, seed, epoch and shard window of
+<code>ResumableBatchSampler</code> are one <code>EpochOrder</code> dataclass that also draws the
+epoch's sample order; behaviour is unchanged.</li>
+<li><strong>Optional bitsandbytes</strong>: <code>paged_adamw_8bit()</code> in
+<code>training/training/optimizer.py</code> imports <code>bitsandbytes.optim</code> on demand
+and returns <code>PagedAdamW8bit</code> only when it is a <code>torch.optim.Optimizer</code>
+subclass, else None, and the optimizer falls back to AdamW. Importing the
+optimizer module no longer loads bitsandbytes, which stays optional.</li>
 </ul>
 </section>
 
@@ -1835,7 +2033,13 @@ and the required GUI training verdict (Section 2.30); manifold task from
 (Section 2.32); the FID re-evaluation tool (Section 2.33); omni-metric
 deficit engine and
 rank-boost escalation (Section 2.7); Soft-Spearman loss with the rank memory
-bank (Section 2.9).</li>
+bank (Section 2.9); container targets for both shard layouts and
+deterministic mid-epoch resume (Section 2.36); byte-offset shard reads with
+the offset cache and the 16-handle pool (Section 2.37); the single quality
+score, four optimizer groups and the exact-divisor batch rule (Section
+2.38); the single task-type resolver (Section 2.39).</li>
+<li><strong>Present but off by default</strong>: shard-window locality sampling and
+block-wise curriculum fractions (<code>data.locality</code>, Section 2.37).</li>
 <li><strong>Present but not active</strong> (code exists, never invoked by the training loop):
 rollback registration (<code>register_rollback</code>) with the loop-breaker and
 resolution escalation built on it; the resolution-jump veto and the pre-jump

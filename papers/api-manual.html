@@ -1222,7 +1222,10 @@ evaluation.</li>
       }
     ],
     "sota_reached": true,
-    "training_status": "fully_trained"
+    "training_status": "fully_trained",
+    "pytorch_ready": true,
+    "onnx_fp32_ready": true,
+    "onnx_fp16_ready": false
   }
 ]
 </code></pre>
@@ -1262,10 +1265,19 @@ completed ($0.0$ to $1.0$).</p>
 </li>
 <li>
 <p><code>parameters_m</code>, <code>best_metric</code>, <code>sota_target</code>: measured or registered values
-only, else <code>null</code> (training v16.9.122). <code>parameters_m</code> comes from
+only, else <code>null</code> (since training v16.9.122). <code>parameters_m</code> comes from
 <code>unified_models_v2.yaml</code> and is <code>null</code> for a model without a count;
 <code>best_metric</code> is <code>null</code> until a value is measured; <code>best_metric</code> and
 <code>sota_target</code> may also be strings.</p>
+</li>
+<li>
+<p><code>pytorch_ready</code>, <code>onnx_fp32_ready</code>, <code>onnx_fp16_ready</code> (boolean, training
+v16.9.147): per-format readiness of the release binaries. Each flag is true
+when <code>&lt;Stem&gt;.pt</code>, <code>&lt;Stem&gt;_FP32.onnx</code> or <code>&lt;Stem&gt;.onnx</code> exists in the model
+hub folder, its <code>checkpoints/</code> folder or the variation's <code>dist/kaggle</code>
+folder; the stem comes from <code>resolve_model_stem</code>. <code>STAGED_FOLDERS</code> in
+<code>training/cloud/variations.py</code> is the one list of these folders. The
+AI Studio GUI variation badges read the three flags.</p>
 </li>
 <li>
 <p><code>POST /api/gui/quick-train</code>: Accepts

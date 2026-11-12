@@ -26,8 +26,8 @@
 <div class="meta">
 <span><strong>Parent Paper</strong>: <a href="training-suite-master.html">LemGendary Model Training Suite: Technical Whitepaper</a></span>
 <span><strong>Author</strong>: Lem Treursic</span>
-<span><strong>Version</strong>: <code>v16.9.138-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Paper Revision</strong>: 1.9.0 - ONNX Export &amp; Multi-Head Validation Pathologies (2026-11-12)</span>
+<span><strong>Version</strong>: <code>v16.9.157-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Paper Revision</strong>: 1.10.0 - Training Suite Remediation Sync (2026-11-12)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU) / Kaggle Tesla T4 Cloud</span>
 </div>
@@ -176,9 +176,11 @@ remediation framework—the <strong>&quot;Nuclear Stability&quot; protocol</stro
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.9.0 aligns the guide with release
-v16.9.138-STABLE of the LemGendary Model Training Suite and adds Pathologies 37
-to 39 (ONNX export of adaptive pooling, multi-head validation outputs and the
+cloud GPU clusters. Revision 1.10.0 aligns the guide with release
+v16.9.157-STABLE of the LemGendary Model Training Suite: shard handles live in
+a bounded per-process pool (Pathology 36) and the CUDA wheel index comes from
+the hardware probe (Pathology 29). Revision 1.9.0 added Pathologies 37 to 39
+(ONNX export of adaptive pooling, multi-head validation outputs and the
 2.00 GB protobuf limit). The governor obeys the
 Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
 decreases within one resolution step, and every backward step raises
@@ -820,7 +822,7 @@ dynamically to the longest sequence in each validation micro-batch.</li>
 <ul>
 <li><strong>The Issue</strong>: In environments where PyTorch is installed without
 pre-compiled CUDA binaries (CPU-only build, e.g. <code>torch==2.15.0+cpu</code> instead
-of <code>+cu126</code>), <code>torch.cuda.is_available()</code> returns <code>False</code>. The training suite
+of <code>+cu134</code>), <code>torch.cuda.is_available()</code> returns <code>False</code>. The training suite
 falls back to CPU execution without throwing an exception. On a 1.5B
 parameter causal transformer with 2048 sequence length, CPU execution
 saturates all host threads (96% CPU utilization across 12 logical processors)
@@ -830,8 +832,9 @@ validation pass).</li>
 <li><strong>Identification</strong>: Task Manager displays 96% CPU load, 0% GPU utilization,
 0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.</li>
 <li><strong>Remedy</strong>: <strong>Hardware Sentinel Pre-Flight Enforcement</strong>. Install
-CUDA-enabled PyTorch wheels
-(<code>pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126</code>). The local trainer has no automatic
+CUDA-enabled PyTorch wheels from the index the LemGendary Environment
+Manager hardware probe selects for the driver (<code>cu134</code> for driver 610 or
+newer, e.g. <code>pip install torch torchvision --index-url https://download.pytorch.org/whl/cu134</code>). The local trainer has no automatic
 pre-flight check yet that compares OS GPU enumeration with
 <code>torch.cuda.is_available()</code>; check <code>lemtrain audit system</code>, which prints
 <code>CUDA Available</code>. Only the generated Kaggle notebooks probe the GPU and
@@ -953,7 +956,12 @@ accumulation steps for edge training.</li>
 <ol>
 <li>Calculate training DataLoader workers dynamically using available system headroom: \(\Omega_{\text{workers}} = \min(N_{\text{cpu}} - 1, \lfloor \text{RAM}_{\text{avail}} / 1.5\text{GB} \rfloor)\) with 0 workers preserved for memory-mapped sequence arrays to honor Pathology 24.</li>
 <li>Dynamically activate <code>persistent_workers = True</code> when available memory \(\ge 16\text{GB}\).</li>
-<li>Ensure <code>WebDatasetReader</code> detects worker process boundaries (<code>os.getpid()</code>) and establishes isolated <code>tarfile</code> handles per worker.</li>
+<li><code>WebDatasetReader</code> keeps its shard handles in a per-process
+<code>HandlePool</code> (at most 16 open handles, least recently used closed
+first). Handles are never pickled, a forked worker closes inherited
+handles, and uncompressed shards are read by byte offset from the
+<code>.shard_offsets.json</code> cache instead of a <code>tarfile</code> name scan (since
+training v16.9.148).</li>
 </ol>
 </li>
 </ul>
@@ -993,7 +1001,7 @@ documented in this section reflect the chronological hardening of the
 LemGendary Model Training Suite across architectural milestones. Historical
 tags (<code>v16.2.8</code>, <code>v17.2</code>, <code>v18.0</code>, <code>v22.0</code>) represent historical development
 phases and research prototypes. In the authoritative active baseline
-(<strong>v16.9.138-STABLE</strong>), all of these individual mechanisms (high-fidelity
+(<strong>v16.9.157-STABLE</strong>), all of these individual mechanisms (high-fidelity
 resolution floors, zero-worker serial lockdown, sawtooth VRAM memory
 sentinels, and ladder-aware resolution jumps) have been fully consolidated
 into the unified <code>SmartTrainingGovernor</code> runtime engine.</p>

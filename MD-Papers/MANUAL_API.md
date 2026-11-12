@@ -1457,7 +1457,10 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
       }
     ],
     "sota_reached": true,
-    "training_status": "fully_trained"
+    "training_status": "fully_trained",
+    "pytorch_ready": true,
+    "onnx_fp32_ready": true,
+    "onnx_fp16_ready": false
   }
 ]
 ```
@@ -1486,10 +1489,17 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
   completed ($0.0$ to $1.0$).
 - `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
 - `parameters_m`, `best_metric`, `sota_target`: measured or registered values
-  only, else `null` (training v16.9.122). `parameters_m` comes from
+  only, else `null` (since training v16.9.122). `parameters_m` comes from
   `unified_models_v2.yaml` and is `null` for a model without a count;
   `best_metric` is `null` until a value is measured; `best_metric` and
   `sota_target` may also be strings.
+- `pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready` (boolean, training
+  v16.9.147): per-format readiness of the release binaries. Each flag is true
+  when `<Stem>.pt`, `<Stem>_FP32.onnx` or `<Stem>.onnx` exists in the model
+  hub folder, its `checkpoints/` folder or the variation's `dist/kaggle`
+  folder; the stem comes from `resolve_model_stem`. `STAGED_FOLDERS` in
+  `training/cloud/variations.py` is the one list of these folders. The
+  AI Studio GUI variation badges read the three flags.
 
 - `POST /api/gui/quick-train`: Accepts
   `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300,
