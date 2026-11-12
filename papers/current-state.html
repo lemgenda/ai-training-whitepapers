@@ -135,7 +135,7 @@ transcoded to WebDataset <code>.data</code> archives: <code>LemGendizedClassific
 <p>Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.</p>
 <ul>
-<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.128-STABLE</code>): PyTorch training
+<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.157-STABLE</code>): PyTorch training
 loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
 optional SWA, FID re-evaluation tool.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
@@ -143,22 +143,22 @@ Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</c
 WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
 Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
-<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.79-STABLE</code>): hardware probe,
+<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.80-STABLE</code>): hardware probe,
 virtual environments, compliance audits, bug report endpoint, ecosystem
 registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
 <code>lemgendary_env_manager.ps1</code>.</li>
 <li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.57</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.95-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.96-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
-<li><strong>Training Pathology Guide</strong> (<code>1.9.0</code>, baseline <code>v16.9.138-STABLE</code>):
+<li><strong>Training Pathology Guide</strong> (<code>1.10.0</code>, baseline <code>v16.9.157-STABLE</code>):
 <code>PAPER_TRAINING_PATHOLOGY.md</code>.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
 <p>The package metadata matches the README releases: the LemGendary Model
-Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.128</code>);
+Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.157</code>);
 <code>training/version.py</code> reads it for the CLI, the sidecar, the health route and
 <code>openapi.json</code>, and <code>config.yaml</code> has no version key (since v16.9.128). The
 LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.84</code> (one
@@ -207,7 +207,7 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.95-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.96-STABLE</code>.</p>
 </section>
 
 <section id="sec-4-tripartite-microservice-topology--port-bindings">
@@ -284,8 +284,8 @@ at least 20 epochs):</p>
 the removed <code>tools/recalibrate_fid.py</code> and are not measured values. Any FID
 value or chart from these four histories is unverified until the checkpoints
 are re-evaluated with <code>feature=2048</code>. The tool for that is
-<code>python -m training.fid_reeval</code> (training v16.9.107): it appends to
-<code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> and never rewrites
+<code>python -m training.fid_reeval</code> (added in training v16.9.107): it appends
+to <code>LemGendaryModels/&lt;model&gt;/fid_provenance.csv</code> and never rewrites
 <code>metrics.csv</code>. The re-measurement needs a GPU and has not been run.</p>
 <p><strong>Training status in the GUI</strong>: <code>GET /api/gui/models/with-stats</code> always
 returns <code>training_status</code> (<code>fully_trained</code>, <code>partially_trained</code>,
@@ -374,12 +374,15 @@ Serial-Only Mode upon memory saturation, eliminating Windows System RAM
 pagefile thrashing (empirically measured $12.5\times$ batch retrieval
 acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence
 manifolds on Windows enforce <code>num_workers=0</code>).</li>
-<li><strong>CUDA 12.6 Verified (cu126)</strong>: NVIDIA GeForce GTX 1650 (Turing, <code>sm_75</code>,
-Driver 610.74) verified with <code>torch 2.14.1+cu126</code>. Hardware gates
-confirmed: FP32 matmul, FP16 autocast, Conv2D forward/backward,
-<code>torch.compile</code> eager fallback, ONNX Dynamo export (max diff 1.78e-07),
-Transformers 5.20.1 BERT/GPT2 CUDA inference and Torchvision CUDA NMS. BF16
-is unsupported on Turing as expected and is not selected.</li>
+<li><strong>GTX 1650 Hardware Verification (earlier stack)</strong>: an NVIDIA GeForce
+GTX 1650 (Turing, <code>sm_75</code>, Driver 610.74) was verified with the earlier
+<code>torch 2.14.1+cu126</code> wheels. Hardware gates confirmed: FP32 matmul, FP16
+autocast, Conv2D forward/backward, <code>torch.compile</code> eager fallback, ONNX
+Dynamo export (max diff 1.78e-07), Transformers 5.20.1 BERT/GPT2 CUDA
+inference and Torchvision CUDA NMS. BF16 is unsupported on Turing as
+expected and is not selected. The current pin is <code>torch==2.15.0</code>, and for
+driver 610.74 the hardware probe now selects the <code>cu134</code> index; the gates
+have not been re-run on that stack.</li>
 <li><strong>Continuous Memory Formula</strong>: Dynamic batch calculation scales continuously
 with available VRAM:</li>
 </ul>

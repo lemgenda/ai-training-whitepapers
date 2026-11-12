@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.95`
+**Version**: `v16.9.96`
 
 ---
 
@@ -19,8 +19,8 @@
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.79, LemGendary
-  Dataset Compiler Suite v16.9.84, LemGendary Model Training Suite v16.9.139,
+* **Current baselines** - LemGendary Environment Manager v16.9.80, LemGendary
+  Dataset Compiler Suite v16.9.84, LemGendary Model Training Suite v16.9.157,
   LemGendary AI Studio GUI v2.10.57.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -40,9 +40,8 @@
   baseline equals the release version the component declares. The sibling
   files are found next to this repository or under
   `LEMGENDARY_WORKSPACE_ROOT`; a missing file is a finding that names the
-  path. The parity backlog (`scripts/parity_backlog.json`) holds one entry,
-  the LemGendary Model Training Suite baseline, until that suite's
-  documentation is synchronized; any other finding fails.
+  path. The parity backlog (`scripts/parity_backlog.json`) is empty: every
+  finding fails the audit.
 
 ---
 
@@ -61,6 +60,57 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.96 - LemGendary Model Training Suite v16.9.157 and Environment Manager v16.9.80 Sync (Audit Phase 5b)
+
+* `canonical_capabilities.json`, `canonical_capabilities.yaml`:
+  `runtime_engine_baseline` and every model `runtime_baseline` set to
+  v16.9.157-STABLE (they said v16.9.139 and v16.9.128),
+  `environment_manager_baseline` to v16.9.80-STABLE. New platform capability
+  `shard_locality_sampling` (`data.locality.window_shards` and
+  `data.locality.fraction_block_size`, off by default).
+* `scripts/parity_backlog.json`: the last backlog entry
+  (`runtime_engine_baseline`) is resolved and removed; the backlog is empty.
+* `PAPER_TRAINING_SUITE.md` and its page (v16.9.157-STABLE): new Sections
+  2.36 (container targets for both shard layouts, 15-value face targets with
+  masked absent landmarks, synthesised degradation for unpaired samples,
+  UltraZoom bicubic input, prompt masking, LPIPS for `l1_lpips` models,
+  governor LR as a ratio over the scheduler, deterministic mid-epoch resume
+  with `ResumableBatchSampler` and GradScaler state, NCCL/Gloo selection,
+  macOS worker budget, POSIX process-group cleanup, readiness flags), 2.37
+  (byte-offset shard reads, `.shard_offsets.json` cache, 16-handle LRU
+  pool, label 0 fix, zero-rebuild curriculum transitions, opt-in locality
+  sampler), 2.38 (one quality score with scheme tagging and FID as a
+  separate gate, four optimizer groups with old-checkpoint migration, the
+  exact-divisor batch rule, VRAM refit on resolution jumps with the
+  `256px -> 384px -> 512px -> 640px` memory analysis, rung entry fraction)
+  and 2.39 (single task-type resolver, exact-divisor OOM throttle,
+  `EpochOrder`, optional `paged_adamw_8bit()` adapter), with LaTeX for the
+  LR ratio, quality score, batch invariant and memory bound. Section 2.21
+  named stale pins (`torch 2.14.1+cu126`) and a training-side index
+  selection; it now names the central pins and the env-manager probe
+  (`cu134`, `cu126`, `cu121`, `cu118`) and marks the GTX 1650 gates as run
+  on the earlier stack. Section 2.34 dates `REVIEW_REPORT.md` to v16.9.123.
+  The abstract, the scorecarding bullet (FID no longer compounded into the
+  score) and Section 8.1 follow; a raw `**` in the 2.35 page is now
+  `strong`.
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.10.0, baseline
+  v16.9.157-STABLE; Pathology 36 describes the bounded handle pool and
+  offset reads, Pathology 29 the probe-selected `cu134` index.
+* `MANUAL_API.md` and its page: `ModelWithStats` example and field list
+  gain `pytorch_ready`, `onnx_fp32_ready` and `onnx_fp16_ready`.
+* `LEMGENDARY_CURRENT_STATE.md`, `VERSIONING_POLICY.md`,
+  `ECOSYSTEM_ARCHITECTURE.md` and their pages: training suite v16.9.157,
+  env manager v16.9.80, documentation hub v16.9.96, pathology guide 1.10.0.
+  The GTX 1650 bullet no longer claims a current cu126 verification; it
+  names the earlier `torch 2.14.1+cu126` stack and the `cu134` index the
+  probe selects today.
+* `PAPER_ENV_MANAGER.md`, `MANUAL_CLI.md` and their pages: env manager
+  v16.9.80; every validation gate runs its tool from the project
+  directory, so `validate` behaves the same from the workspace root.
+* `manifest/documents.json`: training suite and pathology baselines
+  v16.9.157-STABLE, env manager v16.9.80-STABLE, touched documents audited
+  2026-11-12.
 
 ### v16.9.95 - Current State and Versioning Policy Version Sync (Audit DOCS-4)
 
