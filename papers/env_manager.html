@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.1 ENV | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.79-STABLE</code> (LemGendary Environment Manager)</span>
+<span><strong>Version</strong>: <code>v16.9.80-STABLE</code> (LemGendary Environment Manager)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
@@ -75,7 +75,7 @@ Observability</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Environment Manager (release <code>v16.9.79-STABLE</code>) is the
+<p>The LemGendary Environment Manager (release <code>v16.9.80-STABLE</code>) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -376,7 +376,12 @@ dataset manifests, training suite, models hub, git hooks) and
 tool is a <code>tool_error</code> finding, and the npx fallback never downloads
 packages. A new gate is one more <code>Gate</code> in the registry. The documentation check compares
 each Markdown and HTML pair by H2 count, table count and length ratio; it is
-not a word-for-word comparison. Changes in v16.9.74 to v16.9.78: a project without its own Pylint config is linted with the env-manager <code>.pylintrc</code>; ESLint warnings fail like errors and flat configs get no <code>--ext</code>; <code>tsc</code> also checks <code>tsconfig.node.json</code>; html-validate and pa11y run on every HTML page and name the file; the emoji scan covers every text type and the <code>.githooks</code>, <code>.github</code> and <code>.agents</code> folders; the documentation test suite runs as a subprocess with the docs <code>.venv</code>; and step 6 validates every validated project, not only those with a venv.</li>
+not a word-for-word comparison. Changes in v16.9.74 to v16.9.78: a project without its own Pylint config is linted with the env-manager <code>.pylintrc</code>; ESLint warnings fail like errors and flat configs get no <code>--ext</code>; <code>tsc</code> also checks <code>tsconfig.node.json</code>; html-validate and pa11y run on every HTML page and name the file; the emoji scan covers every text type and the <code>.githooks</code>, <code>.github</code> and <code>.agents</code> folders; the documentation test suite runs as a subprocess with the docs <code>.venv</code>; and step 6 validates every validated project, not only those with a venv. Since
+v16.9.80 <code>run_tool</code> requires a working directory and every gate runs its
+tool from the project directory, so <code>validate</code> launched from the
+workspace root (which is not a git repository) no longer crashes the
+yamllint gate, whose <code>ignore-from-file: .gitignore</code> resolves against the
+working directory.</li>
 <li><strong>Health Matrix Generation ($v_7$)</strong>: Compiles global telemetry into an
 aggregated health status matrix for desktop and CLI display, including
 manifest coverage, single-manifest package inventory, and npm workspace

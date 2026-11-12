@@ -329,7 +329,10 @@ Validation gates enforced (in run order, from
   `lemgendary-env-manager/ecosystem/ecosystem.json`; Projects: All projects
 
 Gates fail closed: a missing or crashing tool is a `tool_error` finding, and the
-npx fallback (`npx --no`) never downloads packages.
+npx fallback (`npx --no`) never downloads packages. Every gate runs its tool
+with the project directory as working directory (since LemGendary Environment
+Manager v16.9.80), so `validate` gives the same result from the workspace root
+as from inside a project.
 
 All Node.js validation tools are resolved locally from
 `lemgendary-env-manager/node_modules/.bin` via `_resolve_tool_cmd()`,

@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.79-STABLE` (LemGendary Environment Manager) · **Last
+**Version**: `v16.9.80-STABLE` (LemGendary Environment Manager) · **Last
 audited**: 2026-11-12
 
 ---
@@ -41,7 +41,7 @@ audited**: 2026-11-12
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.79-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.80-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -369,7 +369,12 @@ and Health Matrix. The list below describes what each step does.
    pa11y run on every HTML page and name the file; the emoji scan covers every
    text type and the `.githooks`, `.github` and `.agents` folders; the
    documentation test suite runs as a subprocess with the docs `.venv`; and step
-   6 validates every validated project, not only those with a venv.
+   6 validates every validated project, not only those with a venv. Since
+   v16.9.80 `run_tool` requires a working directory and every gate runs its
+   tool from the project directory, so `validate` launched from the
+   workspace root (which is not a git repository) no longer crashes the
+   yamllint gate, whose `ignore-from-file: .gitignore` resolves against the
+   working directory.
 7. **Health Matrix Generation ($v_7$)**: Compiles global telemetry into an
    aggregated health status matrix for desktop and CLI display, including
    manifest coverage, single-manifest package inventory, and npm workspace

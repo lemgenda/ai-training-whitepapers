@@ -321,7 +321,10 @@ Kaggle owner, docs URL or project lists that do not come from
 <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>; Projects: All projects</li>
 </ul>
 <p>Gates fail closed: a missing or crashing tool is a <code>tool_error</code> finding, and the
-npx fallback (<code>npx --no</code>) never downloads packages.</p>
+npx fallback (<code>npx --no</code>) never downloads packages. Every gate runs its tool
+with the project directory as working directory (since LemGendary Environment
+Manager v16.9.80), so <code>validate</code> gives the same result from the workspace root
+as from inside a project.</p>
 <p>All Node.js validation tools are resolved locally from
 <code>lemgendary-env-manager/node_modules/.bin</code> via <code>_resolve_tool_cmd()</code>,
 eliminating global toolchain pollution.</p>
