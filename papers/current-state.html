@@ -31,7 +31,7 @@
 <span><strong>Versioning Policy</strong>: <a href="versioning-policy.html">Document Authority Hierarchy &amp; Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.68-STABLE</code></span>
 <span><strong>Status</strong>: Canonical</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -80,7 +80,7 @@ Browser requests from origins other than the LemGendary AI Studio GUI
 state-changing browser requests must send the Client Header
 <code>X-LemGendary-Client: ai-studio-gui</code>. <code>GET /api/secrets</code> returns only whether
 each secret is set and its last 4 characters.</li>
-<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.38</code>), a
+<li><strong>Presentation Layer</strong>: The LemGendary AI Studio GUI (<code>v2.10.57</code>), a
 cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
 real Content Security Policy and one shared fetch wrapper for all sidecar
 calls.</li>
@@ -126,11 +126,7 @@ transcoded to WebDataset <code>.data</code> archives: <code>LemGendizedClassific
 (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and
 <code>LemGendizedMultitaskRestorationPro</code> (42.2 GB, 54 shards; 232,464 train +
 31,742 val samples).</li>
-<li><strong>cu126 PyTorch Stack</strong>: <code>torch 2.14.1+cu126</code>, <code>torchvision 0.29.1+cu126</code>,
-<code>torchaudio 2.11.0+cu126</code>, <code>transformers 5.20.1</code>, <code>sympy 1.14.0</code> and
-<code>numpy 2.1.3</code> in <code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>.
-<code>select_cuda_torch_index()</code> in <code>system_probe.py</code> picks the newest supported
-index (<code>cu126</code>, <code>cu121</code>, <code>cu118</code>) from the driver version.</li>
+<li><strong>PyTorch Stack</strong>: the central <code>lemgendary-env-manager/requirements/*.txt</code> files pin <code>torch==2.15.0</code>, <code>torchvision==0.29.2</code>, <code>transformers==5.22.1</code> and <code>numpy==2.5.4</code> for <code>lemgendary-training-suite</code> and <code>lemgendary-datasets</code>, plus <code>torchaudio==2.11.1</code> for the training suite. No wheel index is pinned: <code>select_cuda_torch_index()</code> in <code>system_probe.py</code> picks it from the hardware probe (<code>cu134</code>, <code>cu126</code>, <code>cu121</code> or <code>cu118</code> by NVIDIA driver version, ROCm, PyPI for Apple MPS, CPU otherwise).</li>
 </ul>
 </section>
 
@@ -143,21 +139,21 @@ repository is the source of the release version.</p>
 loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
 optional SWA, FID re-evaluation tool.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
-<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.71-STABLE</code>): shard synthesis,
+<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.84-STABLE</code>): shard synthesis,
 WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
 Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
-<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.60-STABLE</code>): hardware probe,
+<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.79-STABLE</code>): hardware probe,
 virtual environments, compliance audits, bug report endpoint, ecosystem
 registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
 <code>lemgendary_env_manager.ps1</code>.</li>
-<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.38</code>): Tauri v2 desktop application and
+<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.57</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.84-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.95-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
-<li><strong>Training Pathology Guide</strong> (<code>1.6.0</code>, baseline <code>v16.9.107-STABLE</code>):
+<li><strong>Training Pathology Guide</strong> (<code>1.9.0</code>, baseline <code>v16.9.138-STABLE</code>):
 <code>PAPER_TRAINING_PATHOLOGY.md</code>.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
@@ -165,7 +161,7 @@ exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
 Training Suite writes its version only in <code>pyproject.toml</code> (<code>16.9.128</code>);
 <code>training/version.py</code> reads it for the CLI, the sidecar, the health route and
 <code>openapi.json</code>, and <code>config.yaml</code> has no version key (since v16.9.128). The
-LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.71</code> (one
+LemGendary Dataset Compiler Suite <code>core/cli_args.py</code> reports <code>16.9.84</code> (one
 version string since v16.9.52).</p>
 </section>
 
@@ -211,7 +207,7 @@ memory sentinels and scientific citations.</li>
 </ol>
 <p>The machine-readable registries <code>canonical_capabilities.json</code>,
 <code>canonical_capabilities.yaml</code> and <code>manifest/documents.json</code> are updated
-together and share the document baseline <code>v16.9.84-STABLE</code>.</p>
+together and share the document baseline <code>v16.9.95-STABLE</code>.</p>
 </section>
 
 <section id="sec-4-tripartite-microservice-topology--port-bindings">

@@ -77,7 +77,7 @@ and governed as follows:
    - Governs Python microservice sidecars (Ports 8000, 8100, 8200), training
      loops, skip-index compilers, and dataset containers.
    - Current active state: `v16.9.122-STABLE` (LemGendary Model Training
-     Suite), `v16.9.65` (LemGendary Dataset Compiler Suite), `v16.9.60`
+     Suite), `v16.9.84` (LemGendary Dataset Compiler Suite), `v16.9.79`
      (LemGendary Environment Manager).
 2. **Desktop Operator GUI Client (`v2.x.y` / `v2.0.0`)**:
    - Covers `lemgendary-ai-studio-gui` (Tauri v2 + React 18 + Vite desktop
@@ -86,15 +86,15 @@ and governed as follows:
      release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen
      OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.82-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.95-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals,
      and foundational whitepapers.
-   - Reflects the active documentation release (`v16.9.82-STABLE`, reviewed
-     2026-11-04) while governing systems against the core runtime backend engine
-     baseline (`v16.9.122-STABLE`) and desktop operator client (`v2.10.38`).
+   - Reflects the active documentation release (`v16.9.95-STABLE`, reviewed
+     2026-11-12) while governing systems against the core runtime backend engine
+     baseline (`v16.9.122-STABLE`) and desktop operator client (`v2.10.57`).
 4. **Specialized Diagnostic & Clinical Specifications (`v1.x.y` / `v2.x.y`)**:
    - Covers clinical/diagnostic taxonomy standards such as
-     `PAPER_TRAINING_PATHOLOGY.md` (`v1.6.0`) and algorithmic papers
+     `PAPER_TRAINING_PATHOLOGY.md` (`v1.9.0`) and algorithmic papers
      (`ForexPredictor v2.7.1`).
    - These versions reflect domain-specific taxonomy releases rather than
      software runtime build numbers.
@@ -113,17 +113,17 @@ as follows:
   Runtime Version: `v16.9.122-STABLE`; Config Manifests:
   `unified_models_v2.yaml`; Primary Interface: `python -m training.cli.lemtrain`
 - **Dataset Compiler**: Repository / Component: `lemgendary-datasets`; Runtime
-  Version: `v16.9.65`; Config Manifests: `unified_data.yaml`; Primary Interface:
+  Version: `v16.9.84`; Config Manifests: `unified_data.yaml`; Primary Interface:
   `python cli.py` / `lemgendary_datasets_hub.ps1`
 - **Env Manager**: Repository / Component: `lemgendary-env-manager`; Runtime
-  Version: `v16.9.60`; Config Manifests: `pyproject.toml`, `package.json`;
+  Version: `v16.9.79`; Config Manifests: `pyproject.toml`, `package.json`;
   Primary Interface: `lem-env` / `lemgendary_env_manager.ps1`
 - **Desktop Operator GUI**: Repository / Component: `lemgendary-ai-studio-gui`;
-  Runtime Version: `v2.10.38` (Client); Config Manifests: `package.json`,
+  Runtime Version: `v2.10.57` (Client); Config Manifests: `package.json`,
   `src-tauri/tauri.conf.json`; Primary Interface: Tauri v2 Desktop App / Ports
   8000/8100/8200
 - **Documentation Hub**: Repository / Component: `lemgendary-docs`; Runtime
-  Version: `v16.9.82-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
+  Version: `v16.9.95-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
   Interface: Documentation Hub (`index.html`)
 - **Model Registry**: Repository / Component: `LemGendaryModels`; Runtime
   Version: `v16.9.16-STABLE`; Config Manifests: `LemGendaryModels/*/README.md`;
@@ -172,7 +172,7 @@ Specialized clinical or analytical diagnostic frameworks maintain independent
 specification versions to reflect domain-specific diagnostic taxonomies:
 
 - **Training Pathology Specification (`PAPER_TRAINING_PATHOLOGY.md`)**:
-  Maintained at **`v1.6.0` (Clinical Diagnostic Standard)**. While the training
+  Maintained at **`v1.9.0` (Clinical Diagnostic Standard)**. While the training
   suite executing these diagnostics operates at `v16.9.122`, the diagnostic
   taxonomy itself evolves according to clinical diagnostic revisions.
 - **Forex Predictive Architecture (`PAPER_FOREX_PREDICTOR.md`)**: Maintained at

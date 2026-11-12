@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.94`
+**Version**: `v16.9.95`
 
 ---
 
@@ -61,6 +61,24 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.95 - Current State and Versioning Policy Version Sync (Audit DOCS-4)
+
+* `LEMGENDARY_CURRENT_STATE.md`, `VERSIONING_POLICY.md` and their pages:
+  component versions synced with the component sources: LemGendary
+  Environment Manager v16.9.79, LemGendary Dataset Compiler Suite v16.9.84,
+  LemGendary AI Studio GUI v2.10.57, documentation hub v16.9.95 and the
+  Training Pathology Guide revision 1.9.0 (baseline v16.9.138). The
+  training suite versions are left for the training-suite sync.
+* `LEMGENDARY_CURRENT_STATE.md` and its page: the "cu126 PyTorch Stack"
+  bullet named stale pins (`torch 2.14.1+cu126` and others) and a fixed
+  index list; it now names the central requirements pins and the probe
+  index order (`cu134`, `cu126`, `cu121`, `cu118`, ROCm, PyPI for Apple
+  MPS, CPU).
+* `MANUAL_AI_STUDIO_GUI.md` and its page: the example wheel index row named
+  `cu121` next to driver 610.74; the probe selects `cu134` for that driver.
+* `manifest/documents.json`: `current-state` and `versioning-policy`
+  audited 2026-11-12.
 
 ### v16.9.94 - LemGendary AI Studio GUI v2.10.57 Control Registry, Manual and Whitepaper (Audit DOCS-3)
 

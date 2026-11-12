@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.94-STABLE",
+  "document_baseline": "v16.9.95-STABLE",
   "last_audited": "2026-11-12",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -72,7 +72,7 @@
       "html_path": "papers/current-state.html",
       "md_path": "MD-Papers/LEMGENDARY_CURRENT_STATE.md",
       "baseline_version": "v16.9.68-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -482,7 +482,7 @@
       "html_path": "papers/versioning-policy.html",
       "md_path": "MD-Papers/VERSIONING_POLICY.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     }
   ]

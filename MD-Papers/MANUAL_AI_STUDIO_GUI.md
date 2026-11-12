@@ -707,7 +707,8 @@ Card](../assets/gui/gui_hardware_card.png)
 5. **System RAM Capacity Row**: Displays physical host RAM capacity
    (`32,486 MB`) available for data streaming and dataset decompression.
 6. **Recommended PyTorch Wheel Index Row**: Authoritative repository link for
-   CUDA 12.1 binary packages (`https://download.pytorch.org/whl/cu121`).
+   the wheel index the hardware probe selects for the detected driver
+   (`https://download.pytorch.org/whl/cu134` for driver `610.74`).
 7. **Detected Accelerators & Dedicated VRAM Row**: Details physical GPU device
    model (`NVIDIA GeForce GTX 1650`), installed driver level (`610.74`), and
    dedicated video memory capacity (`4096 MB VRAM`).
