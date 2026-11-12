@@ -1368,8 +1368,14 @@ platform_capabilities:
       - data.locality.window_shards
       - data.locality.fraction_block_size
     behaviour:
-      - 'window_shards > 0: the train sampler shuffles the shards per epoch and the samples inside windows of that many shards; the order is drawn from seed + epoch, splits across DDP ranks and resumes mid-epoch.'
-      - 'fraction_block_size > 0: a curriculum data fraction is built from shuffled contiguous blocks inside each shard; the subsets stay nested across fraction steps (Monotonic Ratchet).'
+      - >-
+        window_shards > 0: the train sampler shuffles the shards per epoch and
+        the samples inside windows of that many shards; the order is drawn from
+        seed + epoch, splits across DDP ranks and resumes mid-epoch.
+      - >-
+        fraction_block_size > 0: a curriculum data fraction is built from
+        shuffled contiguous blocks inside each shard; the subsets stay nested
+        across fraction steps (Monotonic Ratchet).
     limitations:
       - Off by default; the GPU throughput gain on real manifolds is not measured yet.
       - Applies to WebDataset shards; other samples share one window key per dataset.
