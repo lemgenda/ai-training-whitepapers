@@ -11,6 +11,7 @@ Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
+* [1.1 What UltraZoom Does (In Plain English)](#11-what-ultrazoom-does-in-plain-english)
 * [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`](#2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical)
 * [3. Shared Foundations: Sub-Pixel Convolution & ESPCN](#3-shared-foundations-sub-pixel-convolution--espcn)
 * [4. Model Deep-Dives](#4-model-deep-dives)

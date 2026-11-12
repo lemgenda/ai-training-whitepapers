@@ -4,5 +4,11 @@
     {"id": "env-manager", "project": "lemgendary-env-manager", "port": 9100},
     {"id": "dataset-compiler", "project": "lemgendary-datasets", "port": 9110},
     {"id": "training-suite", "project": "lemgendary-training-suite", "port": 9120}
+  ],
+  "projects": [
+    {"folder": "lemgendary-env-manager", "display_name": "LemGendary Environment Manager"},
+    {"folder": "lemgendary-datasets", "display_name": "LemGendary Dataset Compiler Suite"},
+    {"folder": "lemgendary-training-suite", "display_name": "LemGendary Model Training Suite"},
+    {"folder": "lemgendary-ai-studio-gui", "display_name": "LemGendary AI Studio GUI"}
   ]
 }

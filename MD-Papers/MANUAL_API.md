@@ -36,6 +36,7 @@
   - [5.7 Three Architectural Ingestion & Modernization Pipelines](#57-three-architectural-ingestion--modernization-pipelines)
   - [5.8 Python In-Process Engine & Streaming Pipeline APIs](#58-python-in-process-engine--streaming-pipeline-apis)
 - [6. Error Handling, Status Codes & Resilience](#6-error-handling-status-codes--resilience)
+- [Companion Documentation](#companion-documentation)
 
 ---
 

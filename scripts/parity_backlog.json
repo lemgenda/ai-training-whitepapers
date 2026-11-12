@@ -1,8 +1,11 @@
 {
-  "description": "Known MD/HTML parity drift. Recorded on 2026-11-03 (docs v16.9.70) with 88 entries; all entries were resolved in v16.9.71 to v16.9.77 (pages on the approved template, MD/HTML pairs resynchronized), so the backlog is empty and every audit finding fails. scripts/audit_docs.py reports listed entries as backlog and fails a listed entry with no finding left as stale. Never add entries to hide new drift.",
+  "description": "Known drift scheduled for a later phase. Recorded on 2026-11-03 (docs v16.9.70) with 88 MD/HTML parity entries, all resolved in v16.9.71 to v16.9.77. Since v16.9.91 one entry: the LemGendary Model Training Suite release recorded in the capability registry (runtime_engine_baseline) waits for the training suite documentation sync (audit plan Phase 5b), because that suite is still being changed; Phase 5b removes the entry. scripts/audit_docs.py reports listed entries as backlog and fails a listed entry with no finding left as stale. Never add entries to hide new drift.",
   "backlog": {
     "heading-parity": [],
     "template": [],
-    "text-similarity": []
+    "text-similarity": [],
+    "component-versions": [
+      "canonical_capabilities.json#runtime_engine_baseline"
+    ]
   }
 }

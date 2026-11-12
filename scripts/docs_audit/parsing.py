@@ -1,7 +1,9 @@
 """Parse Markdown and HTML publications into comparable structures.
 
 Only the facts the audit compares are extracted: headings (level and plain
-text), anchor targets, link targets, visible prose and the version line.
+text), anchor targets, link targets, visible prose, the version line, the
+table of contents (Markdown) or sidebar (HTML ``nav.toc-sidebar``) entries and
+the level-2 sections of an HTML page.
 """
 
 from __future__ import annotations
@@ -25,6 +27,9 @@ _HTML_VERSION = re.compile(
     r"|<strong>Version:?</strong>:? <code>(v?[0-9][^<]*)</code>"
 )
 _SPACE = re.compile(r"\s+")
+# One ``[text](#fragment)`` entry; the text may hold one level of brackets.
+_TOC_ENTRY = re.compile(r"\[((?:[^\[\]]|\[[^\]]*\])+)\]\(#([^)\s]+)\)")
+TOC_SIDEBAR_CLASS = "toc-sidebar"
 
 
 @dataclass(frozen=True)
@@ -33,6 +38,28 @@ class Heading:
 
     level: int
     text: str
+
+
+@dataclass(frozen=True)
+class TocEntry:
+    """One table of contents or sidebar link: normalized text and fragment."""
+
+    text: str
+    target: str
+
+
+@dataclass(frozen=True)
+class SectionHeading:
+    """A level-2 heading of an HTML page and the ids that can link to it.
+
+    ``anchors`` holds the heading's own id and the id of the enclosing
+    ``section``. ``has_body`` is False for a section that holds nothing but
+    its heading (an end marker), which needs no sidebar link.
+    """
+
+    text: str
+    anchors: frozenset[str]
+    has_body: bool
 
 
 @dataclass
@@ -45,6 +72,8 @@ class ParsedDocument:
     words: list[str] = field(default_factory=list)
     version: str | None = None
     elements: set[str] = field(default_factory=set)
+    toc: list[TocEntry] = field(default_factory=list)
+    sections: list[SectionHeading] = field(default_factory=list)
 
 
 def normalize_text(text: str) -> str:
@@ -109,6 +138,7 @@ def parse_markdown(source: str) -> ParsedDocument:
     doc = ParsedDocument()
     seen: dict[str, int] = {}
     prose: list[str] = []
+    toc_lines: list[str] = []
     in_toc = False
     for number, line in markdown_content_lines(source):
         heading = _ATX.match(line)
@@ -131,7 +161,13 @@ def parse_markdown(source: str) -> ParsedDocument:
         doc.links.extend((number, m.group(1)) for m in _MD_LINK.finditer(without_code))
         if not in_toc:
             prose.append(strip_inline_markdown(line))
+        elif not heading:
+            toc_lines.append(line.strip())
     doc.anchors.update(re.findall(r'<a\s+(?:id|name)="([^"]+)"', source))
+    doc.toc = [
+        TocEntry(normalize_text(strip_inline_markdown(m.group(1))), m.group(2))
+        for m in _TOC_ENTRY.finditer(" ".join(toc_lines))
+    ]
     doc.words = _words(" ".join(prose))
     return doc
 
@@ -155,6 +191,9 @@ class _HtmlCollector(HTMLParser):
         self._hidden_depth = 0
         self._div_hidden: list[bool] = []
         self._text: list[str] = []
+        self._toc_depth = 0
+        self._toc_link: tuple[str, list[str]] | None = None
+        self._sections: list[dict[str, object]] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {name: value or "" for name, value in attrs}
@@ -168,6 +207,8 @@ class _HtmlCollector(HTMLParser):
                 self.doc.links.append((self.getpos()[0], html.unescape(values[name])))
         if tag in self._HIDDEN:
             self._hidden_depth += 1
+        self._start_toc(tag, values)
+        self._start_section(tag, values)
         if tag == "div":
             is_math = self._MATH_CLASS in values.get("class", "").split()
             self._div_hidden.append(is_math)
@@ -184,6 +225,8 @@ class _HtmlCollector(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag in self._HIDDEN and self._hidden_depth:
             self._hidden_depth -= 1
+        self._end_toc(tag)
+        self._end_section(tag)
         if tag == "div" and self._div_hidden:
             was_math = self._div_hidden.pop()
             if was_math and self._hidden_depth:
@@ -191,13 +234,54 @@ class _HtmlCollector(HTMLParser):
         if self._heading_level is not None and tag == f"h{self._heading_level}":
             text = normalize_text("".join(self._heading_text))
             self.doc.headings.append(Heading(self._heading_level, text))
+            if self._heading_level == 2 and self._sections:
+                self._sections[-1].setdefault("heading", text)
             self._heading_level = None
 
     def handle_data(self, data: str) -> None:
         if self._heading_level is not None:
             self._heading_text.append(data)
+        elif self._sections and data.strip():
+            self._sections[-1]["body"] = True
+        if self._toc_link is not None:
+            self._toc_link[1].append(data)
         if not self._hidden_depth:
             self._text.append(data)
+
+    def _start_toc(self, tag: str, values: dict[str, str]) -> None:
+        if tag == "nav" and (
+            self._toc_depth or TOC_SIDEBAR_CLASS in values.get("class", "").split()
+        ):
+            self._toc_depth += 1
+        elif self._toc_depth and tag == "a" and values.get("href", "").startswith("#"):
+            self._toc_link = (html.unescape(values["href"][1:]), [])
+
+    def _end_toc(self, tag: str) -> None:
+        if tag == "nav" and self._toc_depth:
+            self._toc_depth -= 1
+        elif tag == "a" and self._toc_link is not None:
+            target, text = self._toc_link
+            self.doc.toc.append(TocEntry(normalize_text("".join(text)), target))
+            self._toc_link = None
+
+    def _start_section(self, tag: str, values: dict[str, str]) -> None:
+        if tag == "section":
+            self._sections.append({"ids": {values["id"]} if values.get("id") else set()})
+        elif tag == "h2" and self._sections and values.get("id"):
+            ids = self._sections[-1]["ids"]
+            if isinstance(ids, set):
+                ids.add(values["id"])
+
+    def _end_section(self, tag: str) -> None:
+        if tag != "section" or not self._sections:
+            return
+        section = self._sections.pop()
+        heading = section.get("heading")
+        ids = section["ids"]
+        if isinstance(heading, str) and isinstance(ids, set):
+            self.doc.sections.append(
+                SectionHeading(heading, frozenset(ids), bool(section.get("body")))
+            )
 
     def result(self) -> ParsedDocument:
         """The collected document, with its visible words."""

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.90`
+**Version**: `v16.9.91`
 
 ---
 
@@ -19,9 +19,9 @@
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.67, LemGendary
-  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.139,
-  LemGendary AI Studio GUI v2.10.45.
+* **Current baselines** - LemGendary Environment Manager v16.9.79, LemGendary
+  Dataset Compiler Suite v16.9.84, LemGendary Model Training Suite v16.9.139,
+  LemGendary AI Studio GUI v2.10.57.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -29,16 +29,20 @@
   `nav.toc-sidebar`, `section` and `footer` and pass W3C validation.
 * **Documentation audit** - `python scripts/audit_docs.py` (also the
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
-  heading parity and text similarity, the approved template, internal links
-  and anchors, absolute paths and canonical names, and the capability
-  registry against the sibling repositories: JSON and YAML hold the same
-  data, the model ids equal the keys of the training registry
-  (`unified_models_v2.yaml`) and every port equals the service port in
-  `lemgendary-env-manager/ecosystem/ecosystem.json`. The sibling files are
-  found next to this repository or under `LEMGENDARY_WORKSPACE_ROOT`; a
-  missing file is a finding that names the path. The parity backlog
-  (`scripts/parity_backlog.json`) is empty since v16.9.77, so any finding
-  fails.
+  heading parity and text similarity, the HTML sidebar against the Markdown
+  table of contents (no duplicate entries, every section linked), raw GitHub
+  alert markers in pages, the approved template, internal links and anchors,
+  absolute paths and canonical names, and the capability registry against
+  the sibling repositories: JSON and YAML hold the same data, the model ids
+  equal the keys of the training registry (`unified_models_v2.yaml`), every
+  port equals the service port in
+  `lemgendary-env-manager/ecosystem/ecosystem.json` and every component
+  baseline equals the release version the component declares. The sibling
+  files are found next to this repository or under
+  `LEMGENDARY_WORKSPACE_ROOT`; a missing file is a finding that names the
+  path. The parity backlog (`scripts/parity_backlog.json`) holds one entry,
+  the LemGendary Model Training Suite baseline, until that suite's
+  documentation is synchronized; any other finding fails.
 
 ---
 
@@ -57,6 +61,37 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.91 - Audit Checks for Sidebars, Alert Markers and Component Versions (Audit DOCS-4)
+
+* `scripts/docs_audit/`: three new checks.
+  * `toc-sidebar`: the `nav.toc-sidebar` links of a page list the same
+    entries in the same order as the Markdown table of contents, neither
+    lists a target twice, and every level-2 section with content has a
+    sidebar link.
+  * `alert-markers`: raw GitHub alert markers (`[!NOTE]`, `[!IMPORTANT]`,
+    `[!WARNING]`, `[!TIP]`, `[!CAUTION]`) in a page are a finding.
+  * `component-versions`: the component baselines of
+    `canonical_capabilities.json` equal the versions in
+    `env_manager/__init__.py`, `core/cli_args.py`, the training suite
+    `pyproject.toml` and the GUI `package.json`, and
+    `control_planes.gui.version` equals `desktop_client_baseline`. The
+    project folders come from `ecosystem.json`. `manifest/documents.json`
+    holds no component baselines, only per-document baselines.
+* `canonical_capabilities.json` and `.yaml`: LemGendary Environment Manager
+  v16.9.79, LemGendary Dataset Compiler Suite v16.9.84, LemGendary AI Studio
+  GUI v2.10.57. The LemGendary Model Training Suite baseline stays at
+  v16.9.139 and is the one backlog entry until that suite's documentation
+  sync.
+* `MANUAL_API.md`, `MANUAL_CLI.md` and `PAPER_LEMGENDARY_ULTRAZOOM.md` (and
+  their pages): the table of contents and sidebar now link the "Companion
+  Documentation" and "1.1 What UltraZoom Does" sections the new check found.
+* `REVIEW_REPORT.md` removed: the 2026-11-02 review it records was closed
+  in v16.9.77 and git keeps the history.
+* `scripts/audit_docs.py` and `tests/test_documentation_content.py`: no
+  optional-member access on `None` (pyright clean).
+* Tests: 9 new audit tests; the fixture workspace gains the four version
+  files and the `projects` list.
 
 ### v16.9.90 - Training Pathology Table of Contents Repair (Audit DOCS-1)
 

@@ -55,6 +55,7 @@
 - [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
 - [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
 - [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
+- [Companion Documentation](#companion-documentation)
 
 ---
 

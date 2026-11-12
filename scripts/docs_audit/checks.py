@@ -19,8 +19,8 @@ from urllib.parse import unquote
 import yaml
 
 from .model import MANIFEST_PATH, AuditContext, Finding
-from .parsing import content_headings
-from .workspace import ECOSYSTEM_PATH, TRAINING_SERVICE_ID, WorkspaceError
+from .parsing import TocEntry, content_headings
+from .workspace import COMPONENT_SOURCES, ECOSYSTEM_PATH, TRAINING_SERVICE_ID, WorkspaceError
 
 SIMILARITY_THRESHOLD = 0.85
 TEMPLATE_ELEMENTS = (
@@ -41,7 +41,6 @@ GUI_PORT_SERVICES = {
     "dataset_compiler_sidecar": "dataset-compiler",
     "training_sidecar": TRAINING_SERVICE_ID,
 }
-HISTORICAL_FILES = frozenset({"REVIEW_REPORT.md"})
 TEXT_SUFFIXES = frozenset(
     {
         ".md",
@@ -72,6 +71,9 @@ _ABSOLUTE_PATH = re.compile(
 _README_VERSION = re.compile(r"^\*\*Version\*\*: `(v[0-9][^`]*)`", re.MULTILINE)
 _YAML_BASELINE = re.compile(r"^document_baseline:\s*['\"]?([^'\"\s]+)", re.MULTILINE)
 _SCHEME = re.compile(r"^[a-z][a-z0-9+.-]*:", re.IGNORECASE)
+# GitHub alert markers render only on GitHub; in a page they show as raw text.
+_ALERT_MARKER = re.compile(r"\[!(?:NOTE|IMPORTANT|WARNING|TIP|CAUTION)\]")
+_RELEASE_SUFFIX = "-STABLE"
 _GAP = r"(\s+)"
 _NAME_RULES = (
     (
@@ -111,7 +113,7 @@ def _publications(ctx: AuditContext) -> list[str]:
 
 
 def _markdown_sources(ctx: AuditContext) -> list[str]:
-    return [p for p in ctx.glob("*.md") + ctx.glob("MD-Papers/*.md") if p not in HISTORICAL_FILES]
+    return ctx.glob("*.md") + ctx.glob("MD-Papers/*.md")
 
 
 def check_manifest(ctx: AuditContext) -> Iterator[Finding]:
@@ -218,6 +220,64 @@ def check_text_similarity(ctx: AuditContext) -> Iterator[Finding]:
                 f"similarity {ratio:.3f} < {SIMILARITY_THRESHOLD} "
                 f"(MD {len(md_words)} words, HTML {len(page_words)})",
             )
+
+
+def _duplicates(entries: list[TocEntry]) -> list[str]:
+    targets = [entry.target for entry in entries]
+    return sorted({target for target in targets if targets.count(target) > 1})
+
+
+def _toc_mismatch(md: list[TocEntry], page: list[TocEntry]) -> str | None:
+    """Describe how the sidebar differs from the Markdown ToC, or None."""
+    md_texts = [entry.text for entry in md]
+    page_texts = [entry.text for entry in page]
+    if md_texts == page_texts:
+        return None
+    missing = [text for text in md_texts if text not in page_texts]
+    extra = [text for text in page_texts if text not in md_texts]
+    if not (missing or extra):
+        return "sidebar lists the Markdown ToC entries in a different order"
+    parts = []
+    if missing:
+        parts.append(f"missing from the sidebar: {'; '.join(missing)}")
+    if extra:
+        parts.append(f"not in the Markdown ToC: {'; '.join(extra)}")
+    return ", ".join(parts)
+
+
+def check_toc_sidebar(ctx: AuditContext) -> Iterator[Finding]:
+    """The HTML sidebar matches the Markdown ToC and links every section."""
+    for doc_id, md_path, html_path in _existing_pairs(ctx):
+        md = ctx.parsed(md_path)
+        page = ctx.parsed(html_path)
+        for path, entries in ((md_path, md.toc), (html_path, page.toc)):
+            for target in _duplicates(entries):
+                yield Finding("toc-sidebar", doc_id, f"{path} lists #{target} more than once")
+        if md.toc:
+            mismatch = _toc_mismatch(md.toc, page.toc)
+            if mismatch:
+                yield Finding("toc-sidebar", doc_id, f"{html_path}: {mismatch}")
+        targets = {entry.target for entry in page.toc}
+        for section in page.sections:
+            if section.has_body and not section.anchors & targets:
+                yield Finding(
+                    "toc-sidebar",
+                    doc_id,
+                    f"{html_path}: no sidebar link to section '{section.text}'",
+                )
+
+
+def check_alert_markers(ctx: AuditContext) -> Iterator[Finding]:
+    """No raw GitHub alert markers ([!NOTE] and the like) in HTML pages."""
+    for path in _publications(ctx):
+        for number, line in enumerate(ctx.read_text(path).splitlines(), start=1):
+            match = _ALERT_MARKER.search(line)
+            if match:
+                yield Finding(
+                    "alert-markers",
+                    path,
+                    f"line {number}: raw {match.group(0)}; use a styled blockquote",
+                )
 
 
 def check_template(ctx: AuditContext) -> Iterator[Finding]:
@@ -355,6 +415,39 @@ def check_registry_models(ctx: AuditContext) -> Iterator[Finding]:
         yield Finding("registry-models", subject, f"models not in {source}: {', '.join(extra)}")
 
 
+def _release(version: object) -> str:
+    return _strip_v(str(version)).removesuffix(_RELEASE_SUFFIX)
+
+
+def check_component_versions(ctx: AuditContext) -> Iterator[Finding]:
+    """Registry component baselines equal the versions the components declare."""
+    subject = REGISTRY_FILES[0]
+    registry = _registry(ctx)
+    for source in COMPONENT_SOURCES:
+        try:
+            declared = ctx.workspace.component_version(source)
+            origin = ctx.workspace.component_version_path(source).as_posix()
+        except WorkspaceError as error:
+            yield Finding("component-versions", subject, str(error))
+            continue
+        recorded = registry.get(source.registry_key)
+        if _release(recorded) != _release(declared):
+            yield Finding(
+                "component-versions",
+                f"{subject}#{source.registry_key}",
+                f"{source.registry_key} is {recorded}, {origin} declares {declared}",
+            )
+    gui = registry.get("control_planes", {}).get("gui", {})
+    client = registry.get("desktop_client_baseline")
+    if "version" in gui and gui["version"] != client:
+        yield Finding(
+            "component-versions",
+            f"{subject}#control_planes.gui.version",
+            f"control_planes.gui.version is {gui['version']}, "
+            f"desktop_client_baseline is {client}",
+        )
+
+
 def check_service_ports(ctx: AuditContext) -> Iterator[Finding]:
     """Registry ports equal the service ports of ecosystem.json."""
     subject = REGISTRY_FILES[0]
@@ -408,6 +501,12 @@ CHECKS: tuple[Check, ...] = (
         f"MD and HTML prose similarity >= {SIMILARITY_THRESHOLD}",
         check_text_similarity,
     ),
+    Check(
+        "toc-sidebar",
+        "HTML sidebar matches the Markdown ToC, no duplicates, every section linked",
+        check_toc_sidebar,
+    ),
+    Check("alert-markers", "no raw GitHub alert markers in HTML", check_alert_markers),
     Check("template", "HTML uses the approved structural template", check_template),
     Check("links", "internal links and anchors resolve", check_links),
     Check("absolute-paths", "no hard-coded absolute paths", check_absolute_paths),
@@ -419,4 +518,9 @@ CHECKS: tuple[Check, ...] = (
         check_registry_models,
     ),
     Check("service-ports", "registry ports equal the ecosystem.json ports", check_service_ports),
+    Check(
+        "component-versions",
+        "registry component baselines equal the sibling release versions",
+        check_component_versions,
+    ),
 )
