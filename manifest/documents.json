@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.88-STABLE",
+  "document_baseline": "v16.9.139-STABLE",
   "last_audited": "2026-11-10",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -441,8 +441,9 @@
       "category": "Category 02 PATHOLOGY",
       "html_path": "papers/training-pathology.html",
       "md_path": "MD-Papers/PAPER_TRAINING_PATHOLOGY.md",
-      "baseline_version": "v16.9.138-STABLE",
-      "last_audited": "2026-11-10",
+      "baseline_version": "v16.9.139-STABLE",
+      "last_audited": "2026-11-12",
+      "pathology_count": 61,
       "status": "Canonical"
     },
     {

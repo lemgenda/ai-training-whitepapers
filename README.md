@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.88`
+**Version**: `v16.9.139`
 
 ---
 
@@ -22,6 +22,10 @@
 * **Current baselines** - LemGendary Environment Manager v16.9.67, LemGendary
   Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.139,
   LemGendary AI Studio GUI v2.10.45.
+* **Pathology catalog** - `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` numbers
+  every pathology (61 in total, tracked as `pathology_count` in
+  `manifest/documents.json`) and lists them in its Pathology Index
+  (Section 1.1).
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -57,6 +61,28 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.139 - Pathology Numbering & Hub Version Alignment
+
+* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and `papers/training-pathology.html`
+  (paper revision 1.9.0): every pathology is now numbered (Pathology 1 to 61)
+  in document order across the Diagnostic Master Table, the Modern 2026
+  Pathologies and the Historical Evolution Taxonomy; the abstract states the
+  count of 61 (previously 27); new Section 1.1 Pathology Index links every
+  pathology; the duplicated Table of Contents entries were removed and the
+  entries for the former Pathologies 37 to 39 restored; Master Table entries that
+  repeat a later pathology now point to its number. The former Pathologies 24
+  to 39 are now Pathologies 26 to 41; older changelog entries below keep the
+  numbers used at the time. The missing HTML twin of the Static OS Worker
+  Throttling table entry was added.
+* `manifest/documents.json`: new `pathology_count` field (61) on the
+  `training-pathology` entry only; its `baseline_version` is
+  `v16.9.139-STABLE` and `last_audited` is `2026-11-12`.
+* `README.md`, `index.html`, `manifest/documents.json`,
+  `canonical_capabilities.json`, `canonical_capabilities.yaml`: hub version
+  raised from v16.9.88 to `v16.9.139-STABLE`.
+* Repository `README.md`: documentation hub and Training Suite baselines
+  synchronized to `v16.9.139-STABLE`.
 
 ### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
 
