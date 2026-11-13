@@ -1,6 +1,6 @@
 ---
 schema_version: 1.0.0
-document_baseline: v16.9.112-STABLE
+document_baseline: v16.9.113-STABLE
 runtime_engine_baseline: v16.9.214-STABLE
 desktop_client_baseline: v2.10.67
 dataset_compiler_baseline: v16.9.107-STABLE

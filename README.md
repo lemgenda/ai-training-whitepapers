@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.112`
+**Version**: `v16.9.113`
 
 ---
 
@@ -61,6 +61,27 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.113 - Training Suite v16.9.216 to v16.9.222 Kaggle Run Fixes
+
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.222): new
+  Section 2.47 "Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode
+  Warnings & Export Probe (v16.9.216 to v16.9.222)".
+  * Known issue in past runs, fixed in v16.9.216: Kaggle runs before
+    v16.9.216 saw every train and validation sample twice per epoch, because
+    alias paths of one manifold each opened a reader (`upn_v2`: 2,699,430
+    train entries for 1,349,715 samples). Discovery now compares real paths.
+  * Read-only manifold folders are skipped by the notebook sync (v16.9.217).
+  * Kaggle trainer output is streamed through a pipe, so each line appears
+    once (v16.9.219).
+  * Decode warnings name the sample key, member, size, head bytes and shard
+    (v16.9.220); the run 4 cases were 0-byte DPED `.jpg` members.
+  * The export probe compares outputs on the CPU (v16.9.222), not yet rerun
+    on Kaggle; the run 5 result is recorded.
+* Section 8.1 lists the shard offset index as active and the doubled
+  samples as a known issue of past runs.
+* `manifest/documents.json`: Training Suite paper at baseline v16.9.222.
+  The component baselines are unchanged.
 
 ### v16.9.112 - Shard Offset Index and `repair shard-offsets`
 

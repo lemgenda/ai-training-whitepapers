@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.218-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.222-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-13
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -109,6 +109,9 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     v16.9.214)](#245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214)
   - [2.46. Shard Offset Index & Fast WebDataset Open (v16.9.215 to
     v16.9.218)](#246-shard-offset-index--fast-webdataset-open-v169215-to-v169218)
+  - [2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &
+    Export Probe (v16.9.216 to
+    v16.9.222)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169222)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -1929,6 +1932,56 @@ shard modification times changed on upload.
   indexed the `upn_v2` train split in 440.3 s on 16 threads.
 - **Dependency**: `filelock` is declared (already installed with torch).
 
+### 2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings & Export Probe (v16.9.216 to v16.9.222)
+
+Fixes from Kaggle runs 4 and 5 of `upn_v2`.
+
+- **Known Issue in Past Runs, Fixed in v16.9.216 (Manifold Dedupe)**:
+  Kaggle runs before v16.9.216 saw every train and validation sample twice
+  per epoch. The Kaggle data cell links alias names (`UpnV2`,
+  `LemGendizedUpnV2`) to the attached dataset folder, and the
+  `...KaggleReady` name falls back to that same folder. Dataset discovery
+  compared path strings, so `LemGendizedUpnV2` and
+  `LemGendizedUpnV2KaggleReady` each opened a reader of the same data: the
+  `upn_v2` train split had 2,699,430 entries for 1,349,715 samples. An epoch
+  of those runs was two passes over the data and took twice as long, and
+  their epoch counts should be read that way. Discovery and the container
+  loader now compare real paths (symlinks resolved), load each real folder
+  once and log the skipped alias.
+- **Read-Only Notebook Sync (v16.9.217)**: the `LemGendaryDatasets` folders
+  on Kaggle link to the read-only `/kaggle/input`, and every process logged
+  `[Errno 30] Read-only file system` for each generated notebook. A manifold
+  folder without write access (or a write refused with `EROFS`) is now
+  skipped with one info record per folder and process; other write errors
+  stay warnings.
+- **Each Trainer Line Once (v16.9.219)**: run 4 printed every trainer line
+  twice, 0.2 s apart. The Kaggle training cell started the trainer with
+  inherited file descriptors; ipykernel forwards a child's fd 1 and 2 output
+  both to the kernel's terminal and, after its 0.2 s flush, as notebook
+  output, and the Kaggle log records both. Kaggle now uses the Colab launch
+  (`TRAINER_STREAM_LINES`): the trainer's stdout and stderr are streamed
+  through a pipe and the cell prints each line once, carriage-return
+  progress updates included.
+- **Decode Warnings Name the Sample (v16.9.220)**: `Image decode failed` and
+  `Target decode failed` warnings named only the loader index, which depends
+  on shard order. They now add the sample key, its member, the payload size,
+  its first 8 bytes in hex and the shard file (`data/sample_origin.py`), so
+  the Dataset Compiler can repair the record. The two run 4 warnings were
+  0-byte DPED `.jpg` members (`UpnV2_DPED_001208204.jpg` in
+  `shards/train/shard-00229.data`, `UpnV2_DPED_001217648.jpg` in
+  `shard-00231.data`); each of those shards holds 4 such members.
+- **Export Probe on the CPU (v16.9.222)**: run 5 finished epoch 1, but both
+  ONNX release exports failed with `Expected all tensors to be on the same
+  device`: the dynamic-axes probe subtracted the model's CUDA outputs from
+  ONNX Runtime's CPU outputs. The probe now moves both sides to
+  `PROBE_DEVICE` (the CPU) before comparing (`compare_outputs` in
+  `training/export/dynamo_onnx.py`); the tolerance is unchanged. The fix is
+  not yet confirmed by a rerun on Kaggle.
+- **Run 5 (v16.9.221)**: train index built in 440.3 s on 16 threads, each
+  log line once, resumed after the 2042 steps of run 4, epoch 1 completed
+  with `latest.pth`, the session deadline honoured and the publish step
+  skipped.
+
 ---
 
 ## 3. Judicial Audit Engine
@@ -2329,7 +2382,11 @@ performance.
   deterministic mid-epoch resume (Section 2.36); byte-offset shard reads with
   the offset cache and the 16-handle pool (Section 2.37); the single quality
   score, four optimizer groups and the exact-divisor batch rule (Section
-  2.38); the single task-type resolver (Section 2.39).
+  2.38); the single task-type resolver (Section 2.39); the shipped shard
+  offset index with the build lock and the threaded scan (Section 2.46).
+- **Known issue in past runs**: Kaggle runs before v16.9.216 saw every
+  sample twice per epoch through alias paths of one manifold; fixed by the
+  real-path manifold dedupe (Section 2.47).
 - **Present but off by default**: shard-window locality sampling and
   block-wise curriculum fractions (`data.locality`, Section 2.37).
 - **Present but not active** (code exists, never invoked by the training loop):

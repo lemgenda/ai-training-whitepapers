@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.112-STABLE",
+  "document_baseline": "v16.9.113-STABLE",
   "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -451,7 +451,7 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.218-STABLE",
+      "baseline_version": "v16.9.222-STABLE",
       "last_audited": "2026-11-13",
       "status": "Canonical"
     },
