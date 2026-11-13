@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.84-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.107-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
@@ -102,6 +102,7 @@ Engine</a></li>
 <li><a href="#sec-410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</a></li>
 <li><a href="#sec-411-sample-integrity-shard-verification--manifold-repair">4.11 Sample Integrity, Shard Verification &amp; Manifold
 Repair</a></li>
+<li><a href="#sec-412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107">4.12 JSON Shard Labels, Sample Policies &amp; Source Labels (v16.9.85 to v16.9.107)</a></li>
 </ul>
 </li>
 <li><a href="#sec-5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a>
@@ -792,7 +793,8 @@ LitData. All existing 110.9 GB <code>.mds.zstd</code> shards
 were transcoded to WebDataset (<code>.data</code>) shards via
 <code>tools/modernization_queue.py</code>. The MDS writer remains available through
 <code>--also-format mds</code> for compatibility, but no registry manifold uses it as its
-canonical format.</li>
+canonical format, and it needs the optional <code>mosaicml-streaming</code> package,
+which the Environment Manager no longer installs (v16.9.81).</li>
 </ul>
 <blockquote>
 <p><strong>Dataset Compiler Format Ingestion Notice</strong>: Formats such as <strong>TFRecord</strong>,
@@ -1030,8 +1032,108 @@ corpus fails; unreadable or invalid JSONL is reported as such.</p>
 <li><strong>Lossless MDS transcode (v16.9.77)</strong>: every non-image MDS column (class, category, <code>nima_scores</code>, bbox, keypoints, source and others) is decoded by its column encoding into the <code>&lt;key&gt;.json</code> sidecar, and the legacy <code>mds/</code> folder is purged only when the written sample count equals the count in the MDS index.</li>
 <li><strong>Workers, interrupt and dedup (v16.9.78)</strong>: worker state is initialised once per process under a lock; Ctrl+C cancels queued batches, commits the registry and re-raises instead of calling <code>os._exit</code>; warm-up results pass the same dedup and <code>max_gb</code> accounting as pool results; resumed runs seed exact and perceptual hashes from the registry; perceptual dedup (<code>enable_perceptual_dedup</code>) uses a bucketed <code>NearDupIndex</code>.</li>
 <li><strong>Download safety (v16.9.82)</strong>: a downloaded zip is streamed into new WebDataset shards only when it is a legacy loose-image archive; a zip that holds shards, Parquet, MDS or JSONL splits is extracted as is, and a target that already has shards is never streamed into. The Temp sweep deletes only <code>LemGendized*.zip</code>, and layout folders (<code>shards</code>, <code>data</code>, <code>images</code>, <code>targets</code>, <code>labels</code>, <code>masks</code>, <code>mds</code>) are never unwrapped.</li>
-<li><strong>Manifold repair (v16.9.81)</strong>: <code>python cli.py repair manifold --manifold PATH</code> (or <code>--model KEY</code>) and <code>python cli.py repair all [--root DIR]</code> print a repair plan and change nothing. With <code>--apply</code> they drop samples with zero-byte members, make scattered groups contiguous (each rewritten shard is verified before it replaces the original), resync the <code>dataset_info.yaml</code> counts, replace an absolute or staging <code>path</code> with the canonical relative one and clean <code>index.json</code>. Replaced files move to <code>.repair_backup/&lt;UTC stamp&gt;/&lt;manifold&gt;/</code> under the datasets root, and a second run finds nothing to do. LLM manifolds now record the canonical <code>path</code> too.</li>
+<li><strong>Manifold repair (v16.9.81)</strong>: <code>python cli.py repair manifold --manifold PATH</code> (or <code>--model KEY</code>) and <code>python cli.py repair all [--root DIR]</code> print a repair plan and change nothing. With <code>--apply</code> they drop samples with zero-byte members, make scattered groups contiguous (each rewritten shard is verified before it replaces the original), resync the <code>dataset_info.yaml</code> counts, replace an absolute or staging <code>path</code> with the canonical relative one and clean <code>index.json</code>. Since v16.9.85 no originals are kept: each rewritten file is verified and swapped in atomically (the <code>.repair_backup</code> folder is gone), and a second run finds nothing to do. LLM manifolds now record the canonical <code>path</code> too.</li>
 <li><strong>No swallowed errors (v16.9.75)</strong>: the hub script's folder probes, the MT5 vault reader and the JSONL ingestor log errors instead of hiding them.</li>
+</ul>
+<h3 id="sec-412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107">4.12 JSON Shard Labels, Sample Policies &amp; Source Labels (v16.9.85 to v16.9.107)</h3>
+<ul>
+<li>
+<p><strong>JSON is the only shard label format (v16.9.98)</strong>: inside WebDataset shards
+a sample's label is <code>&lt;key&gt;.json</code>; there are no <code>.txt</code> label members, and
+masks stay <code>&lt;key&gt;.mask.webp</code>. <code>utils/label_json.py</code> is the schema SSOT
+(<code>LABEL_STRATEGIES</code>); the strategy is the registry entry's <code>label_json</code>,
+else its task's (<code>TASK_STRATEGIES</code>). Coordinates are normalised to 0..1 and
+boxes are <code>cx cy w h</code>:</p>
+<ul>
+<li><code>face_landmarks</code> (RetinaFace): <code>face_count</code>, <code>objects[]</code> with
+<code>category_id</code>, <code>bbox_cxcywh_normalized</code> and, when the face has real
+landmarks, <code>landmarks_normalized</code> (10 values; ten zeros count as absent).
+Labels rebuilt from source landmarks also record <code>landmark_source</code>.</li>
+<li><code>yolo_boxes</code> (detection, pose, restoration, super-resolution,
+parameter prediction): <code>object_count</code>, <code>objects[]</code> with <code>category_id</code>,
+<code>bbox_cxcywh_normalized</code> and, for pose lines, <code>keypoints</code>.</li>
+<li><code>yolo_polygons</code> (segmentation): <code>object_count</code>, <code>objects[]</code> with
+<code>category_id</code>, <code>polygon_normalized</code>.</li>
+<li><code>nima</code> (quality): <code>nima_scores</code> with <code>distribution</code> (10) and
+<code>mean_score</code>.</li>
+<li><code>segmentation_mask</code> (face parsing): the class mask is the
+<code>&lt;key&gt;.mask.webp</code> member (lossless, one class id per pixel); the JSON
+records <code>num_classes</code>, <code>class_names</code> and <code>mask_source</code>.</li>
+<li><code>class_label</code> (classification): <code>class_id</code> or <code>class_name</code>; labels
+written by <code>repair class-labels</code> carry both plus <code>label_source</code> and the
+registry <code>task</code>, and a pseudo label also <code>label_confidence</code> and
+<code>label_check_class</code>.</li>
+<li><code>caption</code> (diffusion): <code>caption</code>.</li>
+</ul>
+<p>An empty detection label is <code>{&quot;object_count&quot;: 0, &quot;objects&quot;: []}</code>, a valid
+negative. Every shard writer packs JSON only, and the shard verifier
+(<code>utils/label_audit.py</code>, <code>repair manifold</code>, the converters' post-write
+check) fails on any <code>.txt</code> member or schema break. The Training Suite reads
+the same schema (<code>data/json_labels.py</code>, v16.9.200).</p>
+</li>
+<li>
+<p><strong>Sample policies (v16.9.97, v16.9.100, v16.9.102)</strong>: <code>core/sample_policy.py</code>
+sorts samples into kinds, drops <code>drop_kinds</code> and draws val from
+<code>val_kinds</code>. The face detection policy (<code>label_json: face_landmarks</code>)
+drops samples without a face and draws val from the landmark-bearing photos
+by source file id; the face parsing policy (<code>segmentation_mask</code>) drops
+copies and segmentation maps by key and splits all photos by SFHQ file id.
+A source with a key layout draws its val share over all of the layout's
+file ids, so ParseNet and RetinaFace share one val set and no file is in
+both splits. Registry fields: <code>scan_exclude_dirs</code> (folder globs the source
+scan never enters) and <code>key_layouts</code> (the key index layout of a source).</p>
+</li>
+<li>
+<p><strong>Source labels registry (v16.9.100, v16.9.101)</strong>: <code>source_labels</code>
+(<code>scheme</code>, <code>source</code>) names the per-file labels a source ships next to its
+images, and <code>key_layouts[].files_dir</code> the source's folder under a local
+label root. Schemes live in <code>core/source_labels.py</code>: <code>celebamask_hq_19</code>
+(the 19-class CelebAMask-HQ / BiSeNet masks of SFHQ, <code>repair masks</code>) and
+<code>sfhq_110</code> (the SFHQ 110-point landmarks; points 0-67 follow the iBUG
+300-W order), from which <code>core/face_geometry.py</code> derives the five
+RetinaFace points (eye centres, nose tip 30, mouth corners 48 and 54) and a
+tight WIDER-style box (<code>repair face-landmarks</code>).</p>
+</li>
+<li>
+<p><strong>Class labels (v16.9.103 to v16.9.106)</strong>: the registry field
+<code>class_labels</code> holds a scheme (<code>nsfw_5</code>: 0 drawings, 1 hentai, 2 neutral,
+3 porn, 4 sexy) and ordered key rules (<code>core/class_labels.py</code>, first match
+wins). ClassificationMaster: <code>anime_dbrating</code> index below 278,119 is
+hentai, the rest drawings, <code>food101</code> neutral, and the NSFW source a pseudo
+label from the GantMan nsfw_model (Inception V3, MIT, ONNX on the CPU),
+kept only at a top probability of at least 0.8 when the MobileNet V2 check
+model agrees (<code>require_check_agreement</code>); other NSFW samples are dropped.</p>
+</li>
+<li>
+<p><strong>Manifold repairs</strong>: <code>repair</code> keeps no originals (v16.9.85; each shard is
+rewritten to a temporary file, verified and swapped in with <code>os.replace</code>),
+converts leftover PNG/JPEG members to WebP (v16.9.86) and offers <code>labels</code>,
+<code>txt-labels</code>, <code>pack-loose</code>, <code>sample-policy</code>, <code>masks</code>, <code>face-landmarks</code>,
+<code>pseudo-labels</code> and <code>class-labels</code> (CLI manual Section 5.17).</p>
+</li>
+<li>
+<p><strong>Kaggle sync (v16.9.92 to v16.9.104)</strong>: one credential module
+(<code>core/kaggle_credentials.py</code>: a <code>KGAT_</code> token goes to <code>KAGGLE_API_TOKEN</code>
+unchanged, <code>~/.kaggle/access_token</code> counts); <code>GET /api/kaggle/status</code> lists
+<code>environment_variables</code>, <code>secrets_vault</code>, <code>user_access_token</code> and
+<code>user_kaggle_json</code>. Uploads carry version notes; new datasets are created
+private with the manifold's license; dataset cards state the real split
+counts once and per-source counts only when exact. <code>sync pull</code> creates a
+missing datasets root, falls back to a file-by-file download (and the
+Kaggle API route after a per-file 404), waits on HTTP 429 and takes
+<code>--only</code>.</p>
+</li>
+<li>
+<p><strong>Forex timestamps (v16.9.87)</strong>: the <code>timestamp</code> column is whole Unix epoch
+seconds (UTC); <code>forex/columns.py</code> holds the column definitions and
+<code>TIMESTAMP_UNIT = &quot;seconds&quot;</code>, and <code>dataset_info.yaml</code> and the Parquet schema
+metadata record <code>timestamp_unit: seconds</code>.</p>
+</li>
+<li>
+<p><strong>GUI access (v16.9.89, v16.9.90)</strong>: <code>POST /api/config/validate</code> is open to
+the GUI origins with the client header; <code>POST /api/gui/quick-compile</code>
+takes <code>shard_ext</code>.</p>
+</li>
 </ul>
 </section>
 
@@ -1464,7 +1566,10 @@ guidance and safe troubleshooting.</li>
 <h3 id="lemgendizedclassificationmaster">LemGendizedClassificationMaster</h3>
 <ul>
 <li><strong>Category:</strong> Image Classification</li>
-<li><strong>Total Samples:</strong> 788,034</li>
+<li><strong>Total Samples:</strong> 753,534 (train 662,746 / val 90,788; Anime DB Rating
+619,514, Food-101 100,999, NSFW 33,021)</li>
+<li><strong>Classes:</strong> 5 (<code>nsfw_5</code>: drawings, hentai, neutral, porn, sexy), written
+by <code>repair class-labels</code></li>
 <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification
 heads</li>
 <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
@@ -1589,7 +1694,9 @@ with 10-bin distribution head</li>
 <h3 id="lemgendizedparsenet">LemGendizedParseNet</h3>
 <ul>
 <li><strong>Category:</strong> Image Segmentation</li>
-<li><strong>Total Samples:</strong> 853,546</li>
+<li><strong>Total Samples:</strong> 425,258 SFHQ photos with class masks (train 374,228 / val
+51,030, split by SFHQ file id)</li>
+<li><strong>Classes:</strong> 19 (<code>celebamask_hq_19</code>, lossless <code>&lt;key&gt;.mask.webp</code>)</li>
 <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical
 decoders</li>
 <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image
@@ -1598,7 +1705,10 @@ manifold.</li>
 <h3 id="lemgendizedretinaface">LemGendizedRetinaFace</h3>
 <ul>
 <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
-<li><strong>Total Samples:</strong> 853,546</li>
+<li><strong>Total Samples:</strong> 425,223 SFHQ photos, one face each (train 374,199 / val
+51,024, the same file-id split as ParseNet)</li>
+<li><strong>Labels:</strong> tight WIDER-style box and 5 points rebuilt from the SFHQ
+110-point landmarks (<code>landmark_source: sfhq-110pt</code>)</li>
 <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
 <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks
 (registry key <code>retinaface_mobilenet</code>).</li>

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.103`
+**Version**: `v16.9.104`
 
 ---
 
@@ -60,6 +60,27 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.104 - Dataset Compiler v16.9.85 to v16.9.107 in the Paper
+
+* `PAPER_DATASET_COMPILER.md` and its page (version line v16.9.107-STABLE):
+  new Section 4.12 documents the JSON label schema (`face_landmarks`,
+  `yolo_boxes`, `yolo_polygons`, `nima`, `segmentation_mask`, `class_label`,
+  `caption`, with `objects`, `class_id` / `class_name`, `caption`,
+  `landmark_source`, `label_source` / `label_confidence`), the sample
+  policies and the shared val split by source file id, the `source_labels`
+  registry with the `celebamask_hq_19` and `sfhq_110` schemes, the
+  ClassificationMaster class labels (`nsfw_5`, pseudo labels kept at 0.8 when
+  both GantMan models agree), the repairs, the Kaggle sync changes, Forex
+  timestamps in seconds and the GUI-facing routes.
+* Section 7: LemGendizedClassificationMaster 753,534 samples (train 662,746
+  / val 90,788, 5 classes), LemGendizedParseNet 425,258 (train 374,228 / val
+  51,030, 19 mask classes) and LemGendizedRetinaFace 425,223 (train 374,199 /
+  val 51,024). Per-class counts are not recorded in the local
+  `dataset_info.yaml` files, so none are given.
+* Section 4.11: repairs no longer keep a `.repair_backup` copy. Section 4.5:
+  the MDS writer needs the optional `mosaicml-streaming` package, which the
+  Environment Manager no longer installs.
 
 ### v16.9.103 - Training Suite v16.9.158 to v16.9.214 in the Papers
 
