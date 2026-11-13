@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.105-STABLE",
+  "document_baseline": "v16.9.106-STABLE",
   "runtime_engine_baseline": "v16.9.157-STABLE",
   "desktop_client_baseline": "v2.10.57",
   "dataset_compiler_baseline": "v16.9.84-STABLE",
@@ -24,9 +24,10 @@
         "environment_manager": "lem-env"
       },
       "syntax": {
-        "train": "lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME]",
+        "train": "lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME] [--clean] [--override-frozen]",
         "llm_train": "lemtrain llm train [MODEL_KEY]",
-        "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]"
+        "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]",
+        "kaggle_launch": "lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]"
       }
     },
     "api": {
@@ -41,7 +42,10 @@
       "training_routes": {
         "train": "POST /api/training/train",
         "llm_train": "POST /api/training/llm/train",
-        "model_soup": "POST /api/models/{model_key}/soup"
+        "model_soup": "POST /api/models/{model_key}/soup",
+        "kaggle_status": "GET /api/training/kaggle/status",
+        "kaggle_accelerators": "GET /api/training/kaggle/accelerators",
+        "kaggle_train": "POST /api/training/kaggle/train"
       }
     }
   },
@@ -1240,7 +1244,7 @@
       "runtime_baseline": "v16.9.157-STABLE",
       "codebase_path": "LemGendaryModels/retinaface/model.py",
       "weights_path": "LemGendaryModels/retinaface/weights.pth",
-      "architecture_type": "Feature Pyramid Network with Context Modules and Multi-Task Loss",
+      "architecture_type": "MobileNetV3-Small backbone with one globally pooled single-box head (box, confidence and 5 landmarks per image; no anchors)",
       "supported_formats": {
         "input": [
           "png",
@@ -1274,7 +1278,8 @@
         "whitepaper": "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md"
       },
       "limitations": [
-        "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners)."
+        "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners).",
+        "Regresses one face box per image; measured with box_iou, ap50, ap50_95 and landmark_nme against provisional targets 0.80, 0.95, 0.60 and 0.10 (training v16.9.208); earlier map_* values are not comparable."
       ],
       "academic_reference": {
         "title": "RetinaFace: Single-Shot Multi-Level Face Localisation in the Wild",
@@ -1438,8 +1443,8 @@
       "control_planes": {
         "gui": {
           "available": true,
-          "client_baseline": "v2.10.57",
-          "control": "train-btn-soup-{model_key} (Blend Soup model card action)"
+          "client_baseline": "v2.10.60",
+          "control": "train-btn-soup-{model_key} (Blend Soup model card action; opens soup-dialog with donors and weights)"
         },
         "cli": {
           "available": true,
@@ -1470,10 +1475,11 @@
       "file": "lemgendary-env-manager/ecosystem/ecosystem.json",
       "schema": "lemgendary-env-manager/ecosystem/ecosystem.schema.json",
       "contents": [
-        "identity (docs_url, kaggle_owner, bind_host)",
+        "identity (docs_url, kaggle_owner, bind_host, github_url)",
         "services[] (id, port, paths)",
         "projects[] (folder, kind, managed, validated, upgrade_order)",
-        "pipeline_steps[] (number, id, name, descriptions)"
+        "pipeline_steps[] (number, id, name, descriptions)",
+        "kaggle (collaborators, default_accelerator, accelerators[], retired_machine_shapes)"
       ],
       "consumers": {
         "environment_manager": "env_manager.ecosystem.ecosystem() (LEMGENDARY_ECOSYSTEM_FILE override)",
@@ -1586,8 +1592,8 @@
       "name": "Shard-Window Sampling and Block-Wise Curriculum Fractions",
       "status": "implemented",
       "owner_project": "lemgendary-training-suite",
-      "baseline": "v16.9.154-STABLE",
-      "default": "off (data.locality.window_shards: 0 and data.locality.fraction_block_size: 0 in config.yaml)",
+      "baseline": "v16.9.159-STABLE",
+      "default": "on (data.locality.window_shards: 4 and data.locality.fraction_block_size: 256 in config.yaml; 0 turns either off)",
       "config_keys": [
         "data.locality.window_shards",
         "data.locality.fraction_block_size"
@@ -1597,8 +1603,9 @@
         "fraction_block_size > 0: a curriculum data fraction is built from shuffled contiguous blocks inside each shard; the subsets stay nested across fraction steps (Monotonic Ratchet)."
       ],
       "limitations": [
-        "Off by default; the GPU throughput gain on real manifolds is not measured yet.",
-        "Applies to WebDataset shards; other samples share one window key per dataset."
+        "The GPU throughput gain on real manifolds is not measured yet.",
+        "Applies to WebDataset shards; other samples share one window key per dataset.",
+        "A changed setting applies from the next epoch of a resumed run (run settings, v16.9.187)."
       ],
       "control_planes": {
         "gui": {
@@ -1614,6 +1621,100 @@
       },
       "evidence": {
         "code": "lemgendary-training-suite/training/data/locality.py",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    },
+    {
+      "id": "kaggle_cloud_training",
+      "name": "Kaggle Cloud Training (Kernel Bundle, Session Guard, Hub Sync)",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.175-STABLE",
+      "client_baseline": "v2.10.65",
+      "accelerators": [
+        "cpu",
+        "gpu-t4x2",
+        "tpu-v5e8"
+      ],
+      "launch_options": [
+        "accelerator",
+        "git_ref",
+        "env_manager_ref",
+        "limit_hours",
+        "margin_minutes",
+        "override_frozen",
+        "auto_pull",
+        "poll_interval",
+        "auto_resume",
+        "max_resumes"
+      ],
+      "kernel_secrets": [
+        "KAGGLE_API_TOKEN (KGAT_ token)",
+        "GITHUB_PAT or SUITE_PAT",
+        "GOOGLE_DRIVE (optional)"
+      ],
+      "session_guard": "kaggle_session in config.yaml: limit_hours 12, margin_minutes 30, auto_resume false, max_resumes 3; the deadline stop saves progress, writes session_deadline.json, syncs the Hub and exits 0",
+      "variations": [
+        "pytorch/default",
+        "pytorch/fp32",
+        "onnx/fp16",
+        "onnx/fp32"
+      ],
+      "limitations": [
+        "The GUI sends no git_ref, env_manager_ref, limit_hours or margin_minutes; the CLI and the API do.",
+        "lemtrain kaggle launch starts one session and does not watch it; auto-resume runs only in a GUI or API job."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "client_baseline": "v2.10.67",
+          "control": "kaggle-accelerator-select, kaggle-override-frozen-checkbox (Cloud Training dialog)"
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/training/kaggle/train",
+          "port": 8200
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-training-suite/training/cloud/kernel_bundle.py",
+        "manual": "lemgendary-docs/MD-Papers/MANUAL_CLI.md",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    },
+    {
+      "id": "frozen_run_settings",
+      "name": "Frozen Run Settings and Resume Refusal",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.187-STABLE",
+      "client_baseline": "v2.10.67",
+      "behaviour": [
+        "Checkpoints record run_settings: frozen settings with frozen_sha and epoch settings.",
+        "A changed frozen setting on resume raises FrozenSettingsChanged unless override_frozen is set; the refusal is written to resume_refusal.json.",
+        "Changed epoch settings apply from the next epoch and are appended to settings_changes.jsonl."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "control": "train-input-override-frozen-{model_key}, kaggle-override-frozen-checkbox, train-frozen-refusal"
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain train MODEL_KEY --override-frozen"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/gui/quick-train (override_frozen)",
+          "port": 8200
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-training-suite/training/run_settings/",
         "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
       }
     }

@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.80-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-12
+**Version**: `v16.9.85-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-13
 
 ---
 
@@ -33,6 +33,8 @@ audited**: 2026-11-12
   - [6.6 Bug Report Endpoint](#66-bug-report-endpoint)
   - [6.7 Ecosystem Registry
     (ecosystem.json)](#67-ecosystem-registry-ecosystemjson)
+  - [6.8 Kaggle Credentials, Changelog Scope & Runtime Contract (v16.9.81 to
+    v16.9.85)](#68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -41,7 +43,7 @@ audited**: 2026-11-12
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.80-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.85-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -330,8 +332,11 @@ and Health Matrix. The list below describes what each step does.
    variant normalization after install to guarantee a single `cv2` provider per
    project. A project with `pyproject.toml` or `setup.py` is then installed in
    editable mode (`pip install --no-deps --no-build-isolation -e`), so console
-   scripts such as `lem-env` exist in the venv; a failed editable install counts
-   as an install failure (since v16.9.73).
+   scripts such as `lem-env` exist in the venv. Since v16.9.82 a failed
+   editable install is a structured warning, not an install failure (the
+   project's dependencies are already installed): step 4 reports `warning`
+   with `data.install_warning`, step 7 summarises the install warnings, and a
+   full run ends with `last_status: warning`.
 5. **Dependency Audit & Safe Upgrades ($v_5$)**: Routes by discovery metadata:
    every Python project gets the pip path and every project with a
    `package.json` (`has_npm_manifest`) gets the npm path (`npm outdated`), so a
@@ -550,7 +555,16 @@ not the code:
   upgrade order and the manifest sync targets are derived from this list.
 - **Pipeline steps** (`pipeline_steps[]`): number, id, name and descriptions of
   the seven pipeline steps (Section 6).
-- **Identity** (`identity`): documentation URL, Kaggle owner and bind host.
+- **Identity** (`identity`): documentation URL, Kaggle owner, bind host and,
+  since v16.9.85, `github_url` (the clone URL base,
+  `github_repo_url(folder)`).
+- **Kaggle** (`kaggle`, v16.9.85): `collaborators` (merged into every model's
+  editor binding), `default_accelerator` (`gpu-t4x2`), `accelerators[]` (`id`,
+  `label`, `kind`, `machine_shape`: `cpu` without a shape, `gpu-t4x2` on
+  `NvidiaTeslaT4`, `tpu-v5e8` on `TpuV5E8`) and `retired_machine_shapes`
+  (P100 and the older TPU shapes, never offered). `KaggleSettings` checks
+  unique ids, a listed default, no retired shape and a null shape exactly for
+  CPU.
 
 Python code in this repository reads the file through
 `env_manager.ecosystem.ecosystem()` (parsed once and cached;
@@ -584,6 +598,31 @@ ports, that the GUI pipeline steps match the file, that the GUI `ProjectHealth`
 type matches the OpenAPI schema and that the GUI `package.json` equals its
 central manifest (`check_npm_manifest`, finding `ssot_npm_manifest`; the
 `version` field is not compared since v16.9.60).
+
+### 6.8 Kaggle Credentials, Changelog Scope & Runtime Contract (v16.9.81 to v16.9.85)
+
+- **One Kaggle credential loader** (`env_manager/kaggle_auth/credentials.py`,
+  v16.9.84): `load_kaggle_credential(vault_records, environ, config_dir)`
+  resolves the vault default first, then `KAGGLE_API_TOKEN` (or
+  `KAGGLE_USERNAME` / `KAGGLE_KEY`), then `~/.kaggle/access_token`; a
+  `KaggleCredential` never shows its token in `repr`, and nothing mutates
+  `os.environ`. `KaggleCliConfigWriter` writes a `KGAT_` API token to
+  `~/.kaggle/access_token` (0600) and removes a `kaggle.json` that holds such
+  a token as its legacy `key` (the Kaggle CLI answers 401); a legacy key still
+  goes to `kaggle.json` with its username. The unused `.kaggle_token`
+  repository list is gone; `.kaggle_users` is read only to seed a new vault.
+- **Changelog scope** (`env_manager/validation/domain/changelog_scope.py`,
+  v16.9.83): the single definition of which changed paths need a README
+  changelog entry. Docs (Markdown other than `README.md`, a top-level
+  `docs/`), tests (`tests` / `test` / `__tests__` folders, `test_*.py`,
+  `*_test.py`, `conftest.py`, `*.test.*`, `*.spec.*`) and tooling (`.github`,
+  `.githooks`, `.husky`, `.vscode`, lint, format and git config files) are
+  exempt; everything else, including `pyproject.toml`, `package.json`,
+  requirements and runtime config, needs an entry. A docs-only or tooling-only
+  last commit no longer fails the domain gate.
+- **MDS dropped** (v16.9.81): `requirements/runtime_env.yaml` (contract 1.2)
+  no longer lists `mosaicml-streaming`; MDS dataset compilation is
+  discontinued.
 
 ---
 

@@ -264,10 +264,11 @@ auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</cod
 central <code>requirements/</code> files are the manifest single source of truth.</li>
 <li><strong>Data Compiler</strong>: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
 formats WebDataset (<code>.data</code>/<code>.tar</code>), LitData (<code>.bin</code>), Parquet and
-Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to
-WebDataset and <code>mosaicml-streaming</code> was removed from the datasets
-requirements. The Environment Manager's <code>runtime_env.yaml</code> still registers
-<code>mosaicml-streaming</code> as a container runtime dependency (open).</li>
+Directory. MosaicML MDS is discontinued: existing MDS shards were transcoded
+to WebDataset, <code>mosaicml-streaming</code> was removed from the datasets
+requirements, and since Environment Manager v16.9.81 <code>runtime_env.yaml</code> no
+longer lists it. Shard labels are JSON only (<code>&lt;key&gt;.json</code>, Dataset Compiler
+v16.9.98).</li>
 <li><strong>Training Suite</strong>: Zero-IPC ThreadPool dataloaders, spatial resolution
 ladders under the pair-rule ratchet (resolution never decreases; the data
 fraction only rises within one resolution step and may reset when resolution

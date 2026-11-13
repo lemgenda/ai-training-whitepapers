@@ -191,10 +191,11 @@ value is written anywhere else.
    manifest single source of truth.
 3. **Data Compiler**: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
    formats WebDataset (`.data`/`.tar`), LitData (`.bin`), Parquet and
-   Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to
-   WebDataset and `mosaicml-streaming` was removed from the datasets
-   requirements. The Environment Manager's `runtime_env.yaml` still registers
-   `mosaicml-streaming` as a container runtime dependency (open).
+   Directory. MosaicML MDS is discontinued: existing MDS shards were transcoded
+   to WebDataset, `mosaicml-streaming` was removed from the datasets
+   requirements, and since Environment Manager v16.9.81 `runtime_env.yaml` no
+   longer lists it. Shard labels are JSON only (`<key>.json`, Dataset Compiler
+   v16.9.98).
 4. **Training Suite**: Zero-IPC ThreadPool dataloaders, spatial resolution
    ladders under the pair-rule ratchet (resolution never decreases; the data
    fraction only rises within one resolution step and may reset when resolution

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.105-STABLE",
+  "document_baseline": "v16.9.106-STABLE",
   "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -141,8 +141,8 @@
       "category": "Category 01.1 ENV",
       "html_path": "papers/env_manager.html",
       "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
-      "baseline_version": "v16.9.80-STABLE",
-      "last_audited": "2026-11-12",
+      "baseline_version": "v16.9.85-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {

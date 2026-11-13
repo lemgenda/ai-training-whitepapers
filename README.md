@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.105`
+**Version**: `v16.9.106`
 
 ---
 
@@ -18,7 +18,8 @@
   capabilities: Bug Report Tool (`POST /api/bug-report`, screen recording in
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
-  Averaging and the FID Re-evaluation Tool.
+  Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
+  Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.80, LemGendary
   Dataset Compiler Suite v16.9.84, LemGendary Model Training Suite v16.9.157,
   LemGendary AI Studio GUI v2.10.57.
@@ -60,6 +61,29 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.106 - Environment Manager v16.9.81 to v16.9.85, Registry Sync
+
+* `PAPER_ENV_MANAGER.md` and its page (version line v16.9.85-STABLE): new
+  Section 6.8 on the one Kaggle credential loader and the `access_token`
+  writer (v16.9.84), the changelog scope rule for docs, test and tooling
+  commits (v16.9.83) and the dropped `mosaicml-streaming` runtime dependency
+  (v16.9.81). Section 6.7 documents `identity.github_url` and the `kaggle`
+  section of `ecosystem.json` (collaborators, default accelerator,
+  accelerator table, retired machine shapes; v16.9.85); the install step
+  reports a failed editable install as a warning (v16.9.82).
+* `ECOSYSTEM_ARCHITECTURE.md` and its page: MDS is discontinued and no longer
+  in `runtime_env.yaml` (the "open" note is closed); shard labels are JSON
+  only.
+* Both capability registries: `train` syntax with `--clean` and
+  `--override-frozen`; new `kaggle_launch` syntax and the `kaggle_status`,
+  `kaggle_accelerators` and `kaggle_train` routes; RetinaFace is a
+  single-box model with provisional `box_iou`, `ap50`, `ap50_95` and
+  `landmark_nme` targets; Model Soup opens `soup-dialog` (GUI v2.10.60); the
+  Ecosystem Registry lists `github_url` and the `kaggle` section;
+  shard-window sampling is on by default (v16.9.159); new platform
+  capabilities `kaggle_cloud_training` and `frozen_run_settings`. README hub
+  features name them.
 
 ### v16.9.105 - GUI v2.10.67 Control Registry and Kaggle Launch Options
 
