@@ -20,8 +20,8 @@
 <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
 <p class="subtitle">Category 03 | LemGendary AI Documentation Hub | Master Operations Manual</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.57</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-12</span>
+<span><strong>Version</strong>: <code>v2.10.67</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-13</span>
 <span><strong>Sidecars</strong>: LemGendary Environment Manager (port 8000), LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite (port 8200); each keeps its own <code>v16.x</code> release line</span>
 <span><strong>Parent Authority</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
 <span><a href="versioning-policy.html">Document Authority Hierarchy &amp; Versioning Policy</a></span>
@@ -107,6 +107,7 @@ Curves</a></li>
 <li><a href="#sec-72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</a></li>
 <li><a href="#sec-73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud
 Registry</a></li>
+<li><a href="#sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.67)</a></li>
 </ul>
 </li>
 <li><a href="#sec-8-health-matrix--cross-project-version-drift-analytics">8. Health Matrix &amp; Cross-Project Version Drift
@@ -1282,8 +1283,9 @@ syntax of canonical Kaggle training notebook template.</li>
 shards are registered in <code>unified_data.yaml</code> and ready for cloud mounting.</li>
 <li><strong>Pre-Flight Checkpoint Vault Row</strong>: Audits remote checkpoint vault status
 and validates cryptographic weight hashes.</li>
-<li><strong>Pre-Flight API Authentication Row</strong>: Verifies Kaggle API credentials
-(<code>kaggle.json</code>) loaded from the Secrets Vault are active and authenticated.</li>
+<li><strong>Pre-Flight API Authentication Row</strong>: Shows the result of the real
+authenticated call of <code>GET /api/training/kaggle/status</code> (user and method,
+or the HTTP status and reason).</li>
 <li><strong>Regen Docs &amp; Meta Action Button</strong>: Dispatches
 <code>POST /api/training/generate-docs</code>, regenerating Markdown Model Card
 (<code>README.md</code>) and <code>model-metadata.json</code>.</li>
@@ -1297,7 +1299,8 @@ verification metrics for the full-precision ONNX computational graph.</li>
 <li><strong>ONNX FP16 Variation Card</strong>: Displays binary isolation status and
 verification metrics for the half-precision ONNX graph.</li>
 <li><strong>Framework Variation Select Dropdown</strong>: Selects target payload to publish
-(<code>All Variations</code>, <code>PyTorch (.pt)</code>, <code>ONNX FP32</code>, or <code>ONNX FP16</code>).</li>
+(<code>all</code> or a <code>VariationKey</code>: <code>pytorch/default</code>, <code>pytorch/fp32</code>,
+<code>onnx/fp16</code>, <code>onnx/fp32</code>).</li>
 <li><strong>Dry-Run Validation Checkbox Toggle</strong>: Enables dry-run validation mode to
 simulate isolation checks and folder verification without executing live
 cloud upload.</li>
@@ -1355,6 +1358,57 @@ fleet-wide synchronization to stage, validate, and publish all 23 registered
 neural models and checkpoints to Kaggle Models Hub simultaneously using the
 <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
+<h3 id="sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.67)</h3>
+<p>The Kaggle GPU Cloud tab of the Cloud &amp; Registry Dispatch dialog follows the
+Training Suite Kaggle contract (<code>openapi.json</code> of Training Suite v16.9.170
+to v16.9.198):</p>
+<ul>
+<li><strong>API Authentication</strong> (<code>cloud-modal-auth-badge</code>): shows the user and the
+method from <code>GET /api/training/kaggle/status</code>, which makes a real
+authenticated call; a refused or missing token shows the HTTP status and
+reason in <code>cloud-modal-auth-error</code>.</li>
+<li><strong>Dataset links</strong> (<code>cloud-modal-dataset-links</code>): the registry
+<code>kaggle_dataset_urls</code> of the model; the kernel
+(<code>code/&lt;user&gt;/&lt;registry slug&gt;-training</code>) and model page links use the
+registry slug, with the ecosystem <code>identity.kaggle_owner</code> when the status
+route reports no username.</li>
+<li><strong>Launch options</strong>: <code>kaggle-accelerator-select</code> (ids from
+<code>GET /api/training/kaggle/accelerators</code>: CPU, GPU T4 x2, TPU v5e-8; the
+P100 option is gone), <code>kaggle-poll-interval-input</code> (default 30 s, minimum
+5 s), <code>kaggle-auto-pull-checkbox</code>, <code>kaggle-auto-resume-checkbox</code> with
+<code>kaggle-max-resumes-input</code> (empty uses <code>kaggle_session.max_resumes</code>) and
+<code>kaggle-override-frozen-checkbox</code>, all sent with
+<code>POST /api/training/kaggle/train</code>. The GUI does not offer the clone ref or
+session window options of the route (<code>git_ref</code>, <code>env_manager_ref</code>,
+<code>limit_hours</code>, <code>margin_minutes</code>); use the CLI for those (CLI manual Section
+6.13).</li>
+<li><strong>Kernel monitor</strong>: <code>kaggle-monitor-kernel-select</code> lists the account's
+recent kernels (<code>GET /api/training/kaggle/kernels</code>, reload
+<code>kaggle-monitor-kernels-refresh</code>) and fills the kernel reference; Attach
+Monitor sends the launch options' poll interval.</li>
+<li><strong>Variations</strong>: the push select offers the <code>VariationKey</code> values
+(<code>pytorch/default</code>, <code>pytorch/fp32</code>, <code>onnx/fp16</code>, <code>onnx/fp32</code>) or <code>all</code>. A
+<code>push-model</code> answer with <code>success: false</code> is an error banner, and skipped
+variations read &quot;unchanged, no new version&quot;.</li>
+<li><strong>Card transfers</strong>: card Push and Pull jobs stream to the Remote Cloud
+console and end with a summary banner (unchanged variations, pulled
+variation count or the failure reason).</li>
+<li><strong>Local launch</strong>: the model card's &quot;Override frozen settings&quot; checkbox
+(<code>train-input-override-frozen-{model_key}</code>) sends <code>override_frozen</code> to
+<code>POST /api/gui/quick-train</code>; the batch size select
+(<code>train-select-batch-{model_key}</code>) offers &quot;Custom...&quot; with a whole-number
+input.</li>
+<li><strong>Resume refusal</strong>: when a local or cloud training job fails with the
+<code>FrozenSettingsChanged</code> message, the panel shows <code>train-frozen-refusal</code>
+instead of the generic error banner: the message, a table of the changed
+settings with their old and new values and a hint naming the override
+toggle of that launch; <code>train-btn-frozen-refusal-dismiss</code> closes it. A
+Kaggle refusal shows only when the job's failure message or a log line of
+the job carries it.</li>
+<li><strong>Blend Soup</strong>: the card action opens <code>soup-dialog</code>, where donors
+(<code>vault_&lt;metric&gt;.pth</code>) and weights can be chosen, or every vault checkpoint
+is blended with uniform weights.</li>
+</ul>
 </section>
 
 <section id="sec-8-health-matrix--cross-project-version-drift-analytics">

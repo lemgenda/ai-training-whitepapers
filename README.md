@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.104`
+**Version**: `v16.9.105`
 
 ---
 
@@ -60,6 +60,35 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.105 - GUI v2.10.67 Control Registry and Kaggle Launch Options
+
+* `GUI_CONTROL_REGISTRY.md` and its page, recounted against LemGendary AI
+  Studio GUI v2.10.67: 193 distinct IDs (123 controls, 70 dialogs, status
+  regions, landmarks and headings; was 150). Added in sections 3.1 to 3.9:
+  `dash-btn-refresh-projects`; the compiler sub-tabs,
+  `compiler-btn-validate-schema`, `comp-input-max-gb`, `comp-input-workers`,
+  `comp-select-shard-ext`, `comp-select-kaggle-registry` and
+  `comp-btn-kaggle-registry-reload`; the card controls
+  `train-select-batch-{model_key}`, `train-input-custom-batch-{model_key}`,
+  `train-input-override-frozen-{model_key}`, `train-btn-docs-{model_key}` and
+  `train-btn-stage-{model_key}`; the Blend Soup dialog (`soup-*`); the
+  console tabs `training-telemetry-tabs-tab-*`; the Kaggle launch options
+  `kaggle-accelerator-select`, `kaggle-poll-interval-input`,
+  `kaggle-auto-pull-checkbox`, `kaggle-auto-resume-checkbox`,
+  `kaggle-max-resumes-input` and `kaggle-override-frozen-checkbox`; the
+  kernel picker; the status regions `cloud-modal-auth-badge`,
+  `cloud-modal-auth-error`, `cloud-modal-dataset-links`,
+  `kaggle-accelerator-source`, `comp-badge-kaggle-auth`; and the resume
+  refusal region `train-frozen-refusal` with `-message`, `-changes`, `-hint`
+  and `train-btn-frozen-refusal-dismiss`. `gpu-select` is removed and the
+  Config & Secrets tabs are `config-tabs-tab-*`. Section 3.10 drops the
+  controls that gained an ID; Section 3.11 lists the changes by release.
+* `MANUAL_AI_STUDIO_GUI.md` and its page (version line v2.10.67): new Section
+  7.4 on the Kaggle launch options, kernel monitor, variation names, card
+  transfers, the override toggle, the resume refusal notice and the Blend
+  Soup dialog; the authentication row and the variation select of Section
+  7.3 are corrected.
 
 ### v16.9.104 - Dataset Compiler v16.9.85 to v16.9.107 in the Paper
 

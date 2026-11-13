@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.57` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-12 · **Sidecars**: LemGendary Environment Manager (port 8000),
+**Version**: `v2.10.67` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-13 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
 [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document
@@ -70,6 +70,8 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [7.2 Exporting to Universal Runtimes](#72-exporting-to-universal-runtimes)
   - [7.3 Publishing to Kaggle Models Hub & Cloud
     Registry](#73-publishing-to-kaggle-models-hub--cloud-registry)
+  - [7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to
+    v2.10.67)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067)
 - [8. Health Matrix & Cross-Project Version Drift
   Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
@@ -1355,8 +1357,9 @@ until it completes, fails or is cancelled, which shows a notice or an error
    shards are registered in `unified_data.yaml` and ready for cloud mounting.
 5. **Pre-Flight Checkpoint Vault Row**: Audits remote checkpoint vault status
    and validates cryptographic weight hashes.
-6. **Pre-Flight API Authentication Row**: Verifies Kaggle API credentials
-   (`kaggle.json`) loaded from the Secrets Vault are active and authenticated.
+6. **Pre-Flight API Authentication Row**: Shows the result of the real
+   authenticated call of `GET /api/training/kaggle/status` (user and method,
+   or the HTTP status and reason).
 7. **Regen Docs & Meta Action Button**: Dispatches
    `POST /api/training/generate-docs`, regenerating Markdown Model Card
    (`README.md`) and `model-metadata.json`.
@@ -1370,7 +1373,8 @@ until it completes, fails or is cancelled, which shows a notice or an error
 11. **ONNX FP16 Variation Card**: Displays binary isolation status and
     verification metrics for the half-precision ONNX graph.
 12. **Framework Variation Select Dropdown**: Selects target payload to publish
-    (`All Variations`, `PyTorch (.pt)`, `ONNX FP32`, or `ONNX FP16`).
+    (`all` or a `VariationKey`: `pytorch/default`, `pytorch/fp32`,
+    `onnx/fp16`, `onnx/fp32`).
 13. **Dry-Run Validation Checkbox Toggle**: Enables dry-run validation mode to
     simulate isolation checks and folder verification without executing live
     cloud upload.
@@ -1428,6 +1432,58 @@ fleet-wide synchronization to stage, validate, and publish all 23 registered
 neural models and checkpoints to Kaggle Models Hub simultaneously using the
 `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (`lemtrain sync push --all`).
+
+### 7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to v2.10.67)
+
+The Kaggle GPU Cloud tab of the Cloud & Registry Dispatch dialog follows the
+Training Suite Kaggle contract (`openapi.json` of Training Suite v16.9.170
+to v16.9.198):
+
+- **API Authentication** (`cloud-modal-auth-badge`): shows the user and the
+  method from `GET /api/training/kaggle/status`, which makes a real
+  authenticated call; a refused or missing token shows the HTTP status and
+  reason in `cloud-modal-auth-error`.
+- **Dataset links** (`cloud-modal-dataset-links`): the registry
+  `kaggle_dataset_urls` of the model; the kernel
+  (`code/<user>/<registry slug>-training`) and model page links use the
+  registry slug, with the ecosystem `identity.kaggle_owner` when the status
+  route reports no username.
+- **Launch options**: `kaggle-accelerator-select` (ids from
+  `GET /api/training/kaggle/accelerators`: CPU, GPU T4 x2, TPU v5e-8; the
+  P100 option is gone), `kaggle-poll-interval-input` (default 30 s, minimum
+  5 s), `kaggle-auto-pull-checkbox`, `kaggle-auto-resume-checkbox` with
+  `kaggle-max-resumes-input` (empty uses `kaggle_session.max_resumes`) and
+  `kaggle-override-frozen-checkbox`, all sent with
+  `POST /api/training/kaggle/train`. The GUI does not offer the clone ref or
+  session window options of the route (`git_ref`, `env_manager_ref`,
+  `limit_hours`, `margin_minutes`); use the CLI for those (CLI manual Section
+  6.13).
+- **Kernel monitor**: `kaggle-monitor-kernel-select` lists the account's
+  recent kernels (`GET /api/training/kaggle/kernels`, reload
+  `kaggle-monitor-kernels-refresh`) and fills the kernel reference; Attach
+  Monitor sends the launch options' poll interval.
+- **Variations**: the push select offers the `VariationKey` values
+  (`pytorch/default`, `pytorch/fp32`, `onnx/fp16`, `onnx/fp32`) or `all`. A
+  `push-model` answer with `success: false` is an error banner, and skipped
+  variations read "unchanged, no new version".
+- **Card transfers**: card Push and Pull jobs stream to the Remote Cloud
+  console and end with a summary banner (unchanged variations, pulled
+  variation count or the failure reason).
+- **Local launch**: the model card's "Override frozen settings" checkbox
+  (`train-input-override-frozen-{model_key}`) sends `override_frozen` to
+  `POST /api/gui/quick-train`; the batch size select
+  (`train-select-batch-{model_key}`) offers "Custom..." with a whole-number
+  input.
+- **Resume refusal**: when a local or cloud training job fails with the
+  `FrozenSettingsChanged` message, the panel shows `train-frozen-refusal`
+  instead of the generic error banner: the message, a table of the changed
+  settings with their old and new values and a hint naming the override
+  toggle of that launch; `train-btn-frozen-refusal-dismiss` closes it. A
+  Kaggle refusal shows only when the job's failure message or a log line of
+  the job carries it.
+- **Blend Soup**: the card action opens `soup-dialog`, where donors
+  (`vault_<metric>.pth`) and weights can be chosen, or every vault checkpoint
+  is blended with uniform weights.
 
 ---
 
