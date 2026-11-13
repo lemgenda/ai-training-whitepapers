@@ -1123,7 +1123,8 @@ private with the manifold's license; dataset cards state the real split
 counts once and per-source counts only when exact. <code>sync pull</code> creates a
 missing datasets root, falls back to a file-by-file download (and the
 Kaggle API route after a per-file 404), waits on HTTP 429 and takes
-<code>--only</code>.</p>
+<code>--only</code>. Since v16.9.109 <code>sync push --notes TEXT</code> adds what changed in the
+new version after the generated version notes (CLI manual Section 5.10).</p>
 </li>
 <li>
 <p><strong>Forex timestamps (v16.9.87)</strong>: the <code>timestamp</code> column is whole Unix epoch
@@ -1670,10 +1671,18 @@ learning</li>
 <h3 id="lemgendizedforexuniverse">LemGendizedForexUniverse</h3>
 <ul>
 <li><strong>Category:</strong> Financial Time-Series</li>
-<li><strong>Total Samples:</strong> 26,818,700 (train 21,015,570 / val 5,803,130; 765
-chunks, per <code>dataset_info.yaml</code> and <code>index.json</code> and the training registry)</li>
-<li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code>
-to <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
+<li><strong>Total Samples:</strong> 26,818,700 (train 21,015,570 / val 5,803,130, per
+<code>dataset_info.yaml</code> and <code>index.json</code> and the training registry)</li>
+<li><strong>Storage Format:</strong> eight yearly Apache Parquet files
+(<code>ForexUniverse2019.parquet</code> to <code>ForexUniverse2026.parquet</code>, Zstandard level
+3, 5,368 row groups of up to 5,000 rows), each row one window with its
+<code>pair</code> and <code>timeframe</code> columns. The 765 &quot;chunks&quot; are the <code>index.json</code>
+entries, one per pair, timeframe and year present (16 pairs by 6
+timeframes by 8 years, 3 absent), not files: years before 2025 are <code>train</code>
+(573 entries), 2025 and 2026 are <code>val</code> (192)
+(<code>core/docs/generators/index_json.py</code>). The MT5 pipeline writes per-year
+chunk shards (<code>ForexUniverse&lt;year&gt;/&lt;pair&gt;/&lt;timeframe&gt;/shard_chunk&lt;N&gt;.parquet</code>)
+that the scanner also reads; the published manifold holds the yearly files.</li>
 <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
 <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries
 for 16 major currency pairs and commodities across 6 timeframes.</li>

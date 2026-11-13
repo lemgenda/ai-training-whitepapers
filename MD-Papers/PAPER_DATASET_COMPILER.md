@@ -1218,7 +1218,8 @@ recorded.
   counts once and per-source counts only when exact. `sync pull` creates a
   missing datasets root, falls back to a file-by-file download (and the
   Kaggle API route after a per-file 404), waits on HTTP 429 and takes
-  `--only`.
+  `--only`. Since v16.9.109 `sync push --notes TEXT` adds what changed in the
+  new version after the generated version notes (CLI manual Section 5.10).
 - **Forex timestamps (v16.9.87)**: the `timestamp` column is whole Unix epoch
   seconds (UTC); `forex/columns.py` holds the column definitions and
   `TIMESTAMP_UNIT = "seconds"`, and `dataset_info.yaml` and the Parquet schema
@@ -1779,10 +1780,18 @@ manifold builds.
 ### LemGendizedForexUniverse
 
 - **Category:** Financial Time-Series
-- **Total Samples:** 26,818,700 (train 21,015,570 / val 5,803,130; 765
-  chunks, per `dataset_info.yaml` and `index.json` and the training registry)
-- **Storage Format:** Unified Annual Apache Parquet (`ForexUniverse2019.parquet`
-  to `ForexUniverse2026.parquet`) with Zstandard compression
+- **Total Samples:** 26,818,700 (train 21,015,570 / val 5,803,130, per
+  `dataset_info.yaml` and `index.json` and the training registry)
+- **Storage Format:** eight yearly Apache Parquet files
+  (`ForexUniverse2019.parquet` to `ForexUniverse2026.parquet`, Zstandard level
+  3, 5,368 row groups of up to 5,000 rows), each row one window with its
+  `pair` and `timeframe` columns. The 765 "chunks" are the `index.json`
+  entries, one per pair, timeframe and year present (16 pairs by 6
+  timeframes by 8 years, 3 absent), not files: years before 2025 are `train`
+  (573 entries), 2025 and 2026 are `val` (192)
+  (`core/docs/generators/index_json.py`). The MT5 pipeline writes per-year
+  chunk shards (`ForexUniverse<year>/<pair>/<timeframe>/shard_chunk<N>.parquet`)
+  that the scanner also reads; the published manifold holds the yearly files.
 - **Architecture Base:** Multi-Scale CNN-Transformer (TCN + CT-MHA)
 - **Primary Task:** Predict directional probability and Pip-Magnitude Boundaries
   for 16 major currency pairs and commodities across 6 timeframes.

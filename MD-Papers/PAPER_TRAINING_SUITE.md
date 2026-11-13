@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.222-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.223-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-13
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -111,7 +111,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     v16.9.218)](#246-shard-offset-index--fast-webdataset-open-v169215-to-v169218)
   - [2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &
     Export Probe (v16.9.216 to
-    v16.9.222)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169222)
+    v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -1932,9 +1932,9 @@ shard modification times changed on upload.
   indexed the `upn_v2` train split in 440.3 s on 16 threads.
 - **Dependency**: `filelock` is declared (already installed with torch).
 
-### 2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings & Export Probe (v16.9.216 to v16.9.222)
+### 2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings & Export Probe (v16.9.216 to v16.9.223)
 
-Fixes from Kaggle runs 4 and 5 of `upn_v2`, and the measured registry
+Fixes from Kaggle runs 4, 5 and 6 of `upn_v2`, and the measured registry
 parameter counts.
 
 - **Known Issue in Past Runs, Fixed in v16.9.216 (Manifold Dedupe)**:
@@ -1976,8 +1976,8 @@ parameter counts.
   device`: the dynamic-axes probe subtracted the model's CUDA outputs from
   ONNX Runtime's CPU outputs. The probe now moves both sides to
   `PROBE_DEVICE` (the CPU) before comparing (`compare_outputs` in
-  `training/export/dynamo_onnx.py`); the tolerance is unchanged. The fix is
-  not yet confirmed by a rerun on Kaggle.
+  `training/export/dynamo_onnx.py`); the tolerance is unchanged. Run 6
+  (v16.9.222) confirmed the fix: both ONNX release files were written.
 - **Measured Parameter Counts (v16.9.221)**: `parameters_m` in
   `unified_models_v2.yaml` was not measured; `retinaface` said 27.2 M for a
   935,663-parameter network. Every value is now the parameter count of the
@@ -2001,6 +2001,25 @@ parameter counts.
   log line once, resumed after the 2042 steps of run 4, epoch 1 completed
   with `latest.pth`, the session deadline honoured and the publish step
   skipped.
+- **Export Parity and Release Files in the Run Log (v16.9.223)**: run 6
+  (v16.9.222) wrote the `.pt`, ONNX FP32 and ONNX FP16 release files at the
+  end of epoch 2, but its log showed only `[EXPORT] Initiating ...`. The
+  trainer configures no INFO log handler, so the passed parity probe and the
+  written files went to `logging` only. The export now prints both to the
+  run log: `[EXPORT] ONNX FP32 parity probe at <shape>: passed, max abs diff
+  <x> (atol <a>, rtol <r>)` (or that the probe was not run because the graph
+  has no dynamic axes; `report_parity` in `training/export/dynamo_onnx.py`)
+  and `[EXPORT] <model>: N release file(s) written: ...` (`export_summary` in
+  `training/export/universal_exporter.py`).
+- **Run 6 Parity, Measured Locally**: the run 6 exports compared against the
+  PyTorch model: ONNX FP32 max abs diff 4.17e-7 at `1x3x128x128`; ONNX FP16
+  4.51e-3 / 6.64e-3. The FP16 graph has no parity probe during the run; only
+  the FP32 graph is probed.
+- **Hub Uploads During and After a Run**: the mid-run Hub sync (per epoch and
+  at the session deadline) uploads only the `pytorch/default` variation. The
+  ONNX variations go up only with the release publish after training
+  completes, so the ONNX files of a run that stops before training completes
+  (for example at a session deadline) do not reach the Hub.
 
 ---
 

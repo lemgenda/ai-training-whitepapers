@@ -731,6 +731,8 @@ python cli.py env install
 ```bash
 # Kaggle dataset push and pull
 python cli.py sync push --model nima_aesthetic
+# Say what changed in the new version (added to the generated version notes)
+python cli.py sync push --model retinaface_mobilenet --notes "Rebuilt labels"
 python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
 
 # Fetch only some folders or files (repeatable --only), into another folder
@@ -762,6 +764,13 @@ through HTTP byte ranges or file by file. A pulled registered manifold packs
 its text labels into JSON with the entry's label strategy. A new Kaggle
 dataset is created private; the metadata push applies the registry
 `is_private` and license.
+
+`sync push` labels every new Kaggle dataset version with generated version
+notes: the compiler release and the sample counts the manifold's `index.json`
+(else `dataset_info.yaml`) records. Since v16.9.109, `--notes TEXT` adds what
+changed in this version after them, separated by `". "`; whitespace is
+collapsed and blank text adds nothing. Without `--notes` the notes are the
+generated part only.
 
 ### 5.11 Canonical Compiler Presets (`presets`)
 

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.115`
+**Version**: `v16.9.116`
 
 ---
 
@@ -21,8 +21,8 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.85, LemGendary
-  Dataset Compiler Suite v16.9.107, LemGendary Model Training Suite v16.9.214,
-  LemGendary AI Studio GUI v2.10.67.
+  Dataset Compiler Suite v16.9.109, LemGendary Model Training Suite v16.9.223,
+  LemGendary AI Studio GUI v2.10.68.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -61,6 +61,30 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.116 - Sync Push Notes, Export Run Log Lines, Forex Layout
+
+* `MANUAL_CLI.md` and its page, Section 5.10: Dataset Compiler v16.9.109
+  `sync push --notes TEXT` adds what changed after the generated version
+  notes (compiler release and sample counts); whitespace is collapsed and
+  blank text adds nothing. The registries gain
+  `control_planes.cli.syntax.dataset_sync_push`; `PAPER_DATASET_COMPILER.md`
+  Section 4.12 notes it.
+* `PAPER_TRAINING_SUITE.md` and its page, Section 2.47 (now v16.9.216 to
+  v16.9.223, version line v16.9.223): the export prints the ONNX FP32 parity
+  probe result (or "not run" for a graph without dynamic axes) and the
+  release files it wrote to the run log, because the trainer has no INFO log
+  handler. Run 6 of `upn_v2` confirmed the v16.9.222 CPU probe; parity
+  measured locally: FP32 max abs diff 4.17e-7 at `1x3x128x128`, FP16
+  4.51e-3 / 6.64e-3 (the FP16 graph has no in-run probe). The mid-run Hub
+  sync uploads only `pytorch/default`; ONNX variations go up with the
+  release publish after training completes.
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedForexUniverse`: the 765 "chunks" are `index.json` entries (one
+  per pair, timeframe and year; 573 train, 192 val), not files; storage is
+  eight yearly Zstandard Parquet files with 5,368 row groups.
+* Baselines: Training Suite v16.9.223, Dataset Compiler v16.9.109,
+  Environment Manager v16.9.85, AI Studio GUI v2.10.68.
 
 ### v16.9.115 - ForexUniverse Sample Count
 

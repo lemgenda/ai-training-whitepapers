@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.222-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.223-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -127,7 +127,7 @@ Probing</a></li>
 <li><a href="#sec-244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203">2.44. Preprocessing, Class Labels &amp; JSON Shard Labels (v16.9.180 to v16.9.203)</a></li>
 <li><a href="#sec-245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214">2.45. Kaggle Cloud Pipeline &amp; Hub Root (v16.9.169 to v16.9.214)</a></li>
 <li><a href="#sec-246-shard-offset-index--fast-webdataset-open-v169215-to-v169218">2.46. Shard Offset Index &amp; Fast WebDataset Open (v16.9.215 to v16.9.218)</a></li>
-<li><a href="#sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169222">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.222)</a></li>
+<li><a href="#sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.223)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -1923,8 +1923,8 @@ index) from a full rescan (16.1 s) to 3.9 s. On Kaggle, run 5 (v16.9.221)
 indexed the <code>upn_v2</code> train split in 440.3 s on 16 threads.</li>
 <li><strong>Dependency</strong>: <code>filelock</code> is declared (already installed with torch).</li>
 </ul>
-<h3 id="sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169222">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.222)</h3>
-<p>Fixes from Kaggle runs 4 and 5 of <code>upn_v2</code>, and the measured registry
+<h3 id="sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.223)</h3>
+<p>Fixes from Kaggle runs 4, 5 and 6 of <code>upn_v2</code>, and the measured registry
 parameter counts.</p>
 <ul>
 <li><strong>Known Issue in Past Runs, Fixed in v16.9.216 (Manifold Dedupe)</strong>:
@@ -1965,8 +1965,8 @@ the Dataset Compiler can repair the record. The two run 4 warnings were
 ONNX release exports failed with <code>Expected all tensors to be on the same device</code>: the dynamic-axes probe subtracted the model's CUDA outputs from
 ONNX Runtime's CPU outputs. The probe now moves both sides to
 <code>PROBE_DEVICE</code> (the CPU) before comparing (<code>compare_outputs</code> in
-<code>training/export/dynamo_onnx.py</code>); the tolerance is unchanged. The fix is
-not yet confirmed by a rerun on Kaggle.</li>
+<code>training/export/dynamo_onnx.py</code>); the tolerance is unchanged. Run 6
+(v16.9.222) confirmed the fix: both ONNX release files were written.</li>
 <li><strong>Measured Parameter Counts (v16.9.221)</strong>: <code>parameters_m</code> in
 <code>unified_models_v2.yaml</code> was not measured; <code>retinaface</code> said 27.2 M for a
 935,663-parameter network. Every value is now the parameter count of the
@@ -1990,6 +1990,25 @@ measured counts.</li>
 log line once, resumed after the 2042 steps of run 4, epoch 1 completed
 with <code>latest.pth</code>, the session deadline honoured and the publish step
 skipped.</li>
+<li><strong>Export Parity and Release Files in the Run Log (v16.9.223)</strong>: run 6
+(v16.9.222) wrote the <code>.pt</code>, ONNX FP32 and ONNX FP16 release files at the
+end of epoch 2, but its log showed only <code>[EXPORT] Initiating ...</code>. The
+trainer configures no INFO log handler, so the passed parity probe and the
+written files went to <code>logging</code> only. The export now prints both to the
+run log: <code>[EXPORT] ONNX FP32 parity probe at &lt;shape&gt;: passed, max abs diff
+&lt;x&gt; (atol &lt;a&gt;, rtol &lt;r&gt;)</code> (or that the probe was not run because the graph
+has no dynamic axes; <code>report_parity</code> in <code>training/export/dynamo_onnx.py</code>)
+and <code>[EXPORT] &lt;model&gt;: N release file(s) written: ...</code> (<code>export_summary</code> in
+<code>training/export/universal_exporter.py</code>).</li>
+<li><strong>Run 6 Parity, Measured Locally</strong>: the run 6 exports compared against the
+PyTorch model: ONNX FP32 max abs diff 4.17e-7 at <code>1x3x128x128</code>; ONNX FP16
+4.51e-3 / 6.64e-3. The FP16 graph has no parity probe during the run; only
+the FP32 graph is probed.</li>
+<li><strong>Hub Uploads During and After a Run</strong>: the mid-run Hub sync (per epoch and
+at the session deadline) uploads only the <code>pytorch/default</code> variation. The
+ONNX variations go up only with the release publish after training
+completes, so the ONNX files of a run that stops before training completes
+(for example at a session deadline) do not reach the Hub.</li>
 </ul>
 </section>
 

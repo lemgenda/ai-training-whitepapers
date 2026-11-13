@@ -55,7 +55,7 @@ Current capabilities:
   state-changing browser requests must send the Client Header
   `X-LemGendary-Client: ai-studio-gui`. `GET /api/secrets` returns only whether
   each secret is set and its last 4 characters.
-- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.67`), a
+- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.68`), a
   cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
   real Content Security Policy and one shared fetch wrapper for all sidecar
   calls.
@@ -116,11 +116,11 @@ Current capabilities:
 Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.
 
-- **LemGendary Model Training Suite** (`v16.9.214-STABLE`): PyTorch training
+- **LemGendary Model Training Suite** (`v16.9.223-STABLE`): PyTorch training
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
   optional SWA, FID re-evaluation tool.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.107-STABLE`): shard synthesis,
+- **LemGendary Dataset Compiler Suite** (`v16.9.109-STABLE`): shard synthesis,
   WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
@@ -128,9 +128,9 @@ repository is the source of the release version.
   virtual environments, compliance audits, bug report endpoint, ecosystem
   registry (`ecosystem.json`). Entrypoints: `lem-env` and
   `lemgendary_env_manager.ps1`.
-- **LemGendary AI Studio GUI** (`v2.10.67`): Tauri v2 desktop application and
+- **LemGendary AI Studio GUI** (`v2.10.68`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.107-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.116-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
@@ -181,7 +181,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.107-STABLE`.
+together and share the document baseline `v16.9.116-STABLE`.
 
 ---
 
