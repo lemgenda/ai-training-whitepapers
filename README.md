@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.108`
+**Version**: `v16.9.109`
 
 ---
 
@@ -61,6 +61,27 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.109 - RetinaFace Paper Describes the Single-Box Model
+
+* `PAPER_LEMGENDARY_RETINAFACE.md` and its page: the abstract, Section 1.1
+  and Sections 5, 6 and 8 now describe the model in the training suite's
+  `models/detection.py`: a MobileNetV3-Small backbone (`mobilenet_v2`
+  optional), adaptive average pooling and three linear heads giving one
+  normalized `cx cy w h` box, one sigmoid confidence and 10 landmark values
+  per image. The anchor, FPN ($P_2$ to $P_5$), DCN v2 and ResNet-50 claims
+  are removed; a multi-scale anchor head is noted as an open owner decision.
+* The "sub-3ms" latency marked `[MEASURED]` (Section 6) and the "under 3
+  milliseconds" claim (Section 1.1) are removed: no benchmark backs them,
+  latency is "not yet measured". The crowd-scene pictures and the
+  convergence curve are labelled as not measurements of the current model;
+  the WIDER FACE ResNet-50 row is labelled an external reference value.
+* Model info: 935,663 parameters with MobileNetV3-Small (927,008 backbone,
+  8,655 heads), counted from the code; the training registry
+  `parameters_m: 27.2` does not match. Section 6 uses the release names
+  `RetinaFace-Detection.onnx`, `RetinaFace-Detection_FP32.onnx` (+ `.data`)
+  and `RetinaFace-Detection.pt` and per-metric `vault_<metric>.pth` (there
+  is no `vault_hard_ap.pth`). Section 4.4 (v16.9.100 metrics) is unchanged.
 
 ### v16.9.108 - Forex Paper States Only Measured Results
 

@@ -23,30 +23,34 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ## 1. Abstract
 
-**RetinaFace** is a single-stage face localization network engineered for
-high-precision facial bounding box detection and **5-point landmark regression**
-(left eye, right eye, nose tip, left mouth corner, right mouth corner). The
-LemGendary ecosystem standardizes on the lightweight **MobileNetV3-Small**
-backbone for edge execution and sub-3ms latency, complemented by an optional
-ResNet-50 variant for extreme crowd densities. Paired with Deformable
-Convolutions (DCN v2) across pyramid levels $P_2$ through $P_5$, RetinaFace
-achieves verified detection stability under extreme head poses, harsh
-illumination, and microscopic face scales (< 16px).
+**RetinaFace** in the LemGendary ecosystem is a RetinaFace-style **single-box
+regressor** (`RetinaFaceMobileNet`, `models/detection.py` in the training
+suite) for one face box and **5-point landmark regression** (left eye, right
+eye, nose tip, left mouth corner, right mouth corner) per image. A
+**MobileNetV3-Small** backbone (`mobilenet_v2` optional) feeds one globally
+pooled feature vector (adaptive average pooling) into three linear heads: one
+normalized `cx cy w h` box, one sigmoid face confidence and 10 landmark values
+(five 2D points). There are no anchors, no feature pyramid (FPN), no
+deformable convolutions and no ResNet-50 variant, so the model finds one face
+per image, not several faces or small faces in a crowd. With the
+MobileNetV3-Small backbone it has 935,663 parameters (counted from the code).
+A multi-scale anchor head (FPN levels with prior boxes and per-anchor outputs)
+is an open owner decision. Latency is not yet measured.
 
 ---
 
 ## 1.1 What RetinaFace Does (In Plain English)
 
-Imagine an intelligent autofocus system that finds every single human face in a
-bustling crowd scene, even if someone is turning away, standing in shadows, or
-wearing sunglasses:
+Imagine an intelligent autofocus system that finds the main face in a photo
+and marks its key points:
 
-* **Instant Face Localization:** In under 3 milliseconds, RetinaFace scans an
-  entire image, locating faces from full-frame portraits down to tiny faces only
-  16 pixels wide in stadium crowds.
-* **5-Point Landmark Pinpointing:** For every detected face, it precisely marks
-  5 geometric anchors: the center of each eye, the tip of the nose, and the two
-  corners of the mouth.
+* **One-Face Localization:** RetinaFace looks at the whole image and returns
+  one box for its main face, as in the one-face SFHQ photos it trains on.
+  Crowd scenes with many or tiny faces need the multi-scale anchor head that
+  is still an open owner decision. Its speed is not yet measured.
+* **5-Point Landmark Pinpointing:** For that face it marks 5 geometric
+  points: the center of each eye, the tip of the nose, and the two corners of
+  the mouth.
 * **Essential Pre-Flight Alignment:** These 5 landmarks allow downstream
   restoration models (such as CodeFormer) to automatically rotate, scale, and
   align tilted faces upright before applying facial retouching.
@@ -58,6 +62,11 @@ wearing sunglasses:
   Detections](../assets/retinaface_after.png)
 
 ![RetinaFace Training Convergence Curve](../assets/retinaface_training.png)
+
+The crowd-scene pictures illustrate the published multi-face RetinaFace, not
+output of the current single-box model, and the convergence curve predates
+the rebuilt labels (v16.9.207 / v16.9.208); none of the three is a
+measurement of the current model.
 
 ---
 
@@ -119,6 +128,9 @@ and real-time pre-flight alignment.
   (`RetinaFaceMobileNet`, MobileNetV3-Small backbone, `mobilenet_v2`
   supported; globally pooled box, confidence and landmark heads)
 * **Input Resolution**: 640x640
+* **Parameters**: 935,663 with MobileNetV3-Small (927,008 backbone, 8,655
+  heads; counted from `models/detection.py`, the registry `parameters_m: 27.2`
+  does not match the code)
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: not measured
 
@@ -166,38 +178,48 @@ twice-squashed confidence score, and the rebuilt boxes cover about 0.31 to
 
 ## 5. Challenges & Resilience Architecture
 
-Micro-scale landmark localization encounters severe real-world challenges:
+The current single-box design meets these challenges as follows:
 
-* **Microscopic Faces (< 16px)**: Deformable Convolutions (DCN v2) across
-  low-level pyramid rungs ($P_2$) maintain high spatial resolution without
-  excessive computational overhead.
-* **Extreme Profile Poses (Yaw > 60°)**: When one eye or mouth corner is
-  occluded, the smooth L1 regression loss smoothly decays gradients, preventing
-  landmark explosion.
-* **Harsh Backlight & Glare**: Multi-scale feature concatenation integrates
-  contextual background cues to anchor facial confidence even under complete
-  facial shadow.
+* **Several or Microscopic Faces (< 16px)**: the head pools the whole feature
+  map into one vector and predicts one box, so it has no per-location outputs
+  for several faces or small faces. The published remedy, an FPN with anchors
+  (optionally with Deformable Convolutions, DCN v2, on the low pyramid
+  levels), is not implemented; adding a multi-scale anchor head is an open
+  owner decision.
+* **Extreme Profile Poses (Yaw > 60°)**: smooth L1 on normalized coordinates
+  grows linearly for large errors, which bounds the gradient of a badly
+  placed point. Landmarks whose ten values are all zero count as absent and
+  are masked out of the loss.
+* **Harsh Backlight & Glare**: no dedicated mechanism; robustness is not yet
+  measured.
 
 ---
 
 ## 6. Deployment Strategy & Production Acceleration
 
-RetinaFace integrates seamlessly into the LemGendary runtime stack:
+RetinaFace uses the training suite's release layout (registry file stem
+`RetinaFace-Detection`):
 
-* **Production FP16 Engine (`retinaface.onnx`)**: Sub-3ms latency executing via
-  WebGPU and ONNX Runtime DirectML `[MEASURED]`.
-* **Research FP32 Export (`retinaface_FP32.onnx` + `.onnx.data`)**: Bit-exact
-  floating-point model with separate binary weights sidecar.
-* **Lifecycle Governance**: 15-minute `progress.pth` intra-epoch checkpointing,
-  `latest.pth` persistence, and milestone `vault_hard_ap.pth` archival.
+* **Production FP16 Engine (`RetinaFace-Detection.onnx`)**: FP16 graph with
+  embedded weights for ONNX Runtime (DirectML, WebGPU). Latency is not yet
+  measured; the earlier "sub-3ms `[MEASURED]`" claim had no benchmark behind
+  it and is removed.
+* **Research FP32 Export (`RetinaFace-Detection_FP32.onnx` + `.onnx.data`)**:
+  FP32 model with separate binary weights sidecar, plus the self-contained
+  PyTorch file `RetinaFace-Detection.pt`.
+* **Lifecycle Governance**: intra-epoch `progress.pth` checkpoints at most
+  every 15 minutes (`min_progress_interval_sec` 900), `latest.pth`
+  persistence, `best.pth` and per-metric vault checkpoints
+  (`vault_<metric>.pth`).
 
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
 * **RetinaFace-ResNet50**: WIDER Face Easy: 96.5%; WIDER Face Medium: 95.6%;
-  WIDER Face Hard: 90.4%; Status & Verification: published multi-face
-  anchor-based reference; not comparable with the single-box metrics below
+  WIDER Face Hard: 90.4%; Status & Verification: external multi-face
+  anchor-based reference value, not measured here; not comparable with the
+  single-box metrics below
 * **RetinaFace-MobileNetV3-Small (LemGendary)**: Box IoU, AP50, AP50-95 and
   Landmark NME: not measured on the rebuilt labels yet; Status &
   Verification: **Pre-training `[CURRENT]`**
@@ -209,16 +231,18 @@ RetinaFace integrates seamlessly into the LemGendary runtime stack:
 
 ## 8. Conclusion
 
-RetinaFace with the MobileNetV3-Small backbone provides lightning-fast facial
-bounding box localization and sub-pixel 5-point landmark regression,
-establishing the foundational pre-flight orientation geometry for the LemGendary
-Face Suite.
+RetinaFace with the MobileNetV3-Small backbone regresses one face box and
+five landmarks per image, the pre-flight orientation geometry for the
+LemGendary Face Suite. Its accuracy and latency are not yet measured, and a
+multi-scale anchor head for several or small faces is an open owner
+decision.
 
 ### Related Ecosystem Documentation
 
 * [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedRetinaFace`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training
+  Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)
