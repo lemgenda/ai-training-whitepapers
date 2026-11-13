@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.100-STABLE",
+  "document_baseline": "v16.9.101-STABLE",
   "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -61,8 +61,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/cli-manual.html",
       "md_path": "MD-Papers/MANUAL_CLI.md",
-      "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-11-12",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {

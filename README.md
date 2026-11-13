@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.100`
+**Version**: `v16.9.101`
 
 ---
 
@@ -60,6 +60,24 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.101 - Kaggle Cloud Training How-To
+
+* `MANUAL_CLI.md` and its page (checked against LemGendary Model Training
+  Suite v16.9.214): new Section 6.13 "Kaggle Cloud Training How-To
+  (`lemtrain kaggle`)". It covers the `KGAT_` API token (resolver order:
+  vault, `KAGGLE_API_TOKEN`, `kaggle.json`, `~/.kaggle/access_token`), the
+  Kaggle Secrets to attach (`KAGGLE_API_TOKEN`; `GITHUB_PAT` or `SUITE_PAT`;
+  optional `GOOGLE_DRIVE`), the accelerators `cpu`, `gpu-t4x2` (default) and
+  `tpu-v5e8`, `lemtrain kaggle accelerators|bundle|launch|status`, the launch
+  options `--git-ref`, `--env-manager-ref`, `--limit-hours`,
+  `--margin-minutes` and `--override-frozen`, the 12 h session guard, the
+  deadline stop (`session_deadline.json`), auto-resume, the trainer exit gate
+  before the publish cell, the `resume_refusal.json` record, the
+  `VariationKey` names, the one push policy (page before upload, skip
+  unchanged variations), version notes and the first live check.
+* Section 6.2: `--override-frozen` and the frozen / epoch run settings of a
+  resume. Section 6.9: `VariationKey` values and the epoch-based pull merge.
 
 ### v16.9.100 - RetinaFace Box IoU, AP and Landmark NME
 

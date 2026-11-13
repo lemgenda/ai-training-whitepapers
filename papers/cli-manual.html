@@ -20,7 +20,7 @@
 <h1>LemGendary Ecosystem: Master CLI Operations Manual</h1>
 <p class="subtitle">Category 00 | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v16.9.44-STABLE</code></span>
+<span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -80,6 +80,7 @@
 <li><a href="#sec-610-sidecar-daemon-operations-server">6.10 Sidecar Daemon Operations (<code>server</code>)</a></li>
 <li><a href="#sec-611-llm-causal-instruction-tuning--model-export-llm">6.11 LLM Causal Instruction Tuning &amp; Model Export (<code>llm</code>)</a></li>
 <li><a href="#sec-612-fid-re-evaluation-python--m-trainingfid_reeval">6.12 FID Re-evaluation (<code>python -m training.fid_reeval</code>)</a></li>
+<li><a href="#sec-613-kaggle-cloud-training-how-to-lemtrain-kaggle">6.13 Kaggle Cloud Training How-To (<code>lemtrain kaggle</code>)</a></li>
 </ul>
 </li>
 <li><a href="#sec-7-models-hub--verification-toolchain">7. Models Hub &amp; Verification Toolchain</a></li>
@@ -868,7 +869,20 @@ python cli.py train mirnet_exposure --preset quick-sota --epochs 50
 
 # Custom hyperparameter overrides
 python cli.py train mirnet_exposure --batch-size 32 --lr 0.0005 --epochs 100 --clean
+
+# Resume although a frozen run setting changed (logged and recorded)
+lemtrain train mirnet_exposure --override-frozen
 </code></pre>
+<p>Checkpoints record the run settings (v16.9.187). Frozen settings (model class
+and <code>kwargs</code>, optimizer type, datasets and task type, quality scheme, Forex
+<code>evaluation.risk_per_trade</code>, NIMA <code>stabilizers.emd_form</code>, subset seed,
+precision) must not change on resume: a change raises
+<code>FrozenSettingsChanged</code>, which names the change, <code>--clean</code> and
+<code>--override-frozen</code>. Epoch settings (locality, batch, LR schedule, weight
+decay, gradient clip, loader workers) change at the next epoch boundary: a
+resumed run finishes the current epoch on the recorded settings, logs
+<code>[SETTINGS] epoch N: ...</code> and appends the change to
+<code>LemGendaryModels/&lt;model&gt;/settings_changes.jsonl</code>.</p>
 <h4 id="fleet-diagnostic-smoke-test-test-all">Fleet Diagnostic Smoke Test (<code>test-all</code>)</h4>
 <p>Executes a rapid 1-epoch diagnostic smoke test sequentially across all 22
 registered neural architectures using <code>tools/train_all.py</code>:</p>
@@ -973,7 +987,10 @@ python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset 
 <h3 id="sec-69-cloud-synchronization-sync">6.9 Cloud Synchronization (<code>sync</code>)</h3>
 <p>Transfers model artifacts, checkpoints, and variations between local storage and
 remote cloud providers (Kaggle Models Hub and Google Drive) with strict payload
-isolation audits and YAML-driven metadata synchronization:</p>
+isolation audits and YAML-driven metadata synchronization. <code>--variation</code> takes
+a <code>VariationKey</code> (<code>pytorch/default</code>, <code>pytorch/fp32</code>, <code>onnx/fp16</code>,
+<code>onnx/fp32</code>) or <code>all</code>; unchanged variations are skipped and every upload
+carries version notes (section 6.13):</p>
 <pre><code class="language-bash"># Push single model across all 4 canonical variations (pytorch/default,
 # pytorch/fp32, onnx/fp16, onnx/fp32)
 lemtrain sync push yolov8n
@@ -998,7 +1015,8 @@ lemtrain sync push --all --dry-run
 lemtrain sync pull yolov8n
 
 # Pull specific variation (e.g. pytorch/default checkpoints or onnx/fp16
-# deployment binary)
+# deployment binary); files merge into LemGendaryModels/&lt;model&gt;, a checkpoint
+# replaces its local copy only when its stored epoch is newer
 lemtrain sync pull yolov8n --variation pytorch/default
 
 # Force re-download even if already present locally
@@ -1079,6 +1097,143 @@ rung state are never written.</li>
 <li><strong>Exit codes</strong>: <code>0</code> success, <code>2</code> bad input or ledger, <code>3</code> FID invariant
 failure or missing FID backend.</li>
 </ul>
+<h3 id="sec-613-kaggle-cloud-training-how-to-lemtrain-kaggle">6.13 Kaggle Cloud Training How-To (<code>lemtrain kaggle</code>)</h3>
+<p>A Kaggle training session is a private notebook kernel that the Training Suite
+builds from the same generator as the notebook files (<code>lemtrain kaggle bundle</code>), pushes with the Kaggle API (<code>lemtrain kaggle launch</code>, the GUI or
+<code>POST /api/training/kaggle/train</code>) and watches until it ends. Run the commands
+from the <code>lemgendary-training-suite</code> root.</p>
+<h4 id="sec-1-kaggle-api-token">1. Kaggle API Token</h4>
+<p>Kaggle API tokens start with <code>KGAT_</code>. The suite resolves one credential
+(<code>training/cloud/credentials.py</code>) in this order: the <code>.secrets.yaml</code> vault of
+the Environment Manager (default Kaggle record), the environment
+(<code>KAGGLE_API_TOKEN</code>, then a legacy <code>KAGGLE_KEY</code> with <code>KAGGLE_USERNAME</code>),
+<code>~/.kaggle/kaggle.json</code>, then <code>~/.kaggle/access_token</code> (or
+<code>access_token.txt</code>). A <code>KGAT_</code> token is exported unchanged as
+<code>KAGGLE_API_TOKEN</code>, the name kaggle 2.x, kagglesdk and kagglehub read first;
+it never goes into <code>kaggle.json</code> as a legacy <code>key</code> (the CLI answers 401). The
+Environment Manager writes a vault token to <code>~/.kaggle/access_token</code>. The
+legacy <code>.kaggle_users</code> and <code>.kaggle_token</code> files are no longer read.</p>
+<pre><code class="language-bash"># Check that the resolved credential really works (one authenticated call)
+curl -s http://127.0.0.1:8200/api/training/kaggle/status
+</code></pre>
+<h4 id="sec-2-kaggle-secrets-of-the-kernel">2. Kaggle Secrets of the Kernel</h4>
+<p>Attach these secrets to the kernel (Kaggle notebook editor, Add-ons,
+Secrets) before the first launch. The secrets cell reads them with
+<code>kaggle_secrets.UserSecretsClient</code> (Colab: <code>google.colab.userdata</code>):</p>
+<ul>
+<li><strong><code>KAGGLE_API_TOKEN</code></strong>: Required; a <code>KGAT_</code> token. Exported for the Hub
+sync and the resume pull; a legacy key is refused. <code>KAGGLE_KEY</code> and
+<code>KAGGLE_USERNAME</code> secrets are no longer read.</li>
+<li><strong><code>GITHUB_PAT</code> or <code>SUITE_PAT</code></strong>: Required while the suite or env-manager
+repository is private. The clone gets it only through <code>GIT_ASKPASS</code>, never
+in a URL or a file.</li>
+<li><strong><code>GOOGLE_DRIVE</code></strong>: Optional; Google Drive mirroring.</li>
+</ul>
+<p>Without <code>KAGGLE_API_TOKEN</code> the session trains but cannot read or write the
+Kaggle Models Hub (<code>[AUTH] Secrets available: []</code> in the log).</p>
+<h4 id="sec-3-accelerators">3. Accelerators</h4>
+<p>The accelerator table lives in the ecosystem file
+(<code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, section <code>kaggle</code>);
+retired machine shapes (P100, the older TPU shapes) are never offered:</p>
+<ul>
+<li><strong><code>cpu</code></strong>: CPU; no machine shape.</li>
+<li><strong><code>gpu-t4x2</code></strong>: GPU T4 x2 (<code>NvidiaTeslaT4</code>); the default.</li>
+<li><strong><code>tpu-v5e8</code></strong>: TPU v5e-8 (<code>TpuV5E8</code>).</li>
+</ul>
+<pre><code class="language-bash">lemtrain kaggle accelerators
+</code></pre>
+<h4 id="sec-4-bundle-launch-and-status">4. Bundle, Launch and Status</h4>
+<pre><code class="language-bash"># Write the kernel bundle (notebook + kernel-metadata.json) for review
+lemtrain kaggle bundle upn_v2 --out ../kaggle_bundle
+
+# Push the kernel and start the session
+lemtrain kaggle launch upn_v2 --accelerator gpu-t4x2
+
+# Test fix-branch code for 45 minutes, stopping 5 minutes before the limit
+lemtrain kaggle launch upn_v2 --git-ref fix/review-remediation \
+  --limit-hours 0.75 --margin-minutes 5
+
+# Session status (QUEUED, RUNNING, COMPLETE, ERROR, CANCEL_REQUESTED, ...)
+lemtrain kaggle status upn_v2
+</code></pre>
+<p>The kernel id is <code>&lt;user&gt;/&lt;registry slug&gt;-training</code>; the bundle is private with
+internet on and mounts the model's manifold datasets and, when the Hub has
+one, the latest <code>pytorch/default</code> version (<code>--resume-version N</code> pins another).
+The same options exist on <code>python -m training.kaggle_cloud_manager --action launch</code> and, as JSON fields, on <code>POST /api/training/kaggle/train</code>:</p>
+<ul>
+<li><strong><code>--git-ref</code></strong>: Branch, tag or full commit SHA the kernel clones the
+suite at (default <code>main</code>). Letters, digits, <code>.</code>, <code>_</code>, <code>/</code> and <code>-</code> only, a
+letter or digit first, at most 200 characters; the clone prints
+<code>[GIT] &lt;url&gt; at &lt;ref&gt; (&lt;sha&gt;)</code>.</li>
+<li><strong><code>--env-manager-ref</code></strong>: Ref of the env-manager clone (default: the
+<code>--git-ref</code> value).</li>
+<li><strong><code>--limit-hours</code></strong>: Session limit for this kernel (default
+<code>kaggle_session.limit_hours</code> of <code>config.yaml</code>, 12).</li>
+<li><strong><code>--margin-minutes</code></strong>: Minutes before the limit the trainer stops (default
+<code>kaggle_session.margin_minutes</code>, 30).</li>
+<li><strong><code>--override-frozen</code></strong>: Resume although a frozen run setting changed
+(logged and recorded in <code>settings_changes.jsonl</code>); also used by the
+auto-resume sessions of a GUI job.</li>
+</ul>
+<h4 id="sec-5-session-guard-deadline-stop-and-auto-resume">5. Session Guard, Deadline Stop and Auto-Resume</h4>
+<ul>
+<li><strong>12 h session guard</strong>: the first cell exports <code>LEMGENDARY_SESSION_START</code>;
+the training and validation loops check the deadline (limit minus margin)
+every step and before each epoch. Under DDP the ranks agree every 25 steps,
+so no rank stops alone.</li>
+<li><strong>Deadline stop</strong>: at the deadline the loop saves <code>progress.pth</code>
+(generator states included), writes
+<code>LemGendaryModels/&lt;model&gt;/session_deadline.json</code>, runs the final Hub sync,
+prints <code>[DEADLINE]</code> and exits 0. No release export runs.</li>
+<li><strong>Auto-resume</strong>: a GUI or API job launched with <code>auto_resume: true</code> (default
+<code>kaggle_session.auto_resume</code>, false) reads the marker from the kernel output
+and pushes a new kernel version that resumes from the Hub, at most
+<code>max_resumes</code> times (default 3). <code>lemtrain kaggle launch</code> starts one
+session and does not watch it.</li>
+<li><strong>Publish gate</strong>: the training cell ends with
+<code>training.cloud.trainer_exit.check_trainer_exit</code>. A non-zero trainer exit
+raises <code>TrainerExitError</code>, the kernel ends with <code>ERROR</code> and no later cell
+(release publish, Google Drive mirror) runs. Exit 0 with
+<code>session_deadline.json</code> is the resumable deadline stop; the publish cell
+skips itself on the marker.</li>
+<li><strong>Resume refusal record</strong>: a resume refused because a frozen setting
+changed writes <code>LemGendaryModels/&lt;model&gt;/resume_refusal.json</code> (the
+<code>FrozenSettingsChanged</code> text and the changed setting names). The Kaggle job
+then fails with that text as its <code>error_message</code>, the same text a local job
+records. Relaunch with <code>--override-frozen</code> or start fresh.</li>
+</ul>
+<h4 id="sec-6-kaggle-models-hub-variations-and-push-policy">6. Kaggle Models Hub Variations and Push Policy</h4>
+<p><code>VariationKey</code> (<code>training/cloud/variations.py</code>) is the single list of Hub
+variations: <code>pytorch/default</code> (checkpoints, <code>README.md</code>, <code>metrics.csv</code>),
+<code>pytorch/fp32</code> (<code>&lt;Stem&gt;.pt</code>), <code>onnx/fp16</code> (<code>&lt;Stem&gt;.onnx</code>) and <code>onnx/fp32</code>
+(<code>&lt;Stem&gt;_FP32.onnx</code> + <code>.onnx.data</code>). <code>--variation</code> and the API <code>variation</code>
+take one of them or <code>all</code>; the old names (<code>pytorch</code>, <code>onnx_fp16</code>) are
+refused.</p>
+<p>One push policy (<code>KaggleModelSyncManager.push_model</code>) serves the GUI,
+<code>lemtrain sync push</code>, <code>kaggle_cloud_manager</code> and the notebook release:
+validate the key, stage <code>dist/kaggle</code>, create or update the model page before
+the first upload (a failed page sync uploads nothing), upload each variation
+with the license from the model metadata, then sync the metadata again. A
+variation whose staged files have the same SHA-256 as its last upload
+(recorded in <code>&lt;model&gt;/.kaggle_sync.json</code>) is skipped: no new Hub version,
+<code>UNCHANGED</code> in the log. The per-epoch auto-sync uploads only
+<code>pytorch/default</code>, every <code>fleet.kaggle_sync_every_epochs</code> epochs (default 5)
+and on a new best (<code>fleet.kaggle_sync_on_best</code>).</p>
+<p>Every upload carries version notes with the stored epoch, up to six measured
+values of the last <code>metrics.csv</code> row and the suite version, for example
+<code>Release: mirnet_exposure [ONNX FP16] | epoch 41 | val_loss=0.0123 psnr=27.1000 | suite v16.9.177</code>.</p>
+<h4 id="sec-7-first-live-check">7. First Live Check</h4>
+<ol>
+<li>Attach <code>KAGGLE_API_TOKEN</code> and <code>GITHUB_PAT</code> to the kernel.</li>
+<li><code>lemtrain kaggle bundle upn_v2 --out &lt;folder&gt;</code> and review
+<code>kernel-metadata.json</code>.</li>
+<li><code>lemtrain kaggle launch upn_v2 --accelerator gpu-t4x2 --limit-hours 0.2 --margin-minutes 5</code>.</li>
+<li>Expect <code>[AUTH] Secrets available</code> with both secrets, checkpoints under
+<code>/kaggle/working/LemGendaryModels/&lt;model&gt;/checkpoints/</code>, <code>[DEADLINE]</code> and
+<code>session_deadline.json</code> in the output, <code>COMPLETE</code> from <code>lemtrain kaggle status upn_v2</code> and Hub version notes with the epoch and suite version.</li>
+<li>Launch again: the session resumes from the Hub. A second push of
+unchanged files reports every variation as <code>UNCHANGED</code>.</li>
+</ol>
 </section>
 
 <section id="sec-7-models-hub--verification-toolchain">
