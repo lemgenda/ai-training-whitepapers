@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.102-STABLE",
+  "document_baseline": "v16.9.103-STABLE",
   "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -201,8 +201,8 @@
       "category": "Category 11 FOREX",
       "html_path": "papers/forex_predictor.html",
       "md_path": "MD-Papers/PAPER_FOREX_PREDICTOR.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -401,8 +401,8 @@
       "category": "Category 07 QUALITY",
       "html_path": "papers/nima-quality.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_NIMA.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -451,8 +451,8 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.157-STABLE",
-      "last_audited": "2026-11-12",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {

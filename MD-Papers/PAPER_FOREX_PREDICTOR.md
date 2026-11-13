@@ -2,8 +2,8 @@
 
 ## Category 11 FINANCIAL | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
-2.7.1 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine) ·
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Paper Revision**:
+2.8.0 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine) ·
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon
 (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
@@ -42,6 +42,8 @@
 - [6. Deployment Strategy: MetaTrader 5 Expert Advisor Bridge](#6-deployment-strategy-metatrader-5-expert-advisor-bridge)
   - [6.1 Stateless ONNX Model Export `[THEORETICAL]`](#61-stateless-onnx-model-export-theoretical)
   - [6.2 Automated Real-Time Tick Ingestion](#62-automated-real-time-tick-ingestion)
+  - [6.3 Generated MQL5 Expert Advisor & MT5 Artefact (v16.9.185,
+    v16.9.192)](#63-generated-mql5-expert-advisor--mt5-artefact-v169185-v169192)
 - [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
 
@@ -66,7 +68,8 @@ identification from high-precision intraday trigger timing. Validated across an
 **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage
 embargo gap, the baseline research checkpoint demonstrates high training
 volatility prior to full convergence (Directional Accuracy 49.69%, Profit Factor
-0.99, Sharpe Ratio -0.16, and Max Cumulative Drawdown 665.80%), demonstrating
+0.99 and Sharpe Ratio -0.16; its Max Cumulative Drawdown used an invalid
+cumulative-pip measure and is withdrawn), demonstrating
 that live capital deployment remains strictly gated until reaching SOTA
 convergence targets while ONNX inference executes in sub-5ms latency.
 
@@ -359,6 +362,15 @@ $$
 
 where $\text{Base} = 10,000$ pips representing the initial account margin.
 
+Since Training Suite v16.9.164 and v16.9.184 the validation MaxDD is a real
+percentage of an explicit equity model instead: every trade risks the
+fraction $r$ = `evaluation.risk_per_trade` of the equity (registry, default
+0.01, valid $0 < r \le 0.05$), a win returns $TP/SL$ R and a loss $-1$ R,
+and equity compounds from 1.0, $E_{k+1} = E_k (1 + r R_k)$. MaxDD is the
+largest peak-to-trough fall of $E$ in percent of the peak. An epoch without
+a directional prediction reports no win rate, profit factor, Sharpe,
+Sortino or drawdown.
+
 #### 5. Scalar Quantitative Quality Score
 
 $$
@@ -366,6 +378,22 @@ $$
 + (\text{ProfitFactor} \times 10.0) + (\text{Sharpe} \times 10.0) -
 (\text{MaxDD} \times 1.0)
 $$
+
+Since Training Suite v16.9.164 Forex epochs use the shared weighted score
+(scheme `forex_weighted_targets_v2_risk0.01`, the risk is part of the id)
+over the SOTA targets measured that epoch:
+
+$$
+Q = 5 \cdot \text{DirAcc} + 5 \cdot \text{WinRate} +
+10 \cdot \text{PF}^{[0, 10]} + 10 \cdot \text{Sharpe}^{[-5, 10]} +
+10 \cdot \text{Sortino}^{[-5, 10]} + \max(0, 100 - \text{MaxDD}) +
+\max(0, 50 - \text{TPMAE}) + \max(0, 50 - \text{SLMAE})
+$$
+
+A superscript range is a clip applied inside the score only; TPMAE and SLMAE
+are the take-profit and stop-loss mean absolute errors in pips. Reported
+metrics keep their measured values. An unmeasured or degenerate epoch (no
+target measured, a non-finite score, or no trade) never becomes `best.pth`.
 
 ### 3.5 Memory Complexity Scaling Bounds
 
@@ -438,7 +466,8 @@ $$
 - **Attention Heads**: 6
 - **Parameters**: 2.75M FP32 Parameters (~11 MB)
 - **Primary Checkpoint**: `[CURRENT]` `ForexPredictorWeights_FP32.pth`
-- **ONNX Export**: `ForexPredictor.onnx` (Opset 17, Fixed Shape)
+- **ONNX Export**: `ForexPredictor.onnx` (opset 18, FP16 graph with FP32
+  inputs and outputs, IR 9, embedded weights for MetaTrader 5)
 
 ### 4.3 Manifold Info
 
@@ -466,7 +495,8 @@ $$
 - **Sortino Ratio**: Baseline (LSTM): 1.12; Transformer (Vanilla): 1.68;
   LemGendary ForexPredictor (SOTA): **-0.18**; Target: $> 2.50$
 - **Max Drawdown**: Baseline (LSTM): 14.80%; Transformer (Vanilla): 11.20%;
-  LemGendary ForexPredictor (SOTA): **665.80%**; Target: $< 6.50\%$
+  LemGendary ForexPredictor (SOTA): **withdrawn** (invalid cumulative-pip
+  measure); Target: $< 6.50\%$
 - **TP MAE (pips)**: Baseline (LSTM): 18.40; Transformer (Vanilla): 14.60;
   LemGendary ForexPredictor (SOTA): **615.42**; Target: $< 12.00$
 - **SL MAE (pips)**: Baseline (LSTM): 16.20; Transformer (Vanilla): 12.80;
@@ -474,8 +504,10 @@ $$
 - **Quality Score**: Baseline (LSTM): 98.42; Transformer (Vanilla): 125.64;
   LemGendary ForexPredictor (SOTA): **105.87**; Target: $> 150.00$
 
-*\*Drawdown Metric Convention Note:* The reported Max Drawdown (665.80%)
-reflects the cumulative leveraged equity decline
+*\*Drawdown Metric Convention Note:* The Max Drawdown reported earlier
+(665.80%) is withdrawn: it was the old cumulative-pip measure, not a
+percentage of equity (Section 3.4 describes the equity model). It reflected
+the cumulative leveraged equity decline
 ($100 \times \text{Cumulative Loss} / \text{Initial Margin}$) across
 unconstrained Walk-Forward test windows without simulated broker margin
 stop-out, modeling raw unhedged model conviction rather than capital-managed
@@ -556,7 +588,8 @@ with mandatory stop-loss risk governors.
 - **XAUUSD (Gold)**: Direction Accuracy: 77.75%; Win Rate: 66.60%; Profit
   Factor: 2.04; Sharpe Ratio: 2.29; Max Drawdown: 9.27%
 - **Mean Universe**: Direction Accuracy: **49.69%**; Win Rate: **49.69%**;
-  Profit Factor: **0.99**; Sharpe Ratio: **-0.16**; Max Drawdown: **665.80%**
+  Profit Factor: **0.99**; Sharpe Ratio: **-0.16**; Max Drawdown:
+  **withdrawn**
 
 ### 4.8 Training Process Analysis
 
@@ -733,13 +766,31 @@ upon every bar close. If directional probability $P(\text{BUY}) > 0.65$ or
 $P(\text{SELL}) > 0.65$, orders are submitted with exact predicted TP/SL
 boundaries.
 
+### 6.3 Generated MQL5 Expert Advisor & MT5 Artefact (v16.9.185, v16.9.192)
+
+The Training Suite renders the Expert Advisor from the registry
+(`python -m export.mt5_signal --mode mql5_ea`, golden file
+`LemGendaryForexEA.mq5`): `CTrade` orders, `OnnxCreate` with the single-file
+model in `MQL5\Files`, one `[1, lookback, features]` float matrix per
+timeframe plus the int64 pair index, softmax and the `MinConfidence` gate
+(default 0.65), and a lot size from `RiskPct`, whose default is
+`evaluation.risk_per_trade`. Its `BuildFeatures` is rendered from
+`data/mt5_feature_spec.py`, the one specification of the 14 input columns,
+the indicator windows and the 300 warm-up bars that the training shards and
+the live signal also use.
+
+MetaTrader 5 bundles ONNX Runtime 1.17, which reads IR versions up to 9, so
+the MT5 graph (opset 18) is written as one file with embedded weights and
+stamped IR 9 after a check for IR 10 features. The EA has not yet been
+compiled in MetaEditor or run in the Strategy Tester (owner check).
+
 ---
 
 ## 7. SOTA Architectural Performance Matrix
 
 - **ForexPredictor**: Task: FX & Gold Prediction; Dir Acc (%): **49.69%**
   `[MEASURED]`; Win Rate (%): **49.69%**; Profit Factor: **0.99**; Sharpe:
-  **-0.16**; MaxDD (%): **665.80%**; Quality Score: **105.87**
+  **-0.16**; MaxDD (%): **withdrawn**; Quality Score: **105.87**
 - **NAFNet Deblurring**: Task: Deblurring; Dir Acc (%): 32.85 dB (PSNR); Win
   Rate (%): 0.942 (SSIM); Profit Factor: —; Sharpe: —; MaxDD (%): —; Quality
   Score: 51.69

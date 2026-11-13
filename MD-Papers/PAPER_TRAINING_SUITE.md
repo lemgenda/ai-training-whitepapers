@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.157-STABLE` (LemGendary Model Training Suite) · **Last
-audited**: 2026-11-12
+**Version**: `v16.9.214-STABLE` (LemGendary Model Training Suite) · **Last
+audited**: 2026-11-13
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
 Guide](./PAPER_TRAINING_PATHOLOGY.md)
@@ -95,6 +95,18 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     v16.9.152)](#238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152)
   - [2.39. Task-Type Resolver & Optional Dependency Adapter (v16.9.155 to
     v16.9.157)](#239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157)
+  - [2.40. ONNX Release Variants, Model Metadata & MT5 Artefact (v16.9.158 to
+    v16.9.195)](#240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v169195)
+  - [2.41. Run Settings, Resume & Generator State (v16.9.159 to
+    v16.9.190)](#241-run-settings-resume--generator-state-v169159-to-v169190)
+  - [2.42. Losses, Scores & Calibration (v16.9.161 to
+    v16.9.208)](#242-losses-scores--calibration-v169161-to-v169208)
+  - [2.43. Device Memory, DXGI Budget & DirectML (v16.9.168 to
+    v16.9.197)](#243-device-memory-dxgi-budget--directml-v169168-to-v169197)
+  - [2.44. Preprocessing, Class Labels & JSON Shard Labels (v16.9.180 to
+    v16.9.203)](#244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203)
+  - [2.45. Kaggle Cloud Pipeline & Hub Root (v16.9.169 to
+    v16.9.214)](#245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -1551,10 +1563,11 @@ $$
   workers never call `scan_tar_members` or `tarfile.open`.
   `tests/unit/test_curriculum_rebuild.py` pins this and checks that each
   larger fraction keeps every sample of the smaller one.
-- **Locality Sampler (opt-in)**: `training/data/locality.py` reads the
-  `data.locality` section of `config.yaml`; `window_shards` and
-  `fraction_block_size` default to 0, which is off. With `window_shards`
-  set, the train sampler shuffles the shards per epoch and the samples
+- **Locality Sampler**: `training/data/locality.py` reads the
+  `data.locality` section of `config.yaml`; since v16.9.159 it is on by
+  default (`window_shards: 4`, `fraction_block_size: 256`; 0 turns either
+  off). With `window_shards` set, the train sampler shuffles the shards per
+  epoch and the samples
   inside windows of that many shards; the order is drawn from
   `seed + epoch`, splits across DDP ranks and resumes mid-epoch. On 50
   shards of 1,000 samples with a window of 4, a 16-sample batch touches 3.9
@@ -1663,6 +1676,208 @@ $$
   and returns `PagedAdamW8bit` only when it is a `torch.optim.Optimizer`
   subclass, else None, and the optimizer falls back to AdamW. Importing the
   optimizer module no longer loads bitsandbytes, which stays optional.
+
+### 2.40. ONNX Release Variants, Model Metadata & MT5 Artefact (v16.9.158 to v16.9.195)
+
+- **Supported Exporter**: every ONNX export uses the `torch.export`-based
+  exporter (`torch.onnx.export(..., dynamo=True)`, opset 18,
+  `training/export/dynamo_onnx.py`). After export the FP32 graph runs in ONNX
+  Runtime at a larger batch and resolution against PyTorch; a model with a
+  shape-dependent branch (Swin window shift in `nima_aesthetic_pro`) is
+  re-exported with fixed height and width.
+- **Three Release Variants** (one writer for all exporters,
+  `training/export/onnx_variants.py`): `<Stem>.pt` self-contained PyTorch
+  FP32; `<Stem>_FP32.onnx` with its weights always in
+  `<Stem>_FP32.onnx.data`; `<Stem>.onnx` FP16 with embedded weights, or a
+  `.onnx.data` sidecar above the 2 GB protobuf limit. FP16 graphs are captured
+  from a half-precision copy; FP16-unsafe layers (Swin V2 window attention)
+  stay FP32 inside the graph. The file suffixes come from
+  `training/cloud/variations.py`.
+- **ONNX `metadata_props`** (`training/export/onnx_metadata.py`): both ONNX
+  variants carry `model_key`, `task`, `input_size` (`[C, H, W]`, JSON), the
+  training preprocessing (`normalization`, `pixel_scale`, `mean`, `std`) and,
+  for a classifier, `class_names` in logit order. The `.pt` metadata carries
+  the preprocessing and the class names too; Forex `.pt` files carry
+  `model_kwargs`, so a non-default architecture loads without the registry.
+- **MT5 Artefact, IR 9**: MetaTrader 5 (build 4230 and later) bundles ONNX
+  Runtime 1.17, which reads opsets up to 20 but IR versions only up to 9.
+  `training/export/mt5_compat.py` rewrites the MT5 graph as one file with
+  embedded weights (`OnnxCreate` cannot read a sidecar) and stamps IR 9 after
+  checking that no IR 10 feature is used, then runs the full ONNX checker.
+  For Forex the FP16 `<Stem>.onnx` (FP32 inputs and outputs, the EA's model)
+  and the single-file FP32 MT5 graph get this finalizer; the release
+  `<Stem>_FP32.onnx` + `.onnx.data` is unchanged. `tools/mt5_ort_check.py`
+  loads a model under ONNX Runtime
+  1.17.3 in a separate interpreter.
+- **MQL5 Expert Advisor**: `training/export/mql5_ea.py` renders the EA from
+  the registry (`python -m export.mt5_signal --mode mql5_ea`): `CTrade`
+  orders, `OnnxCreate` / `OnnxSetInputShape` / `OnnxRun` with one
+  `[1, lookback, features]` matrix per timeframe plus the pair index,
+  softmax and confidence gate, and risk-based lot size from
+  `evaluation.risk_per_trade`. `data/mt5_feature_spec.py` is the one feature
+  specification: the 14 columns in model order, the indicator windows (RSI
+  14, MACD 12/26/9, ATR 14, Bollinger 20 / 2 sigma, ATR rank 100, volume
+  z-score 50) and 300 warm-up bars. The training shards, the live signal and
+  the EA's `BuildFeatures` (rendered by `training/export/mql5_features.py`)
+  all follow it; rendering fails when a specified column is not written. The
+  EA still needs an owner check in MetaEditor and the Strategy Tester.
+
+### 2.41. Run Settings, Resume & Generator State (v16.9.159 to v16.9.190)
+
+- **Locality Sampling On by Default**: `data.locality` uses
+  `window_shards: 4` and `fraction_block_size: 256` (defaults in
+  `training/data/locality.py`, mirrored in `config.yaml`).
+- **Generator State**: checkpoints record `rng_state` (Python, NumPy, torch
+  CPU and every device generator) and, under DDP, `rng_state_ranks`, one
+  record per rank gathered with `all_gather_object`. Augmentation seeds each
+  sample from (seed 42, epoch, dataset index), so a resumed run reproduces
+  the same crops, flips and synthesized degradations on any worker or rank.
+- **Frozen and Epoch Settings** (`training/run_settings/`): checkpoints record
+  `run_settings` with `frozen` settings and their SHA-256 (`frozen_sha`):
+  model class, `kwargs` and parameter-group layout, optimizer type, betas,
+  eps and momentum, datasets and task type, quality scheme, Forex
+  `evaluation.risk_per_trade`, NIMA `stabilizers.emd_form`, subset seed and
+  precision. A changed frozen setting on resume raises
+  `FrozenSettingsChanged` unless `--override-frozen` is given (logged and
+  recorded). `epoch` settings (locality, batch, LR schedule, weight decay,
+  gradient clip, loader workers) stay recorded until the epoch after the
+  checkpoint's, so a mid-epoch resume replays the recorded batch order; the
+  configured values apply when the next epoch starts, are logged as
+  `[SETTINGS] epoch N: ...` and appended to `settings_changes.jsonl`. The
+  scheduler is rebuilt and fast-forwarded; a batch size is taken only when
+  `effective / batch` is an exact accumulation. `optimizer.grad_clip`
+  (default 1.0) is a new setting.
+- **Resume Refusal Record**: a refused resume writes
+  `LemGendaryModels/<model>/resume_refusal.json` (the refusal text and the
+  changed setting names), which a Kaggle job reports as its error.
+- **Head Parameters**: every architecture declares `head_param_prefixes`
+  (for example RetinaFace `bbox_head.`, `conf_head.`, `landmark_head.`;
+  NAFNet `ending.`; Forex `direction_head.` and `magnitude_head.`), which
+  `head_lr_multiplier` applies to.
+
+### 2.42. Losses, Scores & Calibration (v16.9.161 to v16.9.208)
+
+- **LPIPS Loss**: on for every model whose registry `sota_targets` include
+  LPIPS (newly FFA-Net, MPRNet, NAFNet, the multitask restorer, UltraZoom and
+  CodeFormer).
+- **NIMA Logit Soft Cap**: the hard clamp is replaced by
+  $\text{cap} \cdot \tanh(\text{logits} / \text{cap})$ with the registry
+  `stabilizers.logit_clamp` (15.0 for every NIMA entry; 0 turns it off).
+- **NIMA Temperature 1 and Paper EMD**: quality models train at temperature
+  1 under the fixed soft cap (`PinnedThermalState`, `PinnedCalibration`).
+  `stabilizers.emd_form` selects the EMD: `nima` (default, the paper's r = 2
+  form, $\sqrt{\frac{1}{K}\sum_k (\text{CDF}_p - \text{CDF}_t)^2 + 10^{-8}}$
+  per sample, then the batch mean) or `squared`. Checkpoints record
+  `emd_form`; a resume keeps the recorded form (a NIMA checkpoint without one
+  keeps the older `legacy_sum`).
+- **Post-Hoc Calibration**: `python -m training.quality_calibration
+  val_scores.npz` fits one temperature on validation logits (grid 0.5 to
+  2.0, lowest EMD) and keeps it only when PLCC and SRCC do not drop; an
+  accepted value goes into the registry as `calibration.temperature`, which
+  the export `SoftmaxWrapper` uses (default 1.0).
+- **Target Quality Score**: the governor's aim is recomputed from the targets
+  measured in that epoch only.
+- **Honest Forex Metrics**: an unmeasured metric is an empty `metrics.csv`
+  cell (never 0) and an unmeasured or degenerate epoch (no SOTA target
+  measured, a non-finite score, or no trade) never becomes `best.pth` or a
+  vault checkpoint. A row whose target columns equal the SOTA targets exactly
+  is skipped as a baseline.
+- **Forex Risk per Trade**: `forex_predictor.evaluation.risk_per_trade`
+  (default 0.01, valid $0 < r \le 0.05$, read by
+  `training/registry/forex_risk.py`) drives the validation equity model:
+  each trade risks $r$ of the equity, a win returns $TP/SL$ R and a loss
+  $-1$ R, equity compounds from 1.0, and MaxDD is the largest peak-to-trough
+  fall in percent of the peak. The scheme id carries the risk
+  (`forex_weighted_targets_v2_risk0.01`), so a best score at another risk is
+  not reused.
+- **Face Detection Metrics**: RetinaFace is measured with `box_iou`, `ap50`,
+  `ap50_95` and `landmark_nme` (provisional targets 0.80 / 0.95 / 0.60 /
+  0.10) under its own score scheme `face_box_weighted_targets_v1`; earlier
+  `map_*` values are not comparable.
+
+### 2.43. Device Memory, DXGI Budget & DirectML (v16.9.168 to v16.9.197)
+
+- **One Device-Memory Adapter** (`training/hardware/device_memory.py`): CUDA
+  (covering ROCm), XPU, MPS, DirectML and a CPU no-op. The VRAM audit, the
+  resolution-jump refit and the resume batch clamp measure every GPU backend,
+  and OOM relief recognises the messages of all of them.
+- **DXGI Budget** (`training/hardware/dxgi_memory.py`): on Windows, DirectML
+  free memory is read from `IDXGIAdapter3::QueryVideoMemoryInfo` through
+  `ctypes` (free = local budget minus current usage), re-read on every budget
+  call. The adapter is matched to the torch-directml device by name;
+  integrated GPUs are capped by available host RAM. Fallbacks: 0.8 x the
+  adapter's dedicated memory, then 2.0 GB; an explicit
+  `hardware.directml_assumed_free_gb` wins.
+- **DirectML Discovery**: `dml_device_info` loads the `torch_directml` module
+  and uses its API (`is_available()`, `device_count()`, `device_name(i)`,
+  `device(i)`, a `privateuseone:<i>` device); a missing or broken backend is
+  logged and skipped. Before, DirectML was never discovered.
+
+### 2.44. Preprocessing, Class Labels & JSON Shard Labels (v16.9.180 to v16.9.203)
+
+- **One Preprocessing Key**: `training/registry/preprocessing.py` reads the
+  registry `preprocessing.normalization` (`unit` or `imagenet`), else the task
+  default (`quality` models ImageNet, every other task `[0, 1]` pixels).
+  Training and validation transforms, `.pt` and ONNX metadata, the model card
+  and the notebook inference cells follow it;
+  `universal_nsfw_classification` declares `unit`.
+- **Five-Class NSFW Classifier**: `kwargs.num_classes: 5` and `class_names`
+  `0 drawings, 1 hentai, 2 neutral, 3 porn, 4 sexy`, checked by
+  `training/registry/class_names.py`.
+- **`IGNORE_TARGET`**: a classification sample whose label names no class
+  gets `IGNORE_TARGET` (255, the cross-entropy `ignore_index`): the loss and
+  the validation accuracy skip it, and the count is logged. A registry with
+  more than 255 declared classes, or a resolved class id of 255 or more,
+  raises `IgnoreTargetCollision`.
+- **JSON-Only Shard Labels**: the WebDataset reader has no text label role;
+  `data/json_labels.py` reads the datasets label schema: boxes from
+  `objects` (`category_id`, or `class_name` mapped through the manifold's
+  `dataset_info.yaml` `classes`), `class_id` / `class_name` and `caption`. A
+  schema break raises `LabelDocumentError`; RetinaFace raises on a missing
+  face label, and landmarks whose ten values are all zero are absent. Loose
+  image folders keep their `labels/<name>.txt` files.
+- **YOLO Shard Cache** (`data/yolo_shard_cache.py`): YOLOv8n trains from
+  WebDataset shards through a resumable Ultralytics dataset under
+  `.cache/yolo_datasets/<manifold>/` (images, YOLO label rows built from the
+  JSON `objects`, and `data.yaml` with the `dataset_info.yaml` classes); a
+  finished shard is skipped on a rerun and a changed one rebuilt.
+
+### 2.45. Kaggle Cloud Pipeline & Hub Root (v16.9.169 to v16.9.214)
+
+- **One Credential Resolver and a Real Status Probe**: `KGAT_` tokens are
+  exported unchanged as `KAGGLE_API_TOKEN`; `GET /api/training/kaggle/status`
+  makes one authenticated call. Importing the suite no longer loads the
+  `kaggle` package.
+- **One Kernel Bundle Builder** (`training/cloud/kernel_bundle.py`): the
+  generated training notebook plus `kernel-metadata.json`, private, with the
+  ecosystem accelerator (`cpu`, `gpu-t4x2`, `tpu-v5e8`), the manifold
+  datasets and the latest `pytorch/default` Hub version. Launch options:
+  `--git-ref`, `--env-manager-ref`, `--limit-hours`, `--margin-minutes`,
+  `--override-frozen`. One watch loop with backoff to 300 s; cancelled
+  kernels end the job as `cancelled`.
+- **Token-Free Clone**: the suite and the env-manager are cloned to
+  `/kaggle/temp` with the PAT only in `GIT_ASKPASS`; the models hub stays
+  under `/kaggle/working` (`LEMGENDARY_WORKSPACE_ROOT`), resolved by
+  `training.utils.paths.get_models_hub_root()`.
+- **Session Guard**: `kaggle_session` (`limit_hours` 12, `margin_minutes` 30,
+  `auto_resume` false, `max_resumes` 3); at the deadline the run saves
+  progress, writes `session_deadline.json`, syncs and exits 0; the trainer
+  exit gate stops the notebook on a non-zero exit, so a failed run never
+  publishes.
+- **Hub Sync**: pulls merge by stored epoch into the model folder; one push
+  policy (page before upload, skip unchanged variations by SHA-256, version
+  notes with epoch, metrics and suite version); `VariationKey` names; the
+  per-epoch auto-sync uploads `pytorch/default` every 5 epochs and on a new
+  best.
+- **Notebook Cells**: no training cell imports torch in the kernel process
+  (probes run as `python -c`); on CUDA hosts the dependency cell installs the
+  `cu126` torch build (`training/notebooks/torch_build.py`).
+- **One Model-File Loader** (`training/utils/model_payload.py`): release
+  `.pt` dicts, checkpoints and bare state dicts load with
+  `weights_only=True`; full unpickling only for trusted files.
+
+The step-by-step operator guide is Section 6.13 of the
+[Master CLI Manual](./MANUAL_CLI.md).
 
 ---
 

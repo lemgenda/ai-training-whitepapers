@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.157-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.214-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -120,6 +120,12 @@ Probing</a></li>
 <li><a href="#sec-237-shard-io-offset-cache--locality-sampling-v169148-to-v169154">2.37. Shard I/O, Offset Cache &amp; Locality Sampling (v16.9.148 to v16.9.154)</a></li>
 <li><a href="#sec-238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152">2.38. Quality Score, Optimizer Groups &amp; Batch Invariant (v16.9.144 to v16.9.152)</a></li>
 <li><a href="#sec-239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157">2.39. Task-Type Resolver &amp; Optional Dependency Adapter (v16.9.155 to v16.9.157)</a></li>
+<li><a href="#sec-240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v169195">2.40. ONNX Release Variants, Model Metadata &amp; MT5 Artefact (v16.9.158 to v16.9.195)</a></li>
+<li><a href="#sec-241-run-settings-resume--generator-state-v169159-to-v169190">2.41. Run Settings, Resume &amp; Generator State (v16.9.159 to v16.9.190)</a></li>
+<li><a href="#sec-242-losses-scores--calibration-v169161-to-v169208">2.42. Losses, Scores &amp; Calibration (v16.9.161 to v16.9.208)</a></li>
+<li><a href="#sec-243-device-memory-dxgi-budget--directml-v169168-to-v169197">2.43. Device Memory, DXGI Budget &amp; DirectML (v16.9.168 to v16.9.197)</a></li>
+<li><a href="#sec-244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203">2.44. Preprocessing, Class Labels &amp; JSON Shard Labels (v16.9.180 to v16.9.203)</a></li>
+<li><a href="#sec-245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214">2.45. Kaggle Cloud Pipeline &amp; Hub Root (v16.9.169 to v16.9.214)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -1565,10 +1571,11 @@ pickled reader, so <code>update_strategy</code>, item reads and respawned loader
 workers never call <code>scan_tar_members</code> or <code>tarfile.open</code>.
 <code>tests/unit/test_curriculum_rebuild.py</code> pins this and checks that each
 larger fraction keeps every sample of the smaller one.</li>
-<li><strong>Locality Sampler (opt-in)</strong>: <code>training/data/locality.py</code> reads the
-<code>data.locality</code> section of <code>config.yaml</code>; <code>window_shards</code> and
-<code>fraction_block_size</code> default to 0, which is off. With <code>window_shards</code>
-set, the train sampler shuffles the shards per epoch and the samples
+<li><strong>Locality Sampler</strong>: <code>training/data/locality.py</code> reads the
+<code>data.locality</code> section of <code>config.yaml</code>; since v16.9.159 it is on by
+default (<code>window_shards: 4</code>, <code>fraction_block_size: 256</code>; 0 turns either
+off). With <code>window_shards</code> set, the train sampler shuffles the shards per
+epoch and the samples
 inside windows of that many shards; the order is drawn from
 <code>seed + epoch</code>, splits across DDP ranks and resumes mid-epoch. On 50
 shards of 1,000 samples with a window of 4, a 16-sample batch touches 3.9
@@ -1667,6 +1674,206 @@ and returns <code>PagedAdamW8bit</code> only when it is a <code>torch.optim.Opti
 subclass, else None, and the optimizer falls back to AdamW. Importing the
 optimizer module no longer loads bitsandbytes, which stays optional.</li>
 </ul>
+<h3 id="sec-240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v169195">2.40. ONNX Release Variants, Model Metadata &amp; MT5 Artefact (v16.9.158 to v16.9.195)</h3>
+<ul>
+<li><strong>Supported Exporter</strong>: every ONNX export uses the <code>torch.export</code>-based
+exporter (<code>torch.onnx.export(..., dynamo=True)</code>, opset 18,
+<code>training/export/dynamo_onnx.py</code>). After export the FP32 graph runs in ONNX
+Runtime at a larger batch and resolution against PyTorch; a model with a
+shape-dependent branch (Swin window shift in <code>nima_aesthetic_pro</code>) is
+re-exported with fixed height and width.</li>
+<li><strong>Three Release Variants</strong> (one writer for all exporters,
+<code>training/export/onnx_variants.py</code>): <code>&lt;Stem&gt;.pt</code> self-contained PyTorch
+FP32; <code>&lt;Stem&gt;_FP32.onnx</code> with its weights always in
+<code>&lt;Stem&gt;_FP32.onnx.data</code>; <code>&lt;Stem&gt;.onnx</code> FP16 with embedded weights, or a
+<code>.onnx.data</code> sidecar above the 2 GB protobuf limit. FP16 graphs are captured
+from a half-precision copy; FP16-unsafe layers (Swin V2 window attention)
+stay FP32 inside the graph. The file suffixes come from
+<code>training/cloud/variations.py</code>.</li>
+<li><strong>ONNX <code>metadata_props</code></strong> (<code>training/export/onnx_metadata.py</code>): both ONNX
+variants carry <code>model_key</code>, <code>task</code>, <code>input_size</code> (<code>[C, H, W]</code>, JSON), the
+training preprocessing (<code>normalization</code>, <code>pixel_scale</code>, <code>mean</code>, <code>std</code>) and,
+for a classifier, <code>class_names</code> in logit order. The <code>.pt</code> metadata carries
+the preprocessing and the class names too; Forex <code>.pt</code> files carry
+<code>model_kwargs</code>, so a non-default architecture loads without the registry.</li>
+<li><strong>MT5 Artefact, IR 9</strong>: MetaTrader 5 (build 4230 and later) bundles ONNX
+Runtime 1.17, which reads opsets up to 20 but IR versions only up to 9.
+<code>training/export/mt5_compat.py</code> rewrites the MT5 graph as one file with
+embedded weights (<code>OnnxCreate</code> cannot read a sidecar) and stamps IR 9 after
+checking that no IR 10 feature is used, then runs the full ONNX checker.
+For Forex the FP16 <code>&lt;Stem&gt;.onnx</code> (FP32 inputs and outputs, the EA's model)
+and the single-file FP32 MT5 graph get this finalizer; the release
+<code>&lt;Stem&gt;_FP32.onnx</code> + <code>.onnx.data</code> is unchanged. <code>tools/mt5_ort_check.py</code>
+loads a model under ONNX Runtime
+1.17.3 in a separate interpreter.</li>
+<li><strong>MQL5 Expert Advisor</strong>: <code>training/export/mql5_ea.py</code> renders the EA from
+the registry (<code>python -m export.mt5_signal --mode mql5_ea</code>): <code>CTrade</code>
+orders, <code>OnnxCreate</code> / <code>OnnxSetInputShape</code> / <code>OnnxRun</code> with one
+<code>[1, lookback, features]</code> matrix per timeframe plus the pair index,
+softmax and confidence gate, and risk-based lot size from
+<code>evaluation.risk_per_trade</code>. <code>data/mt5_feature_spec.py</code> is the one feature
+specification: the 14 columns in model order, the indicator windows (RSI
+14, MACD 12/26/9, ATR 14, Bollinger 20 / 2 sigma, ATR rank 100, volume
+z-score 50) and 300 warm-up bars. The training shards, the live signal and
+the EA's <code>BuildFeatures</code> (rendered by <code>training/export/mql5_features.py</code>)
+all follow it; rendering fails when a specified column is not written. The
+EA still needs an owner check in MetaEditor and the Strategy Tester.</li>
+</ul>
+<h3 id="sec-241-run-settings-resume--generator-state-v169159-to-v169190">2.41. Run Settings, Resume &amp; Generator State (v16.9.159 to v16.9.190)</h3>
+<ul>
+<li><strong>Locality Sampling On by Default</strong>: <code>data.locality</code> uses
+<code>window_shards: 4</code> and <code>fraction_block_size: 256</code> (defaults in
+<code>training/data/locality.py</code>, mirrored in <code>config.yaml</code>).</li>
+<li><strong>Generator State</strong>: checkpoints record <code>rng_state</code> (Python, NumPy, torch
+CPU and every device generator) and, under DDP, <code>rng_state_ranks</code>, one
+record per rank gathered with <code>all_gather_object</code>. Augmentation seeds each
+sample from (seed 42, epoch, dataset index), so a resumed run reproduces
+the same crops, flips and synthesized degradations on any worker or rank.</li>
+<li><strong>Frozen and Epoch Settings</strong> (<code>training/run_settings/</code>): checkpoints record
+<code>run_settings</code> with <code>frozen</code> settings and their SHA-256 (<code>frozen_sha</code>):
+model class, <code>kwargs</code> and parameter-group layout, optimizer type, betas,
+eps and momentum, datasets and task type, quality scheme, Forex
+<code>evaluation.risk_per_trade</code>, NIMA <code>stabilizers.emd_form</code>, subset seed and
+precision. A changed frozen setting on resume raises
+<code>FrozenSettingsChanged</code> unless <code>--override-frozen</code> is given (logged and
+recorded). <code>epoch</code> settings (locality, batch, LR schedule, weight decay,
+gradient clip, loader workers) stay recorded until the epoch after the
+checkpoint's, so a mid-epoch resume replays the recorded batch order; the
+configured values apply when the next epoch starts, are logged as
+<code>[SETTINGS] epoch N: ...</code> and appended to <code>settings_changes.jsonl</code>. The
+scheduler is rebuilt and fast-forwarded; a batch size is taken only when
+<code>effective / batch</code> is an exact accumulation. <code>optimizer.grad_clip</code>
+(default 1.0) is a new setting.</li>
+<li><strong>Resume Refusal Record</strong>: a refused resume writes
+<code>LemGendaryModels/&lt;model&gt;/resume_refusal.json</code> (the refusal text and the
+changed setting names), which a Kaggle job reports as its error.</li>
+<li><strong>Head Parameters</strong>: every architecture declares <code>head_param_prefixes</code>
+(for example RetinaFace <code>bbox_head.</code>, <code>conf_head.</code>, <code>landmark_head.</code>;
+NAFNet <code>ending.</code>; Forex <code>direction_head.</code> and <code>magnitude_head.</code>), which
+<code>head_lr_multiplier</code> applies to.</li>
+</ul>
+<h3 id="sec-242-losses-scores--calibration-v169161-to-v169208">2.42. Losses, Scores &amp; Calibration (v16.9.161 to v16.9.208)</h3>
+<ul>
+<li><strong>LPIPS Loss</strong>: on for every model whose registry <code>sota_targets</code> include
+LPIPS (newly FFA-Net, MPRNet, NAFNet, the multitask restorer, UltraZoom and
+CodeFormer).</li>
+<li><strong>NIMA Logit Soft Cap</strong>: the hard clamp is replaced by
+$\text{cap} \cdot \tanh(\text{logits} / \text{cap})$ with the registry
+<code>stabilizers.logit_clamp</code> (15.0 for every NIMA entry; 0 turns it off).</li>
+<li><strong>NIMA Temperature 1 and Paper EMD</strong>: quality models train at temperature
+1 under the fixed soft cap (<code>PinnedThermalState</code>, <code>PinnedCalibration</code>).
+<code>stabilizers.emd_form</code> selects the EMD: <code>nima</code> (default, the paper's r = 2
+form, $\sqrt{\frac{1}{K}\sum_k (\text{CDF}_p - \text{CDF}_t)^2 + 10^{-8}}$
+per sample, then the batch mean) or <code>squared</code>. Checkpoints record
+<code>emd_form</code>; a resume keeps the recorded form (a NIMA checkpoint without one
+keeps the older <code>legacy_sum</code>).</li>
+<li><strong>Post-Hoc Calibration</strong>: <code>python -m training.quality_calibration val_scores.npz</code> fits one temperature on validation logits (grid 0.5 to
+2.0, lowest EMD) and keeps it only when PLCC and SRCC do not drop; an
+accepted value goes into the registry as <code>calibration.temperature</code>, which
+the export <code>SoftmaxWrapper</code> uses (default 1.0).</li>
+<li><strong>Target Quality Score</strong>: the governor's aim is recomputed from the targets
+measured in that epoch only.</li>
+<li><strong>Honest Forex Metrics</strong>: an unmeasured metric is an empty <code>metrics.csv</code>
+cell (never 0) and an unmeasured or degenerate epoch (no SOTA target
+measured, a non-finite score, or no trade) never becomes <code>best.pth</code> or a
+vault checkpoint. A row whose target columns equal the SOTA targets exactly
+is skipped as a baseline.</li>
+<li><strong>Forex Risk per Trade</strong>: <code>forex_predictor.evaluation.risk_per_trade</code>
+(default 0.01, valid $0 &lt; r \le 0.05$, read by
+<code>training/registry/forex_risk.py</code>) drives the validation equity model:
+each trade risks $r$ of the equity, a win returns $TP/SL$ R and a loss
+$-1$ R, equity compounds from 1.0, and MaxDD is the largest peak-to-trough
+fall in percent of the peak. The scheme id carries the risk
+(<code>forex_weighted_targets_v2_risk0.01</code>), so a best score at another risk is
+not reused.</li>
+<li><strong>Face Detection Metrics</strong>: RetinaFace is measured with <code>box_iou</code>, <code>ap50</code>,
+<code>ap50_95</code> and <code>landmark_nme</code> (provisional targets 0.80 / 0.95 / 0.60 /
+0.10) under its own score scheme <code>face_box_weighted_targets_v1</code>; earlier
+<code>map_*</code> values are not comparable.</li>
+</ul>
+<h3 id="sec-243-device-memory-dxgi-budget--directml-v169168-to-v169197">2.43. Device Memory, DXGI Budget &amp; DirectML (v16.9.168 to v16.9.197)</h3>
+<ul>
+<li><strong>One Device-Memory Adapter</strong> (<code>training/hardware/device_memory.py</code>): CUDA
+(covering ROCm), XPU, MPS, DirectML and a CPU no-op. The VRAM audit, the
+resolution-jump refit and the resume batch clamp measure every GPU backend,
+and OOM relief recognises the messages of all of them.</li>
+<li><strong>DXGI Budget</strong> (<code>training/hardware/dxgi_memory.py</code>): on Windows, DirectML
+free memory is read from <code>IDXGIAdapter3::QueryVideoMemoryInfo</code> through
+<code>ctypes</code> (free = local budget minus current usage), re-read on every budget
+call. The adapter is matched to the torch-directml device by name;
+integrated GPUs are capped by available host RAM. Fallbacks: 0.8 x the
+adapter's dedicated memory, then 2.0 GB; an explicit
+<code>hardware.directml_assumed_free_gb</code> wins.</li>
+<li><strong>DirectML Discovery</strong>: <code>dml_device_info</code> loads the <code>torch_directml</code> module
+and uses its API (<code>is_available()</code>, <code>device_count()</code>, <code>device_name(i)</code>,
+<code>device(i)</code>, a <code>privateuseone:&lt;i&gt;</code> device); a missing or broken backend is
+logged and skipped. Before, DirectML was never discovered.</li>
+</ul>
+<h3 id="sec-244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203">2.44. Preprocessing, Class Labels &amp; JSON Shard Labels (v16.9.180 to v16.9.203)</h3>
+<ul>
+<li><strong>One Preprocessing Key</strong>: <code>training/registry/preprocessing.py</code> reads the
+registry <code>preprocessing.normalization</code> (<code>unit</code> or <code>imagenet</code>), else the task
+default (<code>quality</code> models ImageNet, every other task <code>[0, 1]</code> pixels).
+Training and validation transforms, <code>.pt</code> and ONNX metadata, the model card
+and the notebook inference cells follow it;
+<code>universal_nsfw_classification</code> declares <code>unit</code>.</li>
+<li><strong>Five-Class NSFW Classifier</strong>: <code>kwargs.num_classes: 5</code> and <code>class_names</code>
+<code>0 drawings, 1 hentai, 2 neutral, 3 porn, 4 sexy</code>, checked by
+<code>training/registry/class_names.py</code>.</li>
+<li><strong><code>IGNORE_TARGET</code></strong>: a classification sample whose label names no class
+gets <code>IGNORE_TARGET</code> (255, the cross-entropy <code>ignore_index</code>): the loss and
+the validation accuracy skip it, and the count is logged. A registry with
+more than 255 declared classes, or a resolved class id of 255 or more,
+raises <code>IgnoreTargetCollision</code>.</li>
+<li><strong>JSON-Only Shard Labels</strong>: the WebDataset reader has no text label role;
+<code>data/json_labels.py</code> reads the datasets label schema: boxes from
+<code>objects</code> (<code>category_id</code>, or <code>class_name</code> mapped through the manifold's
+<code>dataset_info.yaml</code> <code>classes</code>), <code>class_id</code> / <code>class_name</code> and <code>caption</code>. A
+schema break raises <code>LabelDocumentError</code>; RetinaFace raises on a missing
+face label, and landmarks whose ten values are all zero are absent. Loose
+image folders keep their <code>labels/&lt;name&gt;.txt</code> files.</li>
+<li><strong>YOLO Shard Cache</strong> (<code>data/yolo_shard_cache.py</code>): YOLOv8n trains from
+WebDataset shards through a resumable Ultralytics dataset under
+<code>.cache/yolo_datasets/&lt;manifold&gt;/</code> (images, YOLO label rows built from the
+JSON <code>objects</code>, and <code>data.yaml</code> with the <code>dataset_info.yaml</code> classes); a
+finished shard is skipped on a rerun and a changed one rebuilt.</li>
+</ul>
+<h3 id="sec-245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214">2.45. Kaggle Cloud Pipeline &amp; Hub Root (v16.9.169 to v16.9.214)</h3>
+<ul>
+<li><strong>One Credential Resolver and a Real Status Probe</strong>: <code>KGAT_</code> tokens are
+exported unchanged as <code>KAGGLE_API_TOKEN</code>; <code>GET /api/training/kaggle/status</code>
+makes one authenticated call. Importing the suite no longer loads the
+<code>kaggle</code> package.</li>
+<li><strong>One Kernel Bundle Builder</strong> (<code>training/cloud/kernel_bundle.py</code>): the
+generated training notebook plus <code>kernel-metadata.json</code>, private, with the
+ecosystem accelerator (<code>cpu</code>, <code>gpu-t4x2</code>, <code>tpu-v5e8</code>), the manifold
+datasets and the latest <code>pytorch/default</code> Hub version. Launch options:
+<code>--git-ref</code>, <code>--env-manager-ref</code>, <code>--limit-hours</code>, <code>--margin-minutes</code>,
+<code>--override-frozen</code>. One watch loop with backoff to 300 s; cancelled
+kernels end the job as <code>cancelled</code>.</li>
+<li><strong>Token-Free Clone</strong>: the suite and the env-manager are cloned to
+<code>/kaggle/temp</code> with the PAT only in <code>GIT_ASKPASS</code>; the models hub stays
+under <code>/kaggle/working</code> (<code>LEMGENDARY_WORKSPACE_ROOT</code>), resolved by
+<code>training.utils.paths.get_models_hub_root()</code>.</li>
+<li><strong>Session Guard</strong>: <code>kaggle_session</code> (<code>limit_hours</code> 12, <code>margin_minutes</code> 30,
+<code>auto_resume</code> false, <code>max_resumes</code> 3); at the deadline the run saves
+progress, writes <code>session_deadline.json</code>, syncs and exits 0; the trainer
+exit gate stops the notebook on a non-zero exit, so a failed run never
+publishes.</li>
+<li><strong>Hub Sync</strong>: pulls merge by stored epoch into the model folder; one push
+policy (page before upload, skip unchanged variations by SHA-256, version
+notes with epoch, metrics and suite version); <code>VariationKey</code> names; the
+per-epoch auto-sync uploads <code>pytorch/default</code> every 5 epochs and on a new
+best.</li>
+<li><strong>Notebook Cells</strong>: no training cell imports torch in the kernel process
+(probes run as <code>python -c</code>); on CUDA hosts the dependency cell installs the
+<code>cu126</code> torch build (<code>training/notebooks/torch_build.py</code>).</li>
+<li><strong>One Model-File Loader</strong> (<code>training/utils/model_payload.py</code>): release
+<code>.pt</code> dicts, checkpoints and bare state dicts load with
+<code>weights_only=True</code>; full unpickling only for trusted files.</li>
+</ul>
+<p>The step-by-step operator guide is Section 6.13 of the
+<a href="cli-manual.html">Master CLI Manual</a>.</p>
 </section>
 
 <section id="sec-3-judicial-audit-engine">

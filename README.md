@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.102`
+**Version**: `v16.9.103`
 
 ---
 
@@ -60,6 +60,31 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.103 - Training Suite v16.9.158 to v16.9.214 in the Papers
+
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.214-STABLE): six
+  new sections. 2.40: the `torch.export` ONNX exporter, the three release
+  variants, ONNX `metadata_props`, the MT5 artefact (one file, IR 9) and the
+  MQL5 EA built from `data/mt5_feature_spec.py`. 2.41: locality sampling on
+  by default, generator state per DDP rank, frozen and epoch run settings,
+  `--override-frozen`, `resume_refusal.json` and head parameter prefixes.
+  2.42: LPIPS loss, the NIMA soft logit cap, temperature 1, `emd_form` and
+  post-hoc calibration, honest Forex metrics, `risk_per_trade` and the
+  RetinaFace metrics. 2.43: one device-memory adapter, the DXGI budget and
+  DirectML through `torch_directml`. 2.44: the preprocessing key, the 5-class
+  NSFW head, `IGNORE_TARGET`, JSON-only shard labels and the YOLO shard
+  cache. 2.45: the Kaggle cloud pipeline and the one models hub root. The
+  Section 2.37 locality bullet no longer calls the sampler opt-in.
+* `PAPER_LEMGENDARY_NIMA.md` and its page (revision 3.3.0): new Section 5.50
+  (soft logit cap 15, temperature 1, `emd_form`, post-hoc calibration); the
+  0.1 temperature anchor of Section 3.1.2 is marked superseded.
+* `PAPER_FOREX_PREDICTOR.md` and its page (revision 2.8.0): the equity-model
+  MaxDD at `evaluation.risk_per_trade` and the weighted Forex score
+  (`forex_weighted_targets_v2_risk0.01`) are documented; the 665.80% drawdown
+  is withdrawn as the old cumulative-pip measure; the ONNX export is opset 18
+  with an IR 9 single-file MT5 graph; new Section 6.3 describes the
+  generated MQL5 Expert Advisor.
 
 ### v16.9.102 - CLI and API Reference: Kaggle Routes, Sync Pull, Repairs
 
