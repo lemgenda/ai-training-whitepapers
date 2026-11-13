@@ -39,6 +39,7 @@
   - [5.14 Retroactive Container Migration (`format migrate` / `format write`)](#514-retroactive-container-migration-format-migrate--format-write)
   - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
   - [5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)](#516-llm-dataset-compilation--quality-invariant-auditing-llm)
+  - [5.17 Manifold Repair (`repair`)](#517-manifold-repair-repair)
 - [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
   - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
   - [6.2 Model Training (`train`)](#62-model-training-train)
@@ -513,15 +514,15 @@ python cli.py compile --model nima_aesthetic --max-gb 50
 # Compile using canonical compiler preset (Phase 8)
 python cli.py compile --model nima_aesthetic --preset quality-vision
 
-# Concurrently emit WebP directory and MosaicML Streaming (MDS) container
+# Concurrently emit WebP directory and a LitData container
 python cli.py compile --model nima_aesthetic --image-format webp \
-  --image-quality 92 --also-format mds
+  --image-quality 92 --also-format litdata
 
 # High-throughput compile bypassing aesthetic vetting and labeling
 python cli.py compile --model nafnet_deblurring --workers 16 --no-vetting --no-labeling
 
 # Force container byte duplication across hardlink gates
-python cli.py compile --model upn_v2 --also-format mds --force-duplicate
+python cli.py compile --model upn_v2 --also-format litdata --force-duplicate
 
 # Force in-process compilation bypassing active API server
 python cli.py compile --model nima_technical --no-server
@@ -545,7 +546,10 @@ python cli.py compile --model nima_technical --no-server
 - **`--mask-format`**: Type: String; Default: `webp-lossless`; Description:
   Segmentation mask format
 - **`--also-format`**: Type: String; Default: `None`; Description:
-  Comma-separated containers: `mds`, `litdata`, `wds`, `parquet`
+  Comma-separated containers: `litdata`, `wds`, `parquet`; `mds` needs the
+  optional `mosaicml-streaming` package, which the Environment Manager no
+  longer installs (MDS compilation is discontinued since Environment Manager
+  v16.9.81)
 - **`--no-vetting`**: Type: Flag; Default: `False`; Description: Bypass NIMA
   aesthetic score gate
 - **`--no-labeling`**: Type: Flag; Default: `False`; Description: Bypass YOLO
@@ -729,6 +733,10 @@ python cli.py env install
 python cli.py sync push --model nima_aesthetic
 python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
 
+# Fetch only some folders or files (repeatable --only), into another folder
+python cli.py sync pull --url lemtreursi/lemgendizedretinafacemobilenetlarge \
+  --only labels/ --only classes.txt --output RetinaFaceLabels
+
 # Update Kaggle metadata across all manifolds or a single manifold
 python cli.py sync metadata --all
 python cli.py sync metadata --model nima_aesthetic
@@ -739,6 +747,21 @@ python cli.py docs regen
 # Schema validation
 python cli.py config validate
 ```
+
+`sync pull` creates the datasets root (`LemGendaryDatasets/`) when it is
+missing and measures free space at the nearest existing parent folder. When
+Kaggle has no whole-dataset archive (HTTP 404 "No gcs url found") the pull
+falls back to a file-by-file download: every page of the file listing is
+read, each file is fetched through its signed URL, checked against the listed
+size and skipped on a re-run, and an interrupted `.part` resumes with an HTTP
+range. After the first per-file 404 the Kaggle API's `dataset_download_file`
+serves every remaining file. HTTP 429 waits and retries on both routes
+(Retry-After, else 30 s doubling up to 600 s). `--only` fetches a folder
+(ending in `/`) or file relative to the dataset's top folder, from the zip
+through HTTP byte ranges or file by file. A pulled registered manifold packs
+its text labels into JSON with the entry's label strategy. A new Kaggle
+dataset is created private; the metadata push applies the registry
+`is_private` and license.
 
 ### 5.11 Canonical Compiler Presets (`presets`)
 
@@ -923,6 +946,90 @@ python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/
    outputs.
 4. **Duplicate Detection**: Identifies exact and fuzzy duplicate prompt
    collisions across the manifold.
+
+### 5.17 Manifold Repair (`repair`)
+
+Repairs a compiled manifold in place without a recompile. Every subcommand is a
+dry run that prints its plan unless `--apply` is given, takes `--model KEY`
+(registry key) or `--manifold PATH`, rewrites each changed shard to a
+temporary file, verifies it and swaps it in atomically (no backup copies are
+kept), and keeps `index.json` and the `dataset_info.yaml` `count` in step. A
+re-run finds nothing to do.
+
+```bash
+# Zero-byte samples, scattered groups, png/jpg members, counts, paths
+python cli.py repair manifold --model retinaface_mobilenet
+python cli.py repair all
+
+# Labels from a loose labels/<split>/<key>.txt folder into the JSON labels
+python cli.py repair labels --model retinaface_mobilenet \
+  --labels ../LemGendaryDatasets/_labels/RetinaFace/labels --apply
+
+# Legacy .txt label members merged into <key>.json, then removed
+python cli.py repair txt-labels --model yolov8n --apply
+
+# Loose images/ + labels/ folders packed into JSON-labelled WebDataset shards
+python cli.py repair pack-loose --model yolov8n --apply
+
+# Registry sample policy: drop copies, auxiliary images and no-face samples,
+# re-split val by source file id
+python cli.py repair sample-policy --model retinaface_mobilenet --apply
+
+# ParseNet class masks from the SFHQ segmentations/ folders
+python cli.py repair masks --model parsenet --masks-root ../sfhq --apply
+
+# RetinaFace boxes and 5 points rebuilt from the SFHQ 110-point landmarks
+python cli.py repair face-landmarks --model retinaface_mobilenet \
+  --landmarks-root ../sfhq --apply
+
+# ClassificationMaster: pseudo-label table first, then the class labels
+python cli.py repair pseudo-labels --model classification_master_manifold \
+  --table-root ../LemGendaryDatasets/_labels/LemGendizedClassificationMaster
+python cli.py repair class-labels --model classification_master_manifold \
+  --table-root ../LemGendaryDatasets/_labels/LemGendizedClassificationMaster \
+  --apply
+```
+
+- **`manifold`**, **`all`**: Description: Zero-byte samples, scattered sample
+  groups, leftover PNG/JPEG members (re-encoded to WebP with the compiler's
+  encoders), counts and recorded paths.
+- **`labels`**: Options: `--labels DIR` (required), `--strategy NAME`,
+  `--classes FILE`; Description: Writes each sample's label from
+  `DIR/<split>/<key>.txt` into its JSON label through the registry
+  `label_json` strategy. A label whose boxes differ from the recorded ones is
+  a MISMATCH and refuses the apply.
+- **`txt-labels`**: Options: `--strategy NAME`; Description: Merges every
+  `.txt` label member into the sample's JSON (keys must agree; nothing is
+  dropped) and removes the `.txt` members. MISMATCH or UNREADABLE labels
+  refuse the apply.
+- **`pack-loose`**: Options: `--strategy NAME`; Description: Packs
+  `images/<split>` + `labels/<split>` into `shards/<split>/shard-*.data`
+  with `<key>.webp` + `<key>.json`. Refuses while an image has no label file,
+  a label has no image or shards already exist; removes the loose folders
+  only after the packed shards verify.
+- **`sample-policy`**: Description: Applies the registry sample policy
+  (face detection: drop no-face samples and copies, val drawn from the
+  landmark-bearing photos by source file id; face parsing: drop copies and
+  segmentation maps, split all photos by source file id).
+- **`masks`**: Options: `--masks-root DIR` (required), `--workers N`;
+  Description: Stores each photo's source class mask as lossless
+  `<key>.mask.webp` (class ids checked after a decode round trip) and records
+  `num_classes`, `class_names` and `mask_source` in the JSON label.
+- **`face-landmarks`**: Options: `--landmarks-root DIR` (required),
+  `--workers N`; Description: Replaces each photo's `objects` with one face:
+  a tight WIDER-style box and five points derived from the source landmark
+  file, `landmark_source` recorded. A sample that fails the plausibility
+  check is dropped; a missing landmark file refuses the apply.
+- **`pseudo-labels`**: Options: `--table-root DIR` (required), `--workers N`,
+  `--max-shards N`; Description: Runs the registry pseudo-label models (ONNX,
+  CPU) over the pseudo-rule samples and writes one JSON Lines table per shard
+  outside the manifold; the shards are not touched, and a re-run resumes.
+- **`class-labels`**: Options: `--table-root DIR` (required), `--workers N`;
+  Description: Writes `class_id`, `class_name`, `label_source` and the
+  registry task into each sample's JSON (pseudo labels also
+  `label_confidence` and `label_check_class`); a pseudo label that fails its
+  rule drops the sample, and a sample without a rule or table row refuses the
+  apply.
 
 ---
 

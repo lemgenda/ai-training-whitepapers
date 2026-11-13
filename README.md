@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.101`
+**Version**: `v16.9.102`
 
 ---
 
@@ -60,6 +60,32 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.102 - CLI and API Reference: Kaggle Routes, Sync Pull, Repairs
+
+* `MANUAL_CLI.md` and its page: Section 5.10 documents `sync pull --only`
+  and `--output`, the missing-root fix, the file-by-file fallback when Kaggle
+  has no whole-dataset archive, the Kaggle API route after a per-file 404,
+  the HTTP 429 retry, label packing on pull and private new datasets
+  (LemGendary Dataset Compiler Suite v16.9.96 to v16.9.104). New Section
+  5.17 "Manifold Repair (`repair`)" lists `manifold`, `all`, `labels`,
+  `txt-labels`, `pack-loose`, `sample-policy`, `masks`, `face-landmarks`,
+  `pseudo-labels` and `class-labels` with their options. Section 5.2 no
+  longer uses MDS in its examples and says that `mds` needs the
+  `mosaicml-streaming` package the Environment Manager no longer installs.
+* `MANUAL_API.md` and its page (version line v16.9.214-STABLE): the training
+  endpoint matrix lists the Kaggle routes (`status`, `kernels`,
+  `accelerators`, `train`, `monitor`, `pull`, `push`); new sections document
+  the status probe fields, the accelerator list and every
+  `POST /api/training/kaggle/train` field (`accelerator`, `git_ref`,
+  `env_manager_ref`, `limit_hours`, `margin_minutes`, `override_frozen`,
+  `auto_pull`, `poll_interval`, `auto_resume`, `max_resumes`), the monitor
+  and pull requests. `push-model` uses the `VariationKey` names and the real
+  response (`variations`, `skipped`, `errors`). `quick-train` takes `clean`
+  and `override_frozen`; `ModelWithStats.sota_targets_provisional` is
+  documented. Dataset Compiler: `/api/config/validate` is open to the GUI
+  origins, `/api/kaggle/status` lists the four credential sources, and
+  `quick-compile` takes `max_gb`, `workers` and `shard_ext`.
 
 ### v16.9.101 - Kaggle Cloud Training How-To
 
