@@ -2,8 +2,8 @@
 
 ## Category 08 FACE | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
-1.0.0 - Pre-Training & Deployment Specification (2026 Specialization) · **Target
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Paper Revision**:
+1.1.0 - Pre-Training & Deployment Specification (2026 Specialization) · **Target
 Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Dual T4 Cloud
 Nodes
 
@@ -40,14 +40,14 @@ facial perception:
 2. **LemGendary ParseNet**: A bilateral face parsing semantic segmentation
    network segmenting 19 anatomical regions to provide dense spatial boundary
    guidance.
-3. **LemGendary RetinaFace**: A single-shot multi-scale face localization and
-   5-point landmark regression engine utilizing a lightweight MobileNet feature
-   pyramid backbone.
+3. **LemGendary RetinaFace**: A single-box face localization and 5-point
+   landmark regression model on a lightweight MobileNetV3-Small backbone (one
+   box, one confidence and five landmarks per image; no anchors).
 
 This specification documents the mathematical operators, target SOTA metrics,
 memory-sentinel bounds, and training telemetry hooks for active and in-progress
 training cycles across the compiled manifolds `LemGendizedCodeFormerLarge`,
-`LemGendizedParseNetLarge`, and `LemGendizedRetinaFaceMobileNetLarge`.
+`LemGendizedParseNet`, and `LemGendizedRetinaFace`.
 
 ---
 
@@ -62,10 +62,11 @@ distributions across human facial geometry:
 * **Anatomical Segmentation Manifold (`LemGendizedParseNetLarge`)**: Dense
   pixel-level annotations across 19 discrete facial classes (skin, eyebrows,
   eyes, nose, lips, mouth interior, teeth, hair, ears, accessories).
-* **Multi-Scale Localization Manifold (`LemGendizedRetinaFaceMobileNetLarge`)**:
-  Bounding box coordinates and 5-point keypoint coordinates (left eye, right
-  eye, nose tip, left mouth corner, right mouth corner) spanning extreme scale
-  variations from 16px to 1024px.
+* **Face Localization Manifold (`LemGendizedRetinaFace`)**: 425,223 SFHQ
+  photos (train 374,199 / val 51,024), one face per image with a tight
+  WIDER-style box and 5-point keypoint coordinates (left eye, right eye, nose
+  tip, left mouth corner, right mouth corner), rebuilt from the SFHQ 110-point
+  landmarks (`landmark_source: sfhq-110pt`).
 
 ---
 
@@ -210,9 +211,11 @@ boundary convergence. Checkpoint telemetry updates dynamically into
 
 #### 4.3.1 Model Description & Usage
 
-RetinaFace provides single-stage, real-time facial bounding box detection and
-5-point landmark localization, serving as the automated face cropping and
-alignment frontend across the ecosystem.
+RetinaFace provides real-time facial bounding box localization and 5-point
+landmark regression, serving as the automated face cropping and alignment
+frontend across the ecosystem. The suite's model (`RetinaFaceMobileNet`) has
+no prior boxes: one globally pooled head regresses a single normalized
+`cx cy w h` box, one confidence and five landmarks per image.
 
 #### 4.3.2 Model Info
 
@@ -225,15 +228,35 @@ alignment frontend across the ecosystem.
 
 #### 4.3.3 Manifold Info
 
-* **Target Manifold**: `LemGendizedRetinaFaceMobileNetLarge`
-* **Annotation Modality**: Normalized Boxes $[x, y, w, h]$ + 5 Keypoints
+* **Target Manifold**: `LemGendizedRetinaFace` (425,223 samples: train
+  374,199 / val 51,024; val drawn by SFHQ file id, the same split as
+  `LemGendizedParseNet`)
+* **Annotation Modality**: JSON label (`face_landmarks`) with one object per
+  face: normalized box $[c_x, c_y, w, h]$ + 5 keypoints
   $[(x_i, y_i)]_{i=1}^5$
 
 #### 4.3.4 Performance Metrics & SOTA Targets
 
-* **Target mAP (Easy)**: $\ge 0.915$
-* **Target mAP (Medium)**: $\ge 0.890$
-* **Target mAP (Hard)**: $\ge 0.750$
+The training suite (v16.9.208) measures the single-box output per image; all
+four targets are provisional (`sota_targets_provisional: true`): no cited
+source backs them yet, and WIDER FACE easy / medium / hard AP does not apply
+to a one-box-per-image model.
+
+* **Box IoU (`box_iou`)**: mean IoU of the predicted and the labelled box over
+  the images that hold a face. Target $\ge 0.80$.
+* **AP50 (`ap50`)**: single-class AP over images (each image is one
+  detection ranked by its confidence; a true positive holds a face and
+  reaches IoU 0.5), all-point interpolated. Target $\ge 0.95$.
+* **AP50-95 (`ap50_95`)**: the same AP averaged over the COCO thresholds
+  0.50:0.05:0.95. Target $\ge 0.60$.
+* **Landmark NME (`landmark_nme`)**: mean distance of the five points divided
+  by the inter-ocular distance (points 0 and 1); lower is better. Target
+  $\le 0.10$.
+
+RetinaFace metrics recorded before v16.9.207 / v16.9.208 are not comparable
+with new runs: the old `map_*` values were fixed multiples of a
+twice-squashed confidence score, and the label rebuild made the boxes tight
+(about 0.31 to 0.57 of the old box area).
 
 #### 4.3.5 Mathematical Loss Formulation
 
@@ -275,9 +298,10 @@ allocations are locked at $< 350\text{ MB}$ total runtime footprint.
 * **`parsenet`**: Architecture: Bilateral Segmentation; Target Manifold:
   `LemGendizedParseNetLarge`; Input Res: 512x512; Primary Metric Target: mIoU
   0.860; Current Status: In-Progress / Pre-Training
-* **`retinaface`**: Architecture: MobileNetV3-Small Backbone; Target Manifold:
-  `LemGendizedRetinaFaceMobileNetLarge`; Input Res: 640x640; Primary Metric
-  Target: mAP Easy 0.915; Current Status: Pre-Training Spec
+* **`retinaface`**: Architecture: MobileNetV3-Small Backbone (single-box
+  head); Target Manifold: `LemGendizedRetinaFace`; Input Res: 640x640;
+  Primary Metric Target: AP50 0.95 (provisional; also Box IoU 0.80, AP50-95
+  0.60, Landmark NME 0.10); Current Status: Pre-Training Spec
 
 ---
 

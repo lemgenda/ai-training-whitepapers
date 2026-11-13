@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.99`
+**Version**: `v16.9.100`
 
 ---
 
@@ -60,6 +60,30 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.100 - RetinaFace Box IoU, AP and Landmark NME
+
+* `PAPER_LEMGENDARY_FACE_SUITE.md` and its page (revision 1.1.0, checked
+  against LemGendary Model Training Suite v16.9.214): the RetinaFace targets
+  "mAP (Easy) >= 0.915" and the mAP medium / hard rows are replaced by the
+  metrics the training suite measures since v16.9.208: `box_iou` >= 0.80,
+  `ap50` >= 0.95, `ap50_95` >= 0.60 and `landmark_nme` <= 0.10, all
+  provisional (`sota_targets_provisional: true`, no cited source yet). The
+  model is described as a single-box regressor (one box, one confidence and
+  five landmarks per image, no anchors), the manifold as
+  `LemGendizedRetinaFace` (425,223 samples: train 374,199 / val 51,024,
+  boxes and points rebuilt from the SFHQ 110-point landmarks), and the
+  matrix row and abstract follow. A note says that RetinaFace metrics
+  recorded before v16.9.207 / v16.9.208 are not comparable with new runs.
+* `PAPER_LEMGENDARY_RETINAFACE.md` and its page: the same four metrics and
+  provisional targets, the 17-column `metrics.csv` layout and the
+  `face_box_weighted_targets_v1` score scheme. The WIDER FACE AP, NME and
+  latency values of Sections 4 and 7 marked `[MEASURED]` are removed: no
+  measurement backs them, and the manifold holds 425,223 SFHQ photos, not
+  32,203 WIDER FACE samples. Section 3 notes that the suite's model has no
+  prior boxes.
+* `PAPER_TRAINING_SUITE.md` and its page: the `retinaface` registry row lists
+  the provisional targets.
 
 ### v16.9.99 - Merged Similar Training Pathologies
 

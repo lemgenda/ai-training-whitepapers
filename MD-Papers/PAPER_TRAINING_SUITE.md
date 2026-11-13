@@ -1761,8 +1761,8 @@ values.
   (category `enhance`, dataset `LemGendizedClassificationMaster`). Targets:
   Accuracy ≥ 0.98.
 - `retinaface`: LemGendary RetinaFace Detection (category `face`, dataset
-  `LemGendizedRetinaFace`). Targets: mAP easy ≥ 0.915, mAP medium ≥ 0.89, mAP
-  hard ≥ 0.75.
+  `LemGendizedRetinaFace`). Targets (provisional since v16.9.208): Box IoU ≥
+  0.80, AP50 ≥ 0.95, AP50-95 ≥ 0.60, Landmark NME ≤ 0.10.
 - `ai_helper_lemgend`: LemGendary AI Studio Assistant (Causal LLM) (category
   `llm`, dataset `LemGendizedAIHelperLemGend`). Targets: Eval Loss ≤ 1.15,
   Perplexity ≤ 3.15, Token Accuracy % ≥ 72.5.

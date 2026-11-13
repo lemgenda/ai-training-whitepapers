@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.99-STABLE",
-  "last_audited": "2026-11-12",
+  "document_baseline": "v16.9.100-STABLE",
+  "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
   "documents": [
@@ -171,8 +171,8 @@
       "category": "Category 08.3 SPECIFICATION",
       "html_path": "papers/face-retinaface.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -181,8 +181,8 @@
       "category": "Category 08 FACE VISION",
       "html_path": "papers/face-suite.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_FACE_SUITE.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {

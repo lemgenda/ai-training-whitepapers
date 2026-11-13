@@ -2,7 +2,7 @@
 
 ## Category 08 FACE | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Target Hardware**:
 NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -93,9 +93,13 @@ $$
 \text{SmoothL1}(t_i, t_i^*) + \lambda_2 p_i^* \text{SmoothL1}(l_i, l_i^*)
 $$
 
-Online Hard Example Mining (OHEM) balances gradients during anchor
-classification, preventing extreme class imbalance from dominating the
-optimization landscape.
+The formula above is the published anchor-based objective. The training
+suite's `RetinaFaceMobileNet` (v16.9.207) has no prior boxes: one globally
+pooled head regresses a single normalized `cx cy w h` box, one confidence and
+five landmarks per image, so the sum runs over images instead of anchors. The
+loss weights are confidence 1, box 2 and landmarks 1 (smooth L1 on normalized
+coordinates); landmarks whose ten values are all zero count as absent and are
+masked out of the loss.
 
 ---
 
@@ -111,26 +115,52 @@ and real-time pre-flight alignment.
 
 #### 4.2 Model Info
 
-* **Architecture**: RetinaFace (MobileNetV3-Small Backbone + Multi-Scale Feature
-  Pyramid)
+* **Architecture**: RetinaFace-style single-box regressor
+  (`RetinaFaceMobileNet`, MobileNetV3-Small backbone, `mobilenet_v2`
+  supported; globally pooled box, confidence and landmark heads)
 * **Input Resolution**: 640x640
 * **Precision**: ONNX FP16 / PyTorch FP32
-* **Latency**: 2.8ms inference on NVIDIA GTX 1650 `[MEASURED]`
+* **Latency**: not measured
 
 #### 4.3 Manifold Info
 
-* **Dataset**: `LemGendizedRetinaFaceLarge`
-* **Total Samples**: 32,203 WIDER Face annotated samples
-* **Primary Task**: 5-point facial landmark regression and multi-scale face detection
+* **Dataset**: `LemGendizedRetinaFace`
+* **Total Samples**: 425,223 SFHQ photos (train 374,199 / val 51,024), one
+  face per image; val drawn by SFHQ file id, the same split as
+  `LemGendizedParseNet`
+* **Labels**: tight WIDER-style box and five points (eye centres, nose tip,
+  mouth corners) rebuilt from the SFHQ 110-point landmarks
+  (`landmark_source: sfhq-110pt`), stored as JSON (`face_landmarks`)
+* **Primary Task**: 5-point facial landmark regression and face box
+  localization
 
 #### 4.4 Performance Metrics
 
-* **Current Training Epochs**: 80 `[CURRENT]`
-* **WIDER Face Hard AP**: 84.6% `[MEASURED]` (Target: $\ge 85.0\%$ `[TARGET]`)
-* **WIDER Face Medium AP**: 92.1% `[MEASURED]`
-* **WIDER Face Easy AP**: 95.4% `[MEASURED]`
-* **Landmark NME (Normalised Mean Error)**: 4.82% `[MEASURED]`
-* **Current Learning Rate**: 0.000100
+The training suite measures RetinaFace with four metrics (v16.9.208,
+`training/training/face_detection_metrics.py`). The targets are provisional
+(`sota_targets_provisional: true`): no cited source backs them yet.
+
+* **Box IoU (`box_iou`)**: mean IoU of the predicted and the labelled box over
+  the images that hold a face. Target $\ge 0.80$ `[TARGET]`.
+* **AP50 (`ap50`)**: single-class AP over images; each image is one detection
+  ranked by its confidence (used as returned, no second sigmoid) and is a
+  true positive when it holds a face and the IoU reaches 0.5. Target
+  $\ge 0.95$ `[TARGET]`.
+* **AP50-95 (`ap50_95`)**: the same AP averaged over the COCO thresholds
+  0.50:0.05:0.95. Target $\ge 0.60$ `[TARGET]`.
+* **Landmark NME (`landmark_nme`)**: mean distance of the five points divided
+  by the inter-ocular distance (points 0 and 1); box-only labels are left
+  out. Target $\le 0.10$ `[TARGET]`.
+* **Measured values**: not measured on the rebuilt labels yet.
+
+`metrics.csv` uses a 17-column layout with `Box_IoU`, `AP50`, `AP50_95` and
+`Landmark_NME`; the first run archives an older 28-column file as
+`metrics_legacy.csv`. Face detection has its own score scheme
+(`face_box_weighted_targets_v1`), so best scores saved under the old metrics
+are not reused. Metrics recorded before v16.9.207 / v16.9.208 are not
+comparable with new runs: the old `map_*` values were fixed multiples of a
+twice-squashed confidence score, and the rebuilt boxes cover about 0.31 to
+0.57 of the old box area.
 
 ---
 
@@ -166,14 +196,14 @@ RetinaFace integrates seamlessly into the LemGendary runtime stack:
 ## 7. SOTA Architectural Performance Matrix
 
 * **RetinaFace-ResNet50**: WIDER Face Easy: 96.5%; WIDER Face Medium: 95.6%;
-  WIDER Face Hard: 90.4%; Latency (ms): 22.4ms; Status & Verification: Server
-  Baseline `[MEASURED]`
-* **RetinaFace-MobileNetV3-Small**: WIDER Face Easy: **95.4%**; WIDER Face
-  Medium: **92.1%**; WIDER Face Hard: **84.6%**; Latency (ms): **2.8ms**; Status
-  & Verification: **LemGendary `[MEASURED]`**
-* **RetinaFace SOTA Target**: WIDER Face Easy: **$\ge 96.0\%$**; WIDER Face
-  Medium: **$\ge 93.0\%$**; WIDER Face Hard: **$\ge 85.0\%$**; Latency (ms):
-  **$\le 3.0\text{ms}$**; Status & Verification: **Target `[TARGET]`**
+  WIDER Face Hard: 90.4%; Status & Verification: published multi-face
+  anchor-based reference; not comparable with the single-box metrics below
+* **RetinaFace-MobileNetV3-Small (LemGendary)**: Box IoU, AP50, AP50-95 and
+  Landmark NME: not measured on the rebuilt labels yet; Status &
+  Verification: **Pre-training `[CURRENT]`**
+* **RetinaFace Provisional Target**: Box IoU **$\ge 0.80$**; AP50
+  **$\ge 0.95$**; AP50-95 **$\ge 0.60$**; Landmark NME **$\le 0.10$**; Status
+  & Verification: **Provisional `[TARGET]`** (owner to confirm)
 
 ---
 
@@ -186,7 +216,7 @@ Face Suite.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedRetinaFaceLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedRetinaFace`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
