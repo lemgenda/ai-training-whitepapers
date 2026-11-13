@@ -1675,8 +1675,14 @@ manifold builds.
 - **Category:** Image Classification
 - **Total Samples:** 753,534 (train 662,746 / val 90,788; Anime DB Rating
   619,514, Food-101 100,999, NSFW 33,021)
+- **Per Source (train / val, `index.json`):** Anime DB Rating 544,611 /
+  74,903; Food-101 89,105 / 11,894; NSFW 29,030 / 3,991
 - **Classes:** 5 (`nsfw_5`: drawings, hentai, neutral, porn, sexy), written
   by `repair class-labels`
+- **Per Class (train / val, from the `repair class-labels` run):** drawings
+  300,702 / 41,355; hentai 249,105 / 34,257; neutral 92,905 / 12,445; porn
+  9,392 / 1,318; sexy 10,642 / 1,413. `index.json` has no class field, so the
+  per-class counts come from the label repair, not from the index.
 - **Architecture Base:** Lightweight convolutional backbones with classification
   heads
 - **Primary Task:** Predict categorical classes and safety content labels.

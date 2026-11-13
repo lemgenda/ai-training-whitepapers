@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.109`
+**Version**: `v16.9.110`
 
 ---
 
@@ -61,6 +61,18 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.110 - ClassificationMaster Per-Source and Per-Class Counts
+
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedClassificationMaster`: per-source train / val counts counted
+  from the manifold's `index.json` (Anime DB Rating 544,611 / 74,903,
+  Food-101 89,105 / 11,894, NSFW 29,030 / 3,991; totals 662,746 / 90,788)
+  and the per-class train / val counts of the `repair class-labels` run
+  (drawings 300,702 / 41,355, hentai 249,105 / 34,257, neutral 92,905 /
+  12,445, porn 9,392 / 1,318, sexy 10,642 / 1,413). `index.json` has no class
+  field, so the paper names the label repair as the source of the per-class
+  counts.
 
 ### v16.9.109 - RetinaFace Paper Describes the Single-Box Model
 

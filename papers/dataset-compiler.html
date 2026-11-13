@@ -1568,8 +1568,14 @@ guidance and safe troubleshooting.</li>
 <li><strong>Category:</strong> Image Classification</li>
 <li><strong>Total Samples:</strong> 753,534 (train 662,746 / val 90,788; Anime DB Rating
 619,514, Food-101 100,999, NSFW 33,021)</li>
+<li><strong>Per Source (train / val, <code>index.json</code>):</strong> Anime DB Rating 544,611 /
+74,903; Food-101 89,105 / 11,894; NSFW 29,030 / 3,991</li>
 <li><strong>Classes:</strong> 5 (<code>nsfw_5</code>: drawings, hentai, neutral, porn, sexy), written
 by <code>repair class-labels</code></li>
+<li><strong>Per Class (train / val, from the <code>repair class-labels</code> run):</strong> drawings
+300,702 / 41,355; hentai 249,105 / 34,257; neutral 92,905 / 12,445; porn
+9,392 / 1,318; sexy 10,642 / 1,413. <code>index.json</code> has no class field, so the
+per-class counts come from the label repair, not from the index.</li>
 <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification
 heads</li>
 <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
