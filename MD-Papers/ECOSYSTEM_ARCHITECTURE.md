@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.80`, Dataset Compiler Suite `v16.9.84`, Model Training Suite
-`v16.9.157`, AI Studio GUI `v2.10.57` · **Last Reviewed / Verified**: 2026-11-12
+Manager `v16.9.85`, Dataset Compiler Suite `v16.9.107`, Model Training Suite
+`v16.9.214`, AI Studio GUI `v2.10.67` · **Last Reviewed / Verified**: 2026-11-13
 · **Status**: Canonical
 
 ---

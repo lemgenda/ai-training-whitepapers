@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.106`
+**Version**: `v16.9.107`
 
 ---
 
@@ -20,9 +20,9 @@
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
-* **Current baselines** - LemGendary Environment Manager v16.9.80, LemGendary
-  Dataset Compiler Suite v16.9.84, LemGendary Model Training Suite v16.9.157,
-  LemGendary AI Studio GUI v2.10.57.
+* **Current baselines** - LemGendary Environment Manager v16.9.85, LemGendary
+  Dataset Compiler Suite v16.9.107, LemGendary Model Training Suite v16.9.214,
+  LemGendary AI Studio GUI v2.10.67.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -61,6 +61,20 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.107 - Component Baselines
+
+* Both capability registries: `runtime_engine_baseline` v16.9.214-STABLE
+  (LemGendary Model Training Suite), `dataset_compiler_baseline`
+  v16.9.107-STABLE (LemGendary Dataset Compiler Suite),
+  `environment_manager_baseline` v16.9.85-STABLE (LemGendary Environment
+  Manager), `desktop_client_baseline` and `control_planes.gui.version`
+  v2.10.67 (LemGendary AI Studio GUI), every model's `runtime_baseline`
+  v16.9.214-STABLE, `last_audited` 2026-11-13. The documentation audit's
+  component-version check passes again.
+* README "Current baselines", `LEMGENDARY_CURRENT_STATE.md`,
+  `VERSIONING_POLICY.md` and `ECOSYSTEM_ARCHITECTURE.md` (and their pages)
+  name the same component versions and the hub release v16.9.107.
 
 ### v16.9.106 - Environment Manager v16.9.81 to v16.9.85, Registry Sync
 
