@@ -1779,7 +1779,8 @@ manifold builds.
 ### LemGendizedForexUniverse
 
 - **Category:** Financial Time-Series
-- **Total Samples:** 24,850,000
+- **Total Samples:** 26,818,700 (train 21,015,570 / val 5,803,130; 765
+  chunks, per `dataset_info.yaml` and `index.json` and the training registry)
 - **Storage Format:** Unified Annual Apache Parquet (`ForexUniverse2019.parquet`
   to `ForexUniverse2026.parquet`) with Zstandard compression
 - **Architecture Base:** Multi-Scale CNN-Transformer (TCN + CT-MHA)

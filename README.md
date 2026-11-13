@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.114`
+**Version**: `v16.9.115`
 
 ---
 
@@ -61,6 +61,15 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.115 - ForexUniverse Sample Count
+
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedForexUniverse`: Total Samples 26,818,700 (train 21,015,570 /
+  val 5,803,130; 765 chunks), was 24,850,000. The count is the dataset's
+  `dataset_info.yaml` on Kaggle, the sum of its `index.json`, and the
+  training registry (Training Suite v16.9.221 checked it); the Forex paper
+  already stated 26,818,700.
 
 ### v16.9.114 - Measured Model Parameter Counts
 
