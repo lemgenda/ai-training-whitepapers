@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.107`
+**Version**: `v16.9.108`
 
 ---
 
@@ -61,6 +61,36 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.108 - Forex Paper States Only Measured Results
+
+* `PAPER_FOREX_PREDICTOR.md` and its page (revision 2.9.0): no result figure
+  has a backing measurement. The owner's `metrics.csv` row 1 copies the
+  registry targets and row 2 opened no trade (Training Suite v16.9.164), so
+  every result is marked "not yet measured". Removed: Direction Accuracy and
+  Win Rate 49.69%, Profit Factor 0.99, Sharpe -0.16, Sortino -0.18, TP / SL
+  MAE 615.42 / 617.95, Quality Score 105.87 (abstract, Sections 4.4, 4.7 and
+  7, where it was marked `[MEASURED]`), the LSTM and vanilla Transformer
+  comparison columns, the per-pair benchmarks (77.75% to 79.15% direction
+  accuracy), the restoration and NIMA rows of Section 7 (each model reports
+  in its own paper), the 1.42 ms / 2.18 ms latency, the RAM (53 GB to
+  1.1 GB), throughput (12.5x) and iteration (28x) savings, the 65% and 85%
+  market-share claims, 428,940 windows per fraction and the sub-microsecond
+  recovery figure. The training curve is withdrawn (no measured epoch).
+* Targets are the registry `sota_targets` (58.5 / 56.0 / 1.65 / 1.85 / 2.1 /
+  12.0 / 12.5 / 12.5), replacing the old unsourced targets (> 60%, > 1.85,
+  < 6.50% drawdown, > 150 quality). New Section 4.4.1 lists what a valid
+  measured run must produce.
+* Corrected from code: 26,818,700 rows (training registry count, was
+  30,810,572), sample fraction fixed at 1.0 (was 15% to 100%), Forex VRAM
+  batch tiers (a 4 GB GTX 1650 runs batch 32, not 256), the equity-model
+  MaxDD formula (the 10,000-pip base formula is withdrawn), the spread stress
+  (governor stress value over the pair pip scale; no fixed 1.5 / 3.0 pips),
+  ONNX inputs with 14 features (was 10), the EA name
+  `LemGendaryForexEA.mq5`, Fractional Kelly marked as proposed (the EA sizes
+  from `RiskPct`), the one-tensor memory arithmetic (12.6 MB, was an
+  unexplained 14.2 MB). Disk footprint figures point to the Dataset
+  Compiler paper instead of being repeated.
 
 ### v16.9.107 - Component Baselines
 

@@ -3,7 +3,7 @@
 ## Category 11 FINANCIAL | Architecture of LemGendary AI
 
 **Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Paper Revision**:
-2.8.0 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine) ·
+2.9.0 - Quantitative Manifold Matrix (2026 Specialization - v17.7 Engine) ·
 **Target `[TARGET]` Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon
 (MPS) / Intel ARC (XPU) / High-Frequency Low-Latency MT5 Engine
 
@@ -64,14 +64,16 @@ Convolutional Networks (TCN)** with a **Cross-Timeframe Multi-Head Attention
 (CT-MHA)** fusion layer and dynamic pair embeddings. By concurrently ingesting
 the Multi-Timeframe Confluence Ladder
 ($\text{M15}, \text{H1}, \text{H4}, \text{D1}$), the model decouples macro trend
-identification from high-precision intraday trigger timing. Validated across an
-**Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day anti-leakage
-embargo gap, the baseline research checkpoint demonstrates high training
-volatility prior to full convergence (Directional Accuracy 49.69%, Profit Factor
-0.99 and Sharpe Ratio -0.16; its Max Cumulative Drawdown used an invalid
-cumulative-pip measure and is withdrawn), demonstrating
-that live capital deployment remains strictly gated until reaching SOTA
-convergence targets while ONNX inference executes in sub-5ms latency.
+identification from high-precision intraday trigger timing. Training runs
+over an **Anchored 6-Fold Walk-Forward Matrix (2019–2026)** with a 14-day
+anti-leakage embargo gap. No validation epoch has produced a valid
+measurement yet: the two recorded `metrics.csv` rows are a copy of the
+registry targets and an epoch without trades (Section 4.4). Every result
+figure in this paper is therefore **not yet measured**; the figures shown in
+earlier revisions (for example Directional Accuracy 49.69%) are removed. Live
+capital deployment stays gated until measured results reach the registry
+targets. Sub-5 ms ONNX inference is a target; its latency is not yet
+measured.
 
 ---
 
@@ -88,9 +90,10 @@ different timeframes simultaneously before making an investment call:
   accidentally cheat during backtesting by peeking into future price data.
   ForexPredictor enforces strict causal convolutions and a mandatory 14-day
   embargo gap between training and testing periods.
-- **Sub-5ms Execution Latency:** Once trained, the model exports to compact ONNX
-  format, calculating buy, sell, or neutral predictions within 5 milliseconds
-  directly inside MetaTrader 5 Expert Advisors.
+- **Sub-5ms Execution Latency (Target):** Once trained, the model exports to
+  compact ONNX format and is designed to calculate buy, sell, or neutral
+  predictions within 5 milliseconds directly inside MetaTrader 5 Expert
+  Advisors. The latency is not yet measured.
 
 ### Multi-Timeframe Confluence & Risk Matrix
 
@@ -110,10 +113,10 @@ different timeframes simultaneously before making an investment call:
 
 ### 2.1 The Titan Four Asset Universe
 
-The primary production deployment focuses on the **Titan Four** core instruments
-representing over 65% of global foreign exchange and commodity spot turnover,
-while maintaining an extensible embedding table supporting up to 16 multi-asset
-classes:
+The primary production deployment focuses on the **Titan Four** core
+instruments (`TITAN_PAIRS` in `data/forex_spec.py`), three of the most liquid
+currency pairs and spot gold, while maintaining an extensible embedding table
+supporting up to 16 multi-asset classes:
 
 1. **EURUSD (Euro / US Dollar)**: Global reserve liquidity benchmark; highly
    responsive to ECB/Fed interest rate differentials and macro momentum.
@@ -144,8 +147,9 @@ pair, yielding a vastly more intelligent and resilient core brain that
 understands universal market dynamics.
 
 The 16-symbol physical manifold (`LemGendizedForexUniverseLarge`, 2019–2026)
-encapsulates 30,810,572 windowed samples across G7 currency pairs, precious
-metals, crude energy, and major equity indices:
+holds 26,818,700 rows (the training registry count of
+`LemGendizedForexUniverse`) across G7 currency pairs, precious metals, crude
+energy, and major equity indices:
 
 $$
 \mathcal{U}_{\text{universe}} = \mathcal{U}_{\text{core}} \cup \{ \text{USDCAD},
@@ -163,9 +167,9 @@ missing tensor key errors during multi-broker deployment.
 
 ### 2.3 Future Expansion Strategy (Crosses & Exotics)
 
-While the 16-symbol Foundation Model captures over 85% of global trading volume,
-extending the network into illiquid markets requires a specialized deployment
-strategy:
+While the 16-symbol Foundation Model covers the most liquid majors, metals,
+energy and indices, extending the network into illiquid markets requires a
+specialized deployment strategy:
 
 1. **Crosses Extension Model**: A dedicated model trained on secondary crosses
    (e.g., AUDCAD, NZDCHF) that are less liquid than the G7 Majors but still
@@ -351,19 +355,16 @@ $$
 \sigma_{\text{downside}} = \sqrt{\frac{1}{N} \sum_{i: R_i < 0} R_i^2}
 $$
 
-#### 4. Maximum Drawdown (Account-Percentage Anchored)
+#### 4. Maximum Drawdown (Equity Model)
 
 $$
-\text{MaxDD} = \max_{t \in [0, T]} \left( \frac{\max_{\tau \le t}
-(\text{Equity}(\tau) + \text{Base}) - (\text{Equity}(t) +
-\text{Base})}{\max_{\tau \le t} (\text{Equity}(\tau) + \text{Base})} \right)
-\times 100\%
+\text{MaxDD} = \max_{k} \left( \frac{\max_{j \le k} E_j - E_k}{\max_{j \le k}
+E_j} \right) \times 100\%
 $$
-
-where $\text{Base} = 10,000$ pips representing the initial account margin.
 
 Since Training Suite v16.9.164 and v16.9.184 the validation MaxDD is a real
-percentage of an explicit equity model instead: every trade risks the
+percentage of an explicit equity model (the older cumulative-pip measure over
+a fixed pip base is withdrawn): every trade risks the
 fraction $r$ = `evaluation.risk_per_trade` of the equity (registry, default
 0.01, valid $0 < r \le 0.05$), a win returns $TP/SL$ R and a loss $-1$ R,
 and equity compounds from 1.0, $E_{k+1} = E_k (1 + r R_k)$. MaxDD is the
@@ -372,6 +373,8 @@ a directional prediction reports no win rate, profit factor, Sharpe,
 Sortino or drawdown.
 
 #### 5. Scalar Quantitative Quality Score
+
+Before Training Suite v16.9.164 the score was (historical, no longer used):
 
 $$
 \text{Quality Score} = (\text{DirAcc} \times 1.0) + (\text{WinRate} \times 1.0)
@@ -407,25 +410,30 @@ $$
 
 $$
 \text{Mem}_{\text{peak}} = \mathcal{O}\left( B \cdot \max_{m} (L_m) \cdot
-d_{\text{model}} \right) \approx 14.2 \text{ MB per batch of 32}
+d_{\text{model}} \right)
 $$
+
+For $B = 32$, $\max_m L_m = 512$ (M1) and $d_{\text{model}} = 192$, one FP32
+activation tensor of that shape is $32 \cdot 512 \cdot 192 \cdot 4$ bytes
+$\approx 12.6$ MB. This is arithmetic for one tensor, not a measured peak; the
+measured peak memory is not yet recorded.
 
 ### 3.6 Apache Parquet Columnar Sharding & Zstandard Compression (v16.8.0)
 
 The v16.8.0 storage modernization introduces native Apache Parquet columnar
-sharding with Zstandard level 3 block compression for the 30.8M-row Forex
+sharding with Zstandard level 3 block compression for the 26.8M-row Forex
 universe:
 
 - **Footprint Reduction**: Consolidates 16 currency pairs across 6 timeframe
   tiers into contiguous annual Parquet partitions
-  (`ForexUniverse{year}.parquet`), reducing physical disk footprint from
-  $\sim 738\text{ GB}$ to $\sim 5.2\text{ GB}$ ($143\times$ compression factor,
-  $99.3\%$ space recovery).
+  (`ForexUniverse{year}.parquet`). The footprint figures are owned by the
+  [Dataset Compiler paper](./PAPER_DATASET_COMPILER.md) (Section 2.1) and are
+  not repeated or re-measured here.
 - **Cluster Slack Elimination**: Eliminates thousands of loose `.npy` sliding
   window files, eradicating NTFS 4KB cluster slack allocation waste.
 - **Zero-Copy Columnar Ingestion**: Employs `pyarrow.parquet` with LRU row-group
-  caching, enabling sub-microsecond batch tensor recovery ($<1\mu\text{s}$)
-  directly into contiguous memory buffers.
+  caching for batch tensor recovery directly into contiguous memory buffers
+  (recovery latency not yet measured).
 
 This minimal memory complexity allows real-time evaluation on consumer hardware
 and low-latency edge deployment.
@@ -464,7 +472,7 @@ $$
   Stochastic Depth)
 - **Embedding Dimension ($d_{\text{model}}$)**: 192
 - **Attention Heads**: 6
-- **Parameters**: 2.75M FP32 Parameters (~11 MB)
+- **Parameters**: 2.75M FP32 Parameters (~11 MB; registry `parameters_m`)
 - **Primary Checkpoint**: `[CURRENT]` `ForexPredictorWeights_FP32.pth`
 - **ONNX Export**: `ForexPredictor.onnx` (opset 18, FP16 graph with FP32
   inputs and outputs, IR 9, embedded weights for MetaTrader 5)
@@ -473,9 +481,9 @@ $$
 
 - **Dataset Identifier**: `LemGendizedForexUniverseLarge` (Unified 16-Symbol
   Financial Foundation Manifold)
-- **Total Physical Samples**: 30,810,572 windowed sequences (2019–2026) across
-  16 symbols and 6 timeframe rungs
-- **Windowed Subsets**: 428,940 core windowed sequences per training epoch fraction
+- **Total Physical Samples**: 26,818,700 rows (2019–2026) across 16 symbols
+  and 6 timeframe rungs (training registry
+  `_registry_metadata.datasets.LemGendizedForexUniverse.count`)
 - **Broker Symbol Aliases**: `NAS100` $\leftrightarrow$ `USTEC`, `DE40`
   $\leftrightarrow$ `GER40`
 - **Normalized Features (14)**: Open, High, Low, Close, Tick Volume, RSI (14),
@@ -484,39 +492,71 @@ $$
 
 ### 4.4 Performance Metrics
 
-- **Direction Accuracy**: Baseline (LSTM): 52.10%; Transformer (Vanilla):
-  55.40%; LemGendary ForexPredictor (SOTA): **49.69%**; Target: $> 60.00\%$
-- **Trade Win Rate**: Baseline (LSTM): 49.30%; Transformer (Vanilla): 52.20%;
-  LemGendary ForexPredictor (SOTA): **49.69%**; Target: $> 56.00\%$
-- **Profit Factor**: Baseline (LSTM): 1.18; Transformer (Vanilla): 1.42;
-  LemGendary ForexPredictor (SOTA): **0.99**; Target: $> 1.85$
-- **Sharpe Ratio**: Baseline (LSTM): 0.94; Transformer (Vanilla): 1.35;
-  LemGendary ForexPredictor (SOTA): **-0.16**; Target: $> 2.10$
-- **Sortino Ratio**: Baseline (LSTM): 1.12; Transformer (Vanilla): 1.68;
-  LemGendary ForexPredictor (SOTA): **-0.18**; Target: $> 2.50$
-- **Max Drawdown**: Baseline (LSTM): 14.80%; Transformer (Vanilla): 11.20%;
-  LemGendary ForexPredictor (SOTA): **withdrawn** (invalid cumulative-pip
-  measure); Target: $< 6.50\%$
-- **TP MAE (pips)**: Baseline (LSTM): 18.40; Transformer (Vanilla): 14.60;
-  LemGendary ForexPredictor (SOTA): **615.42**; Target: $< 12.00$
-- **SL MAE (pips)**: Baseline (LSTM): 16.20; Transformer (Vanilla): 12.80;
-  LemGendary ForexPredictor (SOTA): **617.95**; Target: $< 10.00$
-- **Quality Score**: Baseline (LSTM): 98.42; Transformer (Vanilla): 125.64;
-  LemGendary ForexPredictor (SOTA): **105.87**; Target: $> 150.00$
+**Status: not yet measured.** The owner's Forex `metrics.csv` holds two rows,
+and neither is a valid measurement:
 
-*\*Drawdown Metric Convention Note:* The Max Drawdown reported earlier
-(665.80%) is withdrawn: it was the old cumulative-pip measure, not a
-percentage of equity (Section 3.4 describes the equity model). It reflected
-the cumulative leveraged equity decline
-($100 \times \text{Cumulative Loss} / \text{Initial Margin}$) across
-unconstrained Walk-Forward test windows without simulated broker margin
-stop-out, modeling raw unhedged model conviction rather than capital-managed
-execution. Production deployment targets require $\text{Max Drawdown} < 6.50\%$
-with mandatory stop-loss risk governors.
+- **Row 1 (fold 1, epoch 1)** equals the registry `sota_targets` digit for
+  digit (58.5 / 56 / 1.65 / 1.85 / 2.1 / 12 / 12.5 / 12.5) with
+  `Quality_Score` = 100 − `Val_Loss` (99.7291). No committed version of the
+  validation code writes such a row; since Training Suite v16.9.164 a row
+  whose target columns equal the targets is skipped.
+- **Row 2 (fold 1, epoch 2)** opened no trade: `WinRate` equals `DirAcc`,
+  Sharpe and Sortino are pinned at −5 and MaxDD at 100 by clips that
+  v16.9.164 removed. Since v16.9.164 such an epoch reports no trade metrics
+  and never becomes `best.pth`.
+
+The result figures of earlier revisions (Direction Accuracy and Win Rate
+49.69%, Profit Factor 0.99, Sharpe −0.16, Sortino −0.18, TP MAE 615.42, SL MAE
+617.95, Quality Score 105.87, the withdrawn 665.80% drawdown) and the LSTM and
+vanilla Transformer comparison columns have no backing measurement or source
+and are removed. The targets below are the registry `sota_targets` of
+`forex_predictor` (`unified_models_v2.yaml`):
+
+- **Direction Accuracy**: Measured: not yet measured; Target: 58.5%
+  (higher is better)
+- **Trade Win Rate**: Measured: not yet measured; Target: 56.0% (higher is
+  better)
+- **Profit Factor**: Measured: not yet measured; Target: 1.65 (higher is
+  better)
+- **Sharpe Ratio**: Measured: not yet measured; Target: 1.85 (higher is
+  better)
+- **Sortino Ratio**: Measured: not yet measured; Target: 2.1 (higher is
+  better)
+- **Max Drawdown (equity model, 1% risk)**: Measured: not yet measured;
+  Target: 12.0% (lower is better)
+- **TP MAE (pips)**: Measured: not yet measured; Target: 12.5 (lower is
+  better)
+- **SL MAE (pips)**: Measured: not yet measured; Target: 12.5 (lower is
+  better)
+- **Quality Score**: Measured: not yet measured; Target: the weighted score
+  of the targets above (Section 3.4), not a separate fixed number
+
+#### 4.4.1 What a Valid Measured Run Must Produce
+
+A Forex result may be reported here only when it comes from a run that:
+
+1. Writes `metrics.csv` with Training Suite v16.9.184 or later (equity-model
+   MaxDD at `evaluation.risk_per_trade`, score scheme
+   `forex_weighted_targets_v2_risk0.01`), from a completed validation epoch
+   on the walk-forward validation window of a named fold.
+2. Has target columns that are measured values, not a copy of the registry
+   targets (such rows are skipped by the engine).
+3. Opened at least one trade, so win rate, profit factor, Sharpe, Sortino and
+   MaxDD are present; an empty cell means not measured and is reported as
+   such, never as 0 or as the target.
+4. Has a finite `Quality_Score` and a matching checkpoint (`best.pth` or a
+   vault checkpoint) whose governor state records the score scheme id.
+5. Names the fold, the epoch, the active timeframes and pairs, and the code
+   version, so that the row can be traced.
+
+Latency figures additionally need a committed benchmark (device, runtime,
+batch size, number of runs, mean and P95).
 
 ### 4.5 Training Curve
 
-![Forex Training Curves](../assets/forex_training_curve_v2.png)
+No training curve is shown: no measured epoch exists yet. The earlier chart
+was not drawn from a valid measurement and is withdrawn. A new chart will plot
+every completed epoch of a valid run's `metrics.csv`.
 
 ### 4.6 Model Specific Issues and Optimizations
 
@@ -565,40 +605,37 @@ with mandatory stop-loss risk governors.
    Execution (v17.7)**: Resolves GPU data starvation (0% utilization) and
    Windows multiprocessing pagefile thrashing. The data pipeline precomputes
    cross-timeframe temporal alignment matrices in vector space ($O(1)$ integer
-   index lookup replacing $35\text{M}$ individual $O(\log N)$ binary searches
-   per epoch). Physical batch sizes scale dynamically by GPU VRAM tier ($256$ on
-   4GB GTX 1650 to maximize memory-sentinel headroom). Uniform chronological
-   striding represents all 16 symbols proportionally at early curriculum
-   fractions ($15\%$), and Windows multiprocessing is strictly gated to
+   index lookup replacing one $O(\log N)$ binary search per sample and
+   timeframe). Physical batch sizes follow the Forex VRAM tiers of
+   `training/hardware/probe.py` (256 from 20 GB, 128 from 12 GB, 64 from
+   6 GB, 32 from 3.2 GB of total VRAM, so a 4GB GTX 1650 runs batch 32).
+   Uniform chronological striding represents all 16 symbols proportionally at
+   reduced fractions, and Windows multiprocessing is strictly gated to
    in-process execution (`num_workers=0`), eliminating child process memory
-   duplication (dropping RAM from $53\text{ GB}$ committed down to
-   $1.1\text{ GB}$) and accelerating batch throughput by $12.5\times$ while
-   reducing single-epoch training iterations by $28\times$. Checkpoint
+   duplication. The RAM, throughput and iteration savings are not yet
+   measured; the figures of earlier revisions are removed. Checkpoint
    resumption enforces curriculum fraction overrides to prevent legacy $100\%$
    fraction resurrected states from diluting early-epoch convergence.
 
 ### 4.7 Consolidated SOTA Benchmarks
 
-- **EURUSD**: Direction Accuracy: 79.15%; Win Rate: 69.40%; Profit Factor: 2.26;
-  Sharpe Ratio: 2.62; Max Drawdown: 9.85%
-- **GBPUSD**: Direction Accuracy: 78.80%; Win Rate: 68.70%; Profit Factor: 2.18;
-  Sharpe Ratio: 2.51; Max Drawdown: 9.20%
-- **USDJPY**: Direction Accuracy: 77.90%; Win Rate: 67.80%; Profit Factor: 2.08;
-  Sharpe Ratio: 2.38; Max Drawdown: 9.40%
-- **XAUUSD (Gold)**: Direction Accuracy: 77.75%; Win Rate: 66.60%; Profit
-  Factor: 2.04; Sharpe Ratio: 2.29; Max Drawdown: 9.27%
-- **Mean Universe**: Direction Accuracy: **49.69%**; Win Rate: **49.69%**;
-  Profit Factor: **0.99**; Sharpe Ratio: **-0.16**; Max Drawdown:
-  **withdrawn**
+Not yet measured, for every pair and for the universe mean. The per-pair
+figures of earlier revisions (EURUSD, GBPUSD, USDJPY and XAUUSD direction
+accuracy 77.75% to 79.15%, win rate 66.60% to 69.40%, profit factor 2.04 to
+2.26, Sharpe 2.29 to 2.62, drawdown 9.20% to 9.85%) and the universe mean
+(49.69%) have no backing measurement and are removed. Per-pair results will be
+listed once a valid run (Section 4.4.1) reports them.
 
 ### 4.8 Training Process Analysis
 
-The Smart Governor expands the dataset fraction from 15% to 100% across the
-Walk-Forward matrix while advancing through the Timeframe Confluence Ladder
+The Smart Governor keeps the sample fraction at 1.0 (registry
+`initial_fraction: 1.0`, `fraction_increment: 0.0`) across the Walk-Forward
+matrix while advancing through the Timeframe Confluence Ladder
 ($\text{H1}+\text{H4} \rightarrow \text{M15}+\text{H1}+\text{H4}+\text{D1}$).
-Across 250 epochs, learning rate cooling ($10^{-4} \rightarrow 10^{-6}$) and
-stochastic weight averaging (SWA at 70% progress) ensure that the weights
-converge to broad, noise-resilient minima.
+The learning rate starts at $10^{-4}$ (registry `learning_rate`) and is cooled
+by the governor (`cooling_factor: 0.85`); stochastic weight averaging starts
+at 70% of progress (`swa_start_pct: 0.7`). Whether the weights converge is not
+yet measured.
 
 #### 4.8.1 Walk-Forward Curriculum Expansion
 
@@ -647,7 +684,7 @@ fold's launch. It then dynamically scales the next fold's target (e.g.,
 `current_epoch + epochs_per_fold`), ensuring no future folds are starved of
 their intended training cycles due to previous resiliency extensions.
 
-To optimize storage and training throughput, the 30.8M sample physical manifold
+To optimize storage and training throughput, the 26.8M-row physical manifold
 is packaged into a unified dataset:
 
 - `LemGendizedForexUniverseLarge`
@@ -722,27 +759,32 @@ $$
 \tilde{y}_{\text{sl}} = y_{\text{sl}} + \delta_{\text{spread}}
 $$
 
-where $\delta_{\text{spread}} = 1.5 \text{ pips}$ for majors and
-$3.0 \text{ pips}$ for gold.
+where $\delta_{\text{spread}}$ is the governor's stress value in pips (the
+`Stress` column of `metrics.csv`, default 0) divided by the pair's
+`PAIR_PIP_SCALE` (`data/forex_dataset.py`). The code has no fixed per-asset
+spread value.
 
 ### 5.4 Risk-Adjusted Position Sizing via Fractional Kelly
 
-Live execution utilizes the Fractional Kelly Criterion ($f^* = 0.25 \cdot K$):
+Proposed, not implemented: the generated Expert Advisor sizes lots from
+`RiskPct` (Section 6.3), not from a Kelly rule. A Fractional Kelly Criterion
+($f^* = 0.25 \cdot K$) would use:
 
 $$
 K = \frac{p \cdot b - (1 - p)}{b}
 $$
 
 where $p = \text{Win Rate}$,
-$b = \frac{\mathbb{E}[\text{TP}]}{\mathbb{E}[\text{SL}]}$. This guarantees
-asymptotic capital growth while eliminating risk of ruin.
+$b = \frac{\mathbb{E}[\text{TP}]}{\mathbb{E}[\text{SL}]}$. It needs a measured
+win rate and payoff ratio, which do not exist yet (Section 4.4).
 
 ### 5.5 Sub-5ms Real-Time Inference Deployment
 
-Benchmarked across 100 consecutive forward passes, the PyTorch/ONNX engine
-delivers an average inference latency of **1.42 ms** (P95: **2.18 ms**),
-exceeding the $<5.0 \text{ ms}$ high-frequency trading threshold by over
-$3\times$.
+The $<5.0 \text{ ms}$ inference latency is a target. It is not yet measured:
+the 1.42 ms average and 2.18 ms P95 of earlier revisions have no committed
+benchmark behind them and are removed. A valid figure names the device, the
+runtime (PyTorch or ONNX Runtime), the batch size, the number of runs, and the
+mean and P95.
 
 ---
 
@@ -750,21 +792,22 @@ $3\times$.
 
 ### 6.1 Stateless ONNX Model Export `[THEORETICAL]`
 
-The trained model is exported to ONNX format with static tensor dimensions:
+The trained model is exported to ONNX format with one static input matrix per
+active timeframe $m$, $L_m$ bars (Section 2.4) by 14 features, plus the pair
+index:
 
 $$
-\mathbf{X}_{15} \in \mathbb{R}^{1 \times 192 \times 10}, \quad \mathbf{X}_{60}
-\in \mathbb{R}^{1 \times 168 \times 10}, \quad \mathbf{X}_{240} \in
-\mathbb{R}^{1 \times 90 \times 10}, \quad \mathbf{X}_{1440} \in \mathbb{R}^{1
-\times 252 \times 10}
+\mathbf{X}_{m} \in \mathbb{R}^{1 \times L_m \times 14}, \quad \text{e.g.}
+\quad \mathbf{X}_{15} \in \mathbb{R}^{1 \times 192 \times 14}, \quad
+\mathbf{X}_{1440} \in \mathbb{R}^{1 \times 252 \times 14}
 $$
 
 ### 6.2 Automated Real-Time Tick Ingestion
 
-The MetaTrader 5 Expert Advisor (`LemGendary_Trader.mq5`) queries the ONNX model
-upon every bar close. If directional probability $P(\text{BUY}) > 0.65$ or
-$P(\text{SELL}) > 0.65$, orders are submitted with exact predicted TP/SL
-boundaries.
+The generated MetaTrader 5 Expert Advisor (`LemGendaryForexEA.mq5`, Section
+6.3) queries the ONNX model upon every bar close. If directional probability
+$P(\text{BUY})$ or $P(\text{SELL})$ reaches `MinConfidence` (default 0.65),
+orders are submitted with the predicted TP/SL boundaries.
 
 ### 6.3 Generated MQL5 Expert Advisor & MT5 Artefact (v16.9.185, v16.9.192)
 
@@ -788,33 +831,29 @@ compiled in MetaEditor or run in the Strategy Tester (owner check).
 
 ## 7. SOTA Architectural Performance Matrix
 
-- **ForexPredictor**: Task: FX & Gold Prediction; Dir Acc (%): **49.69%**
-  `[MEASURED]`; Win Rate (%): **49.69%**; Profit Factor: **0.99**; Sharpe:
-  **-0.16**; MaxDD (%): **withdrawn**; Quality Score: **105.87**
-- **NAFNet Deblurring**: Task: Deblurring; Dir Acc (%): 32.85 dB (PSNR); Win
-  Rate (%): 0.942 (SSIM); Profit Factor: —; Sharpe: —; MaxDD (%): —; Quality
-  Score: 51.69
-- **NAFNet Denoising**: Task: Denoising; Dir Acc (%): 38.40 dB (PSNR); Win Rate
-  (%): 0.968 (SSIM); Profit Factor: —; Sharpe: —; MaxDD (%): —; Quality Score:
-  57.76
-- **MPRNet Deraining**: Task: Deraining; Dir Acc (%): 33.12 dB (PSNR); Win Rate
-  (%): 0.948 (SSIM); Profit Factor: —; Sharpe: —; MaxDD (%): —; Quality Score:
-  52.08
-- **NIMA Aesthetic**: Task: Aesthetic Scoring; Dir Acc (%): 0.724 (SRCC); Win
-  Rate (%): 0.718 (PLCC); Profit Factor: —; Sharpe: —; MaxDD (%): —; Quality
-  Score: 72.10
+- **ForexPredictor**: Task: FX & Gold Prediction; Dir Acc (%): not yet
+  measured (target 58.5); Win Rate (%): not yet measured (target 56.0);
+  Profit Factor: not yet measured (target 1.65); Sharpe: not yet measured
+  (target 1.85); MaxDD (%): not yet measured (target 12.0); Quality Score: not
+  yet measured
+
+The figures of earlier revisions (Dir Acc 49.69% marked `[MEASURED]`, Quality
+Score 105.87) are removed, as are the restoration and aesthetic rows (NAFNet
+deblurring 32.85 dB, NAFNet denoising 38.40 dB, MPRNet deraining 33.12 dB,
+NIMA SRCC 0.724), which had no backing measurement here. Each of those models
+reports its own metrics in its own paper.
 
 ---
 
 ## 8. Conclusion
 
-The **LemGendary ForexPredictor** sets a new standard for quantitative deep
-learning in foreign exchange and commodity trading. By combining multi-timeframe
-causal dilated convolutions with cross-temporal attention fusion and 6-fold
-walk-forward validation, the model achieves superior risk-adjusted returns while
-eliminating future lookahead bias. The lightweight stateless architecture
-guarantees sub-5ms deployment readiness for live MetaTrader 5 algorithmic
-execution.
+The **LemGendary ForexPredictor** combines multi-timeframe causal dilated
+convolutions with cross-temporal attention fusion and 6-fold walk-forward
+validation, and is built to avoid future lookahead bias. Whether it reaches
+the registry targets for risk-adjusted returns is not yet measured: no valid
+validation epoch exists (Section 4.4). The lightweight stateless architecture
+targets sub-5ms inference for live MetaTrader 5 algorithmic execution; the
+latency is not yet measured.
 
 ### Quantitative Financial Foundation Innovations (v17.1–v17.6)
 
@@ -841,7 +880,7 @@ execution.
   `metrics.csv`, and strictly isolate all checkpoints into
   `LemGendaryModels/<model>/checkpoints/`.
 - **16-Symbol Forex Universe & Timeframe Dropout Regularizer (v17.6)**:
-  Ingestion of `LemGendizedForexUniverseLarge` (30.8M samples across 2019–2026)
+  Ingestion of `LemGendizedForexUniverseLarge` (26.8M rows across 2019–2026)
   with expanding-window 6-fold WFCV, broker symbol aliasing (`NAS100`
   $\leftrightarrow$ `USTEC`, `DE40` $\leftrightarrow$ `GER40`), and stochastic
   timeframe masking ($p=0.15$) to prevent high-frequency noise co-adaptation.
@@ -851,6 +890,7 @@ execution.
 - [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedForexUniverse`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training
+  Panel Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)
