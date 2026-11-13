@@ -1934,7 +1934,8 @@ shard modification times changed on upload.
 
 ### 2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings & Export Probe (v16.9.216 to v16.9.222)
 
-Fixes from Kaggle runs 4 and 5 of `upn_v2`.
+Fixes from Kaggle runs 4 and 5 of `upn_v2`, and the measured registry
+parameter counts.
 
 - **Known Issue in Past Runs, Fixed in v16.9.216 (Manifold Dedupe)**:
   Kaggle runs before v16.9.216 saw every train and validation sample twice
@@ -1977,6 +1978,25 @@ Fixes from Kaggle runs 4 and 5 of `upn_v2`.
   `PROBE_DEVICE` (the CPU) before comparing (`compare_outputs` in
   `training/export/dynamo_onnx.py`); the tolerance is unchanged. The fix is
   not yet confirmed by a rerun on Kaggle.
+- **Measured Parameter Counts (v16.9.221)**: `parameters_m` in
+  `unified_models_v2.yaml` was not measured; `retinaface` said 27.2 M for a
+  935,663-parameter network. Every value is now the parameter count of the
+  model the code builds on the CPU from the registry (millions, 4 decimals),
+  and a test pins each value to the instantiated model; `yolov8n` is counted
+  from Ultralytics `yolov8n.yaml` (3,157,200), and `ai_helper_lemgend` (a
+  fine-tuned external base) has no value. Old to measured, in millions:
+  `forex_predictor` 2.75 to 3.5358; `nima_aesthetic_mobile` 2.3 to 1.0773;
+  `nima_aesthetic_efficientnet` 21.5 to 20.5080; `nima_aesthetic_pro` 86.8
+  to 27.5887; `nima_technical` 2.3 to 20.5080; `nima_authenticity` 4.1 to
+  20.1903; `upn_v2` 88.5 to 0.9287; `film_restorer` 17.1 to 0.6321;
+  `codeformer` 38.6 to 4.4114; `parsenet` 12.4 to 1.1085; `ffanet_indoor`
+  and `ffanet_outdoor` 4.5 to 1.8196; `mirnet_lowlight` and
+  `mirnet_exposure` 31.8 to 0.0387; `mprnet_deraining` 20.1 to 0.0046
+  (4,582 parameters); `nafnet_debluring` and `nafnet_denoising` 17.1 to
+  4.4921; `yolov8n` 3.2 to 3.1572; `professional_multitask_restoration` 42.0
+  to 0.7277; `ultrazoom` 24.3 to 0.0268; `universal_nsfw_classification` 4.1
+  to 20.1839; `retinaface` 27.2 to 0.9357. The model papers state the
+  measured counts.
 - **Run 5 (v16.9.221)**: train index built in 440.3 s on 16 threads, each
   log line once, resumed after the 2042 steps of run 4, epoch 1 completed
   with `latest.pth`, the session deadline honoured and the publish step

@@ -1034,7 +1034,7 @@ weights (v2.10.55).
 4. **Neural Architecture Backbone Row**: Displays network architecture type
    (`Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention)`).
 5. **Trainable Parameters Metric Row**: Displays total parameter allocation
-   across backbone and attention heads (`2.75 M`).
+   across backbone and attention heads (`3.5358 M`).
 6. **Task Category Metric Row**: Displays registered domain classification
    (`forex`).
 7. **Completed Epochs Counter Row**: Reports cumulative trained epochs recorded

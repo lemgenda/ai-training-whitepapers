@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.113-STABLE",
+  "document_baseline": "v16.9.114-STABLE",
   "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
@@ -322,7 +322,7 @@
       "html_path": "papers/mirnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_MIRNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -332,7 +332,7 @@
       "html_path": "papers/mprnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_MPRNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -342,7 +342,7 @@
       "html_path": "papers/nafnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_NAFNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -362,7 +362,7 @@
       "html_path": "papers/nima-efficientnet.html",
       "md_path": "MD-Papers/PAPER_NIMA_EFFICIENTNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -382,7 +382,7 @@
       "html_path": "papers/nima-mobile.html",
       "md_path": "MD-Papers/PAPER_NIMA_MOBILE.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -392,7 +392,7 @@
       "html_path": "papers/nima-pro.html",
       "md_path": "MD-Papers/PAPER_NIMA_PRO.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {

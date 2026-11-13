@@ -472,7 +472,8 @@ $$
   Stochastic Depth)
 - **Embedding Dimension ($d_{\text{model}}$)**: 192
 - **Attention Heads**: 6
-- **Parameters**: 2.75M FP32 Parameters (~11 MB; registry `parameters_m`)
+- **Parameters**: 3.5358M FP32 Parameters (~14 MB; registry `parameters_m`,
+  measured from the code since Training Suite v16.9.221)
 - **Primary Checkpoint**: `[CURRENT]` `ForexPredictorWeights_FP32.pth`
 - **ONNX Export**: `ForexPredictor.onnx` (opset 18, FP16 graph with FP32
   inputs and outputs, IR 9, embedded weights for MetaTrader 5)

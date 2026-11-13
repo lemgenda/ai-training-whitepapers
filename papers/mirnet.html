@@ -135,7 +135,8 @@ overexposed photography.</p>
 <section id="sec-3-shared-foundations">
 <h2>3. Shared Foundations</h2>
 <h3 id="sec-31-hardware-aware-infrastructure-universal-acceleration">3.1 Hardware-Aware Infrastructure: Universal Acceleration</h3>
-<p>Training massive architectures like MIRNet (31M+ parameters) at high resolutions
+<p>Training restoration architectures like MIRNet v2 (0.0387M parameters as built
+by the registry, 38.7k) at high resolutions
 requires absolute synchronization on multi-GPU Kaggle environments and
 constrained local hardware.</p>
 <h4 id="the-headroom-aware-memory-sentinel">The Headroom-Aware Memory-Sentinel</h4>
@@ -289,7 +290,7 @@ Viability: Highly Optimal</li>
 Footprint (1080p): ~ 14 GB; PSNR Target: ~32.4dB; Perceptual Integrity
 (LPIPS): 0.05 (VGG); WebGPU Viability: Highly Degraded (Opset)</li>
 <li><strong>LemGendary MIRNet v2</strong>: Paradigm: <em>Multi-Scale Gating (Ours)</em>; Parameters:
-<strong>31M</strong>; GPU Footprint (1080p): <strong>~ 11 GB</strong>; PSNR Target: <strong>~33.8dB+</strong>;
+<strong>0.0387M</strong>; GPU Footprint (1080p): <strong>~ 11 GB</strong>; PSNR Target: <strong>~33.8dB+</strong>;
 Perceptual Integrity (LPIPS): <strong>&lt; 0.08 (VGG)</strong>; WebGPU Viability: <strong>Production
 Grade</strong></li>
 </ul>

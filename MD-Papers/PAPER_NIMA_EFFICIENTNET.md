@@ -26,7 +26,7 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 The **NIMA Aesthetic EfficientNetV2-S Architecture** is a dedicated neural
 evaluation engine engineered for precise visual quality assessment. Operating on
 the compiled manifold `LemGendizedNimaAesthetic`, it
-leverages **EfficientNetV2-S (21.5M Parameters)** to predict continuous perceptual
+leverages **EfficientNetV2-S (20.508M Parameters)** to predict continuous perceptual
 distributions rather than simplistic scalar scores. By formulating evaluation as
 an Earth Mover's Distance (EMD) and Soft-Spearman rank optimization problem,
 this model captures subtle perceptual judgments with verified mathematical
@@ -99,7 +99,7 @@ automated training loss gating, and desktop studio review.
 
 #### 4.2 Model Info
 
-* **Architecture**: EfficientNetV2-S (21.5M Parameters)
+* **Architecture**: EfficientNetV2-S (20.508M Parameters)
 * **Input Resolution**: 384x384
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 11.2ms on NVIDIA GTX 1650 `[MEASURED]`

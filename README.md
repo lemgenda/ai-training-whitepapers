@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.113`
+**Version**: `v16.9.114`
 
 ---
 
@@ -61,6 +61,31 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.114 - Measured Model Parameter Counts
+
+* Training Suite v16.9.221 measures `parameters_m` in
+  `unified_models_v2.yaml` from the code. The papers now state those counts
+  (old value, then measured, in millions):
+  * `PAPER_FOREX_PREDICTOR.md` Section 4.1 and `MANUAL_AI_STUDIO_GUI.md`
+    (model card example): `forex_predictor` 2.75 to 3.5358 (about 14 MB in
+    FP32, was about 11 MB).
+  * `PAPER_NIMA_MOBILE.md`: MobileNetV3-Small model 2.5 to 1.0773.
+  * `PAPER_NIMA_EFFICIENTNET.md`: EfficientNetV2-S model 21.5 to 20.508.
+  * `PAPER_NIMA_PRO.md`: Swin-v2-T model 28.3 to 27.5887.
+  * `PAPER_LEMGENDARY_MIRNET.md`: MIRNet v2 31 (and "31M+" in Section 3.1)
+    to 0.0387.
+  * `PAPER_LEMGENDARY_MPRNET.md`: the "Ours" row 17 to 0.0046.
+  * `PAPER_LEMGENDARY_NAFNET.md`: the "Ours" row 17 to 4.4921.
+  * The published-baseline rows (DnCNN, U-Net, MIRNet, Restormer) and the
+    SOTA target rows describe other models and are unchanged.
+* `PAPER_TRAINING_SUITE.md` Section 2.47 lists every registry model's old
+  and measured count (for example `retinaface` 27.2 to 0.9357, `upn_v2` 88.5
+  to 0.9287, `mprnet_deraining` 20.1 to 0.0046). The RetinaFace paper
+  already stated 935,663. The capability registries hold no parameter
+  counts.
+* Every changed page mirrors its Markdown. `manifest/documents.json`: the
+  changed papers are audited 2026-11-13.
 
 ### v16.9.113 - Training Suite v16.9.216 to v16.9.222 Kaggle Run Fixes
 

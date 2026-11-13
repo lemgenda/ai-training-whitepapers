@@ -1924,7 +1924,8 @@ indexed the <code>upn_v2</code> train split in 440.3 s on 16 threads.</li>
 <li><strong>Dependency</strong>: <code>filelock</code> is declared (already installed with torch).</li>
 </ul>
 <h3 id="sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169222">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.222)</h3>
-<p>Fixes from Kaggle runs 4 and 5 of <code>upn_v2</code>.</p>
+<p>Fixes from Kaggle runs 4 and 5 of <code>upn_v2</code>, and the measured registry
+parameter counts.</p>
 <ul>
 <li><strong>Known Issue in Past Runs, Fixed in v16.9.216 (Manifold Dedupe)</strong>:
 Kaggle runs before v16.9.216 saw every train and validation sample twice
@@ -1966,6 +1967,25 @@ ONNX Runtime's CPU outputs. The probe now moves both sides to
 <code>PROBE_DEVICE</code> (the CPU) before comparing (<code>compare_outputs</code> in
 <code>training/export/dynamo_onnx.py</code>); the tolerance is unchanged. The fix is
 not yet confirmed by a rerun on Kaggle.</li>
+<li><strong>Measured Parameter Counts (v16.9.221)</strong>: <code>parameters_m</code> in
+<code>unified_models_v2.yaml</code> was not measured; <code>retinaface</code> said 27.2 M for a
+935,663-parameter network. Every value is now the parameter count of the
+model the code builds on the CPU from the registry (millions, 4 decimals),
+and a test pins each value to the instantiated model; <code>yolov8n</code> is counted
+from Ultralytics <code>yolov8n.yaml</code> (3,157,200), and <code>ai_helper_lemgend</code> (a
+fine-tuned external base) has no value. Old to measured, in millions:
+<code>forex_predictor</code> 2.75 to 3.5358; <code>nima_aesthetic_mobile</code> 2.3 to 1.0773;
+<code>nima_aesthetic_efficientnet</code> 21.5 to 20.5080; <code>nima_aesthetic_pro</code> 86.8
+to 27.5887; <code>nima_technical</code> 2.3 to 20.5080; <code>nima_authenticity</code> 4.1 to
+20.1903; <code>upn_v2</code> 88.5 to 0.9287; <code>film_restorer</code> 17.1 to 0.6321;
+<code>codeformer</code> 38.6 to 4.4114; <code>parsenet</code> 12.4 to 1.1085; <code>ffanet_indoor</code>
+and <code>ffanet_outdoor</code> 4.5 to 1.8196; <code>mirnet_lowlight</code> and
+<code>mirnet_exposure</code> 31.8 to 0.0387; <code>mprnet_deraining</code> 20.1 to 0.0046
+(4,582 parameters); <code>nafnet_debluring</code> and <code>nafnet_denoising</code> 17.1 to
+4.4921; <code>yolov8n</code> 3.2 to 3.1572; <code>professional_multitask_restoration</code> 42.0
+to 0.7277; <code>ultrazoom</code> 24.3 to 0.0268; <code>universal_nsfw_classification</code> 4.1
+to 20.1839; <code>retinaface</code> 27.2 to 0.9357. The model papers state the
+measured counts.</li>
 <li><strong>Run 5 (v16.9.221)</strong>: train index built in 440.3 s on 16 threads, each
 log line once, resumed after the 2042 steps of run 4, epoch 1 completed
 with <code>latest.pth</code>, the session deadline honoured and the publish step
