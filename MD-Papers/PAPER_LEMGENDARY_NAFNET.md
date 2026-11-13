@@ -772,7 +772,7 @@ industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants
   Footprint (1080p): ~ 14 GB; PSNR: ~32.4dB; Perceptual Integrity (LPIPS): 0.05
   (VGG); WebGPU Viability: Highly Degraded (Opset); Status & Verification:
   Baseline `[MEASURED]`
-- **LemGendary NAFNet**: Paradigm: *SCA SimpleGate (Ours)*; Parameters: **17M**;
+- **LemGendary NAFNet**: Paradigm: *SCA SimpleGate (Ours)*; Parameters: **4.4921M**;
   GPU Footprint (1080p): **~ 6 GB**; PSNR: **~32.5dB+**; Perceptual Integrity
   (LPIPS): **< 0.06 (VGG)**; WebGPU Viability: **Production Grade**; Status &
   Verification: **LemGendary `[MEASURED]`**

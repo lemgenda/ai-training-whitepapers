@@ -1,8 +1,9 @@
 {
-  "description": "Known MD/HTML parity drift. Recorded on 2026-11-03 (docs v16.9.70) with 88 entries; all entries were resolved in v16.9.71 to v16.9.77 (pages on the approved template, MD/HTML pairs resynchronized), so the backlog is empty and every audit finding fails. scripts/audit_docs.py reports listed entries as backlog and fails a listed entry with no finding left as stale. Never add entries to hide new drift.",
+  "description": "Known drift scheduled for a later phase. Recorded on 2026-11-03 (docs v16.9.70) with 88 MD/HTML parity entries, all resolved in v16.9.71 to v16.9.77. From v16.9.91 to v16.9.95 one entry waited for the LemGendary Model Training Suite documentation sync (runtime_engine_baseline); audit plan Phase 5b (v16.9.96) resolved it, so the backlog is empty. scripts/audit_docs.py reports listed entries as backlog and fails a listed entry with no finding left as stale. Never add entries to hide new drift.",
   "backlog": {
     "heading-parity": [],
     "template": [],
-    "text-similarity": []
+    "text-similarity": [],
+    "component-versions": []
   }
 }

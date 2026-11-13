@@ -2,8 +2,8 @@
 
 ## Category 07 QUALITY | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
-3.2.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14) · **Target Hardware**:
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Paper Revision**:
+3.3.0 - Governor v18 SRCC Dynamic Protocol (2026-08-14) · **Target Hardware**:
 NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 ---
@@ -121,6 +121,8 @@ NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
   - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
   - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
   - [5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud Engine](#549-universal-post-training-target-audit--headless-kaggle-cloud-engine)
+  - [5.50 Temperature 1, Paper EMD, Soft Logit Cap & Post-Hoc Calibration
+    (v16.9.162, v16.9.186)](#550-temperature-1-paper-emd-soft-logit-cap--post-hoc-calibration-v169162-v169186)
 - [6. Deployment Strategy: Why ONNX?](#6-deployment-strategy-why-onnx)
   - [6.1 Format Comparison Matrix](#61-format-comparison-matrix)
   - [6.2 Why ONNX Wins for LemGendary](#62-why-onnx-wins-for-lemgendary)
@@ -233,6 +235,9 @@ fluctuation.
 $$
 Loss_{Resonance} = Loss_{EMD(Temperature=0.1)}
 $$
+
+Superseded since Training Suite v16.9.186: NIMA models train at temperature
+1 with the paper EMD and a soft logit cap (Section 5.50).
 
 #### 3.1.3 The Resonance Coefficient Selection (0.15 Weighting)
 
@@ -1329,6 +1334,30 @@ audit. It reports metric gaps against `sota_targets` and allows seamless
 escalation to high-VRAM Kaggle Cloud instances (Tesla T4 x2 / 16GB) via
 `kaggle_cloud_manager.py`, unlocking batch size 16–32 training with zero manual
 web configuration.
+
+### 5.50 Temperature 1, Paper EMD, Soft Logit Cap & Post-Hoc Calibration (v16.9.162, v16.9.186)
+
+Training Suite v16.9.162 and v16.9.186 supersede the temperature anchoring of
+Sections 3.1.2 and 5.40 for every NIMA model:
+
+- **Logit soft cap**: the hard `torch.clamp(logits, -10, 10)` is replaced by
+  $\text{cap} \cdot \tanh(\text{logits} / \text{cap})$ with the registry
+  `stabilizers.logit_clamp` (15.0 for every NIMA entry; 0 turns it off). Every
+  score bin stays differentiable.
+- **Temperature 1**: quality models train at temperature 1 under that cap
+  (`PinnedThermalState`, `PinnedCalibration`); sharpening, recoil, resets and
+  checkpoint restore leave the temperature at 1.0, and the quality loss is a
+  plain softmax.
+- **EMD form**: `stabilizers.emd_form` is `nima` (default, the paper's r = 2
+  form per sample, then the batch mean) or `squared`; the five NIMA entries
+  set `nima`. Checkpoints record `emd_form`, a resume keeps the recorded form
+  (older NIMA checkpoints keep `legacy_sum`), and the form is a frozen run
+  setting.
+- **Post-hoc calibration**: `python -m training.quality_calibration
+  val_scores.npz` fits one temperature on validation logits (grid 0.5 to
+  2.0, lowest EMD) and keeps it only when PLCC and SRCC do not drop. An
+  accepted value is stored as the registry `calibration.temperature` and used
+  by the export `SoftmaxWrapper` (default 1.0).
 
 ---
 

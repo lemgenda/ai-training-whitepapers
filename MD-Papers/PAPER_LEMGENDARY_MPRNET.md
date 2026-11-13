@@ -688,7 +688,7 @@ industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants
   (VGG); WebGPU Viability: Highly Degraded (Opset); Status & Verification:
   Baseline `[MEASURED]`
 - **LemGendary MPRNet**: Paradigm: *Multi-Stage Progressive (Ours)*; Parameters:
-  **17M**; GPU Footprint (1080p): **~ 6 GB**; PSNR: **53.95 dB**; Perceptual
+  **0.0046M**; GPU Footprint (1080p): **~ 6 GB**; PSNR: **53.95 dB**; Perceptual
   Integrity (LPIPS): **0.0013 (VGG)**; WebGPU Viability: **Production Grade**;
   Status & Verification: **LemGendary `[MEASURED]`**
 - **MPRNet SOTA Target**: Paradigm: *Multi-Stage Progressive Target*;

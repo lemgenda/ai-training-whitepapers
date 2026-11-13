@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.4 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v2.10.57</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -81,7 +81,7 @@ Cancellation</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary AI Studio GUI (client version <code>v2.10.38</code>) is a hardware-aware
+<p>The LemGendary AI Studio GUI (client version <code>v2.10.57</code>) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
@@ -97,7 +97,7 @@ hands it to the operator's own mail client.</p>
 <p><strong>Note:</strong> <strong>Dual Versioning Architecture</strong>: The desktop application and its backends use
 separate version tracks:</p>
 <ol>
-<li><strong>LemGendary AI Studio GUI (<code>v2.10.38</code>)</strong>: Governs the Tauri v2 desktop
+<li><strong>LemGendary AI Studio GUI (<code>v2.10.57</code>)</strong>: Governs the Tauri v2 desktop
 application, the React 18 frontend and the Operator Manual
 (<a href="ai-studio-manual.html"><code>MANUAL_AI_STUDIO_GUI.md</code></a>). <code>package.json</code>
 holds this version and <code>tauri.conf.json</code> reads it from there.</li>
@@ -412,8 +412,8 @@ accessibility contracts.</li>
 Manager, together with a dependency audit across the Python virtual environments
 and the GUI's npm packages:</p>
 <ul>
-<li><strong>Cross-Project Python Drift Matrix</strong>: Compares <code>unified_requirements.yaml</code>
-with the installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>
+<li><strong>Cross-Project Python Drift Matrix</strong>: Compares the central manifests
+<code>lemgendary-env-manager/requirements/*.txt</code> with the installed wheels in <code>lemgendary-env-manager</code>, <code>lemgendary-datasets</code>
 and <code>lemgendary-training-suite</code>.</li>
 <li><strong>Desktop GUI Project Packages (NPM) Audit</strong>: Reads <code>package.json</code> and
 <code>node_modules</code> of <code>lemgendary-ai-studio-gui</code>, including <code>@tauri-apps/api</code>,
@@ -473,6 +473,13 @@ hides the metrics.</li>
 Model Training Suite sends <code>null</code> for values it has not measured or does not
 know. The model card shows Parameters as <code>N/A</code> only for <code>null</code> (<code>0</code> is
 <code>0 M</code>) and a <code>null</code> SOTA goal as a dash.</li>
+<li><strong>Manifest Editor Guards (v2.10.47)</strong>: an unreachable manifest registry leaves the list empty instead of six placeholder manifests, and a failed read leaves the editor empty with <code>loadError</code> set; the offline or error banner shows and editing is disabled.</li>
+<li><strong>Action Feedback (v2.10.48)</strong>: every failed training action goes through <code>reportFailure</code> (red <code>statusError</code> banner) and every success through <code>reportSuccess</code>; each action clears both banners when it starts.</li>
+<li><strong>Pipeline Progress (v2.10.49)</strong>: <code>derivePipelineProgress</code> gives each step its own state (WAIT, RUN, DONE, FAILED) from that step's latest Environment Manager event; the store's <code>pipelineRun</code> records the scope (<code>"full"</code> or a step number) and start time of the run.</li>
+<li><strong>Job Polling (v2.10.50)</strong>: <code>useJobStatusPoll</code> polls <code>GET /api/jobs/{job_id}</code> until a terminal status for both the local and the remote job, and a running cloud job is restored into <code>remoteJob</code> on mount.</li>
+<li><strong>Per-Format Readiness (v2.10.51)</strong>: optional <code>pytorch_ready</code>, <code>onnx_fp32_ready</code> and <code>onnx_fp16_ready</code> flags on <code>ModelItem</code> drive the variation badges; the LemGendary Model Training Suite must send them for a badge to turn green.</li>
+<li><strong>One Event Buffer (v2.10.53, v2.10.55)</strong>: <code>addEvent</code> uses <code>appendLiveEvent</code> and <code>EVENT_BUFFER_LIMIT</code>, the live log socket appends through <code>addEvent</code>, and the shared <code>useScrollToBottom</code> hook keeps the telemetry streams at the newest line.</li>
+<li><strong>Process Control (v2.10.54)</strong>: <code>src-tauri/src/process_control.rs</code> stops a service with SIGTERM and up to 3 s before SIGKILL on macOS and Linux (with an <code>ss -tlpnH</code> fallback when <code>lsof</code> is missing) and <code>taskkill /T /F</code> on Windows; <code>src-tauri/src/workspace_paths.rs</code> finds the sibling projects from the working directory and the executable's folders.</li>
 <li><strong>Control ID Registry</strong>: Interactive controls carry stable DOM IDs listed in
 <a href="gui-control-registry.html"><code>GUI_CONTROL_REGISTRY.md</code></a>; the registry is
 rebuilt from the <code>id</code> attributes in the source.</li>

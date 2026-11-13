@@ -10,8 +10,8 @@ Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.60`, Dataset Compiler Suite `v16.9.71`, Model Training Suite
-`v16.9.128`, AI Studio GUI `v2.10.38` · **Last Reviewed / Verified**: 2026-11-04
+Manager `v16.9.85`, Dataset Compiler Suite `v16.9.109`, Model Training Suite
+`v16.9.223`, AI Studio GUI `v2.10.68` · **Last Reviewed / Verified**: 2026-11-13
 · **Status**: Canonical
 
 ---
@@ -123,7 +123,8 @@ value is written anywhere else.
   sidecars.
 - **Responsibilities**:
   - Real-time hardware discovery (`nvidia-smi`, `rocm-smi`, DirectX DXGI) and
-    driver-aware PyTorch index selection (`cu126`, `cu121` or `cu118`).
+    driver-aware PyTorch index selection (`cu134`, `cu126`, `cu121` or
+    `cu118`; ROCm, Apple MPS and CPU hosts get their own index).
   - Virtual environment provisioning (non-destructive by default; `clean` is
     opt-in), one-way manifest sync with a downgrade guard, and version drift
     analytics.
@@ -190,15 +191,17 @@ value is written anywhere else.
    manifest single source of truth.
 3. **Data Compiler**: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
    formats WebDataset (`.data`/`.tar`), LitData (`.bin`), Parquet and
-   Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to
-   WebDataset and `mosaicml-streaming` was removed from the datasets
-   requirements. The Environment Manager's `runtime_env.yaml` still registers
-   `mosaicml-streaming` as a container runtime dependency (open).
+   Directory. MosaicML MDS is discontinued: existing MDS shards were transcoded
+   to WebDataset, `mosaicml-streaming` was removed from the datasets
+   requirements, and since Environment Manager v16.9.81 `runtime_env.yaml` no
+   longer lists it. Shard labels are JSON only (`<key>.json`, Dataset Compiler
+   v16.9.98).
 4. **Training Suite**: Zero-IPC ThreadPool dataloaders, spatial resolution
    ladders under the pair-rule ratchet (resolution never decreases; the data
    fraction only rises within one resolution step and may reset when resolution
    steps up), bounded epoch budget, nuclear-hardened checkpoints.
-   `torch==2.15.0` from the `cu126` wheel index, `transformers==5.22.1`.
+   `torch==2.15.0` from the PyTorch wheel index the hardware probe picks,
+   `transformers==5.22.1`.
 5. **Documentation**: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
    generated on the approved template, Markdown and HTML kept in sync.
 

@@ -22,7 +22,10 @@ class TestDocumentationContent(DocsTestCase):
 
         readme = os.path.join(self.docs_root, "README.md")
         with open(readme, "r", encoding="utf-8") as f:
-            hub_version = re.search(r"\*\*Version\*\*: `(v[0-9.]+)`", f.read()).group(1)
+            match = re.search(r"\*\*Version\*\*: `(v[0-9.]+)`", f.read())
+        if match is None:
+            self.fail("README.md has no **Version** line")
+        hub_version = match.group(1)
         self.assertIn(
             f"Version {hub_version}-STABLE",
             txt,

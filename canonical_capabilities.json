@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.139-STABLE",
-  "runtime_engine_baseline": "v16.9.139-STABLE",
-  "desktop_client_baseline": "v2.10.45",
-  "dataset_compiler_baseline": "v16.9.71-STABLE",
-  "environment_manager_baseline": "v16.9.67-STABLE",
-  "last_audited": "2026-11-10",
+  "document_baseline": "v16.9.116-STABLE",
+  "runtime_engine_baseline": "v16.9.223-STABLE",
+  "desktop_client_baseline": "v2.10.68",
+  "dataset_compiler_baseline": "v16.9.109-STABLE",
+  "environment_manager_baseline": "v16.9.85-STABLE",
+  "last_audited": "2026-11-13",
   "control_planes": {
     "gui": {
       "framework": "Tauri v2 + React 18 + Vite",
-      "version": "v2.10.45",
+      "version": "v2.10.68",
       "ports": {
         "environment_manager_sidecar": 8000,
         "dataset_compiler_sidecar": 8100,
@@ -24,9 +24,11 @@
         "environment_manager": "lem-env"
       },
       "syntax": {
-        "train": "lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME]",
+        "train": "lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME] [--clean] [--override-frozen]",
         "llm_train": "lemtrain llm train [MODEL_KEY]",
-        "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]"
+        "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]",
+        "kaggle_launch": "lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]",
+        "dataset_sync_push": "python cli.py sync push --model KEY [--url SLUG] [--no-wait] [--notes TEXT] (--notes: what changed, added after the generated version notes)"
       }
     },
     "api": {
@@ -41,7 +43,10 @@
       "training_routes": {
         "train": "POST /api/training/train",
         "llm_train": "POST /api/training/llm/train",
-        "model_soup": "POST /api/models/{model_key}/soup"
+        "model_soup": "POST /api/models/{model_key}/soup",
+        "kaggle_status": "GET /api/training/kaggle/status",
+        "kaggle_accelerators": "GET /api/training/kaggle/accelerators",
+        "kaggle_train": "POST /api/training/kaggle/train"
       }
     }
   },
@@ -54,7 +59,7 @@
       "domain": "time_series_quantitative_finance",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/ForexPredictor/ForexPredictor.py",
       "weights_path": "LemGendaryModels/ForexPredictor/ForexPredictorWeights_FP32.pth",
       "architecture_type": "Causal TCN + Multi-Head Cross-Timeframe Attention",
@@ -111,7 +116,7 @@
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_mobile/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_mobile/weights.pth",
       "architecture_type": "MobileNetV3-Small + Earth Mover's Distance Head",
@@ -167,7 +172,7 @@
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_efficientnet/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_efficientnet/weights.pth",
       "architecture_type": "EfficientNet-B0 Backbone + EMD Loss",
@@ -223,7 +228,7 @@
       "domain": "perceptual_aesthetic_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nima_aesthetic_pro/model.py",
       "weights_path": "LemGendaryModels/nima_aesthetic_pro/weights.pth",
       "architecture_type": "DenseNet-201 / ConvNeXt-Tiny + Multi-Head EMD",
@@ -280,7 +285,7 @@
       "domain": "technical_distortion_scoring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nima_technical/model.py",
       "weights_path": "LemGendaryModels/nima_technical/weights.pth",
       "architecture_type": "MobileNetV3 Backbone + Multi-Distortion Classification Head",
@@ -336,7 +341,7 @@
       "domain": "synthetic_generation_authenticity",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nima_authenticity/model.py",
       "weights_path": "LemGendaryModels/nima_authenticity/weights.pth",
       "architecture_type": "Frequency-Aware High-Pass ResNet Backbone",
@@ -392,7 +397,7 @@
       "domain": "vision_hybrid_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/upn_v2/model.py",
       "weights_path": "LemGendaryModels/upn_v2/weights.pth",
       "architecture_type": "Residual-in-Residual Dense Blocks with Spatial Attention",
@@ -448,7 +453,7 @@
       "domain": "vintage_photographic_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/film_restorer/model.py",
       "weights_path": "LemGendaryModels/film_restorer/weights.pth",
       "architecture_type": "Dual-Branch Attention Network (Structure + Grain Decomposition)",
@@ -505,7 +510,7 @@
       "domain": "blind_face_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/codeformer/model.py",
       "weights_path": "LemGendaryModels/codeformer/weights.pth",
       "architecture_type": "Learned Discrete Codebook Transformer with Fidelity Controllability",
@@ -561,7 +566,7 @@
       "domain": "semantic_face_segmentation",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/parsenet/model.py",
       "weights_path": "LemGendaryModels/parsenet/weights.pth",
       "architecture_type": "BiSeNet-V2 with Spatial and Context Paths",
@@ -617,7 +622,7 @@
       "domain": "feature_fusion_indoor_dehazing",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/ffanet_indoor/model.py",
       "weights_path": "LemGendaryModels/ffanet_indoor/weights.pth",
       "architecture_type": "Feature Fusion Attention Network (Channel + Pixel Attention)",
@@ -673,7 +678,7 @@
       "domain": "feature_fusion_outdoor_dehazing",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/ffanet_outdoor/model.py",
       "weights_path": "LemGendaryModels/ffanet_outdoor/weights.pth",
       "architecture_type": "Feature Fusion Attention Network (Extended Depth Layers)",
@@ -729,7 +734,7 @@
       "domain": "multi_scale_low_light_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/mirnet_lowlight/model.py",
       "weights_path": "LemGendaryModels/mirnet_lowlight/weights.pth",
       "architecture_type": "Multi-Scale Residual Block with Dual Attention Units",
@@ -786,7 +791,7 @@
       "domain": "dual_exposure_over_under_correction",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/mirnet_exposure/model.py",
       "weights_path": "LemGendaryModels/mirnet_exposure/weights.pth",
       "architecture_type": "Multi-Scale Residual Block with Highlight Preservation",
@@ -843,7 +848,7 @@
       "domain": "multi_stage_progressive_deraining",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/mprnet_deraining/model.py",
       "weights_path": "LemGendaryModels/mprnet_deraining/weights.pth",
       "architecture_type": "3-Stage Progressive Architecture with Cross-Stage Feature Fusion",
@@ -899,7 +904,7 @@
       "domain": "nonlinear_activation_free_deblurring",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nafnet_debluring/model.py",
       "weights_path": "LemGendaryModels/nafnet_debluring/weights.pth",
       "architecture_type": "Nonlinear Activation Free Network (SimpleGate + Simplified Channel Attention)",
@@ -955,7 +960,7 @@
       "domain": "nonlinear_activation_free_denoising",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/nafnet_denoising/model.py",
       "weights_path": "LemGendaryModels/nafnet_denoising/weights.pth",
       "architecture_type": "Nonlinear Activation Free Network (36-Block Backbone)",
@@ -1012,7 +1017,7 @@
       "domain": "realtime_object_detection",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/yolov8n/model.py",
       "weights_path": "LemGendaryModels/yolov8n/weights.pth",
       "architecture_type": "Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned Assigner)",
@@ -1069,7 +1074,7 @@
       "domain": "unified_multi_distortion_restoration",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/professional_multitask_restoration/model.py",
       "weights_path": "LemGendaryModels/professional_multitask_restoration/weights.pth",
       "architecture_type": "Dynamic Multi-Head Transformer with Task Prompt Embeddings",
@@ -1125,7 +1130,7 @@
       "domain": "perceptual_super_resolution",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/ultrazoom/model.py",
       "weights_path": "LemGendaryModels/ultrazoom/weights.pth",
       "architecture_type": "Cascaded Residual LapSRN + High-Frequency Edge Head",
@@ -1181,7 +1186,7 @@
       "domain": "content_safety_classification",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/universal_nsfw_classification/model.py",
       "weights_path": "LemGendaryModels/universal_nsfw_classification/weights.pth",
       "architecture_type": "Vision Transformer (ViT-Small / EfficientNet-B2 Head)",
@@ -1237,10 +1242,10 @@
       "domain": "dense_face_and_landmark_localization",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/retinaface/model.py",
       "weights_path": "LemGendaryModels/retinaface/weights.pth",
-      "architecture_type": "Feature Pyramid Network with Context Modules and Multi-Task Loss",
+      "architecture_type": "MobileNetV3-Small backbone with one globally pooled single-box head (box, confidence and 5 landmarks per image; no anchors)",
       "supported_formats": {
         "input": [
           "png",
@@ -1274,7 +1279,8 @@
         "whitepaper": "lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md"
       },
       "limitations": [
-        "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners)."
+        "Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners).",
+        "Regresses one face box per image; measured with box_iou, ap50, ap50_95 and landmark_nme against provisional targets 0.80, 0.95, 0.60 and 0.10 (training v16.9.208); earlier map_* values are not comparable."
       ],
       "academic_reference": {
         "title": "RetinaFace: Single-Shot Multi-Level Face Localisation in the Wild",
@@ -1293,7 +1299,7 @@
       "domain": "technical_documentation_and_ecosystem_triage",
       "general_ai_support": true,
       "studio_implementation_status": "implemented",
-      "runtime_baseline": "v16.9.128-STABLE",
+      "runtime_baseline": "v16.9.223-STABLE",
       "codebase_path": "LemGendaryModels/ai_helper_lemgend/model.py",
       "weights_path": "LemGendaryModels/ai_helper_lemgend/checkpoints/AIHelperLemGend_best.pth",
       "architecture_type": "Causal Decoder Transformer (QLoRA Fine-Tuned)",
@@ -1437,7 +1443,9 @@
       "baseline": "v16.9.68-STABLE",
       "control_planes": {
         "gui": {
-          "available": false
+          "available": true,
+          "client_baseline": "v2.10.60",
+          "control": "train-btn-soup-{model_key} (Blend Soup model card action; opens soup-dialog with donors and weights)"
         },
         "cli": {
           "available": true,
@@ -1468,10 +1476,11 @@
       "file": "lemgendary-env-manager/ecosystem/ecosystem.json",
       "schema": "lemgendary-env-manager/ecosystem/ecosystem.schema.json",
       "contents": [
-        "identity (docs_url, kaggle_owner, bind_host)",
+        "identity (docs_url, kaggle_owner, bind_host, github_url)",
         "services[] (id, port, paths)",
         "projects[] (folder, kind, managed, validated, upgrade_order)",
-        "pipeline_steps[] (number, id, name, descriptions)"
+        "pipeline_steps[] (number, id, name, descriptions)",
+        "kaggle (collaborators, default_accelerator, accelerators[], retired_machine_shapes)"
       ],
       "consumers": {
         "environment_manager": "env_manager.ecosystem.ecosystem() (LEMGENDARY_ECOSYSTEM_FILE override)",
@@ -1576,6 +1585,175 @@
       },
       "evidence": {
         "code": "lemgendary-training-suite/training/fid_reeval/",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    },
+    {
+      "id": "shard_locality_sampling",
+      "name": "Shard-Window Sampling and Block-Wise Curriculum Fractions",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.159-STABLE",
+      "default": "on (data.locality.window_shards: 4 and data.locality.fraction_block_size: 256 in config.yaml; 0 turns either off)",
+      "config_keys": [
+        "data.locality.window_shards",
+        "data.locality.fraction_block_size"
+      ],
+      "behaviour": [
+        "window_shards > 0: the train sampler shuffles the shards per epoch and the samples inside windows of that many shards; the order is drawn from seed + epoch, splits across DDP ranks and resumes mid-epoch.",
+        "fraction_block_size > 0: a curriculum data fraction is built from shuffled contiguous blocks inside each shard; the subsets stay nested across fraction steps (Monotonic Ratchet)."
+      ],
+      "limitations": [
+        "The GPU throughput gain on real manifolds is not measured yet.",
+        "Applies to WebDataset shards; other samples share one window key per dataset.",
+        "A changed setting applies from the next epoch of a resumed run (run settings, v16.9.187)."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": false
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain train MODEL_KEY (with data.locality set in config.yaml)"
+        },
+        "api": {
+          "available": false
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-training-suite/training/data/locality.py",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    },
+    {
+      "id": "shard_offset_index",
+      "name": "Shard Offset Index (shard_offsets.json)",
+      "status": "implemented",
+      "owner_project": "lemgendary-datasets",
+      "baseline": "v16.9.108-STABLE",
+      "reader_project": "lemgendary-training-suite",
+      "reader_baseline": "v16.9.215-STABLE",
+      "file": "shards/<split>/shard_offsets.json",
+      "format_version": 2,
+      "behaviour": [
+        "One file per shard folder: {\"version\": 2, \"shards\": {...}} with each plain tar shard's size, mtime_ns and the names, offsets and sizes of its regular members; compressed shards get no entry.",
+        "Acceptance rule: an entry is used when the shard size matches and either the modification time matches or the tar headers of the first, middle and last member agree (three reads), so the index stays valid after a Kaggle upload.",
+        "Every compiler step that writes or rewrites shards refreshes the file (utils/shard_offsets.py is the only writer and checker); the shard verifier checks a present index.",
+        "Training Suite: a read-only shard folder keeps its scan cache under <suite>/.cache/shard_offsets (LEMGENDARY_SHARD_CACHE_DIR overrides it); missing shards are scanned once under a file lock per shard folder (one DDP rank builds, the others load); a probe of the largest missing shard picks 16 scan threads on latency-bound storage, one on a local disk."
+      ],
+      "limitations": [
+        "Kaggle dataset uploads skip hidden files, so the older .shard_offsets.json cache is not shipped; only shard_offsets.json is.",
+        "Compressed shards cannot be read by offset and are always scanned."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": false
+        },
+        "cli": {
+          "available": true,
+          "command": "python cli.py repair shard-offsets [--model KEY | --manifold PATH] [--apply]"
+        },
+        "api": {
+          "available": false
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-datasets/utils/shard_offsets.py",
+        "reader": "lemgendary-training-suite/training/data/containers/shard_tables.py",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md"
+      }
+    },
+    {
+      "id": "kaggle_cloud_training",
+      "name": "Kaggle Cloud Training (Kernel Bundle, Session Guard, Hub Sync)",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.175-STABLE",
+      "client_baseline": "v2.10.65",
+      "accelerators": [
+        "cpu",
+        "gpu-t4x2",
+        "tpu-v5e8"
+      ],
+      "launch_options": [
+        "accelerator",
+        "git_ref",
+        "env_manager_ref",
+        "limit_hours",
+        "margin_minutes",
+        "override_frozen",
+        "auto_pull",
+        "poll_interval",
+        "auto_resume",
+        "max_resumes"
+      ],
+      "kernel_secrets": [
+        "KAGGLE_API_TOKEN (KGAT_ token)",
+        "GITHUB_PAT or SUITE_PAT",
+        "GOOGLE_DRIVE (optional)"
+      ],
+      "session_guard": "kaggle_session in config.yaml: limit_hours 12, margin_minutes 30, auto_resume false, max_resumes 3; the deadline stop saves progress, writes session_deadline.json, syncs the Hub and exits 0",
+      "variations": [
+        "pytorch/default",
+        "pytorch/fp32",
+        "onnx/fp16",
+        "onnx/fp32"
+      ],
+      "limitations": [
+        "The GUI sends no git_ref, env_manager_ref, limit_hours or margin_minutes; the CLI and the API do.",
+        "lemtrain kaggle launch starts one session and does not watch it; auto-resume runs only in a GUI or API job."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "client_baseline": "v2.10.67",
+          "control": "kaggle-accelerator-select, kaggle-override-frozen-checkbox (Cloud Training dialog)"
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/training/kaggle/train",
+          "port": 8200
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-training-suite/training/cloud/kernel_bundle.py",
+        "manual": "lemgendary-docs/MD-Papers/MANUAL_CLI.md",
+        "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
+      }
+    },
+    {
+      "id": "frozen_run_settings",
+      "name": "Frozen Run Settings and Resume Refusal",
+      "status": "implemented",
+      "owner_project": "lemgendary-training-suite",
+      "baseline": "v16.9.187-STABLE",
+      "client_baseline": "v2.10.67",
+      "behaviour": [
+        "Checkpoints record run_settings: frozen settings with frozen_sha and epoch settings.",
+        "A changed frozen setting on resume raises FrozenSettingsChanged unless override_frozen is set; the refusal is written to resume_refusal.json.",
+        "Changed epoch settings apply from the next epoch and are appended to settings_changes.jsonl."
+      ],
+      "control_planes": {
+        "gui": {
+          "available": true,
+          "control": "train-input-override-frozen-{model_key}, kaggle-override-frozen-checkbox, train-frozen-refusal"
+        },
+        "cli": {
+          "available": true,
+          "command": "lemtrain train MODEL_KEY --override-frozen"
+        },
+        "api": {
+          "available": true,
+          "route": "POST /api/gui/quick-train (override_frozen)",
+          "port": 8200
+        }
+      },
+      "evidence": {
+        "code": "lemgendary-training-suite/training/run_settings/",
         "whitepaper": "lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md"
       }
     }

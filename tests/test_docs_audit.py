@@ -30,6 +30,7 @@ audit_docs = importlib.import_module("audit_docs")
 FIXTURE_WORKSPACE = Path(__file__).resolve().parent / "fixtures" / "workspace"
 FIXTURE = docs_audit.Workspace(FIXTURE_WORKSPACE)
 GUI_PORT_SERVICES = importlib.import_module("docs_audit.checks").GUI_PORT_SERVICES
+COMPONENT_SOURCES = importlib.import_module("docs_audit.workspace").COMPONENT_SOURCES
 
 HUB_VERSION = "v1.2.3"
 DOC_VERSION = "v1.0.0-STABLE"
@@ -125,10 +126,16 @@ class SyntheticDocsRepo:
     def registry(baseline: str) -> dict:
         """A capability registry consistent with the fixture workspace."""
         training_port = FIXTURE.service("training-suite").port
+        components = {
+            source.registry_key: f"v{FIXTURE.component_version(source)}-STABLE"
+            for source in COMPONENT_SOURCES
+        }
         return {
             "document_baseline": baseline,
+            **components,
             "control_planes": {
                 "gui": {
+                    "version": components["desktop_client_baseline"],
                     "ports": {
                         key: FIXTURE.service(service_id).port
                         for key, service_id in GUI_PORT_SERVICES.items()
@@ -355,6 +362,124 @@ class TestBacklogAudit(SyntheticAuditCase):
 
 
 
+class TestTocSidebarAudit(SyntheticAuditCase):
+    """Table of contents against the sidebar, and raw alert markers in pages."""
+
+    def test_duplicate_toc_entry_detected(self):
+        """A Markdown ToC entry listed twice is a finding."""
+        self.repo.replace(
+            "MD-Papers/ALPHA.md",
+            "- [2. Method](#2-method)\n",
+            "- [2. Method](#2-method)\n- [2. Method](#2-method)\n",
+        )
+        result = self.audit()
+        self.assert_finding(result, "toc-sidebar", "alpha")
+        self.assertIn("lists #2-method more than once", docs_audit.render(result))
+
+    def test_wrapped_toc_entry_is_parsed(self):
+        """A ToC entry wrapped over two lines still matches its sidebar link."""
+        self.repo.replace(
+            "MD-Papers/ALPHA.md", "- [2. Method](#2-method)", "- [2.\n  Method](#2-method)"
+        )
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+    def test_missing_sidebar_link_detected(self):
+        """A section without a sidebar link is a finding."""
+        self.repo.replace("papers/beta.html", ' <a href="#2-method">2. Method</a>', "")
+        result = self.audit()
+        self.assert_finding(result, "toc-sidebar", "beta")
+        report = docs_audit.render(result)
+        self.assertIn("missing from the sidebar: 2. Method", report)
+        self.assertIn("no sidebar link to section '2. Method'", report)
+
+    def test_sidebar_order_drift_detected(self):
+        """Sidebar links in another order than the Markdown ToC are a finding."""
+        self.repo.replace(
+            "papers/alpha.html",
+            '<a href="#1-abstract">1. Abstract</a> <a href="#2-method">2. Method</a>',
+            '<a href="#2-method">2. Method</a> <a href="#1-abstract">1. Abstract</a>',
+        )
+        result = self.audit()
+        self.assert_finding(result, "toc-sidebar", "alpha")
+        self.assertIn("different order", docs_audit.render(result))
+
+    def test_empty_end_section_needs_no_sidebar_link(self):
+        """A section holding only its heading needs no sidebar link."""
+        self.repo.replace(
+            "MD-Papers/ALPHA.md", "Suite.\n", "Suite.\n\n## Document End\n"
+        )
+        self.repo.replace(
+            "papers/alpha.html",
+            "<footer>",
+            '<section id="document-end"><h2>Document End</h2></section>\n<footer>',
+        )
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+    def test_raw_alert_marker_detected(self):
+        """A raw GitHub alert marker in a page is a finding."""
+        self.repo.replace("papers/alpha.html", "<p>The alpha", "<p>[!NOTE] The alpha")
+        self.assert_finding(self.audit(), "alert-markers", "papers/alpha.html")
+
+
+class TestListItemAudit(SyntheticAuditCase):
+    """Labelled top-level list items (master-table rows) in Markdown and HTML."""
+
+    ROWS_MD = (
+        "- **Vanishing Gradients**\n"
+        "  - *Remediation*: residual links.\n"
+        "- **Static Worker Throttling &\n"
+        "  Tar Starvation**\n"
+        "  - *Remediation*: a bounded pool.\n"
+    )
+    ROWS_HTML = (
+        "<ul>\n<li><strong>Vanishing Gradients</strong>\n"
+        "<ul><li><em>Remediation</em>: residual links.</li></ul></li>\n"
+        "<li><strong>Static Worker Throttling &amp;\nTar Starvation</strong>\n"
+        "<ul><li><em>Remediation</em>: a bounded pool.</li></ul></li>\n</ul>"
+    )
+
+    def add_rows(self, markdown: str, page: str) -> None:
+        """Append master-table rows to the Method section of alpha."""
+        self.repo.replace("MD-Papers/ALPHA.md", "Suite.\n", f"Suite.\n\n{markdown}")
+        self.repo.replace("papers/alpha.html", "Suite.</p>", f"Suite.</p>\n{page}")
+
+    def test_matching_rows_pass(self):
+        """The same rows, one label wrapped over two lines, pass."""
+        self.add_rows(self.ROWS_MD, self.ROWS_HTML)
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+    def test_row_missing_from_html_detected(self):
+        """A row present in Markdown and missing from the page is a finding."""
+        last_row = self.ROWS_HTML.index("<li><strong>Static")
+        self.add_rows(self.ROWS_MD, self.ROWS_HTML[:last_row] + "</ul>")
+        result = self.audit()
+        self.assert_finding(result, "list-items", "alpha")
+        report = docs_audit.render(result)
+        self.assertIn("MD 2 vs HTML 1 labelled list items", report)
+        self.assertIn("missing from HTML: Static Worker Throttling & Tar Starvation", report)
+
+    def test_row_order_drift_detected(self):
+        """The same rows in another order are a finding."""
+        first, second = self.ROWS_MD.split("- **Static")
+        self.add_rows("- **Static" + second + first, self.ROWS_HTML)
+        result = self.audit()
+        self.assert_finding(result, "list-items", "alpha")
+        self.assertIn("same labels in a different order", docs_audit.render(result))
+
+    def test_nested_and_quoted_items_are_not_rows(self):
+        """Nested items and items in a block quote or the sidebar are not counted."""
+        self.repo.replace(
+            "papers/alpha.html",
+            "Suite.</p>",
+            "Suite.</p>\n<blockquote><ul><li><strong>Quoted</strong></li></ul></blockquote>",
+        )
+        result = self.audit()
+        self.assertTrue(result.passed, docs_audit.render(result))
+
+
 class TestRegistryAudit(SyntheticAuditCase):
     """Capability registries against the fixture workspace, workspace lookup and CLI."""
 
@@ -402,6 +527,30 @@ class TestRegistryAudit(SyntheticAuditCase):
         result = self.audit()
         self.assert_finding(result, "service-ports", "canonical_capabilities.json")
         self.assertIn(key, docs_audit.render(result))
+
+    def test_component_version_drift_detected(self):
+        """A registry baseline other than the sibling release is a finding."""
+        data = self._registry()
+        data["dataset_compiler_baseline"] = "v0.0.1-STABLE"
+        self.repo.write_registry(data)
+        result = self.audit()
+        self.assert_finding(
+            result, "component-versions", "canonical_capabilities.json#dataset_compiler_baseline"
+        )
+        self.assertIn("lemgendary-datasets/core/cli_args.py declares", docs_audit.render(result))
+
+    def test_gui_control_plane_version_drift_detected(self):
+        """control_planes.gui.version must equal desktop_client_baseline."""
+        data = self._registry()
+        data["control_planes"]["gui"]["version"] = "v0.0.1"
+        self.repo.write_registry(data)
+        subject = "canonical_capabilities.json#control_planes.gui.version"
+        self.assert_finding(self.audit(), "component-versions", subject)
+
+    def test_component_versions_read_from_sibling_files(self):
+        """Each component version comes from its own project file."""
+        versions = [FIXTURE.component_version(source) for source in COMPONENT_SOURCES]
+        self.assertEqual(versions, ["1.0.1", "1.0.2", "1.0.3", "1.0.4"])
 
     def test_missing_workspace_is_a_clear_finding(self):
         """Missing workspace is a clear finding."""

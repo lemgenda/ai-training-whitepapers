@@ -24,7 +24,7 @@
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
 <span><strong>Version</strong>: <code>v16.9.68-STABLE</code> (LemGendary AI Documentation Hub)</span>
-<span><strong>Last audited</strong>: 2026-11-03</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -182,8 +182,8 @@ measured in hours. The LemGendary Model Training Suite discovers and decodes
 <h3 id="sec-38-dynamic-cuda-index-selection">3.8 Dynamic CUDA Index Selection</h3>
 <p>A runtime algorithm implemented in
 <code>env_manager.system_probe.select_cuda_torch_index()</code> that reads the NVIDIA
-driver version and returns the newest compatible PyTorch wheel index (<code>cu126</code>,
-then <code>cu121</code>, then <code>cu118</code>). It eliminates hard-coded CUDA index pins and
+driver version and returns the newest compatible PyTorch wheel index (<code>cu134</code>,
+then <code>cu126</code>, then <code>cu121</code>, then <code>cu118</code>). It eliminates hard-coded CUDA index pins and
 ensures the correct build is installed regardless of driver version.</p>
 <h3 id="sec-39-task-taxonomy">3.9 Task Taxonomy</h3>
 <p>The file <code>lemgendary-datasets/task_taxonomy.json</code> (schema

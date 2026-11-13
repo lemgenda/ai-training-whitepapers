@@ -171,7 +171,10 @@ prevents synthetic over-sharpening from altering recognizable biometric facial
 features.</li>
 <li><strong>Publication-Grade FID 2048 &amp; Memory Safety</strong>: Validation computes Fréchet
 Inception Distance at standard feature dimension 2048 with micro-chunking
-(=2$), guaranteeing benchmark comparability against academic baselines while bounding evaluation VRAM to $&lt; 280$ MB. * **Monotonic Curriculum Ratchet &amp; Dynamic Degradation**: Training strictly enforces monotonic data fraction expansion (\%$ strides) with on-the-fly
+($b_{\text{chunk}} \le 2$), guaranteeing benchmark comparability against academic baselines while
+bounding evaluation VRAM to $&lt; 280$ MB.</li>
+<li><strong>Monotonic Curriculum Ratchet &amp; Dynamic Degradation</strong>: Training strictly
+enforces monotonic data fraction expansion ($20\%$ strides) with on-the-fly
 degradation synthesis for containerized WebDatasets, preventing curriculum
 retreat and gradient starvation.</li>
 <li><strong>Sensor Readout Noise &amp; JPEG Ringing</strong>: Pre-flight degradation gating in the

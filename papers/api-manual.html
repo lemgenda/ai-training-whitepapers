@@ -22,7 +22,7 @@
 <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
 <p class="subtitle">Category 00 | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v16.9.44-STABLE</code></span>
+<span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -68,6 +68,7 @@
 </ul>
 </li>
 <li><a href="#sec-6-error-handling-status-codes--resilience">6. Error Handling, Status Codes &amp; Resilience</a></li>
+<li><a href="#companion-documentation">Companion Documentation</a></li>
 
 </ul>
 </nav>
@@ -278,8 +279,8 @@ with the last 50 telemetry events.</p>
 <p>Lists every centralized requirements manifest with its raw contents.</p>
 <pre><code class="language-json">{
   "manifests": {
-    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
-    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-datasets.txt": "torch==2.15.0\ntorchvision==0.29.2",
+    "requirements-training.txt": "torch==2.15.0\ntorchvision==0.29.2\ntorchaudio==2.11.1",
     "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
   }
 }
@@ -858,7 +859,8 @@ Retrieve model specifications and default hyperparameters</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/models/{name}/audit</code>; Auth: Required; Description:
 Detailed model audit: parameter counts, layer topology, memory</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/train</code>; Auth: Required; Description:
-In-process training initiation with hardware discovery</li>
+In-process training initiation with hardware discovery (<code>clean</code> and
+<code>override_frozen</code> select the resume behaviour)</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/evaluate</code>; Auth: Required; Description:
 In-process checkpoint evaluation under torch.no_grad()</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/export</code>; Auth: Required; Description:
@@ -872,6 +874,23 @@ Kaggle variation subdirectories</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/training/models/{model_key}/variations/validate</code>;
 Auth: Required; Description: Validate strict binary isolation across all
 Kaggle variation directories</li>
+<li><strong><code>GET</code></strong>: Endpoint: <code>/api/training/kaggle/status</code>; Auth: Required;
+Description: Real authenticated Kaggle call: <code>authenticated</code>, <code>username</code>,
+<code>token_configured</code>, <code>auth_method</code>, <code>http_status</code>, <code>error</code></li>
+<li><strong><code>GET</code></strong>: Endpoint: <code>/api/training/kaggle/kernels</code>; Auth: Required;
+Description: Recent kernels of the configured account with their status</li>
+<li><strong><code>GET</code></strong>: Endpoint: <code>/api/training/kaggle/accelerators</code>; Auth: Required;
+Description: Ecosystem accelerators (<code>id</code>, <code>label</code>, <code>kind</code>,
+<code>machine_shape</code>) and the <code>default</code> id</li>
+<li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/kaggle/train</code>; Auth: Required;
+Description: Push the model's kernel bundle and watch the session
+(accelerator, clone refs, session window, override, auto-resume)</li>
+<li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/kaggle/monitor</code>; Auth: Required;
+Description: Attach a watch job to a running kernel</li>
+<li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/kaggle/pull</code>; Auth: Required;
+Description: Pull Hub variations and merge them into the model folder</li>
+<li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/kaggle/push</code>; Auth: Required;
+Description: Enqueue staging and pushing all 4 variations of one model</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/training/kaggle/push-model</code>; Auth: Required;
 Description: Publish validated isolated model variation(s) to Kaggle Models
 Hub</li>
@@ -1060,6 +1079,82 @@ the specified model key, verifying zero cross-contamination.</p>
   "summary": "Validation Report for yolov8n: 3 valid, 0 invalid"
 }
 </code></pre>
+<h5 id="get-apitrainingkagglestatus"><code>GET /api/training/kaggle/status</code></h5>
+<p>Makes one cheap authenticated Kaggle call (<code>kernels_list(mine=True, page_size=1)</code>) with the resolved credential and reports the real outcome
+(training v16.9.170):</p>
+<pre><code class="language-json">{
+  "authenticated": true,
+  "username": "lemtreursi",
+  "token_configured": true,
+  "auth_method": "access_token",
+  "http_status": 200,
+  "error": null
+}
+</code></pre>
+<p><code>auth_method</code> is <code>access_token</code> (a <code>KGAT_</code> token) or <code>legacy_api_key</code>. A
+refused token gives <code>authenticated: false</code> with the HTTP status and reason.</p>
+<h5 id="get-apitrainingkaggleaccelerators"><code>GET /api/training/kaggle/accelerators</code></h5>
+<p>Lists the Kaggle accelerators of the ecosystem file without retired machine
+shapes; <code>id</code> is what <code>POST /api/training/kaggle/train</code> takes:</p>
+<pre><code class="language-json">{
+  "default": "gpu-t4x2",
+  "accelerators": [
+    { "id": "cpu", "label": "CPU", "kind": "cpu", "machine_shape": null },
+    { "id": "gpu-t4x2", "label": "GPU T4 x2", "kind": "gpu",
+      "machine_shape": "NvidiaTeslaT4" },
+    { "id": "tpu-v5e8", "label": "TPU v5e-8", "kind": "tpu",
+      "machine_shape": "TpuV5E8" }
+  ]
+}
+</code></pre>
+<h5 id="post-apitrainingkaggletrain"><code>POST /api/training/kaggle/train</code></h5>
+<p>Builds the model's kernel bundle, pushes it and watches the session as a
+<code>kaggle_train</code> job. Every field except <code>model</code> is optional:</p>
+<pre><code class="language-json">{
+  "model": "upn_v2",
+  "accelerator": "gpu-t4x2",
+  "git_ref": "fix/review-remediation",
+  "env_manager_ref": null,
+  "limit_hours": 0.75,
+  "margin_minutes": 5,
+  "override_frozen": false,
+  "auto_pull": true,
+  "poll_interval": 30,
+  "auto_resume": true,
+  "max_resumes": 3
+}
+</code></pre>
+<ul>
+<li><strong><code>accelerator</code></strong>: An id from <code>GET /api/training/kaggle/accelerators</code>
+(default: the ecosystem default); an unknown or retired id is 422. It
+replaces the old <code>gpu</code> field.</li>
+<li><strong><code>git_ref</code></strong>, <strong><code>env_manager_ref</code></strong>: Clone refs of the suite and the
+env-manager (default <code>main</code>; the env-manager follows <code>git_ref</code>). An invalid
+ref is 422 before a job is created.</li>
+<li><strong><code>limit_hours</code></strong> (&gt; 0), <strong><code>margin_minutes</code></strong> (&gt;= 0): Session window for
+this kernel (default <code>kaggle_session</code> of <code>config.yaml</code>).</li>
+<li><strong><code>override_frozen</code></strong>: Passes <code>--override-frozen</code> to the kernel's trainer,
+also in the auto-resume sessions.</li>
+<li><strong><code>auto_pull</code></strong>: Pulls <code>pytorch/default</code> whenever the Hub has a newer
+version and merges the kernel output when the session completes.</li>
+<li><strong><code>poll_interval</code></strong>: First status poll in seconds (minimum 5); the watch
+backs off to 300 s while the status is unchanged.</li>
+<li><strong><code>auto_resume</code></strong>, <strong><code>max_resumes</code></strong> (&gt;= 0): Push a new kernel version
+after a deadline stop, at most <code>max_resumes</code> times (defaults
+<code>kaggle_session.auto_resume</code> and <code>max_resumes</code>); the job records the
+effective values.</li>
+</ul>
+<p>The response is <code>{ &quot;job_id&quot;, &quot;status&quot;: &quot;pending&quot;, &quot;message&quot;, &quot;model&quot; }</code>. A job
+whose kernel left <code>resume_refusal.json</code> fails with the <code>FrozenSettingsChanged</code>
+text as its <code>error_message</code>; a cancelled kernel ends the job as <code>cancelled</code>.</p>
+<h5 id="post-apitrainingkagglemonitor"><code>POST /api/training/kaggle/monitor</code></h5>
+<p>Attaches a <code>kaggle_monitor</code> job to a running kernel: <code>{ &quot;kernel_slug&quot;: &quot;owner/kernel-slug&quot;, &quot;model&quot;: null, &quot;auto_pull&quot;: false, &quot;poll_interval&quot;: 30 }</code>.</p>
+<h5 id="post-apitrainingkagglepull"><code>POST /api/training/kaggle/pull</code></h5>
+<p>Enqueues a <code>kaggle_pull</code> job: <code>{ &quot;model&quot;: &quot;yolov8n&quot;, &quot;variation&quot;: &quot;all&quot;, &quot;force_download&quot;: false, &quot;username&quot;: null }</code>. <code>variation</code> is a
+<code>VariationKey</code> or <code>all</code>. Files are downloaded into a temporary folder and
+merged into <code>LemGendaryModels/&lt;model&gt;</code>: a checkpoint replaces its local copy
+only when its stored epoch is newer, and <code>force_download</code> overwrites only the
+pulled files.</p>
 <h5 id="post-apitrainingkagglepush-model"><code>POST /api/training/kaggle/push-model</code></h5>
 <p>Publishes validated isolated model variation(s) to Kaggle Models Hub using the
 Kaggle API.</p>
@@ -1067,20 +1162,34 @@ Kaggle API.</p>
 <pre><code class="language-json">{
   "model": "yolov8n",
   "variation": "all",
-  "version_notes": "Production release with strict 3-variation isolation",
+  "version_notes": null,
   "dry_run": false
 }
 </code></pre>
-<p>Response:</p>
+<p><code>variation</code> is a <code>VariationKey</code> (<code>pytorch/default</code>, <code>pytorch/fp32</code>,
+<code>onnx/fp16</code>, <code>onnx/fp32</code>) or <code>all</code>; the old names (<code>pytorch</code>, <code>onnx_fp16</code>)
+answer 422. Without <code>version_notes</code> every upload gets the standard notes
+(epoch, up to six measured values, suite version). The route answers HTTP
+200 also on failure; check <code>success</code>.</p>
+<p>Response (one entry per variation; <code>skipped: true</code> means the staged files
+equal the last upload, so no new Hub version was created):</p>
 <pre><code class="language-json">{
   "model_key": "yolov8n",
   "success": true,
-  "results": {
-    "pytorch": { "success": true, "version": 1 },
-    "onnx_fp32": { "success": true, "version": 1 },
-    "onnx_fp16": { "success": true, "version": 1 }
+  "variations": {
+    "pytorch/default": {
+      "variation": "pytorch/default",
+      "handle": "lemtreursi/yolov8n/pytorch/default",
+      "success": true,
+      "files": ["checkpoints/latest.pth", "README.md", "metrics.csv"],
+      "error": null,
+      "dry_run": false,
+      "skipped": false
+    }
   },
-  "dry_run": false
+  "is_valid_isolation": true,
+  "metadata_sync": null,
+  "errors": []
 }
 </code></pre>
 <h5 id="post-apitrainingkagglepush-all"><code>POST /api/training/kaggle/push-all</code></h5>
@@ -1221,7 +1330,10 @@ evaluation.</li>
       }
     ],
     "sota_reached": true,
-    "training_status": "fully_trained"
+    "training_status": "fully_trained",
+    "pytorch_ready": true,
+    "onnx_fp32_ready": true,
+    "onnx_fp16_ready": false
   }
 ]
 </code></pre>
@@ -1261,40 +1373,85 @@ completed ($0.0$ to $1.0$).</p>
 </li>
 <li>
 <p><code>parameters_m</code>, <code>best_metric</code>, <code>sota_target</code>: measured or registered values
-only, else <code>null</code> (training v16.9.122). <code>parameters_m</code> comes from
+only, else <code>null</code> (since training v16.9.122). <code>parameters_m</code> comes from
 <code>unified_models_v2.yaml</code> and is <code>null</code> for a model without a count;
 <code>best_metric</code> is <code>null</code> until a value is measured; <code>best_metric</code> and
 <code>sota_target</code> may also be strings.</p>
 </li>
 <li>
+<p><code>pytorch_ready</code>, <code>onnx_fp32_ready</code>, <code>onnx_fp16_ready</code> (boolean, training
+v16.9.147): per-format readiness of the release binaries. Each flag is true
+when <code>&lt;Stem&gt;.pt</code>, <code>&lt;Stem&gt;_FP32.onnx</code> or <code>&lt;Stem&gt;.onnx</code> exists in the model
+hub folder, its <code>checkpoints/</code> folder or the variation's <code>dist/kaggle</code>
+folder; the stem comes from <code>resolve_model_stem</code>. <code>STAGED_FOLDERS</code> in
+<code>training/cloud/variations.py</code> is the one list of these folders. The
+AI Studio GUI variation badges read the three flags.</p>
+</li>
+<li>
+<p><code>sota_targets_provisional</code> (boolean, training v16.9.208): true when the
+registry marks the model's <code>sota_targets</code> as provisional (no cited source,
+for example RetinaFace <code>box_iou</code>, <code>ap50</code>, <code>ap50_95</code>, <code>landmark_nme</code>).</p>
+</li>
+<li>
 <p><code>POST /api/gui/quick-train</code>: Accepts
-<code>{ &quot;model_key&quot;: &quot;yolov8n&quot;, &quot;preset&quot;: &quot;quick-sota&quot;, &quot;epochs&quot;: 300, &quot;batch_size&quot;: 16, &quot;learning_rate&quot;: 0.01, &quot;ladder_stage&quot;: 640, &quot;enable_sawtooth&quot;: true }</code> and queues a training pipeline instantly with
-validated parameters. Supports Ultralytics native trainer delegation for
+<code>{ &quot;model_key&quot;: &quot;yolov8n&quot;, &quot;preset&quot;: &quot;quick-sota&quot;, &quot;epochs&quot;: 300, &quot;batch_size&quot;: 16, &quot;learning_rate&quot;: 0.01, &quot;ladder_stage&quot;: 640, &quot;enable_sawtooth&quot;: true, &quot;clean&quot;: false, &quot;override_frozen&quot;: false }</code> and
+queues a training pipeline instantly with validated parameters.
+<code>override_frozen</code> resumes although a frozen run setting changed (logged and
+recorded); without it such a resume fails with the <code>FrozenSettingsChanged</code>
+message. Supports Ultralytics native trainer delegation for
 YOLOv8n and automatic fallback resolving <code>task_type: forex</code> for financial
 models.</p>
 </li>
 </ul>
 <h3 id="sec-47-python-in-process-engine--governance-api">4.7 Python In-Process Engine &amp; Governance API</h3>
-<p>The training suite provides foundational Python engine classes for standalone
-execution and notebook integration:</p>
-<pre><code class="language-python">from training.core.orchestrator import TrainingOrchestrator
-from training.governance.sentinel import SentinelGuard
-from training.governance.governor import DynamicGovernor
-from training.models.registry import ModelRegistry
+<p>The training suite provides foundational Python engine classes and functions
+for standalone execution and notebook integration. Run them from the
+<code>lemgendary-training-suite</code> project root with its <code>.venv</code> interpreter:</p>
+<pre><code class="language-python">from pathlib import Path
 
-# Discover registered architectures
-registry = ModelRegistry()
-model_meta = registry.get_model("mirnet_exposure")
-
-# Initialize safety sentinel guard
-sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
-
-# Create training orchestrator with dynamic loss governor
-orchestrator = TrainingOrchestrator(
-    model_name="mirnet_exposure",
-    sentinel=sentinel,
-    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+from converters.dispatch import detect_annotations
+from converters.matlab import parse_matlab
+from services.compiler_service import run_compile
+from services.migration_service import MigrationService
+from tools.stream_zip_to_container import (
+    ZipStreamOptions,
+    stream_zip_to_webdataset,
 )
+
+# 1. Direct streaming of multi-gigabyte zip archive to WebDataset shards
+options = ZipStreamOptions(
+    shard_size_samples=5000,
+    transcode_webp=True,
+    max_workers=12,
+    delete_zip=True,
+    legacy_dir=None,
+)
+success = stream_zip_to_webdataset(
+    Path("LemGendaryDatasets/lemgendizedmirnetexposure.zip"),
+    Path("LemGendaryDatasets/LemGendizedMirNetExposure"),
+    options,
+)
+
+# 2. Retroactive directory-to-container migration
+exit_code = MigrationService.migrate_containers(
+    Path("LemGendaryDatasets/LemGendizedFilmRestorer"),
+    "webdataset",
+    accept_space_loss=True,
+    purge_source=True,
+)
+
+# 3. Regular manifold compilation pipeline (CLI options as keywords)
+exit_code = run_compile(
+    model="mirnet_exposure",
+    preset="quality-vision",
+    also_format="webdataset",
+    workers=8,
+)
+
+# 4. Ingest and parse custom annotation formats (including MATLAB)
+fmt, ann_path = detect_annotations("raw-sets/custom_dataset")
+if fmt == "matlab" and ann_path:
+    mat_data, primary_key = parse_matlab(ann_path)
 </code></pre>
 </section>
 
@@ -1343,8 +1500,10 @@ check, uptime, version, and active job count</li>
 telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/config</code>; Auth: Required; Description: Retrieves
 parsed <code>unified_data.yaml</code> structure</li>
-<li><strong><code>POST</code></strong>: Endpoint: <code>/api/config/validate</code>; Auth: Required; Description:
-Validates configuration against Pydantic schema</li>
+<li><strong><code>POST</code></strong>: Endpoint: <code>/api/config/validate</code>; Auth: None (GUI origins with
+<code>X-LemGendary-Client: ai-studio-gui</code>, since v16.9.89); Description:
+Validates configuration against Pydantic schema and returns only a
+summary</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/jobs</code>; Auth: Required; Description: List historical
 and active jobs with pagination (<code>limit</code>, <code>offset</code>, <code>state</code>, <code>job_type</code>)</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/jobs/{id}</code>; Auth: Required; Description: Fetch
@@ -1363,8 +1522,10 @@ compiled manifolds with size, sample counts, and container formats</li>
 <code>dataset_info.yaml</code> and class lists for a specific manifold</li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/sources</code>; Auth: None; Description: Catalog local
 <code>raw-sets</code> and configured upstream datasets</li>
-<li><strong><code>GET</code></strong>: Endpoint: <code>/api/kaggle/status</code>; Auth: None; Description: Check
-Kaggle credentials (<code>.secrets.yaml</code>, <code>~/.kaggle/kaggle.json</code>, env)</li>
+<li><strong><code>GET</code></strong>: Endpoint: <code>/api/kaggle/status</code>; Auth: None; Description:
+Presence of Kaggle credentials (no network check): <code>authenticated</code> and
+<code>auth_methods</code> with <code>environment_variables</code>, <code>secrets_vault</code>,
+<code>user_access_token</code> (<code>~/.kaggle/access_token</code>) and <code>user_kaggle_json</code></li>
 <li><strong><code>GET</code></strong>: Endpoint: <code>/api/kaggle/registry-datasets</code>; Auth: None; Description:
 Enumerate 20 canonical Kaggle-bound production manifolds with local status</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/kaggle/download</code>; Auth: None; Description: Ingest
@@ -1459,7 +1620,9 @@ vetting thresholds, YOLO auto-labeling flags, and container targets.</p>
 <h4 id="post-apiguiquick-compile"><code>POST /api/gui/quick-compile</code></h4>
 <p>Fast-dispatch compilation endpoint accepting a preset profile name, target model
 key, and optional worker/storage overrides. Executed without blocking for local
-desktop GUI integration.</p>
+desktop GUI integration. Body: <code>{ &quot;model&quot;, &quot;preset&quot;: &quot;quality-vision&quot;, &quot;max_gb&quot;: null, &quot;workers&quot;: null, &quot;shard_ext&quot;: null }</code>; <code>shard_ext</code> is the
+WebDataset shard extension without dot (<code>data</code> or <code>tar</code>; unset, the compiler
+default <code>data</code> applies).</p>
 <h4 id="post-apiguicustom-compile"><code>POST /api/gui/custom-compile</code></h4>
 <p>Custom multi-source compilation endpoint accepting a user-defined manifold name,
 target domain task (<code>restoration</code>, <code>detection</code>, <code>segmentation</code>, <code>quality</code>,
@@ -1606,7 +1769,8 @@ while keeping sample contents bit-exact.</li>
 </ol>
 <h3 id="sec-58-python-in-process-engine--streaming-pipeline-apis">5.8 Python In-Process Engine &amp; Streaming Pipeline APIs</h3>
 <p>The dataset compiler exposes programmatic Python service classes and streaming
-utilities for automated workflows and sidecar runners:</p>
+utilities for automated workflows and sidecar runners. Run them from the
+<code>lemgendary-datasets</code> project root with its <code>.venv</code> interpreter:</p>
 <pre><code class="language-python">from pathlib import Path
 from services.compiler_service import CompilerService
 from services.migration_service import MigrationService

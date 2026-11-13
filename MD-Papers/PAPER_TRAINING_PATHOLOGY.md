@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.139-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.9.0 - Pathology Numbering
-& Count Alignment (2026-11-12) · **Last audited**: 2026-11-12
+**Author**: Lem Treursic · **Version**: `v16.9.157-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.12.0 - Merged Similar Pathologies
+(2026-11-12) · **Last audited**: 2026-11-12
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
@@ -17,7 +17,6 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-  - [1.1. Pathology Index](#11-pathology-index)
 - [2. The Diagnostic Master Table](#2-the-diagnostic-master-table)
 - [3. The "Fast Audit" Framework](#3-the-fast-audit-framework)
   - [3.1. Gradient Global Norm](#31-gradient-global-norm)
@@ -25,110 +24,114 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
   - [3.3. Weight-to-Update Ratio](#33-weight-to-update-ratio)
 - [4. Modern 2026 Pathologies](#4-modern-2026-pathologies)
   - [Mixed Precision Underflow (FP16/FP8) (Pathology
-    14)](#mixed-precision-underflow-fp16fp8-pathology-14)
+    20)](#mixed-precision-underflow-fp16fp8-pathology-20)
   - [Optimizer Momentum Decay (Pathology
-    15)](#optimizer-momentum-decay-pathology-15)
+    21)](#optimizer-momentum-decay-pathology-21)
   - [The "Governor Loop" (Artificial Plateau Exploit) (Pathology
-    16)](#the-governor-loop-artificial-plateau-exploit-pathology-16)
+    22)](#the-governor-loop-artificial-plateau-exploit-pathology-22)
   - [Live Polarity Inversion (Negative Manifold) (Pathology
-    17)](#live-polarity-inversion-negative-manifold-pathology-17)
+    23)](#live-polarity-inversion-negative-manifold-pathology-23)
   - [Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)
     (Pathology
-    18)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault-pathology-18)
+    40)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault-pathology-40)
   - [Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)
     (Pathology
-    19)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck-pathology-19)
+    14)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck-pathology-14)
   - [Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)
     (Pathology
-    20)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-20)
+    15)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-15)
   - [Silent Epoch Limit Termination (The Raw Exit Pathology) (Pathology
-    21)](#silent-epoch-limit-termination-the-raw-exit-pathology-pathology-21)
+    16)](#silent-epoch-limit-termination-the-raw-exit-pathology-pathology-16)
   - [The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM) (Pathology
-    22)](#the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom-pathology-22)
+    41)](#the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom-pathology-41)
   - [The Catastrophic Model Wipe (Unsafe Folder Initialization) (Pathology
-    23)](#the-catastrophic-model-wipe-unsafe-folder-initialization-pathology-23)
+    42)](#the-catastrophic-model-wipe-unsafe-folder-initialization-pathology-42)
   - [Metric Asymmetry (The Manifold Plateau) (Pathology
-    24)](#metric-asymmetry-the-manifold-plateau-pathology-24)
+    17)](#metric-asymmetry-the-manifold-plateau-pathology-17)
   - [Multi-Asset Pip Mismatch & Temperature Sharpening Collapse (Financial)
     (Pathology
-    25)](#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial-pathology-25)
+    19)](#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial-pathology-19)
   - [Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology
-    26)](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-26)
+    24)](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24)
   - [Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology
-    27)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-27)
+    25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
   - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
-    28)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-28)
+    26)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-26)
   - [Fabricated Metric History (FID Rescaling) (Pathology
-    29)](#fabricated-metric-history-fid-rescaling-pathology-29)
+    27)](#fabricated-metric-history-fid-rescaling-pathology-27)
   - [Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
-    30)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-30)
+    28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
   - [CPU-Bound Execution & Silent Accelerator Starvation (Pathology
-    31)](#cpu-bound-execution--silent-accelerator-starvation-pathology-31)
+    29)](#cpu-bound-execution--silent-accelerator-starvation-pathology-29)
   - [Vision-Curriculum Cross-Domain Contamination (Pathology
-    32)](#vision-curriculum-cross-domain-contamination-pathology-32)
+    30)](#vision-curriculum-cross-domain-contamination-pathology-30)
   - [Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
-    33)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-33)
+    31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
   - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
-    34)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-34)
+    32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
   - [Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
-    35)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-35)
+    33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
   - [PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology
-    36)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-36)
+    34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
   - [Multitask Target Collation Type Mismatch & Loss Crash (Pathology
-    37)](#multitask-target-collation-type-mismatch--loss-crash-pathology-37)
+    35)](#multitask-target-collation-type-mismatch--loss-crash-pathology-35)
   - [Static OS Worker Throttling & WebDataset Starvation (Pathology
-    38)](#static-os-worker-throttling--webdataset-starvation-pathology-38)
+    36)](#static-os-worker-throttling--webdataset-starvation-pathology-36)
   - [Dynamic Spatial Pooling & Symbolic Axis Export Failure (Pathology
-    39)](#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-39)
+    37)](#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-37)
   - [Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology
-    40)](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-40)
+    38)](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38)
   - [Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology
-    41)](#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-41)
+    39)](#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39)
 - [5. High-Fidelity Strategy & Historical Evolution
   Taxonomy](#5-high-fidelity-strategy--historical-evolution-taxonomy)
   - [The "Low-Resolution Blur" Pathology (Milestone v16.2.8) (Pathology
-    42)](#the-low-resolution-blur-pathology-milestone-v1628-pathology-42)
-  - [Memory-Sentinel Drift (Pathology 43)](#memory-sentinel-drift-pathology-43)
+    43)](#the-low-resolution-blur-pathology-milestone-v1628-pathology-43)
+  - [Memory-Sentinel Drift (Pathology 44)](#memory-sentinel-drift-pathology-44)
   - [Atomic Hardware Re-Auditing (Pathology
-    44)](#atomic-hardware-re-auditing-pathology-44)
+    45)](#atomic-hardware-re-auditing-pathology-45)
   - [The Serial Recovery Shield (Prototype v17.2) (Pathology
-    45)](#the-serial-recovery-shield-prototype-v172-pathology-45)
+    46)](#the-serial-recovery-shield-prototype-v172-pathology-46)
   - [The Sub-Nuclear 4GB Lockdown (Design Study v22.0) (Pathology
-    46)](#the-sub-nuclear-4gb-lockdown-design-study-v220-pathology-46)
+    47)](#the-sub-nuclear-4gb-lockdown-design-study-v220-pathology-47)
   - [The False-Positive Spike (Absolute Energy Floor) (Pathology
-    47)](#the-false-positive-spike-absolute-energy-floor-pathology-47)
+    48)](#the-false-positive-spike-absolute-energy-floor-pathology-48)
   - [Premature SOTA Termination (Ladder Guard v18.0) (Pathology
-    48)](#premature-sota-termination-ladder-guard-v180-pathology-48)
+    49)](#premature-sota-termination-ladder-guard-v180-pathology-49)
   - [Manifold Fragility (Glass Manifold Effect) (Pathology
-    49)](#manifold-fragility-glass-manifold-effect-pathology-49)
+    50)](#manifold-fragility-glass-manifold-effect-pathology-50)
   - [Thermal Glass Manifold Collapse (The Stress Loop) (Pathology
-    50)](#thermal-glass-manifold-collapse-the-stress-loop-pathology-50)
+    51)](#thermal-glass-manifold-collapse-the-stress-loop-pathology-51)
   - [The "CSV Lie" Pathology (Pathology
-    51)](#the-csv-lie-pathology-pathology-51)
+    52)](#the-csv-lie-pathology-pathology-52)
   - [The Infinite Cooling Loop (Pathology
-    52)](#the-infinite-cooling-loop-pathology-52)
+    53)](#the-infinite-cooling-loop-pathology-53)
   - [The Permanent Stress Pathology (Pathology
-    53)](#the-permanent-stress-pathology-pathology-53)
+    54)](#the-permanent-stress-pathology-pathology-54)
   - [The Max Stress LR Freeze (v16 Bug) (Pathology
-    54)](#the-max-stress-lr-freeze-v16-bug-pathology-54)
+    55)](#the-max-stress-lr-freeze-v16-bug-pathology-55)
   - [The Amnesiac Double-Jolt (Cooldown Persistence) (Pathology
-    55)](#the-amnesiac-double-jolt-cooldown-persistence-pathology-55)
+    56)](#the-amnesiac-double-jolt-cooldown-persistence-pathology-56)
   - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop) (Pathology
-    56)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop-pathology-56)
+    57)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop-pathology-57)
   - [Premature Spatial Retreat (The Over-Aggressive Recoil) (Pathology
-    57)](#premature-spatial-retreat-the-over-aggressive-recoil-pathology-57)
+    58)](#premature-spatial-retreat-the-over-aggressive-recoil-pathology-58)
   - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)
     (Pathology
-    58)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier-pathology-58)
+    59)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier-pathology-59)
   - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)
     (Pathology
-    59)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization-pathology-59)
+    60)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization-pathology-60)
   - [Single-Threaded CPU Validation Thrashing (The Evaluation Starvation
     Bottleneck) (Pathology
-    60)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck-pathology-60)
+    61)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck-pathology-61)
   - [Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)
     (Pathology
-    61)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop-pathology-61)
+    18)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop-pathology-18)
+  - [Finished-Epoch Resume Loop (Pathology
+    62)](#finished-epoch-resume-loop-pathology-62)
+  - [Restoration Metric Weight Imbalance (Pathology
+    63)](#restoration-metric-weight-imbalance-pathology-63)
 - [6. Best Practices Checklist](#6-best-practices-checklist)
 - [7. Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
 - [8. Mapping Pathologies to Pipeline
@@ -153,132 +156,33 @@ learning. However, the pursuit of SOTA performance is frequently obstructed by
 complex training pathologies ranging from classical vanishing gradients to
 modern micro-batch pairwise ranking starvation and spatial average pooling
 feature dilution. This whitepaper establishes a comprehensive diagnostic and
-remediation framework—the **"Nuclear Stability" protocol**. By cataloging 61
+remediation framework—the **"Nuclear Stability" protocol**. By cataloging 58
 distinct pathologies and mapping them to specific architectural progression
 stages, we provide a mathematical and operational roadmap for achieving
 indestructible convergence across edge hardware (GTX 1650 4GB) and high-VRAM
-cloud GPU clusters. Revision 1.6.0 aligns the guide with release
-v16.9.107-STABLE of the LemGendary Model Training Suite: the governor obeys the
+cloud GPU clusters. Revision 1.12.0 merges five similar pairs into the lower
+number: NaN overflow and mixed-precision underflow (20 into 5), the training
+plateau and optimizer momentum decay (21 into 7), the two checkpoint fraction
+desynchronizations (25 into 18), memory-sentinel drift and hardware
+re-auditing (45 into 44), and the two 4 GB paging pathologies (47 into 34).
+The numbers stay valid: each merged number keeps a pointer to the pathology
+that absorbed it. Revision 1.11.0 gives every pathology one number, used in
+the master table, the section headings and cross-references: Pathologies 24 to
+39 keep their numbers, Pathologies 1 to 23 and 40 to 63 receive theirs, and a
+master-table row shares its number with the section that details it.
+Revision 1.10.0 aligns the guide with release
+v16.9.157-STABLE of the LemGendary Model Training Suite: shard handles live in
+a bounded per-process pool (Pathology 36) and the CUDA wheel index comes from
+the hardware probe (Pathology 29). Revision 1.9.0 added Pathologies 37 to 39
+(ONNX export of adaptive pooling, multi-head validation outputs and the
+2.00 GB protobuf limit). The governor obeys the
 Monotonic Ratchet pair rule (resolution never decreases, the data fraction never
 decreases within one resolution step, and every backward step raises
 `RatchetViolation`), training ends on a bounded epoch budget, Stochastic Weight
 Averaging (SWA) is available but off by default, and the historical FID rows of
 four models are unverified until the FID re-evaluation tool has re-measured
 them. Remedies that earlier revisions described but the code does not run are
-marked as such. The guide catalogs 61 numbered pathologies; the complete
-list is in the [Pathology Index](#11-pathology-index).
-
-### 1.1. Pathology Index
-
-- Pathology 1: [Vanishing Gradients](#2-the-diagnostic-master-table)
-- Pathology 2: [Exploding Gradients](#2-the-diagnostic-master-table)
-- Pathology 3: [Dying ReLUs](#2-the-diagnostic-master-table)
-- Pathology 4: [Overfitting](#2-the-diagnostic-master-table)
-- Pathology 5: [NaN Divergence](#2-the-diagnostic-master-table)
-- Pathology 6: [Mode Collapse](#2-the-diagnostic-master-table)
-- Pathology 7: [Training Plateau](#2-the-diagnostic-master-table)
-- Pathology 8: [Internal Covariate Shift](#2-the-diagnostic-master-table)
-- Pathology 9: [Catastrophic Forgetting](#2-the-diagnostic-master-table)
-- Pathology 10: [Label Noise Sensitivity](#2-the-diagnostic-master-table)
-- Pathology 11: [Regression Boundary Collapse](#2-the-diagnostic-master-table)
-- Pathology 12: [Multi-Task Gradient Conflict](#2-the-diagnostic-master-table)
-- Pathology 13: [MoE Routing Collapse](#2-the-diagnostic-master-table)
-- Pathology 14: [Mixed Precision Underflow
-  (FP16/FP8)](#mixed-precision-underflow-fp16fp8-pathology-14)
-- Pathology 15: [Optimizer Momentum
-  Decay](#optimizer-momentum-decay-pathology-15)
-- Pathology 16: [The "Governor Loop" (Artificial Plateau
-  Exploit)](#the-governor-loop-artificial-plateau-exploit-pathology-16)
-- Pathology 17: [Live Polarity Inversion (Negative
-  Manifold)](#live-polarity-inversion-negative-manifold-pathology-17)
-- Pathology 18: [Turing Multi-GPU DataParallel Misalignment (The 16-byte
-  Coalesce
-  Fault)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault-pathology-18)
-- Pathology 19: [Micro-Batch Pairwise Ranking Starvation (The Single-Pair
-  Bottleneck)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck-pathology-19)
-- Pathology 20: [Spatial Average Pooling Dilution (The Micro-Trigger Vanishing
-  Defect)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-20)
-- Pathology 21: [Silent Epoch Limit Termination (The Raw Exit
-  Pathology)](#silent-epoch-limit-termination-the-raw-exit-pathology-pathology-21)
-- Pathology 22: [The Persistent Worker VRAM Fragmentation (Kaggle T4/P100
-  OOM)](#the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom-pathology-22)
-- Pathology 23: [The Catastrophic Model Wipe (Unsafe Folder
-  Initialization)](#the-catastrophic-model-wipe-unsafe-folder-initialization-pathology-23)
-- Pathology 24: [Metric Asymmetry (The Manifold
-  Plateau)](#metric-asymmetry-the-manifold-plateau-pathology-24)
-- Pathology 25: [Multi-Asset Pip Mismatch & Temperature Sharpening Collapse
-  (Financial)](#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial-pathology-25)
-- Pathology 26: [Windows Multiprocessing Heap Duplication & Pagefile
-  Thrashing](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-26)
-- Pathology 27: [Checkpoint Resumption Fraction Desync (Ghost
-  Loader)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-27)
-- Pathology 28: [The Unbounded Horizon (Open-Ended Epoch
-  Loop)](#the-unbounded-horizon-open-ended-epoch-loop-pathology-28)
-- Pathology 29: [Fabricated Metric History (FID
-  Rescaling)](#fabricated-metric-history-fid-rescaling-pathology-29)
-- Pathology 30: [Variable-Length Ragged Tensor Validation Collation
-  Collapse](#variable-length-ragged-tensor-validation-collation-collapse-pathology-30)
-- Pathology 31: [CPU-Bound Execution & Silent Accelerator
-  Starvation](#cpu-bound-execution--silent-accelerator-starvation-pathology-31)
-- Pathology 32: [Vision-Curriculum Cross-Domain
-  Contamination](#vision-curriculum-cross-domain-contamination-pathology-32)
-- Pathology 33: [Symbolic Tracing Artifacts on Dynamic Transformer Causal
-  Masks](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-33)
-- Pathology 34: [Disconnected Milestone Vault Tracking for Causal Language
-  Models](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-34)
-- Pathology 35: [Unquantized Checkpoint Resume Shape Mismatch on 4-bit
-  Backbones](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-35)
-- Pathology 36: [PCIe Paging Thrashing & Host VRAM Starvation on 4GB
-  Accelerators](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-36)
-- Pathology 37: [Multitask Target Collation Type Mismatch & Loss
-  Crash](#multitask-target-collation-type-mismatch--loss-crash-pathology-37)
-- Pathology 38: [Static OS Worker Throttling & WebDataset
-  Starvation](#static-os-worker-throttling--webdataset-starvation-pathology-38)
-- Pathology 39: [Dynamic Spatial Pooling & Symbolic Axis Export
-  Failure](#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-39)
-- Pathology 40: [Multi-Head Output Tuple Unwrapping in Validation
-  Telemetry](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-40)
-- Pathology 41: [Protobuf 2.00 GB Serialization Limit on FP16
-  LLMs](#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-41)
-- Pathology 42: [The "Low-Resolution Blur" Pathology (Milestone
-  v16.2.8)](#the-low-resolution-blur-pathology-milestone-v1628-pathology-42)
-- Pathology 43: [Memory-Sentinel Drift](#memory-sentinel-drift-pathology-43)
-- Pathology 44: [Atomic Hardware
-  Re-Auditing](#atomic-hardware-re-auditing-pathology-44)
-- Pathology 45: [The Serial Recovery Shield (Prototype
-  v17.2)](#the-serial-recovery-shield-prototype-v172-pathology-45)
-- Pathology 46: [The Sub-Nuclear 4GB Lockdown (Design Study
-  v22.0)](#the-sub-nuclear-4gb-lockdown-design-study-v220-pathology-46)
-- Pathology 47: [The False-Positive Spike (Absolute Energy
-  Floor)](#the-false-positive-spike-absolute-energy-floor-pathology-47)
-- Pathology 48: [Premature SOTA Termination (Ladder Guard
-  v18.0)](#premature-sota-termination-ladder-guard-v180-pathology-48)
-- Pathology 49: [Manifold Fragility (Glass Manifold
-  Effect)](#manifold-fragility-glass-manifold-effect-pathology-49)
-- Pathology 50: [Thermal Glass Manifold Collapse (The Stress
-  Loop)](#thermal-glass-manifold-collapse-the-stress-loop-pathology-50)
-- Pathology 51: [The "CSV Lie" Pathology](#the-csv-lie-pathology-pathology-51)
-- Pathology 52: [The Infinite Cooling
-  Loop](#the-infinite-cooling-loop-pathology-52)
-- Pathology 53: [The Permanent Stress
-  Pathology](#the-permanent-stress-pathology-pathology-53)
-- Pathology 54: [The Max Stress LR Freeze (v16
-  Bug)](#the-max-stress-lr-freeze-v16-bug-pathology-54)
-- Pathology 55: [The Amnesiac Double-Jolt (Cooldown
-  Persistence)](#the-amnesiac-double-jolt-cooldown-persistence-pathology-55)
-- Pathology 56: [OneCycleLR Desynchronization (Velocity Bomb / Stagnation
-  Loop)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop-pathology-56)
-- Pathology 57: [Premature Spatial Retreat (The Over-Aggressive
-  Recoil)](#premature-spatial-retreat-the-over-aggressive-recoil-pathology-57)
-- Pathology 58: [Static Loss Hyperparameter Saturation (Mid-Training Edit
-  Barrier)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier-pathology-58)
-- Pathology 59: [The False-Alarm Jolt Collapse Loop (Manifold Scale
-  Desynchronization)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization-pathology-59)
-- Pathology 60: [Single-Threaded CPU Validation Thrashing (The Evaluation
-  Starvation
-  Bottleneck)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck-pathology-60)
-- Pathology 61: [Checkpoint Fraction Desynchronization (The Preemption Recoil
-  Loop)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop-pathology-61)
+marked as such.
 
 ---
 
@@ -286,6 +190,13 @@ list is in the [Pathology Index](#11-pathology-index).
 
 A front-line framework for recognizing and remediating training failures in the
 LemGendary ecosystem.
+
+The guide numbers 63 pathologies, 58 of them distinct. Numbers are stable:
+revision 1.12.0 merged five similar pairs into the lower number (20 into 5,
+21 into 7, 25 into 18, 45 into 44 and 47 into 34), and each higher number
+keeps a short "Merged into Pathology N" pointer in its place. Pathologies 1
+to 19, 24 to 27 and 36 have a row in this table; Sections 4 and 5 describe
+Pathologies 14 to 63 under numbered headings.
 
 - **Vanishing Gradients (Pathology 1)**
   - *When & Why it Happens*: Deep networks with sigmoid/tanh; saturation in
@@ -316,12 +227,17 @@ LemGendary ecosystem.
   - *Remediation Strategy*: **Data Augmentation**; **Dropout** (0.2–0.5);
     **Weight Decay (L2)**; **Overfitting Rescue Protocol** (Governor dynamic
     dataset expansion).
-- **NaN Divergence (Pathology 5)**
+- **NaN Divergence: Overflow and Underflow (Pathology 5)**
   - *When & Why it Happens*: Numerical instability in Mixed Precision
-    (FP16/FP8); log(0) or division by zero.
-  - *Recognition Metrics*: Loss becomes `NaN` or `Inf` within 10–50 steps.
+    (FP16/FP8), in two sub-cases. *Overflow*: log(0) or division by zero
+    turns the loss into `NaN` or `Inf`. *Underflow* (formerly Pathology 20):
+    gradients are so small they become zero in 16-bit or 8-bit precision.
+  - *Recognition Metrics*: Overflow: loss becomes `NaN` or `Inf` within
+    10–50 steps. Underflow: gradients read exactly zero in 16-bit or 8-bit
+    precision.
   - *Remediation Strategy*: **Loss Scaling**; check for `eps` stability; use
-    **FP32** for loss calculation.
+    **FP32** for loss calculation. Against underflow, increase `Loss Scale`
+    or switch to **BFloat16**, which has a larger dynamic range.
 - **Mode Collapse (Pathology 6)**
   - *When & Why it Happens*: Generator finds a single output that "fools" the
     discriminator in GANs.
@@ -331,12 +247,15 @@ LemGendary ecosystem.
     **Wasserstein Loss (WGAN-GP)**.
 - **Training Plateau (Pathology 7)**
   - *When & Why it Happens*: Optimizer stuck in flat regions or local minima.
+    Optimizer momentum decay (formerly Pathology 21) is one cause: Adam/AdamW
+    can lose "energy" in flat manifolds, leading to premature plateaus.
   - *Recognition Metrics*: Loss curve is flat for many epochs despite no
     convergence.
   - *Remediation Strategy*: **LR Scheduler** (Cosine/Plateau); try **SWA**
     (Stochastic Weight Averaging; in the LemGendary Model Training Suite set
     `swa.enabled: true` in `config.yaml`, off by default; the plateau-triggered
-    Mini-SWA is not implemented).
+    Mini-SWA is not implemented). Against momentum decay, reset optimizer
+    state; use **Lookahead Optimizer**; or increase Momentum parameters.
 - **Internal Covariate Shift (Pathology 8)**
   - *When & Why it Happens*: Distribution of layer inputs changes during
     training, slowing convergence.
@@ -381,7 +300,7 @@ LemGendary ecosystem.
     head index; secondary heads fail to learn.
   - *Remediation Strategy*: Implement **Dynamic Filename Task Ingestion** to
     extract task targets directly from file metadata/filenames.
-- **Micro-Batch Rank Starvation** (see Pathology 19)
+- **Micro-Batch Rank Starvation (Pathology 14)**
   - *When & Why it Happens*: Small physical VRAM forces micro-batch $b=2$;
     pairwise ranking loss evaluates only $\binom{2}{2}=1$ pair per step,
     starving rank gradients.
@@ -391,7 +310,7 @@ LemGendary ecosystem.
   - *Remediation Strategy*: Implement **Differentiable Soft-Spearman Loss**
     ($\mathcal{L}_{\text{soft\_spearman}}$) and **Cross-Microbatch Rank Memory
     Bank** ($N=32/64$) to evaluate $\binom{32}{2}=496$ pairs per backward pass.
-- **Spatial Pooling Dilution** (see Pathology 20)
+- **Spatial Pooling Dilution (Pathology 15)**
   - *When & Why it Happens*: Global Average Pooling (GAP) averages activations
     over $100\%$ of spatial pixels, diluting localized defects/NSFW triggers
     occupying $5\%\text{--}15\%$ area.
@@ -401,7 +320,7 @@ LemGendary ecosystem.
   - *Remediation Strategy*: Implement **Spatial Statistical Pooling
     ($\text{Mean} \oplus \text{Std}$)** and **GeM Pooling** to capture localized
     feature variance.
-- **Silent Epoch Limit Termination** (see Pathology 21)
+- **Silent Epoch Limit Termination (Pathology 16)**
   - *When & Why it Happens*: Model hits maximum epoch budget (e.g. 300) without
     meeting SOTA targets; training abruptly terminates with uninformative
     prompt.
@@ -409,7 +328,7 @@ LemGendary ecosystem.
     no target audit, diagnostic guidance, or recovery options.
   - *Remediation Strategy*: Implement **Universal Post-Training Target Audit &
     Interactive Guidance** with headless Kaggle Cloud escalation.
-- **Metric Asymmetry (The Manifold Plateau)** (see Pathology 24)
+- **Metric Asymmetry (The Manifold Plateau) (Pathology 17)**
   - *When & Why it Happens*: Model prioritizes mathematically easier global
     metrics (e.g., PLCC, PSNR) at the total expense of complex structural
     metrics (SRCC, LPIPS).
@@ -418,19 +337,32 @@ LemGendary ecosystem.
   - *Remediation Strategy*: Implement **Omni-Metric Autonomous Governor** with
     **Metric Deficit Engine** ($\Delta_m$) to dynamically actuate specialized
     loss weights.
-- **Checkpoint Fraction Desynchronization** (see Pathology 61)
-  - *When & Why it Happens*: Model expands dataset fraction (e.g. 75% → 90%) on
-    preemption-prone cloud GPU (Kaggle), but checkpoint serialization runs prior
-    to expansion. Preemption rolls state back to 75%.
+- **Checkpoint Fraction Desynchronization (Pathology 18)**
+  - *When & Why it Happens*: The checkpoint and the curriculum disagree about
+    the data fraction, in two sub-cases. *Preemption recoil*: model expands
+    dataset fraction (e.g. 75% → 90%) on preemption-prone cloud GPU
+    (Kaggle), but checkpoint serialization runs prior to expansion.
+    Preemption rolls state back to 75%. *Ghost loader dilution* (formerly
+    Pathology 25): resuming training from an earlier checkpoint saved prior
+    to curriculum fractional scaling (where `sample_fraction` was 1.0)
+    overrides the active curriculum, expanding batch count by 7x (3,900 to
+    27,300 batches) and diluting convergence rate.
   - *Recognition Metrics*: **Fraction Recoil**: Terminal logs report fraction
     expansion, but subsequent session resumes revert to previous fraction,
-    trapping training in a fraction loop.
+    trapping training in a fraction loop. **Ghost Loader**: checkpoint
+    telemetry reports `Source Fraction: 100.0%`, `New Length: 27300`
+    (instead of ~3,900), and epoch progress bar indicates 24–26+ hours
+    remaining for Epoch 1.
   - *Remediation Strategy*: **Atomic Fraction Persistence (v16.3.4)**. Flush
     live `governor.get_state()` into checkpoint payload immediately upon
     fraction promotion and re-save both `_latest.pth` and `_best.pth`. Anchor
-    Hub Lock to live governor state.
-- **Multi-Asset Pip Scale Mismatch & Thermal Sharpening Collapse**
-  (see Pathology 25)
+    Hub Lock to live governor state. For a legacy checkpoint, keep the
+    restored fraction (v16.9.67). Lowering a saved fraction at the same
+    resolution breaks the Monotonic Ratchet, so the earlier **Curriculum
+    Checkpoint Fraction Override** was removed. Start a clean run (`--clean`
+    / `--fresh`) when a legacy checkpoint's fraction is unwanted.
+- **Multi-Asset Pip Scale Mismatch & Thermal Sharpening Collapse (Pathology
+  19)**
   - *When & Why it Happens*: Multi-asset financial models trained concurrently
     on currencies, commodities, and indices; commodity/index volatility
     (1,000–8,000 pips) overpowers a clamped magnitude head (200 pips), while
@@ -443,8 +375,8 @@ LemGendary ecosystem.
     ($[0, 100]$ NPUs); enforce **Financial Governor Hardening** with a strict
     temperature floor ($\min T = 0.75$), bounded LR jolts ($\le 1.15\times$),
     and `CURRICULUM_FOLD` phase classification.
-- **Windows Multiprocessing Heap Duplication & Pagefile Thrashing**
-  (see Pathology 26)
+- **Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology
+  24)**
   - *When & Why it Happens*: PyTorch DataLoader with `num_workers > 0` on
     Windows uses `spawn`, duplicating large memory-mapped sequence datasets
     across child processes. 4 workers consume 20+ GB, driving committed memory
@@ -456,21 +388,9 @@ LemGendary ecosystem.
     for memory-mapped sequence datasets on Windows. In-process execution
     operates at 1.1GB RAM total, preserving 20+ GB free RAM for OS filesystem
     caching and accelerating batch retrieval by $12.5\times$.
-- **Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)**
-  (see Pathology 27)
-  - *When & Why it Happens*: Resuming training from an earlier checkpoint saved
-    prior to curriculum fractional scaling (where `sample_fraction` was 1.0)
-    overrides the active curriculum, expanding batch count by 7x (3,900 to
-    27,300 batches) and diluting convergence rate.
-  - *Recognition Metrics*: Checkpoint telemetry reports
-    `Source Fraction: 100.0%`, `New Length: 27300` (instead of ~3,900), and
-    epoch progress bar indicates 24–26+ hours remaining for Epoch 1.
-  - *Remediation Strategy*: Keep the restored fraction (v16.9.67). Lowering a
-    saved fraction at the same resolution breaks the Monotonic Ratchet, so the
-    earlier **Curriculum Checkpoint Fraction Override** was removed. Start a
-    clean run (`--clean` / `--fresh`) when a legacy checkpoint's fraction is
-    unwanted.
-- **Unbounded Epoch Horizon** (see Pathology 28)
+- **Checkpoint Resumption Fraction Desynchronization (Ghost Loader Dilution)
+  (Pathology 25)**: Merged into Pathology 18.
+- **Unbounded Epoch Horizon (Pathology 26)**
   - *When & Why it Happens*: An open-ended loop extends the epoch budget
     whenever it is reached and ignores the governor's early-stop signal.
   - *Recognition Metrics*: A `--epochs 1` diagnostic run never finishes; epoch
@@ -478,7 +398,7 @@ LemGendary ecosystem.
   - *Remediation Strategy*: **Bounded Epoch Budget** (v16.9.65): the budget is a
     hard cap, early stop is honoured, and extensions are opt-in up to
     `training_budget.max_extension_epochs`.
-- **Fabricated Metric History** (see Pathology 29)
+- **Fabricated Metric History (Pathology 27)**
   - *When & Why it Happens*: A tool rewrites logged metrics with formulas to
     smooth charts (for example FID rescaling).
   - *Recognition Metrics*: `metrics.csv` values that no checkpoint evaluation
@@ -487,8 +407,8 @@ LemGendary ecosystem.
     re-evaluate from the checkpoints (FID with `feature=2048`, chunks of at most
     two; `python -m training.fid_reeval`).
 
-- **Static OS Worker Throttling & WebDataset Tar Decompression Starvation**
-  (see Pathology 38)
+- **Static OS Worker Throttling & WebDataset Tar Decompression Starvation
+  (Pathology 36)**
   - *When & Why it Happens*: DataLoader workers clamped to 0 or 2 on Windows
     combined with synchronous single-threaded tar extraction for paired
     multi-image datasets (`professional_multitask_restoration`) causes CPU
@@ -504,7 +424,8 @@ LemGendary ecosystem.
     $$\Omega_{\text{workers}} = \min\left(N_{\text{cpu}}-1,
     \lfloor \text{RAM}_{\text{avail}} / 1.5\text{GB} \rfloor\right)$$
     Activate `persistent_workers` when available RAM $\ge 16\text{GB}$, and
-    isolate tarfile handle descriptors across spawned processes.
+    keep shard handles in a bounded per-process pool (at most 16, least
+    recently used closed first; inherited handles closed after a fork).
 
 ---
 
@@ -534,23 +455,15 @@ If 10^-1: updates are **Violent (Exploding)**. If 10^-5: you are **Stagnating**.
 
 ## 4. Modern 2026 Pathologies
 
-### Mixed Precision Underflow (FP16/FP8) (Pathology 14)
+### Mixed Precision Underflow (FP16/FP8) (Pathology 20)
 
-**The Issue:** Gradients are so small they become zero in 16-bit or 8-bit
-precision.
+Merged into Pathology 5 (NaN Divergence: Overflow and Underflow, Section 2).
 
-**Remedy:** Increase `Loss Scale` or switch to **BFloat16** which has a larger
-dynamic range.
+### Optimizer Momentum Decay (Pathology 21)
 
-### Optimizer Momentum Decay (Pathology 15)
+Merged into Pathology 7 (Training Plateau, Section 2).
 
-**The Issue:** Adam/AdamW can lose "energy" in flat manifolds, leading to
-premature plateaus.
-
-**Remedy:** Reset optimizer state; use **Lookahead Optimizer**; or increase
-Momentum parameters.
-
-### The "Governor Loop" (Artificial Plateau Exploit) (Pathology 16)
+### The "Governor Loop" (Artificial Plateau Exploit) (Pathology 22)
 
 **The Issue:** The model fails to reach the Absolute SOTA, but avoids a hard
 regression rollback by briefly spiking just high enough to reset the Governor's
@@ -565,7 +478,7 @@ regardless of minor drift resets. **Status:** the current code has no absolute
 patience limit; a stalled run ends through the bounded epoch budget (Pathology
 26).
 
-### Live Polarity Inversion (Negative Manifold) (Pathology 17)
+### Live Polarity Inversion (Negative Manifold) (Pathology 23)
 
 **The Issue:** The model's classification head physically inverts mid-epoch,
 mapping correct features to inverse targets (e.g., scoring bad images as good).
@@ -579,7 +492,7 @@ negative (`< 0.0`) despite high theoretical quality scores.
 actively monitor `SRCC` and `PLCC` during the epoch, instantly triggering a SOTA
 rollback if a negative correlation is detected.
 
-### Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault) (Pathology 18)
+### Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault) (Pathology 40)
 
 **The Issue:** When running PyTorch `DataParallel` on Turing-class GPUs (e.g.
 Tesla T4), PyTorch packs all parameters into a single contiguous flat buffer to
@@ -605,7 +518,7 @@ DataParallel replica buffer), intercept the execution and force a `.clone()` to
 instantly reallocate the tensor on PyTorch's native 256-byte aligned allocator
 before passing it to `F.conv2d`.
 
-### Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck) (Pathology 19)
+### Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck) (Pathology 14)
 
 - **The Issue**: In technical and aesthetic quality scoring (NIMA
   architectures), models are supervised with both pointwise distribution loss
@@ -645,7 +558,7 @@ before passing it to `F.conv2d`.
        pairs on every forward step, backpropagating gradients exclusively
        through the active micro-batch.
 
-### Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect) (Pathology 20)
+### Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect) (Pathology 15)
 
 - **The Issue**: Standard Global Average Pooling ($\text{GAP}$) collapses a
   $H \times W \times C$ spatial activation tensor to $1 \times 1 \times C$ by
@@ -681,7 +594,7 @@ before passing it to `F.conv2d`.
   Statistical pooling preserves localized peak activation variance alongside
   scene-level context without adding convolutional FLOPs.
 
-### Silent Epoch Limit Termination (The Raw Exit Pathology) (Pathology 21)
+### Silent Epoch Limit Termination (The Raw Exit Pathology) (Pathology 16)
 
 - **The Issue**: When a model finishes its total epoch budget (e.g. 300 epochs)
   without breaching SOTA benchmarks, training scripts traditionally exit
@@ -701,7 +614,7 @@ before passing it to `F.conv2d`.
        Kaggle Cloud Hub, export ONNX binaries, or extend local training
        in-process.
 
-### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM) (Pathology 22)
+### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM) (Pathology 41)
 
 - **The Issue**: In constrained environments like Kaggle (16GB T4/P100), PyTorch
   DataLoader workers (when `persistent_workers=True`) hold onto fragmented C++
@@ -717,7 +630,7 @@ before passing it to `F.conv2d`.
   `torch.cuda.empty_cache()` teardown sequences exactly between the training and
   validation phases to force the C++ allocator to flush the VRAM footprint.
 
-### The Catastrophic Model Wipe (Unsafe Folder Initialization) (Pathology 23)
+### The Catastrophic Model Wipe (Unsafe Folder Initialization) (Pathology 42)
 
 - **The Issue**: To prevent overlapping legacy checkpoints, `shutil.rmtree` was
   historically used to purge the output directory before a fresh start. However,
@@ -732,7 +645,7 @@ before passing it to `F.conv2d`.
   specific checkpoint files (`_latest.pth`, `_best.pth`) rather than destroying
   their parent container.
 
-### Metric Asymmetry (The Manifold Plateau) (Pathology 24)
+### Metric Asymmetry (The Manifold Plateau) (Pathology 17)
 
 - **The Issue**: During multi-objective optimization, the model discovers a
   "lazy" minima where it optimizes a mathematically simpler metric (like global
@@ -751,7 +664,7 @@ before passing it to `F.conv2d`.
     3. Modulate `dir_weight` versus `mag_weight` in Forex manifolds if
        Directional Accuracy plateaus.
 
-### Multi-Asset Pip Mismatch & Temperature Sharpening Collapse (Financial) (Pathology 25)
+### Multi-Asset Pip Mismatch & Temperature Sharpening Collapse (Financial) (Pathology 19)
 
 - **The Issue**: In multi-asset financial models trained concurrently across
   currencies, commodities, and indices, pip magnitude scales differ by orders of
@@ -786,7 +699,7 @@ before passing it to `F.conv2d`.
        limit differential LR jolts to $\le 1.15\times$, and classify financial
        training phases as `CURRICULUM_FOLD`.
 
-### Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology 26)
+### Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology 24)
 
 - **The Issue**: On Windows platforms, PyTorch `DataLoader` with
   `num_workers > 0` cannot leverage UNIX `fork()` with Copy-On-Write memory
@@ -811,29 +724,11 @@ before passing it to `F.conv2d`.
   blocks resident in RAM, eliminating pagefile swapping and accelerating batch
   retrieval by $12.5\times$ (0.275s/batch).
 
-### Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology 27)
+### Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology 25)
 
-- **The Issue**: When `SmartTrainingGovernor` saves progress checkpoints
-  (`_progress.pth`), it serializes the active `sample_fraction`. If a run is
-  interrupted and resumed from an older checkpoint generated before fractional
-  curriculum fixes (where the sample fraction was hardcoded to 1.0), the
-  checkpoint restoration logic blindly restores `current_fraction = 1.0`. This
-  expands the training dataloader from the intended curriculum fraction (e.g.
-  15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying
-  epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning
-  rates across 7 million samples.
-- **Identification**: Resumption telemetry logs report
-  `Source Fraction: 100.0%`, `New Length: 27300`, and `Iteration 1362/27300`
-  despite configuration specifying `initial_fraction: 0.15`.
-- **Remedy**: **Keep the Restored Fraction (v16.9.67)**.
-  `SmartTrainingGovernor.load_state` restores the saved fraction as-is. The
-  earlier **Curriculum Checkpoint Fraction Override**, which lowered a legacy
-  100% fraction to `initial_fraction: 0.15` during early epochs, was removed:
-  lowering the fraction at the same resolution breaks the Monotonic Ratchet
-  (pair rule). When a legacy checkpoint's fraction is unwanted, start a clean
-  run (`--clean` / `--fresh`) so training begins again at the initial fraction.
+Merged into Pathology 18 (Checkpoint Fraction Desynchronization).
 
-### The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology 28)
+### The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology 26)
 
 - **The Issue**: The engine loop ran as `while True`, ended only on 4-pillar
   completion or cancellation, and added 10 epochs whenever the budget was
@@ -852,7 +747,7 @@ $$
 E_{\text{trained}} \le E + E_{\max}
 $$
 
-### Fabricated Metric History (FID Rescaling) (Pathology 29)
+### Fabricated Metric History (FID Rescaling) (Pathology 27)
 
 - **The Issue**: `tools/recalibrate_fid.py` rewrote historical `metrics.csv` FID
   values with formulas (for example `fid * 45 + lpips * 26`, a fixed `2.78` for
@@ -871,7 +766,7 @@ $$
   checkpoint; both append to `LemGendaryModels/<model>/fid_provenance.csv` and
   never write `metrics.csv`. The measurements need a GPU and are still open.
 
-### Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 30)
+### Variable-Length Ragged Tensor Validation Collation Collapse (Pathology 28)
 
 - **The Issue**: Language model instruction datasets consist of heterogeneous
   user prompts and assistant completions with varying token sequence lengths
@@ -891,11 +786,11 @@ $$
   `task_type in ("text_instruction", "llm")`, padding token sequences
   dynamically to the longest sequence in each validation micro-batch.
 
-### CPU-Bound Execution & Silent Accelerator Starvation (Pathology 31)
+### CPU-Bound Execution & Silent Accelerator Starvation (Pathology 29)
 
 - **The Issue**: In environments where PyTorch is installed without
   pre-compiled CUDA binaries (CPU-only build, e.g. `torch==2.15.0+cpu` instead
-  of `+cu126`), `torch.cuda.is_available()` returns `False`. The training suite
+  of `+cu134`), `torch.cuda.is_available()` returns `False`. The training suite
   falls back to CPU execution without throwing an exception. On a 1.5B
   parameter causal transformer with 2048 sequence length, CPU execution
   saturates all host threads (96% CPU utilization across 12 logical processors)
@@ -905,15 +800,16 @@ $$
 - **Identification**: Task Manager displays 96% CPU load, 0% GPU utilization,
   0.8 GB GPU dedicated memory, and iteration speed of ~40-55 seconds/it.
 - **Remedy**: **Hardware Sentinel Pre-Flight Enforcement**. Install
-  CUDA-enabled PyTorch wheels
-  (`pip install torch torchvision --index-url
-  https://download.pytorch.org/whl/cu126`). The local trainer has no automatic
+  CUDA-enabled PyTorch wheels from the index the LemGendary Environment
+  Manager hardware probe selects for the driver (`cu134` for driver 610 or
+  newer, e.g. `pip install torch torchvision --index-url
+  https://download.pytorch.org/whl/cu134`). The local trainer has no automatic
   pre-flight check yet that compares OS GPU enumeration with
   `torch.cuda.is_available()`; check `lemtrain audit system`, which prints
   `CUDA Available`. Only the generated Kaggle notebooks probe the GPU and
   print a reinstall hint.
 
-### Vision-Curriculum Cross-Domain Contamination (Pathology 32)
+### Vision-Curriculum Cross-Domain Contamination (Pathology 30)
 
 - **The Issue**: Progressive curriculum learning designed for vision models
   (resolution ladders: 256px -> 384px -> 512px; sample fraction ladders: 15% ->
@@ -931,7 +827,7 @@ $$
   (`Context: 2048 tokens`), and dynamically resolve data fraction and effective
   batch size directly from `unified_models_v2.yaml`.
 
-### Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 33)
+### Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology 31)
 
 - **The Issue**: Exporting autoregressive causal transformers to ONNX via
   legacy TorchScript tracing (`dynamo=False`) attempts to capture Python
@@ -951,7 +847,7 @@ $$
   during graph compilation to eliminate the root cause of tracer warnings
   without suppression (`training/export/llm_exporter.py`).
 
-### Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 34)
+### Disconnected Milestone Vault Tracking for Causal Language Models (Pathology 32)
 
 - **The Issue**: `CheckpointLifecycleManager` records Pareto milestone
   checkpoints (`vault_<metric>.pth`) based on SOTA target metrics configured in
@@ -970,7 +866,7 @@ $$
   `perplexity` in `LOWER_IS_BETTER_METRICS`, and enable Pareto model soup
   blending across LLM adapter checkpoints.
 
-### Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology 35)
+### Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology 33)
 
 - **The Issue**: When resuming training for an LLM that was previously initialized
   or trained in unquantized FP32 (e.g. CPU fallback), linear projection weights
@@ -988,7 +884,11 @@ $$
   diagnostic warning and proceed with freshly initialized quantized base weights
   while preserving curriculum metrics.
 
-### PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology 36)
+### PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology 34)
+
+Two workloads hit the same 4 GB paging limit: 4-bit language models with long
+sequences, and vision models whose batches exceed the free VRAM (formerly
+Pathology 47, the Sub-Nuclear 4GB Lockdown).
 
 - **The Issue**: On edge GPUs with 4 GB physical VRAM (e.g. NVIDIA GTX 1650),
   ambient OS, display managers, and hardware-accelerated host applications (e.g.
@@ -1007,8 +907,16 @@ $$
   `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus lockups,
   and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
   accumulation steps for edge training.
+- **The Issue (Vision Models)**: 4GB cards (GTX 1650) trigger **System RAM
+  Paging** when VRAM usage exceeds ~3.5GB, slowing training by 10x-20x.
+- **Identification (Vision Models)**: "Shared GPU Memory" in Task Manager
+  exceeds 1GB; speed drops below 0.5 img/s.
+- **Remedy (Vision Models)**: **Absolute Sentinel Authority**. The Memory
+  Sentinel now acts as the absolute physical authority, overriding any
+  hardcoded YAML config batch sizes. It dynamically clamps pixel volumes to
+  fit entirely within physical VRAM, preventing Windows System RAM paging.
 
-### Multitask Target Collation Type Mismatch & Loss Crash (Pathology 37)
+### Multitask Target Collation Type Mismatch & Loss Crash (Pathology 35)
 
 - **The Issue**: In multi-task image restoration models such as
   `professional_multitask_restoration`, DataLoader pipelines ingest sample
@@ -1042,7 +950,7 @@ $$
      for `professional_multitask_restoration` items from filename prefixes or
      container sample IDs rather than falling back to a static generic label.
 
-### Static OS Worker Throttling & WebDataset Starvation (Pathology 38)
+### Static OS Worker Throttling & WebDataset Starvation (Pathology 36)
 
 - **The Issue**: On multi-core workstations (e.g. 12+ threads, 32GB RAM),
   static platform rules historically clamped `DataLoader` training workers
@@ -1070,15 +978,18 @@ $$
      $$\text{num\_workers} = \min\left(\Omega_{\text{core}},
      \Omega_{\text{ram}}, \Omega_{\text{cap}}\right)$$
      with $\Omega_{\text{cap}} = 0$ strictly maintained for continuous
-     memory-mapped financial time-series to honor Pathology 26.
+     memory-mapped financial time-series to honor Pathology 24.
   2. Dynamically enable `persistent_workers = True` when available system
      memory $\ge 16\text{ GB}$, avoiding costly worker process re-initialization
      and teardown overhead across epochs.
-  3. Ensure `WebDatasetReader` detects worker process boundaries
-     (`os.getpid()`) and establishes isolated `tarfile` file handle stacks
-     per worker to guarantee thread-safe asynchronous stream reading.
+  3. `WebDatasetReader` keeps its shard handles in a per-process
+     `HandlePool` (at most 16 open handles, least recently used closed
+     first). Handles are never pickled, a forked worker closes inherited
+     handles, and uncompressed shards are read by byte offset from the
+     `.shard_offsets.json` cache instead of a `tarfile` name scan (since
+     training v16.9.148).
 
-### Dynamic Spatial Pooling & Symbolic Axis Export Failure (Pathology 39)
+### Dynamic Spatial Pooling & Symbolic Axis Export Failure (Pathology 37)
 
 - **The Issue**: Vision models with dynamic spatial resolutions (`H=*`, `W=*`)
   exported to ONNX via TorchScript frequently collapse on adaptive pooling
@@ -1097,7 +1008,7 @@ $$
   2. Replace spatial classifier pooling with tensor reduction:
      `x.mean(dim=(-2, -1))` to compile into standard ONNX `ReduceMean` operators.
 
-### Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology 40)
+### Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology 38)
 
 - **The Issue**: Universal multitask restoration architectures return multi-head
   predictions as tuples (e.g. `(restored_image, task_logits)`). When validation
@@ -1111,7 +1022,7 @@ $$
   (`preds[0]`) before computing perceptual metrics, preserving logits for task
   classification metrics.
 
-### Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology 41)
+### Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology 39)
 
 - **The Issue**: Google Protocol Buffers strictly enforces a 2,147,483,648 byte
   (2.00 GB) limit on single serialized protobuf messages. When exporting large
@@ -1131,17 +1042,18 @@ $$
 
 ## 5. High-Fidelity Strategy & Historical Evolution Taxonomy
 
-> [!NOTE] **Historical Evolution & Version Authority Note**: The strategies
+> [!NOTE]
+> **Historical Evolution & Version Authority Note**: The strategies
 > documented in this section reflect the chronological hardening of the
 > LemGendary Model Training Suite across architectural milestones. Historical
 > tags (`v16.2.8`, `v17.2`, `v18.0`, `v22.0`) represent historical development
 > phases and research prototypes. In the authoritative active baseline
-> (**v16.9.68-STABLE**), all of these individual mechanisms (high-fidelity
+> (**v16.9.157-STABLE**), all of these individual mechanisms (high-fidelity
 > resolution floors, zero-worker serial lockdown, sawtooth VRAM memory
 > sentinels, and ladder-aware resolution jumps) have been fully consolidated
 > into the unified `SmartTrainingGovernor` runtime engine.
 
-### The "Low-Resolution Blur" Pathology (Milestone v16.2.8) (Pathology 42)
+### The "Low-Resolution Blur" Pathology (Milestone v16.2.8) (Pathology 43)
 
 **The Issue:** Initializing training at ultra-low resolutions results in the
 model learning to ignore high-frequency details. This leads to persistent
@@ -1151,27 +1063,27 @@ blurring artifacts.
 v16.9.16-STABLE), all models must start at a minimum of **224px** or **512px**
 (Metric Scorers).
 
-### Memory-Sentinel Drift (Pathology 43)
+### Memory-Sentinel Drift (Pathology 44)
 
 **The Issue:** Static batch sizes fail to account for background VRAM usage,
-causing "OOM-Drift" during long training runs.
-
-**Remedy:** **Active Memory-Sentinel Probing**. Decouple batch size from
-registry and probe hardware headroom before every resolution jump.
-
-### Atomic Hardware Re-Auditing (Pathology 44)
-
-**The Issue:** Using a single batch size measurement for the entire training run
-is sub-optimal. A 4GB card can fit 4 batches at 256px but only 1 at 512px.
+causing "OOM-Drift" during long training runs. Using a single batch size
+measurement for the entire training run is also sub-optimal (formerly
+Pathology 45, Atomic Hardware Re-Auditing). A 4GB card can fit 4 batches at
+256px but only 1 at 512px.
 
 **Identification:** Under-utilization (low it/s) at low resolutions or OOM
 crashes immediately following a resolution jump.
 
-**Remedy:** **Atomic Re-Audit Protocol**. Trigger a fresh hardware probe on
-every spatial jump and at the start of every validation phase to re-calculate
-peak batch and accumulation.
+**Remedy:** **Active Memory-Sentinel Probing** with the **Atomic Re-Audit
+Protocol**. Decouple batch size from registry and trigger a fresh hardware
+probe on every spatial jump and at the start of every validation phase to
+re-calculate peak batch and accumulation.
 
-### The Serial Recovery Shield (Prototype v17.2) (Pathology 45)
+### Atomic Hardware Re-Auditing (Pathology 45)
+
+Merged into Pathology 44 (Memory-Sentinel Drift).
+
+### The Serial Recovery Shield (Prototype v17.2) (Pathology 46)
 
 **The Issue:** On Windows, OOM recovery events involving parallel data workers
 often lead to kernel-level deadlocks or "Zombie" Python processes that freeze
@@ -1181,20 +1093,12 @@ the entire training suite.
 force-disable all parallel workers and revert to **Serial Mode (0 workers)** for
 the remainder of the manifold stage.
 
-### The Sub-Nuclear 4GB Lockdown (Design Study v22.0) (Pathology 46)
+### The Sub-Nuclear 4GB Lockdown (Design Study v22.0) (Pathology 47)
 
-**The Issue:** 4GB cards (GTX 1650) trigger **System RAM Paging** when VRAM
-usage exceeds ~3.5GB, slowing training by 10x-20x.
+Merged into Pathology 34 (PCIe Paging Thrashing & Host VRAM Starvation on 4GB
+Accelerators).
 
-**Identification:** "Shared GPU Memory" in Task Manager exceeds 1GB; speed drops
-below 0.5 img/s.
-
-**Remedy:** **Absolute Sentinel Authority**. The Memory Sentinel now acts as the
-absolute physical authority, overriding any hardcoded YAML config batch sizes.
-It dynamically clamps pixel volumes to fit entirely within physical VRAM,
-preventing Windows System RAM paging.
-
-### The False-Positive Spike (Absolute Energy Floor) (Pathology 47)
+### The False-Positive Spike (Absolute Energy Floor) (Pathology 48)
 
 **The Issue:** The Pre-Backward Sentinel monitors relative loss spikes (e.g., 8x
 the running average). In high-fidelity restoration, the running average can drop
@@ -1212,7 +1116,7 @@ threshold (e.g., `> 0.05` unscaled) to the spike detection logic. A spike is now
 only considered dangerous if it represents a massive relative deviation *and*
 breaches the absolute baseline energy floor.
 
-### Premature SOTA Termination (Ladder Guard v18.0) (Pathology 48)
+### Premature SOTA Termination (Ladder Guard v18.0) (Pathology 49)
 
 **The Issue:** The training suite terminates immediately upon reaching SOTA
 targets at low-resolution rungs, resulting in lack of high-frequency spatial
@@ -1221,7 +1125,7 @@ maturity.
 **Remedy:** **Ladder-Aware SOTA Guard**. Targets met at lower rungs now trigger
 an autonomous **Force-Jump** to the next resolution instead of mission shutdown.
 
-### Manifold Fragility (Glass Manifold Effect) (Pathology 49)
+### Manifold Fragility (Glass Manifold Effect) (Pathology 50)
 
 **The Issue:** Rapid resolution jumps can destabilize the model's weight
 distribution before it has "hardened" at the new scale.
@@ -1230,7 +1134,7 @@ distribution before it has "hardened" at the new scale.
 Manifold Maturity** period. The model is forbidden from jumping until it has
 solidified weights for 2 full epochs.
 
-### Thermal Glass Manifold Collapse (The Stress Loop) (Pathology 50)
+### Thermal Glass Manifold Collapse (The Stress Loop) (Pathology 51)
 
 **The Issue:** When a model plateaus far away from its final SOTA target, the
 Governor assumes it is trapped and deploys the **Stress Protocol** by sharpening
@@ -1244,7 +1148,7 @@ SOTA, causing an endless loop.
 `min_temp: 0.96`). This physically blocks the Stress Protocol from dropping the
 temperature into the shattering zone.
 
-### The "CSV Lie" Pathology (Pathology 51)
+### The "CSV Lie" Pathology (Pathology 52)
 
 **The Issue:** Telemetry logging natively pulls background hardware metrics
 instead of the Governor's internal state machine, causing visualizations to show
@@ -1258,7 +1162,7 @@ terminal outputting `REFINEMENT: Trapped in Plateau. Deploying Stress Protocol`.
 must be hardwired to extract `current_epoch_governor_state['stress']` instead of
 hardware memory stress.
 
-### The Infinite Cooling Loop (Pathology 52)
+### The Infinite Cooling Loop (Pathology 53)
 
 **The Issue:** A mathematical logic flaw in the training loop resets the
 `epochs_no_improve` counter to `0` whenever any action is taken by the Governor.
@@ -1274,7 +1178,7 @@ the Stress Protocol is never deployed.
 standard learning rate adjustments (`lr_changed = True`), resetting only upon
 spatial jumps, dataset fraction expansions, or positive 'Jolt' multipliers.
 
-### The Permanent Stress Pathology (Pathology 53)
+### The Permanent Stress Pathology (Pathology 54)
 
 **The Issue:** A failure to deactivate the Stress Protocol. After deploying
 Stress to shake a model out of a plateau, the model successfully establishes a
@@ -1290,7 +1194,7 @@ phase in `optimization_engine.py`. When `current_quality > self.best_quality`,
 instantly neutralize `self.current_stress` back to `0.0` so the new manifold can
 anchor cleanly.
 
-### The Max Stress LR Freeze (v16 Bug) (Pathology 54)
+### The Max Stress LR Freeze (v16 Bug) (Pathology 55)
 
 **The Issue:** A logic gap in the Governor's `REFINEMENT` phase. When
 `current_stress` reaches the maximum level of `5.0` and the model's quality
@@ -1319,7 +1223,7 @@ state with no improvement, emit a `[STUCK]` signal in the governor message so
 the operator can make an informed decision about stopping or switching the
 architecture backbone. This prevents indefinite silent degradation.
 
-### The Amnesiac Double-Jolt (Cooldown Persistence) (Pathology 55)
+### The Amnesiac Double-Jolt (Cooldown Persistence) (Pathology 56)
 
 **The Issue:** The Governor fails to persist the `last_jolt_epoch` timer across
 script restarts. If the training hub is restarted while a model is in a plateau,
@@ -1335,7 +1239,7 @@ a checkpoint, and metrics regress heavily.
 serialized in `get_state()` and loaded in `load_state()` inside
 `optimization_engine.py`.
 
-### OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop) (Pathology 56)
+### OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop) (Pathology 57)
 
 **The Issue:** Instantiating a new `OneCycleLR` scheduler in PyTorch immediately
 resets the optimizer's active learning rate parameter groups to the initial
@@ -1357,7 +1261,7 @@ manually setting `scheduler.last_epoch` and `scheduler._step_count` on newly
 instantiated schedulers, manually synchronize the optimizer's active parameter
 groups with `scheduler.get_lr()` and update `scheduler._last_lr`.
 
-### Premature Spatial Retreat (The Over-Aggressive Recoil) (Pathology 57)
+### Premature Spatial Retreat (The Over-Aggressive Recoil) (Pathology 58)
 
 **The Issue:** When dataset fraction is expanded (e.g. `55% -> 75%`) on a
 high-resolution manifold, temporary validation variance occurs. Under legacy
@@ -1380,7 +1284,7 @@ the fraction backwards at the same resolution. Every governor transition goes
 through `_commit_rung`, which raises `RatchetViolation` on a backward step
 (v16.9.67).
 
-### Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier) (Pathology 58)
+### Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier) (Pathology 59)
 
 **The Issue:** Fixed loss hyperparameters (such as pairwise `rank_weight`,
 `rank_margin`, or static `softmax_temp`) in static configuration files limit
@@ -1400,7 +1304,7 @@ tightens pairwise `rank_margin` (down to `0.05`), and sharpens `softmax_temp`
 (down to `0.90`) on the fly, writing the updated parameters into
 `criterion.stab` and checkpoint state.
 
-### The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization) (Pathology 59)
+### The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization) (Pathology 60)
 
 **The Issue:** During late-stage plateau breaking on high-scalar quality
 manifolds (such as `nima_technical` where Quality Score is ~284), the **Jolt
@@ -1433,7 +1337,7 @@ Forex, doubles Jolt Protocol intensity (2.0×), extends absolute plateau patienc
 (15+ epochs), and explicitly recalibrates collapse guard thresholds to < 45.0%
 Directional Accuracy to prevent false-positive retreats.
 
-### Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck) (Pathology 60)
+### Single-Threaded CPU Validation Thrashing (The Evaluation Starvation Bottleneck) (Pathology 61)
 
 **The Issue:** In high-resolution image restoration pipelines, transferring
 validation predictions to CPU host RAM for single-threaded
@@ -1445,7 +1349,7 @@ further clamp validation batch sizes on 15GB/30GB GPUs to micro-batches of 1–2
 
 **Identification:** Kaggle/Cloud dashboard shows CPU at 103%, GPU utilization
 drops to 18–27%, GPU memory is underutilized, and validation progress moves at
-\> 1.5s per iteration across thousands of micro-batches.
+> 1.5s per iteration across thousands of micro-batches.
 
 **Remedy:** **Zero-Copy GPU-Native Evaluation & Dynamic VRAM-Tiered Batching
 (v19.2)**:
@@ -1459,7 +1363,11 @@ drops to 18–27%, GPU memory is underutilized, and validation progress moves at
 4. **Dynamic CPU Worker Topology:** Aligns `num_workers = min(cpu_count, 2)` on
    Kaggle to prevent CPU core oversubscription.
 
-### Checkpoint Fraction Desynchronization (The Preemption Recoil Loop) (Pathology 61)
+### Checkpoint Fraction Desynchronization (The Preemption Recoil Loop) (Pathology 18)
+
+The checkpoint and the curriculum disagree about the data fraction in two
+sub-cases: preemption recoil, described first, and the ghost loader (formerly
+Pathology 25), described after it.
 
 **The Issue:** In cloud training environments with session quotas (e.g., Kaggle
 12-hour VM timeouts), the SOTA Guard historically evaluated quality targets and
@@ -1484,6 +1392,49 @@ Flush (v16.3.4)**:
    so restarts cannot reload stale pre-expansion fractions.
 3. Anchor Hub Lock skip-paths directly to live `governor.get_state()` so local
    progress checkpoints never persist stale governor snapshots.
+
+**Ghost Loader Sub-Case (formerly Pathology 25):** a resume from a legacy
+checkpoint restores a stale fraction instead of losing a new one.
+
+- **The Issue**: When `SmartTrainingGovernor` saves progress checkpoints
+  (`_progress.pth`), it serializes the active `sample_fraction`. If a run is
+  interrupted and resumed from an older checkpoint generated before fractional
+  curriculum fixes (where the sample fraction was hardcoded to 1.0), the
+  checkpoint restoration logic blindly restores `current_fraction = 1.0`. This
+  expands the training dataloader from the intended curriculum fraction (e.g.
+  15%, ~3,900 batches) to 100% of the dataset (27,300 batches), multiplying
+  epoch training time by $7\times$ (26+ hours) and diluting early-epoch learning
+  rates across 7 million samples.
+- **Identification**: Resumption telemetry logs report
+  `Source Fraction: 100.0%`, `New Length: 27300`, and `Iteration 1362/27300`
+  despite configuration specifying `initial_fraction: 0.15`.
+- **Remedy**: **Keep the Restored Fraction (v16.9.67)**.
+  `SmartTrainingGovernor.load_state` restores the saved fraction as-is. The
+  earlier **Curriculum Checkpoint Fraction Override**, which lowered a legacy
+  100% fraction to `initial_fraction: 0.15` during early epochs, was removed:
+  lowering the fraction at the same resolution breaks the Monotonic Ratchet
+  (pair rule). When a legacy checkpoint's fraction is unwanted, start a clean
+  run (`--clean` / `--fresh`) so training begins again at the initial fraction.
+
+### Finished-Epoch Resume Loop (Pathology 62)
+
+**The Issue:** A checkpoint saved at ≥99.9% of an epoch's progress resumed into
+the epoch that had already finished, so the run looped recursively on finished
+epochs instead of moving on.
+
+**Remedy:** **Terminal Progress Guard (v17.2)**. Epoch-advancing logic treats a
+checkpoint at ≥99.9% progress as a finished epoch and starts the next one (the
+Progress Recovery row of Section 11).
+
+### Restoration Metric Weight Imbalance (Pathology 63)
+
+**The Issue:** The metric weights rated PSNR at 1 against SSIM at 40, so PSNR
+changes barely moved the quality score and the metric was effectively ignored
+during restoration training.
+
+**Remedy:** **Metric Rebalancing (Task 1.1)**. Scale `METRIC_WEIGHTS['psnr']` to
+10 (PSNR 10 vs SSIM 40) so both metrics steer the score (the Restoration Balance
+row of Section 11).
 
 ---
 
@@ -1561,19 +1512,19 @@ Flush (v16.3.4)**:
 ## 8. Mapping Pathologies to Pipeline Stages
 
 - **Foundation (224px-512px)**
-  - *Likely Pathology*: **Exploding Gradients**
+  - *Likely Pathology*: **Exploding Gradients** (Pathology 2)
   - *Warning Sign*: Loss spikes in first 50 steps.
   - *Correction*: Linear Warm-up & Grad Clipping.
 - **Expansion (512px-768px)**
-  - *Likely Pathology*: **Training Plateau**
+  - *Likely Pathology*: **Training Plateau** (Pathology 7)
   - *Warning Sign*: Loss Delta < 0.001 per epoch.
   - *Correction*: **LR Jolt** (1.5x) or Stride Threshold (0.75).
 - **Deepening (768px+)**
-  - *Likely Pathology*: **Vanishing Gradients**
+  - *Likely Pathology*: **Vanishing Gradients** (Pathology 1)
   - *Warning Sign*: Norm falls to 10^-7.
   - *Correction*: Switch to **BFloat16**.
 - **Refinement (100% Data)**
-  - *Likely Pathology*: **Overfitting**
+  - *Likely Pathology*: **Overfitting** (Pathology 4)
   - *Warning Sign*: Val metric diverges from Train.
   - *Correction*: Increase **Dropout** (0.3) & L2.
 

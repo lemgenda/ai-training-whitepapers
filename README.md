@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.139`
+**Version**: `v16.9.116`
 
 ---
 
@@ -18,14 +18,11 @@
   capabilities: Bug Report Tool (`POST /api/bug-report`, screen recording in
   the desktop app on Windows), the sidecar security contract (Origin Guard and
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
-  Averaging and the FID Re-evaluation Tool.
-* **Current baselines** - LemGendary Environment Manager v16.9.67, LemGendary
-  Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite v16.9.139,
-  LemGendary AI Studio GUI v2.10.45.
-* **Pathology catalog** - `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` numbers
-  every pathology (61 in total, tracked as `pathology_count` in
-  `manifest/documents.json`) and lists them in its Pathology Index
-  (Section 1.1).
+  Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
+  Training and Frozen Run Settings.
+* **Current baselines** - LemGendary Environment Manager v16.9.85, LemGendary
+  Dataset Compiler Suite v16.9.109, LemGendary Model Training Suite v16.9.223,
+  LemGendary AI Studio GUI v2.10.68.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -33,16 +30,19 @@
   `nav.toc-sidebar`, `section` and `footer` and pass W3C validation.
 * **Documentation audit** - `python scripts/audit_docs.py` (also the
   pre-commit hook) checks the manifest, hub and document versions, MD/HTML
-  heading parity and text similarity, the approved template, internal links
-  and anchors, absolute paths and canonical names, and the capability
-  registry against the sibling repositories: JSON and YAML hold the same
-  data, the model ids equal the keys of the training registry
-  (`unified_models_v2.yaml`) and every port equals the service port in
-  `lemgendary-env-manager/ecosystem/ecosystem.json`. The sibling files are
-  found next to this repository or under `LEMGENDARY_WORKSPACE_ROOT`; a
-  missing file is a finding that names the path. The parity backlog
-  (`scripts/parity_backlog.json`) is empty since v16.9.77, so any finding
-  fails.
+  heading parity and text similarity, the HTML sidebar against the Markdown
+  table of contents (no duplicate entries, every section linked), raw GitHub
+  alert markers in pages, the approved template, internal links and anchors,
+  absolute paths and canonical names, and the capability registry against
+  the sibling repositories: JSON and YAML hold the same data, the model ids
+  equal the keys of the training registry (`unified_models_v2.yaml`), every
+  port equals the service port in
+  `lemgendary-env-manager/ecosystem/ecosystem.json` and every component
+  baseline equals the release version the component declares. The sibling
+  files are found next to this repository or under
+  `LEMGENDARY_WORKSPACE_ROOT`; a missing file is a finding that names the
+  path. The parity backlog (`scripts/parity_backlog.json`) is empty: every
+  finding fails the audit.
 
 ---
 
@@ -62,27 +62,663 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
-### v16.9.139 - Pathology Numbering & Hub Version Alignment
+### v16.9.116 - Sync Push Notes, Export Run Log Lines, Forex Layout
 
-* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and `papers/training-pathology.html`
-  (paper revision 1.9.0): every pathology is now numbered (Pathology 1 to 61)
-  in document order across the Diagnostic Master Table, the Modern 2026
-  Pathologies and the Historical Evolution Taxonomy; the abstract states the
-  count of 61 (previously 27); new Section 1.1 Pathology Index links every
-  pathology; the duplicated Table of Contents entries were removed and the
-  entries for the former Pathologies 37 to 39 restored; Master Table entries that
-  repeat a later pathology now point to its number. The former Pathologies 24
-  to 39 are now Pathologies 26 to 41; older changelog entries below keep the
-  numbers used at the time. The missing HTML twin of the Static OS Worker
-  Throttling table entry was added.
-* `manifest/documents.json`: new `pathology_count` field (61) on the
-  `training-pathology` entry only; its `baseline_version` is
-  `v16.9.139-STABLE` and `last_audited` is `2026-11-12`.
-* `README.md`, `index.html`, `manifest/documents.json`,
-  `canonical_capabilities.json`, `canonical_capabilities.yaml`: hub version
-  raised from v16.9.88 to `v16.9.139-STABLE`.
-* Repository `README.md`: documentation hub and Training Suite baselines
-  synchronized to `v16.9.139-STABLE`.
+* `MANUAL_CLI.md` and its page, Section 5.10: Dataset Compiler v16.9.109
+  `sync push --notes TEXT` adds what changed after the generated version
+  notes (compiler release and sample counts); whitespace is collapsed and
+  blank text adds nothing. The registries gain
+  `control_planes.cli.syntax.dataset_sync_push`; `PAPER_DATASET_COMPILER.md`
+  Section 4.12 notes it.
+* `PAPER_TRAINING_SUITE.md` and its page, Section 2.47 (now v16.9.216 to
+  v16.9.223, version line v16.9.223): the export prints the ONNX FP32 parity
+  probe result (or "not run" for a graph without dynamic axes) and the
+  release files it wrote to the run log, because the trainer has no INFO log
+  handler. Run 6 of `upn_v2` confirmed the v16.9.222 CPU probe; parity
+  measured locally: FP32 max abs diff 4.17e-7 at `1x3x128x128`, FP16
+  4.51e-3 / 6.64e-3 (the FP16 graph has no in-run probe). The mid-run Hub
+  sync uploads only `pytorch/default`; ONNX variations go up with the
+  release publish after training completes.
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedForexUniverse`: the 765 "chunks" are `index.json` entries (one
+  per pair, timeframe and year; 573 train, 192 val), not files; storage is
+  eight yearly Zstandard Parquet files with 5,368 row groups.
+* Baselines: Training Suite v16.9.223, Dataset Compiler v16.9.109,
+  Environment Manager v16.9.85, AI Studio GUI v2.10.68.
+
+### v16.9.115 - ForexUniverse Sample Count
+
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedForexUniverse`: Total Samples 26,818,700 (train 21,015,570 /
+  val 5,803,130; 765 chunks), was 24,850,000. The count is the dataset's
+  `dataset_info.yaml` on Kaggle, the sum of its `index.json`, and the
+  training registry (Training Suite v16.9.221 checked it); the Forex paper
+  already stated 26,818,700.
+
+### v16.9.114 - Measured Model Parameter Counts
+
+* Training Suite v16.9.221 measures `parameters_m` in
+  `unified_models_v2.yaml` from the code. The papers now state those counts
+  (old value, then measured, in millions):
+  * `PAPER_FOREX_PREDICTOR.md` Section 4.1 and `MANUAL_AI_STUDIO_GUI.md`
+    (model card example): `forex_predictor` 2.75 to 3.5358 (about 14 MB in
+    FP32, was about 11 MB).
+  * `PAPER_NIMA_MOBILE.md`: MobileNetV3-Small model 2.5 to 1.0773.
+  * `PAPER_NIMA_EFFICIENTNET.md`: EfficientNetV2-S model 21.5 to 20.508.
+  * `PAPER_NIMA_PRO.md`: Swin-v2-T model 28.3 to 27.5887.
+  * `PAPER_LEMGENDARY_MIRNET.md`: MIRNet v2 31 (and "31M+" in Section 3.1)
+    to 0.0387.
+  * `PAPER_LEMGENDARY_MPRNET.md`: the "Ours" row 17 to 0.0046.
+  * `PAPER_LEMGENDARY_NAFNET.md`: the "Ours" row 17 to 4.4921.
+  * The published-baseline rows (DnCNN, U-Net, MIRNet, Restormer) and the
+    SOTA target rows describe other models and are unchanged.
+* `PAPER_TRAINING_SUITE.md` Section 2.47 lists every registry model's old
+  and measured count (for example `retinaface` 27.2 to 0.9357, `upn_v2` 88.5
+  to 0.9287, `mprnet_deraining` 20.1 to 0.0046). The RetinaFace paper
+  already stated 935,663. The capability registries hold no parameter
+  counts.
+* Every changed page mirrors its Markdown. `manifest/documents.json`: the
+  changed papers are audited 2026-11-13.
+
+### v16.9.113 - Training Suite v16.9.216 to v16.9.222 Kaggle Run Fixes
+
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.222): new
+  Section 2.47 "Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode
+  Warnings & Export Probe (v16.9.216 to v16.9.222)".
+  * Known issue in past runs, fixed in v16.9.216: Kaggle runs before
+    v16.9.216 saw every train and validation sample twice per epoch, because
+    alias paths of one manifold each opened a reader (`upn_v2`: 2,699,430
+    train entries for 1,349,715 samples). Discovery now compares real paths.
+  * Read-only manifold folders are skipped by the notebook sync (v16.9.217).
+  * Kaggle trainer output is streamed through a pipe, so each line appears
+    once (v16.9.219).
+  * Decode warnings name the sample key, member, size, head bytes and shard
+    (v16.9.220); the run 4 cases were 0-byte DPED `.jpg` members.
+  * The export probe compares outputs on the CPU (v16.9.222), not yet rerun
+    on Kaggle; the run 5 result is recorded.
+* Section 8.1 lists the shard offset index as active and the doubled
+  samples as a known issue of past runs.
+* `manifest/documents.json`: Training Suite paper at baseline v16.9.222.
+  The component baselines are unchanged.
+
+### v16.9.112 - Shard Offset Index and `repair shard-offsets`
+
+* `PAPER_DATASET_COMPILER.md` and its page (version line v16.9.108): new
+  Section 4.13 "Shard Offset Index (v16.9.108)": `shard_offsets.json` in
+  every shard folder, format `version` 2 (per plain tar shard `size`,
+  `mtime_ns`, `names`, `offsets`, `sizes`), the acceptance rule (size plus
+  modification time, or a three-header check), the read cost, the single
+  writer `utils/shard_offsets.py` and the steps that refresh it, the shard
+  verifier, the upload, the measured `repair shard-offsets` runs
+  (RetinaFace, ParseNet, ClassificationMaster) and the read-only case.
+  Section 4.12 names `shard-offsets` among the repairs.
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.218): new
+  Section 2.46 "Shard Offset Index & Fast WebDataset Open (v16.9.215 to
+  v16.9.218)": the 48-minute open of run 3, the shipped index and its
+  acceptance rule, the read-only cache fallback (`.cache/shard_offsets`,
+  `LEMGENDARY_SHARD_CACHE_DIR`), the build lock per shard folder (one DDP
+  rank builds), the 16-thread scan picked by a probe of the largest missing
+  shard, and the measurements. Section 2.37 points from the hidden
+  `.shard_offsets.json` cache to it.
+* `MANUAL_CLI.md` and its page, Section 5.17: the `repair shard-offsets
+  [--model KEY | --manifold PATH] [--apply]` example and entry; shard
+  rewriting repairs refresh the index, and `repair manifold` verifies a
+  present one.
+* Capability registries (JSON and YAML): new capability
+  `shard_offset_index` (dataset compiler v16.9.108, Training Suite reader
+  v16.9.215).
+* `manifest/documents.json`: dataset compiler paper at baseline v16.9.108,
+  Training Suite paper at v16.9.218. The component baselines are unchanged.
+
+### v16.9.111 - GUI v2.10.68 Kaggle Advanced Launch Controls
+
+* `GUI_CONTROL_REGISTRY.md` and its page (version line v2.10.68): section
+  3.6 lists the Kaggle launch "Advanced" group `kaggle-fieldset-advanced` and
+  its four optional fields `kaggle-input-git-ref` (`git_ref`),
+  `kaggle-input-env-manager-ref` (`env_manager_ref`),
+  `kaggle-input-limit-hours` (`limit_hours`, greater than 0) and
+  `kaggle-input-margin-minutes` (`margin_minutes`, 0 or more and below the
+  limit), each empty by default and not sent when empty; refs follow the
+  Training Suite ref rules. Section 3.9 lists the four `role="alert"`
+  messages `kaggle-input-{field}-error`. The count is now 202 distinct IDs
+  (128 controls, 74 dialogs, regions, landmarks and headings; was 193 / 123 /
+  70), and section 3.11 lists the nine IDs under `v2.10.68` (53 added since
+  the `v2.10.57` registry).
+* `MANUAL_AI_STUDIO_GUI.md` and its page (version line v2.10.68): Section
+  7.4 (now "v2.10.58 to v2.10.68", Training Suite contract up to v16.9.210)
+  describes the Advanced group instead of saying the GUI lacks the clone ref
+  and session window options.
+* `manifest/documents.json`: both documents at baseline v2.10.68.
+
+### v16.9.110 - ClassificationMaster Per-Source and Per-Class Counts
+
+* `PAPER_DATASET_COMPILER.md` and its page, Section 7
+  `LemGendizedClassificationMaster`: per-source train / val counts counted
+  from the manifold's `index.json` (Anime DB Rating 544,611 / 74,903,
+  Food-101 89,105 / 11,894, NSFW 29,030 / 3,991; totals 662,746 / 90,788)
+  and the per-class train / val counts of the `repair class-labels` run
+  (drawings 300,702 / 41,355, hentai 249,105 / 34,257, neutral 92,905 /
+  12,445, porn 9,392 / 1,318, sexy 10,642 / 1,413). `index.json` has no class
+  field, so the paper names the label repair as the source of the per-class
+  counts.
+
+### v16.9.109 - RetinaFace Paper Describes the Single-Box Model
+
+* `PAPER_LEMGENDARY_RETINAFACE.md` and its page: the abstract, Section 1.1
+  and Sections 5, 6 and 8 now describe the model in the training suite's
+  `models/detection.py`: a MobileNetV3-Small backbone (`mobilenet_v2`
+  optional), adaptive average pooling and three linear heads giving one
+  normalized `cx cy w h` box, one sigmoid confidence and 10 landmark values
+  per image. The anchor, FPN ($P_2$ to $P_5$), DCN v2 and ResNet-50 claims
+  are removed; a multi-scale anchor head is noted as an open owner decision.
+* The "sub-3ms" latency marked `[MEASURED]` (Section 6) and the "under 3
+  milliseconds" claim (Section 1.1) are removed: no benchmark backs them,
+  latency is "not yet measured". The crowd-scene pictures and the
+  convergence curve are labelled as not measurements of the current model;
+  the WIDER FACE ResNet-50 row is labelled an external reference value.
+* Model info: 935,663 parameters with MobileNetV3-Small (927,008 backbone,
+  8,655 heads), counted from the code; the training registry
+  `parameters_m: 27.2` does not match. Section 6 uses the release names
+  `RetinaFace-Detection.onnx`, `RetinaFace-Detection_FP32.onnx` (+ `.data`)
+  and `RetinaFace-Detection.pt` and per-metric `vault_<metric>.pth` (there
+  is no `vault_hard_ap.pth`). Section 4.4 (v16.9.100 metrics) is unchanged.
+
+### v16.9.108 - Forex Paper States Only Measured Results
+
+* `PAPER_FOREX_PREDICTOR.md` and its page (revision 2.9.0): no result figure
+  has a backing measurement. The owner's `metrics.csv` row 1 copies the
+  registry targets and row 2 opened no trade (Training Suite v16.9.164), so
+  every result is marked "not yet measured". Removed: Direction Accuracy and
+  Win Rate 49.69%, Profit Factor 0.99, Sharpe -0.16, Sortino -0.18, TP / SL
+  MAE 615.42 / 617.95, Quality Score 105.87 (abstract, Sections 4.4, 4.7 and
+  7, where it was marked `[MEASURED]`), the LSTM and vanilla Transformer
+  comparison columns, the per-pair benchmarks (77.75% to 79.15% direction
+  accuracy), the restoration and NIMA rows of Section 7 (each model reports
+  in its own paper), the 1.42 ms / 2.18 ms latency, the RAM (53 GB to
+  1.1 GB), throughput (12.5x) and iteration (28x) savings, the 65% and 85%
+  market-share claims, 428,940 windows per fraction and the sub-microsecond
+  recovery figure. The training curve is withdrawn (no measured epoch).
+* Targets are the registry `sota_targets` (58.5 / 56.0 / 1.65 / 1.85 / 2.1 /
+  12.0 / 12.5 / 12.5), replacing the old unsourced targets (> 60%, > 1.85,
+  < 6.50% drawdown, > 150 quality). New Section 4.4.1 lists what a valid
+  measured run must produce.
+* Corrected from code: 26,818,700 rows (training registry count, was
+  30,810,572), sample fraction fixed at 1.0 (was 15% to 100%), Forex VRAM
+  batch tiers (a 4 GB GTX 1650 runs batch 32, not 256), the equity-model
+  MaxDD formula (the 10,000-pip base formula is withdrawn), the spread stress
+  (governor stress value over the pair pip scale; no fixed 1.5 / 3.0 pips),
+  ONNX inputs with 14 features (was 10), the EA name
+  `LemGendaryForexEA.mq5`, Fractional Kelly marked as proposed (the EA sizes
+  from `RiskPct`), the one-tensor memory arithmetic (12.6 MB, was an
+  unexplained 14.2 MB). Disk footprint figures point to the Dataset
+  Compiler paper instead of being repeated.
+
+### v16.9.107 - Component Baselines
+
+* Both capability registries: `runtime_engine_baseline` v16.9.214-STABLE
+  (LemGendary Model Training Suite), `dataset_compiler_baseline`
+  v16.9.107-STABLE (LemGendary Dataset Compiler Suite),
+  `environment_manager_baseline` v16.9.85-STABLE (LemGendary Environment
+  Manager), `desktop_client_baseline` and `control_planes.gui.version`
+  v2.10.67 (LemGendary AI Studio GUI), every model's `runtime_baseline`
+  v16.9.214-STABLE, `last_audited` 2026-11-13. The documentation audit's
+  component-version check passes again.
+* README "Current baselines", `LEMGENDARY_CURRENT_STATE.md`,
+  `VERSIONING_POLICY.md` and `ECOSYSTEM_ARCHITECTURE.md` (and their pages)
+  name the same component versions and the hub release v16.9.107.
+
+### v16.9.106 - Environment Manager v16.9.81 to v16.9.85, Registry Sync
+
+* `PAPER_ENV_MANAGER.md` and its page (version line v16.9.85-STABLE): new
+  Section 6.8 on the one Kaggle credential loader and the `access_token`
+  writer (v16.9.84), the changelog scope rule for docs, test and tooling
+  commits (v16.9.83) and the dropped `mosaicml-streaming` runtime dependency
+  (v16.9.81). Section 6.7 documents `identity.github_url` and the `kaggle`
+  section of `ecosystem.json` (collaborators, default accelerator,
+  accelerator table, retired machine shapes; v16.9.85); the install step
+  reports a failed editable install as a warning (v16.9.82).
+* `ECOSYSTEM_ARCHITECTURE.md` and its page: MDS is discontinued and no longer
+  in `runtime_env.yaml` (the "open" note is closed); shard labels are JSON
+  only.
+* Both capability registries: `train` syntax with `--clean` and
+  `--override-frozen`; new `kaggle_launch` syntax and the `kaggle_status`,
+  `kaggle_accelerators` and `kaggle_train` routes; RetinaFace is a
+  single-box model with provisional `box_iou`, `ap50`, `ap50_95` and
+  `landmark_nme` targets; Model Soup opens `soup-dialog` (GUI v2.10.60); the
+  Ecosystem Registry lists `github_url` and the `kaggle` section;
+  shard-window sampling is on by default (v16.9.159); new platform
+  capabilities `kaggle_cloud_training` and `frozen_run_settings`. README hub
+  features name them.
+
+### v16.9.105 - GUI v2.10.67 Control Registry and Kaggle Launch Options
+
+* `GUI_CONTROL_REGISTRY.md` and its page, recounted against LemGendary AI
+  Studio GUI v2.10.67: 193 distinct IDs (123 controls, 70 dialogs, status
+  regions, landmarks and headings; was 150). Added in sections 3.1 to 3.9:
+  `dash-btn-refresh-projects`; the compiler sub-tabs,
+  `compiler-btn-validate-schema`, `comp-input-max-gb`, `comp-input-workers`,
+  `comp-select-shard-ext`, `comp-select-kaggle-registry` and
+  `comp-btn-kaggle-registry-reload`; the card controls
+  `train-select-batch-{model_key}`, `train-input-custom-batch-{model_key}`,
+  `train-input-override-frozen-{model_key}`, `train-btn-docs-{model_key}` and
+  `train-btn-stage-{model_key}`; the Blend Soup dialog (`soup-*`); the
+  console tabs `training-telemetry-tabs-tab-*`; the Kaggle launch options
+  `kaggle-accelerator-select`, `kaggle-poll-interval-input`,
+  `kaggle-auto-pull-checkbox`, `kaggle-auto-resume-checkbox`,
+  `kaggle-max-resumes-input` and `kaggle-override-frozen-checkbox`; the
+  kernel picker; the status regions `cloud-modal-auth-badge`,
+  `cloud-modal-auth-error`, `cloud-modal-dataset-links`,
+  `kaggle-accelerator-source`, `comp-badge-kaggle-auth`; and the resume
+  refusal region `train-frozen-refusal` with `-message`, `-changes`, `-hint`
+  and `train-btn-frozen-refusal-dismiss`. `gpu-select` is removed and the
+  Config & Secrets tabs are `config-tabs-tab-*`. Section 3.10 drops the
+  controls that gained an ID; Section 3.11 lists the changes by release.
+* `MANUAL_AI_STUDIO_GUI.md` and its page (version line v2.10.67): new Section
+  7.4 on the Kaggle launch options, kernel monitor, variation names, card
+  transfers, the override toggle, the resume refusal notice and the Blend
+  Soup dialog; the authentication row and the variation select of Section
+  7.3 are corrected.
+
+### v16.9.104 - Dataset Compiler v16.9.85 to v16.9.107 in the Paper
+
+* `PAPER_DATASET_COMPILER.md` and its page (version line v16.9.107-STABLE):
+  new Section 4.12 documents the JSON label schema (`face_landmarks`,
+  `yolo_boxes`, `yolo_polygons`, `nima`, `segmentation_mask`, `class_label`,
+  `caption`, with `objects`, `class_id` / `class_name`, `caption`,
+  `landmark_source`, `label_source` / `label_confidence`), the sample
+  policies and the shared val split by source file id, the `source_labels`
+  registry with the `celebamask_hq_19` and `sfhq_110` schemes, the
+  ClassificationMaster class labels (`nsfw_5`, pseudo labels kept at 0.8 when
+  both GantMan models agree), the repairs, the Kaggle sync changes, Forex
+  timestamps in seconds and the GUI-facing routes.
+* Section 7: LemGendizedClassificationMaster 753,534 samples (train 662,746
+  / val 90,788, 5 classes), LemGendizedParseNet 425,258 (train 374,228 / val
+  51,030, 19 mask classes) and LemGendizedRetinaFace 425,223 (train 374,199 /
+  val 51,024). Per-class counts are not recorded in the local
+  `dataset_info.yaml` files, so none are given.
+* Section 4.11: repairs no longer keep a `.repair_backup` copy. Section 4.5:
+  the MDS writer needs the optional `mosaicml-streaming` package, which the
+  Environment Manager no longer installs.
+
+### v16.9.103 - Training Suite v16.9.158 to v16.9.214 in the Papers
+
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.214-STABLE): six
+  new sections. 2.40: the `torch.export` ONNX exporter, the three release
+  variants, ONNX `metadata_props`, the MT5 artefact (one file, IR 9) and the
+  MQL5 EA built from `data/mt5_feature_spec.py`. 2.41: locality sampling on
+  by default, generator state per DDP rank, frozen and epoch run settings,
+  `--override-frozen`, `resume_refusal.json` and head parameter prefixes.
+  2.42: LPIPS loss, the NIMA soft logit cap, temperature 1, `emd_form` and
+  post-hoc calibration, honest Forex metrics, `risk_per_trade` and the
+  RetinaFace metrics. 2.43: one device-memory adapter, the DXGI budget and
+  DirectML through `torch_directml`. 2.44: the preprocessing key, the 5-class
+  NSFW head, `IGNORE_TARGET`, JSON-only shard labels and the YOLO shard
+  cache. 2.45: the Kaggle cloud pipeline and the one models hub root. The
+  Section 2.37 locality bullet no longer calls the sampler opt-in.
+* `PAPER_LEMGENDARY_NIMA.md` and its page (revision 3.3.0): new Section 5.50
+  (soft logit cap 15, temperature 1, `emd_form`, post-hoc calibration); the
+  0.1 temperature anchor of Section 3.1.2 is marked superseded.
+* `PAPER_FOREX_PREDICTOR.md` and its page (revision 2.8.0): the equity-model
+  MaxDD at `evaluation.risk_per_trade` and the weighted Forex score
+  (`forex_weighted_targets_v2_risk0.01`) are documented; the 665.80% drawdown
+  is withdrawn as the old cumulative-pip measure; the ONNX export is opset 18
+  with an IR 9 single-file MT5 graph; new Section 6.3 describes the
+  generated MQL5 Expert Advisor.
+
+### v16.9.102 - CLI and API Reference: Kaggle Routes, Sync Pull, Repairs
+
+* `MANUAL_CLI.md` and its page: Section 5.10 documents `sync pull --only`
+  and `--output`, the missing-root fix, the file-by-file fallback when Kaggle
+  has no whole-dataset archive, the Kaggle API route after a per-file 404,
+  the HTTP 429 retry, label packing on pull and private new datasets
+  (LemGendary Dataset Compiler Suite v16.9.96 to v16.9.104). New Section
+  5.17 "Manifold Repair (`repair`)" lists `manifold`, `all`, `labels`,
+  `txt-labels`, `pack-loose`, `sample-policy`, `masks`, `face-landmarks`,
+  `pseudo-labels` and `class-labels` with their options. Section 5.2 no
+  longer uses MDS in its examples and says that `mds` needs the
+  `mosaicml-streaming` package the Environment Manager no longer installs.
+* `MANUAL_API.md` and its page (version line v16.9.214-STABLE): the training
+  endpoint matrix lists the Kaggle routes (`status`, `kernels`,
+  `accelerators`, `train`, `monitor`, `pull`, `push`); new sections document
+  the status probe fields, the accelerator list and every
+  `POST /api/training/kaggle/train` field (`accelerator`, `git_ref`,
+  `env_manager_ref`, `limit_hours`, `margin_minutes`, `override_frozen`,
+  `auto_pull`, `poll_interval`, `auto_resume`, `max_resumes`), the monitor
+  and pull requests. `push-model` uses the `VariationKey` names and the real
+  response (`variations`, `skipped`, `errors`). `quick-train` takes `clean`
+  and `override_frozen`; `ModelWithStats.sota_targets_provisional` is
+  documented. Dataset Compiler: `/api/config/validate` is open to the GUI
+  origins, `/api/kaggle/status` lists the four credential sources, and
+  `quick-compile` takes `max_gb`, `workers` and `shard_ext`.
+
+### v16.9.101 - Kaggle Cloud Training How-To
+
+* `MANUAL_CLI.md` and its page (checked against LemGendary Model Training
+  Suite v16.9.214): new Section 6.13 "Kaggle Cloud Training How-To
+  (`lemtrain kaggle`)". It covers the `KGAT_` API token (resolver order:
+  vault, `KAGGLE_API_TOKEN`, `kaggle.json`, `~/.kaggle/access_token`), the
+  Kaggle Secrets to attach (`KAGGLE_API_TOKEN`; `GITHUB_PAT` or `SUITE_PAT`;
+  optional `GOOGLE_DRIVE`), the accelerators `cpu`, `gpu-t4x2` (default) and
+  `tpu-v5e8`, `lemtrain kaggle accelerators|bundle|launch|status`, the launch
+  options `--git-ref`, `--env-manager-ref`, `--limit-hours`,
+  `--margin-minutes` and `--override-frozen`, the 12 h session guard, the
+  deadline stop (`session_deadline.json`), auto-resume, the trainer exit gate
+  before the publish cell, the `resume_refusal.json` record, the
+  `VariationKey` names, the one push policy (page before upload, skip
+  unchanged variations), version notes and the first live check.
+* Section 6.2: `--override-frozen` and the frozen / epoch run settings of a
+  resume. Section 6.9: `VariationKey` values and the epoch-based pull merge.
+
+### v16.9.100 - RetinaFace Box IoU, AP and Landmark NME
+
+* `PAPER_LEMGENDARY_FACE_SUITE.md` and its page (revision 1.1.0, checked
+  against LemGendary Model Training Suite v16.9.214): the RetinaFace targets
+  "mAP (Easy) >= 0.915" and the mAP medium / hard rows are replaced by the
+  metrics the training suite measures since v16.9.208: `box_iou` >= 0.80,
+  `ap50` >= 0.95, `ap50_95` >= 0.60 and `landmark_nme` <= 0.10, all
+  provisional (`sota_targets_provisional: true`, no cited source yet). The
+  model is described as a single-box regressor (one box, one confidence and
+  five landmarks per image, no anchors), the manifold as
+  `LemGendizedRetinaFace` (425,223 samples: train 374,199 / val 51,024,
+  boxes and points rebuilt from the SFHQ 110-point landmarks), and the
+  matrix row and abstract follow. A note says that RetinaFace metrics
+  recorded before v16.9.207 / v16.9.208 are not comparable with new runs.
+* `PAPER_LEMGENDARY_RETINAFACE.md` and its page: the same four metrics and
+  provisional targets, the 17-column `metrics.csv` layout and the
+  `face_box_weighted_targets_v1` score scheme. The WIDER FACE AP, NME and
+  latency values of Sections 4 and 7 marked `[MEASURED]` are removed: no
+  measurement backs them, and the manifold holds 425,223 SFHQ photos, not
+  32,203 WIDER FACE samples. Section 3 notes that the suite's model has no
+  prior boxes.
+* `PAPER_TRAINING_SUITE.md` and its page: the `retinaface` registry row lists
+  the provisional targets.
+
+### v16.9.99 - Merged Similar Training Pathologies
+
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.12.0. Five similar
+  pairs are merged into the lower number, each combined entry keeping both
+  mechanisms: NaN Divergence now covers overflow and mixed-precision
+  underflow (20 into 5), the Training Plateau row names optimizer momentum
+  decay and its remedies (21 into 7), Checkpoint Fraction Desynchronization
+  covers preemption recoil and the ghost loader in its row and section
+  (25 into 18), Memory-Sentinel Drift includes atomic hardware re-auditing
+  (45 into 44), and the 4 GB paging section covers language and vision
+  models (47 into 34). Numbers stay stable: each higher number keeps its
+  heading or row with a short "Merged into Pathology N" pointer, so
+  external references and anchors stay valid. The abstract counts 58
+  distinct pathologies (it said 63) and Section 2 explains the merges.
+* `LEMGENDARY_CURRENT_STATE.md` and `VERSIONING_POLICY.md` (and their
+  pages): pathology guide revision 1.12.0; the current state lists 58
+  distinct pathologies under 63 stable numbers.
+* **Version** - hub version v16.9.99 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
+
+### v16.9.98 - Training Pathology Numbering
+
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.11.0. Only
+  Pathologies 24 to 39 carried a number; the guide describes 63 distinct
+  pathologies, and every one now has a number in the master table, its
+  section heading, the table of contents and the cross-references.
+  Pathologies 24 to 39 keep their numbers. The master-table rows are
+  Pathologies 1 to 19 in their order (with 24 to 27 and 36 as before), the
+  first four unnumbered Section 4 headings are 20 to 23, and the remaining
+  Section 4 and Section 5 headings are 40 to 61 in document order. Two
+  pathologies that only Sections 9 to 11 named get short sections:
+  Finished-Epoch Resume Loop (62) and Restoration Metric Weight Imbalance
+  (63). A master-table row and the section that details it share one
+  number (14 to 19, 24 to 27 and 36). The abstract states 63 (it said 39),
+  Section 2 explains the numbering and Section 8 names the numbers.
+* `LEMGENDARY_CURRENT_STATE.md` and `VERSIONING_POLICY.md` (and their
+  pages): pathology guide revision 1.11.0; the current state lists the 63
+  numbered pathologies.
+* **Version** - hub version v16.9.98 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
+
+### v16.9.97 - Training Pathology Page Parity, Labelled List Item Check and Master API Python Examples
+
+* `papers/training-pathology.html`: the Section 2 master table lacked the
+  Pathology 36 row (Static OS Worker Throttling & WebDataset Tar
+  Decompression Starvation) that the Markdown has; the row is added. The
+  Pathology 35 and 36 sections of the page were older shortened wording;
+  they now follow the Markdown word for word (the three-case task index
+  resolution, the 12-thread example, the epoch-time estimate and the three
+  worker formulas).
+* `scripts/docs_audit/`: new `list-items` check. Every top-level list item
+  that opens with a bold label (the master-table rows written as lists)
+  must appear in the Markdown and the page, in the same order; a missing,
+  extra or reordered row is a finding. Labels wrapped over several lines
+  are joined; nested items and lists in the sidebar, code, block quotes
+  and tables are not counted. `tests/test_docs_audit.py` covers matching
+  rows, a missing row, reordered rows and quoted lists.
+* `MANUAL_API.md` and its page: the Section 4.7 example imported modules
+  and classes that do not exist (`training.core.orchestrator`,
+  `TrainingOrchestrator`, `training.governance.sentinel`, `DynamicGovernor`,
+  `training.models.registry`, `ModelRegistry`). It now uses
+  `get_model_registry()` from `training.registry.model_specs`,
+  `SentinelGuard` from `training.hardware.sentinel`,
+  `SmartTrainingGovernor` from `training.governance.governor`, and
+  `load_workspace_config`, `load_model_info` and `main` from
+  `training.core_loop`. The Section 5.8 example named `CompilerService`
+  and `ZipToContainerStreamer`, which do not exist, and wrong
+  `migrate_containers` arguments; it now uses `run_compile()`,
+  `ZipStreamOptions` with `stream_zip_to_webdataset()` and the static
+  `MigrationService.migrate_containers(manifold_path, to_formats, ...)`.
+  Both sections say to run from the project root with its `.venv`. Every
+  import was checked against the LemGendary Model Training Suite and the
+  LemGendary Dataset Compiler Suite sources.
+* **Version** - hub version v16.9.97 in `README.md`, `index.html`, manifest,
+  both registries and the Current State and Versioning Policy documents.
+  `VERSIONING_POLICY.md` Section 8 wraps its 90-column line at 80 columns
+  (markdownlint MD013).
+
+### v16.9.96 - LemGendary Model Training Suite v16.9.157 and Environment Manager v16.9.80 Sync (Audit Phase 5b)
+
+* `canonical_capabilities.json`, `canonical_capabilities.yaml`:
+  `runtime_engine_baseline` and every model `runtime_baseline` set to
+  v16.9.157-STABLE (they said v16.9.139 and v16.9.128),
+  `environment_manager_baseline` to v16.9.80-STABLE. New platform capability
+  `shard_locality_sampling` (`data.locality.window_shards` and
+  `data.locality.fraction_block_size`, off by default). Its two behaviour
+  strings are folded YAML scalars so every YAML line stays under the
+  120-column yamllint limit.
+* `scripts/parity_backlog.json`: the last backlog entry
+  (`runtime_engine_baseline`) is resolved and removed; the backlog is empty.
+* `PAPER_TRAINING_SUITE.md` and its page (v16.9.157-STABLE): new Sections
+  2.36 (container targets for both shard layouts, 15-value face targets with
+  masked absent landmarks, synthesised degradation for unpaired samples,
+  UltraZoom bicubic input, prompt masking, LPIPS for `l1_lpips` models,
+  governor LR as a ratio over the scheduler, deterministic mid-epoch resume
+  with `ResumableBatchSampler` and GradScaler state, NCCL/Gloo selection,
+  macOS worker budget, POSIX process-group cleanup, readiness flags), 2.37
+  (byte-offset shard reads, `.shard_offsets.json` cache, 16-handle LRU
+  pool, label 0 fix, zero-rebuild curriculum transitions, opt-in locality
+  sampler), 2.38 (one quality score with scheme tagging and FID as a
+  separate gate, four optimizer groups with old-checkpoint migration, the
+  exact-divisor batch rule, VRAM refit on resolution jumps with the
+  `256px -> 384px -> 512px -> 640px` memory analysis, rung entry fraction)
+  and 2.39 (single task-type resolver, exact-divisor OOM throttle,
+  `EpochOrder`, optional `paged_adamw_8bit()` adapter), with LaTeX for the
+  LR ratio, quality score, batch invariant and memory bound. Section 2.21
+  named stale pins (`torch 2.14.1+cu126`) and a training-side index
+  selection; it now names the central pins and the env-manager probe
+  (`cu134`, `cu126`, `cu121`, `cu118`) and marks the GTX 1650 gates as run
+  on the earlier stack. Section 2.34 dates `REVIEW_REPORT.md` to v16.9.123.
+  The abstract, the scorecarding bullet (FID no longer compounded into the
+  score) and Section 8.1 follow; a raw `**` in the 2.35 page is now
+  `strong`.
+* `PAPER_TRAINING_PATHOLOGY.md` and its page: revision 1.10.0, baseline
+  v16.9.157-STABLE; Pathology 36 describes the bounded handle pool and
+  offset reads, Pathology 29 the probe-selected `cu134` index.
+* `MANUAL_API.md` and its page: `ModelWithStats` example and field list
+  gain `pytorch_ready`, `onnx_fp32_ready` and `onnx_fp16_ready`.
+* `LEMGENDARY_CURRENT_STATE.md`, `VERSIONING_POLICY.md`,
+  `ECOSYSTEM_ARCHITECTURE.md` and their pages: training suite v16.9.157,
+  env manager v16.9.80, documentation hub v16.9.96, pathology guide 1.10.0.
+  The GTX 1650 bullet no longer claims a current cu126 verification; it
+  names the earlier `torch 2.14.1+cu126` stack and the `cu134` index the
+  probe selects today.
+* `PAPER_ENV_MANAGER.md`, `MANUAL_CLI.md` and their pages: env manager
+  v16.9.80; every validation gate runs its tool from the project
+  directory, so `validate` behaves the same from the workspace root.
+* `manifest/documents.json`: training suite and pathology baselines
+  v16.9.157-STABLE, env manager v16.9.80-STABLE, touched documents audited
+  2026-11-12.
+
+### v16.9.95 - Current State and Versioning Policy Version Sync (Audit DOCS-4)
+
+* `LEMGENDARY_CURRENT_STATE.md`, `VERSIONING_POLICY.md` and their pages:
+  component versions synced with the component sources: LemGendary
+  Environment Manager v16.9.79, LemGendary Dataset Compiler Suite v16.9.84,
+  LemGendary AI Studio GUI v2.10.57, documentation hub v16.9.95 and the
+  Training Pathology Guide revision 1.9.0 (baseline v16.9.138). The
+  training suite versions are left for the training-suite sync.
+* `LEMGENDARY_CURRENT_STATE.md` and its page: the "cu126 PyTorch Stack"
+  bullet named stale pins (`torch 2.14.1+cu126` and others) and a fixed
+  index list; it now names the central requirements pins and the probe
+  index order (`cu134`, `cu126`, `cu121`, `cu118`, ROCm, PyPI for Apple
+  MPS, CPU).
+* `MANUAL_AI_STUDIO_GUI.md` and its page: the example wheel index row named
+  `cu121` next to driver 610.74; the probe selects `cu134` for that driver.
+* `manifest/documents.json`: `current-state` and `versioning-policy`
+  audited 2026-11-12.
+
+### v16.9.94 - LemGendary AI Studio GUI v2.10.57 Control Registry, Manual and Whitepaper (Audit DOCS-3)
+
+* `GUI_CONTROL_REGISTRY.md` and its page: recounted against the
+  `lemgendary-ai-studio-gui` source of v2.10.57: 150 distinct IDs (91
+  controls). Added `train-btn-soup-{model_key}`, `kaggle-monitor-slug` and
+  `kaggle-monitor-btn`. Section 3.10 now lists every control without an ID
+  by area (it missed, among others, the card "Docs & Meta" and "Stage
+  Variations" actions, the batch size select, the filters and the manifest
+  editor buttons). The IDs the 2026-11 audit asked to add
+  (`compiler-btn-validate-schema`, `comp-input-max-gb`,
+  `train-select-batch-{key}`, `config-tabs-tab-manifests` and others) do not
+  exist in the source; section 3.11 records this.
+* `MANUAL_AI_STUDIO_GUI.md` and its page: the Reconcile button exists
+  ("Reconcile Environment" on each project card), but it calls
+  `POST /api/pipeline/run` with `target_project` and `clean: false`, not the
+  nonexistent `POST /api/pipeline/reconcile`, and keeps valid `.venv`
+  folders. `unified_requirements.yaml` replaced with
+  `lemgendary-env-manager/requirements/*.txt`. Documents the v2.10.47 to
+  v2.10.57 features: manifest editor guards and central manifests, the red
+  error banner for failed actions, per-step pipeline pills, remote job
+  restore and polling, per-format variation badges, card actions disabled
+  while the training sidecar is offline, telemetry auto-scroll, sidecar
+  stop with SIGTERM before SIGKILL, Blend Soup, Attach Monitor and the
+  portable verify script.
+* `PAPER_AI_STUDIO_GUI.md` and its page: v2.10.57; the drift matrix reads
+  the central requirements files; the v2.10.47 to v2.10.55 architecture
+  changes are listed in Section 6.9.
+* `canonical_capabilities.json` and `.yaml`: `model_soup` is available in
+  the GUI since v2.10.57 (`train-btn-soup-{model_key}`).
+* `manifest/documents.json`: the three GUI documents at baseline v2.10.57.
+
+### v16.9.93 - LemGendary Dataset Compiler Suite v16.9.84 (Audit DOCS-2)
+
+* `PAPER_DATASET_COMPILER.md` and `papers/dataset-compiler.html`: baseline
+  v16.9.84-STABLE (was v16.9.65; the audit named v16.9.75, but the suite
+  declares 16.9.84 in `core/cli_args.py`). The abstract summarizes
+  v16.9.66 to v16.9.84, and the new Section 4.11 "Sample Integrity, Shard
+  Verification & Manifold Repair" documents the v16.9.75 to v16.9.84
+  changes: no identity pairs, lossless masks and corrupt-image rejection,
+  contiguous sample groups, label geometry fixes, the audit gates and
+  `reject_log`, post-write shard verification with pair completeness, the
+  lossless MDS transcode, safe worker init and interrupt, full dedup on
+  warm-up and resume, download and Temp sweep safety, the `repair` command
+  and logged instead of swallowed errors.
+* `manifest/documents.json`: `dataset-compiler` baseline v16.9.84-STABLE.
+
+### v16.9.92 - LemGendary Environment Manager v16.9.79 and PyTorch Index Claims (Audit DOCS-2)
+
+* `PAPER_ENV_MANAGER.md` and `papers/env_manager.html`: baseline
+  v16.9.79-STABLE (the page abstract still said v16.9.60). Documents the
+  v16.9.69 to v16.9.79 changes: the `cu134` index for drivers 610 and newer,
+  the PyPI index for Apple MPS and the probe order; no fixed
+  `--extra-index-url` in the central requirements; the 64-bit DirectML and
+  CSV `rocm-smi` probes; the `bitsandbytes` macOS marker; the write-back of
+  upgraded pins only after validation (`finalize_upgrade()`) and the npm
+  write-back; the manifest editor that opens the central manifests;
+  `pip3` detection; `sys.prefix` venv detection; the editable project
+  install; one upgrade engine with CUDA family vetting; the in-memory
+  compile check and the new and corrected validation gates.
+* PyTorch claims checked against `lemgendary-env-manager/requirements/`
+  (`torch==2.15.0`, `torchvision==0.29.2`, `torchaudio==2.11.1`,
+  `transformers==5.22.1`; the wheel index comes from the hardware probe):
+  `ECOSYSTEM_ARCHITECTURE.md` no longer names a fixed `cu126` index and lists
+  `cu134`; `GLOSSARY.md` lists `cu134`; the `MANUAL_API.md` manifest example
+  shows the pins instead of the removed `--extra-index-url` line;
+  `MANUAL_CLI.md` no longer names a fixed `cu121` index. The training suite
+  paper keeps its claims until that suite's documentation sync.
+* `ECOSYSTEM_ARCHITECTURE.md`: component versions Environment Manager
+  v16.9.79, Dataset Compiler Suite v16.9.84, AI Studio GUI v2.10.57.
+* `manifest/documents.json`: `env_manager` baseline v16.9.79-STABLE; audit
+  dates of the edited documents.
+
+### v16.9.91 - Audit Checks for Sidebars, Alert Markers and Component Versions (Audit DOCS-4)
+
+* `scripts/docs_audit/`: three new checks.
+  * `toc-sidebar`: the `nav.toc-sidebar` links of a page list the same
+    entries in the same order as the Markdown table of contents, neither
+    lists a target twice, and every level-2 section with content has a
+    sidebar link.
+  * `alert-markers`: raw GitHub alert markers (`[!NOTE]`, `[!IMPORTANT]`,
+    `[!WARNING]`, `[!TIP]`, `[!CAUTION]`) in a page are a finding.
+  * `component-versions`: the component baselines of
+    `canonical_capabilities.json` equal the versions in
+    `env_manager/__init__.py`, `core/cli_args.py`, the training suite
+    `pyproject.toml` and the GUI `package.json`, and
+    `control_planes.gui.version` equals `desktop_client_baseline`. The
+    project folders come from `ecosystem.json`. `manifest/documents.json`
+    holds no component baselines, only per-document baselines.
+* `canonical_capabilities.json` and `.yaml`: LemGendary Environment Manager
+  v16.9.79, LemGendary Dataset Compiler Suite v16.9.84, LemGendary AI Studio
+  GUI v2.10.57. The LemGendary Model Training Suite baseline stays at
+  v16.9.139 and is the one backlog entry until that suite's documentation
+  sync.
+* `MANUAL_API.md`, `MANUAL_CLI.md` and `PAPER_LEMGENDARY_ULTRAZOOM.md` (and
+  their pages): the table of contents and sidebar now link the "Companion
+  Documentation" and "1.1 What UltraZoom Does" sections the new check found.
+* `REVIEW_REPORT.md` removed: the 2026-11-02 review it records was closed
+  in v16.9.77 and git keeps the history.
+* `scripts/audit_docs.py` and `tests/test_documentation_content.py`: no
+  optional-member access on `None` (pyright clean).
+* Tests: 9 new audit tests; the fixture workspace gains the four version
+  files and the `projects` list.
+
+### v16.9.90 - Training Pathology Table of Contents Repair (Audit DOCS-1)
+
+* `MD-Papers/PAPER_TRAINING_PATHOLOGY.md`: removed the orphan fragment and
+  the duplicated Pathology 26 to 34 entries from the table of contents and
+  added the missing entries for Pathologies 37 to 39.
+* `papers/training-pathology.html`: the sidebar lists Pathologies 36 to 39,
+  which were missing.
+* Both files: Paper Revision 1.9.0 (2026-11-12). The Abstract counts 39
+  pathologies (it said 27) and cites the header release v16.9.138-STABLE
+  instead of revision 1.6.0 and v16.9.107-STABLE. The Section 5 note cites
+  v16.9.138-STABLE instead of v16.9.68-STABLE.
+* The raw `[!NOTE]` text in `papers/training-pathology.html` and
+  `papers/foundation-llm.html` is now a styled `Note:` blockquote, the
+  markup the other pages use. In both Markdown sources the `[!NOTE]` marker
+  stands on its own line, which GitHub needs to render the alert.
+* `manifest/documents.json`: `training-pathology` audited 2026-11-12.
+
+### v16.9.89 - WCAG 2.2 AA Contrast Fixes (Audit WCAG)
+
+* `style.css`: new colour token `--accent-fill` (`#006ee6`, 4.8:1 against
+  white text) for the active tab pill. The accent colour `#007aff` gave white
+  text only 4.0:1: 48 of the 61 pa11y findings, one per paper page.
+* `papers/ecosystem-architecture.html`: edge labels of the Mermaid dark theme
+  had 4.43:1 contrast (11 findings); the diagram now sets
+  `edgeLabelBackground` to the code background colour.
+* `MD-Papers/PAPER_LEMGENDARY_CODEFORMER.md` and `papers/face-codeformer.html`:
+  restored two damaged formulas ($b_{\text{chunk}} \le 2$ and $20\%$
+  strides). MathJax rendered the broken input as red error text, which also
+  failed the contrast check (2 findings); the HTML list item that had
+  swallowed the next bullet is split again.
+* `requirements.txt`: regenerated from the central
+  `requirements-documentation.txt` of the LemGendary Environment Manager. It
+  now pins `pylint`, which the validator runs in this venv.
+* All 49 pages pass pa11y (WCAG2AA) with no findings.
 
 ### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
 

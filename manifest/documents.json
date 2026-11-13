@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.139-STABLE",
-  "last_audited": "2026-11-10",
+  "document_baseline": "v16.9.116-STABLE",
+  "last_audited": "2026-11-13",
   "total_publications": 48,
   "author": "Lem Treursic",
   "documents": [
@@ -21,8 +21,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/ai-studio-manual.html",
       "md_path": "MD-Papers/MANUAL_AI_STUDIO_GUI.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.68",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -31,8 +31,8 @@
       "category": "Category 01.4 GUI",
       "html_path": "papers/ai-studio-whitepaper.html",
       "md_path": "MD-Papers/PAPER_AI_STUDIO_GUI.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.57",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -41,8 +41,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/api-manual.html",
       "md_path": "MD-Papers/MANUAL_API.md",
-      "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -61,8 +61,8 @@
       "category": "Category 03 MANUALS",
       "html_path": "papers/cli-manual.html",
       "md_path": "MD-Papers/MANUAL_CLI.md",
-      "baseline_version": "v16.9.44-STABLE",
-      "last_audited": "2026-10-28",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -72,7 +72,7 @@
       "html_path": "papers/current-state.html",
       "md_path": "MD-Papers/LEMGENDARY_CURRENT_STATE.md",
       "baseline_version": "v16.9.68-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -81,8 +81,8 @@
       "category": "Category 01.2 DATASET",
       "html_path": "papers/dataset-compiler.html",
       "md_path": "MD-Papers/PAPER_DATASET_COMPILER.md",
-      "baseline_version": "v16.9.65-STABLE",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v16.9.108-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -132,7 +132,7 @@
       "html_path": "papers/ecosystem-architecture.html",
       "md_path": "MD-Papers/ECOSYSTEM_ARCHITECTURE.md",
       "baseline_version": "v16.9.65-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -141,8 +141,8 @@
       "category": "Category 01.1 ENV",
       "html_path": "papers/env_manager.html",
       "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
-      "baseline_version": "v16.9.67-STABLE",
-      "last_audited": "2026-11-09",
+      "baseline_version": "v16.9.85-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -171,8 +171,8 @@
       "category": "Category 08.3 SPECIFICATION",
       "html_path": "papers/face-retinaface.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -181,8 +181,8 @@
       "category": "Category 08 FACE VISION",
       "html_path": "papers/face-suite.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_FACE_SUITE.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -201,8 +201,8 @@
       "category": "Category 11 FOREX",
       "html_path": "papers/forex_predictor.html",
       "md_path": "MD-Papers/PAPER_FOREX_PREDICTOR.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -262,7 +262,7 @@
       "html_path": "papers/glossary.html",
       "md_path": "MD-Papers/GLOSSARY.md",
       "baseline_version": "v16.9.68-STABLE",
-      "last_audited": "2026-11-03",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     },
     {
@@ -271,8 +271,8 @@
       "category": "Category 03.4 CONTROLS",
       "html_path": "papers/gui-control-registry.html",
       "md_path": "MD-Papers/GUI_CONTROL_REGISTRY.md",
-      "baseline_version": "v2.10.38",
-      "last_audited": "2026-11-04",
+      "baseline_version": "v2.10.68",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -322,7 +322,7 @@
       "html_path": "papers/mirnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_MIRNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -332,7 +332,7 @@
       "html_path": "papers/mprnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_MPRNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -342,7 +342,7 @@
       "html_path": "papers/nafnet.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_NAFNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -362,7 +362,7 @@
       "html_path": "papers/nima-efficientnet.html",
       "md_path": "MD-Papers/PAPER_NIMA_EFFICIENTNET.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -382,7 +382,7 @@
       "html_path": "papers/nima-mobile.html",
       "md_path": "MD-Papers/PAPER_NIMA_MOBILE.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -392,7 +392,7 @@
       "html_path": "papers/nima-pro.html",
       "md_path": "MD-Papers/PAPER_NIMA_PRO.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -401,8 +401,8 @@
       "category": "Category 07 QUALITY",
       "html_path": "papers/nima-quality.html",
       "md_path": "MD-Papers/PAPER_LEMGENDARY_NIMA.md",
-      "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-10-17",
+      "baseline_version": "v16.9.214-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -441,9 +441,8 @@
       "category": "Category 02 PATHOLOGY",
       "html_path": "papers/training-pathology.html",
       "md_path": "MD-Papers/PAPER_TRAINING_PATHOLOGY.md",
-      "baseline_version": "v16.9.139-STABLE",
+      "baseline_version": "v16.9.157-STABLE",
       "last_audited": "2026-11-12",
-      "pathology_count": 61,
       "status": "Canonical"
     },
     {
@@ -452,8 +451,8 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.137-STABLE",
-      "last_audited": "2026-11-09",
+      "baseline_version": "v16.9.223-STABLE",
+      "last_audited": "2026-11-13",
       "status": "Canonical"
     },
     {
@@ -483,7 +482,7 @@
       "html_path": "papers/versioning-policy.html",
       "md_path": "MD-Papers/VERSIONING_POLICY.md",
       "baseline_version": "v16.9.27-STABLE",
-      "last_audited": "2026-11-04",
+      "last_audited": "2026-11-12",
       "status": "Canonical"
     }
   ]

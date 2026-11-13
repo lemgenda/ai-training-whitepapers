@@ -2,8 +2,8 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-04 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
+**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-13 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
 ---
@@ -44,11 +44,11 @@
 This registry lists every element of the LemGendary AI Studio GUI
 (`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.38`, including
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.68`, including
 the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
 from their props, with a template such as `train-btn-start-{model_key}` counted
-once: 147 distinct IDs, of which 88 belong to controls (sections 3.1 to 3.8)
-and 59 to dialogs, status regions, landmarks and headings (section 3.9).
+once: 202 distinct IDs, of which 128 belong to controls (sections 3.1 to 3.8)
+and 74 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
 
@@ -101,6 +101,10 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `GET /api/health` and `GET /api/pipeline/status` (8000) plus the liveness
   probes. Reloads hardware, health and pipeline state; shows "Refreshing..."
   while busy.
+- `dash-btn-refresh-projects` (`button`): "Refresh Projects".
+  `GET /api/projects` (8000). Re-reads project health and replaces only the
+  project rows of the health report; disabled while the Environment Manager
+  is offline or no report is loaded.
 - `tab-{tab_id}` (`button`): sidebar tab ("Dashboard", "LemGendary Dataset
   Compiler Suite", "LemGendary Model Training Suite", "Clean Install Pipeline",
   "Health & Version Drift"). None. Switches the workspace view; the dot shows
@@ -186,6 +190,13 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.5 Dataset Compiler Suite
 
+- `compiler-subtabs-tab-catalog`, `compiler-subtabs-tab-queue`,
+  `compiler-subtabs-tab-reduce` (`button`, `role="tab"`): the Catalog,
+  Modernization Queue and Scale Reduction sub-tabs. None.
+- `compiler-btn-validate-schema` (`button`): "Validate Schema".
+  `POST /api/config/validate` (8100, no API token; admitted with the client
+  header). Shows a success notice (version, dataset count, prefix, suffix,
+  output folder) or an error banner; disabled while the compiler is offline.
 - `comp-mode-standard`, `comp-mode-custom` (`button`, `aria-pressed`):
   "Standard Preset" and "Custom Multi-Source" compile mode switch. None. Shows
   the standard or the custom multi-source compilation form.
@@ -203,9 +214,18 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `preset-select` (`select`): compiler preset. `GET /api/gui/presets` (8100)
   fills it. "Server default" omits `preset` so the sidecar applies its default;
   offline only that option is shown.
+- `comp-input-max-gb` (`input type=number`): "Max Size (GB)". None. Sent as
+  `max_gb`; empty keeps the preset default, an invalid value stops the
+  compile with a message.
+- `comp-input-workers` (`input type=number`): "Workers". None. Sent as
+  `workers`; empty keeps the sidecar default.
+- `comp-select-shard-ext` (`select`): shard extension. None. "Compiler
+  default" (sends nothing; the compiler writes `.data`), `.data` or `.tar`,
+  sent as `shard_ext`.
 - `comp-btn-compile` (`button`): "Compile Manifold".
-  `POST /api/gui/quick-compile` (8100) with `model` and `preset`. Starts a
-  compile job; an unknown preset shows the server's 422 detail.
+  `POST /api/gui/quick-compile` (8100) with `model`, `preset` and the optional
+  `max_gb`, `workers` and `shard_ext`. Starts a compile job; an unknown preset
+  shows the server's 422 detail.
 - `custom-name-input` (`input type=text`): custom manifold name. None. Name of
   the new manifold.
 - `custom-task-select` (`select`): domain task. None. Restoration, detection or
@@ -224,6 +244,11 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `comp-input-kaggle-custom-ref` (`input type=text`): Kaggle dataset slug or
   URL. `POST /api/kaggle/download` (8100) on "Ingest from Kaggle". Downloads a
   public or private Kaggle dataset into `LemGendaryDatasets`.
+- `comp-select-kaggle-registry` (`select`): registry manifold with a Kaggle
+  reference. `GET /api/kaggle/registry-datasets` (8100) fills it. Fills the
+  Kaggle reference and the modernized target folder.
+- `comp-btn-kaggle-registry-reload` (`button`): reload. Reloads the registry
+  manifold list.
 - `comp-btn-meta-{dataset_key}` (`button`): "Update Metadata".
   `POST /api/kaggle/update-metadata` (8100). Pushes the metadata of one manifold
   without uploading data.
@@ -248,8 +273,18 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `GET /api/gui/models/with-stats` (8200). Reloads models with their latest
   metrics in one request.
 - `train-btn-start-{model_key}` (`button`): "Local Training".
-  `POST /api/gui/quick-train` (8200) with `model_key` and `batch_size`. Starts
-  local training.
+  `POST /api/gui/quick-train` (8200) with `model_key`, `batch_size` and
+  `override_frozen`. Starts local training; an assistant LLM card uses
+  `POST /api/training/llm/train` instead.
+- `train-select-batch-{model_key}` (`select`): local batch size. None. Preset
+  sizes or "Custom..."; a non-preset registry batch size opens on "Custom...".
+- `train-input-custom-batch-{model_key}` (`input type=number`): custom batch
+  size. None. Whole number used when "Custom..." is chosen.
+- `train-input-override-frozen-{model_key}` (`input type=checkbox`):
+  "Override frozen settings". None. Unchecked by default; sent as
+  `override_frozen` with the local launch, so a resume proceeds although a
+  frozen run setting changed. Not on assistant LLM cards (the QLoRA route has
+  no frozen guard).
 - `train-btn-stop-{model_key}` (`button`): "Stop Training".
   `POST /api/jobs/{job_id}/cancel` (8200). Cancels the local job; the job is
   cleared only when the sidecar confirms `cancelled`.
@@ -269,11 +304,85 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `POST /api/training/evaluate` (8200). Evaluates the checkpoint locally.
 - `train-btn-export-{model_key}` (`button`): "Export Binaries".
   `POST /api/training/export` (8200). Exports the model binaries.
+- `train-btn-docs-{model_key}` (`button`): "Docs & Meta".
+  `POST /api/training/models/{model_key}/docs/generate` (8200). Regenerates
+  the model card and the Kaggle `model-metadata.json`.
+- `train-btn-stage-{model_key}` (`button`): "Stage Variations".
+  `POST /api/training/models/{model_key}/export/stage` (8200). Stages the
+  exported binaries into the isolated `dist/kaggle` variation folders.
+- `train-btn-soup-{model_key}` (`button`): "Blend Soup". None. Opens the Blend
+  Soup dialog (`soup-dialog`).
+- `soup-mode-all`, `soup-mode-pick` (`input type=radio`): "Every vault
+  checkpoint on disk, uniform weights" or "Choose donors and weights" (needs
+  2 measured SOTA metrics). None.
+- `soup-donor-{metric}` (`input type=checkbox`), `soup-weight-{metric}`
+  (`input type=number`): use the `vault_{metric}.pth` donor and its weight
+  (default 1). None. The recipe is validated like the sidecar (at least 2
+  donors, finite weights >= 0, positive sum) and sent normalised.
+- `soup-btn-blend` (`button`): "Blend". `POST /api/models/{model_key}/soup`
+  (8200) with `{ donors, weights }`, or an empty body for every vault
+  checkpoint with uniform weights. The dialog stays open when the blend
+  fails. `soup-btn-cancel` (`button`) closes it.
+- `training-telemetry-tabs-tab-local`, `training-telemetry-tabs-tab-remote`,
+  `training-telemetry-tabs-tab-system` (`button`, `role="tab"`): the Local
+  Process, Remote Cloud and Ecosystem Mesh console tabs. None.
+- `train-btn-frozen-refusal-dismiss` (`button`): dismiss. None. Closes the
+  resume refusal notice (`train-frozen-refusal`); a new local or Kaggle
+  launch replaces it.
 - `cloud-modal-tab-kaggle`, `cloud-modal-tab-colab`, `train-modal-tab-upload`
   (`button`, `role="tab"`): "Kaggle GPU Cloud", "Google Colab FUSE" and "Kaggle
   Models Hub" in the Cloud & Registry Dispatch dialog. None. Switch the panel
   `cloud-modal-panel`.
-- `gpu-select` (`select`): Kaggle GPU. None. T4 x2 or P100 for the cloud launch.
+- `kaggle-accelerator-select` (`select`): "Kaggle Accelerator".
+  `GET /api/training/kaggle/accelerators` (8200) fills it, else the ecosystem
+  snapshot without retired machine shapes. Sent as `accelerator` (an id) with
+  `POST /api/training/kaggle/train`; replaces the GPU select.
+- `kaggle-poll-interval-input` (`input type=number`): "Poll Interval (s)".
+  None. Default 30, minimum 5; sent as `poll_interval`.
+- `kaggle-auto-pull-checkbox` (`input type=checkbox`): "Auto-pull to
+  LemGendaryModels". None. Sent as `auto_pull`.
+- `kaggle-auto-resume-checkbox` (`input type=checkbox`): "Auto-resume after
+  the session deadline". None. Unchecked by default; sent as `auto_resume`.
+- `kaggle-max-resumes-input` (`input type=number`): "Max Resumes". None.
+  Enabled when auto-resume is checked; empty uses the Training Suite
+  `kaggle_session.max_resumes`, minimum 0; sent as `max_resumes`.
+- `kaggle-override-frozen-checkbox` (`input type=checkbox`): "Override frozen
+  settings". None. Sent as `override_frozen` with
+  `POST /api/training/kaggle/train`, which also applies it to the auto-resume
+  sessions.
+- `kaggle-fieldset-advanced` (`fieldset`): "Advanced" group of the Kaggle
+  launch options (`KaggleAdvancedOptions`). None. Holds the four optional
+  fields below; each is empty by default and not sent when empty. A refused
+  value shows its message in `kaggle-input-{field}-error` (section 3.9) and
+  disables "Launch Cloud Training"; a 422 from the Training Suite shows its
+  message in the dialog's error banner.
+- `kaggle-input-git-ref` (`input type=text`): "Training Suite Ref". None.
+  Branch, tag or full commit SHA the kernel clones the Training Suite at;
+  sent as `git_ref`; empty clones `main`. Rules: letters, digits, `.`, `_`,
+  `/` and `-` only, starting with a letter or digit, at most 200 characters,
+  none of `..`, `//`, `@{`, `/.` and no trailing `/`, `.` or `.lock` (the
+  Training Suite ref rules).
+- `kaggle-input-env-manager-ref` (`input type=text`): "Env Manager Ref". None.
+  Ref the kernel clones the Environment Manager at; sent as
+  `env_manager_ref`; empty uses the Training Suite ref. Same ref rules.
+- `kaggle-input-limit-hours` (`input type=text`, decimal): "Session Limit
+  (h)". None. Session limit in hours, greater than 0; sent as `limit_hours`;
+  empty uses `kaggle_session.limit_hours` of the Training Suite `config.yaml`.
+- `kaggle-input-margin-minutes` (`input type=text`, decimal): "Stop Margin
+  (min)". None. Minutes before the limit at which the trainer stops and
+  saves, 0 or more and below the limit; sent as `margin_minutes`; empty uses
+  `kaggle_session.margin_minutes`.
+- `kaggle-monitor-slug` (`input type=text`): "Monitor an already running
+  kernel". None. Kernel reference `owner/kernel-slug`.
+- `kaggle-monitor-kernel-select` (`select`): recent Kaggle kernels of the
+  configured account. `GET /api/training/kaggle/kernels` (8200) fills it.
+  Fills the kernel reference.
+- `kaggle-monitor-kernels-refresh` (`button`): reload. Reloads the kernel
+  list.
+- `kaggle-monitor-btn` (`button`): "Attach Monitor". `POST
+  /api/training/kaggle/monitor` (8200) with the launch options' poll interval.
+  Attaches the Remote Cloud console to the running kernel and tracks it as the
+  remote job; disabled until the reference has the form `owner/kernel-slug`.
 - `variation-select` (`select`): variation to check. None. Filters the isolation
   report from `GET /api/models/{model_key}/variations/validate` (8200).
 
@@ -293,9 +402,10 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.8 Config & Secrets
 
-- `config-editor-tab-manifests`, `config-editor-tab-secrets` (`button`,
+- `config-tabs-tab-manifests`, `config-tabs-tab-secrets` (`button`,
   `role="tab"`): "Registry Manifests" and "Secrets & Tokens Vault". None. Switch
-  the panel `config-editor-panel`.
+  the panel `config-editor-panel` (the IDs were `config-editor-tab-*` up to
+  v2.10.60).
 - `manifest-select` (`select`): manifest file. `GET /api/manifests/registry`
   fills it; `GET /api/manifests/read` (8000) loads the chosen file.
 - `new-service-select` (`select`): "Target Service". None. Service of a new
@@ -319,8 +429,9 @@ Dialogs and forms:
   shared `Modal` dialogs (`role="dialog"`, `aria-modal`, focus trap; Escape
   closes the innermost one). Each title has the ID `{dialog_id}-title`.
 - `bug-modal-form`: the Report Issue form.
-- `test-modal`, `cloud-modal`, `config-editor-modal`: the Test & Diagnostic
-  Orchestrator, Cloud Training and Config & Secrets dialogs (shared `Modal`).
+- `test-modal`, `cloud-modal`, `config-editor-modal`, `soup-dialog`: the Test
+  & Diagnostic Orchestrator, Cloud Training, Config & Secrets and Blend Model
+  Soup dialogs (shared `Modal`).
 - `test-modal-panel`, `cloud-modal-panel`, `config-editor-panel`: the tab
   panels (`role="tabpanel"`) of the shared `Tabs` component, labelled by the
   active tab.
@@ -355,6 +466,26 @@ Status and error regions:
   success view (archive name and relative path, recipient, subject, and notes
   when the mail client or the reports folder did not open).
 - `test-modal-output-console`: test output (`pre`).
+- `cloud-modal-auth-badge`: the "API Authentication" check of the cloud
+  dialog (user and method from `GET /api/training/kaggle/status`);
+  `cloud-modal-auth-error`: banner with the HTTP status and reason when Kaggle
+  refused the token or none is configured (`role="alert"`).
+- `cloud-modal-dataset-links`: the model's Kaggle dataset links (registry
+  `kaggle_dataset_urls`).
+- `kaggle-accelerator-source`: note that the accelerator list comes from the
+  ecosystem snapshot while the Training Suite is offline.
+- `kaggle-input-git-ref-error`, `kaggle-input-env-manager-ref-error`,
+  `kaggle-input-limit-hours-error`, `kaggle-input-margin-minutes-error`
+  (`role="alert"`): the validation message under the matching Advanced
+  launch field (section 3.6); shown only while the value is refused.
+- `comp-badge-kaggle-auth`: Dataset Compiler Kaggle credential badge
+  (`GET /api/kaggle/status`, 8100); the tooltip names the credential sources.
+- `train-frozen-refusal` (region): shown instead of the generic error banner
+  when a local or cloud training job fails with the Training Suite
+  `FrozenSettingsChanged` message; `train-frozen-refusal-message` (the
+  message), `train-frozen-refusal-changes` (table of the changed settings
+  with the old and new canonical JSON values) and `train-frozen-refusal-hint`
+  (names the override toggle of that launch).
 
 Landmarks and headings:
 
@@ -368,18 +499,82 @@ Landmarks and headings:
 
 ### 3.10 Controls Without an ID
 
-These controls work but have no `id` yet; tests find them by role and label: the
-"Config & Secrets" and "LemGendary AI Documentation Hub" header buttons, the
-Start Service and Stop Service buttons on the sidecar tiles, the per-step run
-buttons of the pipeline step cards, the Catalog, Modernization Queue and Scale
-Reduction sub-tabs, the modernization
-queue buttons, the scale reduction dispatch button, the "Ingest from Kaggle"
-button and the telemetry console tabs.
+These controls work but have no `id` yet; tests find them by role and label. The
+list was recounted from the `button`, `input`, `select` and `textarea` elements
+without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
+`v2.10.67` are removed from it:
+
+- **Header and shell**: the "Config & Secrets" and "LemGendary AI Documentation
+  Hub" buttons, the help tooltip (`?`) buttons, the validation banner and error
+  dismiss buttons and the hover pin popovers.
+- **Dashboard**: the quick action, Start Service and Stop Service buttons on the
+  sidecar tiles, "Start All Services" in the mesh banner, "Start Environment
+  Manager" on the hardware card and the health panel, the "Reconcile
+  Environment" button on each project card, and the "Copy Stream" and "Clear
+  Stream" buttons of the log panel.
+- **Pipeline**: the per-step run buttons of the pipeline step cards.
+- **Dataset Compiler Suite**: the manifold search box, its clear button, the status,
+  format and task filters and "Reset Filters"; the custom compile button; the
+  Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the
+  modernization workers input, the push, force and dry-run check boxes, "Scan
+  Queue", the run-all and per-row modernize buttons; and "Launch Scale
+  Reduction".
+- **Model Training Suite**: the model search box, its clear button, the status,
+  category and architecture filters and "Reset Filters"; "Start Training Suite",
+  Retry and the clear-filters button of the training panel; the "Copy Stream",
+  "Clear Stream" and "Halt Local Job" buttons of the console tabs; the "Regen
+  Docs & Meta", "Stage Variations" and dry-run controls of the variation
+  isolation checker; and the close button, Cancel, "Launch Cloud Training" and
+  publish buttons of the Cloud & Registry Dispatch dialog.
+- **Config & Secrets**: the dialog close button; "Validate Syntax", the diff
+  toggle, "Revert", "Save Manifest" and the text area of the manifest editor;
+  and the add toggle, "Save Secrets to Ecosystem", the default check box,
+  Cancel, "Add to Vault", the service shortcut buttons and the per-credential
+  set-default and delete buttons of the secrets vault.
 
 ### 3.11 Changes Since the Previous Registry
 
-The previous registry listed 75 IDs, of which 21 exist in the code. 54 were
-removed and 98 added.
+Since the `v2.10.57` registry 53 IDs were added, one removed and two renamed
+(GUI releases `v2.10.59` to `v2.10.68`):
+
+- **Added, Dashboard and Dataset Compiler**: `dash-btn-refresh-projects`,
+  `comp-badge-kaggle-auth`, `comp-select-kaggle-registry`,
+  `comp-btn-kaggle-registry-reload` (`v2.10.59`);
+  `compiler-subtabs-tab-{catalog,queue,reduce}`, `comp-input-max-gb`,
+  `comp-input-workers` (`v2.10.61`); `compiler-btn-validate-schema`,
+  `comp-select-shard-ext` (`v2.10.62`).
+- **Added, Model Training Suite**: `kaggle-monitor-kernel-select`,
+  `kaggle-monitor-kernels-refresh` (`v2.10.59`); `soup-dialog` (with
+  `soup-dialog-title`), `soup-mode-all`, `soup-mode-pick`,
+  `soup-donor-{metric}`, `soup-weight-{metric}`, `soup-btn-blend`,
+  `soup-btn-cancel` (`v2.10.60`); `train-btn-docs-{model_key}`,
+  `train-btn-stage-{model_key}`, `train-select-batch-{model_key}`,
+  `train-input-custom-batch-{model_key}`,
+  `training-telemetry-tabs-tab-{local,remote,system}` (`v2.10.61`);
+  `cloud-modal-auth-badge`, `cloud-modal-auth-error`,
+  `cloud-modal-dataset-links`, `kaggle-accelerator-select`,
+  `kaggle-accelerator-source`, `kaggle-poll-interval-input`,
+  `kaggle-auto-pull-checkbox` (`v2.10.65`); `kaggle-auto-resume-checkbox`,
+  `kaggle-max-resumes-input` (`v2.10.66`);
+  `train-input-override-frozen-{model_key}`,
+  `kaggle-override-frozen-checkbox`, `train-frozen-refusal`,
+  `train-frozen-refusal-message`, `train-frozen-refusal-changes`,
+  `train-frozen-refusal-hint`, `train-btn-frozen-refusal-dismiss`
+  (`v2.10.67`); `kaggle-fieldset-advanced`, `kaggle-input-git-ref`,
+  `kaggle-input-env-manager-ref`, `kaggle-input-limit-hours`,
+  `kaggle-input-margin-minutes` and their four `-error` regions
+  (`v2.10.68`).
+- **Renamed**: `config-editor-tab-manifests` and `config-editor-tab-secrets` to
+  `config-tabs-tab-manifests` and `config-tabs-tab-secrets` (`v2.10.61`).
+- **Removed**: `gpu-select` (the P100 / T4 choice), replaced by
+  `kaggle-accelerator-select` (`v2.10.65`).
+
+Before that, since the `v2.10.38` registry three IDs were added
+(`train-btn-soup-{model_key}`, `kaggle-monitor-slug` and `kaggle-monitor-btn`,
+release `v2.10.55`) and none removed.
+
+Before that, the previous registry listed 75 IDs, of which 21 exist in the
+code. 54 were removed and 98 added.
 
 Renamed (old ID to current ID): `comp-input-custom-name` to `custom-name-input`,
 `comp-select-custom-task` to `custom-task-select`, `comp-select-custom-format`

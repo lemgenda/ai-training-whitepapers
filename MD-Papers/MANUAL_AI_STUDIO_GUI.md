@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.38` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-04 · **Sidecars**: LemGendary Environment Manager (port 8000),
+**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-13 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
 [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document
@@ -70,6 +70,8 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [7.2 Exporting to Universal Runtimes](#72-exporting-to-universal-runtimes)
   - [7.3 Publishing to Kaggle Models Hub & Cloud
     Registry](#73-publishing-to-kaggle-models-hub--cloud-registry)
+  - [7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to
+    v2.10.68)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068)
 - [8. Health Matrix & Cross-Project Version Drift
   Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
@@ -114,6 +116,11 @@ deployment accessible to everyone from senior machine learning researchers to
 high school students and non-technical hobbyists. When something goes wrong, the
 Report Issue button packages a description, annotated screenshots and recent
 telemetry for the maintainers (chapter 13).
+
+Release `v2.10.57` routes every failed training action to the red error banner
+instead of the green notice (v2.10.48), and `npm run verify` uses the portable
+script of the central manifest, which finds `lem-env` on Windows, macOS and
+Linux.
 
 ### The Gardening Model Rule
 
@@ -249,6 +256,12 @@ three local microservices:
 
 ![Ecosystem Sidecar Services Grid](../assets/gui/gui_service_tiles.png)
 
+Stopping a sidecar on macOS and Linux sends SIGTERM and waits up to 3 s before
+SIGKILL, so the sidecar can flush its logs; Linux falls back to `ss -tlpnH` when
+`lsof` is missing, and Windows uses `taskkill /T /F` (v2.10.54). Sibling
+projects are found from the working directory and from the executable's folders,
+so a build started outside the GUI folder still finds the sidecars.
+
 #### Ecosystem Sidecar Cards Numbered Reference
 
 1. **Environment Manager Service Card**: Identifies the primary port 8000
@@ -343,6 +356,14 @@ Universal Configuration & Secrets Vault modal, opened with the
 ![Universal Dynamic Config & Manifest
 Editor](../assets/gui/gui_config_secrets_modal.png)
 
+The Python and npm dependency manifests open the central files in
+`lemgendary-env-manager/requirements/`; saving one makes the Environment Manager
+sync it to every sibling project (Environment Manager v16.9.79). When the
+registry is unreachable the list stays empty and an offline banner shows; when a
+manifest cannot be read the editor stays empty and an error banner names the
+failure. In both cases **Validate Syntax**, **Save Manifest** and the text area
+are disabled (v2.10.47).
+
 #### Manifest Registry Editor Numbered Reference
 
 1. **Configuration Editor Modal Title**: Header identifying the central
@@ -354,7 +375,8 @@ Editor](../assets/gui/gui_config_secrets_modal.png)
 4. **Target Manifest Selector Dropdown** (`manifest-select`): Selects one of the
    ecosystem manifests reported by the Environment Manager, for example
    `unified_data.yaml` (dataset definitions), `unified_models_v2.yaml`
-   (architecture registry) and `unified_requirements.yaml` (dependency SSOT).
+   (architecture registry) and the dependency manifests
+   `lemgendary-env-manager/requirements/*.txt` (dependency SSOT).
 5. **Validate Syntax Button**: Sends the current text to the Environment Manager
    for YAML or JSON parsing without writing to disk and reports structural
    errors.
@@ -581,6 +603,11 @@ rapid re-verification:
 ![Individual Pipeline Step Execution Cards
 Grid](../assets/gui/gui_pipeline_step_cards.png)
 
+Each step pill (WAIT, RUN, DONE, FAILED) follows only that step's latest
+Environment Manager event. Compiler, training and console events no longer reset
+the pills, a single-step run no longer marks the steps before it as DONE, and a
+failed step shows a FAILED pill (v2.10.49).
+
 #### Pipeline Step Execution Cards Numbered Reference
 
 1. **Stage 1 Card Title (Hardware Discovery)**: Probes host platform, CPU
@@ -601,8 +628,8 @@ Grid](../assets/gui/gui_pipeline_step_cards.png)
    (`POST /api/pipeline/run-step`, step 3, `clean: false`), recreating missing
    or corrupted `.venv` folders idempotently.
 7. **Stage 4 Card Title (Requirements Sync & Install)**: Propagates centralized
-   dependencies from `unified_requirements.yaml`, installs binary wheels, and
-   normalizes OpenCV.
+   dependencies from `lemgendary-env-manager/requirements/*.txt`, installs
+   binary wheels, and normalizes OpenCV.
 8. **Stage 4 Run Step Action Button**: Dispatches isolated execution of Step 4
    (`POST /api/pipeline/run-step`, step 4, `clean: false`), synchronizing
    packages and installing missing dependencies.
@@ -682,7 +709,8 @@ Card](../assets/gui/gui_hardware_card.png)
 5. **System RAM Capacity Row**: Displays physical host RAM capacity
    (`32,486 MB`) available for data streaming and dataset decompression.
 6. **Recommended PyTorch Wheel Index Row**: Authoritative repository link for
-   CUDA 12.1 binary packages (`https://download.pytorch.org/whl/cu121`).
+   the wheel index the hardware probe selects for the detected driver
+   (`https://download.pytorch.org/whl/cu134` for driver `610.74`).
 7. **Detected Accelerators & Dedicated VRAM Row**: Details physical GPU device
    model (`NVIDIA GeForce GTX 1650`), installed driver level (`610.74`), and
    dedicated video memory capacity (`4096 MB VRAM`).
@@ -737,9 +765,10 @@ Callout bindings (control type; endpoint or action):
   validity and manifest conformance.
 - **3. Packages Metric** (Metric Row; `pip list` / manifest scan): Displays
   total installed package count and synchronization status.
-- **4. Reconcile Button** (Action Button;
-  `POST /api/pipeline/reconcile?project={name}`): Recreates `.venv` and
-  reconciles missing wheels for selected project.
+- **4. Reconcile Button** (Action Button; `POST /api/pipeline/run` with
+  `target_project` and `clean: false`): Runs the non-destructive pipeline for
+  the selected project; valid `.venv` folders are kept and missing wheels are
+  reconciled.
 
 ---
 
@@ -980,6 +1009,15 @@ readiness, and interactive SOTA target inspection:
 ![Registered Neural Architectures Telemetry
 Card](../assets/gui/gui_architecture_telemetry.png)
 
+The PyTorch, ONNX FP32 and ONNX FP16 badges follow their own readiness flags
+(`pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready`); a flag the Training
+Suite does not send shows the badge as not ready with a "not reported" tooltip
+(v2.10.51). While the Training Suite sidecar is offline, every card action
+except Stop Training is disabled (v2.10.52). **Blend Soup**
+(`train-btn-soup-{model_key}`, `POST /api/models/{model_key}/soup`) blends the
+checkpoints in the model's vault into one Model Soup checkpoint with uniform
+weights (v2.10.55).
+
 #### Architecture Telemetry Card Numbered Reference
 
 1. **Model Identity, Help Glyph & Target Pin**: Displays canonical model title
@@ -996,7 +1034,7 @@ Card](../assets/gui/gui_architecture_telemetry.png)
 4. **Neural Architecture Backbone Row**: Displays network architecture type
    (`Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention)`).
 5. **Trainable Parameters Metric Row**: Displays total parameter allocation
-   across backbone and attention heads (`2.75 M`).
+   across backbone and attention heads (`3.5358 M`).
 6. **Task Category Metric Row**: Displays registered domain classification
    (`forex`).
 7. **Completed Epochs Counter Row**: Reports cumulative trained epochs recorded
@@ -1172,6 +1210,10 @@ local training, remote cloud execution, and ecosystem mesh daemons:
 ![Redesigned Three-Tab Real-Time Telemetry
 Console](../assets/gui/gui_telemetry_console.png)
 
+The Local Process and Remote Cloud streams follow the newest line when events
+arrive or their tab is shown (v2.10.53). Live log events and progress ticks
+share one event buffer with one rule for collapsing progress ticks (v2.10.55).
+
 #### Telemetry Console Numbered Reference
 
 1. **Local Training Telemetry Subtab**: Focuses the local training worker log
@@ -1294,6 +1336,14 @@ isolated multi-variation publishing workflow:
 ![Model Export, Binary Packaging & Kaggle Models Hub Registry
 Dispatch](../assets/gui/gui_model_export_publish.png)
 
+The Kaggle tab can also attach to a kernel that is already running: enter
+`owner/kernel-slug` in `kaggle-monitor-slug` and press **Attach Monitor**
+(`kaggle-monitor-btn`, `POST /api/training/kaggle/monitor`); the kernel is then
+tracked as the remote job (v2.10.55). A running cloud job is restored when the
+Training panel opens, and the remote job is polled (`GET /api/jobs/{job_id}`)
+until it completes, fails or is cancelled, which shows a notice or an error
+(v2.10.50).
+
 #### Cloud & Registry Dispatch Numbered Reference
 
 1. **Modal Header & Model Identity**: Displays active model target
@@ -1307,8 +1357,9 @@ Dispatch](../assets/gui/gui_model_export_publish.png)
    shards are registered in `unified_data.yaml` and ready for cloud mounting.
 5. **Pre-Flight Checkpoint Vault Row**: Audits remote checkpoint vault status
    and validates cryptographic weight hashes.
-6. **Pre-Flight API Authentication Row**: Verifies Kaggle API credentials
-   (`kaggle.json`) loaded from the Secrets Vault are active and authenticated.
+6. **Pre-Flight API Authentication Row**: Shows the result of the real
+   authenticated call of `GET /api/training/kaggle/status` (user and method,
+   or the HTTP status and reason).
 7. **Regen Docs & Meta Action Button**: Dispatches
    `POST /api/training/generate-docs`, regenerating Markdown Model Card
    (`README.md`) and `model-metadata.json`.
@@ -1322,7 +1373,8 @@ Dispatch](../assets/gui/gui_model_export_publish.png)
 11. **ONNX FP16 Variation Card**: Displays binary isolation status and
     verification metrics for the half-precision ONNX graph.
 12. **Framework Variation Select Dropdown**: Selects target payload to publish
-    (`All Variations`, `PyTorch (.pt)`, `ONNX FP32`, or `ONNX FP16`).
+    (`all` or a `VariationKey`: `pytorch/default`, `pytorch/fp32`,
+    `onnx/fp16`, `onnx/fp32`).
 13. **Dry-Run Validation Checkbox Toggle**: Enables dry-run validation mode to
     simulate isolation checks and folder verification without executing live
     cloud upload.
@@ -1380,6 +1432,68 @@ fleet-wide synchronization to stage, validate, and publish all 23 registered
 neural models and checkpoints to Kaggle Models Hub simultaneously using the
 `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (`lemtrain sync push --all`).
+
+### 7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to v2.10.68)
+
+The Kaggle GPU Cloud tab of the Cloud & Registry Dispatch dialog follows the
+Training Suite Kaggle contract (`openapi.json` of Training Suite v16.9.170
+to v16.9.210):
+
+- **API Authentication** (`cloud-modal-auth-badge`): shows the user and the
+  method from `GET /api/training/kaggle/status`, which makes a real
+  authenticated call; a refused or missing token shows the HTTP status and
+  reason in `cloud-modal-auth-error`.
+- **Dataset links** (`cloud-modal-dataset-links`): the registry
+  `kaggle_dataset_urls` of the model; the kernel
+  (`code/<user>/<registry slug>-training`) and model page links use the
+  registry slug, with the ecosystem `identity.kaggle_owner` when the status
+  route reports no username.
+- **Launch options**: `kaggle-accelerator-select` (ids from
+  `GET /api/training/kaggle/accelerators`: CPU, GPU T4 x2, TPU v5e-8; the
+  P100 option is gone), `kaggle-poll-interval-input` (default 30 s, minimum
+  5 s), `kaggle-auto-pull-checkbox`, `kaggle-auto-resume-checkbox` with
+  `kaggle-max-resumes-input` (empty uses `kaggle_session.max_resumes`) and
+  `kaggle-override-frozen-checkbox`, all sent with
+  `POST /api/training/kaggle/train`.
+- **Advanced** (`kaggle-fieldset-advanced`, v2.10.68): four optional fields,
+  empty by default and not sent when empty: `kaggle-input-git-ref`
+  (`git_ref`, the Training Suite ref; empty clones `main`),
+  `kaggle-input-env-manager-ref` (`env_manager_ref`; empty uses the Training
+  Suite ref), `kaggle-input-limit-hours` (`limit_hours`, greater than 0) and
+  `kaggle-input-margin-minutes` (`margin_minutes`, 0 or more and below the
+  limit); empty session fields keep `kaggle_session` of the Training Suite
+  `config.yaml`. Refs follow the Training Suite ref rules (letters, digits,
+  `.`, `_`, `/`, `-`; a letter or digit first; at most 200 characters; no
+  `..`, `//`, `@{`, `/.`, trailing `/`, `.` or `.lock`). A refused value
+  shows `kaggle-input-{field}-error` and disables "Launch Cloud Training"; a
+  422 from the Training Suite shows its message in the error banner. The CLI
+  offers the same options (CLI manual Section 6.13).
+- **Kernel monitor**: `kaggle-monitor-kernel-select` lists the account's
+  recent kernels (`GET /api/training/kaggle/kernels`, reload
+  `kaggle-monitor-kernels-refresh`) and fills the kernel reference; Attach
+  Monitor sends the launch options' poll interval.
+- **Variations**: the push select offers the `VariationKey` values
+  (`pytorch/default`, `pytorch/fp32`, `onnx/fp16`, `onnx/fp32`) or `all`. A
+  `push-model` answer with `success: false` is an error banner, and skipped
+  variations read "unchanged, no new version".
+- **Card transfers**: card Push and Pull jobs stream to the Remote Cloud
+  console and end with a summary banner (unchanged variations, pulled
+  variation count or the failure reason).
+- **Local launch**: the model card's "Override frozen settings" checkbox
+  (`train-input-override-frozen-{model_key}`) sends `override_frozen` to
+  `POST /api/gui/quick-train`; the batch size select
+  (`train-select-batch-{model_key}`) offers "Custom..." with a whole-number
+  input.
+- **Resume refusal**: when a local or cloud training job fails with the
+  `FrozenSettingsChanged` message, the panel shows `train-frozen-refusal`
+  instead of the generic error banner: the message, a table of the changed
+  settings with their old and new values and a hint naming the override
+  toggle of that launch; `train-btn-frozen-refusal-dismiss` closes it. A
+  Kaggle refusal shows only when the job's failure message or a log line of
+  the job carries it.
+- **Blend Soup**: the card action opens `soup-dialog`, where donors
+  (`vault_<metric>.pth`) and weights can be chosen, or every vault checkpoint
+  is blended with uniform weights.
 
 ---
 

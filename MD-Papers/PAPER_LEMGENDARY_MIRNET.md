@@ -107,7 +107,8 @@ overexposed photography.
 
 ### 3.1 Hardware-Aware Infrastructure: Universal Acceleration
 
-Training massive architectures like MIRNet (31M+ parameters) at high resolutions
+Training restoration architectures like MIRNet v2 (0.0387M parameters as built
+by the registry, 38.7k) at high resolutions
 requires absolute synchronization on multi-GPU Kaggle environments and
 constrained local hardware.
 
@@ -288,7 +289,7 @@ powers the web instance natively.
   Footprint (1080p): ~ 14 GB; PSNR Target: ~32.4dB; Perceptual Integrity
   (LPIPS): 0.05 (VGG); WebGPU Viability: Highly Degraded (Opset)
 - **LemGendary MIRNet v2**: Paradigm: *Multi-Scale Gating (Ours)*; Parameters:
-  **31M**; GPU Footprint (1080p): **~ 11 GB**; PSNR Target: **~33.8dB+**;
+  **0.0387M**; GPU Footprint (1080p): **~ 11 GB**; PSNR Target: **~33.8dB+**;
   Perceptual Integrity (LPIPS): **< 0.08 (VGG)**; WebGPU Viability: **Production
   Grade**
 

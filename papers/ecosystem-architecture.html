@@ -9,7 +9,7 @@
 <script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({ startOnLoad: true, theme: "dark" });</script>
+<script>mermaid.initialize({ startOnLoad: true, theme: "dark", themeVariables: { edgeLabelBackground: "#1a1a1c" } });</script>
 </head>
 <body>
 <div class="container">
@@ -36,8 +36,8 @@
 <span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
 <span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
-<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.60</code>, Dataset Compiler Suite <code>v16.9.71</code>, Model Training Suite <code>v16.9.128</code>, AI Studio GUI <code>v2.10.38</code></span>
-<span><strong>Last Reviewed / Verified</strong>: 2026-11-04</span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.85</code>, Dataset Compiler Suite <code>v16.9.109</code>, Model Training Suite <code>v16.9.223</code>, AI Studio GUI <code>v2.10.68</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-13</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
 </header>
@@ -155,7 +155,8 @@ sidecars.</li>
 <li><strong>Responsibilities</strong>:
 <ul>
 <li>Real-time hardware discovery (<code>nvidia-smi</code>, <code>rocm-smi</code>, DirectX DXGI) and
-driver-aware PyTorch index selection (<code>cu126</code>, <code>cu121</code> or <code>cu118</code>).</li>
+driver-aware PyTorch index selection (<code>cu134</code>, <code>cu126</code>, <code>cu121</code> or
+<code>cu118</code>; ROCm, Apple MPS and CPU hosts get their own index).</li>
 <li>Virtual environment provisioning (non-destructive by default; <code>clean</code> is
 opt-in), one-way manifest sync with a downgrade guard, and version drift
 analytics.</li>
@@ -263,15 +264,17 @@ auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</cod
 central <code>requirements/</code> files are the manifest single source of truth.</li>
 <li><strong>Data Compiler</strong>: $\mathcal{O}(1)$ skip-indexing, WebP $q=92/95$, canonical
 formats WebDataset (<code>.data</code>/<code>.tar</code>), LitData (<code>.bin</code>), Parquet and
-Directory. MosaicML MDS is deprecated: existing MDS shards were transcoded to
-WebDataset and <code>mosaicml-streaming</code> was removed from the datasets
-requirements. The Environment Manager's <code>runtime_env.yaml</code> still registers
-<code>mosaicml-streaming</code> as a container runtime dependency (open).</li>
+Directory. MosaicML MDS is discontinued: existing MDS shards were transcoded
+to WebDataset, <code>mosaicml-streaming</code> was removed from the datasets
+requirements, and since Environment Manager v16.9.81 <code>runtime_env.yaml</code> no
+longer lists it. Shard labels are JSON only (<code>&lt;key&gt;.json</code>, Dataset Compiler
+v16.9.98).</li>
 <li><strong>Training Suite</strong>: Zero-IPC ThreadPool dataloaders, spatial resolution
 ladders under the pair-rule ratchet (resolution never decreases; the data
 fraction only rises within one resolution step and may reset when resolution
 steps up), bounded epoch budget, nuclear-hardened checkpoints.
-<code>torch==2.15.0</code> from the <code>cu126</code> wheel index, <code>transformers==5.22.1</code>.</li>
+<code>torch==2.15.0</code> from the PyTorch wheel index the hardware probe picks,
+<code>transformers==5.22.1</code>.</li>
 <li><strong>Documentation</strong>: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
 generated on the approved template, Markdown and HTML kept in sync.</li>
 </ol>

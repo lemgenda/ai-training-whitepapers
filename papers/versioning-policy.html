@@ -103,8 +103,8 @@ and governed as follows:</p>
 <li>Covers <code>lemgendary-training-suite</code>, <code>lemgendary-datasets</code>, and <code>lemgendary-env-manager</code>.</li>
 <li>Governs Python microservice sidecars (Ports 8000, 8100, 8200), training
 loops, skip-index compilers, and dataset containers.</li>
-<li>Current active state: <code>v16.9.122-STABLE</code> (LemGendary Model Training
-Suite), <code>v16.9.65</code> (LemGendary Dataset Compiler Suite), <code>v16.9.60</code>
+<li>Current active state: <code>v16.9.223-STABLE</code> (LemGendary Model Training
+Suite), <code>v16.9.109</code> (LemGendary Dataset Compiler Suite), <code>v16.9.85</code>
 (LemGendary Environment Manager).</li>
 </ul>
 </li>
@@ -118,19 +118,19 @@ release (superseding legacy web/Electron prototypes).</li>
 OpenAPI 3.1 contracts (<code>openapi.json</code>).</li>
 </ul>
 </li>
-<li><strong>Master Ecosystem Documentation Hub &amp; Specification Baseline (<code>v16.9.82-STABLE</code>)</strong>:
+<li><strong>Master Ecosystem Documentation Hub &amp; Specification Baseline (<code>v16.9.116-STABLE</code>)</strong>:
 <ul>
 <li>Covers <code>lemgendary-docs</code>, master architectural maps, operations manuals,
 and foundational whitepapers.</li>
-<li>Reflects the active documentation release (<code>v16.9.82-STABLE</code>, reviewed
-2026-11-04) while governing systems against the core runtime backend engine
-baseline (<code>v16.9.122-STABLE</code>) and desktop operator client (<code>v2.10.38</code>).</li>
+<li>Reflects the active documentation release (<code>v16.9.116-STABLE</code>, reviewed
+2026-11-13) while governing systems against the core runtime backend engine
+baseline (<code>v16.9.223-STABLE</code>) and desktop operator client (<code>v2.10.68</code>).</li>
 </ul>
 </li>
 <li><strong>Specialized Diagnostic &amp; Clinical Specifications (<code>v1.x.y</code> / <code>v2.x.y</code>)</strong>:
 <ul>
 <li>Covers clinical/diagnostic taxonomy standards such as
-<code>PAPER_TRAINING_PATHOLOGY.md</code> (<code>v1.6.0</code>) and algorithmic papers
+<code>PAPER_TRAINING_PATHOLOGY.md</code> (<code>v1.12.0</code>) and algorithmic papers
 (<code>ForexPredictor v2.7.1</code>).</li>
 <li>These versions reflect domain-specific taxonomy releases rather than
 software runtime build numbers.</li>
@@ -148,20 +148,20 @@ software runtime build numbers.</li>
 as follows:</p>
 <ul>
 <li><strong>Training Engine</strong>: Repository / Component: <code>lemgendary-training-suite</code>;
-Runtime Version: <code>v16.9.122-STABLE</code>; Config Manifests:
+Runtime Version: <code>v16.9.223-STABLE</code>; Config Manifests:
 <code>unified_models_v2.yaml</code>; Primary Interface: <code>python -m training.cli.lemtrain</code></li>
 <li><strong>Dataset Compiler</strong>: Repository / Component: <code>lemgendary-datasets</code>; Runtime
-Version: <code>v16.9.65</code>; Config Manifests: <code>unified_data.yaml</code>; Primary Interface:
+Version: <code>v16.9.109</code>; Config Manifests: <code>unified_data.yaml</code>; Primary Interface:
 <code>python cli.py</code> / <code>lemgendary_datasets_hub.ps1</code></li>
 <li><strong>Env Manager</strong>: Repository / Component: <code>lemgendary-env-manager</code>; Runtime
-Version: <code>v16.9.60</code>; Config Manifests: <code>pyproject.toml</code>, <code>package.json</code>;
+Version: <code>v16.9.85</code>; Config Manifests: <code>pyproject.toml</code>, <code>package.json</code>;
 Primary Interface: <code>lem-env</code> / <code>lemgendary_env_manager.ps1</code></li>
 <li><strong>Desktop Operator GUI</strong>: Repository / Component: <code>lemgendary-ai-studio-gui</code>;
-Runtime Version: <code>v2.10.38</code> (Client); Config Manifests: <code>package.json</code>,
+Runtime Version: <code>v2.10.68</code> (Client); Config Manifests: <code>package.json</code>,
 <code>src-tauri/tauri.conf.json</code>; Primary Interface: Tauri v2 Desktop App / Ports
 8000/8100/8200</li>
 <li><strong>Documentation Hub</strong>: Repository / Component: <code>lemgendary-docs</code>; Runtime
-Version: <code>v16.9.82-STABLE</code>; Config Manifests: <code>MD-Papers/</code>, <code>papers/</code>; Primary
+Version: <code>v16.9.116-STABLE</code>; Config Manifests: <code>MD-Papers/</code>, <code>papers/</code>; Primary
 Interface: Documentation Hub (<code>index.html</code>)</li>
 <li><strong>Model Registry</strong>: Repository / Component: <code>LemGendaryModels</code>; Runtime
 Version: <code>v16.9.16-STABLE</code>; Config Manifests: <code>LemGendaryModels/*/README.md</code>;
@@ -218,12 +218,12 @@ of any conflict.</li>
 specification versions to reflect domain-specific diagnostic taxonomies:</p>
 <ul>
 <li><strong>Training Pathology Specification (<code>PAPER_TRAINING_PATHOLOGY.md</code>)</strong>:
-Maintained at <strong><code>v1.6.0</code> (Clinical Diagnostic Standard)</strong>. While the training
-suite executing these diagnostics operates at <code>v16.9.122</code>, the diagnostic
+Maintained at <strong><code>v1.12.0</code> (Clinical Diagnostic Standard)</strong>. While the training
+suite executing these diagnostics operates at <code>v16.9.157</code>, the diagnostic
 taxonomy itself evolves according to clinical diagnostic revisions.</li>
 <li><strong>Forex Predictive Architecture (<code>PAPER_FOREX_PREDICTOR.md</code>)</strong>: Maintained at
 <strong><code>v2.7.1</code> (Quantitative Model Specification)</strong>, executing under the
-<code>v16.9.122</code> engine.</li>
+<code>v16.9.157</code> engine.</li>
 </ul>
 </section>
 

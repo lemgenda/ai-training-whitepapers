@@ -20,8 +20,8 @@
 <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
 <p class="subtitle">Category 03 | LemGendary AI Documentation Hub | Master Operations Manual</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.38</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v2.10.68</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-13</span>
 <span><strong>Sidecars</strong>: LemGendary Environment Manager (port 8000), LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite (port 8200); each keeps its own <code>v16.x</code> release line</span>
 <span><strong>Parent Authority</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
 <span><a href="versioning-policy.html">Document Authority Hierarchy &amp; Versioning Policy</a></span>
@@ -107,6 +107,7 @@ Curves</a></li>
 <li><a href="#sec-72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</a></li>
 <li><a href="#sec-73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud
 Registry</a></li>
+<li><a href="#sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.68)</a></li>
 </ul>
 </li>
 <li><a href="#sec-8-health-matrix--cross-project-version-drift-analytics">8. Health Matrix &amp; Cross-Project Version Drift
@@ -169,6 +170,7 @@ deployment accessible to everyone from senior machine learning researchers to
 high school students and non-technical hobbyists. When something goes wrong, the
 Report Issue button packages a description, annotated screenshots and recent
 telemetry for the maintainers (chapter 13).</p>
+<p>Release <code>v2.10.57</code> routes every failed training action to the red error banner instead of the green notice (v2.10.48), and <code>npm run verify</code> uses the portable script of the central manifest, which finds <code>lem-env</code> on Windows, macOS and Linux.</p>
 <h3 id="the-gardening-model-rule">The Gardening Model Rule</h3>
 <p>To ensure absolute operational clarity, every control, workflow, and safeguard
 in this manual is designed according to the <strong>Gardening Model Rule</strong>:</p>
@@ -294,6 +296,7 @@ streaming storage server (<code>./lemgendary-datasets/</code>).</li>
 training and evaluation engine (<code>./lemgendary-training-suite/</code>).</li>
 </ul>
 <p><img src="../assets/gui/gui_service_tiles.png" alt="Ecosystem Sidecar Services Grid"></p>
+<p>Stopping a sidecar on macOS and Linux sends SIGTERM and waits up to 3 s before SIGKILL, so the sidecar can flush its logs; Linux falls back to <code>ss -tlpnH</code> when <code>lsof</code> is missing, and Windows uses <code>taskkill /T /F</code> (v2.10.54). Sibling projects are found from the working directory and from the executable's folders, so a build started outside the GUI folder still finds the sidecars.</p>
 <h4 id="ecosystem-sidecar-cards-numbered-reference">Ecosystem Sidecar Cards Numbered Reference</h4>
 <ol>
 <li><strong>Environment Manager Service Card</strong>: Identifies the primary port 8000
@@ -385,6 +388,7 @@ Universal Configuration &amp; Secrets Vault modal, opened with the
 <h3 id="sec-31-central-manifest-registry-editor">3.1 Central Manifest Registry Editor</h3>
 <p><img src="../assets/gui/gui_config_secrets_modal.png" alt="Universal Dynamic Config &amp; Manifest
 Editor"></p>
+<p>The Python and npm dependency manifests open the central files in <code>lemgendary-env-manager/requirements/</code>; saving one makes the Environment Manager sync it to every sibling project (Environment Manager v16.9.79). When the registry is unreachable the list stays empty and an offline banner shows; when a manifest cannot be read the editor stays empty and an error banner names the failure. In both cases <strong>Validate Syntax</strong>, <strong>Save Manifest</strong> and the text area are disabled (v2.10.47).</p>
 <h4 id="manifest-registry-editor-numbered-reference">Manifest Registry Editor Numbered Reference</h4>
 <ol>
 <li><strong>Configuration Editor Modal Title</strong>: Header identifying the central
@@ -396,7 +400,8 @@ and API token management.</li>
 <li><strong>Target Manifest Selector Dropdown</strong> (<code>manifest-select</code>): Selects one of the
 ecosystem manifests reported by the Environment Manager, for example
 <code>unified_data.yaml</code> (dataset definitions), <code>unified_models_v2.yaml</code>
-(architecture registry) and <code>unified_requirements.yaml</code> (dependency SSOT).</li>
+(architecture registry) and the dependency manifests
+<code>lemgendary-env-manager/requirements/*.txt</code> (dependency SSOT).</li>
 <li><strong>Validate Syntax Button</strong>: Sends the current text to the Environment Manager
 for YAML or JSON parsing without writing to disk and reports structural
 errors.</li>
@@ -604,6 +609,7 @@ individual stages in isolation for granular troubleshooting, inspection, and
 rapid re-verification:</p>
 <p><img src="../assets/gui/gui_pipeline_step_cards.png" alt="Individual Pipeline Step Execution Cards
 Grid"></p>
+<p>Each step pill (WAIT, RUN, DONE, FAILED) follows only that step's latest Environment Manager event. Compiler, training and console events no longer reset the pills, a single-step run no longer marks the steps before it as DONE, and a failed step shows a FAILED pill (v2.10.49).</p>
 <h4 id="pipeline-step-execution-cards-numbered-reference">Pipeline Step Execution Cards Numbered Reference</h4>
 <ol>
 <li><strong>Stage 1 Card Title (Hardware Discovery)</strong>: Probes host platform, CPU
@@ -624,7 +630,7 @@ repositories.</li>
 (<code>POST /api/pipeline/run-step</code>, step 3, <code>clean: false</code>), recreating missing
 or corrupted <code>.venv</code> folders idempotently.</li>
 <li><strong>Stage 4 Card Title (Requirements Sync &amp; Install)</strong>: Propagates centralized
-dependencies from <code>unified_requirements.yaml</code>, installs binary wheels, and
+dependencies from <code>lemgendary-env-manager/requirements/*.txt</code>, installs binary wheels, and
 normalizes OpenCV.</li>
 <li><strong>Stage 4 Run Step Action Button</strong>: Dispatches isolated execution of Step 4
 (<code>POST /api/pipeline/run-step</code>, step 4, <code>clean: false</code>), synchronizing
@@ -700,7 +706,8 @@ across logical threads and physical compute cores (<code>12 / 6</code>).</li>
 <li><strong>System RAM Capacity Row</strong>: Displays physical host RAM capacity
 (<code>32,486 MB</code>) available for data streaming and dataset decompression.</li>
 <li><strong>Recommended PyTorch Wheel Index Row</strong>: Authoritative repository link for
-CUDA 12.1 binary packages (<code>https://download.pytorch.org/whl/cu121</code>).</li>
+the wheel index the hardware probe selects for the detected driver
+(<code>https://download.pytorch.org/whl/cu134</code> for driver <code>610.74</code>).</li>
 <li><strong>Detected Accelerators &amp; Dedicated VRAM Row</strong>: Details physical GPU device
 model (<code>NVIDIA GeForce GTX 1650</code>), installed driver level (<code>610.74</code>), and
 dedicated video memory capacity (<code>4096 MB VRAM</code>).</li>
@@ -750,9 +757,7 @@ relative path shown.</li>
 validity and manifest conformance.</li>
 <li><strong>3. Packages Metric</strong> (Metric Row; <code>pip list</code> / manifest scan): Displays
 total installed package count and synchronization status.</li>
-<li><strong>4. Reconcile Button</strong> (Action Button;
-<code>POST /api/pipeline/reconcile?project={name}</code>): Recreates <code>.venv</code> and
-reconciles missing wheels for selected project.</li>
+<li><strong>4. Reconcile Button</strong> (Action Button; <code>POST /api/pipeline/run</code> with <code>target_project</code> and <code>clean: false</code>): Runs the non-destructive pipeline for the selected project; valid <code>.venv</code> folders are kept and missing wheels are reconciled.</li>
 </ul>
 </section>
 
@@ -973,6 +978,7 @@ removed &quot;Unit Test All Models&quot; button.</p>
 readiness, and interactive SOTA target inspection:</p>
 <p><img src="../assets/gui/gui_architecture_telemetry.png" alt="Registered Neural Architectures Telemetry
 Card"></p>
+<p>The PyTorch, ONNX FP32 and ONNX FP16 badges follow their own readiness flags (<code>pytorch_ready</code>, <code>onnx_fp32_ready</code>, <code>onnx_fp16_ready</code>); a flag the Training Suite does not send shows the badge as not ready with a "not reported" tooltip (v2.10.51). While the Training Suite sidecar is offline, every card action except Stop Training is disabled (v2.10.52). <strong>Blend Soup</strong> (<code>train-btn-soup-{model_key}</code>, <code>POST /api/models/{model_key}/soup</code>) blends the checkpoints in the model's vault into one Model Soup checkpoint with uniform weights (v2.10.55).</p>
 <h4 id="architecture-telemetry-card-numbered-reference">Architecture Telemetry Card Numbered Reference</h4>
 <ol>
 <li><strong>Model Identity, Help Glyph &amp; Target Pin</strong>: Displays canonical model title
@@ -989,7 +995,7 @@ formats ready for inference (<code>PyTorch (.pt)</code>, <code>ONNX FP32</code>,
 <li><strong>Neural Architecture Backbone Row</strong>: Displays network architecture type
 (<code>Multi-Scale CNN-Transformer (Causal TCN + Cross-Timeframe Attention)</code>).</li>
 <li><strong>Trainable Parameters Metric Row</strong>: Displays total parameter allocation
-across backbone and attention heads (<code>2.75 M</code>).</li>
+across backbone and attention heads (<code>3.5358 M</code>).</li>
 <li><strong>Task Category Metric Row</strong>: Displays registered domain classification
 (<code>forex</code>).</li>
 <li><strong>Completed Epochs Counter Row</strong>: Reports cumulative trained epochs recorded
@@ -1147,6 +1153,7 @@ panel, providing a tabbed terminal interface for complete observability across
 local training, remote cloud execution, and ecosystem mesh daemons:</p>
 <p><img src="../assets/gui/gui_telemetry_console.png" alt="Redesigned Three-Tab Real-Time Telemetry
 Console"></p>
+<p>The Local Process and Remote Cloud streams follow the newest line when events arrive or their tab is shown (v2.10.53). Live log events and progress ticks share one event buffer with one rule for collapsing progress ticks (v2.10.55).</p>
 <h4 id="telemetry-console-numbered-reference">Telemetry Console Numbered Reference</h4>
 <ol>
 <li><strong>Local Training Telemetry Subtab</strong>: Focuses the local training worker log
@@ -1262,6 +1269,7 @@ arbitrary code execution vulnerabilities.</li>
 isolated multi-variation publishing workflow:</p>
 <p><img src="../assets/gui/gui_model_export_publish.png" alt="Model Export, Binary Packaging &amp; Kaggle Models Hub Registry
 Dispatch"></p>
+<p>The Kaggle tab can also attach to a kernel that is already running: enter <code>owner/kernel-slug</code> in <code>kaggle-monitor-slug</code> and press <strong>Attach Monitor</strong> (<code>kaggle-monitor-btn</code>, <code>POST /api/training/kaggle/monitor</code>); the kernel is then tracked as the remote job (v2.10.55). A running cloud job is restored when the Training panel opens, and the remote job is polled (<code>GET /api/jobs/{job_id}</code>) until it completes, fails or is cancelled, which shows a notice or an error (v2.10.50).</p>
 <h4 id="cloud--registry-dispatch-numbered-reference">Cloud &amp; Registry Dispatch Numbered Reference</h4>
 <ol>
 <li><strong>Modal Header &amp; Model Identity</strong>: Displays active model target
@@ -1275,8 +1283,9 @@ syntax of canonical Kaggle training notebook template.</li>
 shards are registered in <code>unified_data.yaml</code> and ready for cloud mounting.</li>
 <li><strong>Pre-Flight Checkpoint Vault Row</strong>: Audits remote checkpoint vault status
 and validates cryptographic weight hashes.</li>
-<li><strong>Pre-Flight API Authentication Row</strong>: Verifies Kaggle API credentials
-(<code>kaggle.json</code>) loaded from the Secrets Vault are active and authenticated.</li>
+<li><strong>Pre-Flight API Authentication Row</strong>: Shows the result of the real
+authenticated call of <code>GET /api/training/kaggle/status</code> (user and method,
+or the HTTP status and reason).</li>
 <li><strong>Regen Docs &amp; Meta Action Button</strong>: Dispatches
 <code>POST /api/training/generate-docs</code>, regenerating Markdown Model Card
 (<code>README.md</code>) and <code>model-metadata.json</code>.</li>
@@ -1290,7 +1299,8 @@ verification metrics for the full-precision ONNX computational graph.</li>
 <li><strong>ONNX FP16 Variation Card</strong>: Displays binary isolation status and
 verification metrics for the half-precision ONNX graph.</li>
 <li><strong>Framework Variation Select Dropdown</strong>: Selects target payload to publish
-(<code>All Variations</code>, <code>PyTorch (.pt)</code>, <code>ONNX FP32</code>, or <code>ONNX FP16</code>).</li>
+(<code>all</code> or a <code>VariationKey</code>: <code>pytorch/default</code>, <code>pytorch/fp32</code>,
+<code>onnx/fp16</code>, <code>onnx/fp32</code>).</li>
 <li><strong>Dry-Run Validation Checkbox Toggle</strong>: Enables dry-run validation mode to
 simulate isolation checks and folder verification without executing live
 cloud upload.</li>
@@ -1348,6 +1358,67 @@ fleet-wide synchronization to stage, validate, and publish all 23 registered
 neural models and checkpoints to Kaggle Models Hub simultaneously using the
 <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
+<h3 id="sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.68)</h3>
+<p>The Kaggle GPU Cloud tab of the Cloud &amp; Registry Dispatch dialog follows the
+Training Suite Kaggle contract (<code>openapi.json</code> of Training Suite v16.9.170
+to v16.9.210):</p>
+<ul>
+<li><strong>API Authentication</strong> (<code>cloud-modal-auth-badge</code>): shows the user and the
+method from <code>GET /api/training/kaggle/status</code>, which makes a real
+authenticated call; a refused or missing token shows the HTTP status and
+reason in <code>cloud-modal-auth-error</code>.</li>
+<li><strong>Dataset links</strong> (<code>cloud-modal-dataset-links</code>): the registry
+<code>kaggle_dataset_urls</code> of the model; the kernel
+(<code>code/&lt;user&gt;/&lt;registry slug&gt;-training</code>) and model page links use the
+registry slug, with the ecosystem <code>identity.kaggle_owner</code> when the status
+route reports no username.</li>
+<li><strong>Launch options</strong>: <code>kaggle-accelerator-select</code> (ids from
+<code>GET /api/training/kaggle/accelerators</code>: CPU, GPU T4 x2, TPU v5e-8; the
+P100 option is gone), <code>kaggle-poll-interval-input</code> (default 30 s, minimum
+5 s), <code>kaggle-auto-pull-checkbox</code>, <code>kaggle-auto-resume-checkbox</code> with
+<code>kaggle-max-resumes-input</code> (empty uses <code>kaggle_session.max_resumes</code>) and
+<code>kaggle-override-frozen-checkbox</code>, all sent with
+<code>POST /api/training/kaggle/train</code>.</li>
+<li><strong>Advanced</strong> (<code>kaggle-fieldset-advanced</code>, v2.10.68): four optional fields,
+empty by default and not sent when empty: <code>kaggle-input-git-ref</code>
+(<code>git_ref</code>, the Training Suite ref; empty clones <code>main</code>),
+<code>kaggle-input-env-manager-ref</code> (<code>env_manager_ref</code>; empty uses the Training
+Suite ref), <code>kaggle-input-limit-hours</code> (<code>limit_hours</code>, greater than 0) and
+<code>kaggle-input-margin-minutes</code> (<code>margin_minutes</code>, 0 or more and below the
+limit); empty session fields keep <code>kaggle_session</code> of the Training Suite
+<code>config.yaml</code>. Refs follow the Training Suite ref rules (letters, digits,
+<code>.</code>, <code>_</code>, <code>/</code>, <code>-</code>; a letter or digit first; at most 200 characters; no
+<code>..</code>, <code>//</code>, <code>@{</code>, <code>/.</code>, trailing <code>/</code>, <code>.</code> or <code>.lock</code>). A refused value
+shows <code>kaggle-input-{field}-error</code> and disables &quot;Launch Cloud Training&quot;; a
+422 from the Training Suite shows its message in the error banner. The CLI
+offers the same options (CLI manual Section 6.13).</li>
+<li><strong>Kernel monitor</strong>: <code>kaggle-monitor-kernel-select</code> lists the account's
+recent kernels (<code>GET /api/training/kaggle/kernels</code>, reload
+<code>kaggle-monitor-kernels-refresh</code>) and fills the kernel reference; Attach
+Monitor sends the launch options' poll interval.</li>
+<li><strong>Variations</strong>: the push select offers the <code>VariationKey</code> values
+(<code>pytorch/default</code>, <code>pytorch/fp32</code>, <code>onnx/fp16</code>, <code>onnx/fp32</code>) or <code>all</code>. A
+<code>push-model</code> answer with <code>success: false</code> is an error banner, and skipped
+variations read &quot;unchanged, no new version&quot;.</li>
+<li><strong>Card transfers</strong>: card Push and Pull jobs stream to the Remote Cloud
+console and end with a summary banner (unchanged variations, pulled
+variation count or the failure reason).</li>
+<li><strong>Local launch</strong>: the model card's &quot;Override frozen settings&quot; checkbox
+(<code>train-input-override-frozen-{model_key}</code>) sends <code>override_frozen</code> to
+<code>POST /api/gui/quick-train</code>; the batch size select
+(<code>train-select-batch-{model_key}</code>) offers &quot;Custom...&quot; with a whole-number
+input.</li>
+<li><strong>Resume refusal</strong>: when a local or cloud training job fails with the
+<code>FrozenSettingsChanged</code> message, the panel shows <code>train-frozen-refusal</code>
+instead of the generic error banner: the message, a table of the changed
+settings with their old and new values and a hint naming the override
+toggle of that launch; <code>train-btn-frozen-refusal-dismiss</code> closes it. A
+Kaggle refusal shows only when the job's failure message or a log line of
+the job carries it.</li>
+<li><strong>Blend Soup</strong>: the card action opens <code>soup-dialog</code>, where donors
+(<code>vault_&lt;metric&gt;.pth</code>) and weights can be chosen, or every vault checkpoint
+is blended with uniform weights.</li>
+</ul>
 </section>
 
 <section id="sec-8-health-matrix--cross-project-version-drift-analytics">

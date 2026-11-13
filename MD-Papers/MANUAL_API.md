@@ -2,7 +2,7 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
-**Version**: `v16.9.44-STABLE`
+**Version**: `v16.9.214-STABLE`
 
 ---
 
@@ -36,6 +36,7 @@
   - [5.7 Three Architectural Ingestion & Modernization Pipelines](#57-three-architectural-ingestion--modernization-pipelines)
   - [5.8 Python In-Process Engine & Streaming Pipeline APIs](#58-python-in-process-engine--streaming-pipeline-apis)
 - [6. Error Handling, Status Codes & Resilience](#6-error-handling-status-codes--resilience)
+- [Companion Documentation](#companion-documentation)
 
 ---
 
@@ -292,8 +293,8 @@ Lists every centralized requirements manifest with its raw contents.
 ```json
 {
   "manifests": {
-    "requirements-datasets.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
-    "requirements-training.txt": "--extra-index-url https://download.pytorch.org/whl/cu121",
+    "requirements-datasets.txt": "torch==2.15.0\ntorchvision==0.29.2",
+    "requirements-training.txt": "torch==2.15.0\ntorchvision==0.29.2\ntorchaudio==2.11.1",
     "requirements-env-manager.txt": "typer==0.27.2\nrich==15.0.0"
   }
 }
@@ -1002,7 +1003,8 @@ enforce token authentication:
 - **`GET`**: Endpoint: `/api/models/{name}/audit`; Auth: Required; Description:
   Detailed model audit: parameter counts, layer topology, memory
 - **`POST`**: Endpoint: `/api/training/train`; Auth: Required; Description:
-  In-process training initiation with hardware discovery
+  In-process training initiation with hardware discovery (`clean` and
+  `override_frozen` select the resume behaviour)
 - **`POST`**: Endpoint: `/api/training/evaluate`; Auth: Required; Description:
   In-process checkpoint evaluation under torch.no_grad()
 - **`POST`**: Endpoint: `/api/training/export`; Auth: Required; Description:
@@ -1016,6 +1018,23 @@ enforce token authentication:
 - **`GET`**: Endpoint: `/api/training/models/{model_key}/variations/validate`;
   Auth: Required; Description: Validate strict binary isolation across all
   Kaggle variation directories
+- **`GET`**: Endpoint: `/api/training/kaggle/status`; Auth: Required;
+  Description: Real authenticated Kaggle call: `authenticated`, `username`,
+  `token_configured`, `auth_method`, `http_status`, `error`
+- **`GET`**: Endpoint: `/api/training/kaggle/kernels`; Auth: Required;
+  Description: Recent kernels of the configured account with their status
+- **`GET`**: Endpoint: `/api/training/kaggle/accelerators`; Auth: Required;
+  Description: Ecosystem accelerators (`id`, `label`, `kind`,
+  `machine_shape`) and the `default` id
+- **`POST`**: Endpoint: `/api/training/kaggle/train`; Auth: Required;
+  Description: Push the model's kernel bundle and watch the session
+  (accelerator, clone refs, session window, override, auto-resume)
+- **`POST`**: Endpoint: `/api/training/kaggle/monitor`; Auth: Required;
+  Description: Attach a watch job to a running kernel
+- **`POST`**: Endpoint: `/api/training/kaggle/pull`; Auth: Required;
+  Description: Pull Hub variations and merge them into the model folder
+- **`POST`**: Endpoint: `/api/training/kaggle/push`; Auth: Required;
+  Description: Enqueue staging and pushing all 4 variations of one model
 - **`POST`**: Endpoint: `/api/training/kaggle/push-model`; Auth: Required;
   Description: Publish validated isolated model variation(s) to Kaggle Models
   Hub
@@ -1264,6 +1283,103 @@ Response:
 }
 ```
 
+##### `GET /api/training/kaggle/status`
+
+Makes one cheap authenticated Kaggle call (`kernels_list(mine=True,
+page_size=1)`) with the resolved credential and reports the real outcome
+(training v16.9.170):
+
+```json
+{
+  "authenticated": true,
+  "username": "lemtreursi",
+  "token_configured": true,
+  "auth_method": "access_token",
+  "http_status": 200,
+  "error": null
+}
+```
+
+`auth_method` is `access_token` (a `KGAT_` token) or `legacy_api_key`. A
+refused token gives `authenticated: false` with the HTTP status and reason.
+
+##### `GET /api/training/kaggle/accelerators`
+
+Lists the Kaggle accelerators of the ecosystem file without retired machine
+shapes; `id` is what `POST /api/training/kaggle/train` takes:
+
+```json
+{
+  "default": "gpu-t4x2",
+  "accelerators": [
+    { "id": "cpu", "label": "CPU", "kind": "cpu", "machine_shape": null },
+    { "id": "gpu-t4x2", "label": "GPU T4 x2", "kind": "gpu",
+      "machine_shape": "NvidiaTeslaT4" },
+    { "id": "tpu-v5e8", "label": "TPU v5e-8", "kind": "tpu",
+      "machine_shape": "TpuV5E8" }
+  ]
+}
+```
+
+##### `POST /api/training/kaggle/train`
+
+Builds the model's kernel bundle, pushes it and watches the session as a
+`kaggle_train` job. Every field except `model` is optional:
+
+```json
+{
+  "model": "upn_v2",
+  "accelerator": "gpu-t4x2",
+  "git_ref": "fix/review-remediation",
+  "env_manager_ref": null,
+  "limit_hours": 0.75,
+  "margin_minutes": 5,
+  "override_frozen": false,
+  "auto_pull": true,
+  "poll_interval": 30,
+  "auto_resume": true,
+  "max_resumes": 3
+}
+```
+
+- **`accelerator`**: An id from `GET /api/training/kaggle/accelerators`
+  (default: the ecosystem default); an unknown or retired id is 422. It
+  replaces the old `gpu` field.
+- **`git_ref`**, **`env_manager_ref`**: Clone refs of the suite and the
+  env-manager (default `main`; the env-manager follows `git_ref`). An invalid
+  ref is 422 before a job is created.
+- **`limit_hours`** (> 0), **`margin_minutes`** (>= 0): Session window for
+  this kernel (default `kaggle_session` of `config.yaml`).
+- **`override_frozen`**: Passes `--override-frozen` to the kernel's trainer,
+  also in the auto-resume sessions.
+- **`auto_pull`**: Pulls `pytorch/default` whenever the Hub has a newer
+  version and merges the kernel output when the session completes.
+- **`poll_interval`**: First status poll in seconds (minimum 5); the watch
+  backs off to 300 s while the status is unchanged.
+- **`auto_resume`**, **`max_resumes`** (>= 0): Push a new kernel version
+  after a deadline stop, at most `max_resumes` times (defaults
+  `kaggle_session.auto_resume` and `max_resumes`); the job records the
+  effective values.
+
+The response is `{ "job_id", "status": "pending", "message", "model" }`. A job
+whose kernel left `resume_refusal.json` fails with the `FrozenSettingsChanged`
+text as its `error_message`; a cancelled kernel ends the job as `cancelled`.
+
+##### `POST /api/training/kaggle/monitor`
+
+Attaches a `kaggle_monitor` job to a running kernel: `{ "kernel_slug":
+"owner/kernel-slug", "model": null, "auto_pull": false, "poll_interval": 30
+}`.
+
+##### `POST /api/training/kaggle/pull`
+
+Enqueues a `kaggle_pull` job: `{ "model": "yolov8n", "variation": "all",
+"force_download": false, "username": null }`. `variation` is a
+`VariationKey` or `all`. Files are downloaded into a temporary folder and
+merged into `LemGendaryModels/<model>`: a checkpoint replaces its local copy
+only when its stored epoch is newer, and `force_download` overwrites only the
+pulled files.
+
 ##### `POST /api/training/kaggle/push-model`
 
 Publishes validated isolated model variation(s) to Kaggle Models Hub using the
@@ -1275,23 +1391,38 @@ Request body:
 {
   "model": "yolov8n",
   "variation": "all",
-  "version_notes": "Production release with strict 3-variation isolation",
+  "version_notes": null,
   "dry_run": false
 }
 ```
 
-Response:
+`variation` is a `VariationKey` (`pytorch/default`, `pytorch/fp32`,
+`onnx/fp16`, `onnx/fp32`) or `all`; the old names (`pytorch`, `onnx_fp16`)
+answer 422. Without `version_notes` every upload gets the standard notes
+(epoch, up to six measured values, suite version). The route answers HTTP
+200 also on failure; check `success`.
+
+Response (one entry per variation; `skipped: true` means the staged files
+equal the last upload, so no new Hub version was created):
 
 ```json
 {
   "model_key": "yolov8n",
   "success": true,
-  "results": {
-    "pytorch": { "success": true, "version": 1 },
-    "onnx_fp32": { "success": true, "version": 1 },
-    "onnx_fp16": { "success": true, "version": 1 }
+  "variations": {
+    "pytorch/default": {
+      "variation": "pytorch/default",
+      "handle": "lemtreursi/yolov8n/pytorch/default",
+      "success": true,
+      "files": ["checkpoints/latest.pth", "README.md", "metrics.csv"],
+      "error": null,
+      "dry_run": false,
+      "skipped": false
+    }
   },
-  "dry_run": false
+  "is_valid_isolation": true,
+  "metadata_sync": null,
+  "errors": []
 }
 ```
 
@@ -1456,7 +1587,10 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
       }
     ],
     "sota_reached": true,
-    "training_status": "fully_trained"
+    "training_status": "fully_trained",
+    "pytorch_ready": true,
+    "onnx_fp32_ready": true,
+    "onnx_fp16_ready": false
   }
 ]
 ```
@@ -1485,43 +1619,85 @@ aggregation endpoints hydrate desktop views in a single HTTP transaction:
   completed ($0.0$ to $1.0$).
 - `data_fraction_passed`: True if $\ge 0.99$ ($100\%$ dataset variety).
 - `parameters_m`, `best_metric`, `sota_target`: measured or registered values
-  only, else `null` (training v16.9.122). `parameters_m` comes from
+  only, else `null` (since training v16.9.122). `parameters_m` comes from
   `unified_models_v2.yaml` and is `null` for a model without a count;
   `best_metric` is `null` until a value is measured; `best_metric` and
   `sota_target` may also be strings.
+- `pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready` (boolean, training
+  v16.9.147): per-format readiness of the release binaries. Each flag is true
+  when `<Stem>.pt`, `<Stem>_FP32.onnx` or `<Stem>.onnx` exists in the model
+  hub folder, its `checkpoints/` folder or the variation's `dist/kaggle`
+  folder; the stem comes from `resolve_model_stem`. `STAGED_FOLDERS` in
+  `training/cloud/variations.py` is the one list of these folders. The
+  AI Studio GUI variation badges read the three flags.
+
+- `sota_targets_provisional` (boolean, training v16.9.208): true when the
+  registry marks the model's `sota_targets` as provisional (no cited source,
+  for example RetinaFace `box_iou`, `ap50`, `ap50_95`, `landmark_nme`).
 
 - `POST /api/gui/quick-train`: Accepts
   `{ "model_key": "yolov8n", "preset": "quick-sota", "epochs": 300,
   "batch_size": 16, "learning_rate": 0.01, "ladder_stage": 640,
-  "enable_sawtooth": true }` and queues a training pipeline instantly with
-  validated parameters. Supports Ultralytics native trainer delegation for
+  "enable_sawtooth": true, "clean": false, "override_frozen": false }` and
+  queues a training pipeline instantly with validated parameters.
+  `override_frozen` resumes although a frozen run setting changed (logged and
+  recorded); without it such a resume fails with the `FrozenSettingsChanged`
+  message. Supports Ultralytics native trainer delegation for
   YOLOv8n and automatic fallback resolving `task_type: forex` for financial
   models.
 
 ### 4.7 Python In-Process Engine & Governance API
 
-The training suite provides foundational Python engine classes for standalone
-execution and notebook integration:
+The training suite provides foundational Python engine classes and functions
+for standalone execution and notebook integration. Run them from the
+`lemgendary-training-suite` project root with its `.venv` interpreter:
 
 ```python
-from training.core.orchestrator import TrainingOrchestrator
-from training.governance.sentinel import SentinelGuard
-from training.governance.governor import DynamicGovernor
-from training.models.registry import ModelRegistry
+from pathlib import Path
 
-# Discover registered architectures
-registry = ModelRegistry()
-model_meta = registry.get_model("mirnet_exposure")
-
-# Initialize safety sentinel guard
-sentinel = SentinelGuard(target_device="cuda:0", min_headroom_mb=1024)
-
-# Create training orchestrator with dynamic loss governor
-orchestrator = TrainingOrchestrator(
-    model_name="mirnet_exposure",
-    sentinel=sentinel,
-    governor=DynamicGovernor(initial_lr=1e-4, min_lr=1e-6),
+from converters.dispatch import detect_annotations
+from converters.matlab import parse_matlab
+from services.compiler_service import run_compile
+from services.migration_service import MigrationService
+from tools.stream_zip_to_container import (
+    ZipStreamOptions,
+    stream_zip_to_webdataset,
 )
+
+# 1. Direct streaming of multi-gigabyte zip archive to WebDataset shards
+options = ZipStreamOptions(
+    shard_size_samples=5000,
+    transcode_webp=True,
+    max_workers=12,
+    delete_zip=True,
+    legacy_dir=None,
+)
+success = stream_zip_to_webdataset(
+    Path("LemGendaryDatasets/lemgendizedmirnetexposure.zip"),
+    Path("LemGendaryDatasets/LemGendizedMirNetExposure"),
+    options,
+)
+
+# 2. Retroactive directory-to-container migration
+exit_code = MigrationService.migrate_containers(
+    Path("LemGendaryDatasets/LemGendizedFilmRestorer"),
+    "webdataset",
+    accept_space_loss=True,
+    purge_source=True,
+)
+
+# 3. Regular manifold compilation pipeline (CLI options as keywords)
+exit_code = run_compile(
+    model="mirnet_exposure",
+    preset="quality-vision",
+    also_format="webdataset",
+    workers=8,
+)
+
+# 4. Ingest and parse custom annotation formats (including MATLAB)
+fmt, ann_path = detect_annotations("raw-sets/custom_dataset")
+if fmt == "matlab" and ann_path:
+    mat_data, primary_key = parse_matlab(ann_path)
 ```
 
 ---
@@ -1575,8 +1751,10 @@ token authentication:
   telemetry: CPU cores, RAM, PyTorch CUDA detection, GPU model
 - **`GET`**: Endpoint: `/api/config`; Auth: Required; Description: Retrieves
   parsed `unified_data.yaml` structure
-- **`POST`**: Endpoint: `/api/config/validate`; Auth: Required; Description:
-  Validates configuration against Pydantic schema
+- **`POST`**: Endpoint: `/api/config/validate`; Auth: None (GUI origins with
+  `X-LemGendary-Client: ai-studio-gui`, since v16.9.89); Description:
+  Validates configuration against Pydantic schema and returns only a
+  summary
 - **`GET`**: Endpoint: `/api/jobs`; Auth: Required; Description: List historical
   and active jobs with pagination (`limit`, `offset`, `state`, `job_type`)
 - **`GET`**: Endpoint: `/api/jobs/{id}`; Auth: Required; Description: Fetch
@@ -1595,8 +1773,10 @@ token authentication:
   `dataset_info.yaml` and class lists for a specific manifold
 - **`GET`**: Endpoint: `/api/sources`; Auth: None; Description: Catalog local
   `raw-sets` and configured upstream datasets
-- **`GET`**: Endpoint: `/api/kaggle/status`; Auth: None; Description: Check
-  Kaggle credentials (`.secrets.yaml`, `~/.kaggle/kaggle.json`, env)
+- **`GET`**: Endpoint: `/api/kaggle/status`; Auth: None; Description:
+  Presence of Kaggle credentials (no network check): `authenticated` and
+  `auth_methods` with `environment_variables`, `secrets_vault`,
+  `user_access_token` (`~/.kaggle/access_token`) and `user_kaggle_json`
 - **`GET`**: Endpoint: `/api/kaggle/registry-datasets`; Auth: None; Description:
   Enumerate 20 canonical Kaggle-bound production manifolds with local status
 - **`POST`**: Endpoint: `/api/kaggle/download`; Auth: None; Description: Ingest
@@ -1713,7 +1893,10 @@ vetting thresholds, YOLO auto-labeling flags, and container targets.
 
 Fast-dispatch compilation endpoint accepting a preset profile name, target model
 key, and optional worker/storage overrides. Executed without blocking for local
-desktop GUI integration.
+desktop GUI integration. Body: `{ "model", "preset": "quality-vision",
+"max_gb": null, "workers": null, "shard_ext": null }`; `shard_ext` is the
+WebDataset shard extension without dot (`data` or `tar`; unset, the compiler
+default `data` applies).
 
 #### `POST /api/gui/custom-compile`
 
@@ -1893,7 +2076,8 @@ The dataset compilation engine supports three canonical processing pathways:
 ### 5.8 Python In-Process Engine & Streaming Pipeline APIs
 
 The dataset compiler exposes programmatic Python service classes and streaming
-utilities for automated workflows and sidecar runners:
+utilities for automated workflows and sidecar runners. Run them from the
+`lemgendary-datasets` project root with its `.venv` interpreter:
 
 ```python
 from pathlib import Path

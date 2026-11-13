@@ -9,7 +9,7 @@ Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 Policy](./VERSIONING_POLICY.md)
 
 **Version**: `v16.9.68-STABLE` · **Status**: Canonical ·
-**Last audited**: 2026-11-04
+**Last audited**: 2026-11-13
 
 ---
 
@@ -55,7 +55,7 @@ Current capabilities:
   state-changing browser requests must send the Client Header
   `X-LemGendary-Client: ai-studio-gui`. `GET /api/secrets` returns only whether
   each secret is set and its last 4 characters.
-- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.38`), a
+- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.68`), a
   cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
   real Content Security Policy and one shared fetch wrapper for all sidecar
   calls.
@@ -101,11 +101,13 @@ Current capabilities:
   (68.7 GB, 789 shards; 693,040 train + 94,965 val samples) and
   `LemGendizedMultitaskRestorationPro` (42.2 GB, 54 shards; 232,464 train +
   31,742 val samples).
-- **cu126 PyTorch Stack**: `torch 2.14.1+cu126`, `torchvision 0.29.1+cu126`,
-  `torchaudio 2.11.0+cu126`, `transformers 5.20.1`, `sympy 1.14.0` and
-  `numpy 2.1.3` in `lemgendary-training-suite` and `lemgendary-datasets`.
-  `select_cuda_torch_index()` in `system_probe.py` picks the newest supported
-  index (`cu126`, `cu121`, `cu118`) from the driver version.
+- **PyTorch Stack**: the central `lemgendary-env-manager/requirements/*.txt`
+  files pin `torch==2.15.0`, `torchvision==0.29.2`, `transformers==5.22.1` and
+  `numpy==2.5.4` for `lemgendary-training-suite` and `lemgendary-datasets`, plus
+  `torchaudio==2.11.1` for the training suite. No wheel index is pinned:
+  `select_cuda_torch_index()` in `system_probe.py` picks it from the hardware
+  probe (`cu134`, `cu126`, `cu121` or `cu118` by NVIDIA driver version, ROCm,
+  PyPI for Apple MPS, CPU otherwise).
 
 ---
 
@@ -114,33 +116,33 @@ Current capabilities:
 Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.
 
-- **LemGendary Model Training Suite** (`v16.9.122-STABLE`): PyTorch training
+- **LemGendary Model Training Suite** (`v16.9.223-STABLE`): PyTorch training
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
   optional SWA, FID re-evaluation tool.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.71-STABLE`): shard synthesis,
+- **LemGendary Dataset Compiler Suite** (`v16.9.109-STABLE`): shard synthesis,
   WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
-- **LemGendary Environment Manager** (`v16.9.60-STABLE`): hardware probe,
+- **LemGendary Environment Manager** (`v16.9.85-STABLE`): hardware probe,
   virtual environments, compliance audits, bug report endpoint, ecosystem
   registry (`ecosystem.json`). Entrypoints: `lem-env` and
   `lemgendary_env_manager.ps1`.
-- **LemGendary AI Studio GUI** (`v2.10.38`): Tauri v2 desktop application and
+- **LemGendary AI Studio GUI** (`v2.10.68`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.82-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.116-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
-- **Training Pathology Guide** (`1.6.0`, baseline `v16.9.107-STABLE`):
-  `PAPER_TRAINING_PATHOLOGY.md`.
+- **Training Pathology Guide** (`1.12.0`, baseline `v16.9.157-STABLE`):
+  `PAPER_TRAINING_PATHOLOGY.md`, 58 distinct pathologies, 63 stable numbers.
 - **Forex Predictor Specification** (`v2.7.1`): `PAPER_FOREX_PREDICTOR.md`.
 
 The package metadata matches the README releases: the LemGendary Model
-Training Suite writes its version only in `pyproject.toml` (`16.9.122`);
+Training Suite writes its version only in `pyproject.toml` (`16.9.157`);
 `training/version.py` reads it for the CLI, the sidecar, the health route and
 `openapi.json`, and `config.yaml` has no version key (since v16.9.128). The
-LemGendary Dataset Compiler Suite `core/cli_args.py` reports `16.9.71` (one
+LemGendary Dataset Compiler Suite `core/cli_args.py` reports `16.9.84` (one
 version string since v16.9.52).
 
 ---
@@ -179,7 +181,7 @@ $$
 
 The machine-readable registries `canonical_capabilities.json`,
 `canonical_capabilities.yaml` and `manifest/documents.json` are updated
-together and share the document baseline `v16.9.82-STABLE`.
+together and share the document baseline `v16.9.116-STABLE`.
 
 ---
 
@@ -261,8 +263,8 @@ $$
 the removed `tools/recalibrate_fid.py` and are not measured values. Any FID
 value or chart from these four histories is unverified until the checkpoints
 are re-evaluated with `feature=2048`. The tool for that is
-`python -m training.fid_reeval` (training v16.9.107): it appends to
-`LemGendaryModels/<model>/fid_provenance.csv` and never rewrites
+`python -m training.fid_reeval` (added in training v16.9.107): it appends
+to `LemGendaryModels/<model>/fid_provenance.csv` and never rewrites
 `metrics.csv`. The re-measurement needs a GPU and has not been run.
 
 **Training status in the GUI**: `GET /api/gui/models/with-stats` always
@@ -338,12 +340,15 @@ whose stats cannot be read is shown as `unknown` with the reason
   pagefile thrashing (empirically measured $12.5\times$ batch retrieval
   acceleration from 3.43s down to 0.27s per batch when memory-mapped sequence
   manifolds on Windows enforce `num_workers=0`).
-- **CUDA 12.6 Verified (cu126)**: NVIDIA GeForce GTX 1650 (Turing, `sm_75`,
-  Driver 610.74) verified with `torch 2.14.1+cu126`. Hardware gates
-  confirmed: FP32 matmul, FP16 autocast, Conv2D forward/backward,
-  `torch.compile` eager fallback, ONNX Dynamo export (max diff 1.78e-07),
-  Transformers 5.20.1 BERT/GPT2 CUDA inference and Torchvision CUDA NMS. BF16
-  is unsupported on Turing as expected and is not selected.
+- **GTX 1650 Hardware Verification (earlier stack)**: an NVIDIA GeForce
+  GTX 1650 (Turing, `sm_75`, Driver 610.74) was verified with the earlier
+  `torch 2.14.1+cu126` wheels. Hardware gates confirmed: FP32 matmul, FP16
+  autocast, Conv2D forward/backward, `torch.compile` eager fallback, ONNX
+  Dynamo export (max diff 1.78e-07), Transformers 5.20.1 BERT/GPT2 CUDA
+  inference and Torchvision CUDA NMS. BF16 is unsupported on Turing as
+  expected and is not selected. The current pin is `torch==2.15.0`, and for
+  driver 610.74 the hardware probe now selects the `cu134` index; the gates
+  have not been re-run on that stack.
 - **Continuous Memory Formula**: Dynamic batch calculation scales continuously
   with available VRAM:
 

@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.65-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-04</span>
+<span><strong>Version</strong>: <code>v16.9.108-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -100,6 +100,10 @@ Engine</a></li>
 <li><a href="#sec-49-physical-degradation-synthesis-engine">4.9 Physical Degradation Synthesis
 Engine</a></li>
 <li><a href="#sec-410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</a></li>
+<li><a href="#sec-411-sample-integrity-shard-verification--manifold-repair">4.11 Sample Integrity, Shard Verification &amp; Manifold
+Repair</a></li>
+<li><a href="#sec-412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107">4.12 JSON Shard Labels, Sample Policies &amp; Source Labels (v16.9.85 to v16.9.107)</a></li>
+<li><a href="#sec-413-shard-offset-index-v169108">4.13 Shard Offset Index (v16.9.108)</a></li>
 </ul>
 </li>
 <li><a href="#sec-5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a>
@@ -134,7 +138,7 @@ Presets</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.65-STABLE</code>) is the data
+<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.84-STABLE</code>) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -163,6 +167,7 @@ the arbitrary-command endpoint <code>POST /api/jobs/generic</code> is removed (3
 The port, bind host, Kaggle owner and sibling folders come from
 <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, and task ids come from
 <code>task_taxonomy.json</code> (Section 3.7).</p>
+<p>The <code>v16.9.66</code> to <code>v16.9.74</code> releases move the toolchain to <code>torch==2.15.0</code> (the wheel index comes from the LemGendary Environment Manager hardware probe), make <code>.secrets.yaml</code> the authoritative credential source over stale environment tokens, and register the Kaggle reference of the AIHelper instruction manifold. The <code>v16.9.75</code> to <code>v16.9.84</code> releases reject incomplete or corrupt samples, verify every written shard, keep every metadata column in transcodes and add a manifold repair command (Section 4.11).</p>
 <ul>
 <li><strong>Project Repository</strong>:
 <a href="https://github.com/lemgenda/lemgendary-datasets">lemgendary-datasets</a></li>
@@ -789,7 +794,8 @@ LitData. All existing 110.9 GB <code>.mds.zstd</code> shards
 were transcoded to WebDataset (<code>.data</code>) shards via
 <code>tools/modernization_queue.py</code>. The MDS writer remains available through
 <code>--also-format mds</code> for compatibility, but no registry manifold uses it as its
-canonical format.</li>
+canonical format, and it needs the optional <code>mosaicml-streaming</code> package,
+which the Environment Manager no longer installs (v16.9.81).</li>
 </ul>
 <blockquote>
 <p><strong>Dataset Compiler Format Ingestion Notice</strong>: Formats such as <strong>TFRecord</strong>,
@@ -1016,6 +1022,175 @@ for $n_c &gt; 1$ and 0 otherwise.</p>
 <p><code>lem llm validate</code> and <code>POST /api/llm/validate</code> report up to 20 issues
 (severity, field, record id, issue) and exit 1 or return HTTP 400 when the
 corpus fails; unreadable or invalid JSONL is reported as such.</p>
+<h3 id="sec-411-sample-integrity-shard-verification--manifold-repair">4.11 Sample Integrity, Shard Verification &amp; Manifold Repair</h3>
+<p>The <code>v16.9.75</code> to <code>v16.9.84</code> releases close the data-integrity findings of the 2026-11 audit. A sample is written whole and correct, or it is rejected and recorded.</p>
+<ul>
+<li><strong>No identity pairs (v16.9.79)</strong>: restoration, super-resolution and segmentation samples without a real target are rejected before anything is written; before, the degraded input (or the RGB image for segmentation) was copied as its own target. Clean-only sources (ParseNet, CodeFormer) keep their documented behaviour.</li>
+<li><strong>Masks, labels and corrupt images (v16.9.76)</strong>: <code>utils/image_payload.py</code> turns raw bytes into shard payloads; zero-byte or undecodable images raise <code>CorruptImageError</code> instead of being packed, and masks are stored as lossless <code>.mask.webp</code> that keep their class indices. Loose and zip <code>masks/</code> and <code>labels/</code> are packed with their image, and <code>utils/sample_group.py</code> writes one sample (image, <code>.target</code>, <code>.mask</code>, <code>.txt</code> or <code>.json</code>) as one contiguous tar member group.</li>
+<li><strong>Label geometry (v16.9.79)</strong>: safetensors full-frame boxes are pixel boxes (they were normalized twice), Parquet pose rows use their bbox columns or the box around the visible keypoints instead of <code>0 0 0 0</code>, and NPZ face keypoints are normalized like every other pose source. <code>WebDatasetWriter</code> partitions shards by split (<code>shards/&lt;split&gt;/</code>).</li>
+<li><strong>Audit gates (v16.9.80)</strong>: <code>core/sample_audit.py</code> runs the audit gates on the compile path: file headers (magic bytes) before decoding, target size equal to the input size, boxes in pixels and keypoints and polygons normalized. A missing paired target is <code>ERR_TARGET_MISSING</code>, and every reject goes to the registry's <code>reject_log</code> table.</li>
+<li><strong>Shard verification (v16.9.80, v16.9.83)</strong>: <code>utils/shard_audit.py</code> audits every written shard by its headers: sample keys, zero-byte members, scattered groups, unreadable tars and, in a paired set, samples without a <code>.target.*</code> member. The converters and the MDS transcoder fail on any finding and keep the source; <code>verify_archive</code> fails on zero-byte image or shard members.</li>
+<li><strong>Lossless MDS transcode (v16.9.77)</strong>: every non-image MDS column (class, category, <code>nima_scores</code>, bbox, keypoints, source and others) is decoded by its column encoding into the <code>&lt;key&gt;.json</code> sidecar, and the legacy <code>mds/</code> folder is purged only when the written sample count equals the count in the MDS index.</li>
+<li><strong>Workers, interrupt and dedup (v16.9.78)</strong>: worker state is initialised once per process under a lock; Ctrl+C cancels queued batches, commits the registry and re-raises instead of calling <code>os._exit</code>; warm-up results pass the same dedup and <code>max_gb</code> accounting as pool results; resumed runs seed exact and perceptual hashes from the registry; perceptual dedup (<code>enable_perceptual_dedup</code>) uses a bucketed <code>NearDupIndex</code>.</li>
+<li><strong>Download safety (v16.9.82)</strong>: a downloaded zip is streamed into new WebDataset shards only when it is a legacy loose-image archive; a zip that holds shards, Parquet, MDS or JSONL splits is extracted as is, and a target that already has shards is never streamed into. The Temp sweep deletes only <code>LemGendized*.zip</code>, and layout folders (<code>shards</code>, <code>data</code>, <code>images</code>, <code>targets</code>, <code>labels</code>, <code>masks</code>, <code>mds</code>) are never unwrapped.</li>
+<li><strong>Manifold repair (v16.9.81)</strong>: <code>python cli.py repair manifold --manifold PATH</code> (or <code>--model KEY</code>) and <code>python cli.py repair all [--root DIR]</code> print a repair plan and change nothing. With <code>--apply</code> they drop samples with zero-byte members, make scattered groups contiguous (each rewritten shard is verified before it replaces the original), resync the <code>dataset_info.yaml</code> counts, replace an absolute or staging <code>path</code> with the canonical relative one and clean <code>index.json</code>. Since v16.9.85 no originals are kept: each rewritten file is verified and swapped in atomically (the <code>.repair_backup</code> folder is gone), and a second run finds nothing to do. LLM manifolds now record the canonical <code>path</code> too.</li>
+<li><strong>No swallowed errors (v16.9.75)</strong>: the hub script's folder probes, the MT5 vault reader and the JSONL ingestor log errors instead of hiding them.</li>
+</ul>
+<h3 id="sec-412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107">4.12 JSON Shard Labels, Sample Policies &amp; Source Labels (v16.9.85 to v16.9.107)</h3>
+<ul>
+<li>
+<p><strong>JSON is the only shard label format (v16.9.98)</strong>: inside WebDataset shards
+a sample's label is <code>&lt;key&gt;.json</code>; there are no <code>.txt</code> label members, and
+masks stay <code>&lt;key&gt;.mask.webp</code>. <code>utils/label_json.py</code> is the schema SSOT
+(<code>LABEL_STRATEGIES</code>); the strategy is the registry entry's <code>label_json</code>,
+else its task's (<code>TASK_STRATEGIES</code>). Coordinates are normalised to 0..1 and
+boxes are <code>cx cy w h</code>:</p>
+<ul>
+<li><code>face_landmarks</code> (RetinaFace): <code>face_count</code>, <code>objects[]</code> with
+<code>category_id</code>, <code>bbox_cxcywh_normalized</code> and, when the face has real
+landmarks, <code>landmarks_normalized</code> (10 values; ten zeros count as absent).
+Labels rebuilt from source landmarks also record <code>landmark_source</code>.</li>
+<li><code>yolo_boxes</code> (detection, pose, restoration, super-resolution,
+parameter prediction): <code>object_count</code>, <code>objects[]</code> with <code>category_id</code>,
+<code>bbox_cxcywh_normalized</code> and, for pose lines, <code>keypoints</code>.</li>
+<li><code>yolo_polygons</code> (segmentation): <code>object_count</code>, <code>objects[]</code> with
+<code>category_id</code>, <code>polygon_normalized</code>.</li>
+<li><code>nima</code> (quality): <code>nima_scores</code> with <code>distribution</code> (10) and
+<code>mean_score</code>.</li>
+<li><code>segmentation_mask</code> (face parsing): the class mask is the
+<code>&lt;key&gt;.mask.webp</code> member (lossless, one class id per pixel); the JSON
+records <code>num_classes</code>, <code>class_names</code> and <code>mask_source</code>.</li>
+<li><code>class_label</code> (classification): <code>class_id</code> or <code>class_name</code>; labels
+written by <code>repair class-labels</code> carry both plus <code>label_source</code> and the
+registry <code>task</code>, and a pseudo label also <code>label_confidence</code> and
+<code>label_check_class</code>.</li>
+<li><code>caption</code> (diffusion): <code>caption</code>.</li>
+</ul>
+<p>An empty detection label is <code>{&quot;object_count&quot;: 0, &quot;objects&quot;: []}</code>, a valid
+negative. Every shard writer packs JSON only, and the shard verifier
+(<code>utils/label_audit.py</code>, <code>repair manifold</code>, the converters' post-write
+check) fails on any <code>.txt</code> member or schema break. The Training Suite reads
+the same schema (<code>data/json_labels.py</code>, v16.9.200).</p>
+</li>
+<li>
+<p><strong>Sample policies (v16.9.97, v16.9.100, v16.9.102)</strong>: <code>core/sample_policy.py</code>
+sorts samples into kinds, drops <code>drop_kinds</code> and draws val from
+<code>val_kinds</code>. The face detection policy (<code>label_json: face_landmarks</code>)
+drops samples without a face and draws val from the landmark-bearing photos
+by source file id; the face parsing policy (<code>segmentation_mask</code>) drops
+copies and segmentation maps by key and splits all photos by SFHQ file id.
+A source with a key layout draws its val share over all of the layout's
+file ids, so ParseNet and RetinaFace share one val set and no file is in
+both splits. Registry fields: <code>scan_exclude_dirs</code> (folder globs the source
+scan never enters) and <code>key_layouts</code> (the key index layout of a source).</p>
+</li>
+<li>
+<p><strong>Source labels registry (v16.9.100, v16.9.101)</strong>: <code>source_labels</code>
+(<code>scheme</code>, <code>source</code>) names the per-file labels a source ships next to its
+images, and <code>key_layouts[].files_dir</code> the source's folder under a local
+label root. Schemes live in <code>core/source_labels.py</code>: <code>celebamask_hq_19</code>
+(the 19-class CelebAMask-HQ / BiSeNet masks of SFHQ, <code>repair masks</code>) and
+<code>sfhq_110</code> (the SFHQ 110-point landmarks; points 0-67 follow the iBUG
+300-W order), from which <code>core/face_geometry.py</code> derives the five
+RetinaFace points (eye centres, nose tip 30, mouth corners 48 and 54) and a
+tight WIDER-style box (<code>repair face-landmarks</code>).</p>
+</li>
+<li>
+<p><strong>Class labels (v16.9.103 to v16.9.106)</strong>: the registry field
+<code>class_labels</code> holds a scheme (<code>nsfw_5</code>: 0 drawings, 1 hentai, 2 neutral,
+3 porn, 4 sexy) and ordered key rules (<code>core/class_labels.py</code>, first match
+wins). ClassificationMaster: <code>anime_dbrating</code> index below 278,119 is
+hentai, the rest drawings, <code>food101</code> neutral, and the NSFW source a pseudo
+label from the GantMan nsfw_model (Inception V3, MIT, ONNX on the CPU),
+kept only at a top probability of at least 0.8 when the MobileNet V2 check
+model agrees (<code>require_check_agreement</code>); other NSFW samples are dropped.</p>
+</li>
+<li>
+<p><strong>Manifold repairs</strong>: <code>repair</code> keeps no originals (v16.9.85; each shard is
+rewritten to a temporary file, verified and swapped in with <code>os.replace</code>),
+converts leftover PNG/JPEG members to WebP (v16.9.86) and offers <code>labels</code>,
+<code>txt-labels</code>, <code>pack-loose</code>, <code>sample-policy</code>, <code>masks</code>, <code>face-landmarks</code>,
+<code>pseudo-labels</code> and <code>class-labels</code> (CLI manual Section 5.17); since
+v16.9.108 also <code>shard-offsets</code> (Section 4.13).</p>
+</li>
+<li>
+<p><strong>Kaggle sync (v16.9.92 to v16.9.104)</strong>: one credential module
+(<code>core/kaggle_credentials.py</code>: a <code>KGAT_</code> token goes to <code>KAGGLE_API_TOKEN</code>
+unchanged, <code>~/.kaggle/access_token</code> counts); <code>GET /api/kaggle/status</code> lists
+<code>environment_variables</code>, <code>secrets_vault</code>, <code>user_access_token</code> and
+<code>user_kaggle_json</code>. Uploads carry version notes; new datasets are created
+private with the manifold's license; dataset cards state the real split
+counts once and per-source counts only when exact. <code>sync pull</code> creates a
+missing datasets root, falls back to a file-by-file download (and the
+Kaggle API route after a per-file 404), waits on HTTP 429 and takes
+<code>--only</code>. Since v16.9.109 <code>sync push --notes TEXT</code> adds what changed in the
+new version after the generated version notes (CLI manual Section 5.10).</p>
+</li>
+<li>
+<p><strong>Forex timestamps (v16.9.87)</strong>: the <code>timestamp</code> column is whole Unix epoch
+seconds (UTC); <code>forex/columns.py</code> holds the column definitions and
+<code>TIMESTAMP_UNIT = &quot;seconds&quot;</code>, and <code>dataset_info.yaml</code> and the Parquet schema
+metadata record <code>timestamp_unit: seconds</code>.</p>
+</li>
+<li>
+<p><strong>GUI access (v16.9.89, v16.9.90)</strong>: <code>POST /api/config/validate</code> is open to
+the GUI origins with the client header; <code>POST /api/gui/quick-compile</code>
+takes <code>shard_ext</code>.</p>
+</li>
+</ul>
+<h3 id="sec-413-shard-offset-index-v169108">4.13 Shard Offset Index (v16.9.108)</h3>
+<p>Every WebDataset shard folder (<code>shards/&lt;split&gt;/</code>) carries
+<code>shard_offsets.json</code>, the byte offsets of the members of its plain tar
+shards. The Training Suite (v16.9.215 and later) reads this file instead of
+every tar member header of a split; the header scan took 15 to 48 minutes for
+a 53 GB split on Kaggle's network storage (Training Suite paper Section 2.46).</p>
+<ul>
+<li><strong>Format (version 2)</strong>: one JSON object per shard folder,
+<code>{&quot;version&quot;: 2, &quot;shards&quot;: {&quot;shard-00000.data&quot;: {...}}}</code>. Each plain tar
+shard has its byte <code>size</code>, its modification time <code>mtime_ns</code> and the
+<code>names</code>, <code>offsets</code> (payload offsets) and <code>sizes</code> of its regular members in
+archive order. The layout is the Training Suite's
+(<code>training/data/containers/shard_tables.py</code>), and a file with another
+<code>version</code> is ignored. The name has no leading dot because Kaggle dataset
+uploads skip hidden files. A compressed shard cannot be read by offset and
+gets no entry.</li>
+<li><strong>Acceptance rule</strong>: an entry is used when the shard size matches and
+either the modification time matches or the tar headers of the first,
+middle and last member agree with the entry (three reads). An upload or a
+copy changes the modification time, never the size or the member layout, so
+the index stays valid after a Kaggle upload. Any other entry is stale and
+the shard is rescanned.</li>
+<li><strong>Cost</strong>: for a split of $S$ shards with $M_s$ members each, the header
+scan costs $\mathcal{O}\left(\sum_{s=1}^{S} M_s\right)$ random reads, while
+an open from the index costs one file read plus at most $3S$ header reads
+(none when the modification times match).</li>
+<li><strong>One writer</strong>: <code>utils/shard_offsets.py</code> (<code>write_shard_offsets</code>) is the
+only writer and checker and does not import the Training Suite. Unchanged
+shards keep their entry, rewritten ones are rescanned. Every step that
+writes or rewrites shards refreshes the file: <code>WebDatasetWriter.close</code> and
+the legacy <code>ShardWriter.close</code> (compile and <code>--also-format</code>), the diffusion
+shard pass, zip streaming, loose packing, MDS transcoding, the sample
+policy, and the <code>apply</code> of <code>repair manifold</code>, <code>labels</code>, <code>txt-labels</code>,
+<code>masks</code>, <code>face-landmarks</code> and <code>class-labels</code>.</li>
+<li><strong>Verification</strong>: the shard verifier (<code>utils/shard_audit.py</code>
+<code>shard_set_problems</code>, so the converters' post-write check and
+<code>repair manifold</code>, which rewrites a stale index) checks a present index:
+every plain shard needs an entry the Training Suite would accept, with the
+member count of the audit, and no entry may name a missing shard.</li>
+<li><strong>Upload</strong>: the staging zip packs every file of the manifold folder, so the
+index is uploaded; a newer index makes the staging zip be rebuilt. The GUI
+catalog scan does not count <code>shard_offsets.json</code> as a shard.</li>
+<li><strong>Existing manifolds</strong>: <code>repair shard-offsets [--model KEY | --manifold PATH] [--apply]</code> writes the index without touching the shards (CLI manual
+Section 5.17). Measured runs: LemGendizedRetinaFace 103 shards, 850,446
+members, 75.5 MiB in 98 s; LemGendizedParseNet 111 shards, 1,275,774
+members, 101.8 MiB in 101 s; LemGendizedClassificationMaster 158 shards,
+1,507,068 members, 107.0 MiB in 163 s. The Training Suite reader accepts
+every train shard from the file (1.5 to 3.1 s per split, no header scan).</li>
+<li><strong>Read-only folders</strong>: when the Training Suite opens a read-only shard
+folder without a usable index (Kaggle <code>/kaggle/input</code>), it keeps its own
+scan cache outside the manifold; the index in the manifold is written only
+by the compiler or by a Training Suite run on a writable folder.</li>
+</ul>
 </section>
 
 <section id="sec-5-comparative-analysis--benchmarks">
@@ -1447,7 +1622,16 @@ guidance and safe troubleshooting.</li>
 <h3 id="lemgendizedclassificationmaster">LemGendizedClassificationMaster</h3>
 <ul>
 <li><strong>Category:</strong> Image Classification</li>
-<li><strong>Total Samples:</strong> 788,034</li>
+<li><strong>Total Samples:</strong> 753,534 (train 662,746 / val 90,788; Anime DB Rating
+619,514, Food-101 100,999, NSFW 33,021)</li>
+<li><strong>Per Source (train / val, <code>index.json</code>):</strong> Anime DB Rating 544,611 /
+74,903; Food-101 89,105 / 11,894; NSFW 29,030 / 3,991</li>
+<li><strong>Classes:</strong> 5 (<code>nsfw_5</code>: drawings, hentai, neutral, porn, sexy), written
+by <code>repair class-labels</code></li>
+<li><strong>Per Class (train / val, from the <code>repair class-labels</code> run):</strong> drawings
+300,702 / 41,355; hentai 249,105 / 34,257; neutral 92,905 / 12,445; porn
+9,392 / 1,318; sexy 10,642 / 1,413. <code>index.json</code> has no class field, so the
+per-class counts come from the label repair, not from the index.</li>
 <li><strong>Architecture Base:</strong> Lightweight convolutional backbones with classification
 heads</li>
 <li><strong>Primary Task:</strong> Predict categorical classes and safety content labels.</li>
@@ -1487,9 +1671,18 @@ learning</li>
 <h3 id="lemgendizedforexuniverse">LemGendizedForexUniverse</h3>
 <ul>
 <li><strong>Category:</strong> Financial Time-Series</li>
-<li><strong>Total Samples:</strong> 24,850,000</li>
-<li><strong>Storage Format:</strong> Unified Annual Apache Parquet (<code>ForexUniverse2019.parquet</code>
-to <code>ForexUniverse2026.parquet</code>) with Zstandard compression</li>
+<li><strong>Total Samples:</strong> 26,818,700 (train 21,015,570 / val 5,803,130, per
+<code>dataset_info.yaml</code> and <code>index.json</code> and the training registry)</li>
+<li><strong>Storage Format:</strong> eight yearly Apache Parquet files
+(<code>ForexUniverse2019.parquet</code> to <code>ForexUniverse2026.parquet</code>, Zstandard level
+3, 5,368 row groups of up to 5,000 rows), each row one window with its
+<code>pair</code> and <code>timeframe</code> columns. The 765 &quot;chunks&quot; are the <code>index.json</code>
+entries, one per pair, timeframe and year present (16 pairs by 6
+timeframes by 8 years, 3 absent), not files: years before 2025 are <code>train</code>
+(573 entries), 2025 and 2026 are <code>val</code> (192)
+(<code>core/docs/generators/index_json.py</code>). The MT5 pipeline writes per-year
+chunk shards (<code>ForexUniverse&lt;year&gt;/&lt;pair&gt;/&lt;timeframe&gt;/shard_chunk&lt;N&gt;.parquet</code>)
+that the scanner also reads; the published manifold holds the yearly files.</li>
 <li><strong>Architecture Base:</strong> Multi-Scale CNN-Transformer (TCN + CT-MHA)</li>
 <li><strong>Primary Task:</strong> Predict directional probability and Pip-Magnitude Boundaries
 for 16 major currency pairs and commodities across 6 timeframes.</li>
@@ -1572,7 +1765,9 @@ with 10-bin distribution head</li>
 <h3 id="lemgendizedparsenet">LemGendizedParseNet</h3>
 <ul>
 <li><strong>Category:</strong> Image Segmentation</li>
-<li><strong>Total Samples:</strong> 853,546</li>
+<li><strong>Total Samples:</strong> 425,258 SFHQ photos with class masks (train 374,228 / val
+51,030, split by SFHQ file id)</li>
+<li><strong>Classes:</strong> 19 (<code>celebamask_hq_19</code>, lossless <code>&lt;key&gt;.mask.webp</code>)</li>
 <li><strong>Architecture Base:</strong> Vision Transformer (ViT) backbones with hierarchical
 decoders</li>
 <li><strong>Primary Task:</strong> Assign categorical labels to every pixel in the image
@@ -1581,7 +1776,10 @@ manifold.</li>
 <h3 id="lemgendizedretinaface">LemGendizedRetinaFace</h3>
 <ul>
 <li><strong>Category:</strong> Pose Estimation / Face Landmarks</li>
-<li><strong>Total Samples:</strong> 853,546</li>
+<li><strong>Total Samples:</strong> 425,223 SFHQ photos, one face each (train 374,199 / val
+51,024, the same file-id split as ParseNet)</li>
+<li><strong>Labels:</strong> tight WIDER-style box and 5 points rebuilt from the SFHQ
+110-point landmarks (<code>landmark_source: sfhq-110pt</code>)</li>
 <li><strong>Architecture Base:</strong> High-Resolution Net (HRNet) or ViT backbones</li>
 <li><strong>Primary Task:</strong> Regress exact coordinate points for biological landmarks
 (registry key <code>retinaface_mobilenet</code>).</li>
@@ -1625,7 +1823,7 @@ deterministic output. The <code>v16.9.23</code> to <code>v16.9.27</code> release
 safe to drive from the AI Studio GUI: only the GUI's origins may call the
 sidecar, registry writes are atomic and never rewrite existing entries, loose
 images are removed only after their container exists, dry runs change nothing,
-and file access by the validator stays inside the dataset root.</p>
+and file access by the validator stays inside the dataset root. The <code>v16.9.75</code> to <code>v16.9.84</code> releases make the output verifiable: a sample is written whole or rejected and logged, every shard is audited after writing, and a damaged manifold can be repaired in place.</p>
 </section>
 
 <footer>

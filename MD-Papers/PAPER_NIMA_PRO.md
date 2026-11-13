@@ -26,7 +26,7 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 The **NIMA Aesthetic Pro Architecture (Swin-v2-T)** is a dedicated neural
 evaluation engine engineered for precise visual quality assessment. Operating on
 the compiled manifold `LemGendizedNimaAesthetic`, it leverages **Swin-v2-T
-(28.3M Parameters)** to predict continuous perceptual distributions rather than
+(27.5887M Parameters)** to predict continuous perceptual distributions rather than
 simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance
 (EMD) and Soft-Spearman rank optimization problem, this model captures subtle
 perceptual judgments with verified mathematical resilience.
@@ -98,7 +98,7 @@ automated training loss gating, and desktop studio review.
 
 #### 4.2 Model Info
 
-* **Architecture**: Swin-v2-T (28.3M Parameters)
+* **Architecture**: Swin-v2-T (27.5887M Parameters)
 * **Input Resolution**: 384x384
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 19.5ms on NVIDIA GTX 1650 `[MEASURED]`
