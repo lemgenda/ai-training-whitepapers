@@ -3,7 +3,7 @@
   "document_baseline": "v16.9.116-STABLE",
   "runtime_engine_baseline": "v16.9.223-STABLE",
   "desktop_client_baseline": "v2.10.68",
-  "dataset_compiler_baseline": "v16.9.109-STABLE",
+  "dataset_compiler_baseline": "v16.9.110-STABLE",
   "environment_manager_baseline": "v16.9.85-STABLE",
   "last_audited": "2026-11-13",
   "control_planes": {
