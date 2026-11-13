@@ -27,7 +27,7 @@
 <h1>LemGendary AI Studio GUI: Control ID Registry &amp; Operational Boundaries</h1>
 <p class="subtitle">Category 03.4 CONTROLS | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.67</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Version</strong>: <code>v2.10.68</code> (LemGendary AI Studio GUI)</span>
 <span><strong>Last audited</strong>: 2026-11-13</span>
 <span><strong>Companion</strong>: <a href="ai-studio-manual.html">Operator Manual</a></span>
 <span><a href="ai-studio-whitepaper.html">Architectural Whitepaper</a></span>
@@ -81,11 +81,11 @@ Availability</a></li>
 <p>This registry lists every element of the LemGendary AI Studio GUI
 (<code>lemgendary-ai-studio-gui</code>) that carries an <code>id</code> attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.67</code>, including
+from the <code>id</code> attributes in <code>src/**/*.tsx</code> of GUI release <code>v2.10.68</code>, including
 the IDs that the shared <code>Modal</code>, <code>ConfirmDialog</code> and <code>Tabs</code> components build
 from their props, with a template such as <code>train-btn-start-{model_key}</code> counted
-once: 193 distinct IDs, of which 123 belong to controls (sections 3.1 to 3.8)
-and 70 to dialogs, status regions, landmarks and headings (section 3.9).
+once: 202 distinct IDs, of which 128 belong to controls (sections 3.1 to 3.8)
+and 74 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.</p>
 <p>The GUI talks to three local sidecars: the LemGendary Environment Manager on
@@ -379,6 +379,27 @@ Enabled when auto-resume is checked; empty uses the Training Suite
 settings&quot;. None. Sent as <code>override_frozen</code> with
 <code>POST /api/training/kaggle/train</code>, which also applies it to the auto-resume
 sessions.</li>
+<li><code>kaggle-fieldset-advanced</code> (<code>fieldset</code>): &quot;Advanced&quot; group of the Kaggle
+launch options (<code>KaggleAdvancedOptions</code>). None. Holds the four optional
+fields below; each is empty by default and not sent when empty. A refused
+value shows its message in <code>kaggle-input-{field}-error</code> (section 3.9) and
+disables &quot;Launch Cloud Training&quot;; a 422 from the Training Suite shows its
+message in the dialog's error banner.</li>
+<li><code>kaggle-input-git-ref</code> (<code>input type=text</code>): &quot;Training Suite Ref&quot;. None.
+Branch, tag or full commit SHA the kernel clones the Training Suite at;
+sent as <code>git_ref</code>; empty clones <code>main</code>. Rules: letters, digits, <code>.</code>, <code>_</code>, <code>/</code> and <code>-</code> only, starting with a letter or
+digit, at most 200 characters, none of <code>..</code>, <code>//</code>, <code>@{</code>, <code>/.</code> and no
+trailing <code>/</code>, <code>.</code> or <code>.lock</code> (the Training Suite ref rules).</li>
+<li><code>kaggle-input-env-manager-ref</code> (<code>input type=text</code>): &quot;Env Manager Ref&quot;. None.
+Ref the kernel clones the Environment Manager at; sent as
+<code>env_manager_ref</code>; empty uses the Training Suite ref. Same ref rules.</li>
+<li><code>kaggle-input-limit-hours</code> (<code>input type=text</code>, decimal): &quot;Session Limit
+(h)&quot;. None. Session limit in hours, greater than 0; sent as <code>limit_hours</code>;
+empty uses <code>kaggle_session.limit_hours</code> of the Training Suite <code>config.yaml</code>.</li>
+<li><code>kaggle-input-margin-minutes</code> (<code>input type=text</code>, decimal): &quot;Stop Margin
+(min)&quot;. None. Minutes before the limit at which the trainer stops and
+saves, 0 or more and below the limit; sent as <code>margin_minutes</code>; empty uses
+<code>kaggle_session.margin_minutes</code>.</li>
 <li><code>kaggle-monitor-slug</code> (<code>input type=text</code>): "Monitor an already running kernel". None. Kernel reference <code>owner/kernel-slug</code>.</li>
 <li><code>kaggle-monitor-kernel-select</code> (<code>select</code>): recent Kaggle kernels of the
 configured account. <code>GET /api/training/kaggle/kernels</code> (8200) fills it.
@@ -478,6 +499,10 @@ refused the token or none is configured (<code>role=&quot;alert&quot;</code>).</
 <code>kaggle_dataset_urls</code>).</li>
 <li><code>kaggle-accelerator-source</code>: note that the accelerator list comes from the
 ecosystem snapshot while the Training Suite is offline.</li>
+<li><code>kaggle-input-git-ref-error</code>, <code>kaggle-input-env-manager-ref-error</code>,
+<code>kaggle-input-limit-hours-error</code>, <code>kaggle-input-margin-minutes-error</code>
+(<code>role=&quot;alert&quot;</code>): the validation message under the matching Advanced
+launch field (section 3.6); shown only while the value is refused.</li>
 <li><code>comp-badge-kaggle-auth</code>: Dataset Compiler Kaggle credential badge
 (<code>GET /api/kaggle/status</code>, 8100); the tooltip names the credential sources.</li>
 <li><code>train-frozen-refusal</code> (region): shown instead of the generic error banner
@@ -516,8 +541,8 @@ publish buttons of the Cloud &amp; Registry Dispatch dialog.</li>
 <li><strong>Config &amp; Secrets</strong>: the dialog close button; "Validate Syntax", the diff toggle, "Revert", "Save Manifest" and the text area of the manifest editor; and the add toggle, "Save Secrets to Ecosystem", the default check box, Cancel, "Add to Vault", the service shortcut buttons and the per-credential set-default and delete buttons of the secrets vault.</li>
 </ul>
 <h3 id="sec-311-changes-since-the-previous-registry">3.11 Changes Since the Previous Registry</h3>
-<p>Since the <code>v2.10.57</code> registry 44 IDs were added, one removed and two renamed
-(GUI releases <code>v2.10.59</code> to <code>v2.10.67</code>):</p>
+<p>Since the <code>v2.10.57</code> registry 53 IDs were added, one removed and two renamed
+(GUI releases <code>v2.10.59</code> to <code>v2.10.68</code>):</p>
 <ul>
 <li><strong>Added, Dashboard and Dataset Compiler</strong>: <code>dash-btn-refresh-projects</code>,
 <code>comp-badge-kaggle-auth</code>, <code>comp-select-kaggle-registry</code>,
@@ -542,7 +567,10 @@ publish buttons of the Cloud &amp; Registry Dispatch dialog.</li>
 <code>kaggle-override-frozen-checkbox</code>, <code>train-frozen-refusal</code>,
 <code>train-frozen-refusal-message</code>, <code>train-frozen-refusal-changes</code>,
 <code>train-frozen-refusal-hint</code>, <code>train-btn-frozen-refusal-dismiss</code>
-(<code>v2.10.67</code>).</li>
+(<code>v2.10.67</code>); <code>kaggle-fieldset-advanced</code>, <code>kaggle-input-git-ref</code>,
+<code>kaggle-input-env-manager-ref</code>, <code>kaggle-input-limit-hours</code>,
+<code>kaggle-input-margin-minutes</code> and their four <code>-error</code> regions
+(<code>v2.10.68</code>).</li>
 <li><strong>Renamed</strong>: <code>config-editor-tab-manifests</code> and <code>config-editor-tab-secrets</code> to
 <code>config-tabs-tab-manifests</code> and <code>config-tabs-tab-secrets</code> (<code>v2.10.61</code>).</li>
 <li><strong>Removed</strong>: <code>gpu-select</code> (the P100 / T4 choice), replaced by

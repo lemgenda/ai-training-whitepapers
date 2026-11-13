@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.110`
+**Version**: `v16.9.111`
 
 ---
 
@@ -61,6 +61,26 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.111 - GUI v2.10.68 Kaggle Advanced Launch Controls
+
+* `GUI_CONTROL_REGISTRY.md` and its page (version line v2.10.68): section
+  3.6 lists the Kaggle launch "Advanced" group `kaggle-fieldset-advanced` and
+  its four optional fields `kaggle-input-git-ref` (`git_ref`),
+  `kaggle-input-env-manager-ref` (`env_manager_ref`),
+  `kaggle-input-limit-hours` (`limit_hours`, greater than 0) and
+  `kaggle-input-margin-minutes` (`margin_minutes`, 0 or more and below the
+  limit), each empty by default and not sent when empty; refs follow the
+  Training Suite ref rules. Section 3.9 lists the four `role="alert"`
+  messages `kaggle-input-{field}-error`. The count is now 202 distinct IDs
+  (128 controls, 74 dialogs, regions, landmarks and headings; was 193 / 123 /
+  70), and section 3.11 lists the nine IDs under `v2.10.68` (53 added since
+  the `v2.10.57` registry).
+* `MANUAL_AI_STUDIO_GUI.md` and its page (version line v2.10.68): Section
+  7.4 (now "v2.10.58 to v2.10.68", Training Suite contract up to v16.9.210)
+  describes the Advanced group instead of saying the GUI lacks the clone ref
+  and session window options.
+* `manifest/documents.json`: both documents at baseline v2.10.68.
 
 ### v16.9.110 - ClassificationMaster Per-Source and Per-Class Counts
 

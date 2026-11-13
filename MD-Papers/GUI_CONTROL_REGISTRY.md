@@ -2,7 +2,7 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.67` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-13 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
@@ -44,11 +44,11 @@
 This registry lists every element of the LemGendary AI Studio GUI
 (`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.67`, including
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.68`, including
 the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
 from their props, with a template such as `train-btn-start-{model_key}` counted
-once: 193 distinct IDs, of which 123 belong to controls (sections 3.1 to 3.8)
-and 70 to dialogs, status regions, landmarks and headings (section 3.9).
+once: 202 distinct IDs, of which 128 belong to controls (sections 3.1 to 3.8)
+and 74 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
 
@@ -350,6 +350,28 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   settings". None. Sent as `override_frozen` with
   `POST /api/training/kaggle/train`, which also applies it to the auto-resume
   sessions.
+- `kaggle-fieldset-advanced` (`fieldset`): "Advanced" group of the Kaggle
+  launch options (`KaggleAdvancedOptions`). None. Holds the four optional
+  fields below; each is empty by default and not sent when empty. A refused
+  value shows its message in `kaggle-input-{field}-error` (section 3.9) and
+  disables "Launch Cloud Training"; a 422 from the Training Suite shows its
+  message in the dialog's error banner.
+- `kaggle-input-git-ref` (`input type=text`): "Training Suite Ref". None.
+  Branch, tag or full commit SHA the kernel clones the Training Suite at;
+  sent as `git_ref`; empty clones `main`. Rules: letters, digits, `.`, `_`,
+  `/` and `-` only, starting with a letter or digit, at most 200 characters,
+  none of `..`, `//`, `@{`, `/.` and no trailing `/`, `.` or `.lock` (the
+  Training Suite ref rules).
+- `kaggle-input-env-manager-ref` (`input type=text`): "Env Manager Ref". None.
+  Ref the kernel clones the Environment Manager at; sent as
+  `env_manager_ref`; empty uses the Training Suite ref. Same ref rules.
+- `kaggle-input-limit-hours` (`input type=text`, decimal): "Session Limit
+  (h)". None. Session limit in hours, greater than 0; sent as `limit_hours`;
+  empty uses `kaggle_session.limit_hours` of the Training Suite `config.yaml`.
+- `kaggle-input-margin-minutes` (`input type=text`, decimal): "Stop Margin
+  (min)". None. Minutes before the limit at which the trainer stops and
+  saves, 0 or more and below the limit; sent as `margin_minutes`; empty uses
+  `kaggle_session.margin_minutes`.
 - `kaggle-monitor-slug` (`input type=text`): "Monitor an already running
   kernel". None. Kernel reference `owner/kernel-slug`.
 - `kaggle-monitor-kernel-select` (`select`): recent Kaggle kernels of the
@@ -452,6 +474,10 @@ Status and error regions:
   `kaggle_dataset_urls`).
 - `kaggle-accelerator-source`: note that the accelerator list comes from the
   ecosystem snapshot while the Training Suite is offline.
+- `kaggle-input-git-ref-error`, `kaggle-input-env-manager-ref-error`,
+  `kaggle-input-limit-hours-error`, `kaggle-input-margin-minutes-error`
+  (`role="alert"`): the validation message under the matching Advanced
+  launch field (section 3.6); shown only while the value is refused.
 - `comp-badge-kaggle-auth`: Dataset Compiler Kaggle credential badge
   (`GET /api/kaggle/status`, 8100); the tooltip names the credential sources.
 - `train-frozen-refusal` (region): shown instead of the generic error banner
@@ -508,8 +534,8 @@ without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
 
 ### 3.11 Changes Since the Previous Registry
 
-Since the `v2.10.57` registry 44 IDs were added, one removed and two renamed
-(GUI releases `v2.10.59` to `v2.10.67`):
+Since the `v2.10.57` registry 53 IDs were added, one removed and two renamed
+(GUI releases `v2.10.59` to `v2.10.68`):
 
 - **Added, Dashboard and Dataset Compiler**: `dash-btn-refresh-projects`,
   `comp-badge-kaggle-auth`, `comp-select-kaggle-registry`,
@@ -534,7 +560,10 @@ Since the `v2.10.57` registry 44 IDs were added, one removed and two renamed
   `kaggle-override-frozen-checkbox`, `train-frozen-refusal`,
   `train-frozen-refusal-message`, `train-frozen-refusal-changes`,
   `train-frozen-refusal-hint`, `train-btn-frozen-refusal-dismiss`
-  (`v2.10.67`).
+  (`v2.10.67`); `kaggle-fieldset-advanced`, `kaggle-input-git-ref`,
+  `kaggle-input-env-manager-ref`, `kaggle-input-limit-hours`,
+  `kaggle-input-margin-minutes` and their four `-error` regions
+  (`v2.10.68`).
 - **Renamed**: `config-editor-tab-manifests` and `config-editor-tab-secrets` to
   `config-tabs-tab-manifests` and `config-tabs-tab-secrets` (`v2.10.61`).
 - **Removed**: `gpu-select` (the P100 / T4 choice), replaced by

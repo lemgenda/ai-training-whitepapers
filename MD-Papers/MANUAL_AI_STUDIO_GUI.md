@@ -2,7 +2,7 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.67` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-13 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
@@ -71,7 +71,7 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [7.3 Publishing to Kaggle Models Hub & Cloud
     Registry](#73-publishing-to-kaggle-models-hub--cloud-registry)
   - [7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to
-    v2.10.67)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067)
+    v2.10.68)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068)
 - [8. Health Matrix & Cross-Project Version Drift
   Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
@@ -1433,11 +1433,11 @@ neural models and checkpoints to Kaggle Models Hub simultaneously using the
 `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (`lemtrain sync push --all`).
 
-### 7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to v2.10.67)
+### 7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to v2.10.68)
 
 The Kaggle GPU Cloud tab of the Cloud & Registry Dispatch dialog follows the
 Training Suite Kaggle contract (`openapi.json` of Training Suite v16.9.170
-to v16.9.198):
+to v16.9.210):
 
 - **API Authentication** (`cloud-modal-auth-badge`): shows the user and the
   method from `GET /api/training/kaggle/status`, which makes a real
@@ -1454,10 +1454,20 @@ to v16.9.198):
   5 s), `kaggle-auto-pull-checkbox`, `kaggle-auto-resume-checkbox` with
   `kaggle-max-resumes-input` (empty uses `kaggle_session.max_resumes`) and
   `kaggle-override-frozen-checkbox`, all sent with
-  `POST /api/training/kaggle/train`. The GUI does not offer the clone ref or
-  session window options of the route (`git_ref`, `env_manager_ref`,
-  `limit_hours`, `margin_minutes`); use the CLI for those (CLI manual Section
-  6.13).
+  `POST /api/training/kaggle/train`.
+- **Advanced** (`kaggle-fieldset-advanced`, v2.10.68): four optional fields,
+  empty by default and not sent when empty: `kaggle-input-git-ref`
+  (`git_ref`, the Training Suite ref; empty clones `main`),
+  `kaggle-input-env-manager-ref` (`env_manager_ref`; empty uses the Training
+  Suite ref), `kaggle-input-limit-hours` (`limit_hours`, greater than 0) and
+  `kaggle-input-margin-minutes` (`margin_minutes`, 0 or more and below the
+  limit); empty session fields keep `kaggle_session` of the Training Suite
+  `config.yaml`. Refs follow the Training Suite ref rules (letters, digits,
+  `.`, `_`, `/`, `-`; a letter or digit first; at most 200 characters; no
+  `..`, `//`, `@{`, `/.`, trailing `/`, `.` or `.lock`). A refused value
+  shows `kaggle-input-{field}-error` and disables "Launch Cloud Training"; a
+  422 from the Training Suite shows its message in the error banner. The CLI
+  offers the same options (CLI manual Section 6.13).
 - **Kernel monitor**: `kaggle-monitor-kernel-select` lists the account's
   recent kernels (`GET /api/training/kaggle/kernels`, reload
   `kaggle-monitor-kernels-refresh`) and fills the kernel reference; Attach

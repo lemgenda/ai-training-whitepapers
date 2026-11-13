@@ -20,7 +20,7 @@
 <h1>LemGendary AI Studio GUI: Comprehensive Operator Manual</h1>
 <p class="subtitle">Category 03 | LemGendary AI Documentation Hub | Master Operations Manual</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v2.10.67</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Version</strong>: <code>v2.10.68</code> (LemGendary AI Studio GUI)</span>
 <span><strong>Last audited</strong>: 2026-11-13</span>
 <span><strong>Sidecars</strong>: LemGendary Environment Manager (port 8000), LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite (port 8200); each keeps its own <code>v16.x</code> release line</span>
 <span><strong>Parent Authority</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
@@ -107,7 +107,7 @@ Curves</a></li>
 <li><a href="#sec-72-exporting-to-universal-runtimes">7.2 Exporting to Universal Runtimes</a></li>
 <li><a href="#sec-73-publishing-to-kaggle-models-hub--cloud-registry">7.3 Publishing to Kaggle Models Hub &amp; Cloud
 Registry</a></li>
-<li><a href="#sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.67)</a></li>
+<li><a href="#sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.68)</a></li>
 </ul>
 </li>
 <li><a href="#sec-8-health-matrix--cross-project-version-drift-analytics">8. Health Matrix &amp; Cross-Project Version Drift
@@ -1358,10 +1358,10 @@ fleet-wide synchronization to stage, validate, and publish all 23 registered
 neural models and checkpoints to Kaggle Models Hub simultaneously using the
 <code>Push All Models to Kaggle</code> button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (<code>lemtrain sync push --all</code>).</p>
-<h3 id="sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21067">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.67)</h3>
+<h3 id="sec-74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068">7.4 Kaggle Launch Options, Card Transfers &amp; Resume Refusal (v2.10.58 to v2.10.68)</h3>
 <p>The Kaggle GPU Cloud tab of the Cloud &amp; Registry Dispatch dialog follows the
 Training Suite Kaggle contract (<code>openapi.json</code> of Training Suite v16.9.170
-to v16.9.198):</p>
+to v16.9.210):</p>
 <ul>
 <li><strong>API Authentication</strong> (<code>cloud-modal-auth-badge</code>): shows the user and the
 method from <code>GET /api/training/kaggle/status</code>, which makes a real
@@ -1378,10 +1378,20 @@ P100 option is gone), <code>kaggle-poll-interval-input</code> (default 30 s, min
 5 s), <code>kaggle-auto-pull-checkbox</code>, <code>kaggle-auto-resume-checkbox</code> with
 <code>kaggle-max-resumes-input</code> (empty uses <code>kaggle_session.max_resumes</code>) and
 <code>kaggle-override-frozen-checkbox</code>, all sent with
-<code>POST /api/training/kaggle/train</code>. The GUI does not offer the clone ref or
-session window options of the route (<code>git_ref</code>, <code>env_manager_ref</code>,
-<code>limit_hours</code>, <code>margin_minutes</code>); use the CLI for those (CLI manual Section
-6.13).</li>
+<code>POST /api/training/kaggle/train</code>.</li>
+<li><strong>Advanced</strong> (<code>kaggle-fieldset-advanced</code>, v2.10.68): four optional fields,
+empty by default and not sent when empty: <code>kaggle-input-git-ref</code>
+(<code>git_ref</code>, the Training Suite ref; empty clones <code>main</code>),
+<code>kaggle-input-env-manager-ref</code> (<code>env_manager_ref</code>; empty uses the Training
+Suite ref), <code>kaggle-input-limit-hours</code> (<code>limit_hours</code>, greater than 0) and
+<code>kaggle-input-margin-minutes</code> (<code>margin_minutes</code>, 0 or more and below the
+limit); empty session fields keep <code>kaggle_session</code> of the Training Suite
+<code>config.yaml</code>. Refs follow the Training Suite ref rules (letters, digits,
+<code>.</code>, <code>_</code>, <code>/</code>, <code>-</code>; a letter or digit first; at most 200 characters; no
+<code>..</code>, <code>//</code>, <code>@{</code>, <code>/.</code>, trailing <code>/</code>, <code>.</code> or <code>.lock</code>). A refused value
+shows <code>kaggle-input-{field}-error</code> and disables &quot;Launch Cloud Training&quot;; a
+422 from the Training Suite shows its message in the error banner. The CLI
+offers the same options (CLI manual Section 6.13).</li>
 <li><strong>Kernel monitor</strong>: <code>kaggle-monitor-kernel-select</code> lists the account's
 recent kernels (<code>GET /api/training/kaggle/kernels</code>, reload
 <code>kaggle-monitor-kernels-refresh</code>) and fills the kernel reference; Attach
