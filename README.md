@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.111`
+**Version**: `v16.9.112`
 
 ---
 
@@ -61,6 +61,35 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### v16.9.112 - Shard Offset Index and `repair shard-offsets`
+
+* `PAPER_DATASET_COMPILER.md` and its page (version line v16.9.108): new
+  Section 4.13 "Shard Offset Index (v16.9.108)": `shard_offsets.json` in
+  every shard folder, format `version` 2 (per plain tar shard `size`,
+  `mtime_ns`, `names`, `offsets`, `sizes`), the acceptance rule (size plus
+  modification time, or a three-header check), the read cost, the single
+  writer `utils/shard_offsets.py` and the steps that refresh it, the shard
+  verifier, the upload, the measured `repair shard-offsets` runs
+  (RetinaFace, ParseNet, ClassificationMaster) and the read-only case.
+  Section 4.12 names `shard-offsets` among the repairs.
+* `PAPER_TRAINING_SUITE.md` and its page (version line v16.9.218): new
+  Section 2.46 "Shard Offset Index & Fast WebDataset Open (v16.9.215 to
+  v16.9.218)": the 48-minute open of run 3, the shipped index and its
+  acceptance rule, the read-only cache fallback (`.cache/shard_offsets`,
+  `LEMGENDARY_SHARD_CACHE_DIR`), the build lock per shard folder (one DDP
+  rank builds), the 16-thread scan picked by a probe of the largest missing
+  shard, and the measurements. Section 2.37 points from the hidden
+  `.shard_offsets.json` cache to it.
+* `MANUAL_CLI.md` and its page, Section 5.17: the `repair shard-offsets
+  [--model KEY | --manifold PATH] [--apply]` example and entry; shard
+  rewriting repairs refresh the index, and `repair manifold` verifies a
+  present one.
+* Capability registries (JSON and YAML): new capability
+  `shard_offset_index` (dataset compiler v16.9.108, Training Suite reader
+  v16.9.215).
+* `manifest/documents.json`: dataset compiler paper at baseline v16.9.108,
+  Training Suite paper at v16.9.218. The component baselines are unchanged.
 
 ### v16.9.111 - GUI v2.10.68 Kaggle Advanced Launch Controls
 

@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.107-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+**Version**: `v16.9.108-STABLE` (LemGendary Dataset Compiler Suite) · **Last
 audited**: 2026-11-13
 
 ---
@@ -70,6 +70,7 @@ audited**: 2026-11-13
     Repair](#411-sample-integrity-shard-verification--manifold-repair)
   - [4.12 JSON Shard Labels, Sample Policies & Source Labels (v16.9.85 to
     v16.9.107)](#412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107)
+  - [4.13 Shard Offset Index (v16.9.108)](#413-shard-offset-index-v169108)
 - [5. Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
   - [5.1 Technical Comparison Matrix](#51-technical-comparison-matrix)
   - [5.2 Competitor Deep-Dive: Pros, Cons &
@@ -1206,7 +1207,8 @@ recorded.
   rewritten to a temporary file, verified and swapped in with `os.replace`),
   converts leftover PNG/JPEG members to WebP (v16.9.86) and offers `labels`,
   `txt-labels`, `pack-loose`, `sample-policy`, `masks`, `face-landmarks`,
-  `pseudo-labels` and `class-labels` (CLI manual Section 5.17).
+  `pseudo-labels` and `class-labels` (CLI manual Section 5.17); since
+  v16.9.108 also `shard-offsets` (Section 4.13).
 - **Kaggle sync (v16.9.92 to v16.9.104)**: one credential module
   (`core/kaggle_credentials.py`: a `KGAT_` token goes to `KAGGLE_API_TOKEN`
   unchanged, `~/.kaggle/access_token` counts); `GET /api/kaggle/status` lists
@@ -1224,6 +1226,61 @@ recorded.
 - **GUI access (v16.9.89, v16.9.90)**: `POST /api/config/validate` is open to
   the GUI origins with the client header; `POST /api/gui/quick-compile`
   takes `shard_ext`.
+
+### 4.13 Shard Offset Index (v16.9.108)
+
+Every WebDataset shard folder (`shards/<split>/`) carries
+`shard_offsets.json`, the byte offsets of the members of its plain tar
+shards. The Training Suite (v16.9.215 and later) reads this file instead of
+every tar member header of a split; the header scan took 15 to 48 minutes for
+a 53 GB split on Kaggle's network storage (Training Suite paper Section 2.46).
+
+- **Format (version 2)**: one JSON object per shard folder,
+  `{"version": 2, "shards": {"shard-00000.data": {...}}}`. Each plain tar
+  shard has its byte `size`, its modification time `mtime_ns` and the
+  `names`, `offsets` (payload offsets) and `sizes` of its regular members in
+  archive order. The layout is the Training Suite's
+  (`training/data/containers/shard_tables.py`), and a file with another
+  `version` is ignored. The name has no leading dot because Kaggle dataset
+  uploads skip hidden files. A compressed shard cannot be read by offset and
+  gets no entry.
+- **Acceptance rule**: an entry is used when the shard size matches and
+  either the modification time matches or the tar headers of the first,
+  middle and last member agree with the entry (three reads). An upload or a
+  copy changes the modification time, never the size or the member layout, so
+  the index stays valid after a Kaggle upload. Any other entry is stale and
+  the shard is rescanned.
+- **Cost**: for a split of $S$ shards with $M_s$ members each, the header
+  scan costs $\mathcal{O}\left(\sum_{s=1}^{S} M_s\right)$ random reads, while
+  an open from the index costs one file read plus at most $3S$ header reads
+  (none when the modification times match).
+- **One writer**: `utils/shard_offsets.py` (`write_shard_offsets`) is the
+  only writer and checker and does not import the Training Suite. Unchanged
+  shards keep their entry, rewritten ones are rescanned. Every step that
+  writes or rewrites shards refreshes the file: `WebDatasetWriter.close` and
+  the legacy `ShardWriter.close` (compile and `--also-format`), the diffusion
+  shard pass, zip streaming, loose packing, MDS transcoding, the sample
+  policy, and the `apply` of `repair manifold`, `labels`, `txt-labels`,
+  `masks`, `face-landmarks` and `class-labels`.
+- **Verification**: the shard verifier (`utils/shard_audit.py`
+  `shard_set_problems`, so the converters' post-write check and
+  `repair manifold`, which rewrites a stale index) checks a present index:
+  every plain shard needs an entry the Training Suite would accept, with the
+  member count of the audit, and no entry may name a missing shard.
+- **Upload**: the staging zip packs every file of the manifold folder, so the
+  index is uploaded; a newer index makes the staging zip be rebuilt. The GUI
+  catalog scan does not count `shard_offsets.json` as a shard.
+- **Existing manifolds**: `repair shard-offsets [--model KEY | --manifold
+  PATH] [--apply]` writes the index without touching the shards (CLI manual
+  Section 5.17). Measured runs: LemGendizedRetinaFace 103 shards, 850,446
+  members, 75.5 MiB in 98 s; LemGendizedParseNet 111 shards, 1,275,774
+  members, 101.8 MiB in 101 s; LemGendizedClassificationMaster 158 shards,
+  1,507,068 members, 107.0 MiB in 163 s. The Training Suite reader accepts
+  every train shard from the file (1.5 to 3.1 s per split, no header scan).
+- **Read-only folders**: when the Training Suite opens a read-only shard
+  folder without a usable index (Kaggle `/kaggle/input`), it keeps its own
+  scan cache outside the manifold; the index in the manifold is written only
+  by the compiler or by a Training Suite run on a writable folder.
 
 ---
 

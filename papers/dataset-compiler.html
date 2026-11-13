@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.107-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.108-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-12</span>
 </div>
 </header>
@@ -103,6 +103,7 @@ Engine</a></li>
 <li><a href="#sec-411-sample-integrity-shard-verification--manifold-repair">4.11 Sample Integrity, Shard Verification &amp; Manifold
 Repair</a></li>
 <li><a href="#sec-412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107">4.12 JSON Shard Labels, Sample Policies &amp; Source Labels (v16.9.85 to v16.9.107)</a></li>
+<li><a href="#sec-413-shard-offset-index-v169108">4.13 Shard Offset Index (v16.9.108)</a></li>
 </ul>
 </li>
 <li><a href="#sec-5-comparative-analysis--benchmarks">5. Comparative Analysis / Benchmarks</a>
@@ -1109,7 +1110,8 @@ model agrees (<code>require_check_agreement</code>); other NSFW samples are drop
 rewritten to a temporary file, verified and swapped in with <code>os.replace</code>),
 converts leftover PNG/JPEG members to WebP (v16.9.86) and offers <code>labels</code>,
 <code>txt-labels</code>, <code>pack-loose</code>, <code>sample-policy</code>, <code>masks</code>, <code>face-landmarks</code>,
-<code>pseudo-labels</code> and <code>class-labels</code> (CLI manual Section 5.17).</p>
+<code>pseudo-labels</code> and <code>class-labels</code> (CLI manual Section 5.17); since
+v16.9.108 also <code>shard-offsets</code> (Section 4.13).</p>
 </li>
 <li>
 <p><strong>Kaggle sync (v16.9.92 to v16.9.104)</strong>: one credential module
@@ -1134,6 +1136,59 @@ metadata record <code>timestamp_unit: seconds</code>.</p>
 the GUI origins with the client header; <code>POST /api/gui/quick-compile</code>
 takes <code>shard_ext</code>.</p>
 </li>
+</ul>
+<h3 id="sec-413-shard-offset-index-v169108">4.13 Shard Offset Index (v16.9.108)</h3>
+<p>Every WebDataset shard folder (<code>shards/&lt;split&gt;/</code>) carries
+<code>shard_offsets.json</code>, the byte offsets of the members of its plain tar
+shards. The Training Suite (v16.9.215 and later) reads this file instead of
+every tar member header of a split; the header scan took 15 to 48 minutes for
+a 53 GB split on Kaggle's network storage (Training Suite paper Section 2.46).</p>
+<ul>
+<li><strong>Format (version 2)</strong>: one JSON object per shard folder,
+<code>{&quot;version&quot;: 2, &quot;shards&quot;: {&quot;shard-00000.data&quot;: {...}}}</code>. Each plain tar
+shard has its byte <code>size</code>, its modification time <code>mtime_ns</code> and the
+<code>names</code>, <code>offsets</code> (payload offsets) and <code>sizes</code> of its regular members in
+archive order. The layout is the Training Suite's
+(<code>training/data/containers/shard_tables.py</code>), and a file with another
+<code>version</code> is ignored. The name has no leading dot because Kaggle dataset
+uploads skip hidden files. A compressed shard cannot be read by offset and
+gets no entry.</li>
+<li><strong>Acceptance rule</strong>: an entry is used when the shard size matches and
+either the modification time matches or the tar headers of the first,
+middle and last member agree with the entry (three reads). An upload or a
+copy changes the modification time, never the size or the member layout, so
+the index stays valid after a Kaggle upload. Any other entry is stale and
+the shard is rescanned.</li>
+<li><strong>Cost</strong>: for a split of $S$ shards with $M_s$ members each, the header
+scan costs $\mathcal{O}\left(\sum_{s=1}^{S} M_s\right)$ random reads, while
+an open from the index costs one file read plus at most $3S$ header reads
+(none when the modification times match).</li>
+<li><strong>One writer</strong>: <code>utils/shard_offsets.py</code> (<code>write_shard_offsets</code>) is the
+only writer and checker and does not import the Training Suite. Unchanged
+shards keep their entry, rewritten ones are rescanned. Every step that
+writes or rewrites shards refreshes the file: <code>WebDatasetWriter.close</code> and
+the legacy <code>ShardWriter.close</code> (compile and <code>--also-format</code>), the diffusion
+shard pass, zip streaming, loose packing, MDS transcoding, the sample
+policy, and the <code>apply</code> of <code>repair manifold</code>, <code>labels</code>, <code>txt-labels</code>,
+<code>masks</code>, <code>face-landmarks</code> and <code>class-labels</code>.</li>
+<li><strong>Verification</strong>: the shard verifier (<code>utils/shard_audit.py</code>
+<code>shard_set_problems</code>, so the converters' post-write check and
+<code>repair manifold</code>, which rewrites a stale index) checks a present index:
+every plain shard needs an entry the Training Suite would accept, with the
+member count of the audit, and no entry may name a missing shard.</li>
+<li><strong>Upload</strong>: the staging zip packs every file of the manifold folder, so the
+index is uploaded; a newer index makes the staging zip be rebuilt. The GUI
+catalog scan does not count <code>shard_offsets.json</code> as a shard.</li>
+<li><strong>Existing manifolds</strong>: <code>repair shard-offsets [--model KEY | --manifold PATH] [--apply]</code> writes the index without touching the shards (CLI manual
+Section 5.17). Measured runs: LemGendizedRetinaFace 103 shards, 850,446
+members, 75.5 MiB in 98 s; LemGendizedParseNet 111 shards, 1,275,774
+members, 101.8 MiB in 101 s; LemGendizedClassificationMaster 158 shards,
+1,507,068 members, 107.0 MiB in 163 s. The Training Suite reader accepts
+every train shard from the file (1.5 to 3.1 s per split, no header scan).</li>
+<li><strong>Read-only folders</strong>: when the Training Suite opens a read-only shard
+folder without a usable index (Kaggle <code>/kaggle/input</code>), it keeps its own
+scan cache outside the manifold; the index in the manifold is written only
+by the compiler or by a Training Suite run on a writable folder.</li>
 </ul>
 </section>
 

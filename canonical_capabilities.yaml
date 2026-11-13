@@ -1,6 +1,6 @@
 ---
 schema_version: 1.0.0
-document_baseline: v16.9.111-STABLE
+document_baseline: v16.9.112-STABLE
 runtime_engine_baseline: v16.9.214-STABLE
 desktop_client_baseline: v2.10.67
 dataset_compiler_baseline: v16.9.107-STABLE
@@ -1408,6 +1408,52 @@ platform_capabilities:
     evidence:
       code: lemgendary-training-suite/training/data/locality.py
       whitepaper: lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md
+  - id: shard_offset_index
+    name: Shard Offset Index (shard_offsets.json)
+    status: implemented
+    owner_project: lemgendary-datasets
+    baseline: v16.9.108-STABLE
+    reader_project: lemgendary-training-suite
+    reader_baseline: v16.9.215-STABLE
+    file: shards/<split>/shard_offsets.json
+    format_version: 2
+    behaviour:
+      - >-
+        One file per shard folder: {"version": 2, "shards": {...}} with each
+        plain tar shard's size, mtime_ns and the names, offsets and sizes of its
+        regular members; compressed shards get no entry.
+      - >-
+        Acceptance rule: an entry is used when the shard size matches and either
+        the modification time matches or the tar headers of the first, middle and
+        last member agree (three reads), so the index stays valid after a Kaggle
+        upload.
+      - >-
+        Every compiler step that writes or rewrites shards refreshes the file
+        (utils/shard_offsets.py is the only writer and checker); the shard
+        verifier checks a present index.
+      - >-
+        Training Suite: a read-only shard folder keeps its scan cache under
+        <suite>/.cache/shard_offsets (LEMGENDARY_SHARD_CACHE_DIR overrides it);
+        missing shards are scanned once under a file lock per shard folder (one
+        DDP rank builds, the others load); a probe of the largest missing shard
+        picks 16 scan threads on latency-bound storage, one on a local disk.
+    limitations:
+      - >-
+        Kaggle dataset uploads skip hidden files, so the older .shard_offsets.json
+        cache is not shipped; only shard_offsets.json is.
+      - Compressed shards cannot be read by offset and are always scanned.
+    control_planes:
+      gui:
+        available: false
+      cli:
+        available: true
+        command: python cli.py repair shard-offsets [--model KEY | --manifold PATH] [--apply]
+      api:
+        available: false
+    evidence:
+      code: lemgendary-datasets/utils/shard_offsets.py
+      reader: lemgendary-training-suite/training/data/containers/shard_tables.py
+      whitepaper: lemgendary-docs/MD-Papers/PAPER_DATASET_COMPILER.md
   - id: kaggle_cloud_training
     name: Kaggle Cloud Training (Kernel Bundle, Session Guard, Hub Sync)
     status: implemented

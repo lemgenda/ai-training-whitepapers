@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.214-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.218-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-13
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -107,6 +107,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     v16.9.203)](#244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203)
   - [2.45. Kaggle Cloud Pipeline & Hub Root (v16.9.169 to
     v16.9.214)](#245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214)
+  - [2.46. Shard Offset Index & Fast WebDataset Open (v16.9.215 to
+    v16.9.218)](#246-shard-offset-index--fast-webdataset-open-v169215-to-v169218)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -1546,7 +1548,9 @@ $$
   `.shard_offsets.json` next to the shards, or in a temp-dir fallback when
   the shard folder is read-only (Kaggle `/kaggle/input`). An entry is reused
   only while the shard's size and mtime match and every member lies inside
-  the file; otherwise the shard is rescanned.
+  the file; otherwise the shard is rescanned. Since v16.9.215 the file is
+  the shipped `shard_offsets.json` with its own acceptance rule (Section
+  2.46).
 - **Bounded Handles**: `HandlePool`
   (`training/data/containers/handle_pool.py`) keeps at most 16 shard handles
   per process (`max_open_handles`) and closes the least recently used one.
@@ -1878,6 +1882,52 @@ $$
 
 The step-by-step operator guide is Section 6.13 of the
 [Master CLI Manual](./MANUAL_CLI.md).
+
+### 2.46. Shard Offset Index & Fast WebDataset Open (v16.9.215 to v16.9.218)
+
+Kaggle run 3 of `upn_v2` spent 48 minutes opening the train split (1,349,715
+samples, 270 shards on `/kaggle/input`) and trained 0 steps:
+`WebDatasetReader` read every tar member header (about 4 million small
+random reads on network storage) on both DDP ranks at once. The hidden
+`.shard_offsets.json` cache of Section 2.37 did not help, because Kaggle
+dataset uploads skip hidden files and a copied cache was rejected when the
+shard modification times changed on upload.
+
+- **Shard Offset Index**: the index is now `shard_offsets.json` (no leading
+  dot) in each shard folder, format `version` 2:
+  `{"version": 2, "shards": {...}}` with each shard's `size`, `mtime_ns` and
+  the `names`, `offsets` and `sizes` of its regular members
+  (`training/data/containers/shard_tables.py`). It is written next to the
+  shards whenever that folder is writable, so a manifold opened once locally
+  ships its index with the next upload. The Dataset Compiler writes the same
+  file at compile time and offers `repair shard-offsets` (Dataset Compiler
+  paper Section 4.13, CLI manual Section 5.17).
+- **Acceptance Rule**: an entry is used when the shard size matches and
+  either the modification time matches or the tar headers of its first,
+  middle and last member agree with the entry (three reads). A same-size
+  shard with other headers is rescanned.
+- **Read-Only Fallback**: a read-only shard folder keeps its scan cache under
+  the suite's `.cache/shard_offsets` (on Kaggle the suite checkout lives in
+  the session-only `/kaggle/temp`, so the cache is not published as kernel
+  output); `LEMGENDARY_SHARD_CACHE_DIR` overrides the folder, and an
+  unwritable suite folder falls back to the system temp folder. Entries of
+  the scan cache win over the shipped index.
+- **Rank-0 Build Lock**: shards still missing an index are scanned once,
+  under a file lock per shard folder: the first process (one DDP rank)
+  builds, the others wait and load the saved index.
+- **Multi-Threaded Scan**: a probe shard decides the scan threads.
+  Latency-bound storage scans on 16 threads, a local disk stays on one. Since
+  v16.9.218 the probe is the largest missing shard: run 4 probed a 17 MB
+  shard whose dense headers share buffered reads, measured under 100 us per
+  header, judged the storage CPU-bound and indexed the 270 train shards on
+  one thread in 906.6 s.
+- **Measurements**: synthetic, 540,000 members. With 0.5 ms emulated read
+  latency (40 shards, 48,000 members) one open went from 100.7 s to 10.6 s,
+  two concurrent processes from 102 s wall (both scanning) to 15.9 s (one
+  scans), and an open after an upload (new modification times, shipped
+  index) from a full rescan (16.1 s) to 3.9 s. On Kaggle, run 5 (v16.9.221)
+  indexed the `upn_v2` train split in 440.3 s on 16 threads.
+- **Dependency**: `filelock` is declared (already installed with torch).
 
 ---
 

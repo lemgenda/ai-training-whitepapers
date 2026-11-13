@@ -954,7 +954,9 @@ dry run that prints its plan unless `--apply` is given, takes `--model KEY`
 (registry key) or `--manifold PATH`, rewrites each changed shard to a
 temporary file, verifies it and swaps it in atomically (no backup copies are
 kept), and keeps `index.json` and the `dataset_info.yaml` `count` in step. A
-re-run finds nothing to do.
+re-run finds nothing to do. Every subcommand that rewrites shards also
+refreshes the `shard_offsets.json` index of each shard folder it touched
+(dataset compiler v16.9.108).
 
 ```bash
 # Zero-byte samples, scattered groups, png/jpg members, counts, paths
@@ -988,11 +990,17 @@ python cli.py repair pseudo-labels --model classification_master_manifold \
 python cli.py repair class-labels --model classification_master_manifold \
   --table-root ../LemGendaryDatasets/_labels/LemGendizedClassificationMaster \
   --apply
+
+# Shard offset index (shard_offsets.json) of every shard folder; the shards
+# are not changed
+python cli.py repair shard-offsets --model upn_v2
+python cli.py repair shard-offsets --model upn_v2 --apply
 ```
 
 - **`manifold`**, **`all`**: Description: Zero-byte samples, scattered sample
   groups, leftover PNG/JPEG members (re-encoded to WebP with the compiler's
-  encoders), counts and recorded paths.
+  encoders), counts and recorded paths. A present `shard_offsets.json` is
+  verified, and a stale one is rewritten on `--apply`.
 - **`labels`**: Options: `--labels DIR` (required), `--strategy NAME`,
   `--classes FILE`; Description: Writes each sample's label from
   `DIR/<split>/<key>.txt` into its JSON label through the registry
@@ -1030,6 +1038,17 @@ python cli.py repair class-labels --model classification_master_manifold \
   `label_confidence` and `label_check_class`); a pseudo label that fails its
   rule drops the sample, and a sample without a rule or table row refuses the
   apply.
+- **`shard-offsets`**: Options: `--model KEY` or `--manifold PATH`,
+  `--apply`; Description: Writes the Shard Offset Index
+  `shards/<split>/shard_offsets.json` (format `version` 2) without touching
+  the shards. The dry run reports each shard folder's index as missing,
+  stale (with the reasons) or current, checking a present index the way the
+  Training Suite does: an entry is accepted when the shard size matches and
+  either the modification time matches or the tar headers of the first,
+  middle and last member agree. `--apply` keeps the entries of unchanged
+  shards, rescans the rest, prints the file size and time, and exits 1 when a
+  folder is still not current afterwards. Compressed shards get no entry. See
+  Section 4.13 of the Dataset Compiler paper.
 
 ---
 
