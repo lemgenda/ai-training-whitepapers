@@ -1853,6 +1853,8 @@ precision.</li>
   <li><strong>Causal Volatility Regime Labeling (<code>classify_volatility_regime</code>)</strong>: Labels each bar as <code>low_vol</code>, <code>normal_vol</code>, or <code>high_vol</code> using expanding causal quantiles.</li>
   <li><strong>Purged, Embargoed Walk-Forward Splits (<code>purged_walk_forward_splits</code>)</strong>: Removes training samples whose <code>[pred_time, eval_time]</code> interval overlaps with the test block, plus a post-test embargo buffer, verified by <code>audit_horizon_leakage</code>.</li>
 </ol>
+<h3>7.3 Canonical <code>unified_data.yaml</code> &amp; JSON Schema Export</h3>
+<p>All 21 dataset definitions in <code>unified_data.yaml</code> are validated at preflight by <code>core/config_schema.py</code> (<code>UnifiedData</code>), with an exported JSON Schema at <code>unified_data.schema.json</code> verified against <code>UnifiedData.model_json_schema()</code> by <code>tests/test_config_schema_export.py</code>.</p>
 <h2>8. Conclusion</h2>
 <p>The LemGendary Dataset Compiler Suite changes how generative AI manifolds are
 structured, scaled, and consumed. By automating the ingestion pipeline,

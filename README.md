@@ -2118,3 +2118,9 @@ post-training
 * Updated `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and
   `papers/training-pathology.html` with Data Leakage & Blank-Sample Curation
   Pathologies.
+
+### 2026-11-15 — Dataset Compiler Unified Schema Docs
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` with Section 7.3 (Canonical
+  `unified_data.yaml` & JSON Schema Export).

@@ -2029,6 +2029,13 @@ manifolds, `forex/qa.py` enforces:
 - Lopez de Prado, M., *Advances in Financial Machine Learning*, Wiley, 2018
   (Chapters 7 & 12: Purged and Embargoed Cross-Validation).
 
+### 7.3 Canonical `unified_data.yaml` & JSON Schema Export
+
+All 21 dataset definitions in `unified_data.yaml` are validated at preflight
+by `core/config_schema.py` (`UnifiedData`), with an exported JSON Schema at
+`unified_data.schema.json` verified against `UnifiedData.model_json_schema()`
+by `tests/test_config_schema_export.py`.
+
 ---
 
 ## 8. Conclusion
