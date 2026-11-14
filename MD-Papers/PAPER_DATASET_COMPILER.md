@@ -1078,6 +1078,28 @@ default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c > 1$ and 0 otherwise.
 
 `lem llm validate` and `POST /api/llm/validate` report up to 20 issues
+
+#### 4.10.5 SOTA Curation, Deduplication & Decontamination
+
+Grounded in FineWeb-Edu (Penedo et al., 2024), Dolma (Soldaini et al., 2024),
+SemDeDup (Abbas et al., 2023), DEITA (Liu et al., 2024), and LMSYS
+Decontamination (Yang et al., 2023), `tools/llm_helper/curation.py` applies
+five deterministic curation stages before shard emission:
+
+1. **Heuristic Quality Filtering & Metadata Enrichment**: Computes normalized
+   Shannon token entropy $H_{\text{norm}}(x)$ and 3-gram repetition ratio
+   $R_3(x)$, scoring each record $Q(x) \in [0, 1]$ and assigning
+   `difficulty` (`basic`, `intermediate`, `advanced`), `license`, `language`,
+   and `content_sha256`.
+2. **MinHash + Semantic Deduplication**: Prunes near-duplicates via 32-perm
+   MinHash Jaccard similarity ($\tau_{\text{Jaccard}} \ge 0.85$) and 5-gram
+   cosine similarity ($\tau_{\cos} \ge 0.92$).
+3. **Cross-Split Decontamination**: Removes `train` records with 8-gram
+   overlap $\ge 0.75$ against held-out `val` or `test` splits.
+4. **Rejected Record Telemetry & Merkle Lineage**: Writes all filtered/leaked
+   records to `rejected_records.jsonl` with `rejection_reason`, and emits
+   `seed`, `curation_stats`, and `manifest_sha256` into `build_manifest.json`
+   and `quality_report.json`.
 (severity, field, record id, issue) and exit 1 or return HTTP 400 when the
 corpus fails; unreadable or invalid JSONL is reported as such.
 

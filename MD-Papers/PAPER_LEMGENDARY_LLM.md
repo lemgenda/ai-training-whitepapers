@@ -258,6 +258,11 @@ without maintaining separate model codebases, `GenericCausalLLM` and
    * On TPU v5e-8, `collate_instruction_batch(..., pad_to_max_length=True)`
      enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
      compiles the HLO graph exactly once per run.
+4. **SOTA Corpus Curation & Decontamination**:
+   * Upstream instruction manifolds are curated by `tools/llm_helper/curation.py`
+     (`PAPER_DATASET_COMPILER.md` Section 4.10.5) using Shannon entropy and
+     repetition filtering, MinHash + 5-gram cosine deduplication, cross-split
+     decontamination, and deterministic `manifest_sha256` lineage.
 
 ---
 

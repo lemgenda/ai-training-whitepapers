@@ -270,6 +270,14 @@ enforces invariant \([B, S]\) tensor shapes so the PyTorch/XLA PJRT compiler
 compiles the HLO graph exactly once per run.</li>
 </ul>
 </li>
+<li><strong>SOTA Corpus Curation &amp; Decontamination</strong>:
+<ul>
+<li>Upstream instruction manifolds are curated by <code>tools/llm_helper/curation.py</code>
+(<code>PAPER_DATASET_COMPILER.md</code> Section 4.10.5) using Shannon entropy and
+repetition filtering, MinHash + 5-gram cosine deduplication, cross-split
+decontamination, and deterministic <code>manifest_sha256</code> lineage.</li>
+</ul>
+</li>
 </ol>
 </section>
 

@@ -1022,6 +1022,27 @@ for $n_c &gt; 1$ and 0 otherwise.</p>
 <p><code>lem llm validate</code> and <code>POST /api/llm/validate</code> report up to 20 issues
 (severity, field, record id, issue) and exit 1 or return HTTP 400 when the
 corpus fails; unreadable or invalid JSONL is reported as such.</p>
+<h4 id="sec-4105-sota-curation-deduplication--decontamination">4.10.5 SOTA Curation, Deduplication &amp; Decontamination</h4>
+<p>Grounded in FineWeb-Edu (Penedo et al., 2024), Dolma (Soldaini et al., 2024),
+SemDeDup (Abbas et al., 2023), DEITA (Liu et al., 2024), and LMSYS
+Decontamination (Yang et al., 2023), <code>tools/llm_helper/curation.py</code> applies
+five deterministic curation stages before shard emission:</p>
+<ol>
+<li><strong>Heuristic Quality Filtering &amp; Metadata Enrichment</strong>: Computes normalized
+Shannon token entropy \(H_{\text{norm}}(x)\) and 3-gram repetition ratio
+\(R_3(x)\), scoring each record \(Q(x) \in [0, 1]\) and assigning
+<code>difficulty</code> (<code>basic</code>, <code>intermediate</code>, <code>advanced</code>), <code>license</code>, <code>language</code>,
+and <code>content_sha256</code>.</li>
+<li><strong>MinHash + Semantic Deduplication</strong>: Prunes near-duplicates via 32-perm
+MinHash Jaccard similarity (\(\tau_{\text{Jaccard}} \ge 0.85\)) and 5-gram
+cosine similarity (\(\tau_{\cos} \ge 0.92\)).</li>
+<li><strong>Cross-Split Decontamination</strong>: Removes <code>train</code> records with 8-gram
+overlap \(\ge 0.75\) against held-out <code>val</code> or <code>test</code> splits.</li>
+<li><strong>Rejected Record Telemetry &amp; Merkle Lineage</strong>: Writes all filtered/leaked
+records to <code>rejected_records.jsonl</code> with <code>rejection_reason</code>, and emits
+<code>seed</code>, <code>curation_stats</code>, and <code>manifest_sha256</code> into <code>build_manifest.json</code>
+and <code>quality_report.json</code>.</li>
+</ol>
 <h3 id="sec-411-sample-integrity-shard-verification--manifold-repair">4.11 Sample Integrity, Shard Verification &amp; Manifold Repair</h3>
 <p>The <code>v16.9.75</code> to <code>v16.9.84</code> releases close the data-integrity findings of the 2026-11 audit. A sample is written whole and correct, or it is rejected and recorded.</p>
 <ul>
