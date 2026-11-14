@@ -2004,6 +2004,31 @@ flowchart LR
 - Aizman et al., *High Performance I/O For Large Scale Deep Learning
   (WebDataset)*, IEEE BigData 2019.
 
+### 7.2 Forex Time-Series Curation, Purged Splits, and Leakage Audit
+
+To eliminate look-ahead bias and label-overlap leakage in financial time-series
+manifolds, `forex/qa.py` enforces:
+
+1. **Deterministic UTC Resampling (`resample_ohlcv_utc`)**: Normalizes all
+   timestamps to UTC, deduplicates, sorts, and resamples with
+   `label="left", closed="left"`.
+2. **Anomalous Bar Flagging (`flag_anomalous_bars`)**: Flags non-positive
+   prices, OHLC invariant violations ($H < \max(O, C)$ or $L > \min(O, C)$),
+   and extreme log-return spikes
+   ($|r_t - \text{median}| / (1.4826 \cdot \text{MAD}) > z_{\text{thresh}}$).
+3. **Causal Volatility Regime Labeling (`classify_volatility_regime`)**:
+   Labels each bar as `low_vol`, `normal_vol`, or `high_vol` using expanding
+   causal quantiles of rolling realized volatility.
+4. **Purged, Embargoed Walk-Forward Splits (`purged_walk_forward_splits`)**:
+   Removes training samples whose `[pred_time, eval_time]` interval overlaps
+   with the test block, plus a post-test embargo buffer, verified by
+   `audit_horizon_leakage`.
+
+**References:**
+
+- Lopez de Prado, M., *Advances in Financial Machine Learning*, Wiley, 2018
+  (Chapters 7 & 12: Purged and Embargoed Cross-Validation).
+
 ---
 
 ## 8. Conclusion

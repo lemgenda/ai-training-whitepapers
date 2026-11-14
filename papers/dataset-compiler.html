@@ -1845,6 +1845,14 @@ precision.</li>
   <li><strong>Deterministic Degradation Schedule (<code>degrade/schedule.py</code>)</strong>: Each sample's RNG seed is derived deterministically from <code>SHA-256(global_seed:sample_key)</code>, supporting <code>uniform</code>, <code>linear</code>, and <code>cosine</code> schedules and recording <code>seed</code>, <code>schedule_mode</code>, <code>severity</code>, and <code>ops</code> in the sample's <code>.json</code> sidecar.</li>
   <li><strong>Throughput-Tuned Shard Packing (<code>formats/webdataset.py</code>)</strong>: <code>WebDatasetWriter</code> bounds each <code>.data</code> tar shard by both byte size (<code>wds_shard_size_bytes = 1_000_000_000</code>, 1 GB) and sample count (<code>wds_max_count = 10_000</code>).</li>
 </ol>
+<h3>7.2 Forex Time-Series Curation, Purged Splits, and Leakage Audit</h3>
+<p>To eliminate look-ahead bias and label-overlap leakage in financial time-series manifolds, <code>forex/qa.py</code> enforces:</p>
+<ol>
+  <li><strong>Deterministic UTC Resampling (<code>resample_ohlcv_utc</code>)</strong>: Normalizes all timestamps to UTC, deduplicates, sorts, and resamples with <code>label="left", closed="left"</code>.</li>
+  <li><strong>Anomalous Bar Flagging (<code>flag_anomalous_bars</code>)</strong>: Flags non-positive prices, OHLC invariant violations, and extreme log-return MAD spikes.</li>
+  <li><strong>Causal Volatility Regime Labeling (<code>classify_volatility_regime</code>)</strong>: Labels each bar as <code>low_vol</code>, <code>normal_vol</code>, or <code>high_vol</code> using expanding causal quantiles.</li>
+  <li><strong>Purged, Embargoed Walk-Forward Splits (<code>purged_walk_forward_splits</code>)</strong>: Removes training samples whose <code>[pred_time, eval_time]</code> interval overlaps with the test block, plus a post-test embargo buffer, verified by <code>audit_horizon_leakage</code>.</li>
+</ol>
 <h2>8. Conclusion</h2>
 <p>The LemGendary Dataset Compiler Suite changes how generative AI manifolds are
 structured, scaled, and consumed. By automating the ingestion pipeline,

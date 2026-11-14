@@ -2100,3 +2100,9 @@ post-training
 * Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
   `papers/dataset-compiler.html` with Section 7.1 (WebDataset Manifold
   Curation, QA, and Throughput-Tuned Packing).
+
+### 2026-11-14 — Dataset Compiler Forex QA
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` with Section 7.2 (Forex Time-Series Curation,
+  Purged Splits, and Leakage Audit).
