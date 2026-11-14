@@ -182,6 +182,7 @@ Quantization</a></li>
 </ul>
 </li>
 
+<li><a href="#sec-5-kaggle-cloud-tpu-v5e8">5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA Backend</a></li>
 </ul>
 </nav>
 
@@ -2399,6 +2400,33 @@ Metric-Specific SWA (MS-SWA) over the per-metric vaults; the absolute
 patience limit; validation sharding.</li>
 <li><strong>Needs the owner's GPU</strong>: the FID re-measurement of the four models with
 unverified FID history (Section 2.33).</li>
+</ul>
+</section>
+
+<section id="sec-5-kaggle-cloud-tpu-v5e8">
+<h2>5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA Backend</h2>
+<ul>
+<li><strong>Per-Model Accelerator Resolution (<code>kernel_bundle.py</code>)</strong>: <code>bundle_spec()</code>
+and <code>checked_accelerator()</code> resolve each model's <code>kaggle_accelerator</code> field
+from <code>unified_models_v2.yaml</code> (e.g., <code>tpu-v5e8</code> / <code>TpuV5E8</code> for
+<code>ai_helper_lemgend</code>) when no explicit override is supplied, and
+<code>kaggle_launcher.py</code> preserves <code>enable_tpu: true</code> and <code>enable_gpu: false</code>.</li>
+<li><strong>TPU-Aware Notebook Cells (<code>training/notebooks/cells/</code>)</strong>: <code>env.py</code>,
+<code>deps.py</code>, and <code>sync.py</code> detect <code>PJRT_DEVICE=TPU</code> / <code>torch_xla</code> cores,
+preserve Kaggle's matched <code>torch</code> + <code>torch_xla</code> stack without overwriting it
+with CPU wheels, and dispatch TPU training cleanly.</li>
+<li><strong>XLA Discovery, Autocast &amp; Parallel Strategy</strong>:
+<ul>
+<li><code>training/hardware/discovery.py</code> (<code>_xla_device_info</code>) probes <code>torch_xla</code>
+TPU cores and HBM capacity (<code>DeviceInfo.is_xla</code>).</li>
+<li><code>training/hardware/policy.py</code> and <code>training/training/amp.py</code> enable native
+<code>torch.amp.autocast("xla", dtype=torch.bfloat16)</code> without <code>GradScaler</code>.</li>
+<li><code>training/parallel/xla.py</code> (<code>XlaParallelStrategy</code>) and
+<code>training/training/epoch.py</code> synchronize lazy XLA graphs via
+<code>xm.optimizer_step(optimizer, barrier=True)</code> at update boundaries and
+<code>xm.mark_step()</code> on intermediate accumulation steps.</li>
+</ul>
+</li>
 </ul>
 </section>
 

@@ -149,6 +149,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     Containment)](#76-edge-hardware-optimization-profile-4gb-vram-containment)
 - [8. Conclusion](#8-conclusion)
   - [8.1. Implementation Status](#81-implementation-status)
+- [5. Kaggle Cloud TPU v5e-8 & PyTorch/XLA Backend](#5-kaggle-cloud-tpu-v5e-8--pytorchxla-backend)
 
 ---
 
@@ -2447,3 +2448,26 @@ performance.
   patience limit; validation sharding.
 - **Needs the owner's GPU**: the FID re-measurement of the four models with
   unverified FID history (Section 2.33).
+
+---
+
+## 5. Kaggle Cloud TPU v5e-8 & PyTorch/XLA Backend
+
+- **Per-Model Accelerator Resolution (`kernel_bundle.py`)**: `bundle_spec()`
+  and `checked_accelerator()` resolve each model's `kaggle_accelerator` field
+  from `unified_models_v2.yaml` (e.g., `tpu-v5e8` / `TpuV5E8` for
+  `ai_helper_lemgend`) when no explicit override is supplied, and
+  `kaggle_launcher.py` preserves `enable_tpu: true` and `enable_gpu: false`.
+- **TPU-Aware Notebook Cells (`training/notebooks/cells/`)**: `env.py`,
+  `deps.py`, and `sync.py` detect `PJRT_DEVICE=TPU` / `torch_xla` cores,
+  preserve Kaggle's matched `torch` + `torch_xla` stack without overwriting it
+  with CPU wheels, and dispatch TPU training cleanly.
+- **XLA Discovery, Autocast & Parallel Strategy**:
+  - `training/hardware/discovery.py` (`_xla_device_info`) probes `torch_xla`
+    TPU cores and HBM capacity (`DeviceInfo.is_xla`).
+  - `training/hardware/policy.py` and `training/training/amp.py` enable native
+    `torch.amp.autocast("xla", dtype=torch.bfloat16)` without `GradScaler`.
+  - `training/parallel/xla.py` (`XlaParallelStrategy`) and
+    `training/training/epoch.py` synchronize lazy XLA graphs via
+    `xm.optimizer_step(optimizer, barrier=True)` at update boundaries and
+    `xm.mark_step()` on intermediate accumulation steps.

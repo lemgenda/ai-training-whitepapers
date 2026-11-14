@@ -177,7 +177,8 @@ Checklist</a>
 <li><a href="#sec-10-sota-suite-optimization-task-list">10. SOTA Suite Optimization Task List</a></li>
 <li><a href="#sec-11-sota-transformation-before-vs-after">11. SOTA Transformation: Before vs.
 After</a></li>
-<li><a href="#sec-12-conclusion-the-indestructible-paradigm">12. Conclusion: The Indestructible
+<li><a href="#sec-12-llm-xla-hardware-pathologies">12. LLM &amp; XLA Hardware Pathologies</a></li>
+<li><a href="#sec-13-conclusion-the-indestructible-paradigm">13. Conclusion: The Indestructible
 Paradigm</a></li>
 
 </ul>
@@ -1776,8 +1777,37 @@ and force-expands dataset fraction (+20%) on overfitting trends.</li>
 </ul>
 </section>
 
-<section id="sec-12-conclusion-the-indestructible-paradigm">
-<h2>12. Conclusion: The Indestructible Paradigm</h2>
+<section id="sec-12-llm-xla-hardware-pathologies">
+<h2>12. LLM &amp; XLA Hardware Pathologies</h2>
+<h3>12.1 XLA JIT Recompilation Thrashing (TPU v5e-8)</h3>
+<ul>
+<li><strong>Symptom</strong>: Training on Kaggle TPU v5e-8 stalls for 15–90 seconds on nearly
+every batch, causing epoch times to balloon by \(10\times\text{–}30\times\).</li>
+<li><strong>Root Cause</strong>: Dynamic batch padding (<code>max_len = max(seq_len in batch)</code>)
+generates hundreds of distinct <code>[B, max_len]</code> input shapes, forcing
+PyTorch/XLA PJRT to recompile a new HLO graph for every unique length.</li>
+<li><strong>Autonomous Remediation</strong>: <code>collate_instruction_batch</code> enforces
+<code>pad_to_max_length=True</code> on XLA/TPU, locking every batch to a fixed
+<code>[B, max_seq_length]</code> shape so XLA compiles the graph <strong>exactly once</strong>.</li>
+</ul>
+<h3>12.2 Large-Vocabulary Logit Materialization OOM (4 GB VRAM GPUs)</h3>
+<ul>
+<li><strong>Symptom</strong>: Causal LLMs with large vocabularies (e.g., Qwen2.5,
+\(V = 151,936\)) trigger <code>CUDA OutOfMemoryError</code> during <code>forward()</code> or
+<code>eval_step()</code> even at <code>batch_size = 1, max_seq_length = 512</code>.</li>
+<li><strong>Root Cause</strong>: Computing full <code>[B, S, V]</code> logits and upcasting to FP32 for
+cross-entropy allocates \(\sim 778\text{ MB}\) at \(S=512\) (and \(&gt;3\text{ GB}\) at
+\(S=1024, B=2\)), while <code>eval_step()</code> retains the full <code>[B, S, V]</code> tensor.</li>
+<li><strong>Autonomous Remediation</strong>: <code>ChunkedCausalLMLoss</code> (<code>models/llm_chunked_loss.py</code>)
+computes exact cross-entropy over active (<code>!= -100</code>) tokens in chunks of
+\(C = 256\) (reducing peak logit VRAM by \(&gt;94\%\)), and <code>chunked_eval_loss_and_preds</code>
+returns compact 2D <code>pred_ids</code> (<code>[B, S]</code>) consumed directly by
+<code>update_llm_tokens()</code> in <code>training/training/val_metrics.py</code>.</li>
+</ul>
+</section>
+
+<section id="sec-13-conclusion-the-indestructible-paradigm">
+<h2>13. Conclusion: The Indestructible Paradigm</h2>
 <p>The transition from manual hyperparameter tuning to autonomous,
 <strong>&quot;Nuclear-Hardened&quot;</strong> training represents a paradigm shift in AI development.
 By implementing the diagnostic triggers and remediation strategies outlined in

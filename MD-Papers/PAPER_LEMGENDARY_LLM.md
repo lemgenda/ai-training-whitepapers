@@ -15,7 +15,8 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 * [4. Sparse Mixture-of-Experts Routing](#4-sparse-mixture-of-experts-routing)
 * [5. KV Cache & Inference Throughput](#5-kv-cache--inference-throughput)
 * [6. Parameter Specifications & Scaling](#6-parameter-specifications--scaling)
-* [7. Conclusion](#7-conclusion)
+* [7. Dual-Regime Optimization: Kaggle TPU v5e-8 & Local 4 GB VRAM](#7-dual-regime-optimization-kaggle-tpu-v5e-8--local-4-gb-vram)
+* [8. Conclusion](#8-conclusion)
 
 ---
 
@@ -226,7 +227,41 @@ In accordance with the LemGendary universal multi-variation export standard,
 
 ---
 
-## 7. Conclusion
+## 7. Dual-Regime Optimization: Kaggle TPU v5e-8 & Local 4 GB VRAM
+
+To support both cloud-scale **Kaggle TPU v5e-8** (`TpuV5E8`, 8 cores, 128 GB
+aggregate HBM2e, native `bfloat16` MXUs) and local **4 GB VRAM** consumer GPUs
+without maintaining separate model codebases, `GenericCausalLLM` and
+`InstructionDataset` implement a dual-regime execution architecture:
+
+1. **Device-Adaptive Precision & Quantization**:
+   * **Kaggle TPU v5e-8**: Automatically disables CUDA-only `bitsandbytes` 4-bit
+     quantization (`load_in_4bit = False`) and loads the backbone in native
+     `torch.bfloat16` with `lora_r = 32`, `lora_alpha = 64`, and
+     rank-stabilized LoRA (`use_rslora = True`, scaling updates by
+     $\alpha / \sqrt{r}$).
+   * **Local 4 GB GPU**: Enforces 4-bit NormalFloat (`nf4`) double quantization
+     with hardware-verified compute dtype (`bfloat16` on Ampere+, `float16` on
+     Turing), `lora_r = 8`, and `batch_size = 1` with `accumulation_steps = 16`.
+2. **Chunked Linear Cross-Entropy (`ChunkedCausalLMLoss`)**:
+   * Standard `AutoModelForCausalLM.forward(labels=...)` materializes the full
+     $[B, S, V]$ logit tensor ($V = 151,936$ for Qwen2.5) and upcasts it to
+     FP32, consuming $\sim 778\text{ MB}$ at $B=1, S=512$ and $>3\text{ GB}$ at
+     $B=2, S=1024$.
+   * `ChunkedCausalLMLoss` (`models/llm_chunked_loss.py`) filters active tokens
+     (`labels != -100`) and projects `lm_head` in chunks of $C \in \{256, 1024\}$
+     with non-reentrant gradient checkpointing, reducing peak output-layer
+     memory by $>94\%$.
+   * During validation, `chunked_eval_loss_and_preds()` returns compact 2D
+     `pred_ids` ($[B, S]$) instead of $[B, S, V]$ floating-point logits.
+3. **Static-Shape Collation for XLA (`pad_to_max_length`)**:
+   * On TPU v5e-8, `collate_instruction_batch(..., pad_to_max_length=True)`
+     enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
+     compiles the HLO graph exactly once per run.
+
+---
+
+## 8. Conclusion
 
 Sparse MoE decoders deliver unprecedented reasoning and language generation
 capabilities while adhering strictly to hardware memory bounds.

@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.116`
+**Version**: `v16.9.117`
 
 ---
 
@@ -21,7 +21,7 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.85, LemGendary
-  Dataset Compiler Suite v16.9.109, LemGendary Model Training Suite v16.9.223,
+  Dataset Compiler Suite v16.9.109, LemGendary Model Training Suite v16.9.226,
   LemGendary AI Studio GUI v2.10.68.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and

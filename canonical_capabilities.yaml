@@ -1,6 +1,6 @@
 ---
 schema_version: 1.0.0
-document_baseline: v16.9.116-STABLE
+document_baseline: v16.9.117-STABLE
 runtime_engine_baseline: v16.9.223-STABLE
 desktop_client_baseline: v2.10.68
 dataset_compiler_baseline: v16.9.111-STABLE
@@ -21,15 +21,14 @@ control_planes:
       dataset_compiler: python cli.py
       environment_manager: lem-env
     syntax:
-      train: lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME] [--clean] [--override-frozen]
+      train: lemtrain train MODEL_KEY [--epochs N] [--batch-size N] [--preset NAME]
+        [--clean] [--override-frozen]
       llm_train: lemtrain llm train [MODEL_KEY]
       soup: lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]
-      kaggle_launch: >-
-        lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF]
-        [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]
-      dataset_sync_push: >-
-        python cli.py sync push --model KEY [--url SLUG] [--no-wait] [--notes TEXT]
-        (--notes: what changed, added after the generated version notes)
+      kaggle_launch: lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref
+        REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]
+      dataset_sync_push: 'python cli.py sync push --model KEY [--url SLUG] [--no-wait]
+        [--notes TEXT] (--notes: what changed, added after the generated version notes)'
   api:
     framework: FastAPI + WebSocket
     openapi_specification: openapi.json
@@ -53,7 +52,7 @@ models:
     domain: time_series_quantitative_finance
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/ForexPredictor/ForexPredictor.py
     weights_path: LemGendaryModels/ForexPredictor/ForexPredictorWeights_FP32.pth
     architecture_type: Causal TCN + Multi-Head Cross-Timeframe Attention
@@ -82,17 +81,20 @@ models:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#forex_predictor
       whitepaper: lemgendary-docs/MD-Papers/PAPER_FOREX_PREDICTOR.md
     limitations:
-      - Inference sub-5ms target applies to compiled ONNX runtime; PyTorch eager latency is ~12-18ms.
+      - Inference sub-5ms target applies to compiled ONNX runtime; PyTorch eager latency
+        is ~12-18ms.
       - Requires continuous non-gapped M1-MN data.
     academic_reference:
-      title: An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling
+      title: An Empirical Evaluation of Generic Convolutional and Recurrent Networks
+        for Sequence Modeling
       authors: Shaojie Bai, J. Zico Kolter, Vladlen Koltun
       year: 2018
       venue: arXiv preprint
       link: https://arxiv.org/abs/1803.01271
-      bibtex: "@article{bai2018empirical,\n  title={An empirical evaluation of generic convolutional and\
-        \ recurrent networks for sequence modeling},\n  author={Bai, Shaojie and Kolter, J Zico and Koltun,\
-        \ Vladlen},\n  journal={arXiv preprint arXiv:1803.01271},\n  year={2018}\n}"
+      bibtex: "@article{bai2018empirical,\n  title={An empirical evaluation of generic\
+        \ convolutional and recurrent networks for sequence modeling},\n  author={Bai,\
+        \ Shaojie and Kolter, J Zico and Koltun, Vladlen},\n  journal={arXiv preprint\
+        \ arXiv:1803.01271},\n  year={2018}\n}"
   - id: nima_aesthetic_mobile
     name: NIMA Aesthetic Mobile
     category: enhance
@@ -100,7 +102,7 @@ models:
     domain: perceptual_aesthetic_scoring
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nima_aesthetic_mobile/model.py
     weights_path: LemGendaryModels/nima_aesthetic_mobile/weights.pth
     architecture_type: MobileNetV3-Small + Earth Mover's Distance Head
@@ -136,16 +138,9 @@ models:
       year: 2018
       venue: IEEE Transactions on Image Processing (TIP)
       link: https://arxiv.org/abs/1709.05424
-      bibtex: |-
-        @article{talebi2018nima,
-          title={NIMA: Neural image assessment},
-          author={Talebi, Hossein and Milanfar, Peyman},
-          journal={IEEE TIP},
-          volume={27},
-          number={8},
-          pages={3998--4011},
-          year={2018}
-        }
+      bibtex: "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n\
+        \  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n\
+        \  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
   - id: nima_aesthetic_efficientnet
     name: NIMA Aesthetic EfficientNet
     category: enhance
@@ -153,7 +148,7 @@ models:
     domain: perceptual_aesthetic_scoring
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nima_aesthetic_efficientnet/model.py
     weights_path: LemGendaryModels/nima_aesthetic_efficientnet/weights.pth
     architecture_type: EfficientNet-B0 Backbone + EMD Loss
@@ -189,16 +184,9 @@ models:
       year: 2018
       venue: IEEE Transactions on Image Processing (TIP)
       link: https://arxiv.org/abs/1709.05424
-      bibtex: |-
-        @article{talebi2018nima,
-          title={NIMA: Neural image assessment},
-          author={Talebi, Hossein and Milanfar, Peyman},
-          journal={IEEE TIP},
-          volume={27},
-          number={8},
-          pages={3998--4011},
-          year={2018}
-        }
+      bibtex: "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n\
+        \  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n\
+        \  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
   - id: nima_aesthetic_pro
     name: NIMA Aesthetic Pro
     category: enhance
@@ -206,7 +194,7 @@ models:
     domain: perceptual_aesthetic_scoring
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nima_aesthetic_pro/model.py
     weights_path: LemGendaryModels/nima_aesthetic_pro/weights.pth
     architecture_type: DenseNet-201 / ConvNeXt-Tiny + Multi-Head EMD
@@ -239,15 +227,16 @@ models:
       - Demands minimum 6GB VRAM for batch sizes greater than 16.
     academic_reference:
       title: 'Swin Transformer V2: Using Larger Models and Images'
-      authors: Ze Liu, Han Hu, Yutong Lin, Zhuliang Yao, Zhenda Xie, Yixuan Wei, Jia Ning, Yue Cao, Zheng
-        Zhang, Li Dong, Furu Wei, Baining Guo
+      authors: Ze Liu, Han Hu, Yutong Lin, Zhuliang Yao, Zhenda Xie, Yixuan Wei, Jia
+        Ning, Yue Cao, Zheng Zhang, Li Dong, Furu Wei, Baining Guo
       year: 2022
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/2111.09883
-      bibtex: "@inproceedings{liu2022swin,\n  title={Swin transformer v2: Using larger models and images},\n\
-        \  author={Liu, Ze and Hu, Han and Lin, Yutong and Yao, Zhuliang and Xie, Zhenda and Wei, Yixuan\
-        \ and Ning, Jia and Cao, Yue and Zhang, Zheng and Dong, Li and others},\n  booktitle={CVPR},\n\
-        \  pages={12009--12019},\n  year={2022}\n}"
+      bibtex: "@inproceedings{liu2022swin,\n  title={Swin transformer v2: Using larger\
+        \ models and images},\n  author={Liu, Ze and Hu, Han and Lin, Yutong and Yao,\
+        \ Zhuliang and Xie, Zhenda and Wei, Yixuan and Ning, Jia and Cao, Yue and\
+        \ Zhang, Zheng and Dong, Li and others},\n  booktitle={CVPR},\n  pages={12009--12019},\n\
+        \  year={2022}\n}"
   - id: nima_technical
     name: NIMA Technical Quality
     category: enhance
@@ -255,7 +244,7 @@ models:
     domain: technical_distortion_scoring
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nima_technical/model.py
     weights_path: LemGendaryModels/nima_technical/weights.pth
     architecture_type: MobileNetV3 Backbone + Multi-Distortion Classification Head
@@ -291,16 +280,9 @@ models:
       year: 2018
       venue: IEEE Transactions on Image Processing (TIP)
       link: https://arxiv.org/abs/1709.05424
-      bibtex: |-
-        @article{talebi2018nima,
-          title={NIMA: Neural image assessment},
-          author={Talebi, Hossein and Milanfar, Peyman},
-          journal={IEEE TIP},
-          volume={27},
-          number={8},
-          pages={3998--4011},
-          year={2018}
-        }
+      bibtex: "@article{talebi2018nima,\n  title={NIMA: Neural image assessment},\n\
+        \  author={Talebi, Hossein and Milanfar, Peyman},\n  journal={IEEE TIP},\n\
+        \  volume={27},\n  number={8},\n  pages={3998--4011},\n  year={2018}\n}"
   - id: nima_authenticity
     name: NIMA Authenticity & Artifact Detection
     category: enhance
@@ -308,7 +290,7 @@ models:
     domain: synthetic_generation_authenticity
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nima_authenticity/model.py
     weights_path: LemGendaryModels/nima_authenticity/weights.pth
     architecture_type: Frequency-Aware High-Pass ResNet Backbone
@@ -337,16 +319,19 @@ models:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#nima_authenticity
       whitepaper: lemgendary-docs/MD-Papers/PAPER_NIMA_AUTHENTICITY.md
     limitations:
-      - Requires uncompressed or high-quality WebP inputs; excessive downsampling destroys frequency signatures.
+      - Requires uncompressed or high-quality WebP inputs; excessive downsampling
+        destroys frequency signatures.
     academic_reference:
       title: CNN-Generated Images Are Surprisingly Easy to Spot... for Now
-      authors: Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, Alexei A. Efros
+      authors: Sheng-Yu Wang, Oliver Wang, Richard Zhang, Andrew Owens, Alexei A.
+        Efros
       year: 2020
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/1912.11035
-      bibtex: "@inproceedings{wang2020cnn,\n  title={CNN-generated images are surprisingly easy to spot...\
-        \ for now},\n  author={Wang, Sheng-Yu and Wang, Oliver and Zhang, Richard and Owens, Andrew and\
-        \ Efros, Alexei A},\n  booktitle={CVPR},\n  pages={8695--8704},\n  year={2020}\n}"
+      bibtex: "@inproceedings{wang2020cnn,\n  title={CNN-generated images are surprisingly\
+        \ easy to spot... for now},\n  author={Wang, Sheng-Yu and Wang, Oliver and\
+        \ Zhang, Richard and Owens, Andrew and Efros, Alexei A},\n  booktitle={CVPR},\n\
+        \  pages={8695--8704},\n  year={2020}\n}"
   - id: upn_v2
     name: Universal Perceptual Network V2
     category: enhance
@@ -354,7 +339,7 @@ models:
     domain: vision_hybrid_restoration
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/upn_v2/model.py
     weights_path: LemGendaryModels/upn_v2/weights.pth
     architecture_type: Residual-in-Residual Dense Blocks with Spatial Attention
@@ -385,14 +370,16 @@ models:
     limitations:
       - Requires tiling for images exceeding 1920x1080 on 6GB VRAM.
     academic_reference:
-      title: 'Deep Photo Enhancer: Unpaired Learning for Image Enhancement from Photographs with GANs'
+      title: 'Deep Photo Enhancer: Unpaired Learning for Image Enhancement from Photographs
+        with GANs'
       authors: Yu-Sheng Chen, Yu-Ching Wang, Man-Hsin Kao, Yung-Yu Chuang
       year: 2018
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/1712.01021
-      bibtex: "@inproceedings{chen2018deep,\n  title={Deep photo enhancer: Unpaired learning for image\
-        \ enhancement from photographs with gans},\n  author={Chen, Yu-Sheng and Wang, Yu-Ching and Kao,\
-        \ Man-Hsin and Chuang, Yung-Yu},\n  booktitle={CVPR},\n  pages={6306--6314},\n  year={2018}\n}"
+      bibtex: "@inproceedings{chen2018deep,\n  title={Deep photo enhancer: Unpaired\
+        \ learning for image enhancement from photographs with gans},\n  author={Chen,\
+        \ Yu-Sheng and Wang, Yu-Ching and Kao, Man-Hsin and Chuang, Yung-Yu},\n  booktitle={CVPR},\n\
+        \  pages={6306--6314},\n  year={2018}\n}"
   - id: film_restorer
     name: Film Restorer (Vintage Grain & Scratch Removal)
     category: restoration
@@ -400,7 +387,7 @@ models:
     domain: vintage_photographic_restoration
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/film_restorer/model.py
     weights_path: LemGendaryModels/film_restorer/weights.pth
     architecture_type: Dual-Branch Attention Network (Structure + Grain Decomposition)
@@ -437,9 +424,10 @@ models:
       year: 2020
       venue: IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)
       link: https://arxiv.org/abs/1802.08797
-      bibtex: "@article{zhang2020residual,\n  title={Residual dense network for image restoration},\n\
-        \  author={Zhang, Yulun and Tian, Yapeng and Kong, Yu and Zhong, Bineng and Fu, Yun},\n  journal={IEEE\
-        \ TPAMI},\n  volume={43},\n  number={7},\n  pages={2482--2495},\n  year={2020}\n}"
+      bibtex: "@article{zhang2020residual,\n  title={Residual dense network for image\
+        \ restoration},\n  author={Zhang, Yulun and Tian, Yapeng and Kong, Yu and\
+        \ Zhong, Bineng and Fu, Yun},\n  journal={IEEE TPAMI},\n  volume={43},\n \
+        \ number={7},\n  pages={2482--2495},\n  year={2020}\n}"
   - id: codeformer
     name: CodeFormer Face Restoration
     category: face
@@ -447,7 +435,7 @@ models:
     domain: blind_face_restoration
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/codeformer/model.py
     weights_path: LemGendaryModels/codeformer/weights.pth
     architecture_type: Learned Discrete Codebook Transformer with Fidelity Controllability
@@ -483,9 +471,10 @@ models:
       year: 2022
       venue: Advances in Neural Information Processing Systems (NeurIPS)
       link: https://arxiv.org/abs/2206.11253
-      bibtex: "@inproceedings{zhou2022codeformer,\n  title={Towards Robust Blind Face Restoration with\
-        \ Codebook Lookup Transformer},\n  author={Zhou, Shangchen and Chan, Kelvin CK and Li, Chongyi\
-        \ and Loy, Chen Change},\n  booktitle={NeurIPS},\n  year={2022}\n}"
+      bibtex: "@inproceedings{zhou2022codeformer,\n  title={Towards Robust Blind Face\
+        \ Restoration with Codebook Lookup Transformer},\n  author={Zhou, Shangchen\
+        \ and Chan, Kelvin CK and Li, Chongyi and Loy, Chen Change},\n  booktitle={NeurIPS},\n\
+        \  year={2022}\n}"
   - id: parsenet
     name: ParseNet Facial Parsing
     category: face
@@ -493,7 +482,7 @@ models:
     domain: semantic_face_segmentation
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/parsenet/model.py
     weights_path: LemGendaryModels/parsenet/weights.pth
     architecture_type: BiSeNet-V2 with Spatial and Context Paths
@@ -529,13 +518,10 @@ models:
       year: 2020
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/1907.11922
-      bibtex: |-
-        @inproceedings{lee2020maskgan,
-          title={MaskGAN: Towards Diverse and Interactive Facial Image Manipulation},
-          author={Lee, Cheng-Han and Liu, Ziwei and Wu, Lingyun and Luo, Ping},
-          booktitle={CVPR},
-          year={2020}
-        }
+      bibtex: "@inproceedings{lee2020maskgan,\n  title={MaskGAN: Towards Diverse and\
+        \ Interactive Facial Image Manipulation},\n  author={Lee, Cheng-Han and Liu,\
+        \ Ziwei and Wu, Lingyun and Luo, Ping},\n  booktitle={CVPR},\n  year={2020}\n\
+        }"
   - id: ffanet_indoor
     name: FFA-Net Indoor Dehazing
     category: restoration
@@ -543,7 +529,7 @@ models:
     domain: feature_fusion_indoor_dehazing
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/ffanet_indoor/model.py
     weights_path: LemGendaryModels/ffanet_indoor/weights.pth
     architecture_type: Feature Fusion Attention Network (Channel + Pixel Attention)
@@ -579,10 +565,10 @@ models:
       year: 2020
       venue: AAAI Conference on Artificial Intelligence (AAAI)
       link: https://arxiv.org/abs/1911.07559
-      bibtex: "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention network for single\
-        \ image dehazing},\n  author={Qin, Xu and Wang, Zhilin and Bai, Yuanchao and Xie, Xiaodong and\
-        \ Jia, Huizhu},\n  booktitle={AAAI},\n  volume={34},\n  pages={11908--11915},\n  year={2020}\n\
-        }"
+      bibtex: "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention\
+        \ network for single image dehazing},\n  author={Qin, Xu and Wang, Zhilin\
+        \ and Bai, Yuanchao and Xie, Xiaodong and Jia, Huizhu},\n  booktitle={AAAI},\n\
+        \  volume={34},\n  pages={11908--11915},\n  year={2020}\n}"
   - id: ffanet_outdoor
     name: FFA-Net Outdoor Dehazing
     category: restoration
@@ -590,7 +576,7 @@ models:
     domain: feature_fusion_outdoor_dehazing
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/ffanet_outdoor/model.py
     weights_path: LemGendaryModels/ffanet_outdoor/weights.pth
     architecture_type: Feature Fusion Attention Network (Extended Depth Layers)
@@ -626,10 +612,10 @@ models:
       year: 2020
       venue: AAAI Conference on Artificial Intelligence (AAAI)
       link: https://arxiv.org/abs/1911.07559
-      bibtex: "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention network for single\
-        \ image dehazing},\n  author={Qin, Xu and Wang, Zhilin and Bai, Yuanchao and Xie, Xiaodong and\
-        \ Jia, Huizhu},\n  booktitle={AAAI},\n  volume={34},\n  pages={11908--11915},\n  year={2020}\n\
-        }"
+      bibtex: "@inproceedings{qin2020ffa,\n  title={FFA-Net: Feature fusion attention\
+        \ network for single image dehazing},\n  author={Qin, Xu and Wang, Zhilin\
+        \ and Bai, Yuanchao and Xie, Xiaodong and Jia, Huizhu},\n  booktitle={AAAI},\n\
+        \  volume={34},\n  pages={11908--11915},\n  year={2020}\n}"
   - id: mirnet_lowlight
     name: MIRNet Low-Light Enhancement
     category: restoration
@@ -637,7 +623,7 @@ models:
     domain: multi_scale_low_light_restoration
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/mirnet_lowlight/model.py
     weights_path: LemGendaryModels/mirnet_lowlight/weights.pth
     architecture_type: Multi-Scale Residual Block with Dual Attention Units
@@ -667,18 +653,20 @@ models:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#mirnet_lowlight
       whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MIRNET.md
     limitations:
-      - High memory footprint due to multi-resolution parallel branches; use gradient accumulation.
+      - High memory footprint due to multi-resolution parallel branches; use gradient
+        accumulation.
     academic_reference:
       title: Learning Enriched Features for Fast Image Restoration and Enhancement
-      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan
-        Yang, Ling Shao
+      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz
+        Khan, Ming-Hsuan Yang, Ling Shao
       year: 2022
       venue: IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)
       link: https://arxiv.org/abs/2003.06792
-      bibtex: "@article{zamir2022learning,\n  title={Learning enriched features for fast image restoration\
-        \ and enhancement},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat,\
-        \ Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n\
-        \  year={2022}\n}"
+      bibtex: "@article{zamir2022learning,\n  title={Learning enriched features for\
+        \ fast image restoration and enhancement},\n  author={Zamir, Syed Waqas and\
+        \ Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad Shahbaz\
+        \ and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n  year={2022}\n\
+        }"
   - id: mirnet_exposure
     name: MIRNet Exposure Correction
     category: restoration
@@ -686,7 +674,7 @@ models:
     domain: dual_exposure_over_under_correction
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/mirnet_exposure/model.py
     weights_path: LemGendaryModels/mirnet_exposure/weights.pth
     architecture_type: Multi-Scale Residual Block with Highlight Preservation
@@ -719,15 +707,16 @@ models:
       - Extreme clipping (>99% saturation) may show residual color tinting.
     academic_reference:
       title: Learning Enriched Features for Fast Image Restoration and Enhancement
-      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan
-        Yang, Ling Shao
+      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz
+        Khan, Ming-Hsuan Yang, Ling Shao
       year: 2022
       venue: IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI)
       link: https://arxiv.org/abs/2003.06792
-      bibtex: "@article{zamir2022learning,\n  title={Learning enriched features for fast image restoration\
-        \ and enhancement},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat,\
-        \ Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n\
-        \  year={2022}\n}"
+      bibtex: "@article{zamir2022learning,\n  title={Learning enriched features for\
+        \ fast image restoration and enhancement},\n  author={Zamir, Syed Waqas and\
+        \ Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad Shahbaz\
+        \ and Yang, Ming-Hsuan and Shao, Ling},\n  journal={IEEE TPAMI},\n  year={2022}\n\
+        }"
   - id: mprnet_deraining
     name: MPRNet Deraining & Drop Removal
     category: restoration
@@ -735,7 +724,7 @@ models:
     domain: multi_stage_progressive_deraining
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/mprnet_deraining/model.py
     weights_path: LemGendaryModels/mprnet_deraining/weights.pth
     architecture_type: 3-Stage Progressive Architecture with Cross-Stage Feature Fusion
@@ -764,18 +753,19 @@ models:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#mprnet_deraining
       whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_MPRNET.md
     limitations:
-      - Achieved 53.95 dB PSNR in Kaggle T4 dual runs; requires FP32 clamps on CSFF modules.
+      - Achieved 53.95 dB PSNR in Kaggle T4 dual runs; requires FP32 clamps on CSFF
+        modules.
     academic_reference:
       title: Multi-Stage Progressive Image Restoration
-      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, Ming-Hsuan
-        Yang, Ling Shao
+      authors: Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz
+        Khan, Ming-Hsuan Yang, Ling Shao
       year: 2021
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/2102.02808
-      bibtex: "@inproceedings{zamir2021multi,\n  title={Multi-stage progressive image restoration},\n\
-        \  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman and Hayat, Munawar and Khan, Fahad\
-        \ Shahbaz and Yang, Ming-Hsuan and Shao, Ling},\n  booktitle={CVPR},\n  pages={14821--14831},\n\
-        \  year={2021}\n}"
+      bibtex: "@inproceedings{zamir2021multi,\n  title={Multi-stage progressive image\
+        \ restoration},\n  author={Zamir, Syed Waqas and Arora, Aditya and Khan, Salman\
+        \ and Hayat, Munawar and Khan, Fahad Shahbaz and Yang, Ming-Hsuan and Shao,\
+        \ Ling},\n  booktitle={CVPR},\n  pages={14821--14831},\n  year={2021}\n}"
   - id: nafnet_debluring
     name: NAFNet Deblurring
     category: restoration
@@ -783,10 +773,11 @@ models:
     domain: nonlinear_activation_free_deblurring
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nafnet_debluring/model.py
     weights_path: LemGendaryModels/nafnet_debluring/weights.pth
-    architecture_type: Nonlinear Activation Free Network (SimpleGate + Simplified Channel Attention)
+    architecture_type: Nonlinear Activation Free Network (SimpleGate + Simplified
+      Channel Attention)
     supported_formats:
       input:
         - png
@@ -812,21 +803,18 @@ models:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#nafnet_debluring
       whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_NAFNET.md
     limitations:
-      - SimpleGate layers must run in FP32 on specific legacy CUDA driver revisions to avoid NaN.
+      - SimpleGate layers must run in FP32 on specific legacy CUDA driver revisions
+        to avoid NaN.
     academic_reference:
       title: Simple Baselines for Image Restoration
       authors: Liangyu Chen, Xiaojie Chu, Xiangyu Zhang, Jian Sun
       year: 2022
       venue: European Conference on Computer Vision (ECCV)
       link: https://arxiv.org/abs/2204.04676
-      bibtex: |-
-        @inproceedings{chen2022simple,
-          title={Simple baselines for image restoration},
-          author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu and Sun, Jian},
-          booktitle={ECCV},
-          pages={17--33},
-          year={2022}
-        }
+      bibtex: "@inproceedings{chen2022simple,\n  title={Simple baselines for image\
+        \ restoration},\n  author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu\
+        \ and Sun, Jian},\n  booktitle={ECCV},\n  pages={17--33},\n  year={2022}\n\
+        }"
   - id: nafnet_denoising
     name: NAFNet Denoising
     category: restoration
@@ -834,7 +822,7 @@ models:
     domain: nonlinear_activation_free_denoising
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/nafnet_denoising/model.py
     weights_path: LemGendaryModels/nafnet_denoising/weights.pth
     architecture_type: Nonlinear Activation Free Network (36-Block Backbone)
@@ -871,14 +859,10 @@ models:
       year: 2022
       venue: European Conference on Computer Vision (ECCV)
       link: https://arxiv.org/abs/2204.04676
-      bibtex: |-
-        @inproceedings{chen2022simple,
-          title={Simple baselines for image restoration},
-          author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu and Sun, Jian},
-          booktitle={ECCV},
-          pages={17--33},
-          year={2022}
-        }
+      bibtex: "@inproceedings{chen2022simple,\n  title={Simple baselines for image\
+        \ restoration},\n  author={Chen, Liangyu and Chu, Xiaojie and Zhang, Xiangyu\
+        \ and Sun, Jian},\n  booktitle={ECCV},\n  pages={17--33},\n  year={2022}\n\
+        }"
   - id: yolov8n
     name: YOLOv8 Nano Object Detection
     category: yolo
@@ -886,10 +870,11 @@ models:
     domain: realtime_object_detection
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/yolov8n/model.py
     weights_path: LemGendaryModels/yolov8n/weights.pth
-    architecture_type: Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned Assigner)
+    architecture_type: Anchor-Free Split-Head Detection (C2f Backbone + Task-Aligned
+      Assigner)
     supported_formats:
       input:
         - png
@@ -918,19 +903,15 @@ models:
     limitations:
       - Export targets ONNX opset 17 for WebGPU zero-slice compliance.
     academic_reference:
-      title: 'Ultralytics YOLOv8: Real-Time Object Detection, Instance Segmentation, and Pose Estimation'
+      title: 'Ultralytics YOLOv8: Real-Time Object Detection, Instance Segmentation,
+        and Pose Estimation'
       authors: Glenn Jocher, Ayush Chaurasia, Jing Qiu
       year: 2023
       venue: Ultralytics Research
       link: https://github.com/ultralytics/ultralytics
-      bibtex: |-
-        @software{yolov8_ultralytics,
-          author = {Jocher, Glenn and Chaurasia, Ayush and Qiu, Jing},
-          title = {Ultralytics YOLOv8},
-          version = {8.0.0},
-          year = {2023},
-          url = {https://github.com/ultralytics/ultralytics}
-        }
+      bibtex: "@software{yolov8_ultralytics,\n  author = {Jocher, Glenn and Chaurasia,\
+        \ Ayush and Qiu, Jing},\n  title = {Ultralytics YOLOv8},\n  version = {8.0.0},\n\
+        \  year = {2023},\n  url = {https://github.com/ultralytics/ultralytics}\n}"
   - id: professional_multitask_restoration
     name: Professional Multitask Restoration Pro
     category: restoration
@@ -938,7 +919,7 @@ models:
     domain: unified_multi_distortion_restoration
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/professional_multitask_restoration/model.py
     weights_path: LemGendaryModels/professional_multitask_restoration/weights.pth
     architecture_type: Dynamic Multi-Head Transformer with Task Prompt Embeddings
@@ -974,9 +955,10 @@ models:
       year: 2020
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/2004.11700
-      bibtex: "@inproceedings{li2020all,\n  title={All-in-one image restoration for unknown corruptions},\n\
-        \  author={Li, Boyun and Liu, Xiao and Hu, Peng and Zhou, Zitao and Zhao, Shuangqing and Peng,\
-        \ Xi},\n  booktitle={CVPR},\n  pages={2190--2199},\n  year={2020}\n}"
+      bibtex: "@inproceedings{li2020all,\n  title={All-in-one image restoration for\
+        \ unknown corruptions},\n  author={Li, Boyun and Liu, Xiao and Hu, Peng and\
+        \ Zhou, Zitao and Zhao, Shuangqing and Peng, Xi},\n  booktitle={CVPR},\n \
+        \ pages={2190--2199},\n  year={2020}\n}"
   - id: ultrazoom
     name: UltraZoom Super-Resolution
     category: restoration
@@ -984,7 +966,7 @@ models:
     domain: perceptual_super_resolution
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/ultrazoom/model.py
     weights_path: LemGendaryModels/ultrazoom/weights.pth
     architecture_type: Cascaded Residual LapSRN + High-Frequency Edge Head
@@ -1015,17 +997,18 @@ models:
     limitations:
       - 4x scale factor requires tiling on cards with <=6GB VRAM.
     academic_reference:
-      title: Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional
-        Neural Network
-      authors: Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P. Aitken, Rob Bishop,
-        Daniel Rueckert, Zehan Wang
+      title: Real-Time Single Image and Video Super-Resolution Using an Efficient
+        Sub-Pixel Convolutional Neural Network
+      authors: Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz, Andrew P.
+        Aitken, Rob Bishop, Daniel Rueckert, Zehan Wang
       year: 2016
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/1609.05158
-      bibtex: "@inproceedings{shi2016real,\n  title={Real-time single image and video super-resolution\
-        \ using an efficient sub-pixel convolutional neural network},\n  author={Shi, Wenzhe and Caballero,\
-        \ Jose and Husz{\\'a}r, Ferenc and Totz, Johannes and Aitken, Andrew P and Bishop, Rob and Rueckert,\
-        \ Daniel and Wang, Zehan},\n  booktitle={CVPR},\n  pages={1874--1883},\n  year={2016}\n}"
+      bibtex: "@inproceedings{shi2016real,\n  title={Real-time single image and video\
+        \ super-resolution using an efficient sub-pixel convolutional neural network},\n\
+        \  author={Shi, Wenzhe and Caballero, Jose and Husz{\\'a}r, Ferenc and Totz,\
+        \ Johannes and Aitken, Andrew P and Bishop, Rob and Rueckert, Daniel and Wang,\
+        \ Zehan},\n  booktitle={CVPR},\n  pages={1874--1883},\n  year={2016}\n}"
   - id: universal_nsfw_classification
     name: Universal NSFW & Content Moderation Classifier
     category: enhance
@@ -1033,7 +1016,7 @@ models:
     domain: content_safety_classification
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/universal_nsfw_classification/model.py
     weights_path: LemGendaryModels/universal_nsfw_classification/weights.pth
     architecture_type: Vision Transformer (ViT-Small / EfficientNet-B2 Head)
@@ -1069,14 +1052,9 @@ models:
       year: 2021
       venue: International Conference on Machine Learning (ICML)
       link: https://arxiv.org/abs/2104.00298
-      bibtex: |-
-        @inproceedings{tan2021efficientnetv2,
-          title={Efficientnetv2: Smaller models and faster training},
-          author={Tan, Mingxing and Le, Quoc},
-          booktitle={ICML},
-          pages={10096--10106},
-          year={2021}
-        }
+      bibtex: "@inproceedings{tan2021efficientnetv2,\n  title={Efficientnetv2: Smaller\
+        \ models and faster training},\n  author={Tan, Mingxing and Le, Quoc},\n \
+        \ booktitle={ICML},\n  pages={10096--10106},\n  year={2021}\n}"
   - id: retinaface
     name: RetinaFace Landmark Detection
     category: face
@@ -1084,12 +1062,11 @@ models:
     domain: dense_face_and_landmark_localization
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/retinaface/model.py
     weights_path: LemGendaryModels/retinaface/weights.pth
-    architecture_type: >-
-      MobileNetV3-Small backbone with one globally pooled single-box head (box,
-      confidence and 5 landmarks per image; no anchors)
+    architecture_type: MobileNetV3-Small backbone with one globally pooled single-box
+      head (box, confidence and 5 landmarks per image; no anchors)
     supported_formats:
       input:
         - png
@@ -1116,19 +1093,20 @@ models:
       whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_RETINAFACE.md
     limitations:
       - Generates 5 2D facial fiducial landmarks (eyes, nose, mouth corners).
-      - >-
-        Regresses one face box per image; measured with box_iou, ap50, ap50_95 and
-        landmark_nme against provisional targets 0.80, 0.95, 0.60 and 0.10
-        (training v16.9.208); earlier map_* values are not comparable.
+      - Regresses one face box per image; measured with box_iou, ap50, ap50_95 and
+        landmark_nme against provisional targets 0.80, 0.95, 0.60 and 0.10 (training
+        v16.9.208); earlier map_* values are not comparable.
     academic_reference:
       title: 'RetinaFace: Single-Shot Multi-Level Face Localisation in the Wild'
-      authors: Jiankang Deng, Jia Guo, Evangelos Ververas, Irene Kotsia, Stefanos Zafeiriou
+      authors: Jiankang Deng, Jia Guo, Evangelos Ververas, Irene Kotsia, Stefanos
+        Zafeiriou
       year: 2020
       venue: IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)
       link: https://arxiv.org/abs/1905.00641
-      bibtex: "@inproceedings{deng2020retinaface,\n  title={Retinaface: Single-shot multi-level face localisation\
-        \ in the wild},\n  author={Deng, Jiankang and Guo, Jia and Ververas, Evangelos and Kotsia, Irene\
-        \ and Zafeiriou, Stefanos},\n  booktitle={CVPR},\n  pages={5203--5212},\n  year={2020}\n}"
+      bibtex: "@inproceedings{deng2020retinaface,\n  title={Retinaface: Single-shot\
+        \ multi-level face localisation in the wild},\n  author={Deng, Jiankang and\
+        \ Guo, Jia and Ververas, Evangelos and Kotsia, Irene and Zafeiriou, Stefanos},\n\
+        \  booktitle={CVPR},\n  pages={5203--5212},\n  year={2020}\n}"
   - id: ai_helper_lemgend
     name: LemGendary AI Studio Assistant (Causal LLM)
     category: llm
@@ -1136,7 +1114,7 @@ models:
     domain: technical_documentation_and_ecosystem_triage
     general_ai_support: true
     studio_implementation_status: implemented
-    runtime_baseline: v16.9.223-STABLE
+    runtime_baseline: v16.9.226-STABLE
     codebase_path: LemGendaryModels/ai_helper_lemgend/model.py
     weights_path: LemGendaryModels/ai_helper_lemgend/checkpoints/AIHelperLemGend_best.pth
     architecture_type: Causal Decoder Transformer (QLoRA Fine-Tuned)
@@ -1160,24 +1138,21 @@ models:
       min_vram_gb: 4.0
       recommended_batch_size: 2
       supports_amp: true
+      kaggle_accelerator: tpu-v5e8
     evidence:
       manifest_entry: lemgendary-training-suite/unified_models_v2.yaml#ai_helper_lemgend
       whitepaper: lemgendary-docs/MD-Papers/PAPER_LEMGENDARY_LLM.md
     limitations:
-      - Instruction fine-tuned strictly on authoritative LemGendary documentation invariants.
+      - Instruction fine-tuned strictly on authoritative LemGendary documentation
+        invariants.
     academic_reference:
       title: Qwen2.5 Technical Report
       authors: Qwen Team
       year: 2024
       venue: arXiv preprint
       link: https://arxiv.org/abs/2412.15115
-      bibtex: |-
-        @article{qwen2024,
-          title={Qwen2.5 Technical Report},
-          author={Qwen Team},
-          journal={arXiv preprint arXiv:2412.15115},
-          year={2024}
-        }
+      bibtex: "@article{qwen2024,\n  title={Qwen2.5 Technical Report},\n  author={Qwen\
+        \ Team},\n  journal={arXiv preprint arXiv:2412.15115},\n  year={2024}\n}"
 platform_capabilities:
   - id: bug_reporting
     name: Bug Report Tool
@@ -1185,11 +1160,12 @@ platform_capabilities:
     owner_project: lemgendary-env-manager
     baseline: v16.9.18-STABLE
     client_baseline: v2.10.19
-    request: 'multipart/form-data: email, module, description (50 to 10000 characters), app_version, current_tab;
-      optional files screenshot (repeatable), telemetry, recording'
-    delivery: 'Saves a Bug Report Archive (ZIP) under bug-reports/ in the workspace root and opens the
-      user''s own mail client with a mailto: link; the user attaches the ZIP by hand. No SMTP credentials
-      ship with the application.'
+    request: 'multipart/form-data: email, module, description (50 to 10000 characters),
+      app_version, current_tab; optional files screenshot (repeatable), telemetry,
+      recording'
+    delivery: 'Saves a Bug Report Archive (ZIP) under bug-reports/ in the workspace
+      root and opens the user''s own mail client with a mailto: link; the user attaches
+      the ZIP by hand. No SMTP credentials ship with the application.'
     archive_contents:
       - report.csv
       - screenshot_N.png or screenshot_N.webp
@@ -1202,13 +1178,14 @@ platform_capabilities:
       max_recording_mb: 50
       max_total_mb: 80
     components:
-      screenshot_annotator: 'GUI ScreenshotAnnotator: captures the app window and lets the user draw one
-        highlight rectangle before the image is attached.'
-      telemetry_csv: 'GUI telemetryCsv: RFC 4180 CSV with the columns timestamp, status, source, message,
-        built from pipeline events.'
-      screen_recording: 'implemented (GUI v2.10.20): native app-window-only recorder (Windows Graphics
-        Capture, Windows only), H.264 MP4 up to 60 s, 854x480 at 24 fps, attached as recording.mp4; other
-        platforms report that recording is not supported yet.'
+      screenshot_annotator: 'GUI ScreenshotAnnotator: captures the app window and
+        lets the user draw one highlight rectangle before the image is attached.'
+      telemetry_csv: 'GUI telemetryCsv: RFC 4180 CSV with the columns timestamp, status,
+        source, message, built from pipeline events.'
+      screen_recording: 'implemented (GUI v2.10.20): native app-window-only recorder
+        (Windows Graphics Capture, Windows only), H.264 MP4 up to 60 s, 854x480 at
+        24 fps, attached as recording.mp4; other platforms report that recording is
+        not supported yet.'
     control_planes:
       gui:
         available: true
@@ -1245,11 +1222,15 @@ platform_capabilities:
     client_header:
       name: X-LemGendary-Client
       value: ai-studio-gui
-      required_for: browser requests (with an Origin header) that use POST, PUT, PATCH or DELETE
-    rejection: HTTP 403 with a JSON detail; WebSocket handshakes from other origins are refused
-    non_browser_clients: Requests without an Origin header (CLI, scripts, tests) are allowed
-    secrets_api: GET /api/secrets returns only whether each secret is set and its last 4 characters; POST
-      /api/secrets sets or replaces a value (Environment Manager, port 8000)
+      required_for: browser requests (with an Origin header) that use POST, PUT, PATCH
+        or DELETE
+    rejection: HTTP 403 with a JSON detail; WebSocket handshakes from other origins
+      are refused
+    non_browser_clients: Requests without an Origin header (CLI, scripts, tests) are
+      allowed
+    secrets_api: GET /api/secrets returns only whether each secret is set and its
+      last 4 characters; POST /api/secrets sets or replaces a value (Environment Manager,
+      port 8000)
     evidence:
       code:
         - lemgendary-env-manager/env_manager/security.py
@@ -1265,8 +1246,7 @@ platform_capabilities:
       gui:
         available: true
         client_baseline: v2.10.60
-        control: >-
-          train-btn-soup-{model_key} (Blend Soup model card action; opens soup-dialog
+        control: train-btn-soup-{model_key} (Blend Soup model card action; opens soup-dialog
           with donors and weights)
       cli:
         available: true
@@ -1277,9 +1257,10 @@ platform_capabilities:
         port: 8200
         body: optional JSON {donors, weights}
     limitations:
-      - Blends vault checkpoints; a run with Stochastic Weight Averaging enabled adds vault_swa.pth as an
-        ingredient.
-      - The blend is not evaluated automatically and BatchNorm statistics are not re-estimated after blending.
+      - Blends vault checkpoints; a run with Stochastic Weight Averaging enabled adds
+        vault_swa.pth as an ingredient.
+      - The blend is not evaluated automatically and BatchNorm statistics are not
+        re-estimated after blending.
     evidence:
       code: lemgendary-training-suite/training/model_soup.py
       whitepaper: lemgendary-docs/MD-Papers/PAPER_TRAINING_SUITE.md
@@ -1297,7 +1278,8 @@ platform_capabilities:
       - pipeline_steps[] (number, id, name, descriptions)
       - kaggle (collaborators, default_accelerator, accelerators[], retired_machine_shapes)
     consumers:
-      environment_manager: env_manager.ecosystem.ecosystem() (LEMGENDARY_ECOSYSTEM_FILE override)
+      environment_manager: env_manager.ecosystem.ecosystem() (LEMGENDARY_ECOSYSTEM_FILE
+        override)
       dataset_compiler: core/ecosystem.py loader
       training: training/ecosystem.py loader
       gui: snapshot src/generated/ecosystem.json (npm run sync:ecosystem, check:ecosystem)
@@ -1337,7 +1319,8 @@ platform_capabilities:
       - checkpoints/swa_state.pth (resume sidecar)
     limitations:
       - Mini-SWA and Metric-Specific SWA (MS-SWA) are not implemented.
-      - SWA metrics never reach the SOTA tracker or the governor; curriculum rungs are unchanged.
+      - SWA metrics never reach the SOTA tracker or the governor; curriculum rungs
+        are unchanged.
     control_planes:
       gui:
         available: false
@@ -1354,8 +1337,10 @@ platform_capabilities:
     status: implemented
     owner_project: lemgendary-training-suite
     baseline: v16.9.107-STABLE
-    metric: FID with feature=2048, chunks of at most 2 samples, strict checkpoint loading
-    ledger: LemGendaryModels/<model>/fid_provenance.csv (append-only; metrics.csv is never written)
+    metric: FID with feature=2048, chunks of at most 2 samples, strict checkpoint
+      loading
+    ledger: LemGendaryModels/<model>/fid_provenance.csv (append-only; metrics.csv
+      is never written)
     affected_models:
       - codeformer
       - ffanet_indoor
@@ -1381,25 +1366,23 @@ platform_capabilities:
     status: implemented
     owner_project: lemgendary-training-suite
     baseline: v16.9.159-STABLE
-    default: >-
-      on (data.locality.window_shards: 4 and data.locality.fraction_block_size: 256
-      in config.yaml; 0 turns either off)
+    default: 'on (data.locality.window_shards: 4 and data.locality.fraction_block_size:
+      256 in config.yaml; 0 turns either off)'
     config_keys:
       - data.locality.window_shards
       - data.locality.fraction_block_size
     behaviour:
-      - >-
-        window_shards > 0: the train sampler shuffles the shards per epoch and
-        the samples inside windows of that many shards; the order is drawn from
-        seed + epoch, splits across DDP ranks and resumes mid-epoch.
-      - >-
-        fraction_block_size > 0: a curriculum data fraction is built from
-        shuffled contiguous blocks inside each shard; the subsets stay nested
-        across fraction steps (Monotonic Ratchet).
+      - 'window_shards > 0: the train sampler shuffles the shards per epoch and the
+        samples inside windows of that many shards; the order is drawn from seed +
+        epoch, splits across DDP ranks and resumes mid-epoch.'
+      - 'fraction_block_size > 0: a curriculum data fraction is built from shuffled
+        contiguous blocks inside each shard; the subsets stay nested across fraction
+        steps (Monotonic Ratchet).'
     limitations:
       - The GPU throughput gain on real manifolds is not measured yet.
       - Applies to WebDataset shards; other samples share one window key per dataset.
-      - A changed setting applies from the next epoch of a resumed run (run settings, v16.9.187).
+      - A changed setting applies from the next epoch of a resumed run (run settings,
+        v16.9.187).
     control_planes:
       gui:
         available: false
@@ -1421,28 +1404,21 @@ platform_capabilities:
     file: shards/<split>/shard_offsets.json
     format_version: 2
     behaviour:
-      - >-
-        One file per shard folder: {"version": 2, "shards": {...}} with each
-        plain tar shard's size, mtime_ns and the names, offsets and sizes of its
-        regular members; compressed shards get no entry.
-      - >-
-        Acceptance rule: an entry is used when the shard size matches and either
+      - 'One file per shard folder: {"version": 2, "shards": {...}} with each plain
+        tar shard''s size, mtime_ns and the names, offsets and sizes of its regular
+        members; compressed shards get no entry.'
+      - 'Acceptance rule: an entry is used when the shard size matches and either
         the modification time matches or the tar headers of the first, middle and
-        last member agree (three reads), so the index stays valid after a Kaggle
-        upload.
-      - >-
-        Every compiler step that writes or rewrites shards refreshes the file
-        (utils/shard_offsets.py is the only writer and checker); the shard
-        verifier checks a present index.
-      - >-
-        Training Suite: a read-only shard folder keeps its scan cache under
-        <suite>/.cache/shard_offsets (LEMGENDARY_SHARD_CACHE_DIR overrides it);
-        missing shards are scanned once under a file lock per shard folder (one
-        DDP rank builds, the others load); a probe of the largest missing shard
-        picks 16 scan threads on latency-bound storage, one on a local disk.
+        last member agree (three reads), so the index stays valid after a Kaggle upload.'
+      - Every compiler step that writes or rewrites shards refreshes the file (utils/shard_offsets.py
+        is the only writer and checker); the shard verifier checks a present index.
+      - 'Training Suite: a read-only shard folder keeps its scan cache under <suite>/.cache/shard_offsets
+        (LEMGENDARY_SHARD_CACHE_DIR overrides it); missing shards are scanned once
+        under a file lock per shard folder (one DDP rank builds, the others load);
+        a probe of the largest missing shard picks 16 scan threads on latency-bound
+        storage, one on a local disk.'
     limitations:
-      - >-
-        Kaggle dataset uploads skip hidden files, so the older .shard_offsets.json
+      - Kaggle dataset uploads skip hidden files, so the older .shard_offsets.json
         cache is not shipped; only shard_offsets.json is.
       - Compressed shards cannot be read by offset and are always scanned.
     control_planes:
@@ -1450,7 +1426,8 @@ platform_capabilities:
         available: false
       cli:
         available: true
-        command: python cli.py repair shard-offsets [--model KEY | --manifold PATH] [--apply]
+        command: python cli.py repair shard-offsets [--model KEY | --manifold PATH]
+          [--apply]
       api:
         available: false
     evidence:
@@ -1482,27 +1459,29 @@ platform_capabilities:
       - KAGGLE_API_TOKEN (KGAT_ token)
       - GITHUB_PAT or SUITE_PAT
       - GOOGLE_DRIVE (optional)
-    session_guard: 'kaggle_session in config.yaml: limit_hours 12, margin_minutes 30, auto_resume false,
-      max_resumes 3; the deadline stop saves progress, writes session_deadline.json, syncs the Hub and exits
-      0'
+    session_guard: 'kaggle_session in config.yaml: limit_hours 12, margin_minutes
+      30, auto_resume false, max_resumes 3; the deadline stop saves progress, writes
+      session_deadline.json, syncs the Hub and exits 0'
     variations:
       - pytorch/default
       - pytorch/fp32
       - onnx/fp16
       - onnx/fp32
     limitations:
-      - The GUI sends no git_ref, env_manager_ref, limit_hours or margin_minutes; the CLI and the API do.
-      - lemtrain kaggle launch starts one session and does not watch it; auto-resume runs only in a GUI
-        or API job.
+      - The GUI sends no git_ref, env_manager_ref, limit_hours or margin_minutes;
+        the CLI and the API do.
+      - lemtrain kaggle launch starts one session and does not watch it; auto-resume
+        runs only in a GUI or API job.
     control_planes:
       gui:
         available: true
         client_baseline: v2.10.67
-        control: kaggle-accelerator-select, kaggle-override-frozen-checkbox (Cloud Training dialog)
+        control: kaggle-accelerator-select, kaggle-override-frozen-checkbox (Cloud
+          Training dialog)
       cli:
         available: true
-        command: lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref
-          REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]
+        command: lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF]
+          [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]
       api:
         available: true
         route: POST /api/training/kaggle/train
@@ -1518,14 +1497,16 @@ platform_capabilities:
     baseline: v16.9.187-STABLE
     client_baseline: v2.10.67
     behaviour:
-      - 'Checkpoints record run_settings: frozen settings with frozen_sha and epoch settings.'
-      - A changed frozen setting on resume raises FrozenSettingsChanged unless override_frozen is set; the
-        refusal is written to resume_refusal.json.
+      - 'Checkpoints record run_settings: frozen settings with frozen_sha and epoch
+        settings.'
+      - A changed frozen setting on resume raises FrozenSettingsChanged unless override_frozen
+        is set; the refusal is written to resume_refusal.json.
       - Changed epoch settings apply from the next epoch and are appended to settings_changes.jsonl.
     control_planes:
       gui:
         available: true
-        control: train-input-override-frozen-{model_key}, kaggle-override-frozen-checkbox, train-frozen-refusal
+        control: train-input-override-frozen-{model_key}, kaggle-override-frozen-checkbox,
+          train-frozen-refusal
       cli:
         available: true
         command: lemtrain train MODEL_KEY --override-frozen

@@ -143,8 +143,9 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
 - [10. SOTA Suite Optimization Task List](#10-sota-suite-optimization-task-list)
 - [11. SOTA Transformation: Before vs.
   After](#11-sota-transformation-before-vs-after)
-- [12. Conclusion: The Indestructible
-  Paradigm](#12-conclusion-the-indestructible-paradigm)
+- [12. LLM & XLA Hardware Pathologies](#12-llm--xla-hardware-pathologies)
+- [13. Conclusion: The Indestructible
+  Paradigm](#13-conclusion-the-indestructible-paradigm)
 
 ---
 
@@ -1732,7 +1733,36 @@ strict WebP-only container audits that purge 0-byte or corrupt legacy members.
 
 ---
 
-## 12. Conclusion: The Indestructible Paradigm
+## 12. LLM & XLA Hardware Pathologies
+
+### 12.1 XLA JIT Recompilation Thrashing (TPU v5e-8)
+
+- **Symptom**: Training on Kaggle TPU v5e-8 stalls for 15–90 seconds on nearly
+  every batch, causing epoch times to balloon by $10\times\text{–}30\times$.
+- **Root Cause**: Dynamic batch padding (`max_len = max(seq_len in batch)`)
+  generates hundreds of distinct `[B, max_len]` input shapes, forcing
+  PyTorch/XLA PJRT to recompile a new HLO graph for every unique length.
+- **Autonomous Remediation**: `collate_instruction_batch` enforces
+  `pad_to_max_length=True` on XLA/TPU, locking every batch to a fixed
+  `[B, max_seq_length]` shape so XLA compiles the graph **exactly once**.
+
+### 12.2 Large-Vocabulary Logit Materialization OOM (4 GB VRAM GPUs)
+
+- **Symptom**: Causal LLMs with large vocabularies (e.g., Qwen2.5,
+  $V = 151,936$) trigger `CUDA OutOfMemoryError` during `forward()` or
+  `eval_step()` even at `batch_size = 1, max_seq_length = 512`.
+- **Root Cause**: Computing full `[B, S, V]` logits and upcasting to FP32 for
+  cross-entropy allocates $\sim 778\text{ MB}$ at $S=512$ (and $>3\text{ GB}$ at
+  $S=1024, B=2$), while `eval_step()` retains the full `[B, S, V]` tensor.
+- **Autonomous Remediation**: `ChunkedCausalLMLoss` (`models/llm_chunked_loss.py`)
+  computes exact cross-entropy over active (`!= -100`) tokens in chunks of
+  $C = 256$ (reducing peak logit VRAM by $>94\%$), and `chunked_eval_loss_and_preds`
+  returns compact 2D `pred_ids` (`[B, S]`) consumed directly by
+  `update_llm_tokens()` in `training/training/val_metrics.py`.
+
+---
+
+## 13. Conclusion: The Indestructible Paradigm
 
 The transition from manual hyperparameter tuning to autonomous,
 **"Nuclear-Hardened"** training represents a paradigm shift in AI development.

@@ -39,7 +39,8 @@
 <li><a href="#sec-4-sparse-mixture-of-experts-routing">4. Sparse Mixture-of-Experts Routing</a></li>
 <li><a href="#sec-5-kv-cache--inference-throughput">5. KV Cache &amp; Inference Throughput</a></li>
 <li><a href="#sec-6-parameter-specifications--scaling">6. Parameter Specifications &amp; Scaling</a></li>
-<li><a href="#sec-7-conclusion">7. Conclusion</a></li>
+<li><a href="#sec-7-dual-regime-optimization">7. Dual-Regime Optimization: Kaggle TPU v5e-8 &amp; Local 4 GB VRAM</a></li>
+<li><a href="#sec-8-conclusion">8. Conclusion</a></li>
 
 </ul>
 </nav>
@@ -229,8 +230,51 @@ binary data sidecars (<code>.onnx.data</code>), fully verified and supported by
 </blockquote>
 </section>
 
-<section id="sec-7-conclusion">
-<h2>7. Conclusion</h2>
+<section id="sec-7-dual-regime-optimization">
+<h2>7. Dual-Regime Optimization: Kaggle TPU v5e-8 &amp; Local 4 GB VRAM</h2>
+<p>To support both cloud-scale <strong>Kaggle TPU v5e-8</strong> (<code>TpuV5E8</code>, 8 cores, 128 GB
+aggregate HBM2e, native <code>bfloat16</code> MXUs) and local <strong>4 GB VRAM</strong> consumer GPUs
+without maintaining separate model codebases, <code>GenericCausalLLM</code> and
+<code>InstructionDataset</code> implement a dual-regime execution architecture:</p>
+<ol>
+<li><strong>Device-Adaptive Precision &amp; Quantization</strong>:
+<ul>
+<li><strong>Kaggle TPU v5e-8</strong>: Automatically disables CUDA-only <code>bitsandbytes</code> 4-bit
+quantization (<code>load_in_4bit = False</code>) and loads the backbone in native
+<code>torch.bfloat16</code> with <code>lora_r = 32</code>, <code>lora_alpha = 64</code>, and
+rank-stabilized LoRA (<code>use_rslora = True</code>, scaling updates by
+\(\alpha / \sqrt{r}\)).</li>
+<li><strong>Local 4 GB GPU</strong>: Enforces 4-bit NormalFloat (<code>nf4</code>) double quantization
+with hardware-verified compute dtype (<code>bfloat16</code> on Ampere+, <code>float16</code> on
+Turing), <code>lora_r = 8</code>, and <code>batch_size = 1</code> with <code>accumulation_steps = 16</code>.</li>
+</ul>
+</li>
+<li><strong>Chunked Linear Cross-Entropy (<code>ChunkedCausalLMLoss</code>)</strong>:
+<ul>
+<li>Standard <code>AutoModelForCausalLM.forward(labels=...)</code> materializes the full
+\([B, S, V]\) logit tensor (\(V = 151,936\) for Qwen2.5) and upcasts it to
+FP32, consuming \(\sim 778\text{ MB}\) at \(B=1, S=512\) and \(&gt;3\text{ GB}\) at
+\(B=2, S=1024\).</li>
+<li><code>ChunkedCausalLMLoss</code> (<code>models/llm_chunked_loss.py</code>) filters active tokens
+(<code>labels != -100</code>) and projects <code>lm_head</code> in chunks of \(C \in \{256, 1024\}\)
+with non-reentrant gradient checkpointing, reducing peak output-layer
+memory by \(&gt;94\%\).</li>
+<li>During validation, <code>chunked_eval_loss_and_preds()</code> returns compact 2D
+<code>pred_ids</code> (\([B, S]\)) instead of \([B, S, V]\) floating-point logits.</li>
+</ul>
+</li>
+<li><strong>Static-Shape Collation for XLA (<code>pad_to_max_length</code>)</strong>:
+<ul>
+<li>On TPU v5e-8, <code>collate_instruction_batch(..., pad_to_max_length=True)</code>
+enforces invariant \([B, S]\) tensor shapes so the PyTorch/XLA PJRT compiler
+compiles the HLO graph exactly once per run.</li>
+</ul>
+</li>
+</ol>
+</section>
+
+<section id="sec-8-conclusion">
+<h2>8. Conclusion</h2>
 <p>Sparse MoE decoders deliver unprecedented reasoning and language generation
 capabilities while adhering strictly to hardware memory bounds.</p>
 </section>
