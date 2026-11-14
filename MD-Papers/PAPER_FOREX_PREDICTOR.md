@@ -903,3 +903,13 @@ In MetaTrader 5 Strategy Tester backtests, `CopyRates(_Symbol, PERIOD_D1, 1,
 window (~1 year of pre-loaded `D1` history). `BuildFeatures()` in
 `training/export/mql5_features.py` now left-pads leading bars with `rates[0]`
 when `0 < copied < count`, eliminating `error 4753` journal spam.
+
+### Dataset Leakage Prevention & Purged Walk-Forward Splits
+
+To prevent look-ahead bias and label-horizon overlap during manifold
+compilation, `lemgendary-datasets/forex/qa.py` enforces deterministic UTC
+resampling (`resample_ohlcv_utc`), reproducible anomalous bar flagging
+(`flag_anomalous_bars`), causal volatility regime labeling
+(`classify_volatility_regime`), and Lopez de Prado purged/embargoed
+walk-forward splits (`purged_walk_forward_splits` + `audit_horizon_leakage`).
+See [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) Section 7.2.

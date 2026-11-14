@@ -2106,3 +2106,15 @@ post-training
 * Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
   `papers/dataset-compiler.html` with Section 7.2 (Forex Time-Series Curation,
   Purged Splits, and Leakage Audit).
+
+### 2026-11-15 — Forex Predictor Leakage Prevention Docs
+
+* Updated `MD-Papers/PAPER_FOREX_PREDICTOR.md` and `papers/forex_predictor.html`
+  with cross-references to `forex/qa.py` and `PAPER_DATASET_COMPILER.md`
+  Section 7.2.
+
+### 2026-11-15 — Training Pathology Data-Curation & Leakage
+
+* Updated `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and
+  `papers/training-pathology.html` with Data Leakage & Blank-Sample Curation
+  Pathologies.

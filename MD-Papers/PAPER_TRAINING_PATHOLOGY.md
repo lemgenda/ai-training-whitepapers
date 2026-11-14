@@ -1776,3 +1776,15 @@ and rigorous structural clamps ensures that training missions—even at extreme
 hardware.
 
 Status: SOTA-Autonomous & High-Fidelity Hardened.
+
+### Data Leakage & Blank-Sample Curation Pathologies
+
+- **Financial Time-Series Horizon Overlap:** Training windows whose
+  `[pred_time, eval_time]` label interval overlaps with test blocks inflate
+  validation metrics and collapse out-of-sample. Mitigated via
+  `purged_walk_forward_splits`, `audit_horizon_leakage`, and
+  `flag_anomalous_bars` in `lemgendary-datasets/forex/qa.py`.
+- **Blank & Low-Variance Visual Samples:** Solid-color or near-blank images
+  (`max(stddev) < 1.0`) and misaligned/holed segmentation masks corrupt
+  gradient updates. Mitigated via `check_image_integrity` and
+  `check_mask_integrity` in `lemgendary-datasets/core/visual_qa.py`.

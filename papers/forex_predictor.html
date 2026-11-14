@@ -738,6 +738,8 @@ Governance &amp; Specifications)</li>
 </ul>
 <h3 id="mt5-strategy-tester-period_d1-leading-bar-padding">MT5 Strategy Tester <code>PERIOD_D1</code> Leading-Bar Padding</h3>
 <p>In MetaTrader 5 Strategy Tester backtests, <code>CopyRates(_Symbol, PERIOD_D1, 1, 552, rates)</code> can return fewer than 552 daily bars near the start of a test window (~1 year of pre-loaded <code>D1</code> history). <code>BuildFeatures()</code> in <code>training/export/mql5_features.py</code> now left-pads leading bars with <code>rates[0]</code> when <code>0 &lt; copied &lt; count</code>, eliminating <code>error 4753</code> journal spam.</p>
+<h3>Dataset Leakage Prevention &amp; Purged Walk-Forward Splits</h3>
+<p>To prevent look-ahead bias and label-horizon overlap during manifold compilation, <code>lemgendary-datasets/forex/qa.py</code> enforces deterministic UTC resampling (<code>resample_ohlcv_utc</code>), reproducible anomalous bar flagging (<code>flag_anomalous_bars</code>), causal volatility regime labeling (<code>classify_volatility_regime</code>), and Lopez de Prado purged/embargoed walk-forward splits (<code>purged_walk_forward_splits</code> + <code>audit_horizon_leakage</code>). See <a href="./dataset-compiler.html">Dataset Compiler Suite</a> Section 7.2.</p>
 </section>
 
 <footer>
