@@ -69,7 +69,7 @@ audited**: 2026-11-13
   - [4.11 Sample Integrity, Shard Verification & Manifold
     Repair](#411-sample-integrity-shard-verification--manifold-repair)
   - [4.12 JSON Shard Labels, Sample Policies & Source Labels (v16.9.85 to
-    v16.9.107)](#412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107)
+v16.9.107)](#412-json-shard-labels-sample-policies--source-labels-v16985-to-v169107)
   - [4.13 Shard Offset Index (v16.9.108)](#413-shard-offset-index-v169108)
 - [5. Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
   - [5.1 Technical Comparison Matrix](#51-technical-comparison-matrix)
@@ -123,7 +123,8 @@ The `v16.9.28` to `v16.9.64` releases remove silent exception handling and
 lint suppressions, split the large modules, and move shared facts to single
 sources. API jobs run the same service entry points as the CLI
 (`python -m services.<module>`, described by a typed `ServiceInvocation`), and
-the arbitrary-command endpoint `POST /api/jobs/generic` is removed (37 operations).
+the arbitrary-command endpoint `POST /api/jobs/generic` is removed (37
+operations).
 The port, bind host, Kaggle owner and sibling folders come from
 `lemgendary-env-manager/ecosystem/ecosystem.json`, and task ids come from
 `task_taxonomy.json` (Section 3.7).

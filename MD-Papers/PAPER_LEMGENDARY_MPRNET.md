@@ -11,65 +11,106 @@ GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-  - [1.1 What MPRNet Does (In Plain English)](#11-what-mprnet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
-  - [2.1 The Deraining Track (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
-  - [2.2 Multi-Stage Progressive Operators (CSFF & SAM)](#22-multi-stage-progressive-operators-csff--sam)
+  - [1.1 What MPRNet Does (In Plain
+    English)](#11-what-mprnet-does-in-plain-english)
+- [2. Visual Taxonomy: The LemGendary Restoration
+  Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
+  - [2.1 The Deraining Track
+    (mprnet_deraining)](#21-the-deraining-track-mprnet_deraining)
+  - [2.2 Multi-Stage Progressive Operators (CSFF &
+    SAM)](#22-multi-stage-progressive-operators-csff--sam)
 - [3. Shared Foundations](#3-shared-foundations)
-  - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
-    - [3.1.1 The Headroom-Aware Memory-Sentinel](#311-the-headroom-aware-memory-sentinel)
-    - [3.1.2 OVC Data Streaming Bridge (OpenCV-to-CUDA)](#312-ovc-data-streaming-bridge-opencv-to-cuda)
-  - [3.2 Mathematical Optimization & Evaluation Metrics](#32-mathematical-optimization--evaluation-metrics)
-    - [3.2.1 Structural Fidelity Formulations](#321-structural-fidelity-formulations)
+  - [3.1 Hardware-Aware Infrastructure: Universal
+    Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
+    - [3.1.1 The Headroom-Aware
+      Memory-Sentinel](#311-the-headroom-aware-memory-sentinel)
+    - [3.1.2 OVC Data Streaming Bridge
+      (OpenCV-to-CUDA)](#312-ovc-data-streaming-bridge-opencv-to-cuda)
+  - [3.2 Mathematical Optimization & Evaluation
+    Metrics](#32-mathematical-optimization--evaluation-metrics)
+    - [3.2.1 Structural Fidelity
+      Formulations](#321-structural-fidelity-formulations)
     - [3.2.2 Deep Perceptual Metrics](#322-deep-perceptual-metrics)
-    - [3.2.3 PCIe VRAM Thrashing & The Chunking Fix](#323-pcie-vram-thrashing--the-chunking-fix)
+    - [3.2.3 PCIe VRAM Thrashing & The Chunking
+      Fix](#323-pcie-vram-thrashing--the-chunking-fix)
     - [3.2.4 The CPU-Bottleneck Bypass](#324-the-cpu-bottleneck-bypass)
   - [3.3 Kaggle Cloud Execution Protocols](#33-kaggle-cloud-execution-protocols)
-    - [3.3.1 Single-GPU Specialization (15GB T4 Node Strategy)](#331-single-gpu-specialization-15gb-t4-node-strategy)
-    - [3.3.2 Sub-Epoch Continuity (Progress Snapshots)](#332-sub-epoch-continuity-progress-snapshots)
-    - [3.3.3 Serial Extraction Mutex: Stable Global Alignment (v1.0.42)](#333-serial-extraction-mutex-stable-global-alignment-v1042)
-    - [3.3.4 Registry-First Dynamic Unification (v4.5)](#334-registry-first-dynamic-unification-v45)
+    - [3.3.1 Single-GPU Specialization (15GB T4 Node
+      Strategy)](#331-single-gpu-specialization-15gb-t4-node-strategy)
+    - [3.3.2 Sub-Epoch Continuity (Progress
+      Snapshots)](#332-sub-epoch-continuity-progress-snapshots)
+    - [3.3.3 Serial Extraction Mutex: Stable Global Alignment
+      (v1.0.42)](#333-serial-extraction-mutex-stable-global-alignment-v1042)
+    - [3.3.4 Registry-First Dynamic Unification
+      (v4.5)](#334-registry-first-dynamic-unification-v45)
 - [4. Model Deep-Dives](#4-model-deep-dives)
   - [4.1 MPRNet Deraining Engine](#41-mprnet-deraining-engine)
-    - [4.1.1 Model description, purpose and usage](#411-model-description-purpose-and-usage)
+    - [4.1.1 Model description, purpose and
+      usage](#411-model-description-purpose-and-usage)
     - [4.1.2 Model Info](#412-model-info)
     - [4.1.3 Manifold Info](#413-manifold-info)
     - [4.1.4 Performance Metrics](#414-performance-metrics)
     - [4.1.5 Training Curve](#415-training-curve)
-    - [4.1.6 Model specific issues and optimizations](#416-model-specific-issues-and-optimizations)
+    - [4.1.6 Model specific issues and
+      optimizations](#416-model-specific-issues-and-optimizations)
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
     - [4.1.8 Training Process Analysis](#418-training-process-analysis)
-- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-  - [5.1 The Progressive Stage NaN Overflows (Structural FP16 Disable)](#51-the-progressive-stage-nan-overflows-structural-fp16-disable)
+- [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+  - [5.1 The Progressive Stage NaN Overflows (Structural FP16
+    Disable)](#51-the-progressive-stage-nan-overflows-structural-fp16-disable)
   - [5.2 The Contiguous View Kernel Crash](#52-the-contiguous-view-kernel-crash)
-  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume Shock](#53-the-onecyclelr-sudden-death--adamw-resume-shock)
-  - [5.4 The VGG Perceptual Convergence Collapse](#54-the-vgg-perceptual-convergence-collapse)
-  - [5.5 The "Double-Step" OneCycleLR Matrix Paradox](#55-the-double-step-onecyclelr-matrix-paradox)
-  - [5.6 The SOTA Sentry "Defibrillation Override"](#56-the-sota-sentry-defibrillation-override)
-  - [5.7 The Universal SOTA Optimization Vector](#57-the-universal-sota-optimization-vector)
-  - [5.8 The Stagnation Paradox: Plateau-Buster v5.2](#58-the-stagnation-paradox-plateau-buster-v52)
-  - [5.9 The Quality-Regression Mutex (SOTA Guardrail)](#59-the-quality-regression-mutex-sota-guardrail)
-  - [5.10 Persistent I/O Synchronization (v5.8)](#510-persistent-io-synchronization-v58)
-  - [5.11 Architectural Survival Profiles (v5.9)](#511-architectural-survival-profiles-v59)
+  - [5.3 The OneCycleLR "Sudden Death" & AdamW Resume
+    Shock](#53-the-onecyclelr-sudden-death--adamw-resume-shock)
+  - [5.4 The VGG Perceptual Convergence
+    Collapse](#54-the-vgg-perceptual-convergence-collapse)
+  - [5.5 The "Double-Step" OneCycleLR Matrix
+    Paradox](#55-the-double-step-onecyclelr-matrix-paradox)
+  - [5.6 The SOTA Sentry "Defibrillation
+    Override"](#56-the-sota-sentry-defibrillation-override)
+  - [5.7 The Universal SOTA Optimization
+    Vector](#57-the-universal-sota-optimization-vector)
+  - [5.8 The Stagnation Paradox: Plateau-Buster
+    v5.2](#58-the-stagnation-paradox-plateau-buster-v52)
+  - [5.9 The Quality-Regression Mutex (SOTA
+    Guardrail)](#59-the-quality-regression-mutex-sota-guardrail)
+  - [5.10 Persistent I/O Synchronization
+    (v5.8)](#510-persistent-io-synchronization-v58)
+  - [5.11 Architectural Survival Profiles
+    (v5.9)](#511-architectural-survival-profiles-v59)
   - [5.12 Mission Continuity Guard (v6.1)](#512-mission-continuity-guard-v61)
-  - [5.13 Manifold Rescue & High-Energy Jolt (v6.1.17)](#513-manifold-rescue--high-energy-jolt-v6117)
+  - [5.13 Manifold Rescue & High-Energy Jolt
+    (v6.1.17)](#513-manifold-rescue--high-energy-jolt-v6117)
   - [5.14 Velocity Life-Support (v6.1.18)](#514-velocity-life-support-v6118)
-  - [5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
-  - [5.16 Telemetry Parity & Plateau Resilience (v6.1.31)](#516-telemetry-parity--plateau-resilience-v6131)
-  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
-  - [5.18 Invariant Native Scorecarding (v6.2.0)](#518-invariant-native-scorecarding-v620)
-  - [5.19 Universal Backend Selection (MPS/XPU/DirectML)](#519-universal-backend-selection-mpsxpudirectml)
-  - [5.20 Time-Aware Checkpoint Governance (15-min Window)](#520-time-aware-checkpoint-governance-15-min-window)
-  - [5.21 Dynamic min_delta Scaling for High-Range Quality](#521-dynamic-min_delta-scaling-for-high-range-quality)
-  - [5.22 Resolution-Aware Patience Reset (SOTA Guard)](#522-resolution-aware-patience-reset-sota-guard)
-  - [5.23 Validation Sharding (30% Fixed Audit)](#523-validation-sharding-30-fixed-audit)
-  - [5.24 VRAM Defibrillation for InceptionV3](#524-vram-defibrillation-for-inceptionv3)
-  - [5.25 Restoration Quality Score Integration](#525-restoration-quality-score-integration)
+  - [5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence
+    (v6.1.19)](#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
+  - [5.16 Telemetry Parity & Plateau Resilience
+    (v6.1.31)](#516-telemetry-parity--plateau-resilience-v6131)
+  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation
+    (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
+  - [5.18 Invariant Native Scorecarding
+    (v6.2.0)](#518-invariant-native-scorecarding-v620)
+  - [5.19 Universal Backend Selection
+    (MPS/XPU/DirectML)](#519-universal-backend-selection-mpsxpudirectml)
+  - [5.20 Time-Aware Checkpoint Governance (15-min
+    Window)](#520-time-aware-checkpoint-governance-15-min-window)
+  - [5.21 Dynamic min_delta Scaling for High-Range
+    Quality](#521-dynamic-min_delta-scaling-for-high-range-quality)
+  - [5.22 Resolution-Aware Patience Reset (SOTA
+    Guard)](#522-resolution-aware-patience-reset-sota-guard)
+  - [5.23 Validation Sharding (30% Fixed
+    Audit)](#523-validation-sharding-30-fixed-audit)
+  - [5.24 VRAM Defibrillation for
+    InceptionV3](#524-vram-defibrillation-for-inceptionv3)
+  - [5.25 Restoration Quality Score
+    Integration](#525-restoration-quality-score-integration)
   - [5.26 Governor History Serialization](#526-governor-history-serialization)
-- [6. Deployment Strategy: The C++ ONNX Ghost-Severing Protocol](#6-deployment-strategy-the-c-onnx-ghost-severing-protocol)
+- [6. Deployment Strategy: The C++ ONNX Ghost-Severing
+  Protocol](#6-deployment-strategy-the-c-onnx-ghost-severing-protocol)
   - [6.1 Standalone Exporters](#61-standalone-exporters)
   - [6.2 The Ghost-Severing Protocol](#62-the-ghost-severing-protocol)
-- [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+- [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
 
 ## 1. Abstract
@@ -130,7 +171,8 @@ By unifying diverse high-resolution rain subsets into
 subtract streaks, volumetric drops, and refractive distortions natively.
 
 ![Deraining Target](../assets/mprnet_deraining_example.png)
-*Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.*
+*Figure 1: Deraining Target - Extreme torrential rain obscuring structure and
+texture.*
 Deraining requires the model to cleanly isolate and remove refractive water
 streaks across infinite depths without blurring the native textures of the
 objects behind them. MPRNet excels here due to its progressive multi-stage
@@ -232,11 +274,13 @@ fidelity and deep perceptual metrics.
   Squared Error:
 
   $$
-  \text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} - K_{i,j}\right)^2
+  \text{MSE}(I, K) = \frac{1}{HW}\sum_{i=1}^H\sum_{j=1}^W \left(I_{i,j} -
+K_{i,j}\right)^2
   $$
 
 - **Structural Similarity Index (SSIM)**:
-  Evaluates luminance, contrast, and structural comparison between image patches:
+  Evaluates luminance, contrast, and structural comparison between image
+patches:
 
   $$
   \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 +
@@ -270,7 +314,8 @@ correlate with human-visual preference. The training suite integrates:
   - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
   $$
 
-  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance
+matrices.
 
 - **Restoration Quality Score Formulation (Project-Specific Heuristic)**:
   The orchestrator unifies structural and perceptual metrics into a single
@@ -714,9 +759,11 @@ be generated automatically in the cloud, and deployed instantly via WebGPU.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMprnetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedMprnetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

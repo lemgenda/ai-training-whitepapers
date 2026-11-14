@@ -10,13 +10,19 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What Universal Film Restorer Does (In Plain English)](#11-what-universal-film-restorer-does-in-plain-english)
-* [2. Visual Taxonomy: Analog Emulsion Physics](#2-visual-taxonomy-analog-emulsion-physics)
-* [3. Shared Foundations: Tri-Stream & Partial Convolution Inpainting](#3-shared-foundations-tri-stream--partial-convolution-inpainting)
+* [1.1 What Universal Film Restorer Does (In Plain
+  English)](#11-what-universal-film-restorer-does-in-plain-english)
+* [2. Visual Taxonomy: Analog Emulsion
+  Physics](#2-visual-taxonomy-analog-emulsion-physics)
+* [3. Shared Foundations: Tri-Stream & Partial Convolution
+  Inpainting](#3-shared-foundations-tri-stream--partial-convolution-inpainting)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production
+  Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -179,9 +185,11 @@ without unnatural digital smoothing.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedFilmRestorerLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedFilmRestorerLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

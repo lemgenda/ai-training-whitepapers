@@ -10,13 +10,19 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What NIMA Aesthetic Mobile Architecture Does (In Plain English)](#11-what-nima-aesthetic-mobile-architecture-does-in-plain-english)
-* [2. Visual Taxonomy: Perceptual Rating Distribution & Feature Extraction](#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction)
-* [3. Shared Foundations: Earth Mover's Distance & Multi-Scale Optimization](#3-shared-foundations-earth-movers-distance--multi-scale-optimization)
+* [1.1 What NIMA Aesthetic Mobile Architecture Does (In Plain
+  English)](#11-what-nima-aesthetic-mobile-architecture-does-in-plain-english)
+* [2. Visual Taxonomy: Perceptual Rating Distribution & Feature
+  Extraction](#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction)
+* [3. Shared Foundations: Earth Mover's Distance & Multi-Scale
+  Optimization](#3-shared-foundations-earth-movers-distance--multi-scale-optimization)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production
+  Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -26,7 +32,8 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 The **NIMA Aesthetic Mobile Architecture** is a dedicated neural evaluation
 engine engineered for precise visual quality assessment. Operating on the
 compiled manifold `LemGendizedNimaAesthetic`, it leverages **MobileNetV3-Small
-(1.0773M Parameters)** to predict continuous perceptual distributions rather than
+(1.0773M Parameters)** to predict continuous perceptual distributions rather
+than
 simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance
 (EMD) and Soft-Spearman rank optimization problem, this model captures subtle
 perceptual judgments with verified mathematical resilience.
@@ -67,7 +74,8 @@ $$
 p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}
 $$
 
-where temperature $\tau = 1.0$ anchors calibration against the human voting distribution.
+where temperature $\tau = 1.0$ anchors calibration against the human voting
+distribution.
 
 ---
 
@@ -113,8 +121,10 @@ automated training loss gating, and desktop studio review.
 #### 4.4 Performance Metrics
 
 * **Current Training Epochs**: 40 `[CURRENT]`
-* **Best Spearman Rank (SRCC)**: 0.685 `[MEASURED]` (Target: $\ge 0.650$ `[TARGET]`)
-* **Best Linear Correlation (PLCC)**: 0.702 `[MEASURED]` (Target: $\ge 0.650$ `[TARGET]`)
+* **Best Spearman Rank (SRCC)**: 0.685 `[MEASURED]` (Target: $\ge 0.650$
+  `[TARGET]`)
+* **Best Linear Correlation (PLCC)**: 0.702 `[MEASURED]` (Target: $\ge 0.650$
+  `[TARGET]`)
 * **Inference Latency**: 4.8ms `[MEASURED]`
 
 ---
@@ -163,9 +173,11 @@ functions with hardware-bounded latency guarantees.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNimaAesthetic`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedNimaAesthetic`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

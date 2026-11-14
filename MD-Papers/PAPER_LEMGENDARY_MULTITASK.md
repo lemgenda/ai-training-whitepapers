@@ -10,13 +10,19 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What MultiTask Restorer Does (In Plain English)](#11-what-multitask-restorer-does-in-plain-english)
-* [2. Visual Taxonomy: Shared Backbone & MoE Router](#2-visual-taxonomy-shared-backbone--moe-router)
-* [3. Shared Foundations: 11 Specialized Heads & Dynamic Weight Average](#3-shared-foundations-11-specialized-heads--dynamic-weight-average)
+* [1.1 What MultiTask Restorer Does (In Plain
+  English)](#11-what-multitask-restorer-does-in-plain-english)
+* [2. Visual Taxonomy: Shared Backbone & MoE
+  Router](#2-visual-taxonomy-shared-backbone--moe-router)
+* [3. Shared Foundations: 11 Specialized Heads & Dynamic Weight
+  Average](#3-shared-foundations-11-specialized-heads--dynamic-weight-average)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production
+  Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -84,7 +90,8 @@ $$
 w_k(t-1) = \frac{\mathcal{L}_k(t-1)}{\mathcal{L}_k(t-2)}
 $$
 
-This autonomously accelerates lagging tasks and dampens well-converged objectives.
+This autonomously accelerates lagging tasks and dampens well-converged
+objectives.
 
 ---
 
@@ -114,9 +121,12 @@ memory footprint.
 #### 4.4 Performance Metrics
 
 * **Current Training Epochs**: 32 `[CURRENT]`
-* **GoPro Deblur PSNR**: 33.72 dB `[MEASURED]` (Target: $\ge 33.50 \text{ dB}$ `[TARGET]`)
-* **Denoise PSNR**: 39.85 dB `[MEASURED]` (Target: $\ge 39.00 \text{ dB}$ `[TARGET]`)
-* **Derain PSNR**: 32.10 dB `[MEASURED]` (Target: $\ge 31.80 \text{ dB}$ `[TARGET]`)
+* **GoPro Deblur PSNR**: 33.72 dB `[MEASURED]` (Target: $\ge 33.50 \text{ dB}$
+  `[TARGET]`)
+* **Denoise PSNR**: 39.85 dB `[MEASURED]` (Target: $\ge 39.00 \text{ dB}$
+  `[TARGET]`)
+* **Derain PSNR**: 32.10 dB `[MEASURED]` (Target: $\ge 31.80 \text{ dB}$
+  `[TARGET]`)
 * **Current Learning Rate**: 0.000040
 
 ---
@@ -138,10 +148,14 @@ memory footprint.
 * **Production FP16 Engine (`ProfessionalMultiRestorer.onnx`)**:
   Embedded self-contained weights (1.62 MB) for high-throughput edge and desktop
   restoration without external data files.
-* **High-Precision FP32 Export (`ProfessionalMultiRestorer_FP32.onnx` + `.onnx.data`)**:
-  Separated 2.89 MB binary sidecar for high-precision validation and lab scanning.
-* **Symbolic Dynamic Resolution Support**: Replaced `adaptive_avg_pool2d` with bilinear
-  `F.interpolate` and global average pooling with `x.mean(dim=(-2, -1))` to enable
+* **High-Precision FP32 Export (`ProfessionalMultiRestorer_FP32.onnx` +
+  `.onnx.data`)**:
+  Separated 2.89 MB binary sidecar for high-precision validation and lab
+scanning.
+* **Symbolic Dynamic Resolution Support**: Replaced `adaptive_avg_pool2d` with
+  bilinear
+  `F.interpolate` and global average pooling with `x.mean(dim=(-2, -1))` to
+enable
   unconstrained resolution inference on any input aspect ratio.
 * **Lifecycle Governance**: 15-minute intra-epoch checkpointing
   (`progress.pth`), end-of-epoch persistence (`latest.pth`), and target
@@ -180,7 +194,8 @@ footprint.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMultitaskRestorationPro`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedMultitaskRestorationPro`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md)

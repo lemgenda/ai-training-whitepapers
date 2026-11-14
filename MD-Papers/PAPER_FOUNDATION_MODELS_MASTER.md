@@ -10,9 +10,11 @@
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Foundation Scaling Laws & Compute Budgets](#2-foundation-scaling-laws--compute-budgets)
+* [2. Foundation Scaling Laws & Compute
+  Budgets](#2-foundation-scaling-laws--compute-budgets)
 * [3. Latent Diffusion Models (LDM)](#3-latent-diffusion-models-ldm)
-* [4. Image-to-Text Vision-Language Models](#4-image-to-text-vision-language-models)
+* [4. Image-to-Text Vision-Language
+  Models](#4-image-to-text-vision-language-models)
 * [5. Causal Decoder Transformers & MoE](#5-causal-decoder-transformers--moe)
 * [6. Distributed Training Dynamics](#6-distributed-training-dynamics)
 * [7. Conclusion](#7-conclusion)
@@ -47,7 +49,8 @@ $$
 
 where:
 
-* $C$ represents total training compute budget in floating point operations ($\text{FLOPs}$).
+* $C$ represents total training compute budget in floating point operations
+  ($\text{FLOPs}$).
 * $N$ denotes the non-embedding active parameter count of the neural network.
 * $D$ denotes the total volume of consumed training tokens or samples.
 
@@ -132,11 +135,13 @@ standard AdamW:
 * **Standard FP32 AdamW** (First moment $m_t$ + Second moment $v_t$ + Master
   FP32 weights):
   $$
-  M_{\text{opt}} = 4N (m_t) + 4N (v_t) + 4N (\text{master copy}) = 12N \text{ bytes}
+  M_{\text{opt}} = 4N (m_t) + 4N (v_t) + 4N (\text{master copy}) = 12N \text{
+bytes}
   $$
 * **8-Bit AdamW (bitsandbytes)**:
   $$
-  M_{\text{opt}} = 1N (m_t) + 1N (v_t) + 2N (\text{master copy}) = 4N \text{ bytes}
+  M_{\text{opt}} = 1N (m_t) + 1N (v_t) + 2N (\text{master copy}) = 4N \text{
+bytes}
   $$
 * **Adafactor / SGD with Momentum**:
   $$
@@ -190,7 +195,8 @@ $$
 \|\epsilon - \epsilon_\theta(\mathbf{z}_t, t, c)\|^2 \right]
 $$
 
-Dedicated documentation: [Diffusion Models Specification](./PAPER_LEMGENDARY_DIFFUSION.md).
+Dedicated documentation: [Diffusion Models
+Specification](./PAPER_LEMGENDARY_DIFFUSION.md).
 
 ---
 
@@ -201,10 +207,12 @@ decoder via a Perceiver Resampler. The visual tokens $\mathbf{H}_v$ condition
 the language model through cross-attention:
 
 $$
-\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{< i}, \mathbf{H}_v)
+\mathcal{L}_{\text{VLM}} = -\sum_{i=1}^T \log P_\theta(y_i \mid y_{< i},
+\mathbf{H}_v)
 $$
 
-Dedicated documentation: [Image-to-Text VLM Specification](./PAPER_LEMGENDARY_IMAGE_TO_TEXT.md).
+Dedicated documentation: [Image-to-Text VLM
+Specification](./PAPER_LEMGENDARY_IMAGE_TO_TEXT.md).
 
 ---
 
@@ -218,7 +226,8 @@ $$
 \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})
 $$
 
-Dedicated documentation: [Large Language Models Specification](./PAPER_LEMGENDARY_LLM.md).
+Dedicated documentation: [Large Language Models
+Specification](./PAPER_LEMGENDARY_LLM.md).
 
 ---
 

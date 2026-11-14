@@ -64,8 +64,10 @@
 
 ### v16.9.225 - Pre-Baked WebDataset Indexing & Cloud Training Pathologies
 
-* **Pathology 64 & 65**: Documented dual-GPU PCIe barrier overhead on lightweight
-  parameter predictors and 0-byte WebDataset member fallback / shard index latency.
+* **Pathology 64 & 65**: Documented dual-GPU PCIe barrier overhead on
+  lightweight
+  parameter predictors and 0-byte WebDataset member fallback / shard index
+latency.
 * **Dataset Compiler & UPN v2**: Documented pre-baked `shard_offsets.json` v2
   generation for 0.0s startup resolution and WebP-only container purity.
 * **Training Suite**: Documented Single-GPU T4 affinity governance and
@@ -731,7 +733,8 @@
 
 ### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
 
-* `manifest/documents.json`, `canonical_capabilities.json`, `canonical_capabilities.yaml`:
+* `manifest/documents.json`, `canonical_capabilities.json`,
+  `canonical_capabilities.yaml`:
   Synchronized Model Training Suite baseline to `v16.9.138-STABLE` and AI Studio
   GUI baseline to `v2.10.45` with audit timestamp `2026-11-10`.
 * `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and `papers/training-pathology.html`:
@@ -762,7 +765,8 @@
 ### v16.9.85 - Edge GPU 4GB VRAM Containment & Causal LLM Quantization Hardening
 
 * `MD-Papers/PAPER_LEMGENDARY_LLM.md`: documented 4-bit NF4 QLoRA quantization,
-  SDPA execution, gradient checkpointing, and Paged 8-bit AdamW containment profile.
+  SDPA execution, gradient checkpointing, and Paged 8-bit AdamW containment
+profile.
 * `MD-Papers/PAPER_TRAINING_PATHOLOGY.md`: catalogued Pathology 33 (Unquantized
   Checkpoint Resume Shape Mismatch on 4-bit Backbones) and Pathology 34 (PCIe
   Paging Thrashing & Host VRAM Starvation on 4GB Accelerators).
@@ -776,10 +780,12 @@
   deterministic stratification across all 7 corpus categories and held-out test
   shard generation (`ai_helper_test.jsonl`).
 * `MD-Papers/PAPER_TRAINING_SUITE.md` and `papers/training-suite-master.html`:
-  documented held-out test set ingestion, tokenization, and automated post-training
+  documented held-out test set ingestion, tokenization, and automated
+post-training
   evaluation metrics (`test_loss`, `test_perplexity`, `test_accuracy`).
 * `canonical_capabilities.yaml`, `canonical_capabilities.json`, and
-  `manifest/documents.json`: bumped runtime engine baseline to `v16.9.128-STABLE`
+  `manifest/documents.json`: bumped runtime engine baseline to
+`v16.9.128-STABLE`
   and dataset compiler baseline to `v16.9.71-STABLE`.
 
 ### v16.9.83 - Master API Manual .secrets.yaml SSOT Alignment

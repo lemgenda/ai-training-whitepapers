@@ -40,11 +40,11 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [4.4 Managed Workspace Projects Health
     Cards](#44-managed-workspace-projects-health-cards)
 - [5. Dataset Compilation: Modernization, Kaggle Ingestion & Streaming
-  Manifolds](#5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds)
+Manifolds](#5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds)
   - [5.1 Dataset Compiler & Modernization Control
     Card](#51-dataset-compiler--modernization-control-card)
   - [5.2 Production Manifolds Catalog, Upstream Lineage & One-Click Cloud
-    Sync](#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync)
+Sync](#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync)
   - [5.3 Modernization Queue & Scale Reduction
     Workflows](#53-modernization-queue--scale-reduction-workflows)
   - [5.4 Embedded Dataset Telemetry
@@ -60,9 +60,9 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [6.2.2 Interactive SOTA Target Pinning & Metric
     Inspection](#622-interactive-sota-target-pinning--metric-inspection)
   - [6.3 Three-Tab Real-Time Telemetry Stream & Responsive
-    Cancellation](#63-three-tab-real-time-telemetry-stream--responsive-cancellation)
+Cancellation](#63-three-tab-real-time-telemetry-stream--responsive-cancellation)
   - [6.4 Revamped Training Dashboard Topology & Interactive SOTA
-    Inspection](#64-revamped-training-dashboard-topology--interactive-sota-inspection)
+Inspection](#64-revamped-training-dashboard-topology--interactive-sota-inspection)
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google
   Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
   - [7.1 Real-Time Metrics & Live Loss
@@ -71,11 +71,11 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [7.3 Publishing to Kaggle Models Hub & Cloud
     Registry](#73-publishing-to-kaggle-models-hub--cloud-registry)
   - [7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to
-    v2.10.68)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068)
+v2.10.68)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068)
 - [8. Health Matrix & Cross-Project Version Drift
   Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
-    Packages](#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages)
+Packages](#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages)
   - [8.2 Ecosystem Maintenance & Governance
     Controls](#82-ecosystem-maintenance--governance-controls)
 - [9. Contextual UX Help & Interactive Hover Guidance
@@ -83,7 +83,7 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [9.1 Interactive Hover Popovers & Safety
     Diagnostics](#91-interactive-hover-popovers--safety-diagnostics)
 - [10. Permanent Offline Documentation Hub & Online
-  Synchronization](#10-permanent-offline-documentation-hub--online-synchronization)
+Synchronization](#10-permanent-offline-documentation-hub--online-synchronization)
   - [10.1 Local Static Offline Documentation
     Server](#101-local-static-offline-documentation-server)
   - [10.2 Live GitHub Pages Online
@@ -1924,3 +1924,30 @@ scaled into 854x480, and is sent as `recording.mp4` (the Environment Manager
 accepts up to 50 MB). On macOS and Linux the recorder reports that recording
 is not supported on this platform yet; describe the steps in the description
 instead.
+
+### Smart Dataset Compilation Engine (v2.10.68+)
+
+- **Automatic Preset Selection**: Selecting a Target Manifold automatically sets
+  `COMPILATION PRESET` to its recommended preset (`forex-timeseries` for
+  Forex/Parquet, `llm-instruction` for LLM/JSONL, `detection-variable` for
+  YOLO/Pose, `restoration-hardlinked` for Restoration/SR, `quality-vision` for
+  Vision/Classification).
+- **70% Hardware Worker Default**: `WORKERS` is pre-filled to 70% of available
+  CPU cores.
+- **Task-Specific Controls**: Displays `Start Date` / `End Date`
+  (`comp-input-start-date`, `comp-input-end-date`) for Forex, `Target Samples`
+  (`comp-input-target-samples`) for LLM, `Label Strategy`
+  (`comp-select-label-strategy`) for Detection, and `Shard Extension`
+  (`comp-select-shard-ext`) for WebDataset manifolds.
+
+![Figure 1: Dataset Compilation Engine Card](../assets/gui/gui_dataset_compilation_engine.png)
+*Figure 1: Dataset Compilation Engine card: (1) Target Manifold selector, (2)
+Compilation Preset (auto-selected for the chosen manifold), (3) Max Size (GB)
+override, (4) Workers (auto-scaled to 70% of CPU cores), (5) Dynamic
+task-specific control (`Target Samples`, `Start/End Date`, `Label Strategy`, or
+`Shard Extension`), and (6) Compile Manifold trigger.*
+
+![Figure 2: Report Issue Modal](../assets/gui/gui_report_issue_modal.png)
+*Figure 2: Report Issue modal: (1) Your email, (2) Module selector, (3) What
+happened? description, (4) Attach telemetry (60 recent events as CSV), (5)
+Capture screenshot (up to 5), and (6) Send report action.*

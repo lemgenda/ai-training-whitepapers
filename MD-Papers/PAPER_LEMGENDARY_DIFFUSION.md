@@ -11,7 +11,8 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 * [1. Abstract](#1-abstract)
 * [2. Latent Space Compression](#2-latent-space-compression)
-* [3. Stochastic Differential Equations & Score Matching](#3-stochastic-differential-equations--score-matching)
+* [3. Stochastic Differential Equations & Score
+  Matching](#3-stochastic-differential-equations--score-matching)
 * [4. Classifier-Free Guidance (CFG)](#4-classifier-free-guidance-cfg)
 * [5. Fast Schedulers (DDIM & Euler-A)](#5-fast-schedulers-ddim--euler-a)
 * [6. Architecture & Training Parameters](#6-architecture--training-parameters)
@@ -47,7 +48,8 @@ intermediate activation memory.
 
 ## 3. Stochastic Differential Equations & Score Matching
 
-Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential equation:
+Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential
+equation:
 
 $$
 dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw

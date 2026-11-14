@@ -12,16 +12,24 @@ Nodes
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Visual Taxonomy: Restoration Manifolds](#2-visual-taxonomy-restoration-manifolds)
-* [3. Shared Foundations & Universal Acceleration](#3-shared-foundations--universal-acceleration)
+* [2. Visual Taxonomy: Restoration
+  Manifolds](#2-visual-taxonomy-restoration-manifolds)
+* [3. Shared Foundations & Universal
+  Acceleration](#3-shared-foundations--universal-acceleration)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-  * [4.1 LemGendary Universal Film Restorer](#41-lemgendary-universal-film-restorer)
-  * [4.2 LemGendary UltraZoom Master Model](#42-lemgendary-ultrazoom-master-model)
-  * [4.3 LemGendary UPN v2 Parameter Predictor](#43-lemgendary-upn-v2-parameter-predictor)
-  * [4.4 LemGendary Professional Multi-Task Restoration MoE](#44-lemgendary-professional-multi-task-restoration-moe)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+  * [4.1 LemGendary Universal Film
+    Restorer](#41-lemgendary-universal-film-restorer)
+  * [4.2 LemGendary UltraZoom Master
+    Model](#42-lemgendary-ultrazoom-master-model)
+  * [4.3 LemGendary UPN v2 Parameter
+    Predictor](#43-lemgendary-upn-v2-parameter-predictor)
+  * [4.4 LemGendary Professional Multi-Task Restoration
+    MoE](#44-lemgendary-professional-multi-task-restoration-moe)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
 * [6. Deployment Strategy](#6-deployment-strategy)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -130,7 +138,8 @@ film stock, removing physical emulsion scratches and chemical decay.
 * **Status**: Checkpoint Trained (`LemGendaryUniversalFilmRestorer.pt`)
 * **Resolution Ladder**: `[256, 384, 512]`
 * **Loss Function**: `l1_lpips`
-* **Target PSNR**: $\ge 24.0\text{ dB}$, **SSIM**: $\ge 0.800$, **LPIPS**: $\le 0.250$
+* **Target PSNR**: $\ge 24.0\text{ dB}$, **SSIM**: $\ge 0.800$, **LPIPS**: $\le
+  0.250$
 
 ---
 
@@ -147,7 +156,8 @@ across high-zoom crops.
 * **Architecture**: UltraZoomMaster (Sub-Pixel ESPCN Super-Resolution)
 * **Status**: Checkpoint Trained (`LemGendaryUltraZoom(Master).pt`)
 * **Resolution Ladder**: `[256, 384, 512]`
-* **Target PSNR**: $\ge 34.0\text{ dB}$, **SSIM**: $\ge 0.950$, **LPIPS**: $\le 0.040$
+* **Target PSNR**: $\ge 34.0\text{ dB}$, **SSIM**: $\ge 0.950$, **LPIPS**: $\le
+  0.040$
 
 ---
 
@@ -185,7 +195,8 @@ degradation signatures.
 * **Target Manifold**: `LemGendizedProfessionalMultitaskRestorationLarge`
 * **Resolution Ladder**: `[256, 384, 512]`
 * **Loss Function**: `hybrid_restoration`
-* **Target PSNR**: $\ge 32.0\text{ dB}$, **SSIM**: $\ge 0.930$, **LPIPS**: $\le 0.070$
+* **Target PSNR**: $\ge 32.0\text{ dB}$, **SSIM**: $\ge 0.930$, **LPIPS**: $\le
+  0.070$
 
 #### 4.4.3 Spatial Ladder & Training Progression
 

@@ -12,20 +12,28 @@ Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-  - [1.1 What MIRNet Does (In Plain English)](#11-what-mirnet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
-  - [2.1 Low-Light Manifold (mirnet_lowlight)](#21-low-light-manifold-mirnet_lowlight)
-  - [2.2 Exposure Manifold (mirnet_exposure)](#22-exposure-manifold-mirnet_exposure)
+  - [1.1 What MIRNet Does (In Plain
+    English)](#11-what-mirnet-does-in-plain-english)
+- [2. Visual Taxonomy: The LemGendary Restoration
+  Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
+  - [2.1 Low-Light Manifold
+    (mirnet_lowlight)](#21-low-light-manifold-mirnet_lowlight)
+  - [2.2 Exposure Manifold
+    (mirnet_exposure)](#22-exposure-manifold-mirnet_exposure)
 - [3. Shared Foundations](#3-shared-foundations)
-  - [3.1 Hardware-Aware Infrastructure: Universal Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
-  - [3.2 Mathematical Optimization: High-Fidelity Perceptual Engines](#32-mathematical-optimization-high-fidelity-perceptual-engines)
+  - [3.1 Hardware-Aware Infrastructure: Universal
+    Acceleration](#31-hardware-aware-infrastructure-universal-acceleration)
+  - [3.2 Mathematical Optimization: High-Fidelity Perceptual
+    Engines](#32-mathematical-optimization-high-fidelity-perceptual-engines)
   - [3.3 Kaggle Cloud Execution Protocols](#33-kaggle-cloud-execution-protocols)
 - [4. Model Deep-Dives](#4-model-deep-dives)
   - [4.1 MIRNet v2 Low-Light Enhancement](#41-mirnet-v2-low-light-enhancement)
   - [4.2 MIRNet v2 Exposure Correction](#42-mirnet-v2-exposure-correction)
-- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+- [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
 - [6. Deployment Strategy](#6-deployment-strategy)
-- [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+- [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
 
 ---
@@ -89,7 +97,8 @@ By unifying diverse low-illumination and night subsets into
 dynamic range, amplify features, and suppress severe sensor noise natively.
 
 ![Low Light Enhancement](../assets/mirnet_lowlight_example.png)
-Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.
+Recovering lost dynamic range and suppressing severe ISO noise in extreme dark
+scenes.
 
 ### 2.2 Exposure Manifold (mirnet_exposure)
 
@@ -308,9 +317,11 @@ via WebGPU, without resorting to expensive multi-pass compositing.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMirnetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedMirnetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

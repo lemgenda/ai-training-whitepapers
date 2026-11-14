@@ -18,7 +18,8 @@ audited**: 2026-11-12
     Manifold)](#22-manifold-compiled-training-manifold)
 - [3. Compiler & Storage Primitives](#3-compiler--storage-primitives)
   - [3.9 Task Taxonomy](#39-task-taxonomy)
-- [4. Model Training Suite & Optimization](#4-model-training-suite--optimization)
+- [4. Model Training Suite &
+  Optimization](#4-model-training-suite--optimization)
   - [4.5 Ratchet Violation](#45-ratchet-violation)
   - [4.6 Epoch Budget](#46-epoch-budget)
   - [4.7 Stochastic Weight Averaging (SWA)](#47-stochastic-weight-averaging-swa)

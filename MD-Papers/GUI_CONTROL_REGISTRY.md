@@ -513,7 +513,8 @@ without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
   Environment" button on each project card, and the "Copy Stream" and "Clear
   Stream" buttons of the log panel.
 - **Pipeline**: the per-step run buttons of the pipeline step cards.
-- **Dataset Compiler Suite**: the manifold search box, its clear button, the status,
+- **Dataset Compiler Suite**: the manifold search box, its clear button, the
+  status,
   format and task filters and "Reset Filters"; the custom compile button; the
   Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the
   modernization workers input, the push, force and dry-run check boxes, "Scan
@@ -695,3 +696,14 @@ depends on the sidecars and the hardware:
 - **Screen recording in bug reports**: desktop app on Windows (Windows
   Graphics Capture, app window only); macOS and Linux report "not supported on
   this platform yet"; not available in the browser build.
+
+
+### Dynamic Dataset Compiler Controls (v2.10.68+)
+
+| Control ID | Condition | Purpose |
+|---|---|---|
+| `comp-input-start-date` | Forex / Parquet | Start date (`YYYY-MM-DD`) for MT5 time-series ingestion |
+| `comp-input-end-date` | Forex / Parquet | End date (`YYYY-MM-DD`) for MT5 time-series ingestion |
+| `comp-input-target-samples` | LLM / JSONL | Target sample count override for instruction synthesis |
+| `comp-select-label-strategy` | Detection / Pose | Label strategy (`yolov8`, `coco`, `retinaface`) |
+| `comp-select-shard-ext` | WebDataset only | Shard extension (`.data` or `.tar`), disabled for non-WebDataset manifolds |

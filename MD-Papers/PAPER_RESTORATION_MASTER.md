@@ -10,10 +10,12 @@ NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Physical Optical Degradation Taxonomy](#2-physical-optical-degradation-taxonomy)
+* [2. Physical Optical Degradation
+  Taxonomy](#2-physical-optical-degradation-taxonomy)
 * [3. Architectural Taxonomy](#3-architectural-taxonomy)
 * [4. Mathematical Loss Formulations](#4-mathematical-loss-formulations)
-* [5. SOTA Architectural Performance Matrix](#5-sota-architectural-performance-matrix)
+* [5. SOTA Architectural Performance
+  Matrix](#5-sota-architectural-performance-matrix)
 * [6. Universal Hardware Deployment](#6-universal-hardware-deployment)
 * [7. Conclusion](#7-conclusion)
 
@@ -52,7 +54,8 @@ The suite targets five distinct optical phenomena:
   Fusion (CSFF).
 * **MIRNet v2**: Dual-residual multi-scale architecture with Selective Kernel
   Feature Fusion (SKFF).
-* **FFANet**: Feature Fusion Attention network with pixel and channel attention blocks.
+* **FFANet**: Feature Fusion Attention network with pixel and channel attention
+  blocks.
 
 ---
 

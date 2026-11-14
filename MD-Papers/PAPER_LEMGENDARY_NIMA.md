@@ -11,129 +11,207 @@ NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-- [2. Visual Taxonomy: The LemGendary Universal Quality Subset](#2-visual-taxonomy-the-lemgendary-universal-quality-subset)
-  - [2.1 The Four-Quadrant Dataset Philosophy](#21-the-four-quadrant-dataset-philosophy)
-  - [2.2 NIMA Authenticity: Generative vs. Real Manifolds](#22-nima-authenticity-generative-vs-real-manifolds)
+- [2. Visual Taxonomy: The LemGendary Universal Quality
+  Subset](#2-visual-taxonomy-the-lemgendary-universal-quality-subset)
+  - [2.1 The Four-Quadrant Dataset
+    Philosophy](#21-the-four-quadrant-dataset-philosophy)
+  - [2.2 NIMA Authenticity: Generative vs. Real
+    Manifolds](#22-nima-authenticity-generative-vs-real-manifolds)
 - [3. Shared Foundations](#3-shared-foundations)
-  - [3.1 Mathematical Optimization: The 2026 Resonance Loss](#31-mathematical-optimization-the-2026-resonance-loss)
-    - [3.1.1 Earth Mover's Distance (EMD) - The Histogram Anchor](#311-earth-movers-distance-emd---the-histogram-anchor)
-    - [3.1.2 True Rank Correlation via EMD Temperature Anchoring](#312-true-rank-correlation-via-emd-temperature-anchoring)
-    - [3.1.3 The Resonance Coefficient Selection (0.15 Weighting)](#313-the-resonance-coefficient-selection-015-weighting)
+  - [3.1 Mathematical Optimization: The 2026 Resonance
+    Loss](#31-mathematical-optimization-the-2026-resonance-loss)
+    - [3.1.1 Earth Mover's Distance (EMD) - The Histogram
+      Anchor](#311-earth-movers-distance-emd---the-histogram-anchor)
+    - [3.1.2 True Rank Correlation via EMD Temperature
+      Anchoring](#312-true-rank-correlation-via-emd-temperature-anchoring)
+    - [3.1.3 The Resonance Coefficient Selection (0.15
+      Weighting)](#313-the-resonance-coefficient-selection-015-weighting)
     - [3.1.4 The Soft-Label PMF Strategy](#314-the-soft-label-pmf-strategy)
-    - [3.1.5 Binned Midpoint Thresholding for Authenticity Scoring](#315-binned-midpoint-thresholding-for-authenticity-scoring)
-  - [3.2 Hardware-Aware Infrastructure: Universal Acceleration](#32-hardware-aware-infrastructure-universal-acceleration)
-    - [3.2.1 The Headroom-Aware Memory-Sentinel](#321-the-headroom-aware-memory-sentinel)
+    - [3.1.5 Binned Midpoint Thresholding for Authenticity
+      Scoring](#315-binned-midpoint-thresholding-for-authenticity-scoring)
+  - [3.2 Hardware-Aware Infrastructure: Universal
+    Acceleration](#32-hardware-aware-infrastructure-universal-acceleration)
+    - [3.2.1 The Headroom-Aware
+      Memory-Sentinel](#321-the-headroom-aware-memory-sentinel)
     - [3.2.2 Intra-Epoch Paging Protection](#322-intra-epoch-paging-protection)
-    - [3.2.3 OVC Data Streaming Bridge (OpenCV-to-CUDA)](#323-ovc-data-streaming-bridge-opencv-to-cuda)
-  - [3.3 Dataset Health & Recovery: The Infinite Pipeline](#33-dataset-health--recovery-the-infinite-pipeline)
+    - [3.2.3 OVC Data Streaming Bridge
+      (OpenCV-to-CUDA)](#323-ovc-data-streaming-bridge-opencv-to-cuda)
+  - [3.3 Dataset Health & Recovery: The Infinite
+    Pipeline](#33-dataset-health--recovery-the-infinite-pipeline)
     - [3.3.1 The Surgical Memory Purger](#331-the-surgical-memory-purger)
-    - [3.3.2 Pre-Fetch Workers & Latency Hiding](#332-pre-fetch-workers--latency-hiding)
-    - [3.3.3 Automated Checksum & Integrity Shield](#333-automated-checksum--integrity-shield)
+    - [3.3.2 Pre-Fetch Workers & Latency
+      Hiding](#332-pre-fetch-workers--latency-hiding)
+    - [3.3.3 Automated Checksum & Integrity
+      Shield](#333-automated-checksum--integrity-shield)
     - [3.3.4 Standardized Data-Unification](#334-standardized-data-unification)
 - [4. Model Deep-Dives](#4-model-deep-dives)
   - [4.1 NIMA Aesthetic Scorer (Mobile)](#41-nima-aesthetic-scorer-mobile)
-    - [4.1.1 Model description, purpose and usage](#411-model-description-purpose-and-usage)
+    - [4.1.1 Model description, purpose and
+      usage](#411-model-description-purpose-and-usage)
     - [4.1.2 Model Info](#412-model-info)
     - [4.1.3 Manifold Info](#413-manifold-info)
     - [4.1.4 Performance Metrics](#414-performance-metrics)
     - [4.1.5 Training Curve](#415-training-curve)
-    - [4.1.6 Model specific issues and optimizations](#416-model-specific-issues-and-optimizations)
+    - [4.1.6 Model specific issues and
+      optimizations](#416-model-specific-issues-and-optimizations)
     - [4.1.7 Consolidated SOTA Benchmarks](#417-consolidated-sota-benchmarks)
-  - [4.2 NIMA Aesthetic Scorer (EfficientNetV2-S)](#42-nima-aesthetic-scorer-efficientnetv2-s)
-    - [4.2.1 Model description, purpose and usage](#421-model-description-purpose-and-usage)
+  - [4.2 NIMA Aesthetic Scorer
+    (EfficientNetV2-S)](#42-nima-aesthetic-scorer-efficientnetv2-s)
+    - [4.2.1 Model description, purpose and
+      usage](#421-model-description-purpose-and-usage)
     - [4.2.2 Model Info](#422-model-info)
     - [4.2.3 Manifold Info](#423-manifold-info)
     - [4.2.4 Performance Metrics](#424-performance-metrics)
     - [4.2.5 Training Curve](#425-training-curve)
-    - [4.2.6 Model specific issues and optimizations](#426-model-specific-issues-and-optimizations)
+    - [4.2.6 Model specific issues and
+      optimizations](#426-model-specific-issues-and-optimizations)
     - [4.2.7 Consolidated SOTA Benchmarks](#427-consolidated-sota-benchmarks)
-  - [4.3 NIMA Aesthetic Scorer Pro (Swin-v2-T)](#43-nima-aesthetic-scorer-pro-swin-v2-t)
-    - [4.3.1 Model description, purpose and usage](#431-model-description-purpose-and-usage)
+  - [4.3 NIMA Aesthetic Scorer Pro
+    (Swin-v2-T)](#43-nima-aesthetic-scorer-pro-swin-v2-t)
+    - [4.3.1 Model description, purpose and
+      usage](#431-model-description-purpose-and-usage)
     - [4.3.2 Model Info](#432-model-info)
     - [4.3.3 Manifold Info](#433-manifold-info)
     - [4.3.4 Performance Metrics](#434-performance-metrics)
     - [4.3.5 Training Curve](#435-training-curve)
-    - [4.3.6 Model specific issues and optimizations](#436-model-specific-issues-and-optimizations)
+    - [4.3.6 Model specific issues and
+      optimizations](#436-model-specific-issues-and-optimizations)
     - [4.3.7 Consolidated SOTA Benchmarks](#437-consolidated-sota-benchmarks)
-  - [4.4 NIMA Technical Scorer (EfficientNetV2-S)](#44-nima-technical-scorer-efficientnetv2-s)
-    - [4.4.1 Model description, purpose and usage](#441-model-description-purpose-and-usage)
+  - [4.4 NIMA Technical Scorer
+    (EfficientNetV2-S)](#44-nima-technical-scorer-efficientnetv2-s)
+    - [4.4.1 Model description, purpose and
+      usage](#441-model-description-purpose-and-usage)
     - [4.4.2 Model Info](#442-model-info)
     - [4.4.3 Manifold Info](#443-manifold-info)
     - [4.4.4 Performance Metrics](#444-performance-metrics)
     - [4.4.5 Training Curve](#445-training-curve)
-    - [4.4.6 Model specific issues and optimizations](#446-model-specific-issues-and-optimizations)
+    - [4.4.6 Model specific issues and
+      optimizations](#446-model-specific-issues-and-optimizations)
     - [4.4.7 Consolidated SOTA Benchmarks](#447-consolidated-sota-benchmarks)
-  - [4.5 NIMA Authenticity Scorer (EfficientNetV2-S)](#45-nima-authenticity-scorer-efficientnetv2-s)
-    - [4.5.1 Model description, purpose and usage](#451-model-description-purpose-and-usage)
+  - [4.5 NIMA Authenticity Scorer
+    (EfficientNetV2-S)](#45-nima-authenticity-scorer-efficientnetv2-s)
+    - [4.5.1 Model description, purpose and
+      usage](#451-model-description-purpose-and-usage)
     - [4.5.2 Model Info](#452-model-info)
     - [4.5.3 Manifold Info](#453-manifold-info)
     - [4.5.4 Performance Metrics](#454-performance-metrics)
     - [4.5.5 Training Curve](#455-training-curve)
-    - [4.5.6 Model specific issues and optimizations](#456-model-specific-issues-and-optimizations)
+    - [4.5.6 Model specific issues and
+      optimizations](#456-model-specific-issues-and-optimizations)
     - [4.5.7 Consolidated SOTA Benchmarks](#457-consolidated-sota-benchmarks)
-- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-  - [5.1 The Scheduler Double-Stepping Bug](#51-the-scheduler-double-stepping-bug)
-  - [5.2 Numerical Instability (NaN Shield)](#52-numerical-instability-nan-shield)
+- [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+  - [5.1 The Scheduler Double-Stepping
+    Bug](#51-the-scheduler-double-stepping-bug)
+  - [5.2 Numerical Instability (NaN
+    Shield)](#52-numerical-instability-nan-shield)
   - [5.3 Continuity & SOTA Recovery](#53-continuity--sota-recovery)
-  - [5.4 The SRCC Convergence Plateau (Nuclear Stability Lockdown)](#54-the-srcc-convergence-plateau-nuclear-stability-lockdown)
-  - [5.5 The Sentinel-Scheduler De-Sync (SOTA Alignment)](#55-the-sentinel-scheduler-de-sync-sota-alignment)
+  - [5.4 The SRCC Convergence Plateau (Nuclear Stability
+    Lockdown)](#54-the-srcc-convergence-plateau-nuclear-stability-lockdown)
+  - [5.5 The Sentinel-Scheduler De-Sync (SOTA
+    Alignment)](#55-the-sentinel-scheduler-de-sync-sota-alignment)
   - [5.6 Pre-Emptive State Injection](#56-pre-emptive-state-injection)
-  - [5.7 The Infinite Loop Plateau (Deep-State Sanitization & Thermal Shield)](#57-the-infinite-loop-plateau-deep-state-sanitization--thermal-shield)
-  - [5.8 The Pearson Singularity (Singularity Shield)](#58-the-pearson-singularity-singularity-shield)
-  - [5.9 Mitochondrial Runway Bloat (Runway Recalibration)](#59-mitochondrial-runway-bloat-runway-recalibration)
-  - [5.10 Power-Loss Resilience (The Mitochondrial Shield)](#510-power-loss-resilience-the-mitochondrial-shield)
-  - [5.11 The Manifold Anchor: Resolving Infinite NaN Loops](#511-the-manifold-anchor-resolving-infinite-nan-loops)
-  - [5.12 Modular Calibration: Non-Destructive Global Scaling](#512-modular-calibration-non-destructive-global-scaling)
-  - [5.13 The Logistic Refactor: Neutralizing Softmax Collisions](#513-the-logistic-refactor-neutralizing-softmax-collisions)
-  - [5.14 The Plateau Breaker: Dynamic Kinetic LR Injection (v5.2)](#514-the-plateau-breaker-dynamic-kinetic-lr-injection-v52)
+  - [5.7 The Infinite Loop Plateau (Deep-State Sanitization & Thermal
+    Shield)](#57-the-infinite-loop-plateau-deep-state-sanitization--thermal-shield)
+  - [5.8 The Pearson Singularity (Singularity
+    Shield)](#58-the-pearson-singularity-singularity-shield)
+  - [5.9 Mitochondrial Runway Bloat (Runway
+    Recalibration)](#59-mitochondrial-runway-bloat-runway-recalibration)
+  - [5.10 Power-Loss Resilience (The Mitochondrial
+    Shield)](#510-power-loss-resilience-the-mitochondrial-shield)
+  - [5.11 The Manifold Anchor: Resolving Infinite NaN
+    Loops](#511-the-manifold-anchor-resolving-infinite-nan-loops)
+  - [5.12 Modular Calibration: Non-Destructive Global
+    Scaling](#512-modular-calibration-non-destructive-global-scaling)
+  - [5.13 The Logistic Refactor: Neutralizing Softmax
+    Collisions](#513-the-logistic-refactor-neutralizing-softmax-collisions)
+  - [5.14 The Plateau Breaker: Dynamic Kinetic LR Injection
+    (v5.2)](#514-the-plateau-breaker-dynamic-kinetic-lr-injection-v52)
   - [5.15 Manifold Smoothing via SWA](#515-manifold-smoothing-via-swa)
-  - [5.16 Intra-Epoch Cosine Recalibration (v3.0 Resiliency)](#516-intra-epoch-cosine-recalibration-v30-resiliency)
-  - [5.17 Metric-Driven Deployment & Polarity Alignment (v3.1 Resiliency)](#517-metric-driven-deployment--polarity-alignment-v31-resiliency)
-  - [5.18 Mission Velocity Acceleration: Stochastic Subsampling (v3.2)](#518-mission-velocity-acceleration-stochastic-subsampling-v32)
-  - [5.19 Registry-First Unification (v4.5)](#519-registry-first-unification-v45)
-  - [5.20 Standardized Epoch Resumption (The Windows Shield)](#520-standardized-epoch-resumption-the-windows-shield)
-  - [5.21 The Velocity-Scheduler Sync (v5.1 Resiliency)](#521-the-velocity-scheduler-sync-v51-resiliency)
-  - [5.22 Persistent I/O Synchronization (v5.8)](#522-persistent-io-synchronization-v58)
+  - [5.16 Intra-Epoch Cosine Recalibration (v3.0
+    Resiliency)](#516-intra-epoch-cosine-recalibration-v30-resiliency)
+  - [5.17 Metric-Driven Deployment & Polarity Alignment (v3.1
+    Resiliency)](#517-metric-driven-deployment--polarity-alignment-v31-resiliency)
+  - [5.18 Mission Velocity Acceleration: Stochastic Subsampling
+    (v3.2)](#518-mission-velocity-acceleration-stochastic-subsampling-v32)
+  - [5.19 Registry-First Unification
+    (v4.5)](#519-registry-first-unification-v45)
+  - [5.20 Standardized Epoch Resumption (The Windows
+    Shield)](#520-standardized-epoch-resumption-the-windows-shield)
+  - [5.21 The Velocity-Scheduler Sync (v5.1
+    Resiliency)](#521-the-velocity-scheduler-sync-v51-resiliency)
+  - [5.22 Persistent I/O Synchronization
+    (v5.8)](#522-persistent-io-synchronization-v58)
   - [5.23 Mission Continuity Guard (v6.1)](#523-mission-continuity-guard-v61)
-  - [5.24 Manifold Rescue and High-Energy Jolt (v6.1.17)](#524-manifold-rescue-and-high-energy-jolt-v6117)
+  - [5.24 Manifold Rescue and High-Energy Jolt
+    (v6.1.17)](#524-manifold-rescue-and-high-energy-jolt-v6117)
   - [5.25 Velocity Life-Support (v6.1.18)](#525-velocity-life-support-v6118)
-  - [5.26 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#526-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
-  - [5.27 The Rank Margin Objective (v6.1.30)](#527-the-rank-margin-objective-v6130)
-  - [5.28 Telemetry Parity & Plateau Resilience (v6.1.31)](#528-telemetry-parity--plateau-resilience-v6131)
-  - [5.29 Invariant Native Scorecarding (v6.2.0)](#529-invariant-native-scorecarding-v620)
-  - [5.30 Low-Variance Safety Gate for Authenticity Convergence (v6.2.8)](#530-low-variance-safety-gate-for-authenticity-convergence-v628)
-  - [5.31 SOTA Memorization & Data Verification (v6.2.8)](#531-sota-memorization--data-verification-v628)
-  - [5.32 SOTA Quality Selection Guard (v6.2.8)](#532-sota-quality-selection-guard-v628)
-  - [5.33 Same-Resolution Recoil Protection (v6.2.8)](#533-same-resolution-recoil-protection-v628)
-  - [5.34 Overfitting Rescue Protocol (v6.3.0)](#534-overfitting-rescue-protocol-v630)
-  - [5.35 Telemetry Engine Synchronization (v6.3.1)](#535-telemetry-engine-synchronization-v631)
+  - [5.26 The Mitochondrial Pulse: Epsilon-Hardened Persistence
+    (v6.1.19)](#526-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
+  - [5.27 The Rank Margin Objective
+    (v6.1.30)](#527-the-rank-margin-objective-v6130)
+  - [5.28 Telemetry Parity & Plateau Resilience
+    (v6.1.31)](#528-telemetry-parity--plateau-resilience-v6131)
+  - [5.29 Invariant Native Scorecarding
+    (v6.2.0)](#529-invariant-native-scorecarding-v620)
+  - [5.30 Low-Variance Safety Gate for Authenticity Convergence
+    (v6.2.8)](#530-low-variance-safety-gate-for-authenticity-convergence-v628)
+  - [5.31 SOTA Memorization & Data Verification
+    (v6.2.8)](#531-sota-memorization--data-verification-v628)
+  - [5.32 SOTA Quality Selection Guard
+    (v6.2.8)](#532-sota-quality-selection-guard-v628)
+  - [5.33 Same-Resolution Recoil Protection
+    (v6.2.8)](#533-same-resolution-recoil-protection-v628)
+  - [5.34 Overfitting Rescue Protocol
+    (v6.3.0)](#534-overfitting-rescue-protocol-v630)
+  - [5.35 Telemetry Engine Synchronization
+    (v6.3.1)](#535-telemetry-engine-synchronization-v631)
   - [5.36 Plateau Timer Hardening (v6.3.2)](#536-plateau-timer-hardening-v632)
-  - [5.37 Permanent Stress Deactivation Protocol (v6.3.3)](#537-permanent-stress-deactivation-protocol-v633)
-  - [5.38 Jolt Cooldown State Persistence (v6.3.4)](#538-jolt-cooldown-state-persistence-v634)
-  - [5.39 Max Stress LR Freeze Fix (Governor v16)](#539-max-stress-lr-freeze-fix-governor-v16)
-  - [5.40 Autonomous SOTA Hyperparameter Adaptation (Governor v17.5)](#540-autonomous-sota-hyperparameter-adaptation-governor-v175)
-  - [5.41 Head Projection Upgrade & Resolution Ladder Expansion (v16.1)](#541-head-projection-upgrade--resolution-ladder-expansion-v161)
-  - [5.42 Cross-Split Dataset Path Resolver (v16.2)](#542-cross-split-dataset-path-resolver-v162)
-  - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation--anti-loop-breakout-v1633)
-  - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)](#544-proven-manifold-protection--intra-resolution-data-recoil-v1600)
-  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration (v18.0)](#545-srcc-driven-dynamic-governance--rank-margin-ceiling-calibration-v180)
-  - [5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)](#546-dynamic-manifold-scaled-jolt-shield-calibration-v181)
-  - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
-  - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
-  - [5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud Engine](#549-universal-post-training-target-audit--headless-kaggle-cloud-engine)
+  - [5.37 Permanent Stress Deactivation Protocol
+    (v6.3.3)](#537-permanent-stress-deactivation-protocol-v633)
+  - [5.38 Jolt Cooldown State Persistence
+    (v6.3.4)](#538-jolt-cooldown-state-persistence-v634)
+  - [5.39 Max Stress LR Freeze Fix (Governor
+    v16)](#539-max-stress-lr-freeze-fix-governor-v16)
+  - [5.40 Autonomous SOTA Hyperparameter Adaptation (Governor
+    v17.5)](#540-autonomous-sota-hyperparameter-adaptation-governor-v175)
+  - [5.41 Head Projection Upgrade & Resolution Ladder Expansion
+    (v16.1)](#541-head-projection-upgrade--resolution-ladder-expansion-v161)
+  - [5.42 Cross-Split Dataset Path Resolver
+    (v16.2)](#542-cross-split-dataset-path-resolver-v162)
+  - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout
+    (v16.3.3)](#543-dynamic-resolution-escalation--anti-loop-breakout-v1633)
+  - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil
+    (v16.0.0)](#544-proven-manifold-protection--intra-resolution-data-recoil-v1600)
+  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration
+    (v18.0)](#545-srcc-driven-dynamic-governance--rank-margin-ceiling-calibration-v180)
+  - [5.46 Dynamic Manifold-Scaled Jolt Shield Calibration
+    (v18.1)](#546-dynamic-manifold-scaled-jolt-shield-calibration-v181)
+  - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank
+    (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
+  - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect
+    Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
+  - [5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud
+    Engine](#549-universal-post-training-target-audit--headless-kaggle-cloud-engine)
   - [5.50 Temperature 1, Paper EMD, Soft Logit Cap & Post-Hoc Calibration
-    (v16.9.162, v16.9.186)](#550-temperature-1-paper-emd-soft-logit-cap--post-hoc-calibration-v169162-v169186)
+    (v16.9.162,
+v16.9.186)](#550-temperature-1-paper-emd-soft-logit-cap--post-hoc-calibration-v169162-v169186)
 - [6. Deployment Strategy: Why ONNX?](#6-deployment-strategy-why-onnx)
   - [6.1 Format Comparison Matrix](#61-format-comparison-matrix)
   - [6.2 Why ONNX Wins for LemGendary](#62-why-onnx-wins-for-lemgendary)
 - [7. Universal Hardware Protocols (v3.0)](#7-universal-hardware-protocols-v30)
-  - [7.1 Universal Backend Selection (MPS/XPU/DirectML)](#71-universal-backend-selection-mpsxpudirectml)
-  - [7.2 Active VRAM Probing (mem_get_info)](#72-active-vram-probing-mem_get_info)
+  - [7.1 Universal Backend Selection
+    (MPS/XPU/DirectML)](#71-universal-backend-selection-mpsxpudirectml)
+  - [7.2 Active VRAM Probing
+    (mem_get_info)](#72-active-vram-probing-mem_get_info)
   - [7.3 Time-Aware Checkpoint Governance](#73-time-aware-checkpoint-governance)
-- [8. Conclusion: The Real-Time Quality Paradigm](#8-conclusion-the-real-time-quality-paradigm)
+- [8. Conclusion: The Real-Time Quality
+  Paradigm](#8-conclusion-the-real-time-quality-paradigm)
   - [8.1 Summary of Breakthroughs](#81-summary-of-breakthroughs)
-  - [8.2 The Impact of Data-First Engineering](#82-the-impact-of-data-first-engineering)
-  - [8.3 Future Outlook: From Browser to Edge](#83-future-outlook-from-browser-to-edge)
+  - [8.2 The Impact of Data-First
+    Engineering](#82-the-impact-of-data-first-engineering)
+  - [8.3 Future Outlook: From Browser to
+    Edge](#83-future-outlook-from-browser-to-edge)
 
 ## 1. Abstract
 
@@ -515,8 +593,10 @@ compression, and sharpness artifacts rather than artistic appeal.
 #### 4.4.3 Manifold Info
 
 - **Dataset**: `LemGendizedNimaTechnical`
-- **Total Samples**: 26,093 (merged from SPAQ, KonIQ, TID2013, LIVE, CSIQ, DND, NAM)
-- **Primary Task**: Predict human-perceptual quality score for Technical Integrity.
+- **Total Samples**: 26,093 (merged from SPAQ, KonIQ, TID2013, LIVE, CSIQ, DND,
+  NAM)
+- **Primary Task**: Predict human-perceptual quality score for Technical
+  Integrity.
 
 #### 4.4.4 Performance Metrics
 
@@ -569,7 +649,8 @@ photographs.
 
 - **Dataset**: `LemGendizedNimaAuthenticity`
 - **Total Samples**: 209,196 (merged from Real vs Fake Faces, AI vs Real, SUT)
-- **Primary Task**: Predict image authenticity score (binary categorization via EMD).
+- **Primary Task**: Predict image authenticity score (binary categorization via
+  EMD).
 
 #### 4.5.4 Performance Metrics
 
@@ -959,7 +1040,8 @@ this resolution. This created a fractured metric curve where Epoch 10's PSNR (at
 true architectural improvements behind spatial complexity shifts.
 **Fix**: Engineered the **Invariant Native Scorecarding** protocol.
 
-- Validation resolution is now decoupled from the Governor's dynamic training size.
+- Validation resolution is now decoupled from the Governor's dynamic training
+  size.
 - Using a `val_resolution` registry key in `unified_models.yaml`, high-end
   models (like NAFNet) are strictly anchored to their target native resolution
   (e.g., 640px) from Epoch 1 to 1000.
@@ -1300,7 +1382,8 @@ To eliminate this bottleneck, the v19.0 architecture integrates:
 1. **Differentiable Soft-Spearman Loss**: Computes smooth surrogate ranks via
    temperature-scaled logistic sigmoids:
    $$
-   \tilde{r}_i^p = 1 + \sum_{j \ne i} \frac{1}{1 + \exp\left(-\frac{p_i - p_j}{\tau}\right)}
+   \tilde{r}_i^p = 1 + \sum_{j \ne i} \frac{1}{1 + \exp\left(-\frac{p_i -
+p_j}{\tau}\right)}
    $$
 2. **Cross-Microbatch Rank Memory Bank**: A detached FIFO queue ($N=32$) caches
    recent predictions and targets across gradient accumulation cycles. On every
@@ -1462,7 +1545,8 @@ and select high-quality images in real-time, locally on a user's machine,
 removes the cloud-latency hurdle for AI photo editing suites. Future iterations
 will focus on:
 
-- **Temporal Quality Assessment**: Expanding the Universal Matrix to video frames.
+- **Temporal Quality Assessment**: Expanding the Universal Matrix to video
+  frames.
 - **Edge Refinement**: Implementing LoRA-based local adaptation for specific
   user-camera characteristics.
 

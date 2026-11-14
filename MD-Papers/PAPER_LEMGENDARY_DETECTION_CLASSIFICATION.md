@@ -12,14 +12,21 @@ Accelerators
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [2. Visual Taxonomy: Detection & Classification Manifolds](#2-visual-taxonomy-detection--classification-manifolds)
-* [3. Shared Foundations & Universal Acceleration](#3-shared-foundations--universal-acceleration)
+* [2. Visual Taxonomy: Detection & Classification
+  Manifolds](#2-visual-taxonomy-detection--classification-manifolds)
+* [3. Shared Foundations & Universal
+  Acceleration](#3-shared-foundations--universal-acceleration)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-  * [4.1 LemGendary YOLOv8n Multi-Task Model](#41-lemgendary-yolov8n-multi-task-model)
-  * [4.2 LemGendary Universal NSFW & Safety Classifier](#42-lemgendary-universal-nsfw--safety-classifier)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Edge Optimization](#6-deployment-strategy--edge-optimization)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+  * [4.1 LemGendary YOLOv8n Multi-Task
+    Model](#41-lemgendary-yolov8n-multi-task-model)
+  * [4.2 LemGendary Universal NSFW & Safety
+    Classifier](#42-lemgendary-universal-nsfw--safety-classifier)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Edge
+  Optimization](#6-deployment-strategy--edge-optimization)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---

@@ -11,14 +11,20 @@
 ## Table of Contents
 
 - [1. Abstract & Rationale](#1-abstract--rationale)
-- [2. The Canonical Ecosystem Versioning Framework](#2-the-canonical-ecosystem-versioning-framework)
-- [3. Multi-Track Versioning Taxonomy & Rationale](#3-multi-track-versioning-taxonomy--rationale)
+- [2. The Canonical Ecosystem Versioning
+  Framework](#2-the-canonical-ecosystem-versioning-framework)
+- [3. Multi-Track Versioning Taxonomy &
+  Rationale](#3-multi-track-versioning-taxonomy--rationale)
 - [4. Component Version Registry](#4-component-version-registry)
 - [5. Document Authority Hierarchy](#5-document-authority-hierarchy)
-- [6. Standalone Diagnostic & Specialized Specifications](#6-standalone-diagnostic--specialized-specifications)
-- [7. Frozen Contract Guarantees (OpenAPI 3.1 & Zero Drift)](#7-frozen-contract-guarantees-openapi-31--zero-drift)
-- [8. Ecosystem Enforcement & Audit Gating](#8-ecosystem-enforcement--audit-gating)
-- [9. Canonical Model Variation Isolation & Licensing Policy](#9-canonical-model-variation-isolation--licensing-policy)
+- [6. Standalone Diagnostic & Specialized
+  Specifications](#6-standalone-diagnostic--specialized-specifications)
+- [7. Frozen Contract Guarantees (OpenAPI 3.1 & Zero
+  Drift)](#7-frozen-contract-guarantees-openapi-31--zero-drift)
+- [8. Ecosystem Enforcement & Audit
+  Gating](#8-ecosystem-enforcement--audit-gating)
+- [9. Canonical Model Variation Isolation & Licensing
+  Policy](#9-canonical-model-variation-isolation--licensing-policy)
 
 ---
 
@@ -45,7 +51,8 @@ All core backend execution engines and orchestrators in the LemGendary AI
 Ecosystem adhere to the unified `v16.<minor>.<patch>` iteration standard:
 
 $$
-\text{Version} = \mathbf{v16}.\langle\text{Minor}\rangle.\langle\text{Patch}\rangle
+\text{Version} =
+\mathbf{v16}.\langle\text{Minor}\rangle.\langle\text{Patch}\rangle
 $$
 
 - **Major Version `16` (Epoch Baseline)**: Signifies the complete,
@@ -73,7 +80,8 @@ tracks. Cross-document version differences between these tracks are deliberate
 and governed as follows:
 
 1. **Core Backend Engines & Services (`v16.x.y`)**:
-   - Covers `lemgendary-training-suite`, `lemgendary-datasets`, and `lemgendary-env-manager`.
+   - Covers `lemgendary-training-suite`, `lemgendary-datasets`, and
+     `lemgendary-env-manager`.
    - Governs Python microservice sidecars (Ports 8000, 8100, 8200), training
      loops, skip-index compilers, and dataset containers.
    - Current active state: `v16.9.223-STABLE` (LemGendary Model Training
@@ -86,7 +94,8 @@ and governed as follows:
      release (superseding legacy web/Electron prototypes).
    - The GUI client acts as a consumer of the `v16.x.y` sidecar APIs via frozen
      OpenAPI 3.1 contracts (`openapi.json`).
-3. **Master Ecosystem Documentation Hub & Specification Baseline (`v16.9.116-STABLE`)**:
+3. **Master Ecosystem Documentation Hub & Specification Baseline
+   (`v16.9.116-STABLE`)**:
    - Covers `lemgendary-docs`, master architectural maps, operations manuals,
      and foundational whitepapers.
    - Reflects the active documentation release (`v16.9.116-STABLE`, reviewed
@@ -113,7 +122,8 @@ as follows:
   Runtime Version: `v16.9.223-STABLE`; Config Manifests:
   `unified_models_v2.yaml`; Primary Interface: `python -m training.cli.lemtrain`
 - **Dataset Compiler**: Repository / Component: `lemgendary-datasets`; Runtime
-  Version: `v16.9.109`; Config Manifests: `unified_data.yaml`; Primary Interface:
+  Version: `v16.9.109`; Config Manifests: `unified_data.yaml`; Primary
+Interface:
   `python cli.py` / `lemgendary_datasets_hub.ps1`
 - **Env Manager**: Repository / Component: `lemgendary-env-manager`; Runtime
   Version: `v16.9.85`; Config Manifests: `pyproject.toml`, `package.json`;
@@ -123,7 +133,8 @@ as follows:
   `src-tauri/tauri.conf.json`; Primary Interface: Tauri v2 Desktop App / Ports
   8000/8100/8200
 - **Documentation Hub**: Repository / Component: `lemgendary-docs`; Runtime
-  Version: `v16.9.116-STABLE`; Config Manifests: `MD-Papers/`, `papers/`; Primary
+  Version: `v16.9.116-STABLE`; Config Manifests: `MD-Papers/`, `papers/`;
+Primary
   Interface: Documentation Hub (`index.html`)
 - **Model Registry**: Repository / Component: `LemGendaryModels`; Runtime
   Version: `v16.9.16-STABLE`; Config Manifests: `LemGendaryModels/*/README.md`;
@@ -142,11 +153,13 @@ $$
 $$
 
 1. **Level 1 — Single Source of Truth Configuration Manifests**:
-   - Manifests: `unified_models_v2.yaml`, `unified_data.yaml`, `presets.yaml`, `openapi.json`.
+   - Manifests: `unified_models_v2.yaml`, `unified_data.yaml`, `presets.yaml`,
+     `openapi.json`.
    - **Authority**: Absolute physical authority for hyperparameters, model
      architectures, dataset paths, and API schemas.
 2. **Level 2 — Master Operational & Technical Manuals**:
-   - Documents: `MANUAL_AI_STUDIO_GUI.md`, `MANUAL_CLI.md`, `MANUAL_API.md`, `GUI_CONTROL_REGISTRY.md`.
+   - Documents: `MANUAL_AI_STUDIO_GUI.md`, `MANUAL_CLI.md`, `MANUAL_API.md`,
+     `GUI_CONTROL_REGISTRY.md`.
    - **Authority**: Authoritative for runtime operation, control IDs, CLI flags,
      REST payloads, and operational guarantees.
 3. **Level 3 — Architectural & Technical Whitepapers**:
@@ -159,7 +172,8 @@ $$
      remain concise, project-specific engineering specifications rather than
      generic introductory AI textbooks.
 4. **Level 4 — Educational & Ecosystem Guides**:
-   - Documents: `GENERAL_AI_TRAINING_KNOWLEDGE.md`, `GLOSSARY.md`, `LEMGENDARY_CURRENT_STATE.md`.
+   - Documents: `GENERAL_AI_TRAINING_KNOWLEDGE.md`, `GLOSSARY.md`,
+     `LEMGENDARY_CURRENT_STATE.md`.
    - **Authority**: Comprehensive educational and onboarding context,
      cross-referenced against Levels 1–3. Subservient to Levels 1–3 in the event
      of any conflict.
@@ -246,7 +260,8 @@ LemGendaryModels/<model_key>/
 All model binaries published to Kaggle Models Hub must satisfy strict binary
 isolation verified prior to deployment via `StrictIsolationValidator`:
 
-1. **Variation 1 (`pytorch`)**: Exclusively standalone PyTorch weights (`<ModelStem>.pt`).
+1. **Variation 1 (`pytorch`)**: Exclusively standalone PyTorch weights
+   (`<ModelStem>.pt`).
 2. **Variation 2 (`onnx_fp32`)**: Exclusively standard precision ONNX model
    (`<ModelStem>_FP32.onnx`) and sidecar tensor data
    (`<ModelStem>_FP32.onnx.data`).

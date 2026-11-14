@@ -11,7 +11,8 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 * [1. Abstract](#1-abstract)
 * [2. Visual Feature Encoding](#2-visual-feature-encoding)
-* [3. Perceiver Resampler & Token Condensation](#3-perceiver-resampler--token-condensation)
+* [3. Perceiver Resampler & Token
+  Condensation](#3-perceiver-resampler--token-condensation)
 * [4. Autoregressive Language Decoder](#4-autoregressive-language-decoder)
 * [5. Cross-Entropy Generation Objective](#5-cross-entropy-generation-objective)
 * [6. Multimodal Benchmarks & Targets](#6-multimodal-benchmarks--targets)

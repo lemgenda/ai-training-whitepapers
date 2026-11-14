@@ -11,17 +11,26 @@ Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What UltraZoom Does (In Plain English)](#11-what-ultrazoom-does-in-plain-english)
-* [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds `[THEORETICAL]`](#2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical)
-* [3. Shared Foundations: Sub-Pixel Convolution & ESPCN](#3-shared-foundations-sub-pixel-convolution--espcn)
+* [1.1 What UltraZoom Does (In Plain
+  English)](#11-what-ultrazoom-does-in-plain-english)
+* [2. Visual Taxonomy: Multi-Scale Super-Resolution Manifolds
+  `[THEORETICAL]`](#2-visual-taxonomy-multi-scale-super-resolution-manifolds-theoretical)
+* [3. Shared Foundations: Sub-Pixel Convolution &
+  ESPCN](#3-shared-foundations-sub-pixel-convolution--espcn)
 * [4. Model Deep-Dives](#4-model-deep-dives)
   * [4.1 UltraZoom-x2 (Real-Time Edge)](#41-ultrazoom-x2-real-time-edge)
-  * [4.2 UltraZoom-x3 (Fractional Recovery)](#42-ultrazoom-x3-fractional-recovery)
-  * [4.3 UltraZoom-x4 (High-Fidelity Detail)](#43-ultrazoom-x4-high-fidelity-detail)
-  * [4.4 UltraZoom-x8 (Extreme Hallucination)](#44-ultrazoom-x8-extreme-hallucination)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+  * [4.2 UltraZoom-x3 (Fractional
+    Recovery)](#42-ultrazoom-x3-fractional-recovery)
+  * [4.3 UltraZoom-x4 (High-Fidelity
+    Detail)](#43-ultrazoom-x4-high-fidelity-detail)
+  * [4.4 UltraZoom-x8 (Extreme
+    Hallucination)](#44-ultrazoom-x8-extreme-hallucination)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production
+  Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -54,7 +63,8 @@ microscope powered by AI**:
 * **Four Specialized Scale Variants:**
   * `UltraZoom-x2`: Ultra-fast 2x enhancement for smartphone screens and
     real-time feeds (38.45 dB PSNR `[MEASURED]`).
-  * `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR `[MEASURED]`).
+  * `UltraZoom-x3`: Fractional 3x recovery for video upscaling (34.20 dB PSNR
+    `[MEASURED]`).
   * `UltraZoom-x4`: Master 4x standard for large photographic prints and 4K
     displays (32.15 dB PSNR `[MEASURED]`).
   * `UltraZoom-x8`: Extreme 8x hallucination for distant objects and aerial
@@ -78,7 +88,8 @@ scale factors:
   with minimal perceptual hallucination.
 * **UltraZoom-x3 Manifold**: Fractional scaling designed for irregular display
   resolution matching.
-* **UltraZoom-x4 Manifold**: The core industrial standard for photo and graphic upscaling.
+* **UltraZoom-x4 Manifold**: The core industrial standard for photo and graphic
+  upscaling.
 * **UltraZoom-x8 Manifold**: Extreme super-resolution operating on highly
   compressed, microscopic source textures.
 
@@ -139,7 +150,8 @@ $$
 ## 5. Challenges & Resilience Architecture
 
 * **ICNR Kernel Initialization**: Eliminates periodic checkerboard artifacts.
-* **Laplacian Edge Regularization**: Prevents Gibbs ringing along sharp object contours.
+* **Laplacian Edge Regularization**: Prevents Gibbs ringing along sharp object
+  contours.
 * **Headroom Sentinel**: Dynamic tiled inference prevents memory fragmentation.
 
 ---
@@ -175,9 +187,11 @@ upscaling engineered for real-time edge execution.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedUltraZoomLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedUltraZoomLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

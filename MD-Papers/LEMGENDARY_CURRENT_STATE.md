@@ -354,7 +354,8 @@ whose stats cannot be read is shown as `unknown` with the reason
 
 $$
 B_{\text{safe}} = \left\lfloor \frac{\text{VRAM}_{\text{total}} \cdot
-\text{safety} - \text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})}
+\text{safety} -
+\text{static\_overhead}}{\text{mem\_per\_sample}(\text{resolution})}
 \right\rfloor
 $$
 

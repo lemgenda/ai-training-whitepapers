@@ -13,14 +13,21 @@ Nodes
 
 * [1. Abstract](#1-abstract)
 * [2. Visual Taxonomy: Facial Manifolds](#2-visual-taxonomy-facial-manifolds)
-* [3. Shared Foundations & Universal Acceleration](#3-shared-foundations--universal-acceleration)
+* [3. Shared Foundations & Universal
+  Acceleration](#3-shared-foundations--universal-acceleration)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-  * [4.1 LemGendary CodeFormer (Face Restoration)](#41-lemgendary-codeformer-face-restoration)
-  * [4.2 LemGendary ParseNet (Face Parsing & Segmentation)](#42-lemgendary-parsenet-face-parsing--segmentation)
-  * [4.3 LemGendary RetinaFace (Multi-Scale Face Detection)](#43-lemgendary-retinaface-multi-scale-face-detection)
-* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & WebAssembly/ONNX Bridge](#6-deployment-strategy--webassemblyonnx-bridge)
-* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
+  * [4.1 LemGendary CodeFormer (Face
+    Restoration)](#41-lemgendary-codeformer-face-restoration)
+  * [4.2 LemGendary ParseNet (Face Parsing &
+    Segmentation)](#42-lemgendary-parsenet-face-parsing--segmentation)
+  * [4.3 LemGendary RetinaFace (Multi-Scale Face
+    Detection)](#43-lemgendary-retinaface-multi-scale-face-detection)
+* [5. Challenges & Resilience
+  Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & WebAssembly/ONNX
+  Bridge](#6-deployment-strategy--webassemblyonnx-bridge)
+* [7. SOTA Architectural Performance
+  Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---

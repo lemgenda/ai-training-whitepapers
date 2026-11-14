@@ -37,9 +37,9 @@
   - [6.9 Centralized State (Zustand) & S.O.L.I.D. Component
     Hierarchy](#69-centralized-state-zustand--solid-component-hierarchy)
   - [6.10 Multi-Variation Kaggle Model Hub Staging & Strict Isolation
-    Contract](#610-multi-variation-kaggle-model-hub-staging--strict-isolation-contract)
+Contract](#610-multi-variation-kaggle-model-hub-staging--strict-isolation-contract)
   - [6.11 Three-Tab Real-Time Telemetry Stream & Responsive
-    Cancellation](#611-three-tab-real-time-telemetry-stream--responsive-cancellation)
+Cancellation](#611-three-tab-real-time-telemetry-stream--responsive-cancellation)
   - [6.12 Security Model](#612-security-model)
   - [6.13 Bug Reporting Subsystem](#613-bug-reporting-subsystem)
 - [7. Unified Models Registry](#7-unified-models-registry)
@@ -83,7 +83,8 @@ hands it to the operator's own mail client.
 High-velocity desktop execution demands bounded event latency, minimal frame
 rendering drops, and efficient non-blocking inter-process communication (IPC).
 Traditional runtime environments such as Electron introduce severe memory bloat
-and multi-second initialization delays. The LemGendary AI Studio GUI architecture
+and multi-second initialization delays. The LemGendary AI Studio GUI
+architecture
 eliminates this overhead by leveraging native operating system webviews
 (WebView2 on Windows, WebKitGTK on Linux) coordinated through a compiled Rust
 runtime.
@@ -359,7 +360,8 @@ response are normalized instead of crashing the modal, and Escape closes it.
 The GUI codebase is verified by an automated test battery:
 
 - **Component & Integration Testing**: 183 Vitest tests and 21 Rust tests
-  (release `v2.10.34`) cover sidecar routing, request field names against the sidecars'
+  (release `v2.10.34`) cover sidecar routing, request field names against the
+sidecars'
   `openapi.json` files, the compiler and training panels, the config and secrets
   editors, the clean install dialog, the Report Issue modal and annotator, and a
   scan that fails when a `className` has no CSS rule.
@@ -641,3 +643,12 @@ by an origin allow-list and client header, a universal configuration editor with
 write-only secrets, a local-first bug reporter and contextual hover
 micro-documentation, the system sets a high bar for developer ergonomics,
 resource efficiency and ecosystem stability.
+
+
+### Smart Compilation & Telemetry Architecture
+
+The Dataset Compilation Engine maps each manifold in `unified_data.yaml` to its
+canonical preset (`forex-timeseries`, `llm-instruction`, `detection-variable`,
+`restoration-hardlinked`, `quality-vision`), scales `WORKERS` to 70% of host CPU
+cores, and streams real-time `DOWNLOADING:` (file-by-file Kaggle fallback) and
+`EXTRACTING:` (7-Zip `-bsp1`) progress bars.
