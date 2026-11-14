@@ -23,21 +23,21 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.3. Hardened Resolution Ladders & SOTA
     Guards](#23-hardened-resolution-ladders--sota-guards)
     - [2.3.1. Authoritative 4-Pillar Fully-Trained Verification
-Invariant](#231-authoritative-4-pillar-fully-trained-verification-invariant)
+      Invariant](#231-authoritative-4-pillar-fully-trained-verification-invariant)
   - [2.4. Checkpoint Resumption & Singularity
     Hardening](#24-checkpoint-resumption--singularity-hardening)
   - [2.5. Mixture-of-Experts (MoE) 11-Manifold
     Architecture](#25-mixture-of-experts-moe-11-manifold-architecture)
   - [2.6. Multi-Scale Forex Trading Architecture
-(`ForexPredictor`)](#26-multi-scale-forex-trading-architecture-forexpredictor)
+    (`ForexPredictor`)](#26-multi-scale-forex-trading-architecture-forexpredictor)
   - [2.7. Omni-Metric Autonomous SOTA
     Adaptation](#27-omni-metric-autonomous-sota-adaptation)
   - [2.8. Smart Governor Plateau-Breaking Engine & Nuclear Safety
-Sentinels](#28-smart-governor-plateau-breaking-engine--nuclear-safety-sentinels)
+    Sentinels](#28-smart-governor-plateau-breaking-engine--nuclear-safety-sentinels)
   - [2.9. Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory
-Bank](#29-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank)
+    Bank](#29-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank)
   - [2.10. Spatial Statistical Pooling Upgrade (Mean and Std) & Universal Safety
-Filter](#210-spatial-statistical-pooling-upgrade-mean-and-std--universal-safety-filter)
+    Filter](#210-spatial-statistical-pooling-upgrade-mean-and-std--universal-safety-filter)
   - [2.11. Headless Kaggle Cloud Engine & Dataset
     Bypass](#211-headless-kaggle-cloud-engine--dataset-bypass)
   - [2.12. Universal Post-Training Target Audit & Interactive
@@ -45,27 +45,26 @@ Filter](#210-spatial-statistical-pooling-upgrade-mean-and-std--universal-safety-
   - [2.13. Native Multi-Container Ingestion
     Architecture](#213-native-multi-container-ingestion-architecture)
   - [2.14. Autonomous YOLO Multi-Stage Curriculum Governor & SOTA Target
-Convergence](#214-autonomous-yolo-multi-stage-curriculum-governor--sota-target-convergence)
+    Convergence](#214-autonomous-yolo-multi-stage-curriculum-governor--sota-target-convergence)
   - [2.15. SSOT Config-Governed GUI Training Controls & Run-State
-Lifecycle](#215-ssot-config-governed-gui-training-controls--run-state-lifecycle)
+    Lifecycle](#215-ssot-config-governed-gui-training-controls--run-state-lifecycle)
   - [2.16. SSOT Jupyter Notebook Generation & Cross-Workspace
     Staging](#216-ssot-jupyter-notebook-generation--cross-workspace-staging)
   - [2.17. Fleet 1-Epoch Diagnostics & Kaggle Models Checkpoint
-Publishing](#217-fleet-1-epoch-diagnostics--kaggle-models-checkpoint-publishing)
+    Publishing](#217-fleet-1-epoch-diagnostics--kaggle-models-checkpoint-publishing)
   - [2.18. Zero-Warning Tensor Memory Isolation & Telemetry Stream Segregation
-(v16.9.25)](#218-zero-warning-tensor-memory-isolation--telemetry-stream-segregation-v16925)
+    (v16.9.25)](#218-zero-warning-tensor-memory-isolation--telemetry-stream-segregation-v16925)
   - [2.19. Forex Parquet Locality & Telemetry Progress Sync
     (v16.9.26)](#219-forex-parquet-locality--telemetry-progress-sync-v16926)
   - [2.20. Validation Batch Telemetry & Live Telemetry Progress Synchronization
-(v16.9.28)](#220-validation-batch-telemetry--live-telemetry-progress-synchronization-v16928)
-  - [2.21. PyTorch & Transformers v5 Stack
-    Integration](#221-pytorch--transformers-v5-stack-integration)
+    (v16.9.28)](#220-validation-batch-telemetry--live-telemetry-progress-synchronization-v16928)
+  - [2.21. PyTorch & Transformers v5 Stack Integration](#221-pytorch--transformers-v5-stack-integration)
   - [2.22. Turing Non-Tensor-Core Hardware cuDNN Bug
     Remediation](#222-turing-non-tensor-core-hardware-cudnn-bug-remediation)
   - [2.23. Multi-Task SOTA Metric Ingestion & Perceptual Telemetry
-Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization)
+    Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-synchronization)
   - [2.24. Kaggle Models Hub Metadata Sync & Whitepaper Citations
-(v16.9.46)](#224-kaggle-models-hub-metadata-sync--whitepaper-citations-v16946)
+    (v16.9.46)](#224-kaggle-models-hub-metadata-sync--whitepaper-citations-v16946)
   - [2.25. Monotonic Ratchet (Pair Rule) & `RatchetViolation` Guard
     (v16.9.67)](#225-monotonic-ratchet-pair-rule--ratchetviolation-guard-v16967)
   - [2.26. Bounded Epoch Budget & Honoured Early Stop
@@ -73,7 +72,7 @@ Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-syn
   - [2.27. Pareto Model Soup Service
     (v16.9.66)](#227-pareto-model-soup-service-v16966)
   - [2.28. Publication-Grade FID & Unverified Historical FID Rows
-(v16.9.67)](#228-publication-grade-fid--unverified-historical-fid-rows-v16967)
+    (v16.9.67)](#228-publication-grade-fid--unverified-historical-fid-rows-v16967)
   - [2.29. Sidecar Security Model & OpenAPI Contract (v16.9.64,
     v16.9.68)](#229-sidecar-security-model--openapi-contract-v16964-v16968)
   - [2.30. Ecosystem Facts & GUI Training Verdict (v16.9.93,
@@ -87,17 +86,17 @@ Synchronization](#223-multi-task-sota-metric-ingestion--perceptual-telemetry-syn
   - [2.34. Version Single Source, Lint & Review Fixes
     (v16.9.122)](#234-version-single-source-lint--review-fixes-v169122)
   - [2.35. Causal Language Model Instruction Tuning & Dynamic VRAM
-Probing](#235-causal-language-model-instruction-tuning--dynamic-vram-probing)
+    Probing](#235-causal-language-model-instruction-tuning--dynamic-vram-probing)
   - [2.36. Container Targets, Resume & Platform Fixes (v16.9.140 to
-v16.9.147)](#236-container-targets-resume--platform-fixes-v169140-to-v169147)
+    v16.9.147)](#236-container-targets-resume--platform-fixes-v169140-to-v169147)
   - [2.37. Shard I/O, Offset Cache & Locality Sampling (v16.9.148 to
-v16.9.154)](#237-shard-io-offset-cache--locality-sampling-v169148-to-v169154)
+    v16.9.154)](#237-shard-io-offset-cache--locality-sampling-v169148-to-v169154)
   - [2.38. Quality Score, Optimizer Groups & Batch Invariant (v16.9.144 to
-v16.9.152)](#238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152)
+    v16.9.152)](#238-quality-score-optimizer-groups--batch-invariant-v169144-to-v169152)
   - [2.39. Task-Type Resolver & Optional Dependency Adapter (v16.9.155 to
-v16.9.157)](#239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157)
+    v16.9.157)](#239-task-type-resolver--optional-dependency-adapter-v169155-to-v169157)
   - [2.40. ONNX Release Variants, Model Metadata & MT5 Artefact (v16.9.158 to
-v16.9.195)](#240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v169195)
+    v16.9.195)](#240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v169195)
   - [2.41. Run Settings, Resume & Generator State (v16.9.159 to
     v16.9.190)](#241-run-settings-resume--generator-state-v169159-to-v169190)
   - [2.42. Losses, Scores & Calibration (v16.9.161 to
@@ -105,14 +104,14 @@ v16.9.195)](#240-onnx-release-variants-model-metadata--mt5-artefact-v169158-to-v
   - [2.43. Device Memory, DXGI Budget & DirectML (v16.9.168 to
     v16.9.197)](#243-device-memory-dxgi-budget--directml-v169168-to-v169197)
   - [2.44. Preprocessing, Class Labels & JSON Shard Labels (v16.9.180 to
-v16.9.203)](#244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203)
+    v16.9.203)](#244-preprocessing-class-labels--json-shard-labels-v169180-to-v169203)
   - [2.45. Kaggle Cloud Pipeline & Hub Root (v16.9.169 to
     v16.9.214)](#245-kaggle-cloud-pipeline--hub-root-v169169-to-v169214)
   - [2.46. Shard Offset Index & Fast WebDataset Open (v16.9.215 to
-v16.9.218)](#246-shard-offset-index--fast-webdataset-open-v169215-to-v169218)
+    v16.9.218)](#246-shard-offset-index--fast-webdataset-open-v169215-to-v169218)
   - [2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &
     Export Probe (v16.9.216 to
-v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
+    v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -135,17 +134,17 @@ v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--exp
   - [6.2. Memory-Sentinel WebGPU Zero-Copy
     Export](#62-memory-sentinel-webgpu-zero-copy-export)
 - [7. Universal Instruction-Tuned Causal LLM Fine-Tuning & Dynamic Dataset
-Ingestion](#7-universal-instruction-tuned-causal-llm-fine-tuning--dynamic-dataset-ingestion)
+  Ingestion](#7-universal-instruction-tuned-causal-llm-fine-tuning--dynamic-dataset-ingestion)
   - [7.1. GenericCausalLLM Architecture & Dynamic HuggingFace Backbone
-Wrapping](#71-genericcausalllm-architecture--dynamic-huggingface-backbone-wrapping)
+    Wrapping](#71-genericcausalllm-architecture--dynamic-huggingface-backbone-wrapping)
   - [7.2. QLoRA Parameterization via unified_models_v2.yaml & PEFT
-Injection](#72-qlora-parameterization-via-unified_models_v2yaml--peft-injection)
+    Injection](#72-qlora-parameterization-via-unified_models_v2yaml--peft-injection)
   - [7.3. Dynamic Dataset Discovery for Arbitrary LLM
     Manifolds](#73-dynamic-dataset-discovery-for-arbitrary-llm-manifolds)
   - [7.4. Multi-Turn ChatML Loss Formulation & Assistant-Only Prompt
-Masking](#74-multi-turn-chatml-loss-formulation--assistant-only-prompt-masking)
+    Masking](#74-multi-turn-chatml-loss-formulation--assistant-only-prompt-masking)
   - [7.5. Tri-Format Deployment Export: PyTorch, ONNX FP32/FP16 & Edge
-Quantization](#75-tri-format-deployment-export-pytorch-onnx-fp32fp16--edge-quantization)
+    Quantization](#75-tri-format-deployment-export-pytorch-onnx-fp32fp16--edge-quantization)
   - [7.6. Edge Hardware Optimization Profile (4GB VRAM
     Containment)](#76-edge-hardware-optimization-profile-4gb-vram-containment)
 - [8. Conclusion](#8-conclusion)
@@ -1288,8 +1287,7 @@ $$
 ### 2.30. Ecosystem Facts & GUI Training Verdict (v16.9.93, v16.9.94)
 
 - **Ecosystem file**: `training/ecosystem.py` reads
-  `lemgendary-env-manager/ecosystem/ecosystem.json`
-(`LEMGENDARY_ECOSYSTEM_FILE`,
+  `lemgendary-env-manager/ecosystem/ecosystem.json` (`LEMGENDARY_ECOSYSTEM_FILE`,
   else the file under the workspace root; `LEMGENDARY_WORKSPACE_ROOT` overrides
   the root). Ports, the bind host, the Kaggle owner and the documentation URL
   come from it; a missing or malformed file raises `EcosystemFileError` naming
@@ -2401,8 +2399,7 @@ training suite deploys a multi-tier memory containment profile:
   `bitsandbytes.optim.PagedAdamW8bit`, automatically paging optimizer momentum
   and variance states across CUDA unified memory when VRAM boundaries approach
   saturation.
-- **Curriculum Context Clamping**: Constrains sequence lengths to 512 tokens
-  with
+- **Curriculum Context Clamping**: Constrains sequence lengths to 512 tokens with
   micro-batch size 1 and 16 accumulation steps for edge training.
 
 ---

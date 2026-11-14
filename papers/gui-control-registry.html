@@ -695,6 +695,19 @@ practical on CPU.</li>
 Graphics Capture, app window only); macOS and Linux report &quot;not supported on
 this platform yet&quot;; not available in the browser build.</li>
 </ul>
+<h3 id="dynamic-dataset-compiler-controls-v21068">Dynamic Dataset Compiler Controls (v2.10.68+)</h3>
+<ul>
+<li><strong><code>comp-input-start-date</code></strong> (Forex / Parquet): Start date (<code>YYYY-MM-DD</code>) for
+MT5 time-series ingestion.</li>
+<li><strong><code>comp-input-end-date</code></strong> (Forex / Parquet): End date (<code>YYYY-MM-DD</code>) for MT5
+time-series ingestion.</li>
+<li><strong><code>comp-input-target-samples</code></strong> (LLM / JSONL): Target sample count override
+for instruction synthesis.</li>
+<li><strong><code>comp-select-label-strategy</code></strong> (Detection / Pose): Label strategy (<code>yolov8</code>,
+<code>coco</code>, <code>retinaface</code>).</li>
+<li><strong><code>comp-select-shard-ext</code></strong> (WebDataset only): Shard extension (<code>.data</code> or
+<code>.tar</code>), disabled for non-WebDataset manifolds.</li>
+</ul>
 </section>
 
 <footer>
@@ -703,4 +716,3 @@ this platform yet&quot;; not available in the browser build.</li>
 </div>
 </body>
 </html>
-<section id="dynamic-compiler-controls"><h3>Dynamic Dataset Compiler Controls (v2.10.68+)</h3><table><thead><tr><th>Control ID</th><th>Condition</th><th>Purpose</th></tr></thead><tbody><tr><td><code>comp-input-start-date</code></td><td>Forex / Parquet</td><td>Start date (<code>YYYY-MM-DD</code>) for MT5 time-series ingestion</td></tr><tr><td><code>comp-input-end-date</code></td><td>Forex / Parquet</td><td>End date (<code>YYYY-MM-DD</code>) for MT5 time-series ingestion</td></tr><tr><td><code>comp-input-target-samples</code></td><td>LLM / JSONL</td><td>Target sample count override for instruction synthesis</td></tr><tr><td><code>comp-select-label-strategy</code></td><td>Detection / Pose</td><td>Label strategy (<code>yolov8</code>, <code>coco</code>, <code>retinaface</code>)</td></tr><tr><td><code>comp-select-shard-ext</code></td><td>WebDataset only</td><td>Shard extension (<code>.data</code> or <code>.tar</code>), disabled for non-WebDataset manifolds</td></tr></tbody></table></section>

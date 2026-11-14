@@ -41,8 +41,7 @@ Manager `v16.9.85`, Dataset Compiler Suite `v16.9.109`, Model Training Suite
 
 ## 1. Abstract
 
-The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning
-platform.
+The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning platform.
 A desktop operator cockpit (LemGendary AI Studio GUI) and command line tools
 drive three local sidecar services, the LemGendary Environment Manager (port
 8000), the LemGendary Dataset Compiler Suite (port 8100) and the LemGendary

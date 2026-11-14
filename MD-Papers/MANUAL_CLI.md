@@ -13,81 +13,50 @@
   - [2.1 Global Options & Invocation](#21-global-options--invocation)
   - [2.2 Hardware Probing (`probe`)](#22-hardware-probing-probe)
   - [2.3 Ecosystem Health Audit (`audit`)](#23-ecosystem-health-audit-audit)
-  - [2.4 Smart Clean Install Pipeline
-    (`install`)](#24-smart-clean-install-pipeline-install)
-  - [2.5 Safe Bottom-Up Package Upgrades
-    (`update`)](#25-safe-bottom-up-package-upgrades-update)
+  - [2.4 Smart Clean Install Pipeline (`install`)](#24-smart-clean-install-pipeline-install)
+  - [2.5 Safe Bottom-Up Package Upgrades (`update`)](#25-safe-bottom-up-package-upgrades-update)
   - [2.6 Manifest Synchronization (`sync`)](#26-manifest-synchronization-sync)
-  - [2.7 Multi-Gate Validation Engine
-    (`validate`)](#27-multi-gate-validation-engine-validate)
-  - [2.8 Workspace Cache & Residue Purge
-    (`clean`)](#28-workspace-cache--residue-purge-clean)
-  - [2.9 Telemetry Daemon & Background Server
-    (`serve`)](#29-telemetry-daemon--background-server-serve)
-  - [2.10 Git Hook Installation
-    (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
-- [3. Interactive PowerShell Host
-  (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
-- [4. LemGendary AI Studio GUI CLI &
-  Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
+  - [2.7 Multi-Gate Validation Engine (`validate`)](#27-multi-gate-validation-engine-validate)
+  - [2.8 Workspace Cache & Residue Purge (`clean`)](#28-workspace-cache--residue-purge-clean)
+  - [2.9 Telemetry Daemon & Background Server (`serve`)](#29-telemetry-daemon--background-server-serve)
+  - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
+- [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
+- [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
   - [5.1 Invocation Syntax](#51-invocation-syntax)
   - [5.2 Manifold Compilation (`compile`)](#52-manifold-compilation-compile)
-  - [5.3 Degradation Engine Synthesis
-    (`degrade`)](#53-degradation-engine-synthesis-degrade)
-  - [5.4 Audit, Deduplication & Hardlinks
-    (`audit`)](#54-audit-deduplication--hardlinks-audit)
-  - [5.5 Retroactive Transcoding
-    (`transcode`)](#55-retroactive-transcoding-transcode)
-  - [5.6 Smart Multi-Modal Generation (`label`, `prompt`,
-    `mask`)](#56-smart-multi-modal-generation-label-prompt-mask)
-  - [5.7 Variant Reduction & Modernization (`reduce`,
-    `modernize`)](#57-variant-reduction--modernization-reduce-modernize)
+  - [5.3 Degradation Engine Synthesis (`degrade`)](#53-degradation-engine-synthesis-degrade)
+  - [5.4 Audit, Deduplication & Hardlinks (`audit`)](#54-audit-deduplication--hardlinks-audit)
+  - [5.5 Retroactive Transcoding (`transcode`)](#55-retroactive-transcoding-transcode)
+  - [5.6 Smart Multi-Modal Generation (`label`, `prompt`, `mask`)](#56-smart-multi-modal-generation-label-prompt-mask)
+  - [5.7 Variant Reduction & Modernization (`reduce`, `modernize`)](#57-variant-reduction--modernization-reduce-modernize)
   - [5.8 Sidecar API Server (`server`)](#58-sidecar-api-server-server)
   - [5.9 Ecosystem Delegation (`env`)](#59-ecosystem-delegation-env)
-  - [5.10 Cloud & Metadata Sync (`sync`, `docs`,
-    `config`)](#510-cloud--metadata-sync-sync-docs-config)
-  - [5.11 Canonical Compiler Presets
-    (`presets`)](#511-canonical-compiler-presets-presets)
-  - [5.12 Forex Universe & Parquet Operations
-    (`forex`)](#512-forex-universe--parquet-operations-forex)
-  - [5.13 Direct Streaming Zip-to-Container Engine
-    (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
-  - [5.14 Retroactive Container Migration (`format migrate` / `format
-    write`)](#514-retroactive-container-migration-format-migrate--format-write)
-  - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion
-    Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
-  - [5.16 LLM Dataset Compilation & Quality Invariant Auditing
-    (`llm`)](#516-llm-dataset-compilation--quality-invariant-auditing-llm)
+  - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
+  - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
+  - [5.12 Forex Universe & Parquet Operations (`forex`)](#512-forex-universe--parquet-operations-forex)
+  - [5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
+  - [5.14 Retroactive Container Migration (`format migrate` / `format write`)](#514-retroactive-container-migration-format-migrate--format-write)
+  - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
+  - [5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)](#516-llm-dataset-compilation--quality-invariant-auditing-llm)
   - [5.17 Manifold Repair (`repair`)](#517-manifold-repair-repair)
-- [6. Training Suite CLI (`lemtrain` / `python
-  cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
+- [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
   - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
   - [6.2 Model Training (`train`)](#62-model-training-train)
   - [6.3 Checkpoint Evaluation (`eval`)](#63-checkpoint-evaluation-eval)
-  - [6.4 Model Compilation & Export
-    (`export`)](#64-model-compilation--export-export)
+  - [6.4 Model Compilation & Export (`export`)](#64-model-compilation--export-export)
   - [6.5 Notebook Generation (`notebooks`)](#65-notebook-generation-notebooks)
-  - [6.6 Checkpoint Management
-    (`checkpoints`)](#66-checkpoint-management-checkpoints)
+  - [6.6 Checkpoint Management (`checkpoints`)](#66-checkpoint-management-checkpoints)
   - [6.7 Canonical Presets (`presets`)](#67-canonical-presets-presets)
-  - [6.8 Hardware & Architecture Audit
-    (`audit`)](#68-hardware--architecture-audit-audit)
+  - [6.8 Hardware & Architecture Audit (`audit`)](#68-hardware--architecture-audit-audit)
   - [6.9 Cloud Synchronization (`sync`)](#69-cloud-synchronization-sync)
-  - [6.10 Sidecar Daemon Operations
-    (`server`)](#610-sidecar-daemon-operations-server)
-  - [6.11 LLM Causal Instruction Tuning & Model Export
-    (`llm`)](#611-llm-causal-instruction-tuning--model-export-llm)
-  - [6.12 FID Re-evaluation (`python -m
-    training.fid_reeval`)](#612-fid-re-evaluation-python--m-trainingfid_reeval)
-  - [6.13 Kaggle Cloud Training How-To (`lemtrain
-    kaggle`)](#613-kaggle-cloud-training-how-to-lemtrain-kaggle)
-- [7. Models Hub & Verification
-  Toolchain](#7-models-hub--verification-toolchain)
-- [8. Documentation Hub & Static
-  Validation](#8-documentation-hub--static-validation)
-- [9. Exit Codes, Automation & CI/CD
-  Integration](#9-exit-codes-automation--cicd-integration)
+  - [6.10 Sidecar Daemon Operations (`server`)](#610-sidecar-daemon-operations-server)
+  - [6.11 LLM Causal Instruction Tuning & Model Export (`llm`)](#611-llm-causal-instruction-tuning--model-export-llm)
+  - [6.12 FID Re-evaluation (`python -m training.fid_reeval`)](#612-fid-re-evaluation-python--m-trainingfid_reeval)
+  - [6.13 Kaggle Cloud Training How-To (`lemtrain kaggle`)](#613-kaggle-cloud-training-how-to-lemtrain-kaggle)
+- [7. Models Hub & Verification Toolchain](#7-models-hub--verification-toolchain)
+- [8. Documentation Hub & Static Validation](#8-documentation-hub--static-validation)
+- [9. Exit Codes, Automation & CI/CD Integration](#9-exit-codes-automation--cicd-integration)
 - [Companion Documentation](#companion-documentation)
 
 ---
@@ -200,10 +169,8 @@ Diagnostic checks performed:
     (transitive install), empty (declared but not installed)
   - **Upgrade marker**: `↑` (safe update available), `⊘` (blocked by reverse
     dependency), none (at latest version)
-- Packages Declared in Only One Manifest: full inventory of drift-invisible
-  packages.
-- NPM Package Dependency Matrix inspecting declared versus installed package
-  versions.
+- Packages Declared in Only One Manifest: full inventory of drift-invisible packages.
+- NPM Package Dependency Matrix inspecting declared versus installed package versions.
 - NPM Package Drift Across Workspaces.
 
 Blocked upgrades include a reason string naming the requiring package and
@@ -242,8 +209,7 @@ The pipeline executes in sequential order:
 4. Python package installation using locked manifests, followed by OpenCV
    variant normalization.
 5. Node.js package installation via NPM.
-6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain
-   gates).
+6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).
 7. Final ecosystem health audit generation.
 
 ---
@@ -401,8 +367,7 @@ Purged items include:
 - `__pycache__` directories and `.pyc` bytecode files.
 - `.pytest_cache`, `.mypy_cache`, and `.ruff_cache`.
 - Temporary build residues (`dist/`, `build/`, `*.egg-info`).
-- Staging artifacts (`.staging_*`, `staging_*`, `.kaggle-partial`, `.tmp`,
-  `.log`).
+- Staging artifacts (`.staging_*`, `staging_*`, `.kaggle-partial`, `.tmp`, `.log`).
 
 ---
 
@@ -1188,8 +1153,7 @@ python cli.py eval mirnet_exposure \
 
 ### 6.4 Model Compilation & Export (`export`)
 
-Compiles trained PyTorch checkpoints into optimized runtime deployment
-artifacts:
+Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:
 
 ```bash
 # Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
@@ -1248,8 +1212,7 @@ All generated notebooks are automatically distributed and mirrored across:
 
 ### 6.6 Checkpoint Management (`checkpoints`)
 
-Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup
-blending:
+Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup blending:
 
 ```bash
 # List discovered checkpoints with size and epoch metadata
@@ -1389,8 +1352,7 @@ python cli.py llm export ai_helper_lemgend --target qlora_adapter \
 
 ### 6.12 FID Re-evaluation (`python -m training.fid_reeval`)
 
-Re-measures FID (`feature=2048`, chunks of at most two) for the four models
-whose
+Re-measures FID (`feature=2048`, chunks of at most two) for the four models whose
 historical FID rows were rewritten by a removed tool (`codeformer`,
 `ffanet_indoor`, `mprnet_deraining`, `mirnet_lowlight`). Run it from the
 `lemgendary-training-suite` root:
@@ -1587,8 +1549,7 @@ psnr=27.1000 | suite v16.9.177`.
 
 ## 7. Models Hub & Verification Toolchain
 
-The `LemGendaryModels` repository hosts trained neural checkpoints and model
-cards.
+The `LemGendaryModels` repository hosts trained neural checkpoints and model cards.
 
 Validation and inspection:
 
@@ -1631,8 +1592,7 @@ python -m http.server 8080 --directory lemgendary-docs
 
 ## 9. Exit Codes, Automation & CI/CD Integration
 
-All ecosystem CLI tools follow standard POSIX and Windows process exit code
-conventions:
+All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:
 
 - **`0`**: Meaning: Success; Operator Action: Operation completed successfully
   with zero violations or errors

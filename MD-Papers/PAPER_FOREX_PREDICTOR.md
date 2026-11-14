@@ -12,61 +12,39 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-  - [1.1 What ForexPredictor Does (In Plain
-    English)](#11-what-forexpredictor-does-in-plain-english)
-- [2. Visual Taxonomy: Multi-Asset & Temporal
-  Manifolds](#2-visual-taxonomy-multi-asset--temporal-manifolds)
+  - [1.1 What ForexPredictor Does (In Plain English)](#11-what-forexpredictor-does-in-plain-english)
+- [2. Visual Taxonomy: Multi-Asset & Temporal Manifolds](#2-visual-taxonomy-multi-asset--temporal-manifolds)
   - [2.1 The Titan Four Asset Universe](#21-the-titan-four-asset-universe)
-  - [2.2 The 16-Symbol Financial Foundation
-    Model](#22-the-16-symbol-financial-foundation-model)
-  - [2.3 Future Expansion Strategy (Crosses &
-    Exotics)](#23-future-expansion-strategy-crosses--exotics)
-  - [2.4 Multi-Timeframe Confluence
-    Ladder](#24-multi-timeframe-confluence-ladder)
+  - [2.2 The 16-Symbol Financial Foundation Model](#22-the-16-symbol-financial-foundation-model)
+  - [2.3 Future Expansion Strategy (Crosses & Exotics)](#23-future-expansion-strategy-crosses--exotics)
+  - [2.4 Multi-Timeframe Confluence Ladder](#24-multi-timeframe-confluence-ladder)
 - [3. Shared Foundations](#3-shared-foundations)
-  - [3.1 Causal Convolution & Temporal
-    Invariance](#31-causal-convolution--temporal-invariance)
-  - [3.2 Cross-Timeframe Multi-Head Attention
-    Fusion](#32-cross-timeframe-multi-head-attention-fusion)
-  - [3.3 6-Fold Anchored Walk-Forward Cross-Validation
-    Matrix](#33-6-fold-anchored-walk-forward-cross-validation-matrix)
-  - [3.4 Quantitative Evaluation Formulations &
-    Scoring](#34-quantitative-evaluation-formulations--scoring)
+  - [3.1 Causal Convolution & Temporal Invariance](#31-causal-convolution--temporal-invariance)
+  - [3.2 Cross-Timeframe Multi-Head Attention Fusion](#32-cross-timeframe-multi-head-attention-fusion)
+  - [3.3 6-Fold Anchored Walk-Forward Cross-Validation Matrix](#33-6-fold-anchored-walk-forward-cross-validation-matrix)
+  - [3.4 Quantitative Evaluation Formulations & Scoring](#34-quantitative-evaluation-formulations--scoring)
   - [3.5 Memory Complexity Scaling Bounds](#35-memory-complexity-scaling-bounds)
-- [4. Model Deep-Dive: LemGendary
-  ForexPredictor](#4-model-deep-dive-lemgendary-forexpredictor)
-  - [4.1 Model Description, Purpose and
-    Usage](#41-model-description-purpose-and-usage)
+- [4. Model Deep-Dive: LemGendary ForexPredictor](#4-model-deep-dive-lemgendary-forexpredictor)
+  - [4.1 Model Description, Purpose and Usage](#41-model-description-purpose-and-usage)
   - [4.2 Model Info](#42-model-info)
   - [4.3 Manifold Info](#43-manifold-info)
   - [4.4 Performance Metrics](#44-performance-metrics)
   - [4.5 Training Curve](#45-training-curve)
-  - [4.6 Model Specific Issues and
-    Optimizations](#46-model-specific-issues-and-optimizations)
+  - [4.6 Model Specific Issues and Optimizations](#46-model-specific-issues-and-optimizations)
   - [4.7 Consolidated SOTA Benchmarks](#47-consolidated-sota-benchmarks)
   - [4.8 Training Process Analysis](#48-training-process-analysis)
-- [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-  - [5.1 Lookahead Leakage Elimination (Strict Embargo
-    Gaps)](#51-lookahead-leakage-elimination-strict-embargo-gaps)
-  - [5.2 Anti-Hold Manifold Collapse (Entropy
-    Regularization)](#52-anti-hold-manifold-collapse-entropy-regularization)
-  - [5.3 Spread Friction & Dynamic Slippage
-    Simulation](#53-spread-friction--dynamic-slippage-simulation)
-  - [5.4 Risk-Adjusted Position Sizing via Fractional
-    Kelly](#54-risk-adjusted-position-sizing-via-fractional-kelly)
-  - [5.5 Sub-5ms Real-Time Inference
-    Deployment](#55-sub-5ms-real-time-inference-deployment)
-- [6. Deployment Strategy: MetaTrader 5 Expert Advisor
-  Bridge](#6-deployment-strategy-metatrader-5-expert-advisor-bridge)
-  - [6.1 Stateless ONNX Model Export
-    `[THEORETICAL]`](#61-stateless-onnx-model-export-theoretical)
-  - [6.2 Automated Real-Time Tick
-    Ingestion](#62-automated-real-time-tick-ingestion)
+- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+  - [5.1 Lookahead Leakage Elimination (Strict Embargo Gaps)](#51-lookahead-leakage-elimination-strict-embargo-gaps)
+  - [5.2 Anti-Hold Manifold Collapse (Entropy Regularization)](#52-anti-hold-manifold-collapse-entropy-regularization)
+  - [5.3 Spread Friction & Dynamic Slippage Simulation](#53-spread-friction--dynamic-slippage-simulation)
+  - [5.4 Risk-Adjusted Position Sizing via Fractional Kelly](#54-risk-adjusted-position-sizing-via-fractional-kelly)
+  - [5.5 Sub-5ms Real-Time Inference Deployment](#55-sub-5ms-real-time-inference-deployment)
+- [6. Deployment Strategy: MetaTrader 5 Expert Advisor Bridge](#6-deployment-strategy-metatrader-5-expert-advisor-bridge)
+  - [6.1 Stateless ONNX Model Export `[THEORETICAL]`](#61-stateless-onnx-model-export-theoretical)
+  - [6.2 Automated Real-Time Tick Ingestion](#62-automated-real-time-tick-ingestion)
   - [6.3 Generated MQL5 Expert Advisor & MT5 Artefact (v16.9.185,
     v16.9.192)](#63-generated-mql5-expert-advisor--mt5-artefact-v169185-v169192)
-- [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+- [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
 
 ---
@@ -737,8 +715,7 @@ continuity without downsampling or fractional stride gaps. The
 passes. The model trains on 100% of historical candles in each fold's expanding
 chronological training window, advancing through the 6-Fold Walk-Forward matrix
 (Fold 1: 2019–2020 $\rightarrow$ 2021 through Fold 6: 2019–2025
-$\rightarrow$ 2026) while expanding across the Multi-Timeframe Confluence
-Ladder.
+$\rightarrow$ 2026) while expanding across the Multi-Timeframe Confluence Ladder.
 
 #### 4.8.2 MetaTrader 5 (MT5) Auto-Acquisition Bridge
 
@@ -911,15 +888,13 @@ latency is not yet measured.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedForexUniverse`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedForexUniverse`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 - [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training
   Panel Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)
-
 
 ### MT5 Strategy Tester `PERIOD_D1` Leading-Bar Padding
 

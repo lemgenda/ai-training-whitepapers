@@ -10,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What ParseNet Does (In Plain
-  English)](#11-what-parsenet-does-in-plain-english)
-* [2. Visual Taxonomy: The 19 Anatomical
-  Classes](#2-visual-taxonomy-the-19-anatomical-classes)
-* [3. Shared Foundations: Bilateral Boundary
-  Architecture](#3-shared-foundations-bilateral-boundary-architecture)
+* [1.1 What ParseNet Does (In Plain English)](#11-what-parsenet-does-in-plain-english)
+* [2. Visual Taxonomy: The 19 Anatomical Classes](#2-visual-taxonomy-the-19-anatomical-classes)
+* [3. Shared Foundations: Bilateral Boundary Architecture](#3-shared-foundations-bilateral-boundary-architecture)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -66,8 +60,7 @@ close-up photograph:
 
 ## 2. Visual Taxonomy: The 19 Anatomical Classes
 
-ParseNet decomposes human portraits into 19 mutually exclusive spatial regions
-`[THEORETICAL]`:
+ParseNet decomposes human portraits into 19 mutually exclusive spatial regions `[THEORETICAL]`:
 
 * **Facial Core**: Category ID & Class Labels: Skin, Left Eyebrow, Right
   Eyebrow, Left Eye, Right Eye, Nose; Downstream Pipeline Target: High-fidelity
@@ -115,8 +108,7 @@ fine-grained editing and localized neural restoration.
 
 #### 4.2 Model Info
 
-* **Architecture**: ParseNet (ResNet-18 Backbone with Multi-Scale Context
-  Aggregation)
+* **Architecture**: ParseNet (ResNet-18 Backbone with Multi-Scale Context Aggregation)
 * **Input Resolution**: 512x512
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 14.8ms inference on NVIDIA GTX 1650 `[MEASURED]`
@@ -190,11 +182,9 @@ artifact bleed during automated restoration workflows.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedParseNetLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedParseNetLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

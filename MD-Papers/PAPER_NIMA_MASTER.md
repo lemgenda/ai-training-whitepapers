@@ -14,8 +14,7 @@
 * [2. Four-Quadrant Quality Taxonomy](#2-four-quadrant-quality-taxonomy)
 * [3. Resonance Loss & Rank Optimization](#3-resonance-loss--rank-optimization)
 * [4. Model Family Architecture](#4-model-family-architecture)
-* [5. SOTA Architectural Performance
-  Matrix](#5-sota-architectural-performance-matrix)
+* [5. SOTA Architectural Performance Matrix](#5-sota-architectural-performance-matrix)
 * [6. Conclusion](#6-conclusion)
 
 ---
@@ -76,8 +75,7 @@ $$
   Architectural Backbone: EfficientNetV2-S; Input Resolution: 384x384; Target
   Performance: Accuracy &ge; 0.940
 
-For full mathematical proofs, refer to
-[PAPER_LEMGENDARY_NIMA.md](./PAPER_LEMGENDARY_NIMA.md).
+For full mathematical proofs, refer to [PAPER_LEMGENDARY_NIMA.md](./PAPER_LEMGENDARY_NIMA.md).
 
 ---
 

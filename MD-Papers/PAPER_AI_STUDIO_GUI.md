@@ -644,7 +644,6 @@ write-only secrets, a local-first bug reporter and contextual hover
 micro-documentation, the system sets a high bar for developer ergonomics,
 resource efficiency and ecosystem stability.
 
-
 ### Smart Compilation & Telemetry Architecture
 
 The Dataset Compilation Engine maps each manifold in `unified_data.yaml` to its

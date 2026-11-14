@@ -33,13 +33,13 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     23)](#live-polarity-inversion-negative-manifold-pathology-23)
   - [Turing Multi-GPU DataParallel Misalignment (The 16-byte Coalesce Fault)
     (Pathology
-40)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault-pathology-40)
+    40)](#turing-multi-gpu-dataparallel-misalignment-the-16-byte-coalesce-fault-pathology-40)
   - [Micro-Batch Pairwise Ranking Starvation (The Single-Pair Bottleneck)
     (Pathology
-14)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck-pathology-14)
+    14)](#micro-batch-pairwise-ranking-starvation-the-single-pair-bottleneck-pathology-14)
   - [Spatial Average Pooling Dilution (The Micro-Trigger Vanishing Defect)
     (Pathology
-15)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-15)
+    15)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-15)
   - [Silent Epoch Limit Termination (The Raw Exit Pathology) (Pathology
     16)](#silent-epoch-limit-termination-the-raw-exit-pathology-pathology-16)
   - [The Persistent Worker VRAM Fragmentation (Kaggle T4 OOM) (Pathology
@@ -50,9 +50,9 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     17)](#metric-asymmetry-the-manifold-plateau-pathology-17)
   - [Multi-Asset Pip Mismatch & Temperature Sharpening Collapse (Financial)
     (Pathology
-19)](#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial-pathology-19)
+    19)](#multi-asset-pip-mismatch--temperature-sharpening-collapse-financial-pathology-19)
   - [Windows Multiprocessing Heap Duplication & Pagefile Thrashing (Pathology
-24)](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24)
+    24)](#windows-multiprocessing-heap-duplication--pagefile-thrashing-pathology-24)
   - [Checkpoint Resumption Fraction Desync (Ghost Loader) (Pathology
     25)](#checkpoint-resumption-fraction-desync-ghost-loader-pathology-25)
   - [The Unbounded Horizon (Open-Ended Epoch Loop) (Pathology
@@ -60,19 +60,19 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
   - [Fabricated Metric History (FID Rescaling) (Pathology
     27)](#fabricated-metric-history-fid-rescaling-pathology-27)
   - [Variable-Length Ragged Tensor Validation Collation Collapse (Pathology
-28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
+    28)](#variable-length-ragged-tensor-validation-collation-collapse-pathology-28)
   - [CPU-Bound Execution & Silent Accelerator Starvation (Pathology
     29)](#cpu-bound-execution--silent-accelerator-starvation-pathology-29)
   - [Vision-Curriculum Cross-Domain Contamination (Pathology
     30)](#vision-curriculum-cross-domain-contamination-pathology-30)
   - [Symbolic Tracing Artifacts on Dynamic Transformer Causal Masks (Pathology
-31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
+    31)](#symbolic-tracing-artifacts-on-dynamic-transformer-causal-masks-pathology-31)
   - [Disconnected Milestone Vault Tracking for Causal Language Models (Pathology
-32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
+    32)](#disconnected-milestone-vault-tracking-for-causal-language-models-pathology-32)
   - [Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology
-33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
+    33)](#unquantized-checkpoint-resume-shape-mismatch-on-4-bit-backbones-pathology-33)
   - [PCIe Paging Thrashing & Host VRAM Starvation on 4GB Accelerators (Pathology
-34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
+    34)](#pcie-paging-thrashing--host-vram-starvation-on-4gb-accelerators-pathology-34)
   - [Multitask Target Collation Type Mismatch & Loss Crash (Pathology
     35)](#multitask-target-collation-type-mismatch--loss-crash-pathology-35)
   - [Static OS Worker Throttling & WebDataset Starvation (Pathology
@@ -80,7 +80,7 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
   - [Dynamic Spatial Pooling & Symbolic Axis Export Failure (Pathology
     37)](#dynamic-spatial-pooling--symbolic-axis-export-failure-pathology-37)
   - [Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology
-38)](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38)
+    38)](#multi-head-output-tuple-unwrapping-in-validation-telemetry-pathology-38)
   - [Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology
     39)](#protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39)
 - [5. High-Fidelity Strategy & Historical Evolution
@@ -113,21 +113,21 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
   - [The Amnesiac Double-Jolt (Cooldown Persistence) (Pathology
     56)](#the-amnesiac-double-jolt-cooldown-persistence-pathology-56)
   - [OneCycleLR Desynchronization (Velocity Bomb / Stagnation Loop) (Pathology
-57)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop-pathology-57)
+    57)](#onecyclelr-desynchronization-velocity-bomb--stagnation-loop-pathology-57)
   - [Premature Spatial Retreat (The Over-Aggressive Recoil) (Pathology
     58)](#premature-spatial-retreat-the-over-aggressive-recoil-pathology-58)
   - [Static Loss Hyperparameter Saturation (Mid-Training Edit Barrier)
     (Pathology
-59)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier-pathology-59)
+    59)](#static-loss-hyperparameter-saturation-mid-training-edit-barrier-pathology-59)
   - [The False-Alarm Jolt Collapse Loop (Manifold Scale Desynchronization)
     (Pathology
-60)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization-pathology-60)
+    60)](#the-false-alarm-jolt-collapse-loop-manifold-scale-desynchronization-pathology-60)
   - [Single-Threaded CPU Validation Thrashing (The Evaluation Starvation
     Bottleneck) (Pathology
-61)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck-pathology-61)
+    61)](#single-threaded-cpu-validation-thrashing-the-evaluation-starvation-bottleneck-pathology-61)
   - [Checkpoint Fraction Desynchronization (The Preemption Recoil Loop)
     (Pathology
-18)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop-pathology-18)
+    18)](#checkpoint-fraction-desynchronization-the-preemption-recoil-loop-pathology-18)
   - [Finished-Epoch Resume Loop (Pathology
     62)](#finished-epoch-resume-loop-pathology-62)
   - [Restoration Metric Weight Imbalance (Pathology
@@ -682,8 +682,7 @@ before passing it to `F.conv2d`.
 - **Identification**: Validation loss explodes to 230+ while training loss
   remains low (~9.3); TP/SL MAE flatlines at ~1,415–1,440 pips; `softmax_temp`
   drops to 0.14 or below; and Governor logs report
-  `[RESCUE] [OVERFITTING] Dataset exhausted. Deploying Stress Protocol (Level
-4.0)`.
+  `[RESCUE] [OVERFITTING] Dataset exhausted. Deploying Stress Protocol (Level 4.0)`.
 - **Remedy**:
     1. **Multi-Asset Pip Scale Normalization (`PAIR_PIP_SCALE`)**: Standardize
        all prediction targets and magnitude outputs into Normalized Pip Units
@@ -869,8 +868,7 @@ $$
 
 ### Unquantized Checkpoint Resume Shape Mismatch on 4-bit Backbones (Pathology 33)
 
-- **The Issue**: When resuming training for an LLM that was previously
-  initialized
+- **The Issue**: When resuming training for an LLM that was previously initialized
   or trained in unquantized FP32 (e.g. CPU fallback), linear projection weights
   in `progress.pth` possess 2D tensor dimensions (e.g. `[1536, 1536]` or
   `[8960, 1536]`). Upon transitioning to 4-bit NF4 quantization on CUDA,
@@ -897,20 +895,16 @@ Pathology 47, the Sub-Nuclear 4GB Lockdown).
   Chrome, Photoshop) claim ~450–600 MB of Dedicated VRAM. While a 1.5B 4-bit
   model fits in ~1,600 MB at rest, processing long sequence lengths (e.g. 1024
   tokens) with standard AdamW and uncheckpointed activations pushes total
-  allocation past the 4 GB boundary. The WDDM GPU driver dynamically pages
-active
+  allocation past the 4 GB boundary. The WDDM GPU driver dynamically pages active
   tensor allocations over the PCIe 3.0 bus to system RAM, causing batch step
   latency to balloon from ~1.5s up to 25s+ per iteration.
 - **Identification**: `nvidia-smi` reports 100% GPU utilization with VRAM pegged
-  at >3,600 MB, high CPU/PCIe bus activity, and fluctuating batch times (13.9s
-->
+  at >3,600 MB, high CPU/PCIe bus activity, and fluctuating batch times (13.9s ->
   22.7s).
 - **Remedy**: **Multi-Tier VRAM Containment Profile**. Deploy 4-bit NF4 base
-  quantization via `BitsAndBytesConfig`, enable activation gradient
-checkpointing
+  quantization via `BitsAndBytesConfig`, enable activation gradient checkpointing
   (`gradient_checkpointing_enable(use_reentrant=False)`), wire
-  `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus
-lockups,
+  `bitsandbytes.optim.PagedAdamW8bit` for dynamic host paging without bus lockups,
   and clamp sequence lengths to 512 tokens with micro-batch size 1 and 16
   accumulation steps for edge training.
 - **The Issue (Vision Models)**: 4GB cards (GTX 1650) trigger **System RAM
@@ -1002,8 +996,7 @@ lockups,
   operators (`F.adaptive_avg_pool2d(x, (32, 32))` or `nn.AdaptiveAvgPool2d(1)`).
   Because TorchScript requires concrete tensor dimensions to calculate output
   stride and sliding-window kernel sizes, dynamic inputs trigger:
-  `Unsupported: ONNX export of operator adaptive_avg_pool2d, input size not
-accessible`.
+  `Unsupported: ONNX export of operator adaptive_avg_pool2d, input size not accessible`.
 - **Identification**: Training succeeds through validation, but automated ONNX
   export halts with `torch.onnx.errors.UnsupportedOperatorError` during
   dynamic batch/resolution tracing.
@@ -1013,8 +1006,7 @@ accessible`.
      generating clean, symbolic ONNX `Resize` operators compatible with any
      input height and width.
   2. Replace spatial classifier pooling with tensor reduction:
-     `x.mean(dim=(-2, -1))` to compile into standard ONNX `ReduceMean`
-operators.
+     `x.mean(dim=(-2, -1))` to compile into standard ONNX `ReduceMean` operators.
 
 ### Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology 38)
 
@@ -1042,8 +1034,7 @@ operators.
 - **Remedy**: **Deterministic Weight Externalization**.
   Configure ONNX export with `save_as_external_data=True` for models whose
   tensor byte footprint exceeds 2.00 GB, producing a lightweight `.onnx` graph
-  paired with a `.onnx.data` external binary sidecar. Models with total
-footprint
+  paired with a `.onnx.data` external binary sidecar. Models with total footprint
   $< 2.00\text{ GB}$ (such as vision models like `ProfessionalMultiRestorer` at
   1.62 MB) must embed weights directly within the `.onnx` container.
 
@@ -1447,11 +1438,9 @@ row of Section 11).
 
 ### Dual-GPU PCIe Barrier Overhead on Lightweight Parameter Predictors (Pathology 64)
 
-**The Issue:** Running `DistributedDataParallel` (DDP) across dual
-PCIe-connected
+**The Issue:** Running `DistributedDataParallel` (DDP) across dual PCIe-connected
 T4 GPUs on lightweight parameter networks (e.g., `upn_v2` at ~11 MB) introduces
-inter-GPU synchronization barrier latency that exceeds the ~15ms
-forward/backward
+inter-GPU synchronization barrier latency that exceeds the ~15ms forward/backward
 compute pass, starving GPU utilization (~20% reported) while consuming 2x cloud
 accelerator quota.
 

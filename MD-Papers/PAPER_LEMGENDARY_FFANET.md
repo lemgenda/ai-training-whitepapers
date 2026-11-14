@@ -10,14 +10,10 @@
 ## Table of Contents
 
 - [1. Abstract](#1-abstract)
-  - [1.1 What FFANet Does (In Plain
-    English)](#11-what-ffanet-does-in-plain-english)
-- [2. Visual Taxonomy: The LemGendary Restoration
-  Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
-  - [2.1 Indoor Dehazing Track
-    (ffanet_indoor)](#21-indoor-dehazing-track-ffanet_indoor)
-  - [2.2 Outdoor Dehazing Track
-    (ffanet_outdoor)](#22-outdoor-dehazing-track-ffanet_outdoor)
+  - [1.1 What FFANet Does (In Plain English)](#11-what-ffanet-does-in-plain-english)
+- [2. Visual Taxonomy: The LemGendary Restoration Subset](#2-visual-taxonomy-theoretical-the-lemgendary-restoration-subset)
+  - [2.1 Indoor Dehazing Track (ffanet_indoor)](#21-indoor-dehazing-track-ffanet_indoor)
+  - [2.2 Outdoor Dehazing Track (ffanet_outdoor)](#22-outdoor-dehazing-track-ffanet_outdoor)
   - [2.3 Synthetic Smoke Evacuation](#23-synthetic-smoke-evacuation)
 - [3. Shared Foundations](#3-shared-foundations)
   - [3.1 Hardware-Aware Infrastructure](#31-hardware-aware-infrastructure)
@@ -26,11 +22,9 @@
 - [4. Model Deep-Dives](#4-model-deep-dives)
   - [4.1 BranchedFFANet Indoor Scorer](#41-branchedffanet-indoor-scorer)
   - [4.2 BranchedFFANet Outdoor Scorer](#42-branchedffanet-outdoor-scorer)
-- [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
+- [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
 - [6. Deployment Strategy](#6-deployment-strategy)
-- [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+- [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 - [8. Conclusion](#8-conclusion)
 
 ---
@@ -166,8 +160,7 @@ physical scatter across confined depth profiles.
 #### 4.1.3 Manifold Info
 
 - **Dataset:** LemGendizedFfaNetIndoorLarge
-- **Total Samples:** 196,304 (merged from ITS, RESIDE-6k, Dehazing and
-  Desmoking)
+- **Total Samples:** 196,304 (merged from ITS, RESIDE-6k, Dehazing and Desmoking)
 - **Primary Task:** Reverses artificial haze distributions while identifying key
   target boxes using the detection head.
 
@@ -292,11 +285,9 @@ dehazing while detecting tactical landmarks.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedFfanetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedFfanetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

@@ -697,13 +697,15 @@ depends on the sidecars and the hardware:
   Graphics Capture, app window only); macOS and Linux report "not supported on
   this platform yet"; not available in the browser build.
 
-
 ### Dynamic Dataset Compiler Controls (v2.10.68+)
 
-| Control ID | Condition | Purpose |
-|---|---|---|
-| `comp-input-start-date` | Forex / Parquet | Start date (`YYYY-MM-DD`) for MT5 time-series ingestion |
-| `comp-input-end-date` | Forex / Parquet | End date (`YYYY-MM-DD`) for MT5 time-series ingestion |
-| `comp-input-target-samples` | LLM / JSONL | Target sample count override for instruction synthesis |
-| `comp-select-label-strategy` | Detection / Pose | Label strategy (`yolov8`, `coco`, `retinaface`) |
-| `comp-select-shard-ext` | WebDataset only | Shard extension (`.data` or `.tar`), disabled for non-WebDataset manifolds |
+- **`comp-input-start-date`** (Forex / Parquet): Start date (`YYYY-MM-DD`) for
+  MT5 time-series ingestion.
+- **`comp-input-end-date`** (Forex / Parquet): End date (`YYYY-MM-DD`) for MT5
+  time-series ingestion.
+- **`comp-input-target-samples`** (LLM / JSONL): Target sample count override
+  for instruction synthesis.
+- **`comp-select-label-strategy`** (Detection / Pose): Label strategy (`yolov8`,
+  `coco`, `retinaface`).
+- **`comp-select-shard-ext`** (WebDataset only): Shard extension (`.data` or
+  `.tar`), disabled for non-WebDataset manifolds.

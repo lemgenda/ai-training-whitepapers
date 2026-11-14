@@ -10,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What NIMA Aesthetic Pro Architecture (Swin-v2-T) Does (In Plain
-  English)](#11-what-nima-aesthetic-pro-architecture-swin-v2-t-does-in-plain-english)
-* [2. Visual Taxonomy: Perceptual Rating Distribution & Feature
-  Extraction](#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction)
-* [3. Shared Foundations: Earth Mover's Distance & Multi-Scale
-  Optimization](#3-shared-foundations-earth-movers-distance--multi-scale-optimization)
+* [1.1 What NIMA Aesthetic Pro Architecture (Swin-v2-T) Does (In Plain English)](#11-what-nima-aesthetic-pro-architecture-swin-v2-t-does-in-plain-english)
+* [2. Visual Taxonomy: Perceptual Rating Distribution & Feature Extraction](#2-visual-taxonomy-perceptual-rating-distribution--feature-extraction)
+* [3. Shared Foundations: Earth Mover's Distance & Multi-Scale Optimization](#3-shared-foundations-earth-movers-distance--multi-scale-optimization)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -32,8 +26,7 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 The **NIMA Aesthetic Pro Architecture (Swin-v2-T)** is a dedicated neural
 evaluation engine engineered for precise visual quality assessment. Operating on
 the compiled manifold `LemGendizedNimaAesthetic`, it leverages **Swin-v2-T
-(27.5887M Parameters)** to predict continuous perceptual distributions rather
-than
+(27.5887M Parameters)** to predict continuous perceptual distributions rather than
 simplistic scalar scores. By formulating evaluation as an Earth Mover's Distance
 (EMD) and Soft-Spearman rank optimization problem, this model captures subtle
 perceptual judgments with verified mathematical resilience.
@@ -74,8 +67,7 @@ $$
 p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}
 $$
 
-where temperature $\tau = 1.0$ anchors calibration against the human voting
-distribution.
+where temperature $\tau = 1.0$ anchors calibration against the human voting distribution.
 
 ---
 
@@ -120,10 +112,8 @@ automated training loss gating, and desktop studio review.
 #### 4.4 Performance Metrics
 
 * **Current Training Epochs**: 50 `[CURRENT]`
-* **Best Spearman Rank (SRCC)**: 0.771 `[MEASURED]` (Target: $\ge 0.750$
-  `[TARGET]`)
-* **Best Linear Correlation (PLCC)**: 0.785 `[MEASURED]` (Target: $\ge 0.750$
-  `[TARGET]`)
+* **Best Spearman Rank (SRCC)**: 0.771 `[MEASURED]` (Target: $\ge 0.750$ `[TARGET]`)
+* **Best Linear Correlation (PLCC)**: 0.785 `[MEASURED]` (Target: $\ge 0.750$ `[TARGET]`)
 * **Inference Latency**: 19.5ms `[MEASURED]`
 
 ---
@@ -172,11 +162,9 @@ distribution-aware loss functions with hardware-bounded latency guarantees.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedNimaAesthetic`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNimaAesthetic`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

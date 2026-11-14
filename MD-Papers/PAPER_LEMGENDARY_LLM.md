@@ -196,8 +196,7 @@ training suite deploys a multi-tier memory containment profile:
    compress optimizer states to 8 bits and dynamically page optimizer states
    across CUDA unified memory when VRAM boundaries approach saturation.
 5. **Sequence Clamping**: Constrains micro-batch to 1 and sequence length to 512
-   tokens with 16 gradient accumulation steps, eliminating $O(N^2)$ memory
-spikes
+   tokens with 16 gradient accumulation steps, eliminating $O(N^2)$ memory spikes
    and preserving stable throughput on edge accelerators.
 
 ### 6.7 Tri-Format Export & Protobuf 2.00 GB Weight Externalization
@@ -208,8 +207,7 @@ In accordance with the LemGendary universal multi-variation export standard,
 * **PyTorch Standalone (`pytorch/AIHelperLemGend.pt`)**: 1.57 GB merged FP16
   torchscript executable containing base model and LoRA adapter weights.
 * **High-Precision FP32 ONNX (`onnx_fp32/AIHelperLemGend_FP32.onnx`)**: 4.26 MB
-  ONNX computation graph paired with external 5.75 GB
-`AIHelperLemGend_FP32.onnx.data`
+  ONNX computation graph paired with external 5.75 GB `AIHelperLemGend_FP32.onnx.data`
   binary weights sidecar.
 * **Production FP16 ONNX (`onnx_fp16/AIHelperLemGend.onnx`)**: 4.28 MB ONNX
   computation graph paired with external 2.88 GB `AIHelperLemGend.onnx.data`

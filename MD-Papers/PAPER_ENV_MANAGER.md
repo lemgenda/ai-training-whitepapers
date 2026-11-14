@@ -27,14 +27,14 @@ audited**: 2026-11-13
   - [6.2 Dual-Interface Telemetry
     Topology](#62-dual-interface-telemetry-topology)
   - [6.3 Desktop GUI State Aggregation & Multi-Sidecar Ecosystem
-Observability](#63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability)
+    Observability](#63-desktop-gui-state-aggregation--multi-sidecar-ecosystem-observability)
   - [6.4 Background Update Jobs](#64-background-update-jobs)
   - [6.5 Security Model](#65-security-model)
   - [6.6 Bug Report Endpoint](#66-bug-report-endpoint)
   - [6.7 Ecosystem Registry
     (ecosystem.json)](#67-ecosystem-registry-ecosystemjson)
   - [6.8 Kaggle Credentials, Changelog Scope & Runtime Contract (v16.9.81 to
-v16.9.85)](#68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985)
+    v16.9.85)](#68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -279,8 +279,7 @@ Capabilities at `16.9.60`:
 | Destructive reinstall | Always | Only with `--clean` / `"clean": true` |
 
 (1) The PowerShell launcher and the git hook template are Windows-only.
-(2) Python compile check, ESLint, TypeScript, jsonlint, PSScriptAnalyzer,
-Pylint,
+(2) Python compile check, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
 forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
 2.2 AA and the `ecosystem_ssot` gate.
 

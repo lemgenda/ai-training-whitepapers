@@ -12,21 +12,14 @@ NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
 
 1. [Abstract](#1-abstract)
 2. [Unified Hybrid Architectures](#2-unified-hybrid-architectures)
-   - [2.1 UPN v2 Large: Parameterized
-     Space-Recovery](#21-upn-v2-large-parameterized-space-recovery)
-   - [2.2 Universal Film Restorer: Synthesized
-     Degradation](#22-universal-film-restorer-synthesized-degradation)
-   - [2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts
-     Routing](#23-multi-task-restorer-multiheaded-mixture-of-experts-routing)
-3. [Critical Architectural
-   Optimizations](#3-critical-architectural-optimizations)
-   - [3.1 Downsampled Global Attention (OOM
-     Remediation)](#31-downsampled-global-attention-oom-remediation)
+   - [2.1 UPN v2 Large: Parameterized Space-Recovery](#21-upn-v2-large-parameterized-space-recovery)
+   - [2.2 Universal Film Restorer: Synthesized Degradation](#22-universal-film-restorer-synthesized-degradation)
+   - [2.3 Multi-Task Restorer: Multiheaded Mixture-of-Experts Routing](#23-multi-task-restorer-multiheaded-mixture-of-experts-routing)
+3. [Critical Architectural Optimizations](#3-critical-architectural-optimizations)
+   - [3.1 Downsampled Global Attention (OOM Remediation)](#31-downsampled-global-attention-oom-remediation)
    - [3.2 Dynamic Filename Task Ingestion](#32-dynamic-filename-task-ingestion)
-   - [3.3 Dynamic Validation Sharding &
-     Auto-Expansion](#33-dynamic-validation-sharding--auto-expansion)
-4. [Deployment Strategy & WebGPU
-   Compatibility](#4-deployment-strategy--webgpu-compatibility)
+   - [3.3 Dynamic Validation Sharding & Auto-Expansion](#33-dynamic-validation-sharding--auto-expansion)
+4. [Deployment Strategy & WebGPU Compatibility](#4-deployment-strategy--webgpu-compatibility)
 5. [Conclusion](#5-conclusion)
 
 ---
@@ -153,8 +146,7 @@ block:
 3. **Bilinear Interpolation**: Interpolates the processed attention map back to
    the original input resolution $(H \times W)$ and injects it residually:
    $$
-   \mathbf{X}_{\text{out}} = \mathbf{X} +
-\text{Interpolate}(\text{Attention}(\text{Pool}(\mathbf{X})))
+   \mathbf{X}_{\text{out}} = \mathbf{X} + \text{Interpolate}(\text{Attention}(\text{Pool}(\mathbf{X})))
    $$
 
 This maintains high-fidelity backward checkpoint compatibility with existing

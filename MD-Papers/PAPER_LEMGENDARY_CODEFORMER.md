@@ -10,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What CodeFormer Does (In Plain
-  English)](#11-what-codeformer-does-in-plain-english)
-* [2. Visual Taxonomy: Discrete Codebook
-  Prior](#2-visual-taxonomy-discrete-codebook-prior)
-* [3. Shared Foundations: Multi-Objective
-  Optimization](#3-shared-foundations-multi-objective-optimization)
+* [1.1 What CodeFormer Does (In Plain English)](#11-what-codeformer-does-in-plain-english)
+* [2. Visual Taxonomy: Discrete Codebook Prior](#2-visual-taxonomy-discrete-codebook-prior)
+* [3. Shared Foundations: Multi-Objective Optimization](#3-shared-foundations-multi-objective-optimization)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -92,8 +86,7 @@ CodeFormer introduces an adjustable modulation scalar $\alpha \in [0, 1]$
 governing intermediate feature fusion:
 
 $$
-\tilde{F} = \alpha \cdot F_{\text{input}} + (1 - \alpha) \cdot
-F_{\text{codebook}}
+\tilde{F} = \alpha \cdot F_{\text{input}} + (1 - \alpha) \cdot F_{\text{codebook}}
 $$
 
 When $\alpha = 1.0$, identity preservation is maximized (biometric alignment);
@@ -131,8 +124,7 @@ continuous hallucination drift.
 
 #### 4.2 Model Info
 
-* **Architecture**: CodeFormer (VQ-Codebook Prior + 9-Layer Contextual
-  Transformer)
+* **Architecture**: CodeFormer (VQ-Codebook Prior + 9-Layer Contextual Transformer)
 * **Input Resolution**: 512x512
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 41.2ms inference on NVIDIA GTX 1650 `[MEASURED]`
@@ -141,8 +133,7 @@ continuous hallucination drift.
 
 * **Dataset**: `LemGendizedCodeFormerLarge`
 * **Total Samples**: 22,000 high-resolution paired portraits
-* **Primary Task**: Discrete codebook feature lookup and controllable identity
-  restoration
+* **Primary Task**: Discrete codebook feature lookup and controllable identity restoration
 
 #### 4.4 Performance Metrics
 
@@ -221,11 +212,9 @@ fidelity across production deployment environments.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedCodeFormerLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedCodeFormerLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

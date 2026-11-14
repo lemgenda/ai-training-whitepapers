@@ -11,49 +11,31 @@
 - [1. Executive Overview](#1-executive-overview)
 - [2. Environment Manager REST API](#2-environment-manager-rest-api)
   - [2.1 Server Configuration & Startup](#21-server-configuration--startup)
-  - [2.2 Interactive OpenAPI
-    Documentation](#22-interactive-openapi-documentation)
-  - [2.3 Health & System Discovery
-    Endpoints](#23-health--system-discovery-endpoints)
-  - [2.4 Projects & Ecosystem Audit
-    Endpoints](#24-projects--ecosystem-audit-endpoints)
-  - [2.5 Orchestration & Lifecycle Action
-    Endpoints](#25-orchestration--lifecycle-action-endpoints)
+  - [2.2 Interactive OpenAPI Documentation](#22-interactive-openapi-documentation)
+  - [2.3 Health & System Discovery Endpoints](#23-health--system-discovery-endpoints)
+  - [2.4 Projects & Ecosystem Audit Endpoints](#24-projects--ecosystem-audit-endpoints)
+  - [2.5 Orchestration & Lifecycle Action Endpoints](#25-orchestration--lifecycle-action-endpoints)
   - [2.6 WebSocket Real-Time Telemetry](#26-websocket-real-time-telemetry)
-  - [2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem
-    Endpoints](#27-desktop-gui-aggregation--multi-sidecar-ecosystem-endpoints)
-- [3. Desktop GUI Tauri IPC API
-  Contracts](#3-desktop-gui-tauri-ipc-api-contracts)
-- [4. Training Suite Sidecar Daemon & Python
-  Engine](#4-training-suite-sidecar-daemon--python-engine)
+  - [2.7 Desktop GUI Aggregation & Multi-Sidecar Ecosystem Endpoints](#27-desktop-gui-aggregation--multi-sidecar-ecosystem-endpoints)
+- [3. Desktop GUI Tauri IPC API Contracts](#3-desktop-gui-tauri-ipc-api-contracts)
+- [4. Training Suite Sidecar Daemon & Python Engine](#4-training-suite-sidecar-daemon--python-engine)
   - [4.1 Server Architecture & Startup](#41-server-architecture--startup)
   - [4.2 Security & Authentication](#42-security--authentication)
   - [4.3 Endpoint Reference Matrix](#43-endpoint-reference-matrix)
-  - [4.4 WebSocket Real-Time Telemetry & Log
-    Streaming](#44-websocket-real-time-telemetry--log-streaming)
-  - [4.5 SQLite WAL Job Persistence & Crash
-    Recovery](#45-sqlite-wal-job-persistence--crash-recovery)
-  - [4.6 Desktop GUI Dashboard Aggregation
-    Endpoints](#46-desktop-gui-dashboard-aggregation-endpoints)
-  - [4.7 Python In-Process Engine & Governance
-    API](#47-python-in-process-engine--governance-api)
-- [5. Datasets Compilation & Stream Pipeline
-  API](#5-datasets-compilation--stream-pipeline-api)
+  - [4.4 WebSocket Real-Time Telemetry & Log Streaming](#44-websocket-real-time-telemetry--log-streaming)
+  - [4.5 SQLite WAL Job Persistence & Crash Recovery](#45-sqlite-wal-job-persistence--crash-recovery)
+  - [4.6 Desktop GUI Dashboard Aggregation Endpoints](#46-desktop-gui-dashboard-aggregation-endpoints)
+  - [4.7 Python In-Process Engine & Governance API](#47-python-in-process-engine--governance-api)
+- [5. Datasets Compilation & Stream Pipeline API](#5-datasets-compilation--stream-pipeline-api)
   - [5.1 Server Architecture & Discovery](#51-server-architecture--discovery)
   - [5.2 Security & Authentication](#52-security--authentication)
   - [5.3 Endpoint Reference Matrix](#53-endpoint-reference-matrix)
-  - [5.4 WebSocket Real-Time Log
-    Streaming](#54-websocket-real-time-log-streaming)
-  - [5.5 SQLite Job Persistence & Restart
-    Recovery](#55-sqlite-job-persistence--restart-recovery)
-  - [5.6 Desktop GUI Aggregated Endpoints & Presets (Phase
-    8)](#56-desktop-gui-aggregated-endpoints--presets-phase-8)
-  - [5.7 Three Architectural Ingestion & Modernization
-    Pipelines](#57-three-architectural-ingestion--modernization-pipelines)
-  - [5.8 Python In-Process Engine & Streaming Pipeline
-    APIs](#58-python-in-process-engine--streaming-pipeline-apis)
-- [6. Error Handling, Status Codes &
-  Resilience](#6-error-handling-status-codes--resilience)
+  - [5.4 WebSocket Real-Time Log Streaming](#54-websocket-real-time-log-streaming)
+  - [5.5 SQLite Job Persistence & Restart Recovery](#55-sqlite-job-persistence--restart-recovery)
+  - [5.6 Desktop GUI Aggregated Endpoints & Presets (Phase 8)](#56-desktop-gui-aggregated-endpoints--presets-phase-8)
+  - [5.7 Three Architectural Ingestion & Modernization Pipelines](#57-three-architectural-ingestion--modernization-pipelines)
+  - [5.8 Python In-Process Engine & Streaming Pipeline APIs](#58-python-in-process-engine--streaming-pipeline-apis)
+- [6. Error Handling, Status Codes & Resilience](#6-error-handling-status-codes--resilience)
 - [Companion Documentation](#companion-documentation)
 
 ---
@@ -81,8 +63,7 @@ package synchronization, and multi-gate validations over HTTP.
 
 ### 2.1 Server Configuration & Startup
 
-The server is launched via the `lem-env` command or PowerShell management
-console:
+The server is launched via the `lem-env` command or PowerShell management console:
 
 ```bash
 # Default binding: http://127.0.0.1:8000
@@ -356,8 +337,7 @@ If a pipeline is already running, returns:
 
 #### `POST /api/update`
 
-Triggers safe bottom-up package upgrades across all projects and auto-syncs
-manifests.
+Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.
 
 Request body:
 
@@ -405,8 +385,7 @@ When `dry_run=false`, applies the plan and returns the collected events:
 Event status values:
 
 - `upgraded`: package was successfully upgraded.
-- `blocked`: upgrade blocked by reverse dependency; `message` contains the
-  reason.
+- `blocked`: upgrade blocked by reverse dependency; `message` contains the reason.
 - `verified`: environment verified as healthy without a version change
   (`pip check`, `torch-cuda-verify`, or torch-family no-op).
 - `failed`: batch or rollback failure.
@@ -414,8 +393,7 @@ Event status values:
 
 #### `POST /api/validate`
 
-Executes the multi-gate validation suite across all projects or a single
-project.
+Executes the multi-gate validation suite across all projects or a single project.
 
 Request body:
 
@@ -2025,8 +2003,7 @@ Response:
 
 #### `POST /api/modernize/reduce`
 
-Submits a scale reduction (spatial/sample downsampling) job for a specified
-manifold.
+Submits a scale reduction (spatial/sample downsampling) job for a specified manifold.
 
 Request body:
 
@@ -2073,11 +2050,9 @@ The dataset compilation engine supports three canonical processing pathways:
    - Emits standardized directories with zero-intermediate WebP transcoding
      (`quality=92` images, `quality=95` targets), or simultaneous streaming
      containers via `--also-format` (`webdataset`, `mds`, `litdata`).
-   - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and
-     `index.json`.
+   - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
 
-2. **Legacy Archive Modernization Pipeline
-   (`tools/stream_zip_to_container.py`)**:
+2. **Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)**:
    - Directly indexes and reads legacy multi-gigabyte `.zip` archives containing
      millions of small images.
    - Streams raw byte streams in memory through a 12-thread worker pool for
@@ -2089,8 +2064,7 @@ The dataset compilation engine supports three canonical processing pathways:
      (`--delete-zip`) and purges legacy uncompressed directories
      (`--delete-legacy-dir`), reclaiming hundreds of gigabytes of disk space.
 
-3. **Retroactive Manifold Migration Pipeline (`format migrate` /
-   `migrate_manifold_format.py`)**:
+3. **Retroactive Manifold Migration Pipeline (`format migrate` / `migrate_manifold_format.py`)**:
    - Discovers existing modernized dataset folders containing loose `.webp`
      files and an `index.json` catalog.
    - Serializes loose samples into continuous ~500 MB WebDataset `.tar` shards

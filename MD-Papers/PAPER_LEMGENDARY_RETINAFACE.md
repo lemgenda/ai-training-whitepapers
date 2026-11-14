@@ -2,8 +2,7 @@
 
 ## Category 08 FACE | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Target
-Hardware**:
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Target Hardware**:
 NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -11,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What RetinaFace Does (In Plain
-  English)](#11-what-retinaface-does-in-plain-english)
-* [2. Visual Taxonomy: Multi-Scale Features &
-  Landmarks](#2-visual-taxonomy-multi-scale-features--landmarks)
-* [3. Shared Foundations: Tri-Head Multi-Task
-  Objective](#3-shared-foundations-tri-head-multi-task-objective)
+* [1.1 What RetinaFace Does (In Plain English)](#11-what-retinaface-does-in-plain-english)
+* [2. Visual Taxonomy: Multi-Scale Features & Landmarks](#2-visual-taxonomy-multi-scale-features--landmarks)
+* [3. Shared Foundations: Tri-Head Multi-Task Objective](#3-shared-foundations-tri-head-multi-task-objective)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -246,8 +239,7 @@ decision.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedRetinaFace`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedRetinaFace`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training

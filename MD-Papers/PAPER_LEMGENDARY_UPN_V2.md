@@ -10,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What UPN v2 Does (In Plain
-  English)](#11-what-upn-v2-does-in-plain-english)
-* [2. Visual Taxonomy: Parameterized Latent
-  Steering](#2-visual-taxonomy-parameterized-latent-steering)
-* [3. Shared Foundations: Feature Modulation & Multi-Objective
-  Optimization](#3-shared-foundations-feature-modulation--multi-objective-optimization)
+* [1.1 What UPN v2 Does (In Plain English)](#11-what-upn-v2-does-in-plain-english)
+* [2. Visual Taxonomy: Parameterized Latent Steering](#2-visual-taxonomy-parameterized-latent-steering)
+* [3. Shared Foundations: Feature Modulation & Multi-Objective Optimization](#3-shared-foundations-feature-modulation--multi-objective-optimization)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -101,8 +95,7 @@ $F \in \mathbb{R}^{C  \times H  \times W}$ denote intermediate feature
 representations:
 
 $$
-\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F -
-\mu(F)}{\sigma(F)}
+\text{FMB}(F, \mathbf{z}) = \gamma(\mathbf{z}) \odot \left( \frac{F - \mu(F)}{\sigma(F)}
 \right) + \beta(\mathbf{z})
 $$
 
@@ -144,16 +137,13 @@ parametric control.
 #### 4.3 Manifold Info
 
 * **Dataset**: `LemGendizedUpnV2`
-* **Total Samples**: 285 WebDataset streaming shards (1.06 TB NTFS hardlink
-  deduplicated)
-* **Primary Task**: Parametric latent steering across compound degradation
-  vectors
+* **Total Samples**: 285 WebDataset streaming shards (1.06 TB NTFS hardlink deduplicated)
+* **Primary Task**: Parametric latent steering across compound degradation vectors
 
 #### 4.4 Performance Metrics
 
 * **Current Training Epochs**: 35 `[CURRENT]`
-* **Best PSNR**: 35.18 dB `[MEASURED]` (Target: $\ge 34.50 \text{ dB}$
-  `[TARGET]`)
+* **Best PSNR**: 35.18 dB `[MEASURED]` (Target: $\ge 34.50 \text{ dB}$ `[TARGET]`)
 * **Best SSIM**: 0.967 `[MEASURED]` (Target: $\ge 0.960$ `[TARGET]`)
 * **Current Learning Rate**: 0.000045
 
@@ -222,11 +212,9 @@ single-task networks while dramatically reducing deployment footprint.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedUpnV2`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedUpnV2`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

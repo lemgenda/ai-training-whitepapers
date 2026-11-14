@@ -11,39 +11,26 @@
 ## Table of Contents
 
 1. [Abstract](#1-abstract)
-2. [High-Velocity Optimizations & Physics
-   Formulations](#2-high-velocity-optimizations--physics-formulations)
-   - [2.1 Physics-Based Kernel
-     Formulations](#21-physics-based-kernel-formulations)
+2. [High-Velocity Optimizations & Physics Formulations](#2-high-velocity-optimizations--physics-formulations)
+   - [2.1 Physics-Based Kernel Formulations](#21-physics-based-kernel-formulations)
      - [2.1.1 Atmospheric Haze & Scattering](#211-atmospheric-haze--scattering)
-     - [2.1.2 Heteroscedastic Sensor Noise
-       (ISO-Calibrated)](#212-heteroscedastic-sensor-noise-iso-calibrated)
-     - [2.1.3 Directional Linear Motion
-       Blur](#213-directional-linear-motion-blur)
-     - [2.1.4 Circular Defocus Aperture
-       Blur](#214-circular-defocus-aperture-blur)
+     - [2.1.2 Heteroscedastic Sensor Noise (ISO-Calibrated)](#212-heteroscedastic-sensor-noise-iso-calibrated)
+     - [2.1.3 Directional Linear Motion Blur](#213-directional-linear-motion-blur)
+     - [2.1.4 Circular Defocus Aperture Blur](#214-circular-defocus-aperture-blur)
      - [2.1.5 Low-Light Photon Starvation](#215-low-light-photon-starvation)
-     - [2.1.6 Precipitation Dynamics (Rain Streaks &
-       Mist)](#216-precipitation-dynamics-rain-streaks--mist)
-     - [2.1.7 Lossy Discrete Cosine Transform (DCT)
-       Quantization](#217-lossy-discrete-cosine-transform-dct-quantization)
-   - [2.2 Complexity Mappings & Execution
-     Efficiency](#22-complexity-mappings--execution-efficiency)
+     - [2.1.6 Precipitation Dynamics (Rain Streaks & Mist)](#216-precipitation-dynamics-rain-streaks--mist)
+     - [2.1.7 Lossy Discrete Cosine Transform (DCT) Quantization](#217-lossy-discrete-cosine-transform-dct-quantization)
+   - [2.2 Complexity Mappings & Execution Efficiency](#22-complexity-mappings--execution-efficiency)
 3. [Hybrid Cloud & Registry Integration](#3-hybrid-cloud--registry-integration)
-   - [3.1 Quantitative Parameter
-     Supervision](#31-quantitative-parameter-supervision-labelssplitnamejson)
+   - [3.1 Quantitative Parameter Supervision](#31-quantitative-parameter-supervision-labelssplitnamejson)
    - [3.2 Registry Schema](#32-registry-schema)
 4. [Multi-Modal & Format Resilience](#4-multi-modal--format-resilience)
-   - [4.1 WebP Container Standardization & Quality
-     Policies](#41-webp-container-standardization--quality-policies)
-   - [4.2 Zero-Duplication Training Suite
-     Bridge](#42-zero-duplication-training-suite-bridge)
+   - [4.1 WebP Container Standardization & Quality Policies](#41-webp-container-standardization--quality-policies)
+   - [4.2 Zero-Duplication Training Suite Bridge](#42-zero-duplication-training-suite-bridge)
 5. [Comparative Analysis / Benchmarks](#5-comparative-analysis--benchmarks)
-   - [5.1 Degradation Kernel Performance
-     Matrix](#51-degradation-kernel-performance-matrix)
+   - [5.1 Degradation Kernel Performance Matrix](#51-degradation-kernel-performance-matrix)
 6. [Synthesis Flow & Topology](#6-synthesis-flow--topology)
-7. [Unified Models Registry & Downstream Restoration
-   Targets](#7-unified-models-registry--downstream-restoration-targets)
+7. [Unified Models Registry & Downstream Restoration Targets](#7-unified-models-registry--downstream-restoration-targets)
 8. [Conclusion](#8-conclusion)
 
 ---
@@ -88,8 +75,7 @@ where:
 - $I(x)$ is the observed hazy image radiance at spatial coordinate $x = (u, v)$.
 - $J(x)$ is the true scene radiance (clean ground truth target).
 - $A$ is the global atmospheric airlight vector ($A \in [0.85, 0.95]^3$).
-- $t(x)$ is the medium transmission map defined via the exponential attenuation
-  law:
+- $t(x)$ is the medium transmission map defined via the exponential attenuation law:
 
 $$
 t(x) = \exp(-\beta \cdot d(x))
@@ -115,8 +101,7 @@ I_{\text{noisy}}(x) \sim \mathcal{N}\left(I(x), \, \sigma_{\text{shot}}^2 \cdot
 I(x) + \sigma_{\text{read}}^2\right)
 $$
 
-The noise variance parameters scale non-linearly with synthetic ISO sensitivity
-($S_{\text{ISO}}$):
+The noise variance parameters scale non-linearly with synthetic ISO sensitivity ($S_{\text{ISO}}$):
 
 $$
 \sigma_{\text{read}} = 0.002 \cdot
@@ -312,8 +297,7 @@ degraded_tensor, metadata = degrader(clean_tensor, sample_seed=sample_idx)
 
 ### 5.1 Degradation Kernel Performance Matrix
 
-Benchmarked on 10,000 $1024 \times 1024$ samples on AMD Ryzen 9 7950X NVMe PCIe
-Gen4:
+Benchmarked on 10,000 $1024 \times 1024$ samples on AMD Ryzen 9 7950X NVMe PCIe Gen4:
 
 - **`motion-blur+iso-noise`**: Engine Throughput (Pairs/sec): 428 pairs/sec;
   Peak Memory per Worker: 12.4 MB; Parameter Determinism: 100% Bit-Exact
@@ -363,8 +347,7 @@ restoration architectures:
    pixel and channel attention modules.
 5. **DeblurGAN-v2**: High-frequency motion deblurring with relativistic
    conditional adversarial networks.
-6. **DiffBIR**: Deep generative diffusion restoration and universal image
-   super-resolution.
+6. **DiffBIR**: Deep generative diffusion restoration and universal image super-resolution.
 
 ---
 

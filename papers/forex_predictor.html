@@ -736,6 +736,8 @@ Checkpoint Lifecycle)</li>
 <li><a href="ecosystem-architecture.html">Master Ecosystem Architecture</a> (System
 Governance &amp; Specifications)</li>
 </ul>
+<h3 id="mt5-strategy-tester-period_d1-leading-bar-padding">MT5 Strategy Tester <code>PERIOD_D1</code> Leading-Bar Padding</h3>
+<p>In MetaTrader 5 Strategy Tester backtests, <code>CopyRates(_Symbol, PERIOD_D1, 1, 552, rates)</code> can return fewer than 552 daily bars near the start of a test window (~1 year of pre-loaded <code>D1</code> history). <code>BuildFeatures()</code> in <code>training/export/mql5_features.py</code> now left-pads leading bars with <code>rates[0]</code> when <code>0 &lt; copied &lt; count</code>, eliminating <code>error 4753</code> journal spam.</p>
 </section>
 
 <footer>
@@ -744,4 +746,3 @@ Governance &amp; Specifications)</li>
 </div>
 </body>
 </html>
-<section id="mt5-d1-padding"><h3>MT5 Strategy Tester <code>PERIOD_D1</code> Leading-Bar Padding</h3><p>In MetaTrader 5 Strategy Tester backtests, <code>CopyRates(_Symbol, PERIOD_D1, 1, 552, rates)</code> can return fewer than 552 daily bars near the start of a test window. <code>BuildFeatures()</code> in <code>training/export/mql5_features.py</code> now left-pads leading bars with <code>rates[0]</code> when <code>0 &lt; copied &lt; count</code>, eliminating <code>error 4753</code> journal spam.</p></section>

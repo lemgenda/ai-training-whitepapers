@@ -10,19 +10,13 @@ NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 ## Table of Contents
 
 * [1. Abstract](#1-abstract)
-* [1.1 What NSFW Classifier Does (In Plain
-  English)](#11-what-nsfw-classifier-does-in-plain-english)
-* [2. Visual Taxonomy: The 5-Tier Moderation
-  Taxonomy](#2-visual-taxonomy-the-5-tier-moderation-taxonomy)
-* [3. Shared Foundations: EfficientNetV2-S & Class-Balanced Focal
-  Loss](#3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss)
+* [1.1 What NSFW Classifier Does (In Plain English)](#11-what-nsfw-classifier-does-in-plain-english)
+* [2. Visual Taxonomy: The 5-Tier Moderation Taxonomy](#2-visual-taxonomy-the-5-tier-moderation-taxonomy)
+* [3. Shared Foundations: EfficientNetV2-S & Class-Balanced Focal Loss](#3-shared-foundations-efficientnetv2-s--class-balanced-focal-loss)
 * [4. Model Deep-Dives](#4-model-deep-dives)
-* [5. Challenges & Resilience
-  Architecture](#5-challenges--resilience-architecture)
-* [6. Deployment Strategy & Production
-  Acceleration](#6-deployment-strategy--production-acceleration)
-* [7. SOTA Architectural Performance
-  Matrix](#7-sota-architectural-performance-matrix)
+* [5. Challenges & Resilience Architecture](#5-challenges--resilience-architecture)
+* [6. Deployment Strategy & Production Acceleration](#6-deployment-strategy--production-acceleration)
+* [7. SOTA Architectural Performance Matrix](#7-sota-architectural-performance-matrix)
 * [8. Conclusion](#8-conclusion)
 
 ---
@@ -72,18 +66,14 @@ explicit, harmful, or inappropriate imagery:
 
 ## 2. Visual Taxonomy: The 5-Tier Moderation Taxonomy
 
-The model categorizes content into mutually exclusive probability distributions
-`[THEORETICAL]`:
+The model categorizes content into mutually exclusive probability distributions `[THEORETICAL]`:
 
 * **Drawings**: Benign illustrations, digital paintings, comics, and
   non-explicit anime.
-* **Neutral**: General real-world photographic content, landscapes, everyday
-  objects.
-* **Sexy**: Provocative poses, swimwear, lingerie, and suggestive non-explicit
-  scenes.
+* **Neutral**: General real-world photographic content, landscapes, everyday objects.
+* **Sexy**: Provocative poses, swimwear, lingerie, and suggestive non-explicit scenes.
 * **Hentai**: Explicit illustrated, animated, or drawn adult material.
-* **Porn**: Explicit photographic sexual acts and anatomically explicit
-  genitalia.
+* **Porn**: Explicit photographic sexual acts and anatomically explicit genitalia.
 
 ---
 
@@ -131,8 +121,7 @@ sanitize public endpoint uploads.
 
 * **Current Training Epochs**: 35 `[CURRENT]`
 * **Top-1 Accuracy**: 98.6% `[MEASURED]` (Target: $\ge 98.0\%$ `[TARGET]`)
-* **Benign False Positive Rate**: 0.38% `[MEASURED]` (Target: $\le 0.40\%$
-  `[TARGET]`)
+* **Benign False Positive Rate**: 0.38% `[MEASURED]` (Target: $\le 0.40\%$ `[TARGET]`)
 * **Explicit Recall**: 99.4% `[MEASURED]` (Target: $\ge 99.0\%$ `[TARGET]`)
 * **Current Learning Rate**: 0.000040
 
@@ -185,11 +174,9 @@ providing robust real-time protection for data pipelines.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
-  `LemGendizedClassificationMaster`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedClassificationMaster`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
-  Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

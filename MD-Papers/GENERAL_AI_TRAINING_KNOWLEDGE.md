@@ -34,23 +34,20 @@ evaluation, and production deployment decisions.
    - [3.2 CSV / TSV](#32-csv--tsv)
    - [3.3 JSON Lines / JSONL / NDJSON](#33-json-lines--jsonl--ndjson)
    - [3.4 Apache Parquet](#34-apache-parquet)
-   - [3.5 Apache Arrow / Arrow IPC /
-     Feather](#35-apache-arrow--arrow-ipc--feather)
+   - [3.5 Apache Arrow / Arrow IPC / Feather](#35-apache-arrow--arrow-ipc--feather)
    - [3.6 Zarr](#36-zarr)
    - [3.7 TFRecord](#37-tfrecord)
    - [3.8 WebDataset](#38-webdataset)
    - [3.9 HDF5](#39-hdf5)
    - [3.10 NetCDF](#310-netcdf)
    - [3.11 LMDB](#311-lmdb)
-   - [3.12 MosaicML MDS / Streaming
-     Formats](#312-mosaicml-mds--streaming-formats)
+   - [3.12 MosaicML MDS / Streaming Formats](#312-mosaicml-mds--streaming-formats)
    - [3.13 Format Comparison](#313-format-comparison)
 4. [Dataset Structure and Engineering](#4-dataset-structure-and-engineering)
    - [4.1 Canonical Dataset Layers](#41-canonical-dataset-layers)
    - [4.2 Dataset Manifest](#42-dataset-manifest)
    - [4.3 Dataset Invariants](#43-dataset-invariants)
-5. [Model Weights, Checkpoints, Serialization and Runtime
-   Artifacts](#5-model-weights-checkpoints-serialization-and-runtime-artifacts)
+5. [Model Weights, Checkpoints, Serialization and Runtime Artifacts](#5-model-weights-checkpoints-serialization-and-runtime-artifacts)
    - [5.1 Safetensors](#51-safetensors)
    - [5.2 PyTorch `.pt` / `.pth`](#52-pytorch-pt--pth)
    - [5.3 ONNX](#53-onnx)
@@ -62,13 +59,11 @@ evaluation, and production deployment decisions.
    - [5.9 TFLite / LiteRT Ecosystem](#59-tflite--litert-ecosystem)
    - [5.10 JAX / Orbax Checkpoints](#510-jax--orbax-checkpoints)
    - [5.11 Weight-Format Comparison](#511-weight-format-comparison)
-6. [Deep Learning Architecture
-   Knowledge](#6-deep-learning-architecture-knowledge)
+6. [Deep Learning Architecture Knowledge](#6-deep-learning-architecture-knowledge)
 7. [Training Theory](#7-training-theory)
 8. [Optimizers](#8-optimizers)
 9. [Learning Rate and Schedulers](#9-learning-rate-and-schedulers)
-10. [Batch Size and Gradient
-    Accumulation](#10-batch-size-and-gradient-accumulation)
+10. [Batch Size and Gradient Accumulation](#10-batch-size-and-gradient-accumulation)
 11. [Regularization](#11-regularization)
 12. [Normalization](#12-normalization)
 13. [Mixed Precision](#13-mixed-precision)
@@ -89,28 +84,19 @@ evaluation, and production deployment decisions.
 28. [Hyperparameter Search](#28-hyperparameter-search)
 29. [Model Selection](#29-model-selection)
 30. [Quantization](#30-quantization)
-31. [Knowledge for an AI Training
-    Helper](#31-knowledge-for-an-ai-training-helper)
+31. [Knowledge for an AI Training Helper](#31-knowledge-for-an-ai-training-helper)
 32. [AI Helper Decision Rules](#32-ai-helper-decision-rules)
 33. [Common AI Training Misconceptions](#33-common-ai-training-misconceptions)
-34. [Comparison Knowledge the AI Helper Should
-    Master](#34-comparison-knowledge-the-ai-helper-should-master)
-35. [General Recommendations by
-    Scenario](#35-general-recommendations-by-scenario)
-36. [General AI Knowledge Safety and Reliability
-    Rules](#36-general-ai-knowledge-safety-and-reliability-rules)
-37. [Recommended Knowledge-Base
-    Metadata](#37-recommended-knowledge-base-metadata)
-38. [Final General AI Training
-    Continuum](#38-final-general-ai-training-continuum)
+34. [Comparison Knowledge the AI Helper Should Master](#34-comparison-knowledge-the-ai-helper-should-master)
+35. [General Recommendations by Scenario](#35-general-recommendations-by-scenario)
+36. [General AI Knowledge Safety and Reliability Rules](#36-general-ai-knowledge-safety-and-reliability-rules)
+37. [Recommended Knowledge-Base Metadata](#37-recommended-knowledge-base-metadata)
+38. [Final General AI Training Continuum](#38-final-general-ai-training-continuum)
 39. [Summary](#39-summary)
 
-- [Appendix A: Training-Corpus Coverage
-  Checklist](#appendix-a-training-corpus-coverage-checklist)
-- [Appendix B: Important Terminology
-  Distinctions](#appendix-b-important-terminology-distinctions)
-- [Appendix C: Required Behavior for Derived AI-Helper Training
-  Examples](#appendix-c-required-behavior-for-derived-ai-helper-training-examples)
+- [Appendix A: Training-Corpus Coverage Checklist](#appendix-a-training-corpus-coverage-checklist)
+- [Appendix B: Important Terminology Distinctions](#appendix-b-important-terminology-distinctions)
+- [Appendix C: Required Behavior for Derived AI-Helper Training Examples](#appendix-c-required-behavior-for-derived-ai-helper-training-examples)
 - [Appendix D: Source Authority Boundary](#appendix-d-source-authority-boundary)
 
 ---
@@ -1464,21 +1450,18 @@ dynamics input-dependent and use hardware-aware scan algorithms.
 
 ### 6.15 Architecture selection matrix
 
-- **Tabular classification**: Strong candidates: MLP, tree models, transformer
-  variants
+- **Tabular classification**: Strong candidates: MLP, tree models, transformer variants
 - **Image classification**: Strong candidates: CNN, ConvNeXt, ViT
 - **Object detection**: Strong candidates: CNN detectors, DETR-family,
   Swin-based systems
-- **Segmentation**: Strong candidates: U-Net, U-Net variants, transformer
-  hybrids
+- **Segmentation**: Strong candidates: U-Net, U-Net variants, transformer hybrids
 - **Restoration**: Strong candidates: CNN/U-Net, NAFNet-like,
   transformer/restoration hybrids
 - **Language modeling**: Strong candidates: Transformer, MoE, SSM/hybrid
 - **Image generation**: Strong candidates: Diffusion, GAN, flow-based systems
 - **Representation learning**: Strong candidates: CNN, ViT, autoencoder,
   contrastive architectures
-- **Long sequences**: Strong candidates: Transformer variants, SSMs, hybrid
-  models
+- **Long sequences**: Strong candidates: Transformer variants, SSMs, hybrid models
 - **Multimodal**: Strong candidates: Transformer-based fusion, modality-specific
   encoders + shared heads
 
@@ -3183,8 +3166,7 @@ and tool-integration layer.
 
 Runtime telemetry and APIs provide active environment state.
 
-Together these form a reliable, context-aware AI training assistant rather than
-a
+Together these form a reliable, context-aware AI training assistant rather than a
 static chatbot.
 
 ---

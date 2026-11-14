@@ -658,6 +658,12 @@ by an origin allow-list and client header, a universal configuration editor with
 write-only secrets, a local-first bug reporter and contextual hover
 micro-documentation, the system sets a high bar for developer ergonomics,
 resource efficiency and ecosystem stability.</p>
+<h3 id="smart-compilation--telemetry-architecture">Smart Compilation &amp; Telemetry Architecture</h3>
+<p>The Dataset Compilation Engine maps each manifold in <code>unified_data.yaml</code> to its
+canonical preset (<code>forex-timeseries</code>, <code>llm-instruction</code>, <code>detection-variable</code>,
+<code>restoration-hardlinked</code>, <code>quality-vision</code>), scales <code>WORKERS</code> to 70% of host CPU
+cores, and streams real-time <code>DOWNLOADING:</code> (file-by-file Kaggle fallback) and
+<code>EXTRACTING:</code> (7-Zip <code>-bsp1</code>) progress bars.</p>
 </section>
 
 <footer>
@@ -666,4 +672,3 @@ resource efficiency and ecosystem stability.</p>
 </div>
 </body>
 </html>
-<section id="smart-compilation-telemetry-architecture"><h3>Smart Compilation &amp; Telemetry Architecture</h3><p>The Dataset Compilation Engine maps each manifold in <code>unified_data.yaml</code> to its canonical preset (<code>forex-timeseries</code>, <code>llm-instruction</code>, <code>detection-variable</code>, <code>restoration-hardlinked</code>, <code>quality-vision</code>), scales <code>WORKERS</code> to 70% of host CPU cores, and streams real-time <code>DOWNLOADING:</code> (file-by-file Kaggle fallback) and <code>EXTRACTING:</code> (7-Zip <code>-bsp1</code>) progress bars.</p></section>
