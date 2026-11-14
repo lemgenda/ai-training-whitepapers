@@ -1953,6 +1953,57 @@ This enables instantaneous `0.0s` byte-offset resolution at training startup.
 Additionally, all vision manifolds enforce strict WebP-only encoding, purging
 any 0-byte or null-padded legacy JPEG/PNG members before shard sealing.
 
+### 7.1 WebDataset Manifold Curation, QA, and Throughput-Tuned Packing
+
+To guarantee high-fidelity visual manifolds at scale, the WebDataset compiler
+enforces pre-shard curation (`core/visual_qa.py`), deterministic degradation
+synthesis (`degrade/schedule.py`), and dual-bound shard packing
+(`formats/webdataset.py`):
+
+1. **Image & Mask Integrity (`core/visual_qa.py`)**:
+   - Every image is decoded and checked for non-zero dimensions, solid-color
+     blankness (`min == max` across all channels), and low-variance degeneration
+     (`max(stddev) < 1.0`).
+   - Segmentation masks are verified for exact `(W, H)` spatial alignment with
+     their paired image, valid class IDs, non-empty foreground, and bounded
+     interior hole ratio ($\rho_{\text{hole}} \le 0.25$).
+2. **Class-Imbalance Weighting**:
+   - Normalized class weights are computed via inverse square-root weighting
+     ($w_c \propto n_c^{-1/2}$) or effective-number weighting:
+     $$w_c = \frac{1 - \beta}{1 - \beta^{n_c}}, \quad \beta \in [0.99, 0.9999]$$
+     normalized such that $\frac{1}{|C|} \sum_{c \in C} w_c = 1$.
+3. **Deterministic Degradation Schedule (`degrade/schedule.py`)**:
+   - Each sample's RNG seed is derived deterministically from
+     $\text{SHA-256}(\text{global\_seed} : \text{sample\_key})$, ensuring
+     identical degradation across worker counts and shard orderings.
+   - Severity $s \in [s_{\min}, s_{\max}]$ supports `uniform`, `linear`, and
+     `cosine` schedules, recording `seed`, `schedule_mode`, `severity`, and
+     `ops` in the sample's `.json` sidecar.
+4. **Throughput-Tuned Shard Packing (`formats/webdataset.py`)**:
+   - `WebDatasetWriter` bounds each `.data` tar shard by both byte size
+     (`wds_shard_size_bytes = 1_000_000_000`, 1 GB) and sample count
+     (`wds_max_count = 10_000`), preventing metadata overhead from tiny shards
+     and shuffle-buffer starvation from monolithic shards.
+
+```mermaid
+flowchart LR
+    A[Raw Image + Mask + Label] --> B{Visual QA}
+    B -- Fail --> C[Reject & Log]
+    B -- Pass --> D[Deterministic Degradation Schedule]
+    D --> E[Attach _qa & _degradation Sidecar]
+    E --> F[WebDatasetWriter: maxsize=1GB, maxcount=10k]
+    F --> G[Shard .data + .index.json + shard_offsets.json]
+```
+
+**References:**
+
+- Zhang et al., *Designing a Practical Degradation Model for Deep Blind Image
+  Super-Resolution (BSRGAN)*, ICCV 2021.
+- Wang et al., *Real-ESRGAN: Training Real-World Blind Super-Resolution with
+  Pure Synthetic Data*, ICCVW 2021.
+- Aizman et al., *High Performance I/O For Large Scale Deep Learning
+  (WebDataset)*, IEEE BigData 2019.
+
 ---
 
 ## 8. Conclusion

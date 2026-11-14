@@ -2094,3 +2094,9 @@ post-training
 * **Markdown Whitepaper Synchronization (`MD-Papers/`)** — Updated all 9
   markdown companions (`PAPER_NIMA_*.md`, `PAPER_LEMGENDARY_*.md`) with
   synchronized visual assessment tables and training curve references.
+
+### 2026-11-14 — Dataset Compiler WebDataset QA
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` with Section 7.1 (WebDataset Manifold
+  Curation, QA, and Throughput-Tuned Packing).
