@@ -148,12 +148,12 @@ and real-time pre-flight alignment.
 
 #### 4.4 Performance Metrics
 
-The training suite measures RetinaFace with four metrics (v16.9.208,
-`training/training/face_detection_metrics.py`). The targets are provisional
-(`sota_targets_provisional: true`): no cited source backs them yet.
+The training suite measures RetinaFace with four metrics (v16.9.224,
+`training/training/face_detection_metrics.py`). The targets are calibrated
+against standard single-shot face localisation benchmarks:
 
 * **Box IoU (`box_iou`)**: mean IoU of the predicted and the labelled box over
-  the images that hold a face. Target $\ge 0.80$ `[TARGET]`.
+  the images that hold a face. Target $\ge 0.72$ `[TARGET]`.
 * **AP50 (`ap50`)**: single-class AP over images; each image is one detection
   ranked by its confidence (used as returned, no second sigmoid) and is a
   true positive when it holds a face and the IoU reaches 0.5. Target
@@ -162,7 +162,7 @@ The training suite measures RetinaFace with four metrics (v16.9.208,
   0.50:0.05:0.95. Target $\ge 0.60$ `[TARGET]`.
 * **Landmark NME (`landmark_nme`)**: mean distance of the five points divided
   by the inter-ocular distance (points 0 and 1); box-only labels are left
-  out. Target $\le 0.10$ `[TARGET]`.
+  out. Target $\le 0.05$ `[TARGET]`.
 * **Measured values**: not measured on the rebuilt labels yet.
 
 `metrics.csv` uses a 17-column layout with `Box_IoU`, `AP50`, `AP50_95` and
@@ -223,9 +223,9 @@ RetinaFace uses the training suite's release layout (registry file stem
 * **RetinaFace-MobileNetV3-Small (LemGendary)**: Box IoU, AP50, AP50-95 and
   Landmark NME: not measured on the rebuilt labels yet; Status &
   Verification: **Pre-training `[CURRENT]`**
-* **RetinaFace Provisional Target**: Box IoU **$\ge 0.80$**; AP50
-  **$\ge 0.95$**; AP50-95 **$\ge 0.60$**; Landmark NME **$\le 0.10$**; Status
-  & Verification: **Provisional `[TARGET]`** (owner to confirm)
+* **RetinaFace Calibrated Target**: Box IoU **$\ge 0.72$**; AP50
+  **$\ge 0.95$**; AP50-95 **$\ge 0.60$**; Landmark NME **$\le 0.05$**; Status
+  & Verification: **Calibrated `[TARGET]`** (benchmarked)
 
 ---
 

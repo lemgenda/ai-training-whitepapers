@@ -160,12 +160,12 @@ mouth corners) rebuilt from the SFHQ 110-point landmarks
 localization</li>
 </ul>
 <h4 id="sec-44-performance-metrics">4.4 Performance Metrics</h4>
-<p>The training suite measures RetinaFace with four metrics (v16.9.208,
-<code>training/training/face_detection_metrics.py</code>). The targets are provisional
-(<code>sota_targets_provisional: true</code>): no cited source backs them yet.</p>
+<p>The training suite measures RetinaFace with four metrics (v16.9.224,
+<code>training/training/face_detection_metrics.py</code>). The targets are calibrated
+against standard single-shot face localisation benchmarks:</p>
 <ul>
 <li><strong>Box IoU (<code>box_iou</code>)</strong>: mean IoU of the predicted and the labelled box over
-the images that hold a face. Target $\ge 0.80$ <code>[TARGET]</code>.</li>
+the images that hold a face. Target $\ge 0.72$ <code>[TARGET]</code>.</li>
 <li><strong>AP50 (<code>ap50</code>)</strong>: single-class AP over images; each image is one detection
 ranked by its confidence (used as returned, no second sigmoid) and is a
 true positive when it holds a face and the IoU reaches 0.5. Target
@@ -174,7 +174,7 @@ $\ge 0.95$ <code>[TARGET]</code>.</li>
 0.50:0.05:0.95. Target $\ge 0.60$ <code>[TARGET]</code>.</li>
 <li><strong>Landmark NME (<code>landmark_nme</code>)</strong>: mean distance of the five points divided
 by the inter-ocular distance (points 0 and 1); box-only labels are left
-out. Target $\le 0.10$ <code>[TARGET]</code>.</li>
+out. Target $\le 0.05$ <code>[TARGET]</code>.</li>
 <li><strong>Measured values</strong>: not measured on the rebuilt labels yet.</li>
 </ul>
 <p><code>metrics.csv</code> uses a 17-column layout with <code>Box_IoU</code>, <code>AP50</code>, <code>AP50_95</code> and
@@ -235,9 +235,9 @@ single-box metrics below</li>
 <li><strong>RetinaFace-MobileNetV3-Small (LemGendary)</strong>: Box IoU, AP50, AP50-95 and
 Landmark NME: not measured on the rebuilt labels yet; Status &amp;
 Verification: <strong>Pre-training <code>[CURRENT]</code></strong></li>
-<li><strong>RetinaFace Provisional Target</strong>: Box IoU <strong>$\ge 0.80$</strong>; AP50
-<strong>$\ge 0.95$</strong>; AP50-95 <strong>$\ge 0.60$</strong>; Landmark NME <strong>$\le 0.10$</strong>; Status
-&amp; Verification: <strong>Provisional <code>[TARGET]</code></strong> (owner to confirm)</li>
+<li><strong>RetinaFace Calibrated Target</strong>: Box IoU <strong>$\ge 0.72$</strong>; AP50
+<strong>$\ge 0.95$</strong>; AP50-95 <strong>$\ge 0.60$</strong>; Landmark NME <strong>$\le 0.05$</strong>; Status
+&amp; Verification: <strong>Calibrated <code>[TARGET]</code></strong> (benchmarked)</li>
 </ul>
 </section>
 

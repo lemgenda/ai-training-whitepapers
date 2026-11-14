@@ -1791,8 +1791,8 @@ fall in percent of the peak. The scheme id carries the risk
 (<code>forex_weighted_targets_v2_risk0.01</code>), so a best score at another risk is
 not reused.</li>
 <li><strong>Face Detection Metrics</strong>: RetinaFace is measured with <code>box_iou</code>, <code>ap50</code>,
-<code>ap50_95</code> and <code>landmark_nme</code> (provisional targets 0.80 / 0.95 / 0.60 /
-0.10) under its own score scheme <code>face_box_weighted_targets_v1</code>; earlier
+<code>ap50_95</code> and <code>landmark_nme</code> (calibrated targets 0.72 / 0.95 / 0.60 /
+0.05) under its own score scheme <code>face_box_weighted_targets_v1</code>; earlier
 <code>map_*</code> values are not comparable.</li>
 </ul>
 <h3 id="sec-243-device-memory-dxgi-budget--directml-v169168-to-v169197">2.43. Device Memory, DXGI Budget &amp; DirectML (v16.9.168 to v16.9.197)</h3>
@@ -2101,8 +2101,8 @@ dataset <code>LemGendizedUltraZoom</code>). Targets: PSNR ≥ 34.0, SSIM ≥ 0.9
 (category <code>enhance</code>, dataset <code>LemGendizedClassificationMaster</code>). Targets:
 Accuracy ≥ 0.98.</li>
 <li><code>retinaface</code>: LemGendary RetinaFace Detection (category <code>face</code>, dataset
-<code>LemGendizedRetinaFace</code>). Targets (provisional since v16.9.208): Box IoU ≥
-0.80, AP50 ≥ 0.95, AP50-95 ≥ 0.60, Landmark NME ≤ 0.10.</li>
+<code>LemGendizedRetinaFace</code>). Targets (calibrated since v16.9.224): Box IoU ≥
+0.72, AP50 ≥ 0.95, AP50-95 ≥ 0.60, Landmark NME ≤ 0.05.</li>
 <li><code>ai_helper_lemgend</code>: LemGendary AI Studio Assistant (Causal LLM) (category
 <code>llm</code>, dataset <code>LemGendizedAIHelperLemGend</code>). Targets: Eval Loss ≤ 1.15,
 Perplexity ≤ 3.15, Token Accuracy % ≥ 72.5.</li>

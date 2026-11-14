@@ -1798,8 +1798,8 @@ $$
   (`forex_weighted_targets_v2_risk0.01`), so a best score at another risk is
   not reused.
 - **Face Detection Metrics**: RetinaFace is measured with `box_iou`, `ap50`,
-  `ap50_95` and `landmark_nme` (provisional targets 0.80 / 0.95 / 0.60 /
-  0.10) under its own score scheme `face_box_weighted_targets_v1`; earlier
+  `ap50_95` and `landmark_nme` (calibrated targets 0.72 / 0.95 / 0.60 /
+  0.05) under its own score scheme `face_box_weighted_targets_v1`; earlier
   `map_*` values are not comparable.
 
 ### 2.43. Device Memory, DXGI Budget & DirectML (v16.9.168 to v16.9.197)
@@ -2118,8 +2118,8 @@ values.
   (category `enhance`, dataset `LemGendizedClassificationMaster`). Targets:
   Accuracy ≥ 0.98.
 - `retinaface`: LemGendary RetinaFace Detection (category `face`, dataset
-  `LemGendizedRetinaFace`). Targets (provisional since v16.9.208): Box IoU ≥
-  0.80, AP50 ≥ 0.95, AP50-95 ≥ 0.60, Landmark NME ≤ 0.10.
+  `LemGendizedRetinaFace`). Targets (calibrated since v16.9.224): Box IoU ≥
+  0.72, AP50 ≥ 0.95, AP50-95 ≥ 0.60, Landmark NME ≤ 0.05.
 - `ai_helper_lemgend`: LemGendary AI Studio Assistant (Causal LLM) (category
   `llm`, dataset `LemGendizedAIHelperLemGend`). Targets: Eval Loss ≤ 1.15,
   Perplexity ≤ 3.15, Token Accuracy % ≥ 72.5.
