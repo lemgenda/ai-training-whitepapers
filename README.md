@@ -64,6 +64,10 @@
 
 ### v16.9.225 - Pre-Baked WebDataset Indexing & Cloud Training Pathologies
 
+* **Environment Manager CLI (`MANUAL_CLI.md`, `cli-manual.html`)**: Documented
+  `--version`/`-V`, `--json` (on `probe`, `sync`, `clean`), and `--yes`/`-y`
+  (on `install --clean`).
+
 * **Pathology 64 & 65**: Documented dual-GPU PCIe barrier overhead on
   lightweight
   parameter predictors and 0-byte WebDataset member fallback / shard index

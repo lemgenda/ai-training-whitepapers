@@ -97,6 +97,12 @@ lem-env --help
 
 - **`--help`**: Type: Flag; Description: Display comprehensive command usage,
   available subcommands, and flags
+- **`--version`, `-V`**: Type: Flag; Description: Print `lem-env <version>` and
+  exit with code 0
+- **`--json`** (on `probe`, `sync`, `clean`): Type: Flag; Description: Emit
+  machine-readable JSON output
+- **`--yes`, `-y`** (on `install --clean`): Type: Flag; Description: Skip the
+  destructive-wipe confirmation prompt
 
 ---
 
@@ -661,7 +667,8 @@ python cli.py modernize --dry-run
 python cli.py modernize --all --yes
 python cli.py modernize --datasets nima_technical,nima_aesthetic --skip-kaggle
 
-# Full modernization: suffix retirement, WebP transcoding, and modern container conversion
+# Full modernization: suffix retirement, WebP transcoding,
+# and modern container conversion
 python cli.py modernize --datasets nima_aesthetic --image-format webp \
   --also-format webdataset
 ```
@@ -923,7 +930,8 @@ into modern WebP containers:
 
 ```bash
 # Ingest all configured sources, vet, and emit canonical modern container shards
-python cli.py compile --model nima_aesthetic --also-format webdataset --workers 12
+python cli.py compile --model nima_aesthetic \
+  --also-format webdataset --workers 12
 ```
 
 ---
@@ -1252,7 +1260,8 @@ python cli.py audit system
 python cli.py audit model mirnet_exposure
 
 # Judicial rank correlation audit (PLCC and SRCC)
-python cli.py audit judicial --model export/mirnet_exposure_fp32.onnx --dataset test_data/
+python cli.py audit judicial \
+  --model export/mirnet_exposure_fp32.onnx --dataset test_data/
 ```
 
 ### 6.9 Cloud Synchronization (`sync`)
