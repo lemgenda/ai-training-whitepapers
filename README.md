@@ -74,8 +74,9 @@ latency.
   SOTA-driven `ALL_VARIATIONS` auto-sync to Kaggle Model Hub.
 * **AI Studio GUI & Forex Predictor**: Added annotated screenshots for the
   Dataset Compilation Engine and Report Issue modal (`MANUAL_AI_STUDIO_GUI.md`,
-  `PAPER_AI_STUDIO_GUI.md`, `GUI_CONTROL_REGISTRY.md`) and documented MT5
-  `PERIOD_D1` leading-bar padding (`PAPER_FOREX_PREDICTOR.md`).
+  `PAPER_AI_STUDIO_GUI.md`, `GUI_CONTROL_REGISTRY.md`), documented MT5
+  `PERIOD_D1` leading-bar padding (`PAPER_FOREX_PREDICTOR.md`), and synchronized
+  `requirements.txt`.
 
 ### v16.9.116 - Sync Push Notes, Export Run Log Lines, Forex Layout
 
