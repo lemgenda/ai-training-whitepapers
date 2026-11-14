@@ -2135,6 +2135,8 @@ hooks, stripping the <code>module.</code> prefix injected by <code>DataParallel<
 to disk. This guarantees that Kaggle Multi-GPU checkpoints can be effortlessly
 downloaded and evaluated natively on standalone Windows environments or CPU
 deployments without manual layer re-mapping.</li>
+<li><strong>Single-GPU Affinity Governance</strong>: Lightweight parameter and tabular predictors (<code>upn_v2</code>, <code>forex_predictor</code>) enforce <code>preferred_parallel: single</code> on a single Tesla T4, avoiding dual-GPU PCIe barrier latency that exceeds their ~15ms compute pass while halving Kaggle accelerator quota consumption.</li>
+<li><strong>SOTA Multi-Variation Auto-Sync</strong>: Whenever an epoch achieves a new SOTA best checkpoint (<code>is_best=True</code>), <code>KaggleHubManager.sync</code> invokes <code>publisher.push_model(..., variation=ALL_VARIATIONS)</code> to export and upload all four production variations (<code>pytorch/default</code>, <code>pytorch/fp32</code>, <code>onnx/fp16</code>, <code>onnx/fp32</code>) to Kaggle Model Hub immediately.</li>
 </ul>
 <h3 id="sec-52-universal-hardware-inference">5.2. Universal Hardware Inference</h3>
 <p>All inference notebooks and training engines natively fall back to <strong>DirectML</strong>

@@ -175,6 +175,12 @@ runtimes with bounded memory consumption:
   sidecar export for scientific verification.
 * **Uniform Buffer Steering**: The conditioning vector $\mathbf{z}$ is bound
   directly to WebGPU uniform buffers, delivering 60 FPS viewport manipulation.
+* **Cloud Training & Dataset Acceleration**: Trained on a single Tesla T4 GPU
+  (`preferred_parallel: single`) to avoid PCIe DDP synchronization overhead on
+  the ~11 MB MobileNetV3 backbone. Consumes `LemGendizedUpnV2` with 100% clean
+  WebP containers (22 corrupt/0-byte legacy members purged) and pre-baked
+  `shard_offsets.json` v2 indices for `0.0s` startup resolution (down from
+  507.9s).
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Paper Revision**:
 1.0.0 - Pre-Training & Deployment Specification (2026 Specialization) · **Target
-Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / P100 Cloud
+Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / T4 Cloud
 Accelerators
 
 ---

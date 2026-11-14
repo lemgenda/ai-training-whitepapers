@@ -202,7 +202,7 @@ complex textures and micro-artifacts from the very first epoch.
   workers, and injects `gc.collect()` and `torch.cuda.empty_cache()` teardown
   sequences before spawning the validation pipeline. This eliminates System RAM
   hoarding and extreme VRAM fragmentation, stabilizing high-resolution
-  validation on Kaggle kernels (T4/P100).
+  validation on Kaggle kernels (T4).
 - **Multi-GPU DataParallel Gathering Safeguard**: Automatically detects multiple
   CUDA devices and wraps the active manifold in PyTorch's `DataParallel` engine.
   Fixes primary-device VRAM bottlenecking by eliminating naive `gpu_count`
@@ -713,7 +713,7 @@ to 512px is therefore no longer reported as complete.
 ### 2.11. Headless Kaggle Cloud Engine & Dataset Bypass
 
 - **Zero-Browser Cloud Deployment**: Launches, monitors, and downloads
-  full-scale GPU training runs (Tesla T4 x2 / P100) directly from PowerShell
+  full-scale GPU training runs (Tesla T4) directly from PowerShell
   without manual web browser intervention.
 - **Kaggle Metadata API Hardening**: Strictly enforces string serialization
   (`"true"` / `"false"`) across all boolean fields (`enable_gpu`,
@@ -834,7 +834,7 @@ to 512px is therefore no longer reported as complete.
   call signatures (`(pascal_name, model_key, output_path)` and
   `(model_key, export_dir)`) in `builders/kaggle.py` and `builders/colab.py`,
   generating 100% reproducible execution environments tailored for Kaggle GPU
-  environments (T4x2, P100) and Google Colab runtimes.
+  environments (T4) and Google Colab runtimes.
 - **Multi-Vector Distribution & Staging**: Synthesized notebooks are atomically
   persisted and synchronized across four ecosystem locations:
   1. `LemGendaryModels/<model_key>/`: Canonical model architecture directory
@@ -2155,6 +2155,15 @@ PyTorch's `nn.DataParallel` API.
   to disk. This guarantees that Kaggle Multi-GPU checkpoints can be effortlessly
   downloaded and evaluated natively on standalone Windows environments or CPU
   deployments without manual layer re-mapping.
+- **Single-GPU Affinity Governance**: Lightweight parameter and tabular
+  predictors (`upn_v2`, `forex_predictor`) enforce `preferred_parallel: single`
+  on a single Tesla T4, avoiding dual-GPU PCIe barrier latency that exceeds
+  their ~15ms compute pass while halving Kaggle accelerator quota consumption.
+- **SOTA Multi-Variation Auto-Sync**: Whenever an epoch achieves a new SOTA
+  best checkpoint (`is_best=True`), `KaggleHubManager.sync` invokes
+  `publisher.push_model(..., variation=ALL_VARIATIONS)` to export and upload all
+  four production variations (`pytorch/default`, `pytorch/fp32`, `onnx/fp16`,
+  `onnx/fp32`) to Kaggle Model Hub immediately.
 
 ### 5.2. Universal Hardware Inference
 

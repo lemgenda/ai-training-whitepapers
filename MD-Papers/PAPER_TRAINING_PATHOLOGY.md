@@ -42,8 +42,8 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     15)](#spatial-average-pooling-dilution-the-micro-trigger-vanishing-defect-pathology-15)
   - [Silent Epoch Limit Termination (The Raw Exit Pathology) (Pathology
     16)](#silent-epoch-limit-termination-the-raw-exit-pathology-pathology-16)
-  - [The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM) (Pathology
-    41)](#the-persistent-worker-vram-fragmentation-kaggle-t4p100-oom-pathology-41)
+  - [The Persistent Worker VRAM Fragmentation (Kaggle T4 OOM) (Pathology
+    41)](#the-persistent-worker-vram-fragmentation-kaggle-t4-oom-pathology-41)
   - [The Catastrophic Model Wipe (Unsafe Folder Initialization) (Pathology
     42)](#the-catastrophic-model-wipe-unsafe-folder-initialization-pathology-42)
   - [Metric Asymmetry (The Manifold Plateau) (Pathology
@@ -614,9 +614,9 @@ before passing it to `F.conv2d`.
        Kaggle Cloud Hub, export ONNX binaries, or extend local training
        in-process.
 
-### The Persistent Worker VRAM Fragmentation (Kaggle T4/P100 OOM) (Pathology 41)
+### The Persistent Worker VRAM Fragmentation (Kaggle T4 OOM) (Pathology 41)
 
-- **The Issue**: In constrained environments like Kaggle (16GB T4/P100), PyTorch
+- **The Issue**: In constrained environments like Kaggle (16GB T4), PyTorch
   DataLoader workers (when `persistent_workers=True`) hold onto fragmented C++
   VRAM allocations even after the training iterator terminates. When the
   validation dataloader spawns, the fragmented VRAM causes an immediate
@@ -1435,6 +1435,32 @@ during restoration training.
 **Remedy:** **Metric Rebalancing (Task 1.1)**. Scale `METRIC_WEIGHTS['psnr']` to
 10 (PSNR 10 vs SSIM 40) so both metrics steer the score (the Restoration Balance
 row of Section 11).
+
+### Dual-GPU PCIe Barrier Overhead on Lightweight Parameter Predictors (Pathology 64)
+
+**The Issue:** Running `DistributedDataParallel` (DDP) across dual PCIe-connected
+T4 GPUs on lightweight parameter networks (e.g., `upn_v2` at ~11 MB) introduces
+inter-GPU synchronization barrier latency that exceeds the ~15ms forward/backward
+compute pass, starving GPU utilization (~20% reported) while consuming 2x cloud
+accelerator quota.
+
+**Remedy:** **Single-GPU Affinity Governance**. Enforce `preferred_parallel:
+single` on lightweight parameter and tabular predictors (`upn_v2`,
+`forex_predictor`), reserving multi-GPU DDP exclusively for high-compute
+convolutional or transformer restoration backbones.
+
+### 0-Byte WebDataset Member Fallback & Shard Index Latency (Pathology 65)
+
+**The Issue:** Unindexed WebDataset tar shards on cloud virtual disks force
+sequential tar header scanning at startup (e.g., 507.9 seconds for 270 shards
+of `LemGendizedUpnV2`). Furthermore, 0-byte or null-padded legacy JPEG members
+inside shards trigger runtime PIL decode failures, silently substituting
+neutral gray frames and polluting gradient updates.
+
+**Remedy:** **Pre-Baked `shard_offsets.json` v2 & WebP Purity Audit**. Generate
+and ship `shard_offsets.json` (STORE_VERSION = 2) inside every split directory
+during dataset compilation to drop startup indexing to 0.0 seconds, and enforce
+strict WebP-only container audits that purge 0-byte or corrupt legacy members.
 
 ---
 

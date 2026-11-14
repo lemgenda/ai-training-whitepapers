@@ -62,6 +62,15 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### v16.9.225 - Pre-Baked WebDataset Indexing & Cloud Training Pathologies
+
+* **Pathology 64 & 65**: Documented dual-GPU PCIe barrier overhead on lightweight
+  parameter predictors and 0-byte WebDataset member fallback / shard index latency.
+* **Dataset Compiler & UPN v2**: Documented pre-baked `shard_offsets.json` v2
+  generation for 0.0s startup resolution and WebP-only container purity.
+* **Training Suite**: Documented Single-GPU T4 affinity governance and
+  SOTA-driven `ALL_VARIATIONS` auto-sync to Kaggle Model Hub.
+
 ### v16.9.116 - Sync Push Notes, Export Run Log Lines, Forex Layout
 
 * `MANUAL_CLI.md` and its page, Section 5.10: Dataset Compiler v16.9.109
