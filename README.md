@@ -22,7 +22,7 @@
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.86, LemGendary
   Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.226,
-  LemGendary AI Studio GUI v2.10.68.
+  LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -2147,3 +2147,11 @@ post-training
 * Added mandatory note across all manuals and papers: any Git commit will
   fail and be blocked for any project that does not have its changelog
   updated in `README.md`.
+
+### 2026-11-15 — GUI Compilation Preset Auto-Sync & Control Registry Sync
+
+* Updated `MD-Papers/MANUAL_AI_STUDIO_GUI.md` Section 19 and
+  `MD-Papers/GUI_CONTROL_REGISTRY.md` with GUI v2.10.70 automatic preset
+  synchronization across both compiled and uncompiled registry manifolds.
+* Refactored pre-commit callout block in `MD-Papers/MANUAL_CLI.md` to resolve
+  markdownlint `MD032` blank-lines-around-lists rule.

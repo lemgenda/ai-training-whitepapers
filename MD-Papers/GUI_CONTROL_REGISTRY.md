@@ -2,7 +2,7 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.70` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-13 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
@@ -209,10 +209,12 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `comp-btn-refresh-catalog` (`button`): "Refresh Catalog".
   `GET /api/gui/datasets/with-stats` (8100). Reloads the manifold catalog.
 - `comp-select-manifold` (`select`): target manifold.
-  `GET /api/gui/datasets/with-stats` (8100) fills it. Chooses the manifold for a
-  standard compile.
+  `GET /api/gui/datasets/with-stats?include_uncompiled=true` (8100) fills it.
+  Chooses the manifold for a standard compile and automatically updates
+  `preset-select` to the manifold's recommended preset.
 - `preset-select` (`select`): compiler preset. `GET /api/gui/presets` (8100)
-  fills it. "Server default" omits `preset` so the sidecar applies its default;
+  fills it. Auto-synchronized upon selecting `comp-select-manifold`.
+  "Server default" omits `preset` so the sidecar applies its default;
   offline only that option is shown.
 - `comp-input-max-gb` (`input type=number`): "Max Size (GB)". None. Sent as
   `max_gb`; empty keeps the preset default, an invalid value stops the

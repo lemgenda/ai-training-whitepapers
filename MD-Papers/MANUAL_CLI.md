@@ -466,11 +466,9 @@ python tools/fix_line_lengths.py --staged
 
 > [!IMPORTANT]
 > **Pre-Commit Failure Guarantee**: Any Git commit will immediately fail and be
-> blocked across all ecosystem repositories if:
->
-> 1. Any staged file contains line length violations.
-> 2. The affected project's `README.md` changelog has not been updated with an
->    entry documenting the changes for the current version.
+> blocked across all ecosystem repositories if any staged file contains line
+> length violations, or if the affected project's `README.md` changelog has
+> not been updated with an entry documenting the changes for the version.
 
 ---
 

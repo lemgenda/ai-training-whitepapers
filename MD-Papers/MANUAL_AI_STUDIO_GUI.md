@@ -2,7 +2,7 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.68` (LemGendary AI Studio GUI) · **Last audited**:
+**Version**: `v2.10.70` (LemGendary AI Studio GUI) · **Last audited**:
 2026-11-13 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
@@ -128,11 +128,12 @@ To ensure absolute operational clarity, every control, workflow, and safeguard
 in this manual is designed according to the **Gardening Model Rule**:
 
 > *If a 75-year-old grandmother wants to train an AI model using photos of her
-> garden roses, tomato plants, and soil to automatically detect plant diseases and
-> enhance low-light garden photographs, she should be able to complete the entire
-> pipeline from environment setup to Kaggle cloud publishing purely by clicking
-> intuitive buttons in the GUI, with zero command-line commands, zero code
-> editing, and zero risk of freezing her computer.*
+> garden roses, tomato plants, and soil to automatically detect plant
+> diseases and enhance low-light garden photographs, she should be able to
+> complete the entire pipeline from environment setup to Kaggle cloud
+> publishing purely by clicking intuitive buttons in the GUI, with zero
+> command-line commands, zero code editing, and zero risk of freezing her
+> computer.*
 
 The system achieves this through three foundational engineering principles:
 
@@ -1925,12 +1926,13 @@ accepts up to 50 MB). On macOS and Linux the recorder reports that recording
 is not supported on this platform yet; describe the steps in the description
 instead.
 
-### Smart Dataset Compilation Engine (v2.10.68+)
+### Smart Dataset Compilation Engine (v2.10.70+)
 
 - **Automatic Preset Selection**: Selecting a Target Manifold automatically sets
-  `COMPILATION PRESET` to its recommended preset (`forex-timeseries` for
-  Forex/Parquet, `llm-instruction` for LLM/JSONL, `detection-variable` for
-  YOLO/Pose, `restoration-hardlinked` for Restoration/SR, `quality-vision` for
+  `COMPILATION PRESET` to its recommended preset across both compiled and
+  uncompiled registry manifolds (`forex-timeseries` for Forex/Parquet,
+  `llm-instruction` for LLM/JSONL, `detection-variable` for YOLO/Pose,
+  `restoration-hardlinked` for Restoration/SR, and `quality-vision` for
   Vision/Classification).
 - **70% Hardware Worker Default**: `WORKERS` is pre-filled to 70% of available
   CPU cores.
