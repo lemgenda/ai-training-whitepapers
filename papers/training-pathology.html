@@ -1823,6 +1823,11 @@ hardware.</p>
   <li><strong>Financial Time-Series Horizon Overlap:</strong> Training windows whose <code>[pred_time, eval_time]</code> label interval overlaps with test blocks inflate validation metrics and collapse out-of-sample. Mitigated via <code>purged_walk_forward_splits</code>, <code>audit_horizon_leakage</code>, and <code>flag_anomalous_bars</code> in <code>lemgendary-datasets/forex/qa.py</code>.</li>
   <li><strong>Blank &amp; Low-Variance Visual Samples:</strong> Solid-color or near-blank images (<code>max(stddev) &lt; 1.0</code>) and misaligned/holed segmentation masks corrupt gradient updates. Mitigated via <code>check_image_integrity</code> and <code>check_mask_integrity</code> in <code>lemgendary-datasets/core/visual_qa.py</code>.</li>
 </ul>
+<h3>Repository Hygiene &amp; Ecosystem Governance Pathologies</h3>
+<ul>
+  <li><strong>Line Length Overflow &amp; Pre-Commit Block:</strong> Unchecked horizontal line lengths in documentation (<code>.md &gt; 80</code> columns) or implementation source (<code>.py &gt; 100</code> columns) disrupt terminal readability, diff clarity, and code review. Mitigated autonomously via <code>lem-env check-lines --staged</code> and <code>lem-env fix-lines --staged</code> using pure AST wrapping and markdown table/fence preservation.</li>
+  <li><strong>Stale Documentation &amp; Missing Changelog Gate:</strong> Changes committed across ecosystem repositories without recording user-facing updates in <code>README.md</code> desynchronize project manifests and documentation. Mitigated by the mandatory pre-commit changelog gate: any Git commit will fail and be hard-blocked for any project that does not have its changelog updated in <code>README.md</code>.</li>
+</ul>
 </section>
 
 <footer>

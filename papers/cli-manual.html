@@ -42,6 +42,7 @@
 <li><a href="#sec-28-workspace-cache--residue-purge-clean">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</a></li>
 <li><a href="#sec-29-telemetry-daemon--background-server-serve">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</a></li>
 <li><a href="#sec-210-git-hook-installation-setup-hooks">2.10 Git Hook Installation (<code>setup-hooks</code>)</a></li>
+<li><a href="#sec-211-line-length-governance--pre-flight-hooks-check-lines-fix-lines">2.11 Line Length Governance &amp; Pre-Flight Hooks (<code>check-lines</code>, <code>fix-lines</code>)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-interactive-powershell-host-lemgendary_env_managerps1">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a></li>
@@ -65,6 +66,7 @@
 <li><a href="#sec-515-upstream-dataset-expansion--multi-format-ingestion-reference">5.15 Upstream Dataset Expansion &amp; Multi-Format Ingestion Reference</a></li>
 <li><a href="#sec-516-llm-dataset-compilation--quality-invariant-auditing-llm">5.16 LLM Dataset Compilation &amp; Quality Invariant Auditing (<code>llm</code>)</a></li>
 <li><a href="#sec-517-manifold-repair-repair">5.17 Manifold Repair (<code>repair</code>)</a></li>
+<li><a href="#sec-518-manifold-testing-validation--verification-pipelines-verify">5.18 Manifold Testing, Validation &amp; Verification Pipelines (<code>verify</code>)</a></li>
 </ul>
 </li>
 <li><a href="#sec-6-training-suite-cli-lemtrain--python-clipy">6. Training Suite CLI (<code>lemtrain</code> / <code>python cli.py</code>)</a>
@@ -389,6 +391,41 @@ lem-env setup-hooks --project lemgendary-datasets
 <p>The installed hook delegates validation to <code>lem-env validate --project &lt;name&gt;</code>
 and blocks the commit if any gate fails. This ensures every repository runs the
 same validation pipeline regardless of local toolchain state.</p>
+<h3 id="sec-211-line-length-governance--pre-flight-hooks-check-lines-fix-lines">2.11 Line Length Governance &amp; Pre-Flight Hooks (<code>check-lines</code>, <code>fix-lines</code>)</h3>
+<p>The <code>check-lines</code> and <code>fix-lines</code> commands enforce and automatically reflow
+line length compliance across Markdown (&le; 80 characters, <code>MD013</code>) and
+Python (&le; 100 characters, <code>C0301</code>) without mangling code blocks, tables,
+atomic links, or math equations.</p>
+<pre><code class="language-bash"># Check line length compliance across staged Git files (&lt; 50ms)
+lem-env check-lines --staged
+
+# Check specific files or directories
+lem-env check-lines lemgendary-docs/MD-Papers/
+lem-env check-lines --ext .py lemgendary-env-manager/
+
+# Ignore Markdown headings longer than 80 chars
+lem-env check-lines --ignore-headings lemgendary-docs/
+
+# Automatically reflow and wrap violating lines in place
+lem-env fix-lines --staged
+lem-env fix-lines lemgendary-docs/MD-Papers/
+</code></pre>
+<p>Standalone zero-dependency CLI utilities are provided at workspace root:</p>
+<pre><code class="language-bash"># Fast staged pre-flight check
+python tools/check_line_lengths.py --staged
+
+# In-place auto-reflow
+python tools/fix_line_lengths.py --staged
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Pre-Commit Failure Guarantee</p>
+<p>Any Git commit will immediately fail and be blocked across all ecosystem repositories if:</p>
+<ol>
+<li>Any staged file contains line length violations.</li>
+<li>The affected project's <code>README.md</code> changelog has not been updated with an
+entry documenting the changes for the current version.</li>
+</ol>
+</div>
 </section>
 
 <section id="sec-3-interactive-powershell-host-lemgendary_env_managerps1">
@@ -955,6 +992,35 @@ middle and last member agree. <code>--apply</code> keeps the entries of unchange
 shards, rescans the rest, prints the file size and time, and exits 1 when a
 folder is still not current afterwards. Compressed shards get no entry. See
 Section 4.13 of the Dataset Compiler paper.</li>
+</ul>
+<h3 id="sec-518-manifold-testing-validation--verification-pipelines-verify">5.18 Manifold Testing, Validation &amp; Verification Pipelines (<code>verify</code>)</h3>
+<p>The <code>verify</code> command runs comprehensive validation contracts across all
+compiled dataset manifolds, verifying schema conformance, split set
+disjointness, domain QA, sidecar indexes, and determinism.</p>
+<pre><code class="language-bash"># Verify a specific manifold directory
+python cli.py verify --path ../LemGendaryDatasets/LemGendizedForexUniverse
+
+# Verify by registered model key
+python cli.py verify --model retinaface_mobilenet
+
+# Verify all manifolds in the ecosystem
+python cli.py verify --all
+
+# Output machine-readable JSON validation report
+python cli.py verify --all --json &gt; manifold_verification_report.json
+</code></pre>
+<p>Contracts enforced:</p>
+<ul>
+<li><strong>Vision (WebDataset)</strong>: Eliminates blank frames (<code>ERR_BLANK_FRAME</code>),
+low-variance images (max(&sigma;) &lt; 1.0, <code>ERR_LOW_VARIANCE</code>), corrupt
+images, and non-uniform JSON labels. Verifies <code>&lt;shard&gt;.data.index.json</code> byte
+offset sidecars.</li>
+<li><strong>Forex (Parquet)</strong>: Enforces strictly positive prices, High &ge; max(Open, Close),
+Low &le; min(Open, Close), monotonic timestamp sequencing, and absence of NaNs or Infs.</li>
+<li><strong>LLM (JSONL)</strong>: Verifies valid JSON syntax per line, non-empty prompt and
+response pairs, token boundary safety, and split disjointness.</li>
+<li><strong>Merkle Determinism</strong>: Calculates deterministic SHA-256 manifests across
+sample payloads to guarantee reproducible recompilation.</li>
 </ul>
 </section>
 

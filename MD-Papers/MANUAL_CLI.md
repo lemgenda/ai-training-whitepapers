@@ -20,6 +20,8 @@
   - [2.8 Workspace Cache & Residue Purge (`clean`)](#28-workspace-cache--residue-purge-clean)
   - [2.9 Telemetry Daemon & Background Server (`serve`)](#29-telemetry-daemon--background-server-serve)
   - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
+  - [2.11 Line Length Governance & Pre-Flight Hooks (`check-lines`,
+    `fix-lines`)](#211-line-length-governance--pre-flight-hooks-check-lines-fix-lines)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
 - [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
@@ -35,11 +37,14 @@
   - [5.10 Cloud & Metadata Sync (`sync`, `docs`, `config`)](#510-cloud--metadata-sync-sync-docs-config)
   - [5.11 Canonical Compiler Presets (`presets`)](#511-canonical-compiler-presets-presets)
   - [5.12 Forex Universe & Parquet Operations (`forex`)](#512-forex-universe--parquet-operations-forex)
-  - [5.13 Direct Streaming Zip-to-Container Engine (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
+  - [5.13 Direct Streaming Zip-to-Container Engine
+    (`stream_zip_to_container.py`)](#513-direct-streaming-zip-to-container-engine-stream_zip_to_containerpy)
   - [5.14 Retroactive Container Migration (`format migrate` / `format write`)](#514-retroactive-container-migration-format-migrate--format-write)
   - [5.15 Upstream Dataset Expansion & Multi-Format Ingestion Reference](#515-upstream-dataset-expansion--multi-format-ingestion-reference)
   - [5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)](#516-llm-dataset-compilation--quality-invariant-auditing-llm)
   - [5.17 Manifold Repair (`repair`)](#517-manifold-repair-repair)
+  - [5.18 Manifold Testing, Validation & Verification Pipelines
+    (`verify`)](#518-manifold-testing-validation--verification-pipelines-verify)
 - [6. Training Suite CLI (`lemtrain` / `python cli.py`)](#6-training-suite-cli-lemtrain--python-clipy)
   - [6.1 Invocation Syntax & Global Help](#61-invocation-syntax--global-help)
   - [6.2 Model Training (`train`)](#62-model-training-train)
@@ -175,8 +180,10 @@ Diagnostic checks performed:
     (transitive install), empty (declared but not installed)
   - **Upgrade marker**: `↑` (safe update available), `⊘` (blocked by reverse
     dependency), none (at latest version)
-- Packages Declared in Only One Manifest: full inventory of drift-invisible packages.
-- NPM Package Dependency Matrix inspecting declared versus installed package versions.
+- Packages Declared in Only One Manifest: full inventory of drift-invisible
+  packages.
+- NPM Package Dependency Matrix inspecting declared versus installed package
+  versions.
 - NPM Package Drift Across Workspaces.
 
 Blocked upgrades include a reason string naming the requiring package and
@@ -215,7 +222,8 @@ The pipeline executes in sequential order:
 4. Python package installation using locked manifests, followed by OpenCV
    variant normalization.
 5. Node.js package installation via NPM.
-6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain gates).
+6. Post-install validation (py_compile, lint, YAML, JSON, HTML/WCAG, domain
+   gates).
 7. Final ecosystem health audit generation.
 
 ---
@@ -373,7 +381,8 @@ Purged items include:
 - `__pycache__` directories and `.pyc` bytecode files.
 - `.pytest_cache`, `.mypy_cache`, and `.ruff_cache`.
 - Temporary build residues (`dist/`, `build/`, `*.egg-info`).
-- Staging artifacts (`.staging_*`, `staging_*`, `.kaggle-partial`, `.tmp`, `.log`).
+- Staging artifacts (`.staging_*`, `staging_*`, `.kaggle-partial`, `.tmp`,
+  `.log`).
 
 ---
 
@@ -419,6 +428,49 @@ lem-env setup-hooks --project lemgendary-datasets
 The installed hook delegates validation to `lem-env validate --project <name>`
 and blocks the commit if any gate fails. This ensures every repository runs the
 same validation pipeline regardless of local toolchain state.
+
+---
+
+### 2.11 Line Length Governance & Pre-Flight Hooks (`check-lines`, `fix-lines`)
+
+The `check-lines` and `fix-lines` commands enforce and automatically reflow
+line length compliance across Markdown ($\le 80$ characters, `MD013`) and
+Python ($\le 100$ characters, `C0301`) without mangling code blocks, tables,
+atomic links, or math equations.
+
+```bash
+# Check line length compliance across staged Git files (< 50ms)
+lem-env check-lines --staged
+
+# Check specific files or directories
+lem-env check-lines lemgendary-docs/MD-Papers/
+lem-env check-lines --ext .py lemgendary-env-manager/
+
+# Ignore Markdown headings longer than 80 chars
+lem-env check-lines --ignore-headings lemgendary-docs/
+
+# Automatically reflow and wrap violating lines in place
+lem-env fix-lines --staged
+lem-env fix-lines lemgendary-docs/MD-Papers/
+```
+
+Standalone zero-dependency CLI utilities are provided at workspace root:
+
+```bash
+# Fast staged pre-flight check
+python tools/check_line_lengths.py --staged
+
+# In-place auto-reflow
+python tools/fix_line_lengths.py --staged
+```
+
+> [!IMPORTANT]
+> **Pre-Commit Failure Guarantee**: Any Git commit will immediately fail and be
+> blocked across all ecosystem repositories if:
+>
+> 1. Any staged file contains line length violations.
+> 2. The affected project's `README.md` changelog has not been updated with an
+>    entry documenting the changes for the current version.
 
 ---
 
@@ -1067,6 +1119,40 @@ python cli.py repair shard-offsets --model upn_v2 --apply
   folder is still not current afterwards. Compressed shards get no entry. See
   Section 4.13 of the Dataset Compiler paper.
 
+### 5.18 Manifold Testing, Validation & Verification Pipelines (`verify`)
+
+The `verify` command runs comprehensive validation contracts across all
+compiled dataset manifolds, verifying schema conformance, split set
+disjointness, domain QA, sidecar indexes, and determinism.
+
+```bash
+# Verify a specific manifold directory
+python cli.py verify --path ../LemGendaryDatasets/LemGendizedForexUniverse
+
+# Verify by registered model key
+python cli.py verify --model retinaface_mobilenet
+
+# Verify all manifolds in the ecosystem
+python cli.py verify --all
+
+# Output machine-readable JSON validation report
+python cli.py verify --all --json > manifold_verification_report.json
+```
+
+Contracts enforced:
+
+- **Vision (WebDataset)**: Eliminates blank frames (`ERR_BLANK_FRAME`),
+  low-variance images ($\max(\sigma) < 1.0$, `ERR_LOW_VARIANCE`), corrupt
+  images, and non-uniform JSON labels. Verifies `<shard>.data.index.json` byte
+  offset sidecars.
+- **Forex (Parquet)**: Enforces strictly positive prices, $H \ge \max(O,C)$,
+  $L \le \min(O,C)$, monotonic timestamp sequencing, and absence of NaNs or
+  Infs.
+- **LLM (JSONL)**: Verifies valid JSON syntax per line, non-empty prompt and
+  response pairs, token boundary safety, and split disjointness.
+- **Merkle Determinism**: Calculates deterministic SHA-256 manifests across
+  sample payloads to guarantee reproducible recompilation.
+
 ---
 
 ## 6. Training Suite CLI (`lemtrain` / `python cli.py`)
@@ -1161,7 +1247,8 @@ python cli.py eval mirnet_exposure \
 
 ### 6.4 Model Compilation & Export (`export`)
 
-Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:
+Compiles trained PyTorch checkpoints into optimized runtime deployment
+artifacts:
 
 ```bash
 # Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
@@ -1220,7 +1307,8 @@ All generated notebooks are automatically distributed and mirrored across:
 
 ### 6.6 Checkpoint Management (`checkpoints`)
 
-Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup blending:
+Manages checkpoint storage, inspections, disk pruning, and Pareto Model Soup
+blending:
 
 ```bash
 # List discovered checkpoints with size and epoch metadata
@@ -1361,7 +1449,8 @@ python cli.py llm export ai_helper_lemgend --target qlora_adapter \
 
 ### 6.12 FID Re-evaluation (`python -m training.fid_reeval`)
 
-Re-measures FID (`feature=2048`, chunks of at most two) for the four models whose
+Re-measures FID (`feature=2048`, chunks of at most two) for the four models
+whose
 historical FID rows were rewritten by a removed tool (`codeformer`,
 `ffanet_indoor`, `mprnet_deraining`, `mirnet_lowlight`). Run it from the
 `lemgendary-training-suite` root:
@@ -1558,7 +1647,8 @@ psnr=27.1000 | suite v16.9.177`.
 
 ## 7. Models Hub & Verification Toolchain
 
-The `LemGendaryModels` repository hosts trained neural checkpoints and model cards.
+The `LemGendaryModels` repository hosts trained neural checkpoints and model
+cards.
 
 Validation and inspection:
 
@@ -1601,7 +1691,8 @@ python -m http.server 8080 --directory lemgendary-docs
 
 ## 9. Exit Codes, Automation & CI/CD Integration
 
-All ecosystem CLI tools follow standard POSIX and Windows process exit code conventions:
+All ecosystem CLI tools follow standard POSIX and Windows process exit code
+conventions:
 
 - **`0`**: Meaning: Success; Operator Action: Operation completed successfully
   with zero violations or errors

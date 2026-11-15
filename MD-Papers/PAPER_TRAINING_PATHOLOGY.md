@@ -997,7 +997,8 @@ Pathology 47, the Sub-Nuclear 4GB Lockdown).
   operators (`F.adaptive_avg_pool2d(x, (32, 32))` or `nn.AdaptiveAvgPool2d(1)`).
   Because TorchScript requires concrete tensor dimensions to calculate output
   stride and sliding-window kernel sizes, dynamic inputs trigger:
-  `Unsupported: ONNX export of operator adaptive_avg_pool2d, input size not accessible`.
+  `Unsupported: ONNX export of operator adaptive_avg_pool2d, input size not
+  accessible`.
 - **Identification**: Training succeeds through validation, but automated ONNX
   export halts with `torch.onnx.errors.UnsupportedOperatorError` during
   dynamic batch/resolution tracing.
@@ -1007,7 +1008,8 @@ Pathology 47, the Sub-Nuclear 4GB Lockdown).
      generating clean, symbolic ONNX `Resize` operators compatible with any
      input height and width.
   2. Replace spatial classifier pooling with tensor reduction:
-     `x.mean(dim=(-2, -1))` to compile into standard ONNX `ReduceMean` operators.
+     `x.mean(dim=(-2, -1))` to compile into standard ONNX `ReduceMean`
+     operators.
 
 ### Multi-Head Output Tuple Unwrapping in Validation Telemetry (Pathology 38)
 
@@ -1035,7 +1037,8 @@ Pathology 47, the Sub-Nuclear 4GB Lockdown).
 - **Remedy**: **Deterministic Weight Externalization**.
   Configure ONNX export with `save_as_external_data=True` for models whose
   tensor byte footprint exceeds 2.00 GB, producing a lightweight `.onnx` graph
-  paired with a `.onnx.data` external binary sidecar. Models with total footprint
+  paired with a `.onnx.data` external binary sidecar. Models with total
+  footprint
   $< 2.00\text{ GB}$ (such as vision models like `ProfessionalMultiRestorer` at
   1.62 MB) must embed weights directly within the `.onnx` container.
 
@@ -1439,9 +1442,11 @@ row of Section 11).
 
 ### Dual-GPU PCIe Barrier Overhead on Lightweight Parameter Predictors (Pathology 64)
 
-**The Issue:** Running `DistributedDataParallel` (DDP) across dual PCIe-connected
+**The Issue:** Running `DistributedDataParallel` (DDP) across dual
+PCIe-connected
 T4 GPUs on lightweight parameter networks (e.g., `upn_v2` at ~11 MB) introduces
-inter-GPU synchronization barrier latency that exceeds the ~15ms forward/backward
+inter-GPU synchronization barrier latency that exceeds the ~15ms
+forward/backward
 compute pass, starving GPU utilization (~20% reported) while consuming 2x cloud
 accelerator quota.
 
@@ -1754,9 +1759,11 @@ strict WebP-only container audits that purge 0-byte or corrupt legacy members.
 - **Root Cause**: Computing full `[B, S, V]` logits and upcasting to FP32 for
   cross-entropy allocates $\sim 778\text{ MB}$ at $S=512$ (and $>3\text{ GB}$ at
   $S=1024, B=2$), while `eval_step()` retains the full `[B, S, V]` tensor.
-- **Autonomous Remediation**: `ChunkedCausalLMLoss` (`models/llm_chunked_loss.py`)
+- **Autonomous Remediation**: `ChunkedCausalLMLoss`
+  (`models/llm_chunked_loss.py`)
   computes exact cross-entropy over active (`!= -100`) tokens in chunks of
-  $C = 256$ (reducing peak logit VRAM by $>94\%$), and `chunked_eval_loss_and_preds`
+  $C = 256$ (reducing peak logit VRAM by $>94\%$), and
+  `chunked_eval_loss_and_preds`
   returns compact 2D `pred_ids` (`[B, S]`) consumed directly by
   `update_llm_tokens()` in `training/training/val_metrics.py`.
 
@@ -1788,3 +1795,18 @@ Status: SOTA-Autonomous & High-Fidelity Hardened.
   (`max(stddev) < 1.0`) and misaligned/holed segmentation masks corrupt
   gradient updates. Mitigated via `check_image_integrity` and
   `check_mask_integrity` in `lemgendary-datasets/core/visual_qa.py`.
+
+### Repository Hygiene & Ecosystem Governance Pathologies
+
+- **Line Length Overflow & Pre-Commit Block:** Unchecked horizontal line lengths
+  in documentation (`.md > 80` columns) or implementation source (`.py > 100`
+  columns) disrupt terminal readability, diff clarity, and code review.
+  Mitigated autonomously via `lem-env check-lines --staged` and
+  `lem-env fix-lines --staged` using pure AST wrapping and markdown table/fence
+  preservation.
+- **Stale Documentation & Missing Changelog Gate:** Changes committed across
+  ecosystem repositories without recording user-facing updates in `README.md`
+  desynchronize project manifests and documentation. Mitigated by the
+  mandatory pre-commit changelog gate: any Git commit will fail and be
+  hard-blocked for any project that does not have its changelog updated in
+  `README.md`.

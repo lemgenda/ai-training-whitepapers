@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.108-STABLE` (LemGendary Dataset Compiler Suite) · **Last
-audited**: 2026-11-13
+**Version**: `v16.9.113-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+audited**: 2026-11-15
 
 ---
 
@@ -123,9 +123,9 @@ The `v16.9.28` to `v16.9.64` releases remove silent exception handling and
 lint suppressions, split the large modules, and move shared facts to single
 sources. API jobs run the same service entry points as the CLI
 (`python -m services.<module>`, described by a typed `ServiceInvocation`), and
-the arbitrary-command endpoint `POST /api/jobs/generic` is removed (37 operations).
-The port, bind host, Kaggle owner and sibling folders come from
-`lemgendary-env-manager/ecosystem/ecosystem.json`, and task ids come from
+the arbitrary-command endpoint `POST /api/jobs/generic` is removed
+(37 operations). The port, bind host, Kaggle owner and sibling folders come
+from `lemgendary-env-manager/ecosystem/ecosystem.json`, and task ids come from
 `task_taxonomy.json` (Section 3.7).
 
 The `v16.9.66` to `v16.9.74` releases move the toolchain to `torch==2.15.0` (the
@@ -2035,6 +2035,120 @@ All 21 dataset definitions in `unified_data.yaml` are validated at preflight
 by `core/config_schema.py` (`UnifiedData`), with an exported JSON Schema at
 `unified_data.schema.json` verified against `UnifiedData.model_json_schema()`
 by `tests/test_config_schema_export.py`.
+
+### 7.4 Multi-Manifold Verification Contracts & Auditing Engine
+
+To prevent silent downstream training failures, corrupted gradient updates, and
+dataset distribution drift, the compiler ecosystem introduces a unified manifold
+verification engine (`core/manifold_verification.py`, invoked via
+`python cli.py verify`). The verification pipeline evaluates output manifolds
+against formal mathematical and structural contracts across vision, financial
+time-series, and instruction datasets.
+
+#### 7.4.1 Formal Verification Contracts by Modality
+
+1. **Vision / WebDataset Manifolds (`WebDatasetManifoldValidator`)**:
+   - **Schema Conformance**: Every sample within `.tar` or `.tar.zst` shards
+     must contain an unbroken contiguous sequence of expected member
+     extensions without orphan keys. Labels are strictly validated against
+     modality schemas (YOLO bounding boxes in $[0, 1]^4$, binary segmentation
+     masks, or class indices).
+   - **Split Disjointness**: Sample keys $K$ across partition splits must
+     satisfy strict set disjointness:
+
+     $$
+     K_{\text{train}} \cap K_{\text{val}} = \emptyset, \quad
+     K_{\text{train}} \cap K_{\text{test}} = \emptyset, \quad
+     K_{\text{val}} \cap K_{\text{test}} = \emptyset
+     $$
+
+   - **Visual Quality and Variance Assurance**: Every decoded raster is
+     audited against solid-color blanks, decompression artifacts, and
+     degenerate low-variance regions:
+
+     $$
+     \max_{c \in \{R, G, B\}} \sigma_c < 1.0 \implies \text{REJECT}
+     $$
+
+     where $\sigma_c$ denotes channel standard deviation. Samples failing
+     the variance threshold or exhibiting structural corruption are evicted
+     prior to shard sealing.
+   - **Sidecar Index Integrity**: Validates the structural presence and byte
+     alignment of `shard_offsets.json` alongside per-shard
+     `<shard>.data.index.json` manifests, enabling sub-millisecond random
+     access seeking without linear tar traversal.
+   - **Count Triangulation**: Formally asserts equivalence between shard
+     sample sums $N_{\text{shards}}$ and metadata claims:
+
+     $$
+     N_{\text{shards}} = N_{\text{info}} = \sum_{s \in \text{splits}}
+     N_{\text{index}}(s)
+     $$
+
+2. **Forex Financial Time-Series Manifolds (`ForexManifoldValidator`)**:
+   - **Horizon and Price Bounding**: For every OHLCV bar or windowed tensor,
+     prices must strictly satisfy positivity and physical arbitrage bounds:
+
+     $$
+     P > 0 \quad \forall P \in \{O, H, L, C\}, \qquad H \ge \max(O, C),
+     \qquad L \le \min(O, C)
+     $$
+
+   - **Strict Temporal Monotonicity**: Timestamps $t_i$ must be strictly
+     monotonically increasing with zero backward-looking steps:
+
+     $$
+     t_{i+1} > t_i \quad \forall i \in [0, N-1]
+     $$
+
+   - **Purged Temporal Split Disjointness**: Split boundaries must obey embargo
+     and purge gaps $G_{\text{purge}} \ge L_{\text{lookback}}$ to eliminate
+     cross-split information leakage.
+
+3. **LLM Instruction and Chat Manifolds (`LLMManifoldValidator`)**:
+   - **Encoding & Token-Level Cleanliness**: Validates clean UTF-8 encoding
+     across all `.jsonl` files, rejecting Unicode replacement characters
+     (`\ufffd`) or malformed byte sequences.
+   - **Prompt-Response Conformance**: Asserts JSON structural conformance
+     requiring valid conversational message lists (`role` and `content`) or
+     explicit instruction-response tuples.
+   - **Row-Level Disjointness**: Enforces cryptographic SHA-256 row-hash
+     disjointness across train, validation, and test splits.
+
+#### 7.4.2 Deterministic Merkle Manifest Hashing
+
+To verify bitwise reproducibility across independent compilation passes, the
+verification engine computes a deterministic Merkle-style root manifest hash
+$\mathcal{H}_{\text{manifold}}$:
+
+$$
+\mathcal{H}_{\text{manifold}} =
+\text{SHA-256}\left(\bigoplus_{s \in \text{splits}}
+\text{SHA-256}\left(k_{s, 1} \,\|\, k_{s, 2} \,\|\, \dots \,\|\,
+k_{s, |K_s|}\right)\right)
+$$
+
+where keys are sorted lexicographically before hashing. Identical input
+configurations produce identical manifest hashes, guaranteeing determinism.
+
+#### 7.4.3 Unified Verification CLI and Machine-Readable Telemetry
+
+The verification engine provides a unified entry point:
+
+```bash
+# Verify a single manifold by registry key
+python cli.py verify --model upn_v2
+
+# Verify all compiled manifolds with machine-readable JSON telemetry
+python cli.py verify --all --json
+
+# Enforce strict zero-warning policy in automated pipelines
+python cli.py verify --model retinaface_v2 --strict
+```
+
+The emitted telemetry structure encapsulates pass/fail status per contract,
+error lists, warning indicators, and sample statistics for upstream ingestion
+pipelines.
 
 ---
 

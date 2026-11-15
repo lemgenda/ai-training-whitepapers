@@ -20,8 +20,8 @@
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
-* **Current baselines** - LemGendary Environment Manager v16.9.85, LemGendary
-  Dataset Compiler Suite v16.9.112, LemGendary Model Training Suite v16.9.226,
+* **Current baselines** - LemGendary Environment Manager v16.9.86, LemGendary
+  Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.226,
   LemGendary AI Studio GUI v2.10.68.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -2124,3 +2124,26 @@ post-training
 * Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
   `papers/dataset-compiler.html` with Section 7.3 (Canonical
   `unified_data.yaml` & JSON Schema Export).
+
+### 2026-11-15 — Dataset Compiler Manifold Verification & Line Length Guard
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` with Section 7.4 (Manifold Testing, Validation
+  & Verification Pipelines).
+* Updated `MD-Papers/PAPER_ENV_MANAGER.md` and `papers/env_manager.html` with
+  Section 6.9 (Line Length Governance, Pre-Flight Guard & Changelog Gate).
+* Updated `MD-Papers/MANUAL_CLI.md` and `papers/cli-manual.html` with Section
+  2.11 (Line Length Governance & Pre-Flight Hooks) and Section 5.18
+  (Manifold Testing, Validation & Verification Pipelines).
+* Updated `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and
+  `papers/training-pathology.html` with Repository Hygiene & Ecosystem
+  Governance Pathologies (Line Length Overflow & Stale Changelog Gates).
+* Updated `MD-Papers/MANUAL_API.md` and `papers/api-manual.html` with
+  Validation & Pre-Commit Failure Guarantees for `POST /api/validate` and
+  `POST /api/hooks/install`.
+* Synced `canonical_capabilities.json`, `canonical_capabilities.yaml`, and
+  `manifest/documents.json` to Environment Manager `v16.9.86-STABLE` and
+  Dataset Compiler `v16.9.113-STABLE`.
+* Added mandatory note across all manuals and papers: any Git commit will
+  fail and be blocked for any project that does not have its changelog
+  updated in `README.md`.

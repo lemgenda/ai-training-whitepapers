@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.85-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-13
+**Version**: `v16.9.86-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-15
 
 ---
 
@@ -35,6 +35,8 @@ audited**: 2026-11-13
     (ecosystem.json)](#67-ecosystem-registry-ecosystemjson)
   - [6.8 Kaggle Credentials, Changelog Scope & Runtime Contract (v16.9.81 to
     v16.9.85)](#68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985)
+  - [6.9 Line Length Governance, Pre-Flight Guard & Changelog Gate
+    (v16.9.86)](#69-line-length-governance-pre-flight-guard--changelog-gate-v16986)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -43,7 +45,7 @@ audited**: 2026-11-13
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.85-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.86-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -279,9 +281,9 @@ Capabilities at `16.9.60`:
 | Destructive reinstall | Always | Only with `--clean` / `"clean": true` |
 
 (1) The PowerShell launcher and the git hook template are Windows-only.
-(2) Python compile check, ESLint, TypeScript, jsonlint, PSScriptAnalyzer, Pylint,
-forbidden suppressions, absolute paths, markdownlint, yamllint, W3C HTML, WCAG
-2.2 AA and the `ecosystem_ssot` gate.
+(2) Python compile check, ESLint, TypeScript, jsonlint, PSScriptAnalyzer,
+Pylint, forbidden suppressions, absolute paths, markdownlint, yamllint,
+W3C HTML, WCAG 2.2 AA and the `ecosystem_ssot` gate.
 
 ---
 
@@ -623,6 +625,30 @@ central manifest (`check_npm_manifest`, finding `ssot_npm_manifest`; the
 - **MDS dropped** (v16.9.81): `requirements/runtime_env.yaml` (contract 1.2)
   no longer lists `mosaicml-streaming`; MDS dataset compilation is
   discontinued.
+
+### 6.9 Line Length Governance, Pre-Flight Guard & Changelog Gate (v16.9.86)
+
+- **Line Length Governance Subsystem** (`env_manager/line_length.py`,
+  `tools/line_length_guard.py`): Pure standard-library AST and regex-driven
+  line length audit and automated reflow engine enforcing standard limits:
+  Markdown lines $\le 80$ characters (`MD013`) and Python lines $\le 100$
+  characters (`C0301`). The engine intelligently preserves Markdown table
+  structures (`| ... |`), code block fences, KaTeX display math blocks
+  (`$$ ... $$`), atomic URLs, and continuation indentation for list items. For
+  Python sources, it safely reflows block comments and module/class docstrings
+  while leaving source statements intact.
+- **Instant Pre-Flight Pre-Commit Hook** (`env_manager/hooks.py`,
+  `.githooks/pre-commit`): Injected into Git pre-commit hooks across all six
+  ecosystem repositories via `lem-env setup-hooks`. Executes an ultra-fast
+  (< 50ms) staged line length check (`python tools/check_line_lengths.py
+  --staged`) prior to launching multi-minute full ecosystem validation suites,
+  preventing wasted developer wait times when formatting violations occur.
+- **Mandatory README Changelog Gate**: Git pre-commit hooks and ecosystem
+  validation strictly enforce that any commit modifying functional source files
+  (Python code, manifests, package dependencies, or configuration) MUST contain
+  a corresponding changelog version entry in the affected project's `README.md`.
+  Commits lacking an updated `README.md` changelog entry will fail and be
+  blocked at the pre-commit boundary with an explicit non-zero exit code.
 
 ---
 

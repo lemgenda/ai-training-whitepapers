@@ -63,7 +63,8 @@ package synchronization, and multi-gate validations over HTTP.
 
 ### 2.1 Server Configuration & Startup
 
-The server is launched via the `lem-env` command or PowerShell management console:
+The server is launched via the `lem-env` command or PowerShell management
+console:
 
 ```bash
 # Default binding: http://127.0.0.1:8000
@@ -337,7 +338,8 @@ If a pipeline is already running, returns:
 
 #### `POST /api/update`
 
-Triggers safe bottom-up package upgrades across all projects and auto-syncs manifests.
+Triggers safe bottom-up package upgrades across all projects and auto-syncs
+manifests.
 
 Request body:
 
@@ -385,7 +387,8 @@ When `dry_run=false`, applies the plan and returns the collected events:
 Event status values:
 
 - `upgraded`: package was successfully upgraded.
-- `blocked`: upgrade blocked by reverse dependency; `message` contains the reason.
+- `blocked`: upgrade blocked by reverse dependency; `message` contains the
+  reason.
 - `verified`: environment verified as healthy without a version change
   (`pip check`, `torch-cuda-verify`, or torch-family no-op).
 - `failed`: batch or rollback failure.
@@ -393,7 +396,15 @@ Event status values:
 
 #### `POST /api/validate`
 
-Executes the multi-gate validation suite across all projects or a single project.
+Executes the multi-gate validation suite across all projects or a single
+project.
+
+> [!IMPORTANT]
+> **Pre-Commit & Validation Failure Guarantee**: Any validation execution and
+> subsequent Git commit will fail and be rejected if any affected project
+> does not have its changelog updated under a release section in `README.md`,
+> or if any staged line exceeds the length limit (maximum 80 characters for
+> Markdown, 100 characters for Python).
 
 Request body:
 
@@ -454,8 +465,10 @@ Response:
 #### `POST /api/hooks/install`
 
 Installs or repairs standardized pre-commit hooks across all ecosystem projects
-or a specified target project. The hooks delegate to `lem-env validate` to
-prevent invalid commits.
+or a specified target project. The hooks execute the instant line length guard
+followed by `lem-env validate` to prevent invalid commits. Any commit will fail
+and be blocked if any project lacks an updated `README.md` changelog or violates
+line length limits.
 
 Request body:
 
@@ -2003,7 +2016,8 @@ Response:
 
 #### `POST /api/modernize/reduce`
 
-Submits a scale reduction (spatial/sample downsampling) job for a specified manifold.
+Submits a scale reduction (spatial/sample downsampling) job for a specified
+manifold.
 
 Request body:
 
@@ -2050,9 +2064,11 @@ The dataset compilation engine supports three canonical processing pathways:
    - Emits standardized directories with zero-intermediate WebP transcoding
      (`quality=92` images, `quality=95` targets), or simultaneous streaming
      containers via `--also-format` (`webdataset`, `mds`, `litdata`).
-   - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and `index.json`.
+   - Generates authoritative `dataset_info.yaml`, `dataset-metadata.json`, and
+     `index.json`.
 
-2. **Legacy Archive Modernization Pipeline (`tools/stream_zip_to_container.py`)**:
+2. **Legacy Archive Modernization Pipeline
+   (`tools/stream_zip_to_container.py`)**:
    - Directly indexes and reads legacy multi-gigabyte `.zip` archives containing
      millions of small images.
    - Streams raw byte streams in memory through a 12-thread worker pool for
@@ -2064,7 +2080,8 @@ The dataset compilation engine supports three canonical processing pathways:
      (`--delete-zip`) and purges legacy uncompressed directories
      (`--delete-legacy-dir`), reclaiming hundreds of gigabytes of disk space.
 
-3. **Retroactive Manifold Migration Pipeline (`format migrate` / `migrate_manifold_format.py`)**:
+3. **Retroactive Manifold Migration Pipeline (`format migrate` /
+   `migrate_manifold_format.py`)**:
    - Discovers existing modernized dataset folders containing loose `.webp`
      files and an `index.json` catalog.
    - Serializes loose samples into continuous ~500 MB WebDataset `.tar` shards

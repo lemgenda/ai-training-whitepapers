@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.1 ENV | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.85-STABLE</code> (LemGendary Environment Manager)</span>
+<span><strong>Version</strong>: <code>v16.9.86-STABLE</code> (LemGendary Environment Manager)</span>
 <span><strong>Last audited</strong>: 2026-11-13</span>
 </div>
 </header>
@@ -65,6 +65,7 @@ Observability</a></li>
 <li><a href="#sec-67-ecosystem-registry-ecosystemjson">6.7 Ecosystem Registry
 (ecosystem.json)</a></li>
 <li><a href="#sec-68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985">6.8 Kaggle Credentials, Changelog Scope &amp; Runtime Contract (v16.9.81 to v16.9.85)</a></li>
+<li><a href="#sec-69-line-length-governance-pre-flight-guard--changelog-gate-v16986">6.9 Line Length Governance, Pre-Flight Guard &amp; Changelog Gate (v16.9.86)</a></li>
 </ul>
 </li>
 <li><a href="#sec-7-unified-models-registry">7. Unified Models Registry</a></li>
@@ -76,7 +77,7 @@ Observability</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Environment Manager (release <code>v16.9.85-STABLE</code>) is the
+<p>The LemGendary Environment Manager (release <code>v16.9.86-STABLE</code>) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -604,6 +605,30 @@ last commit no longer fails the domain gate.</li>
 <li><strong>MDS dropped</strong> (v16.9.81): <code>requirements/runtime_env.yaml</code> (contract 1.2)
 no longer lists <code>mosaicml-streaming</code>; MDS dataset compilation is
 discontinued.</li>
+</ul>
+<h3 id="sec-69-line-length-governance-pre-flight-guard--changelog-gate-v16986">6.9 Line Length Governance, Pre-Flight Guard &amp; Changelog Gate (v16.9.86)</h3>
+<ul>
+<li><strong>Line Length Governance Subsystem</strong> (<code>env_manager/line_length.py</code>,
+<code>tools/line_length_guard.py</code>): Pure standard-library AST and regex-driven
+line length audit and automated reflow engine enforcing standard limits:
+Markdown lines &le; 80 characters (<code>MD013</code>) and Python lines &le; 100
+characters (<code>C0301</code>). The engine intelligently preserves Markdown table
+structures (<code>| ... |</code>), code block fences, KaTeX display math blocks
+(<code>$$ ... $$</code>), atomic URLs, and continuation indentation for list items. For
+Python sources, it safely reflows block comments and module/class docstrings
+while leaving source statements intact.</li>
+<li><strong>Instant Pre-Flight Pre-Commit Hook</strong> (<code>env_manager/hooks.py</code>,
+<code>.githooks/pre-commit</code>): Injected into Git pre-commit hooks across all six
+ecosystem repositories via <code>lem-env setup-hooks</code>. Executes an ultra-fast
+(&lt; 50ms) staged line length check (<code>python tools/check_line_lengths.py
+--staged</code>) prior to launching multi-minute full ecosystem validation suites,
+preventing wasted developer wait times when formatting violations occur.</li>
+<li><strong>Mandatory README Changelog Gate</strong>: Git pre-commit hooks and ecosystem
+validation strictly enforce that any commit modifying functional source files
+(Python code, manifests, package dependencies, or configuration) MUST contain
+a corresponding changelog version entry in the affected project's <code>README.md</code>.
+Commits lacking an updated <code>README.md</code> changelog entry will fail and be
+blocked at the pre-commit boundary with an explicit non-zero exit code.</li>
 </ul>
 </section>
 

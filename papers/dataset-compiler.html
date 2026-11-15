@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.108-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-12</span>
+<span><strong>Version</strong>: <code>v16.9.113-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-15</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -1855,6 +1855,29 @@ precision.</li>
 </ol>
 <h3>7.3 Canonical <code>unified_data.yaml</code> &amp; JSON Schema Export</h3>
 <p>All 21 dataset definitions in <code>unified_data.yaml</code> are validated at preflight by <code>core/config_schema.py</code> (<code>UnifiedData</code>), with an exported JSON Schema at <code>unified_data.schema.json</code> verified against <code>UnifiedData.model_json_schema()</code> by <code>tests/test_config_schema_export.py</code>.</p>
+<h3>7.4 Multi-Manifold Verification Contracts &amp; Auditing Engine</h3>
+<p>To prevent silent downstream training failures, corrupted gradient updates, and dataset distribution drift, the compiler ecosystem introduces a unified manifold verification engine (<code>core/manifold_verification.py</code>, invoked via <code>python cli.py verify</code>). The verification pipeline evaluates output manifolds against formal mathematical and structural contracts across vision, financial time-series, and instruction datasets.</p>
+<h4>7.4.1 Formal Verification Contracts by Modality</h4>
+<ol>
+  <li><strong>Vision / WebDataset Manifolds (<code>WebDatasetManifoldValidator</code>)</strong>: Every sample within <code>.tar</code> or <code>.tar.zst</code> shards must contain an unbroken contiguous sequence of expected member extensions without orphan keys. Labels are strictly validated against modality schemas (YOLO bounding boxes in <span class="math inline">\([0, 1]^4\)</span>, binary segmentation masks, or class indices). Sample keys <span class="math inline">\(K\)</span> across partition splits must satisfy strict set disjointness: <span class="math inline">\(K_{\text{train}} \cap K_{\text{val}} = \emptyset\)</span>, <span class="math inline">\(K_{\text{train}} \cap K_{\text{test}} = \emptyset\)</span>, <span class="math inline">\(K_{\text{val}} \cap K_{\text{test}} = \emptyset\)</span>. Every decoded raster is audited against solid-color blanks, decompression artifacts, and degenerate low-variance regions (<span class="math inline">\(\max_{c \in \{R, G, B\}} \sigma_c &lt; 1.0 \implies \text{REJECT}\)</span>). Validates the structural presence and byte alignment of <code>shard_offsets.json</code> alongside per-shard <code>&lt;shard&gt;.data.index.json</code> manifests, and formally asserts equivalence between shard sample sums <span class="math inline">\(N_{\text{shards}}\)</span> and metadata claims (<span class="math inline">\(N_{\text{shards}} = N_{\text{info}} = \sum_{s \in \text{splits}} N_{\text{index}}(s)\)</span>).</li>
+  <li><strong>Forex Financial Time-Series Manifolds (<code>ForexManifoldValidator</code>)</strong>: For every OHLCV bar or windowed tensor, prices must strictly satisfy positivity and physical arbitrage bounds (<span class="math inline">\(P &gt; 0 \quad \forall P \in \{O, H, L, C\}\)</span>, <span class="math inline">\(H \ge \max(O, C)\)</span>, <span class="math inline">\(L \le \min(O, C)\)</span>). Timestamps <span class="math inline">\(t_i\)</span> must be strictly monotonically increasing with zero backward-looking steps (<span class="math inline">\(t_{i+1} &gt; t_i\)</span>). Split boundaries must obey embargo and purge gaps <span class="math inline">\(G_{\text{purge}} \ge L_{\text{lookback}}\)</span> to eliminate cross-split information leakage.</li>
+  <li><strong>LLM Instruction and Chat Manifolds (<code>LLMManifoldValidator</code>)</strong>: Validates clean UTF-8 encoding across all <code>.jsonl</code> files, rejecting Unicode replacement characters (<span class="math inline">\(\text{\ufffd}\)</span>) or malformed byte sequences. Asserts JSON structural conformance requiring valid conversational message lists (<code>role</code> and <code>content</code>) or explicit instruction-response tuples. Enforces cryptographic SHA-256 row-hash disjointness across train, validation, and test splits.</li>
+</ol>
+<h4>7.4.2 Deterministic Merkle Manifest Hashing</h4>
+<p>To verify bitwise reproducibility across independent compilation passes, the verification engine computes a deterministic Merkle-style root manifest hash <span class="math inline">\(\mathcal{H}_{\text{manifold}}\)</span>:</p>
+<p><span class="math display">\[\mathcal{H}_{\text{manifold}} = \text{SHA-256}\left(\bigoplus_{s \in \text{splits}} \text{SHA-256}\left(k_{s, 1} \,\|\, k_{s, 2} \,\|\, \dots \,\|\, k_{s, |K_s|}\right)\right)\]</span></p>
+<p>where keys are sorted lexicographically before hashing. Identical input configurations produce identical manifest hashes, guaranteeing compilation determinism.</p>
+<h4>7.4.3 Unified Verification CLI and Machine-Readable Telemetry</h4>
+<p>The verification engine provides a unified entry point:</p>
+<pre><code class="language-bash"># Verify a single manifold by registry key
+python cli.py verify --model upn_v2
+
+# Verify all compiled manifolds with machine-readable JSON telemetry
+python cli.py verify --all --json
+
+# Enforce strict zero-warning policy in automated pipelines
+python cli.py verify --model retinaface_v2 --strict</code></pre>
+<p>The emitted telemetry structure encapsulates pass/fail status per contract, error lists, warning indicators, and sample statistics for upstream ingestion pipelines.</p>
 <h2>8. Conclusion</h2>
 <p>The LemGendary Dataset Compiler Suite changes how generative AI manifolds are
 structured, scaled, and consumed. By automating the ingestion pipeline,

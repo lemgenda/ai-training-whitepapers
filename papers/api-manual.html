@@ -353,6 +353,7 @@ stream across WebSocket connections.</p>
 </ul>
 <h4 id="post-apivalidate"><code>POST /api/validate</code></h4>
 <p>Executes the multi-gate validation suite across all projects or a single project.</p>
+<div class="callout callout-important"><div class="callout-title">Pre-Commit &amp; Validation Failure Guarantee</div><p>Any validation execution and subsequent Git commit will fail and be rejected if any affected project does not have its changelog updated under a release section in <code>README.md</code>, or if any staged line exceeds the length limit (maximum 80 characters for Markdown, 100 characters for Python).</p></div>
 <p>Request body:</p>
 <pre><code class="language-json">{
   "project": null
@@ -397,8 +398,10 @@ staging artifacts across all projects or a specified project.</p>
 </code></pre>
 <h4 id="post-apihooksinstall"><code>POST /api/hooks/install</code></h4>
 <p>Installs or repairs standardized pre-commit hooks across all ecosystem projects
-or a specified target project. The hooks delegate to <code>lem-env validate</code> to
-prevent invalid commits.</p>
+or a specified target project. The hooks execute the instant line length guard
+followed by <code>lem-env validate</code> to prevent invalid commits. Any commit will fail
+and be blocked if any project lacks an updated <code>README.md</code> changelog or violates
+line length limits.</p>
 <p>Request body:</p>
 <pre><code class="language-json">{
   "project": null
