@@ -790,7 +790,14 @@ python cli.py env install
 python cli.py sync push --model nima_aesthetic
 # Say what changed in the new version (added to the generated version notes)
 python cli.py sync push --model retinaface_mobilenet --notes "Rebuilt labels"
+# Force re-upload even when manifest_sha256 matches the last synced state
+python cli.py sync push --model nima_aesthetic --force --report sync_push.json
+
+# Pull latest or pin a specific dataset version (--version / @version)
 python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic
+python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic@v2 --force
+python cli.py sync pull --url lemgenda/lemgendizednimaaesthetic \
+  --version 2 --report sync_pull.json --json
 
 # Fetch only some folders or files (repeatable --only), into another folder
 python cli.py sync pull --url lemtreursi/lemgendizedretinafacemobilenetlarge \
@@ -807,8 +814,33 @@ python cli.py docs regen
 python cli.py config validate
 ```
 
+- **`--force`, `-f`**: Type: Flag; Default: `False`; Description: On `push`,
+  bypass idempotent no-op detection and re-upload; on `pull`, skip interactive
+  overwrite/disk confirmation prompts
+- **`--version`, `-v`**: Type: String; Default: `None`; Description: Pin dataset
+  version on `pull` (`2`, `v2`, `latest`, or inline `owner/slug@v2` /
+  `owner/slug/versions/2`)
+- **`--report`**: Type: String; Default: `None`; Description: Write a
+  machine-readable JSON `SyncReport` (status, version, `manifest_sha256`,
+  `checksum_verified`, `idempotent_noop`, `resumed`, `retries`, elapsed seconds)
+  to the specified file path
+- **`--json`**: Type: Flag; Default: `False`; Description: Emit the
+  machine-readable JSON `SyncReport` to standard output
+
+`sync push` computes a deterministic `sync_manifest.json` (per-file SHA-256
+digests and Merkle root `manifest_sha256`) and verifies all file and
+`.data.index.json` shard sidecar sizes before staging. If `.sync_state.json` or
+remote version metadata confirms the exact `manifest_sha256` is already on
+Kaggle, `sync push` performs an idempotent no-op (`status="noop"`) unless
+`--force` is passed. Transient upload errors are retried with exponential
+backoff while preserving the staged `.zip` archive for zero-recompression
+resumption.
+
 `sync pull` creates the datasets root (`LemGendaryDatasets/`) when it is
 missing and measures free space at the nearest existing parent folder. When
+`sync_manifest.json` is present in the pulled manifold, `sync pull` verifies
+the Merkle root, every extracted file's byte size and SHA-256 digest, and every
+`.data.index.json` shard sidecar size before reporting success. When
 Kaggle has no whole-dataset archive (HTTP 404 "No gcs url found") the pull
 falls back to a file-by-file download: every page of the file listing is
 read, each file is fetched through its signed URL, checked against the listed

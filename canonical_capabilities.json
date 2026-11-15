@@ -28,7 +28,8 @@
         "llm_train": "lemtrain llm train [MODEL_KEY]",
         "soup": "lemtrain soup MODEL_KEY [--donors LIST] [--weights LIST] [--output PATH]",
         "kaggle_launch": "lemtrain kaggle launch MODEL_KEY [--accelerator ID] [--git-ref REF] [--env-manager-ref REF] [--limit-hours H] [--margin-minutes M] [--override-frozen]",
-        "dataset_sync_push": "python cli.py sync push --model KEY [--url SLUG] [--no-wait] [--notes TEXT] (--notes: what changed, added after the generated version notes)"
+        "dataset_sync_push": "python cli.py sync push --model KEY [--url SLUG] [--no-wait] [--notes TEXT] [--force] [--report PATH] [--json] (--notes: what changed, added after the generated version notes)",
+        "dataset_sync_pull": "python cli.py sync pull --url SLUG[@VERSION] [--version V] [--only PREFIX] [--output DIR] [--force] [--report PATH] [--json]"
       }
     },
     "api": {

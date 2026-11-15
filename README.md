@@ -67,6 +67,10 @@
 * **Environment Manager CLI (`MANUAL_CLI.md`, `cli-manual.html`)**: Documented
   `--version`/`-V`, `--json` (on `probe`, `sync`, `clean`), and `--yes`/`-y`
   (on `install --clean`).
+* **Dataset Compiler Kaggle Sync (`MANUAL_CLI.md`, `cli-manual.html`)**:
+  Documented `sync_manifest.json` per-file SHA-256 and Merkle root verification,
+  idempotent push (`--force`), version pinning (`--version` / `@version`), and
+  machine-readable `SyncReport` output (`--report`, `--json`).
 
 * **Pathology 64 & 65**: Documented dual-GPU PCIe barrier overhead on
   lightweight
