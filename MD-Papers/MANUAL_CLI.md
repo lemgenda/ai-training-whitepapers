@@ -1548,9 +1548,10 @@ Secrets) before the first launch. The secrets cell reads them with
 - **`KAGGLE_API_TOKEN`**: Required; a `KGAT_` token. Exported for the Hub
   sync and the resume pull; a legacy key is refused. `KAGGLE_KEY` and
   `KAGGLE_USERNAME` secrets are no longer read.
-- **`GITHUB_PAT` or `SUITE_PAT`**: Required while the suite or env-manager
-  repository is private. The clone gets it only through `GIT_ASKPASS`, never
-  in a URL or a file.
+- **`SUITE_PAT`**: Required while the suite or env-manager repository is
+  private (stored under `github-primary` in `.secrets.yaml`). The clone gets it
+  only through `GIT_ASKPASS`, never in a URL or a file. Legacy `GITHUB_PAT` is
+  deprecated and unsupported.
 - **`GOOGLE_DRIVE`**: Optional; Google Drive mirroring.
 
 Without `KAGGLE_API_TOKEN` the session trains but cannot read or write the
@@ -1661,7 +1662,7 @@ psnr=27.1000 | suite v16.9.177`.
 
 #### 7. First Live Check
 
-1. Attach `KAGGLE_API_TOKEN` and `GITHUB_PAT` to the kernel.
+1. Attach `KAGGLE_API_TOKEN` and `SUITE_PAT` to the kernel.
 2. `lemtrain kaggle bundle upn_v2 --out <folder>` and review
    `kernel-metadata.json`.
 3. `lemtrain kaggle launch upn_v2 --accelerator gpu-t4x2 --limit-hours 0.2

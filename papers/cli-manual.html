@@ -1350,9 +1350,9 @@ Secrets) before the first launch. The secrets cell reads them with
 <li><strong><code>KAGGLE_API_TOKEN</code></strong>: Required; a <code>KGAT_</code> token. Exported for the Hub
 sync and the resume pull; a legacy key is refused. <code>KAGGLE_KEY</code> and
 <code>KAGGLE_USERNAME</code> secrets are no longer read.</li>
-<li><strong><code>GITHUB_PAT</code> or <code>SUITE_PAT</code></strong>: Required while the suite or env-manager
-repository is private. The clone gets it only through <code>GIT_ASKPASS</code>, never
-in a URL or a file.</li>
+<li><strong><code>SUITE_PAT</code></strong>: Required while the suite or env-manager
+repository is private (stored under <code>github-primary</code> in <code>.secrets.yaml</code>). The clone gets it only through <code>GIT_ASKPASS</code>, never
+in a URL or a file. Legacy <code>GITHUB_PAT</code> is deprecated and unsupported.</li>
 <li><strong><code>GOOGLE_DRIVE</code></strong>: Optional; Google Drive mirroring.</li>
 </ul>
 <p>Without <code>KAGGLE_API_TOKEN</code> the session trains but cannot read or write the
@@ -1450,7 +1450,7 @@ values of the last <code>metrics.csv</code> row and the suite version, for examp
 <code>Release: mirnet_exposure [ONNX FP16] | epoch 41 | val_loss=0.0123 psnr=27.1000 | suite v16.9.177</code>.</p>
 <h4 id="sec-7-first-live-check">7. First Live Check</h4>
 <ol>
-<li>Attach <code>KAGGLE_API_TOKEN</code> and <code>GITHUB_PAT</code> to the kernel.</li>
+<li>Attach <code>KAGGLE_API_TOKEN</code> and <code>SUITE_PAT</code> to the kernel.</li>
 <li><code>lemtrain kaggle bundle upn_v2 --out &lt;folder&gt;</code> and review
 <code>kernel-metadata.json</code>.</li>
 <li><code>lemtrain kaggle launch upn_v2 --accelerator gpu-t4x2 --limit-hours 0.2 --margin-minutes 5</code>.</li>

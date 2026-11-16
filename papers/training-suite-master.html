@@ -2121,9 +2121,9 @@ defined, preventing runtime <code>AttributeError</code> disruptions during multi
 logging. The <strong>Metrics Sanitizer</strong> explicitly sanitizes <code>inf</code>/<code>NaN</code> artifacts to
 prevent numerical poison.</p>
 <p>The Governor automatically synchronizes with the <code>LemGendaryModels</code> repository,
-saving <code>_latest.pth</code> and <code>_best.pth</code> directly to the Hub. It uses Dual-Token
-PATs (<code>SUITE_PAT</code> and <code>GITHUB_PAT</code>) for secure, headless authentication on
-Kaggle deployment matrices.</p>
+saving <code>_latest.pth</code> and <code>_best.pth</code> directly to the Hub. It uses <code>SUITE_PAT</code>
+(resolved from <code>github-primary</code> in <code>.secrets.yaml</code>) for secure, headless
+authentication on Kaggle deployment matrices.</p>
 <h3 id="sec-51-multi-gpu-dataparallel-capabilities-kaggle-scale">5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)</h3>
 <p>The training suite natively intercepts execution environments with multiple GPUs
 (e.g., Kaggle Tesla T4 x2) and automatically wraps compatible models in

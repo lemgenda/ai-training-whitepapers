@@ -2139,9 +2139,9 @@ logging. The **Metrics Sanitizer** explicitly sanitizes `inf`/`NaN` artifacts to
 prevent numerical poison.
 
 The Governor automatically synchronizes with the `LemGendaryModels` repository,
-saving `_latest.pth` and `_best.pth` directly to the Hub. It uses Dual-Token
-PATs (`SUITE_PAT` and `GITHUB_PAT`) for secure, headless authentication on
-Kaggle deployment matrices.
+saving `_latest.pth` and `_best.pth` directly to the Hub. It uses `SUITE_PAT`
+(resolved from `github-primary` in `.secrets.yaml`) for secure, headless
+authentication on Kaggle deployment matrices.
 
 ### 5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)
 

@@ -1691,7 +1691,7 @@
       ],
       "kernel_secrets": [
         "KAGGLE_API_TOKEN (KGAT_ token)",
-        "GITHUB_PAT or SUITE_PAT",
+        "SUITE_PAT",
         "GOOGLE_DRIVE (optional)"
       ],
       "session_guard": "kaggle_session in config.yaml: limit_hours 12, margin_minutes 30, auto_resume false, max_resumes 3; the deadline stop saves progress, writes session_deadline.json, syncs the Hub and exits 0",
