@@ -62,6 +62,17 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-16 — Secret Management Standardization (SUITE_PAT) & Notebook/Doc Audit
+
+* Updated `MD-Papers/MANUAL_CLI.md` and `papers/cli-manual.html` to standardize
+  on `SUITE_PAT` resolved via `github-primary` in `.secrets.yaml` and mark
+  legacy `GITHUB_PAT` deprecated.
+* Updated `MD-Papers/PAPER_TRAINING_SUITE.md` and
+  `papers/training-suite-master.html` to document headless cloud deployment
+  authentication using `SUITE_PAT`.
+* Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
+  with secret management requirements.
+
 ### v16.9.225 - Pre-Baked WebDataset Indexing & Cloud Training Pathologies
 
 * **Environment Manager CLI (`MANUAL_CLI.md`, `cli-manual.html`)**: Documented

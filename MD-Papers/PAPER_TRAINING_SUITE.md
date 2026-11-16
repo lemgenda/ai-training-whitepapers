@@ -1288,11 +1288,12 @@ $$
 ### 2.30. Ecosystem Facts & GUI Training Verdict (v16.9.93, v16.9.94)
 
 - **Ecosystem file**: `training/ecosystem.py` reads
-  `lemgendary-env-manager/ecosystem/ecosystem.json` (`LEMGENDARY_ECOSYSTEM_FILE`,
-  else the file under the workspace root; `LEMGENDARY_WORKSPACE_ROOT` overrides
-  the root). Ports, the bind host, the Kaggle owner and the documentation URL
-  come from it; a missing or malformed file raises `EcosystemFileError` naming
-  the expected path. Model `kaggle_ref` and `kaggle_dataset_urls` are derived
+  `lemgendary-env-manager/ecosystem/ecosystem.json`
+  (`LEMGENDARY_ECOSYSTEM_FILE`, else the file under the workspace root;
+  `LEMGENDARY_WORKSPACE_ROOT` overrides the root). Ports, the bind host, the
+  Kaggle owner and the documentation URL come from it; a missing or malformed
+  file raises `EcosystemFileError` naming the expected path. Model `kaggle_ref`
+  and `kaggle_dataset_urls` are derived
   from `datasets` and the owner; an explicit value on a model is a per-model
   override.
 - **Training verdict**: `GET /api/gui/models/with-stats` returns
@@ -2400,8 +2401,8 @@ training suite deploys a multi-tier memory containment profile:
   `bitsandbytes.optim.PagedAdamW8bit`, automatically paging optimizer momentum
   and variance states across CUDA unified memory when VRAM boundaries approach
   saturation.
-- **Curriculum Context Clamping**: Constrains sequence lengths to 512 tokens with
-  micro-batch size 1 and 16 accumulation steps for edge training.
+- **Curriculum Context Clamping**: Constrains sequence lengths to 512
+  tokens with micro-batch size 1 and 16 accumulation steps for edge training.
 
 ---
 
