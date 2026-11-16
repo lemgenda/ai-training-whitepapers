@@ -748,6 +748,12 @@ score distributions, discarding heavily degraded or out-of-distribution frames
 <li><strong>Perceptual Deduplication (<code>pHash</code>)</strong>: Computes DCT perceptual hashes to
 eliminate duplicate or near-identical images across overlapping upstream
 sources.</li>
+<li><strong>Manifold Task Validation &amp; Shard Hierarchy Guard</strong>: Prevents collision
+between restoration pipelines and discrete classification manifolds,
+guaranteeing that classification shards embed authoritative label indices
+rather than task-nullified restoration payloads (<code>task: restoration</code>).
+Validates shard directory trees to ensure flat, non-nested tar shard
+hierarchies with verified <code>shard_offsets.json</code> mappings.</li>
 </ul>
 <h3 id="sec-44-domain-specializations">4.4 Domain Specializations</h3>
 <ul>

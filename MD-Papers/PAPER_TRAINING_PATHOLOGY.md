@@ -1468,6 +1468,29 @@ and ship `shard_offsets.json` (STORE_VERSION = 2) inside every split directory
 during dataset compilation to drop startup indexing to 0.0 seconds, and enforce
 strict WebP-only container audits that purge 0-byte or corrupt legacy members.
 
+### Unlabeled Manifold Target Nullification & Telemetry Underflow (Pathology 66)
+
+**The Issue:** When a container dataset manifold contains unindexed or
+misclassified target labels (such as restoration metadata 	ask: restoration
+inadvertently overwriting multi-class classification labels), task target
+builders map all samples to IGNORE_TARGET = 255. In classification loss
+handlers, batches lacking any valid labeled target trigger the zero-loss guard
+pred.sum() * 0.0 to avert NaN exceptions. This zeroes backward gradients
+(grad_norm = 0.0000), halts parameter learning, and causes validation accuracy
+evaluators to fail with quality_score = nan. Compounding this diagnostic
+blackout, standard progress loggers formatted with 4-decimal float precision
+({v:.4f}) truncate small fine-tuning learning rates (e.g., 2.8e-5) to
+lr=0.0000, creating the false telemetry illusion that learning rate decay or
+optimizer zeroing has occurred.
+
+**Remedy:** **Strict Task Label Alignment & High-Precision Telemetry**.
+Enforce compiler-level dataset manifold validation preventing task target
+collision between restoration pipelines and multi-class classification
+shards. In server telemetry and job orchestrators, format all learning rate
+metrics with 6-decimal floating-point precision ({v:.6f}) to distinguish
+micro-learning rates (^{-5}$ to ^{-6}$) from true zero-rate optimizer
+freeze, and emit warning diagnostics whenever _classification_loss activates
+the zeroed unlabelled batch fallback.
 ---
 
 ## 6. Best Practices Checklist

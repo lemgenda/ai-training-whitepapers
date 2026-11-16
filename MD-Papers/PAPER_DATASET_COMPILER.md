@@ -777,6 +777,12 @@ the manifold:
 - **Perceptual Deduplication (`pHash`)**: Computes DCT perceptual hashes to
   eliminate duplicate or near-identical images across overlapping upstream
   sources.
+- **Manifold Task Validation & Shard Hierarchy Guard**: Prevents collision
+  between restoration pipelines and discrete classification manifolds,
+  guaranteeing that classification shards embed authoritative label indices
+  rather than task-nullified restoration payloads (	ask: restoration).
+  Validates shard directory trees to ensure flat, non-nested tar shard
+  hierarchies with verified shard_offsets.json mappings.
 
 ### 4.4 Domain Specializations
 

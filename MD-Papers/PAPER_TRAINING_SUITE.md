@@ -2144,6 +2144,15 @@ saving `_latest.pth` and `_best.pth` directly to the Hub. It uses `SUITE_PAT`
 (resolved from `github-primary` in `.secrets.yaml`) for secure, headless
 authentication on Kaggle deployment matrices.
 
+Additionally, the suite's job execution telemetry formats all learning rate
+metrics with 6-decimal floating-point precision ({v:.6f}) across live console
+progress broadcasts. Standard 4-decimal formatting ({v:.4f}) truncated fine-
+tuning learning rates (^{-5}$ to ^{-6}$) to zero, obscuring optimizer
+dynamics. In multi-task classification pipelines, the loss handler enforces
+safe unlabelled target detection: batches without valid targets evaluate to
+pred.sum() * 0.0 to preserve gradient graph integrity without throwing NaN
+exceptions, accompanied by structured logging diagnostics.
+
 ### 5.1. Multi-GPU DataParallel Capabilities (Kaggle Scale)
 
 The training suite natively intercepts execution environments with multiple GPUs

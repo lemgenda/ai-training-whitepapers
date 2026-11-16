@@ -1412,6 +1412,27 @@ neutral gray frames and polluting gradient updates.</p>
 and ship <code>shard_offsets.json</code> (STORE_VERSION = 2) inside every split directory
 during dataset compilation to drop startup indexing to 0.0 seconds, and enforce
 strict WebP-only container audits that purge 0-byte or corrupt legacy members.</p>
+<h3 id="unlabeled-manifold-target-nullification-and-telemetry-underflow-pathology-66">Unlabeled Manifold Target Nullification &amp; Telemetry Underflow (Pathology 66)</h3>
+<p><strong>The Issue:</strong> When a container dataset manifold contains unindexed or
+misclassified target labels (such as restoration metadata <code>task: restoration</code>
+inadvertently overwriting multi-class classification labels), task target
+builders map all samples to <code>IGNORE_TARGET = 255</code>. In classification loss
+handlers, batches lacking any valid labeled target trigger the zero-loss guard
+<code>pred.sum() * 0.0</code> to avert <code>NaN</code> exceptions. This zeroes backward gradients
+(<code>grad_norm = 0.0000</code>), halts parameter learning, and causes validation accuracy
+evaluators to fail with <code>quality_score = nan</code>. Compounding this diagnostic
+blackout, standard progress loggers formatted with 4-decimal float precision
+(<code>{v:.4f}</code>) truncate small fine-tuning learning rates (e.g., <code>2.8e-5</code>) to
+<code>lr=0.0000</code>, creating the false telemetry illusion that learning rate decay or
+optimizer zeroing has occurred.</p>
+<p><strong>Remedy:</strong> <strong>Strict Task Label Alignment &amp; High-Precision Telemetry</strong>.
+Enforce compiler-level dataset manifold validation preventing task target
+collision between restoration pipelines and multi-class classification
+shards. In server telemetry and job orchestrators, format all learning rate
+metrics with 6-decimal floating-point precision (<code>{v:.6f}</code>) to distinguish
+micro-learning rates ($10^{-5}$ to $10^{-6}$) from true zero-rate optimizer
+freeze, and emit warning diagnostics whenever <code>_classification_loss</code> activates
+the zeroed unlabelled batch fallback.</p>
 </section>
 
 <section id="sec-6-best-practices-checklist">
