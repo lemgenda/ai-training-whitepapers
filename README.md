@@ -62,6 +62,14 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-16 — Dataset Compiler CLI Hardening & Version Discovery
+
+* Updated `MD-Papers/MANUAL_CLI.md` and `papers/cli-manual.html` Section
+  5.1 with root `--version` / `-V` CLI flag invocation examples and Section
+  5.8 with `server status --json` machine-readable output.
+* Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
+  with Dataset Compiler baseline `v16.9.114-STABLE`.
+
 ### 2026-11-16 — Secret Management Standardization (SUITE_PAT) & Notebook/Doc Audit
 
 * Updated `MD-Papers/MANUAL_CLI.md` and `papers/cli-manual.html` to standardize

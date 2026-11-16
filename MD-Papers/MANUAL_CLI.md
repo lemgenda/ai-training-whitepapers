@@ -553,6 +553,11 @@ cd lemgendary-datasets
 # General syntax
 python cli.py [COMMAND] [OPTIONS]
 
+# Version discovery
+python cli.py --version
+python cli.py -V
+python cli.py version
+
 # Help and discovery
 python cli.py --help
 python cli.py [COMMAND] --help
@@ -758,6 +763,7 @@ python cli.py server start --background
 
 # Inspect server status, uptime, and hardware sensors
 python cli.py server status
+python cli.py server status --json
 
 # Gracefully terminate server daemon
 python cli.py server stop
