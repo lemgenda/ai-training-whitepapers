@@ -1440,20 +1440,28 @@ during restoration training.
 10 (PSNR 10 vs SSIM 40) so both metrics steer the score (the Restoration Balance
 row of Section 11).
 
-### Dual-GPU PCIe Barrier Overhead on Lightweight Parameter Predictors (Pathology 64)
+### Dual-GPU PCIe Barrier Overhead & CPU Starvation on Lightweight Predictors (Pathology 64)
 
-**The Issue:** Running `DistributedDataParallel` (DDP) across dual
-PCIe-connected
-T4 GPUs on lightweight parameter networks (e.g., `upn_v2` at ~11 MB) introduces
-inter-GPU synchronization barrier latency that exceeds the ~15ms
-forward/backward
-compute pass, starving GPU utilization (~20% reported) while consuming 2x cloud
-accelerator quota.
+**The Issue:** Running DistributedDataParallel (DDP) across dual
+PCIe-connected T4 GPUs on lightweight parameter networks (e.g., upn_v2
+at ~11 MB) introduces inter-GPU synchronization barrier latency that
+exceeds the ~15ms forward/backward compute pass, starving GPU utilization
+(~20% reported) while consuming 2x cloud accelerator quota. Furthermore,
+running tiny physical micro-batches (e.g. batch size 16–24) on high-throughput
+lightweight architectures triggers severe CPU-side dataloader starvation: CPU
+worker threads saturate at 360–400% host utilization decompressing WebP streams
+and assembling micro-batches, while GPU tensor cores sit idle 95% of the time,
+resulting in apparent 0.00% GPU utilization readings on sampled telemetry
+monitors.
 
-**Remedy:** **Single-GPU Affinity Governance**. Enforce `preferred_parallel:
-single` on lightweight parameter and tabular predictors (`upn_v2`,
-`forex_predictor`), reserving multi-GPU DDP exclusively for high-compute
-convolutional or transformer restoration backbones.
+**Remedy:** **Single-GPU Affinity & Scaled Micro-Batch Sizing**. Enforce
+preferred_parallel: single on lightweight parameter and tabular predictors
+(upn_v2, orex_predictor), reserving multi-GPU DDP exclusively for high-
+compute convolutional or transformer restoration backbones. Additionally,
+scale physical micro-batch size from 16–24 to 64–128 on lightweight
+architectures with low VRAM footprint (<500 MiB), reducing per-epoch Python
+collation cycles by \times$, relieving CPU worker pressure, and maximizing
+CUDA core saturation.
 
 ### 0-Byte WebDataset Member Fallback & Shard Index Latency (Pathology 65)
 

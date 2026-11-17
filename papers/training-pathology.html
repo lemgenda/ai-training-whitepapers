@@ -1392,16 +1392,26 @@ during restoration training.</p>
 <p><strong>Remedy:</strong> <strong>Metric Rebalancing (Task 1.1)</strong>. Scale <code>METRIC_WEIGHTS['psnr']</code> to
 10 (PSNR 10 vs SSIM 40) so both metrics steer the score (the Restoration Balance
 row of Section 11).</p>
-<h3 id="dual-gpu-pcie-barrier-overhead-on-lightweight-parameter-predictors-pathology-64">Dual-GPU PCIe Barrier Overhead on Lightweight Parameter Predictors (Pathology 64)</h3>
-<p><strong>The Issue:</strong> Running <code>DistributedDataParallel</code> (DDP) across dual PCIe-connected
-T4 GPUs on lightweight parameter networks (e.g., <code>upn_v2</code> at ~11 MB) introduces
-inter-GPU synchronization barrier latency that exceeds the ~15ms forward/backward
-compute pass, starving GPU utilization (~20% reported) while consuming 2x cloud
-accelerator quota.</p>
-<p><strong>Remedy:</strong> <strong>Single-GPU Affinity Governance</strong>. Enforce <code>preferred_parallel:
-single</code> on lightweight parameter and tabular predictors (<code>upn_v2</code>,
-<code>forex_predictor</code>), reserving multi-GPU DDP exclusively for high-compute
-convolutional or transformer restoration backbones.</p>
+<h3 id="dual-gpu-pcie-barrier-overhead-and-cpu-starvation-on-lightweight-predictors-pathology-64">Dual-GPU PCIe Barrier Overhead &amp; CPU Starvation on Lightweight Predictors (Pathology 64)</h3>
+<p><strong>The Issue:</strong> Running <code>DistributedDataParallel</code> (DDP) across dual
+PCIe-connected T4 GPUs on lightweight parameter networks (e.g., <code>upn_v2</code>
+at ~11 MB) introduces inter-GPU synchronization barrier latency that
+exceeds the ~15ms forward/backward compute pass, starving GPU utilization
+(~20% reported) while consuming 2x cloud accelerator quota. Furthermore,
+running tiny physical micro-batches (e.g. batch size 16–24) on high-throughput
+lightweight architectures triggers severe CPU-side dataloader starvation: CPU
+worker threads saturate at 360–400% host utilization decompressing WebP streams
+and assembling micro-batches, while GPU tensor cores sit idle 95% of the time,
+resulting in apparent 0.00% GPU utilization readings on sampled telemetry
+monitors.</p>
+<p><strong>Remedy:</strong> <strong>Single-GPU Affinity &amp; Scaled Micro-Batch Sizing</strong>. Enforce
+<code>preferred_parallel: single</code> on lightweight parameter and tabular predictors
+(<code>upn_v2</code>, <code>forex_predictor</code>), reserving multi-GPU DDP exclusively for high-
+compute convolutional or transformer restoration backbones. Additionally,
+scale physical micro-batch size from 16–24 to 64–128 on lightweight
+architectures with low VRAM footprint (&lt;500 MiB), reducing per-epoch Python
+collation cycles by $4\times$, relieving CPU worker pressure, and maximizing
+CUDA core saturation.</p>
 <h3 id="zero-byte-webdataset-member-fallback-and-shard-index-latency-pathology-65">0-Byte WebDataset Member Fallback &amp; Shard Index Latency (Pathology 65)</h3>
 <p><strong>The Issue:</strong> Unindexed WebDataset tar shards on cloud virtual disks force
 sequential tar header scanning at startup (e.g., 507.9 seconds for 270 shards
