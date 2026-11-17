@@ -780,7 +780,7 @@ the manifold:
 - **Manifold Task Validation & Shard Hierarchy Guard**: Prevents collision
   between restoration pipelines and discrete classification manifolds,
   guaranteeing that classification shards embed authoritative label indices
-  rather than task-nullified restoration payloads (	ask: restoration).
+  rather than task-nullified restoration payloads (task: restoration).
   Validates shard directory trees to ensure flat, non-nested tar shard
   hierarchies with verified shard_offsets.json mappings.
 
