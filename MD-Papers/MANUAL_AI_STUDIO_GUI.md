@@ -1937,8 +1937,8 @@ instead.
 - **70% Hardware Worker Default**: `WORKERS` is pre-filled to 70% of available
   CPU cores.
 - **Task-Specific Controls**: Displays `Start Date` / `End Date`
-  (`comp-input-start-date`, `comp-input-end-date`) for Forex, `Target Samples`
-  (`comp-input-target-samples`) for LLM, `Label Strategy`
+  (`comp-input-start-date`, `comp-input-end-date`) for Forex, `Yield Strategy`
+  (`comp-yield-mode`: `Autonomous Source Analysis`) for LLM, `Label Strategy`
   (`comp-select-label-strategy`) for Detection, and `Shard Extension`
   (`comp-select-shard-ext`) for WebDataset manifolds.
 
@@ -1946,7 +1946,7 @@ instead.
 *Figure 1: Dataset Compilation Engine card: (1) Target Manifold selector, (2)
 Compilation Preset (auto-selected for the chosen manifold), (3) Max Size (GB)
 override, (4) Workers (auto-scaled to 70% of CPU cores), (5) Dynamic
-task-specific control (`Target Samples`, `Start/End Date`, `Label Strategy`, or
+task-specific control (`Yield Strategy`, `Start/End Date`, `Label Strategy`, or
 `Shard Extension`), and (6) Compile Manifold trigger.*
 
 ![Figure 2: Report Issue Modal](../assets/gui/gui_report_issue_modal.png)

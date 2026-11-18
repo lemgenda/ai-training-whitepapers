@@ -936,7 +936,6 @@ production entry <code>ai_helper_lemgend</code> (abridged) is:</p>
   test_split: 0.15
   llm_pipeline:
     schema_format: chatml_turn3
-    target_samples: 1150
     generator_module: tools.llm_helper.knowledge_synthesizer
     knowledge_sources:
       - type: markdown_dir
@@ -1638,8 +1637,7 @@ manifold builds.</p>
 <h3 id="lemgendizedaihelperlemgend">LemGendizedAIHelperLemGend</h3>
 <ul>
 <li><strong>Category:</strong> Technical Documentation &amp; AI Assistant Training</li>
-<li><strong>Target Samples:</strong> 1,150 (<code>target_samples</code>), stratified 80/20
-train/validation split</li>
+<li><strong>Autonomous Yield:</strong> 2,432 high-quality samples (1,658 train / 387 val / 387 test, stratified 3-way split via Autonomous Knowledge Yield Discovery)</li>
 <li><strong>Storage Format:</strong> JSON Lines (<code>jsonl</code>)</li>
 <li><strong>Architecture Base:</strong> Instruction-tuned causal language model (AI LemGend
 assistant)</li>

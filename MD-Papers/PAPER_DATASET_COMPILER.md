@@ -981,7 +981,6 @@ ai_helper_lemgend:
   test_split: 0.15
   llm_pipeline:
     schema_format: chatml_turn3
-    target_samples: 1150
     generator_module: tools.llm_helper.knowledge_synthesizer
     knowledge_sources:
       - type: markdown_dir
@@ -1748,8 +1747,8 @@ manifold builds.
 ### LemGendizedAIHelperLemGend
 
 - **Category:** Technical Documentation & AI Assistant Training
-- **Target Samples:** 1,150 (`target_samples`), stratified 80/20
-  train/validation split
+- **Autonomous Yield:** 2,432 high-quality samples (1,658 train / 387 val /
+  387 test, stratified 3-way split via Autonomous Knowledge Yield Discovery)
 - **Storage Format:** JSON Lines (`jsonl`)
 - **Architecture Base:** Instruction-tuned causal language model (AI LemGend
   assistant)

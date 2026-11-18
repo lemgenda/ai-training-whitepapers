@@ -42,7 +42,7 @@
   files are found next to this repository or under
   `LEMGENDARY_WORKSPACE_ROOT`; a missing file is a finding that names the
   path. The parity backlog (`scripts/parity_backlog.json`) is empty: every
-  finding fails the audit.
+  finding fails the audit
 
 ---
 
