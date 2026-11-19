@@ -451,8 +451,8 @@
       "category": "Category 01.3 TRAINING",
       "html_path": "papers/training-suite-master.html",
       "md_path": "MD-Papers/PAPER_TRAINING_SUITE.md",
-      "baseline_version": "v16.9.223-STABLE",
-      "last_audited": "2026-11-13",
+      "baseline_version": "v16.9.229-STABLE",
+      "last_audited": "2026-11-19",
       "status": "Canonical"
     },
     {

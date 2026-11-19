@@ -28,8 +28,8 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.223-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-12</span>
+<span><strong>Version</strong>: <code>v16.9.229-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-19</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
 </header>
@@ -149,6 +149,8 @@ Scale)</a></li>
 Lifecycle</a></li>
 <li><a href="#sec-54-multi-account-kaggle-cloud-telemetry--live-monitor">5.4. Multi-Account Kaggle Cloud Telemetry &amp; Live
 Monitor</a></li>
+<li><a href="#sec-55-kaggle-cloud-tpu-v5e-8--pytorchxla-backend">5.5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA
+Backend</a></li>
 </ul>
 </li>
 <li><a href="#sec-6-distributed-edge-training-lemgendary-cloud-link">6. Distributed Edge Training: LemGendary Cloud
@@ -181,8 +183,6 @@ Quantization</a></li>
 <li><a href="#sec-81-implementation-status">8.1. Implementation Status</a></li>
 </ul>
 </li>
-
-<li><a href="#sec-5-kaggle-cloud-tpu-v5e8">5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA Backend</a></li>
 </ul>
 </nav>
 
@@ -191,7 +191,7 @@ Quantization</a></li>
 <p>The LemGendary Model Training Suite is the orchestration layer that trains,
 evaluates and exports the vision, restoration, quality-assessment, financial
 time-series and causal LLM models of the LemGendary ecosystem. This paper
-documents release v16.9.157-STABLE. It covers the curriculum governor and its
+documents release v16.9.229-STABLE. It covers the curriculum governor and its
 Monotonic Ratchet (pair rule, enforced by a <code>RatchetViolation</code> guard), the
 bounded epoch budget with an honoured early stop, the 4-pillar completion
 invariant, publication-grade FID evaluation (<code>feature=2048</code>, chunks of at most
@@ -1176,8 +1176,8 @@ training.</li>
 <code>expand_fraction</code>, $f_{t+1} = \max(f_t, \min(1, f_t + \Delta f))$ with
 $\Delta f = 0.20$. Values within 1% of full data snap to 1.0.</li>
 <li><strong>Fraction may reset when the resolution steps up</strong>: after a regular spatial
-jump the fraction restarts at the configured initial fraction (0.15), after a
-forced SOTA jump at 0.5.</li>
+jump or a forced SOTA jump the fraction restarts at the configured initial
+fraction (<code>rung_entry_fraction</code>, default 0.15; Section 2.38).</li>
 <li><strong>Enforced guard</strong>: the torch-free module <code>training/ratchet.py</code> defines
 <code>check_transition</code>. Every governor transition (data propulsion, spatial jump,
 SOTA forced jump, loop-breaker breakout, VRAM veto) goes through
@@ -1300,12 +1300,12 @@ without <code>Origin</code> (CLI, scripts, tests) are unaffected.</li>
 credentials by the allow-list above, explicit methods, explicit headers
 (<code>Content-Type</code>, <code>Authorization</code>, <code>X-LemTrain-Token</code>, <code>X-LemGendary-Client</code>)
 and <code>allow_credentials=False</code>. The optional token check keeps working behind
-the guard, and <code>lemtrain serve</code> binds <code>127.0.0.1</code> by default.</li>
+the guard, and <code>lemtrain server start</code> binds <code>127.0.0.1</code> by default.</li>
 <li><strong>Secret files</strong>: <code>.GOOGLE_DRIVE_JSON</code>, <code>.secrets.yaml</code>, <code>.mt5_credentials</code>
 and <code>.kaggle/</code> are git-ignored.</li>
 <li><strong>OpenAPI contract</strong>: <code>tools/export_openapi.py</code> builds the app with
 <code>create_app</code> and writes <code>openapi.json</code> deterministically. The file lists all
-40 HTTP operations (39 paths; <code>/api/health</code> has GET and HEAD). <code>--check</code> exits
+41 HTTP operations (40 paths; <code>/api/health</code> has GET and HEAD). <code>--check</code> exits
 1 on drift, and <code>tests/unit/test_openapi_contract.py</code> fails when the file
 differs from the live app. The two WebSocket routes are not part of OpenAPI.</li>
 </ul>
@@ -2198,6 +2198,30 @@ multi-threaded workers (<code>ThreadPoolExecutor</code>), checking execution sta
 via Kaggle API midtier endpoints, rendering live progress lines and status
 notifications in real time with non-destructive detachment (<code>Ctrl+C</code>).</li>
 </ul>
+<h3 id="sec-55-kaggle-cloud-tpu-v5e-8--pytorchxla-backend">5.5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA Backend</h3>
+<ul>
+<li><strong>Per-Model Accelerator Resolution (<code>kernel_bundle.py</code>)</strong>: <code>bundle_spec()</code>
+and <code>checked_accelerator()</code> resolve each model's <code>kaggle_accelerator</code> field
+from <code>unified_models_v2.yaml</code> (e.g., <code>tpu-v5e8</code> / <code>TpuV5E8</code> for
+<code>ai_helper_lemgend</code>) when no explicit override is supplied, and
+<code>kaggle_launcher.py</code> preserves <code>enable_tpu: true</code> and <code>enable_gpu: false</code>.</li>
+<li><strong>TPU-Aware Notebook Cells (<code>training/notebooks/cells/</code>)</strong>: <code>env.py</code>,
+<code>deps.py</code>, and <code>sync.py</code> detect <code>PJRT_DEVICE=TPU</code> / <code>torch_xla</code> cores,
+preserve Kaggle's matched <code>torch</code> + <code>torch_xla</code> stack without overwriting it
+with CPU wheels, and dispatch TPU training cleanly.</li>
+<li><strong>XLA Discovery, Autocast &amp; Parallel Strategy</strong>:
+<ul>
+<li><code>training/hardware/discovery.py</code> (<code>_xla_device_info</code>) probes <code>torch_xla</code>
+TPU cores and HBM capacity (<code>DeviceInfo.is_xla</code>).</li>
+<li><code>training/hardware/policy.py</code> and <code>training/training/amp.py</code> enable native
+<code>torch.amp.autocast("xla", dtype=torch.bfloat16)</code> without <code>GradScaler</code>.</li>
+<li><code>training/parallel/xla.py</code> (<code>XlaParallelStrategy</code>) and
+<code>training/training/epoch.py</code> synchronize lazy XLA graphs via
+<code>xm.optimizer_step(optimizer, barrier=True)</code> at update boundaries and
+<code>xm.mark_step()</code> on intermediate accumulation steps.</li>
+</ul>
+</li>
+</ul>
 </section>
 
 <section id="sec-6-distributed-edge-training-lemgendary-cloud-link">
@@ -2391,50 +2415,23 @@ bank (Section 2.9); container targets for both shard layouts and
 deterministic mid-epoch resume (Section 2.36); byte-offset shard reads with
 the offset cache and the 16-handle pool (Section 2.37); the single quality
 score, four optimizer groups and the exact-divisor batch rule (Section
-2.38); the single task-type resolver (Section 2.39); the shipped shard
-offset index with the build lock and the threaded scan (Section 2.46).</li>
+2.38); the single task-type resolver (Section 2.39); shard-window locality
+sampling and block-wise curriculum fractions (<code>data.locality</code>,
+<code>window_shards: 4</code>, <code>fraction_block_size: 256</code>, Sections 2.37 and 2.41); the
+shipped shard offset index with the build lock and the threaded scan (Section
+2.46).</li>
 <li><strong>Known issue in past runs</strong>: Kaggle runs before v16.9.216 saw every
 sample twice per epoch through alias paths of one manifold; fixed by the
 real-path manifold dedupe (Section 2.47).</li>
-<li><strong>Present but off by default</strong>: shard-window locality sampling and
-block-wise curriculum fractions (<code>data.locality</code>, Section 2.37).</li>
 <li><strong>Present but not active</strong> (code exists, never invoked by the training loop):
-rollback registration (<code>register_rollback</code>) with the loop-breaker and
-resolution escalation built on it; the resolution-jump veto and the pre-jump
-dry-run probe; the <code>trigger_mini_swa</code> flag; the hardware resolution caps in
-<code>config.yaml</code>.</li>
+<code>SentinelGuard</code> (<code>training/hardware/sentinel.py</code>); <code>RollbackState</code> fields in
+<code>training/governance/sota.py</code>; the <code>trigger_mini_swa</code> flag; the hardware
+resolution caps in <code>config.yaml</code>.</li>
 <li><strong>Not implemented</strong>: Mini-SWA with its <code>update_bn</code> rollback guard and
 Metric-Specific SWA (MS-SWA) over the per-metric vaults; the absolute
 patience limit; validation sharding.</li>
 <li><strong>Needs the owner's GPU</strong>: the FID re-measurement of the four models with
 unverified FID history (Section 2.33).</li>
-</ul>
-</section>
-
-<section id="sec-5-kaggle-cloud-tpu-v5e8">
-<h2>5. Kaggle Cloud TPU v5e-8 &amp; PyTorch/XLA Backend</h2>
-<ul>
-<li><strong>Per-Model Accelerator Resolution (<code>kernel_bundle.py</code>)</strong>: <code>bundle_spec()</code>
-and <code>checked_accelerator()</code> resolve each model's <code>kaggle_accelerator</code> field
-from <code>unified_models_v2.yaml</code> (e.g., <code>tpu-v5e8</code> / <code>TpuV5E8</code> for
-<code>ai_helper_lemgend</code>) when no explicit override is supplied, and
-<code>kaggle_launcher.py</code> preserves <code>enable_tpu: true</code> and <code>enable_gpu: false</code>.</li>
-<li><strong>TPU-Aware Notebook Cells (<code>training/notebooks/cells/</code>)</strong>: <code>env.py</code>,
-<code>deps.py</code>, and <code>sync.py</code> detect <code>PJRT_DEVICE=TPU</code> / <code>torch_xla</code> cores,
-preserve Kaggle's matched <code>torch</code> + <code>torch_xla</code> stack without overwriting it
-with CPU wheels, and dispatch TPU training cleanly.</li>
-<li><strong>XLA Discovery, Autocast &amp; Parallel Strategy</strong>:
-<ul>
-<li><code>training/hardware/discovery.py</code> (<code>_xla_device_info</code>) probes <code>torch_xla</code>
-TPU cores and HBM capacity (<code>DeviceInfo.is_xla</code>).</li>
-<li><code>training/hardware/policy.py</code> and <code>training/training/amp.py</code> enable native
-<code>torch.amp.autocast("xla", dtype=torch.bfloat16)</code> without <code>GradScaler</code>.</li>
-<li><code>training/parallel/xla.py</code> (<code>XlaParallelStrategy</code>) and
-<code>training/training/epoch.py</code> synchronize lazy XLA graphs via
-<code>xm.optimizer_step(optimizer, barrier=True)</code> at update boundaries and
-<code>xm.mark_step()</code> on intermediate accumulation steps.</li>
-</ul>
-</li>
 </ul>
 </section>
 
