@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.234-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.235-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-19
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -115,6 +115,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)](#248-visual-manifold-training--webdataset-enhancements-v169232)
   - [2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
   - [2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
+  - [2.51. Unified Model Configuration Schema & Validator (v16.9.235)](#251-unified-model-configuration-schema--validator-v169235)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2108,6 +2109,31 @@ four modernized YOLO-family training invariants:
   aggregations and class precision tracking into `DetectionLosses` and
   `ClassAPMetrics` dataclasses, ensuring strict Single Responsibility and
   preserving zero-diagnostic rating without suppression.
+
+### 2.51. Unified Model Configuration Schema & Validator (v16.9.235)
+
+To guarantee single-source-of-truth invariants and eliminate configuration drift
+across model architectures, release v16.9.235 standardizes all 23 production
+models in `unified_models_v2.yaml` under an authoritative JSON Schema:
+
+- **Canonical JSON Schema (`training/config/model_schema.json`)**: Formally
+  specifies mandatory top-level blocks and properties for every registered model,
+  including `family`, `architecture`, dataset manifold references (`dataset`,
+  `dataset_variant`), `optimizer`, `lr_schedule`, `batch_size`, `precision`,
+  `checkpoint_policy`, `export_targets`, `validation_suite`, and `seed`.
+- **Preflight & Runtime Schema Validator (`training/config/schema_validator.py`)**:
+  Provides `validate_model_config` and `validate_registry_file`. These methods
+  validate memory mappings and YAML files using `jsonschema.Draft202012Validator`.
+  Violations raise `ModelConfigValidationError` with detailed path reporting.
+- **Fail-Fast Model Registry Integration**: `ModelRegistryService._load()` in
+  `training/registry/model_specs.py` executes schema validation during registry
+  initialization, halting execution with descriptive diagnostic errors if an
+  unsupported category, missing optimizer parameter, or invalid batch size is
+  encountered.
+- **Deterministic 23-Model Convergence Baseline**: All vision, super-resolution,
+  financial forecasting, and LLM architectures define explicit seeds,
+  mixed-precision targets (`amp_bf16`, `amp_fp16`, or `fp32`), retention
+  frequencies, and export target suites (`onnx`, `torchscript`, `safetensors`).
 
 ---
 

@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.234-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.235-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-19</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -131,6 +131,7 @@ Probing</a></li>
 <li><a href="#sec-248-visual-manifold-training--webdataset-enhancements-v169232">2.48. Visual Manifold Training &amp; WebDataset Enhancements (v16.9.232)</a></li>
 <li><a href="#sec-249-financial-forecasting-validation--calibration-enhancements-v169233">2.49. Financial Forecasting Validation &amp; Calibration Enhancements (v16.9.233)</a></li>
 <li><a href="#sec-250-yolo-object-detection-training--evaluation-enhancements-v169234">2.50. YOLO Object Detection Training &amp; Evaluation Enhancements (v16.9.234)</a></li>
+<li><a href="#sec-251-unified-model-configuration-schema--validator-v169235">2.51. Unified Model Configuration Schema &amp; Validator (v16.9.235)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -2092,6 +2093,30 @@ recording both global aggregates and per-category performance into
 aggregations and class precision tracking into <code>DetectionLosses</code> and
 <code>ClassAPMetrics</code> dataclasses, ensuring strict Single Responsibility and
 preserving zero-diagnostic rating without suppression.</li>
+</ul>
+<h3 id="sec-251-unified-model-configuration-schema--validator-v169235">2.51. Unified Model Configuration Schema &amp; Validator (v16.9.235)</h3>
+<p>To guarantee single-source-of-truth invariants and eliminate configuration drift
+across model architectures, release v16.9.235 standardizes all 23 production
+models in <code>unified_models_v2.yaml</code> under an authoritative JSON Schema:</p>
+<ul>
+<li><strong>Canonical JSON Schema (<code>training/config/model_schema.json</code>)</strong>: Formally
+specifies mandatory top-level blocks and properties for every registered model,
+including <code>family</code>, <code>architecture</code>, dataset manifold references (<code>dataset</code>,
+<code>dataset_variant</code>), <code>optimizer</code>, <code>lr_schedule</code>, <code>batch_size</code>, <code>precision</code>,
+<code>checkpoint_policy</code>, <code>export_targets</code>, <code>validation_suite</code>, and <code>seed</code>.</li>
+<li><strong>Preflight &amp; Runtime Schema Validator (<code>training/config/schema_validator.py</code>)</strong>:
+Provides <code>validate_model_config</code> and <code>validate_registry_file</code>. These methods
+validate memory mappings and YAML files using <code>jsonschema.Draft202012Validator</code>.
+Violations raise <code>ModelConfigValidationError</code> with detailed path reporting.</li>
+<li><strong>Fail-Fast Model Registry Integration</strong>: <code>ModelRegistryService._load()</code> in
+<code>training/registry/model_specs.py</code> executes schema validation during registry
+initialization, halting execution with descriptive diagnostic errors if an
+unsupported category, missing optimizer parameter, or invalid batch size is
+encountered.</li>
+<li><strong>Deterministic 23-Model Convergence Baseline</strong>: All vision, super-resolution,
+financial forecasting, and LLM architectures define explicit seeds,
+mixed-precision targets (<code>amp_bf16</code>, <code>amp_fp16</code>, or <code>fp32</code>), retention
+frequencies, and export target suites (<code>onnx</code>, <code>torchscript</code>, <code>safetensors</code>).</li>
 </ul>
 </section>
 
