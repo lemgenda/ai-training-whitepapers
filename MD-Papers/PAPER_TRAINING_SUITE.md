@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.235-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.236-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-19
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -116,6 +116,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
   - [2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
   - [2.51. Unified Model Configuration Schema & Validator (v16.9.235)](#251-unified-model-configuration-schema--validator-v169235)
+  - [2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)](#252-standardized-telemetry--history-recording-pipelines-v169236)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2134,6 +2135,27 @@ models in `unified_models_v2.yaml` under an authoritative JSON Schema:
   financial forecasting, and LLM architectures define explicit seeds,
   mixed-precision targets (`amp_bf16`, `amp_fp16`, or `fp32`), retention
   frequencies, and export target suites (`onnx`, `torchscript`, `safetensors`).
+
+### 2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)
+
+To guarantee auditability, crash-resilience, and cross-family schema consistency,
+release v16.9.236 modernizes the telemetry recording pipelines:
+
+- **Canonical Telemetry Schemas (`training/telemetry/schemas.py`)**: Formally
+  defines column schemas for step-level metrics (`metrics.csv`) and epoch/eval
+  milestones (`history.csv`). Columns cover loss components, learning rates,
+  gradient norms, throughput, physical VRAM/memory allocation, wall time,
+  governor actions, pathology flags (`is_spike`, `is_non_finite`), and
+  specialized metrics per task family (Vision, Forex, YOLO, RetinaFace, LLM).
+- **Atomic & Crash-Safe Recorders (`training/telemetry/recorder.py`)**:
+  Implements `AtomicCsvRecorder` utilizing atomic temp-file creation, synchronous
+  disk flushing (`os.fsync`), and resilient replacement (`_resilient_replace`).
+  Eliminates partially written or corrupted CSV logs upon power loss or sudden
+  session aborts.
+- **Preflight & Runtime Schema Validator (`training/telemetry/validator.py`)**:
+  Provides `TelemetryCsvValidator` to enforce structural and numeric validity
+  across all CSV telemetry files, detecting header omissions, missing mandatory
+  columns, and non-numeric value corruptions.
 
 ---
 

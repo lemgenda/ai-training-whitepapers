@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.235-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.236-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-19</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -132,6 +132,7 @@ Probing</a></li>
 <li><a href="#sec-249-financial-forecasting-validation--calibration-enhancements-v169233">2.49. Financial Forecasting Validation &amp; Calibration Enhancements (v16.9.233)</a></li>
 <li><a href="#sec-250-yolo-object-detection-training--evaluation-enhancements-v169234">2.50. YOLO Object Detection Training &amp; Evaluation Enhancements (v16.9.234)</a></li>
 <li><a href="#sec-251-unified-model-configuration-schema--validator-v169235">2.51. Unified Model Configuration Schema &amp; Validator (v16.9.235)</a></li>
+<li><a href="#sec-252-standardized-telemetry--history-recording-pipelines-v169236">2.52. Standardized Telemetry &amp; History Recording Pipelines (v16.9.236)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -2117,6 +2118,26 @@ encountered.</li>
 financial forecasting, and LLM architectures define explicit seeds,
 mixed-precision targets (<code>amp_bf16</code>, <code>amp_fp16</code>, or <code>fp32</code>), retention
 frequencies, and export target suites (<code>onnx</code>, <code>torchscript</code>, <code>safetensors</code>).</li>
+</ul>
+<h3 id="sec-252-standardized-telemetry--history-recording-pipelines-v169236">2.52. Standardized Telemetry &amp; History Recording Pipelines (v16.9.236)</h3>
+<p>To guarantee auditability, crash-resilience, and cross-family schema consistency,
+release v16.9.236 modernizes the telemetry recording pipelines:</p>
+<ul>
+<li><strong>Canonical Telemetry Schemas (<code>training/telemetry/schemas.py</code>)</strong>: Formally
+defines column schemas for step-level metrics (<code>metrics.csv</code>) and epoch/eval
+milestones (<code>history.csv</code>). Columns cover loss components, learning rates,
+gradient norms, throughput, physical VRAM/memory allocation, wall time,
+governor actions, pathology flags (<code>is_spike</code>, <code>is_non_finite</code>), and
+specialized metrics per task family (Vision, Forex, YOLO, RetinaFace, LLM).</li>
+<li><strong>Atomic &amp; Crash-Safe Recorders (<code>training/telemetry/recorder.py</code>)</strong>:
+Implements <code>AtomicCsvRecorder</code> utilizing atomic temp-file creation, synchronous
+disk flushing (<code>os.fsync</code>), and resilient replacement (<code>_resilient_replace</code>).
+Eliminates partially written or corrupted CSV logs upon power loss or sudden
+session aborts.</li>
+<li><strong>Preflight &amp; Runtime Schema Validator (<code>training/telemetry/validator.py</code>)</strong>:
+Provides <code>TelemetryCsvValidator</code> to enforce structural and numeric validity
+across all CSV telemetry files, detecting header omissions, missing mandatory
+columns, and non-numeric value corruptions.</li>
 </ul>
 </section>
 
