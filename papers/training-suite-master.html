@@ -464,6 +464,16 @@ payload, and overwrites both <code>_latest.pth</code> and <code>_best.pth</code>
 skip-paths are anchored directly to live governor telemetry, guaranteeing that
 cloud restarts resume precisely at the expanded manifold fraction rather than
 reverting to pre-expansion checkpoints.</li>
+<li><strong>Universal Checkpoint Format Versioning &amp; Bit-Reproducible Resumption (v16.9.158)</strong>:
+Enforces atomic writes via write-temp-and-rename (<code>safe_atomic_save</code>) with disk
+headroom validation and lock backoff retries. Every saved checkpoint attaches
+<code>checkpoint_format_version</code> (Version 2). Checkpoint loading (<code>safe_load_checkpoint</code>)
+validates format version bounds and transparently migrates legacy state dict keys
+(<code>state_dict</code>, <code>model</code>) while raising explicit <code>CheckpointMigrationError</code> on
+incompatible future formats. Resumption guarantees exact bit-reproducibility across
+restarts by capturing and restoring the complete execution state: model weights,
+optimizer state, LR scheduler state, AMP scaler state, governor state, ResumableBatchSampler
+progress, and host/device random number generator states (<code>rng_state</code> and <code>rng_state_ranks</code>).</li>
 <li><strong>ONNX Trace Resilience (FakeTensor Guards)</strong>: Dynamically wraps unmapped
 <code>FakeTensor</code> memory pointer access (<code>data_ptr()</code>) during FX/ONNX graph tracing
 within the DataParallel multi-GPU engine to prevent false-positive
