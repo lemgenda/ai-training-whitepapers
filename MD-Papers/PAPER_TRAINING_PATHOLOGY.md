@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.157-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.12.0 - Merged Similar Pathologies
-(2026-11-12) · **Last audited**: 2026-11-12
+**Author**: Lem Treursic · **Version**: `v16.9.230-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.13.0 - Prompt 15 Pathology Audit
+(2026-11-19) · **Last audited**: 2026-11-19
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
