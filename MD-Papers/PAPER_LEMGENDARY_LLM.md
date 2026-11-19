@@ -2,8 +2,8 @@
 
 ## Category 10 FOUNDATION | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.27-STABLE` · **Target Hardware**:
-NVIDIA GeForce GTX 1650 / Apple Silicon / T4
+**Author**: Lem Treursic · **Version**: `v16.9.231-STABLE`
+**Target Hardware**: NVIDIA GeForce GTX 1650 / Apple Silicon / T4 / TPU v5e-8
 
 ---
 
@@ -196,9 +196,9 @@ training suite deploys a multi-tier memory containment profile:
 4. **Paged 8-bit AdamW**: Leverages `bitsandbytes.optim.PagedAdamW8bit` to
    compress optimizer states to 8 bits and dynamically page optimizer states
    across CUDA unified memory when VRAM boundaries approach saturation.
-5. **Sequence Clamping**: Constrains micro-batch to 1 and sequence length to 512
-   tokens with 16 gradient accumulation steps, eliminating $O(N^2)$ memory spikes
-   and preserving stable throughput on edge accelerators.
+5. **Sequence Clamping**: Constrains micro-batch to 1 and sequence length
+   to 512 tokens with 16 gradient accumulation steps, eliminating $O(N^2)$
+   memory spikes and preserving stable throughput on edge accelerators.
 
 ### 6.7 Tri-Format Export & Protobuf 2.00 GB Weight Externalization
 
@@ -208,8 +208,8 @@ In accordance with the LemGendary universal multi-variation export standard,
 * **PyTorch Standalone (`pytorch/AIHelperLemGend.pt`)**: 1.57 GB merged FP16
   torchscript executable containing base model and LoRA adapter weights.
 * **High-Precision FP32 ONNX (`onnx_fp32/AIHelperLemGend_FP32.onnx`)**: 4.26 MB
-  ONNX computation graph paired with external 5.75 GB `AIHelperLemGend_FP32.onnx.data`
-  binary weights sidecar.
+  ONNX computation graph paired with external 5.75 GB
+  `AIHelperLemGend_FP32.onnx.data` binary weights sidecar.
 * **Production FP16 ONNX (`onnx_fp16/AIHelperLemGend.onnx`)**: 4.28 MB ONNX
   computation graph paired with external 2.88 GB `AIHelperLemGend.onnx.data`
   binary weights sidecar.
@@ -249,9 +249,9 @@ without maintaining separate model codebases, `GenericCausalLLM` and
      FP32, consuming $\sim 778\text{ MB}$ at $B=1, S=512$ and $>3\text{ GB}$ at
      $B=2, S=1024$.
    * `ChunkedCausalLMLoss` (`models/llm_chunked_loss.py`) filters active tokens
-     (`labels != -100`) and projects `lm_head` in chunks of $C \in \{256, 1024\}$
-     with non-reentrant gradient checkpointing, reducing peak output-layer
-     memory by $>94\%$.
+     (`labels != -100`) and projects `lm_head` in chunks of
+     $C \in \{256, 1024\}$ with non-reentrant gradient checkpointing, reducing
+     peak output-layer memory by $>94\%$.
    * During validation, `chunked_eval_loss_and_preds()` returns compact 2D
      `pred_ids` ($[B, S]$) instead of $[B, S, V]$ floating-point logits.
 3. **Static-Shape Collation for XLA (`pad_to_max_length`)**:
@@ -259,10 +259,11 @@ without maintaining separate model codebases, `GenericCausalLLM` and
      enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
      compiles the HLO graph exactly once per run.
 4. **SOTA Corpus Curation & Decontamination**:
-   * Upstream instruction manifolds are curated by `tools/llm_helper/curation.py`
-     (`PAPER_DATASET_COMPILER.md` Section 4.10.5) using Shannon entropy and
-     repetition filtering, MinHash + 5-gram cosine deduplication, cross-split
-     decontamination, and deterministic `manifest_sha256` lineage.
+   * Upstream instruction manifolds are curated by
+     `tools/llm_helper/curation.py` (`PAPER_DATASET_COMPILER.md` Section 4.10.5)
+     using Shannon entropy and repetition filtering, MinHash + 5-gram cosine
+     deduplication, cross-split decontamination, and deterministic
+     `manifest_sha256` lineage.
 
 ---
 

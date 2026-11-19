@@ -21,7 +21,7 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.86, LemGendary
-  Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.230,
+  Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.231,
   LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -61,6 +61,14 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### 2026-11-19 — Prompt 16 LLM Pipeline Improvements & v16.9.231 Baseline Sync
+
+* Updated `MD-Papers/PAPER_LEMGENDARY_LLM.md` and `papers/foundation-llm.html`
+  to document sequence packing with 2D block-diagonal attention masking,
+  Warmup-Stable-Decay (WSD) schedules, MFU instrumentation, and FSDP sharding.
+* Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
+  and `manifest/documents.json` with Training Suite baseline `v16.9.231-STABLE`.
 
 ### 2026-11-19 — Training Pathology Audit & v16.9.230 Baseline Sync
 
