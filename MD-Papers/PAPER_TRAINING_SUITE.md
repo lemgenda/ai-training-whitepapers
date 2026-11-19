@@ -2032,11 +2032,11 @@ and restoration architectures, release v16.9.232 introduces visual manifold
 enhancements spanning parameter smoothing, curriculum scheduling, mask weighting,
 distributed shard dispatching, and hardware throughput telemetry:
 
-- **Exponential Moving Average (ModelEMA)**: `training/training/ema.py` implements
-  shadow parameter smoothing $\theta_{\text{ema}} = \beta \cdot \theta_{\text{ema}} +
-  (1 - \beta) \cdot \theta_t$ with dynamic step-dependent warmup ramping, buffer
-  tracking, temporary shadow swapping for zero-cost validation, and state-dict
-  serialization.
+- **Exponential Moving Average (ModelEMA)**: `training/training/ema.py`
+  implements shadow parameter smoothing $\theta_{\text{ema}} = \beta \cdot
+  \theta_{\text{ema}} + (1 - \beta) \cdot \theta_t$ with dynamic
+  step-dependent warmup ramping, buffer tracking, temporary shadow swapping
+  for zero-cost validation, and state-dict serialization.
 - **Easy-to-Hard Degradation Curriculum**: `DegradationCurriculum` in
   `training/data/degrade.py` schedules synthetic corruptions (Gaussian blur,
   noise, downsampling, JPEG artifacts) monotonically across epochs and
