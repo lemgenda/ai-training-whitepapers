@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.232-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.233-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-19</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -129,6 +129,7 @@ Probing</a></li>
 <li><a href="#sec-246-shard-offset-index--fast-webdataset-open-v169215-to-v169218">2.46. Shard Offset Index &amp; Fast WebDataset Open (v16.9.215 to v16.9.218)</a></li>
 <li><a href="#sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.223)</a></li>
 <li><a href="#sec-248-visual-manifold-training--webdataset-enhancements-v169232">2.48. Visual Manifold Training &amp; WebDataset Enhancements (v16.9.232)</a></li>
+<li><a href="#sec-249-financial-forecasting-validation--calibration-enhancements-v169233">2.49. Financial Forecasting Validation &amp; Calibration Enhancements (v16.9.233)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -2035,7 +2036,34 @@ interest masks, focusing gradient backpropagation onto damaged areas or text.</l
 permutations and disjoint shard dispatching across distributed ranks.</li>
 <li><strong>Vision Pipeline Throughput Instrumentation</strong>: <code>ImageThroughputTracker</code> in
 <code>training/training/image_throughput.py</code> monitors real-time images/sec, step
-latencies, and CUDA VRAM consumption to isolate prefetch and decoding bottlenecks.</li>
+latencies, and CUDA VRAM consumption to isolate prefetch bottlenecks.</li>
+</ul>
+<h3 id="sec-249-financial-forecasting-validation--calibration-enhancements-v169233">2.49. Financial Forecasting Validation &amp; Calibration Enhancements (v16.9.233)</h3>
+<p>Forecasting non-stationary financial time series requires rigorous safeguards
+against lookahead leakage, regime shifts, and poorly calibrated confidence
+probabilities. Release v16.9.233 introduces four core pillars grounded in
+modern quantitative finance literature:</p>
+<ul>
+<li><strong>Purged and Embargoed Cross-Validation</strong>: <code>training/data/forex_cv.py</code>
+implements <code>PurgedWalkForwardCV</code> and <code>PurgedKFoldCV</code> per Marcos L&oacute;pez de Prado
+(2018, <em>Advances in Financial Machine Learning</em>). When labels represent
+multi-bar forward outcomes (e.g., triple-barrier methods), train and test
+sets must be purged of overlapping label evaluation spans, and an embargo
+window must follow test intervals to prevent serial autocorrelation leakage.</li>
+<li><strong>Regime-Aware Validation Metrics</strong>: <code>compute_regime_metrics</code> in
+<code>training/training/forex_equity.py</code> partitions validation performance across
+market volatility regimes (Bull, Bear, Volatile). Rather than reporting a
+single global Sharpe or win-rate, this breakdown isolates regime-dependent
+drawdown risks (\(MaxDD\)) and profit factors, exposing hidden vulnerabilities.</li>
+<li><strong>Asymmetric Pinball / Quantile Loss</strong>: <code>pinball_loss</code> in <code>training/losses.py</code>
+provides asymmetric quantile regression:
+\[L_\tau(y, \hat{y}) = \max(\tau(y - \hat{y}), (\tau - 1)(y - \hat{y}))\]
+integrated into <code>ForexDualLoss</code> and <code>ForexLossWeights</code> for predicting
+tail-risk quantiles (\(\tau \in \{0.1, 0.5, 0.9\}\)) and Value-at-Risk (VaR).</li>
+<li><strong>Expected Calibration Error (ECE) Evaluator</strong>: <code>CalibrationEvaluator</code> in
+<code>training/training/forex_calibration.py</code> assesses probability calibration via
+binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
+and Brier scores to guarantee that model confidence aligns with true win-rates.</li>
 </ul>
 </section>
 

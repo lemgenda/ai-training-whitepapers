@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.232-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.233-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-19
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -113,6 +113,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     Export Probe (v16.9.216 to
     v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
   - [2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)](#248-visual-manifold-training--webdataset-enhancements-v169232)
+  - [2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2049,7 +2050,35 @@ distributed shard dispatching, and hardware throughput telemetry:
   permutations and disjoint shard dispatching across distributed ranks.
 - **Vision Pipeline Throughput Instrumentation**: `ImageThroughputTracker` in
   `training/training/image_throughput.py` monitors real-time images/sec, step
-  latencies, and CUDA VRAM consumption to isolate prefetch and decoding bottlenecks.
+  latencies, and CUDA VRAM consumption to isolate prefetch bottlenecks.
+
+### 2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)
+
+Forecasting non-stationary financial time series requires rigorous safeguards
+against lookahead leakage, regime shifts, and poorly calibrated confidence
+probabilities. Release v16.9.233 introduces four core pillars grounded in
+modern quantitative finance literature:
+
+- **Purged and Embargoed Cross-Validation**: `training/data/forex_cv.py`
+  implements `PurgedWalkForwardCV` and `PurgedKFoldCV` per Marcos López de Prado
+  (2018, *Advances in Financial Machine Learning*). When labels represent
+  multi-bar forward outcomes (e.g., triple-barrier methods), train and test
+  sets must be purged of overlapping label evaluation spans, and an embargo
+  window must follow test intervals to prevent serial autocorrelation leakage.
+- **Regime-Aware Validation Metrics**: `compute_regime_metrics` in
+  `training/training/forex_equity.py` partitions validation performance across
+  market volatility regimes (Bull, Bear, Volatile). Rather than reporting a
+  single global Sharpe or win-rate, this breakdown isolates regime-dependent
+  drawdown risks ($MaxDD$) and profit factors, exposing hidden vulnerabilities.
+- **Asymmetric Pinball / Quantile Loss**: `pinball_loss` in `training/losses.py`
+  provides asymmetric quantile regression:
+  $$L_\tau(y, \hat{y}) = \max(\tau(y - \hat{y}), (\tau - 1)(y - \hat{y}))$$
+  integrated into `ForexDualLoss` and `ForexLossWeights` for predicting
+  tail-risk quantiles ($\tau \in \{0.1, 0.5, 0.9\}$) and Value-at-Risk (VaR).
+- **Expected Calibration Error (ECE) Evaluator**: `CalibrationEvaluator` in
+  `training/training/forex_calibration.py` assesses probability calibration via
+  binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
+  and Brier scores to guarantee that model confidence aligns with true win-rates.
 
 ---
 
