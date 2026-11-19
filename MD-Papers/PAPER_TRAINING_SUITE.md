@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.229-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.232-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-19
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -112,6 +112,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &
     Export Probe (v16.9.216 to
     v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
+  - [2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)](#248-visual-manifold-training--webdataset-enhancements-v169232)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -159,7 +160,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
 The LemGendary Model Training Suite is the orchestration layer that trains,
 evaluates and exports the vision, restoration, quality-assessment, financial
 time-series and causal LLM models of the LemGendary ecosystem. This paper
-documents release v16.9.229-STABLE. It covers the curriculum governor and its
+documents release v16.9.232-STABLE. It covers the curriculum governor and its
 Monotonic Ratchet (pair rule, enforced by a `RatchetViolation` guard), the
 bounded epoch budget with an honoured early stop, the 4-pillar completion
 invariant, publication-grade FID evaluation (`feature=2048`, chunks of at most
@@ -2023,6 +2024,32 @@ parameter counts.
   ONNX variations go up only with the release publish after training
   completes, so the ONNX files of a run that stops before training completes
   (for example at a session deadline) do not reach the Hub.
+
+### 2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)
+
+To maximize convergence fidelity and pipeline throughput for generative vision
+and restoration architectures, release v16.9.232 introduces visual manifold
+enhancements spanning parameter smoothing, curriculum scheduling, mask weighting,
+distributed shard dispatching, and hardware throughput telemetry:
+
+- **Exponential Moving Average (ModelEMA)**: `training/training/ema.py` implements
+  shadow parameter smoothing $\theta_{\text{ema}} = \beta \cdot \theta_{\text{ema}} +
+  (1 - \beta) \cdot \theta_t$ with dynamic step-dependent warmup ramping, buffer
+  tracking, temporary shadow swapping for zero-cost validation, and state-dict
+  serialization.
+- **Easy-to-Hard Degradation Curriculum**: `DegradationCurriculum` in
+  `training/data/degrade.py` schedules synthetic corruptions (Gaussian blur,
+  noise, downsampling, JPEG artifacts) monotonically across epochs and
+  resolution rungs, following Real-ESRGAN second-order degradation dynamics.
+- **Mask-Aware Spatial Loss Weighting**: `_masked_spatial_l1_loss` in
+  `training/losses.py` provides spatial error scaling $W(M_{ij})$ for region of
+  interest masks, focusing gradient backpropagation onto damaged areas or text.
+- **Deterministic Shard Sampler**: `DeterministicShardSampler` in
+  `training/data/webdataset_sampler.py` delivers reproducible epoch-seeded
+  permutations and disjoint shard dispatching across distributed ranks.
+- **Vision Pipeline Throughput Instrumentation**: `ImageThroughputTracker` in
+  `training/training/image_throughput.py` monitors real-time images/sec, step
+  latencies, and CUDA VRAM consumption to isolate prefetch and decoding bottlenecks.
 
 ---
 
