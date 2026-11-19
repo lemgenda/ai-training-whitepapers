@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.233-STABLE` (LemGendary Model Training Suite) · **Last
+**Version**: `v16.9.234-STABLE` (LemGendary Model Training Suite) · **Last
 audited**: 2026-11-19
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
@@ -114,6 +114,7 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
   - [2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)](#248-visual-manifold-training--webdataset-enhancements-v169232)
   - [2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
+  - [2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2079,6 +2080,34 @@ modern quantitative finance literature:
   `training/training/forex_calibration.py` assesses probability calibration via
   binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
   and Brier scores to guarantee that model confidence aligns with true win-rates.
+
+### 2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)
+
+To enhance localization precision and training efficiency for object detection
+architectures within the curriculum governor, release v16.9.234 introduces
+four modernized YOLO-family training invariants:
+
+- **Adaptive Mosaic & Mixup Close-Up Schedule**: `training/governance/yolo_run.py`
+  implements dynamic `close_mosaic` scheduling. Severe composite augmentations
+  (mosaic, mixup, and cutmix) improve generalized feature extraction early in
+  training but degrade fine boundary delineation on clean images. The runner
+  disables composite augmentations during the final epochs of each stage
+  (default: 10 epochs or 20% of stage budget), allowing model weights to adapt
+  to the uncorrupted visual manifold before ladder advancement.
+- **Multi-Scale Spatial Training & Regularization**: Integrates dynamic
+  multi-scale batch resolution jittering ($\pm 50\%$ around ladder rung `imgsz`)
+  and label smoothing cross-entropy regularisation into `_train_kwargs`. This
+  prevents overconfidence on rigid grid geometries and enhances small-object
+  detection across variable resolution contexts.
+- **Per-Class and Aggregate mAP Telemetry**: `_extract_per_class_ap` in
+  `training/governance/yolo_callbacks.py` parses per-class average precision
+  metrics ($mAP50$ and $mAP50\text{-}95$) from validator metrics arrays,
+  recording both global aggregates and per-category performance into
+  `telemetry_metrics` rows and terminal summary banners.
+- **S.O.L.I.D. Separation of Detection Losses**: Decoupled detection loss
+  aggregations and class precision tracking into `DetectionLosses` and
+  `ClassAPMetrics` dataclasses, ensuring strict Single Responsibility and
+  preserving zero-diagnostic rating without suppression.
 
 ---
 

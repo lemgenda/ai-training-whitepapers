@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.233-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.234-STABLE</code> (LemGendary Model Training Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-19</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
@@ -130,6 +130,7 @@ Probing</a></li>
 <li><a href="#sec-247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223">2.47. Kaggle Run Fixes: Manifold Dedupe, Log Lines, Decode Warnings &amp; Export Probe (v16.9.216 to v16.9.223)</a></li>
 <li><a href="#sec-248-visual-manifold-training--webdataset-enhancements-v169232">2.48. Visual Manifold Training &amp; WebDataset Enhancements (v16.9.232)</a></li>
 <li><a href="#sec-249-financial-forecasting-validation--calibration-enhancements-v169233">2.49. Financial Forecasting Validation &amp; Calibration Enhancements (v16.9.233)</a></li>
+<li><a href="#sec-250-yolo-object-detection-training--evaluation-enhancements-v169234">2.50. YOLO Object Detection Training &amp; Evaluation Enhancements (v16.9.234)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -2064,6 +2065,33 @@ tail-risk quantiles (\(\tau \in \{0.1, 0.5, 0.9\}\)) and Value-at-Risk (VaR).</l
 <code>training/training/forex_calibration.py</code> assesses probability calibration via
 binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
 and Brier scores to guarantee that model confidence aligns with true win-rates.</li>
+</ul>
+<h3 id="sec-250-yolo-object-detection-training--evaluation-enhancements-v169234">2.50. YOLO Object Detection Training &amp; Evaluation Enhancements (v16.9.234)</h3>
+<p>To enhance localization precision and training efficiency for object detection
+architectures within the curriculum governor, release v16.9.234 introduces
+four modernized YOLO-family training invariants:</p>
+<ul>
+<li><strong>Adaptive Mosaic &amp; Mixup Close-Up Schedule</strong>: <code>training/governance/yolo_run.py</code>
+implements dynamic <code>close_mosaic</code> scheduling. Severe composite augmentations
+(mosaic, mixup, and cutmix) improve generalized feature extraction early in
+training but degrade fine boundary delineation on clean images. The runner
+disables composite augmentations during the final epochs of each stage
+(default: 10 epochs or 20% of stage budget), allowing model weights to adapt
+to the uncorrupted visual manifold before ladder advancement.</li>
+<li><strong>Multi-Scale Spatial Training &amp; Regularization</strong>: Integrates dynamic
+multi-scale batch resolution jittering (\(\pm 50\%\) around ladder rung <code>imgsz</code>)
+and label smoothing cross-entropy regularisation into <code>_train_kwargs</code>. This
+prevents overconfidence on rigid grid geometries and enhances small-object
+detection across variable resolution contexts.</li>
+<li><strong>Per-Class and Aggregate mAP Telemetry</strong>: <code>_extract_per_class_ap</code> in
+<code>training/governance/yolo_callbacks.py</code> parses per-class average precision
+metrics (\(mAP50\) and \(mAP50\text{-}95\)) from validator metrics arrays,
+recording both global aggregates and per-category performance into
+<code>telemetry_metrics</code> rows and terminal summary banners.</li>
+<li><strong>S.O.L.I.D. Separation of Detection Losses</strong>: Decoupled detection loss
+aggregations and class precision tracking into <code>DetectionLosses</code> and
+<code>ClassAPMetrics</code> dataclasses, ensuring strict Single Responsibility and
+preserving zero-diagnostic rating without suppression.</li>
 </ul>
 </section>
 
