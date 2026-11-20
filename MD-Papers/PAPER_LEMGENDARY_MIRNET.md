@@ -89,7 +89,8 @@ By unifying diverse low-illumination and night subsets into
 dynamic range, amplify features, and suppress severe sensor noise natively.
 
 ![Low Light Enhancement](../assets/mirnet_lowlight_example.png)
-Recovering lost dynamic range and suppressing severe ISO noise in extreme dark scenes.
+Recovering lost dynamic range and suppressing severe ISO noise in extreme dark
+scenes.
 
 ### 2.2 Exposure Manifold (mirnet_exposure)
 
@@ -308,9 +309,11 @@ via WebGPU, without resorting to expensive multi-pass compositing.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMirnetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedMirnetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

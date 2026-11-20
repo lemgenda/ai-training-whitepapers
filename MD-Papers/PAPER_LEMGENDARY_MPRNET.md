@@ -56,7 +56,8 @@ GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
   - [5.14 Velocity Life-Support (v6.1.18)](#514-velocity-life-support-v6118)
   - [5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
   - [5.16 Telemetry Parity & Plateau Resilience (v6.1.31)](#516-telemetry-parity--plateau-resilience-v6131)
-  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
+  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation
+    (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
   - [5.18 Invariant Native Scorecarding (v6.2.0)](#518-invariant-native-scorecarding-v620)
   - [5.19 Universal Backend Selection (MPS/XPU/DirectML)](#519-universal-backend-selection-mpsxpudirectml)
   - [5.20 Time-Aware Checkpoint Governance (15-min Window)](#520-time-aware-checkpoint-governance-15-min-window)
@@ -130,7 +131,8 @@ By unifying diverse high-resolution rain subsets into
 subtract streaks, volumetric drops, and refractive distortions natively.
 
 ![Deraining Target](../assets/mprnet_deraining_example.png)
-*Figure 1: Deraining Target - Extreme torrential rain obscuring structure and texture.*
+*Figure 1: Deraining Target - Extreme torrential rain obscuring structure and
+texture.*
 Deraining requires the model to cleanly isolate and remove refractive water
 streaks across infinite depths without blurring the native textures of the
 objects behind them. MPRNet excels here due to its progressive multi-stage
@@ -236,7 +238,8 @@ fidelity and deep perceptual metrics.
   $$
 
 - **Structural Similarity Index (SSIM)**:
-  Evaluates luminance, contrast, and structural comparison between image patches:
+  Evaluates luminance, contrast, and structural comparison between image
+  patches:
 
   $$
   \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 +
@@ -270,7 +273,8 @@ correlate with human-visual preference. The training suite integrates:
   - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
   $$
 
-  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance
+  matrices.
 
 - **Restoration Quality Score Formulation (Project-Specific Heuristic)**:
   The orchestrator unifies structural and perceptual metrics into a single
@@ -714,9 +718,11 @@ be generated automatically in the cloud, and deployed instantly via WebGPU.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedMprnetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedMprnetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

@@ -45,7 +45,8 @@ Operating on the CSPDarknet53 backbone with PANet feature fusion, YOLOv8n
 eliminates anchor box generation, predicting spatial bounding boxes via
 Distributed Focal Loss (DFL) and Complete IoU (CIoU) regression.
 
-Dedicated documentation: [YOLOv8n Multi-Task Whitepaper](./PAPER_LEMGENDARY_YOLOV8N.md).
+Dedicated documentation: [YOLOv8n Multi-Task
+Whitepaper](./PAPER_LEMGENDARY_YOLOV8N.md).
 
 ---
 
@@ -62,7 +63,8 @@ Dedicated documentation: [Universal NSFW Classifier Whitepaper](./PAPER_LEMGENDA
 ## 5. SOTA Architectural Performance Matrix
 
 * **`yolov8n`**: Task Domain: Detection, Class, Pose; Architecture:
-  CSPDarknet53 + PANet; Target Metric: mAP50 &ge; 0.540, mAP50-95 &ge; 0.390; Status:
+  CSPDarknet53 + PANet; Target Metric: mAP50 &ge; 0.540, mAP50-95 &ge; 0.390;
+  Status:
   In-Progress / Pre-Training
 * **`universal_nsfw_classification`**: Task Domain: Content Moderation;
   Architecture: EfficientNetV2-S Categorical; Target Metric: Accuracy &ge;

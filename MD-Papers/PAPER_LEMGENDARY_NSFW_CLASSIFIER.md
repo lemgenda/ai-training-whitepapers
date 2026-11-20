@@ -66,14 +66,18 @@ explicit, harmful, or inappropriate imagery:
 
 ## 2. Visual Taxonomy: The 5-Tier Moderation Taxonomy
 
-The model categorizes content into mutually exclusive probability distributions `[THEORETICAL]`:
+The model categorizes content into mutually exclusive probability distributions
+`[THEORETICAL]`:
 
 * **Drawings**: Benign illustrations, digital paintings, comics, and
   non-explicit anime.
-* **Neutral**: General real-world photographic content, landscapes, everyday objects.
-* **Sexy**: Provocative poses, swimwear, lingerie, and suggestive non-explicit scenes.
+* **Neutral**: General real-world photographic content, landscapes, everyday
+  objects.
+* **Sexy**: Provocative poses, swimwear, lingerie, and suggestive non-explicit
+  scenes.
 * **Hentai**: Explicit illustrated, animated, or drawn adult material.
-* **Porn**: Explicit photographic sexual acts and anatomically explicit genitalia.
+* **Porn**: Explicit photographic sexual acts and anatomically explicit
+  genitalia.
 
 ---
 
@@ -121,7 +125,8 @@ sanitize public endpoint uploads.
 
 * **Current Training Epochs**: 35 `[CURRENT]`
 * **Top-1 Accuracy**: 98.6% `[MEASURED]` (Target: $\ge 98.0\%$ `[TARGET]`)
-* **Benign False Positive Rate**: 0.38% `[MEASURED]` (Target: $\le 0.40\%$ `[TARGET]`)
+* **Benign False Positive Rate**: 0.38% `[MEASURED]` (Target: $\le 0.40\%$
+  `[TARGET]`)
 * **Explicit Recall**: 99.4% `[MEASURED]` (Target: $\ge 99.0\%$ `[TARGET]`)
 * **Current Learning Rate**: 0.000040
 
@@ -174,9 +179,11 @@ providing robust real-time protection for data pipelines.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedClassificationMaster`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedClassificationMaster`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

@@ -47,7 +47,8 @@ $$
 
 where:
 
-* $C$ represents total training compute budget in floating point operations ($\text{FLOPs}$).
+* $C$ represents total training compute budget in floating point operations
+  ($\text{FLOPs}$).
 * $N$ denotes the non-embedding active parameter count of the neural network.
 * $D$ denotes the total volume of consumed training tokens or samples.
 
@@ -218,7 +219,8 @@ $$
 \mathbf{W}_g, k))_i \cdot \text{Expert}_i(\mathbf{x})
 $$
 
-Dedicated documentation: [Large Language Models Specification](./PAPER_LEMGENDARY_LLM.md).
+Dedicated documentation: [Large Language Models
+Specification](./PAPER_LEMGENDARY_LLM.md).
 
 ---
 

@@ -47,7 +47,8 @@ intermediate activation memory.
 
 ## 3. Stochastic Differential Equations & Score Matching
 
-Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential equation:
+Forward noise injection follows the Ornstein-Uhlenbeck stochastic differential
+equation:
 
 $$
 dz = -\frac{1}{2} \beta(t) z dt + \sqrt{\beta(t)} dw

@@ -72,7 +72,8 @@ hands it to the operator's own mail client.
 >    holds this version and `tauri.conf.json` reads it from there.
 > 2. **Sidecar services (`v16.x`)**: The LemGendary Environment Manager (port
 >    8000), LemGendary Dataset Compiler Suite (port 8100) and LemGendary Model
->    Training Suite (port 8200) each keep their own `v16.x` release line in their
+>    Training Suite (port 8200) each keep their own `v16.x` release line in
+     their
 >    README. Each sidecar publishes its contract as `openapi.json`, and the GUI
 >    tests check request field names against those files. See the [Document
 >    Authority Hierarchy & Versioning Policy](./VERSIONING_POLICY.md) for track

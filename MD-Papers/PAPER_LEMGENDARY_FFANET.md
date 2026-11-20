@@ -160,7 +160,8 @@ physical scatter across confined depth profiles.
 #### 4.1.3 Manifold Info
 
 - **Dataset:** LemGendizedFfaNetIndoorLarge
-- **Total Samples:** 196,304 (merged from ITS, RESIDE-6k, Dehazing and Desmoking)
+- **Total Samples:** 196,304 (merged from ITS, RESIDE-6k, Dehazing and
+  Desmoking)
 - **Primary Task:** Reverses artificial haze distributions while identifying key
   target boxes using the detection head.
 
@@ -285,9 +286,11 @@ dehazing while detecting tactical landmarks.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedFfanetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedFfanetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

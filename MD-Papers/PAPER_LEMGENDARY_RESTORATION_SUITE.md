@@ -130,7 +130,8 @@ film stock, removing physical emulsion scratches and chemical decay.
 * **Status**: Checkpoint Trained (`LemGendaryUniversalFilmRestorer.pt`)
 * **Resolution Ladder**: `[256, 384, 512]`
 * **Loss Function**: `l1_lpips`
-* **Target PSNR**: $\ge 24.0\text{ dB}$, **SSIM**: $\ge 0.800$, **LPIPS**: $\le 0.250$
+* **Target PSNR**: $\ge 24.0\text{ dB}$, **SSIM**: $\ge 0.800$, **LPIPS**: $\le
+  0.250$
 
 ---
 
@@ -147,7 +148,8 @@ across high-zoom crops.
 * **Architecture**: UltraZoomMaster (Sub-Pixel ESPCN Super-Resolution)
 * **Status**: Checkpoint Trained (`LemGendaryUltraZoom(Master).pt`)
 * **Resolution Ladder**: `[256, 384, 512]`
-* **Target PSNR**: $\ge 34.0\text{ dB}$, **SSIM**: $\ge 0.950$, **LPIPS**: $\le 0.040$
+* **Target PSNR**: $\ge 34.0\text{ dB}$, **SSIM**: $\ge 0.950$, **LPIPS**: $\le
+  0.040$
 
 ---
 
@@ -185,7 +187,8 @@ degradation signatures.
 * **Target Manifold**: `LemGendizedProfessionalMultitaskRestorationLarge`
 * **Resolution Ladder**: `[256, 384, 512]`
 * **Loss Function**: `hybrid_restoration`
-* **Target PSNR**: $\ge 32.0\text{ dB}$, **SSIM**: $\ge 0.930$, **LPIPS**: $\le 0.070$
+* **Target PSNR**: $\ge 32.0\text{ dB}$, **SSIM**: $\ge 0.930$, **LPIPS**: $\le
+  0.070$
 
 #### 4.4.3 Spatial Ladder & Training Progression
 

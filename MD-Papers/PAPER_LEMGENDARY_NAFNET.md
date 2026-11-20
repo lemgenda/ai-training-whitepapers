@@ -65,7 +65,8 @@ GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
   - [5.14 Velocity Life-Support (v6.1.18)](#514-velocity-life-support-v6118)
   - [5.15 The Mitochondrial Pulse: Epsilon-Hardened Persistence (v6.1.19)](#515-the-mitochondrial-pulse-epsilon-hardened-persistence-v6119)
   - [5.16 Telemetry Parity & Plateau Resilience (v6.1.31)](#516-telemetry-parity--plateau-resilience-v6131)
-  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
+  - [5.17 True Stabilization Shield & Synchronous Spatial Augmentation
+    (v6.1.26)](#517-true-stabilization-shield--synchronous-spatial-augmentation-v6126)
   - [5.18 Invariant Native Scorecarding (v6.2.0)](#518-invariant-native-scorecarding-v620)
   - [5.19 Universal Backend Selection (MPS/XPU/DirectML)](#519-universal-backend-selection-mpsxpudirectml)
   - [5.20 Time-Aware Checkpoint Governance (15-min Window)](#520-time-aware-checkpoint-governance-15-min-window)
@@ -255,7 +256,8 @@ fidelity and deep perceptual metrics.
   $$
 
 - **Structural Similarity Index (SSIM)**:
-  Evaluates luminance, contrast, and structural comparison between image patches:
+  Evaluates luminance, contrast, and structural comparison between image
+  patches:
 
   $$
   \text{SSIM}(x, y) = \frac{(2\mu_x\mu_y + c_1)(2\sigma_{xy} + c_2)}{(\mu_x^2 +
@@ -289,7 +291,8 @@ correlate with human-visual preference. The training suite integrates:
   - 2\left(\Sigma_r\Sigma_g\right)^{1/2}\right)
   $$
 
-  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance matrices.
+  where $\mu$ and $\Sigma$ represent the feature mean vectors and covariance
+  matrices.
 
 - **Restoration Quality Score Formulation (Project-Specific Heuristic)**:
   The orchestrator unifies structural and perceptual metrics into a single
@@ -458,7 +461,8 @@ artifacts.
 #### 4.2.3 Manifold Info
 
 - **Dataset**: `LemGendizedNafNetDebluring`
-- **Total Samples**: 26,093 (merged from GoPro, Performance Analysis, HIDE, RealBlur)
+- **Total Samples**: 26,093 (merged from GoPro, Performance Analysis, HIDE,
+  RealBlur)
 - **Primary Task**: Predict restored pixels using L1 Loss to enforce strict
   manifold alignment.
 
@@ -772,7 +776,8 @@ industry baselines (DnCNN/U-Net) and modern Multi-head transformer giants
   Footprint (1080p): ~ 14 GB; PSNR: ~32.4dB; Perceptual Integrity (LPIPS): 0.05
   (VGG); WebGPU Viability: Highly Degraded (Opset); Status & Verification:
   Baseline `[MEASURED]`
-- **LemGendary NAFNet**: Paradigm: *SCA SimpleGate (Ours)*; Parameters: **4.4921M**;
+- **LemGendary NAFNet**: Paradigm: *SCA SimpleGate (Ours)*; Parameters:
+  **4.4921M**;
   GPU Footprint (1080p): **~ 6 GB**; PSNR: **~32.5dB+**; Perceptual Integrity
   (LPIPS): **< 0.06 (VGG)**; WebGPU Viability: **Production Grade**; Status &
   Verification: **LemGendary `[MEASURED]`**
@@ -799,9 +804,11 @@ be generated automatically in the cloud, and deployed instantly via WebGPU.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNafnetLarge`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedNafnetLarge`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+- [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 - [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

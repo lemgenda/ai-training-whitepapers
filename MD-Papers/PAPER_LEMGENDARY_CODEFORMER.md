@@ -124,7 +124,8 @@ continuous hallucination drift.
 
 #### 4.2 Model Info
 
-* **Architecture**: CodeFormer (VQ-Codebook Prior + 9-Layer Contextual Transformer)
+* **Architecture**: CodeFormer (VQ-Codebook Prior + 9-Layer Contextual
+  Transformer)
 * **Input Resolution**: 512x512
 * **Precision**: ONNX FP16 / PyTorch FP32
 * **Latency**: 41.2ms inference on NVIDIA GTX 1650 `[MEASURED]`
@@ -133,7 +134,8 @@ continuous hallucination drift.
 
 * **Dataset**: `LemGendizedCodeFormerLarge`
 * **Total Samples**: 22,000 high-resolution paired portraits
-* **Primary Task**: Discrete codebook feature lookup and controllable identity restoration
+* **Primary Task**: Discrete codebook feature lookup and controllable identity
+  restoration
 
 #### 4.4 Performance Metrics
 
@@ -212,9 +214,11 @@ fidelity across production deployment environments.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedCodeFormerLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedCodeFormerLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

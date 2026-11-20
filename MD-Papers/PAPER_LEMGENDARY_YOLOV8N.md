@@ -89,7 +89,8 @@ $$
 t = s^\alpha \times \text{IoU}^\beta
 $$
 
-where $s$ is the classification score and $\text{IoU}$ is the spatial bounding overlap.
+where $s$ is the classification score and $\text{IoU}$ is the spatial bounding
+overlap.
 
 ---
 
@@ -133,7 +134,8 @@ detection and pose estimation engine, trained with curriculum scaling across
 
 #### 4.2 Model Info
 
-* **Architecture**: YOLOv8n (Anchor-Free CSPDarknet + PANet Neck + Decoupled Head)
+* **Architecture**: YOLOv8n (Anchor-Free CSPDarknet + PANet Neck + Decoupled
+  Head)
 * **Input Resolution**: 640x640 (Dynamic Curriculum Scaling from 320x320)
 * **Precision**: ONNX FP16 / ONNX FP32 sidecar / PyTorch FP32
 * **Latency**: 7.2ms (Detection) / 3.1ms (Classification) / 8.4ms (Pose) on GTX
@@ -150,7 +152,8 @@ detection and pose estimation engine, trained with curriculum scaling across
 
 * **Current Training Epochs**: 265 `[CURRENT]`
 * **Best mAP@0.50**: 0.698 (69.8%) `[MEASURED]` (Target: $\ge 0.540$ `[TARGET]`)
-* **Best mAP@0.50-0.95**: 0.582 (58.2%) `[MEASURED]` (Target: $\ge 0.390$ `[TARGET]`)
+* **Best mAP@0.50-0.95**: 0.582 (58.2%) `[MEASURED]` (Target: $\ge 0.390$
+  `[TARGET]`)
 * **Validation Box Loss**: 0.567 `[MEASURED]`
 * **Validation Class Loss**: 0.681 `[MEASURED]`
 * **Validation DFL Loss**: 0.893 `[MEASURED]`
@@ -160,7 +163,8 @@ detection and pose estimation engine, trained with curriculum scaling across
 #### 4.5 Training Curve
 
 ![YOLOv8n Detection Training Curve](../assets/yolov8n_training.png)
-*Figure: Training Convergence & Loss Metrics for YOLOv8n Detection (Epochs 1–265).*
+*Figure: Training Convergence & Loss Metrics for YOLOv8n Detection (Epochs
+1–265).*
 
 ---
 
@@ -285,7 +289,8 @@ persistence root:
   `LemGendaryModels/yolov8n/checkpoints/` (`best.pt`, `best.pth`, `last.pt`,
   `progress.pth`, and `curriculum_state.json`). Checkpoint files are excluded
   from the root directory to maintain isolation.
-* **Telemetry**: Primary epoch metrics are streamed directly into `LemGendaryModels/yolov8n/metrics.csv`.
+* **Telemetry**: Primary epoch metrics are streamed directly into
+  `LemGendaryModels/yolov8n/metrics.csv`.
 * **SOTA Exports & Production Artifacts**: Every time SOTA metric targets are
   reached (`mAP50 >= 0.54`, `mAP50-95 >= 0.39`), the model is exported as both
   native PyTorch (`yolov8n.pt`) and optimized ONNX (`yolov8n.onnx`) directly to
@@ -342,9 +347,11 @@ the LemGendary ecosystem.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedYoloV8nLarge`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedYoloV8nLarge`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Curriculum Governor
   & Tri-Format Export)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

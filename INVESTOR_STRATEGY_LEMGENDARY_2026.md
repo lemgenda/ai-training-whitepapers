@@ -253,7 +253,8 @@ following granular checklists:
   * [x] **[LOW-HANGING FRUIT]** Construct standardized JSON export schemas
     reporting Spearman (SRCC) and Pearson (PLCC) metrics for CI/CD pipeline
     integration.
-* **[x] Mixture-of-Experts (MoE) 11-Manifold Scaling** (Core expanded and verified!)
+* **[x] Mixture-of-Experts (MoE) 11-Manifold Scaling** (Core expanded and
+  verified!)
   * [x] Expand the `TaskClassifier` gating network in `MultiTaskRestorer` to
     support the full 11-expert manifold suite. (Delivered & Verified)
   * [x] **[LOW-HANGING FRUIT]** Scale the `MultiTaskDataset` regex parser to
@@ -262,7 +263,8 @@ following granular checklists:
   * [x] Balance the perceptual LPIPS training loss coefficients to prevent head
     competition during concurrent joint task tuning. (Implemented dynamic batch
     balancing)
-* **[x] Distributed Edge Training ("LemGendary Cloud Link")** (Fully Audited & Hardened)
+* **[x] Distributed Edge Training ("LemGendary Cloud Link")** (Fully Audited &
+  Hardened)
   * [x] Build a centralized, lightweight coordinator hub (WebSockets) to track
     epoch syncs, learning rate recoil, and node parameters. (Verified active on
     port 8765)

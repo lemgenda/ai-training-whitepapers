@@ -15,7 +15,8 @@
 Every troubleshooting scenario in this knowledge base conforms strictly to the
 canonical 3-stage diagnostic structure and 6-attribute diagnostic schema:
 
-* **`symptom`**: The observable failure state, error message, or telemetry anomaly.
+* **`symptom`**: The observable failure state, error message, or telemetry
+  anomaly.
 * **`context`**: Operational environment, active model architecture, dataset
   container, hardware footprint, and active resolution rung.
 * **`Stage 1: Initial Triage (Safe Checks)`**: Safe, non-destructive checks
@@ -54,7 +55,8 @@ sources strictly in descending order of precedence:
    Architecture ([`ECOSYSTEM_ARCHITECTURE.md`](./ECOSYSTEM_ARCHITECTURE.md)).
 3. **Tier 3 (Architectural Whitepapers)**: Model whitepapers
    (`PAPER_LEMGENDARY_*.md`, `PAPER_NIMA_*.md`).
-4. **Tier 4 (Diagnostic Playbooks)**: Troubleshooting knowledge base (`AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md`).
+4. **Tier 4 (Diagnostic Playbooks)**: Troubleshooting knowledge base
+   (`AI_HELPER_TROUBLESHOOTING_KNOWLEDGE.md`).
 
 ### 2.2 Mandatory Citation Policy
 
@@ -118,11 +120,14 @@ single authoritative resolution for this state."` and prescribe running
     1. Compressed WebP image decoding overhead in Python PIL workers (dataloader
        wait time > 250ms).
     2. Insufficient worker count (num_workers: 0 on disk-backed datasets).
-    3. Disk I/O latency bottleneck caused by reading archives from rotational media.
+    3. Disk I/O latency bottleneck caused by reading archives from rotational
+       media.
 * **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Dataloader wait time confirmed > 200ms per iteration in metrics.csv.
+  * *Prerequisite*: Dataloader wait time confirmed > 200ms per iteration in
+    metrics.csv.
   1. Set num_workers: 4 and enable pin_memory: true in dataloader configuration.
-  2. Increase prefetch buffer factor to prefetch_factor: 2 in PyTorch DataLoader.
+  2. Increase prefetch buffer factor to prefetch_factor: 2 in PyTorch
+     DataLoader.
   3. If reading WebDataset from HDD, pre-compile shards onto NVMe SSD
      (--also-format webdataset).
 
@@ -151,7 +156,8 @@ single authoritative resolution for this state."` and prescribe running
        of zero gradients to yield NaN.
 * **`Stage 3: Bounded Remediation [CONFIRMED]`**:
   * *Prerequisite*: GTX 1650 hardware confirmed with EMD loss active.
-  1. Set amp: false (force FP32 mode) for all Turing GTX 1650 configurations in unified_models_v2.yaml.
+  1. Set amp: false (force FP32 mode) for all Turing GTX 1650 configurations in
+     unified_models_v2.yaml.
   2. Apply logit numerical clamping: torch.clamp(logits, min=-15.0, max=15.0)
      before computing softmax.
   3. Ensure emd_epsilon: 1e-4 is added inside the square root of the distance
@@ -182,7 +188,8 @@ single authoritative resolution for this state."` and prescribe running
 * **`Stage 3: Bounded Remediation [PROBABLE]`**:
   * *Prerequisite*: Confirm whether scheduler is epoch-based (CosineAnnealingLR)
     or step-based (OneCycleLR).
-  1. Restrict scheduler.step() invocation strictly to epoch boundary for CosineAnnealingLR.
+  1. Restrict scheduler.step() invocation strictly to epoch boundary for
+     CosineAnnealingLR.
   2. Ensure SawtoothGovernor modifies learning rate multiplier directly without
      advancing the internal scheduler epoch counter.
 
@@ -212,7 +219,8 @@ single authoritative resolution for this state."` and prescribe running
      in half (16 -> 8), double gradient accumulation steps (1 -> 2).
   2. Maintain constant effective batch size: B_effective = B_physical * S_accum
      = constant.
-  3. Flush CUDA cache immediately following down-scaling: torch.cuda.empty_cache().
+  3. Flush CUDA cache immediately following down-scaling:
+     torch.cuda.empty_cache().
 
 ---
 
@@ -228,7 +236,8 @@ single authoritative resolution for this state."` and prescribe running
 * **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Check metrics.csv to verify if validation SRCC metric stagnates while
      epochs continue cycling.
-  2. Confirm whether training is deadlocked or endlessly triggering jolt multipliers.
+  2. Confirm whether training is deadlocked or endlessly triggering jolt
+     multipliers.
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
   * **Required Telemetry**: Check optimization.plateau_patience and
     optimization.absolute_patience in unified_models_v2.yaml.
@@ -288,10 +297,13 @@ single authoritative resolution for this state."` and prescribe running
   * Model: Any of the 22 LemGendary architectures
   * File: best.pth or latest.pth
 * **`Stage 1: Initial Triage (Safe Checks)`**:
-  1. Inspect file sizes of progress.pth, latest.pth, and best.pth in checkpoints/.
-  2. Test checkpoint load in an isolated python shell: torch.load(path, map_location='cpu').
+  1. Inspect file sizes of progress.pth, latest.pth, and best.pth in
+     checkpoints/.
+  2. Test checkpoint load in an isolated python shell: torch.load(path,
+     map_location='cpu').
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify file integrity of primary and fallback checkpoints.
+  * **Required Telemetry**: Verify file integrity of primary and fallback
+    checkpoints.
   * **Ranked Candidate Causes**:
     1. Non-atomic file write interrupted by power disruption, leaving a 0 KB or
        incomplete archive.
@@ -344,7 +356,8 @@ single authoritative resolution for this state."` and prescribe running
   * Tool: LemGendary Dataset Compiler Suite
   * Module: Deduplication Engine
 * **`Stage 1: Initial Triage (Safe Checks)`**:
-  1. Review Dataset Compiler execution command flags used during compilation in compiler.log.
+  1. Review Dataset Compiler execution command flags used during compilation in
+     compiler.log.
   2. Inspect raw source images to check if metadata or byte headers differ
      across visually identical images.
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
@@ -355,7 +368,8 @@ single authoritative resolution for this state."` and prescribe running
        volume; re-compressed images possess different quantization tables and
        fail byte-level deduplication.
 * **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Dataset sourced from web crawl or multiple compressed archives.
+  * *Prerequisite*: Dataset sourced from web crawl or multiple compressed
+    archives.
   1. Re-compile manifold with default perceptual deduplication enabled (do NOT
      pass --no-hash).
   2. Reserve Hardlink Deduplication exclusively for local repository
@@ -370,12 +384,15 @@ single authoritative resolution for this state."` and prescribe running
   'manifest.json' not found in path.
 * **`context`**:
   * Tool: Training Suite CLI / GUI
-  * Input: User specified raw download directory (e.g. raw_images/) as --dataset-path.
+  * Input: User specified raw download directory (e.g. raw_images/) as
+    --dataset-path.
 * **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Run ls or dir on the path provided to --dataset-path.
-  2. Confirm whether manifest.json, shards/, or splits.json exist in that directory.
+  2. Confirm whether manifest.json, shards/, or splits.json exist in that
+     directory.
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify directory layout against LemGendary Manifold Specification.
+  * **Required Telemetry**: Verify directory layout against LemGendary Manifold
+    Specification.
   * **Ranked Candidate Causes**:
     1. User provided an uncompiled raw image directory directly to the training
        suite. The training suite strictly requires a compiled manifold
@@ -445,7 +462,8 @@ single authoritative resolution for this state."` and prescribe running
        checks emitted a warning or error, cleanup never executed and
        `isRunningPipeline` remained `true`.
 * **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Backend reports `is_running: false` while GUI card displays `RUNNING`.
+  * *Prerequisite*: Backend reports `is_running: false` while GUI card displays
+    `RUNNING`.
   1. Intercept all terminal statuses (`"success"`, `"warning"`, `"error"`) in
      `src/App.tsx` WebSocket listener.
   2. Guard `isStepRunning` evaluation in `src/components/PipelineStepCards.tsx`
@@ -466,7 +484,8 @@ single authoritative resolution for this state."` and prescribe running
   * Subsystem: Health Checker (`env_manager/health_checker.py`)
   * Trigger: Step 4 package normalization uninstalls redundant OpenCV variants.
 * **`Stage 1: Initial Triage (Safe Checks)`**:
-  1. Run `python -m pip list` in the affected virtual environment (`lemgendary-datasets/.venv`).
+  1. Run `python -m pip list` in the affected virtual environment
+     (`lemgendary-datasets/.venv`).
   2. Check if `opencv-contrib-python` or `opencv-python` is present in the
      installed package list.
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
@@ -510,11 +529,14 @@ single authoritative resolution for this state."` and prescribe running
        dependencies, imposing ecosystem-wide version locks on NumPy and
        Transformers.
 * **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Datasets can be served via WebDataset or LitData streaming engines.
-  1. Uninstall `mosaicml-streaming` and remove it from all `requirements*.txt` manifests.
+  * *Prerequisite*: Datasets can be served via WebDataset or LitData streaming
+    engines.
+  1. Uninstall `mosaicml-streaming` and remove it from all `requirements*.txt`
+     manifests.
   2. Standardize on **Lightning AI LitData** (`litdata>=0.2.0`) and
      **WebDataset** (`webdataset==1.0.2`) as canonical streaming primitives.
-  3. Re-run dependency audit (`lem-env audit`) to confirm blocked package count drops.
+  3. Re-run dependency audit (`lem-env audit`) to confirm blocked package count
+     drops.
 
 ---
 
@@ -524,13 +546,16 @@ single authoritative resolution for this state."` and prescribe running
   `MISSING SOURCE` for manifolds whose source data exists exclusively in legacy
   `.mds.zstd` shards (`mds/train/`, `mds/val/`).
 * **`context`**:
-  * Tool: LemGendary Dataset Compiler Suite Modernization Queue (`tools/modernization_queue.py`)
-  * Target Manifolds: `LemGendizedClassificationMaster`, `LemGendizedMultitaskRestorationPro`
+  * Tool: LemGendary Dataset Compiler Suite Modernization Queue
+    (`tools/modernization_queue.py`)
+  * Target Manifolds: `LemGendizedClassificationMaster`,
+    `LemGendizedMultitaskRestorationPro`
   * Format Transition: MDS (`.mds.zstd`) to WebDataset (`.data`)
 * **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Check disk contents of target manifold folder with `dir /s /b mds` or
      `ls -l mds/`.
-  2. Confirm presence of `index.json` and `shard.*.mds.zstd` files in split directories.
+  2. Confirm presence of `index.json` and `shard.*.mds.zstd` files in split
+     directories.
 * **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
   * **Required Telemetry**: Verify whether `shards/` or raw image folders exist
     alongside `mds/`.

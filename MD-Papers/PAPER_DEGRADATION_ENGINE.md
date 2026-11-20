@@ -75,7 +75,8 @@ where:
 - $I(x)$ is the observed hazy image radiance at spatial coordinate $x = (u, v)$.
 - $J(x)$ is the true scene radiance (clean ground truth target).
 - $A$ is the global atmospheric airlight vector ($A \in [0.85, 0.95]^3$).
-- $t(x)$ is the medium transmission map defined via the exponential attenuation law:
+- $t(x)$ is the medium transmission map defined via the exponential attenuation
+  law:
 
 $$
 t(x) = \exp(-\beta \cdot d(x))
@@ -101,7 +102,8 @@ I_{\text{noisy}}(x) \sim \mathcal{N}\left(I(x), \, \sigma_{\text{shot}}^2 \cdot
 I(x) + \sigma_{\text{read}}^2\right)
 $$
 
-The noise variance parameters scale non-linearly with synthetic ISO sensitivity ($S_{\text{ISO}}$):
+The noise variance parameters scale non-linearly with synthetic ISO sensitivity
+($S_{\text{ISO}}$):
 
 $$
 \sigma_{\text{read}} = 0.002 \cdot
@@ -297,7 +299,8 @@ degraded_tensor, metadata = degrader(clean_tensor, sample_seed=sample_idx)
 
 ### 5.1 Degradation Kernel Performance Matrix
 
-Benchmarked on 10,000 $1024 \times 1024$ samples on AMD Ryzen 9 7950X NVMe PCIe Gen4:
+Benchmarked on 10,000 $1024 \times 1024$ samples on AMD Ryzen 9 7950X NVMe PCIe
+Gen4:
 
 - **`motion-blur+iso-noise`**: Engine Throughput (Pairs/sec): 428 pairs/sec;
   Peak Memory per Worker: 12.4 MB; Parameter Determinism: 100% Bit-Exact
@@ -347,7 +350,8 @@ restoration architectures:
    pixel and channel attention modules.
 5. **DeblurGAN-v2**: High-frequency motion deblurring with relativistic
    conditional adversarial networks.
-6. **DiffBIR**: Deep generative diffusion restoration and universal image super-resolution.
+6. **DiffBIR**: Deep generative diffusion restoration and universal image
+   super-resolution.
 
 ---
 

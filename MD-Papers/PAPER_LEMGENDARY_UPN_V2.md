@@ -137,13 +137,16 @@ parametric control.
 #### 4.3 Manifold Info
 
 * **Dataset**: `LemGendizedUpnV2`
-* **Total Samples**: 285 WebDataset streaming shards (1.06 TB NTFS hardlink deduplicated)
-* **Primary Task**: Parametric latent steering across compound degradation vectors
+* **Total Samples**: 285 WebDataset streaming shards (1.06 TB NTFS hardlink
+  deduplicated)
+* **Primary Task**: Parametric latent steering across compound degradation
+  vectors
 
 #### 4.4 Performance Metrics
 
 * **Current Training Epochs**: 35 `[CURRENT]`
-* **Best PSNR**: 35.18 dB `[MEASURED]` (Target: $\ge 34.50 \text{ dB}$ `[TARGET]`)
+* **Best PSNR**: 35.18 dB `[MEASURED]` (Target: $\ge 34.50 \text{ dB}$
+  `[TARGET]`)
 * **Best SSIM**: 0.967 `[MEASURED]` (Target: $\ge 0.960$ `[TARGET]`)
 * **Current Learning Rate**: 0.000045
 
@@ -212,9 +215,11 @@ single-task networks while dramatically reducing deployment footprint.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedUpnV2`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedUpnV2`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

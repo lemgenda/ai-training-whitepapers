@@ -69,7 +69,8 @@ $$
 p_k = \frac{\exp(z_k / \tau)}{\sum_{j=1}^{10} \exp(z_j / \tau)}
 $$
 
-where temperature $\tau = 1.0$ anchors calibration against the human voting distribution.
+where temperature $\tau = 1.0$ anchors calibration against the human voting
+distribution.
 
 ---
 
@@ -108,8 +109,10 @@ automated training loss gating, and desktop studio review.
 #### 4.3 Manifold Info
 
 * **Dataset**: `LemGendizedNimaAuthenticity`
-* **Total Samples**: 310,000 paired authentic photos and modern diffusion/GAN generations
-* **Primary Task**: Synthetic generation detection and photographic provenance verification
+* **Total Samples**: 310,000 paired authentic photos and modern diffusion/GAN
+  generations
+* **Primary Task**: Synthetic generation detection and photographic provenance
+  verification
 
 #### 4.4 Performance Metrics
 
@@ -164,9 +167,11 @@ distribution-aware loss functions with hardware-bounded latency guarantees.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedNimaAuthenticity`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedNimaAuthenticity`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
-* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel Controls)
+* [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training Panel
+  Controls)
 * [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) (System
   Governance & Specifications)

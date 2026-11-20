@@ -116,10 +116,13 @@ NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel ARC (XPU)
   - [5.42 Cross-Split Dataset Path Resolver (v16.2)](#542-cross-split-dataset-path-resolver-v162)
   - [5.43 Dynamic Resolution Escalation & Anti-Loop Breakout (v16.3.3)](#543-dynamic-resolution-escalation--anti-loop-breakout-v1633)
   - [5.44 Proven-Manifold Protection & Intra-Resolution Data Recoil (v16.0.0)](#544-proven-manifold-protection--intra-resolution-data-recoil-v1600)
-  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration (v18.0)](#545-srcc-driven-dynamic-governance--rank-margin-ceiling-calibration-v180)
+  - [5.45 SRCC-Driven Dynamic Governance & Rank Margin Ceiling Calibration
+    (v18.0)](#545-srcc-driven-dynamic-governance--rank-margin-ceiling-calibration-v180)
   - [5.46 Dynamic Manifold-Scaled Jolt Shield Calibration (v18.1)](#546-dynamic-manifold-scaled-jolt-shield-calibration-v181)
-  - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
-  - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
+  - [5.47 Differentiable Soft-Spearman Loss & Cross-Microbatch Rank Memory Bank
+    (v19.0)](#547-differentiable-soft-spearman-loss--cross-microbatch-rank-memory-bank-v190)
+  - [5.48 Spatial Statistical Pooling Upgrade (Mean ⊕ Std) for Micro-Defect
+    Localization](#548-spatial-statistical-pooling-upgrade-mean--std-for-micro-defect-localization)
   - [5.49 Universal Post-Training Target Audit & Headless Kaggle Cloud Engine](#549-universal-post-training-target-audit--headless-kaggle-cloud-engine)
   - [5.50 Temperature 1, Paper EMD, Soft Logit Cap & Post-Hoc Calibration
     (v16.9.162, v16.9.186)](#550-temperature-1-paper-emd-soft-logit-cap--post-hoc-calibration-v169162-v169186)
@@ -515,8 +518,10 @@ compression, and sharpness artifacts rather than artistic appeal.
 #### 4.4.3 Manifold Info
 
 - **Dataset**: `LemGendizedNimaTechnical`
-- **Total Samples**: 26,093 (merged from SPAQ, KonIQ, TID2013, LIVE, CSIQ, DND, NAM)
-- **Primary Task**: Predict human-perceptual quality score for Technical Integrity.
+- **Total Samples**: 26,093 (merged from SPAQ, KonIQ, TID2013, LIVE, CSIQ, DND,
+  NAM)
+- **Primary Task**: Predict human-perceptual quality score for Technical
+  Integrity.
 
 #### 4.4.4 Performance Metrics
 
@@ -569,7 +574,8 @@ photographs.
 
 - **Dataset**: `LemGendizedNimaAuthenticity`
 - **Total Samples**: 209,196 (merged from Real vs Fake Faces, AI vs Real, SUT)
-- **Primary Task**: Predict image authenticity score (binary categorization via EMD).
+- **Primary Task**: Predict image authenticity score (binary categorization via
+  EMD).
 
 #### 4.5.4 Performance Metrics
 
@@ -959,7 +965,8 @@ this resolution. This created a fractured metric curve where Epoch 10's PSNR (at
 true architectural improvements behind spatial complexity shifts.
 **Fix**: Engineered the **Invariant Native Scorecarding** protocol.
 
-- Validation resolution is now decoupled from the Governor's dynamic training size.
+- Validation resolution is now decoupled from the Governor's dynamic training
+  size.
 - Using a `val_resolution` registry key in `unified_models.yaml`, high-end
   models (like NAFNet) are strictly anchored to their target native resolution
   (e.g., 640px) from Epoch 1 to 1000.
@@ -1462,7 +1469,8 @@ and select high-quality images in real-time, locally on a user's machine,
 removes the cloud-latency hurdle for AI photo editing suites. Future iterations
 will focus on:
 
-- **Temporal Quality Assessment**: Expanding the Universal Matrix to video frames.
+- **Temporal Quality Assessment**: Expanding the Universal Matrix to video
+  frames.
 - **Edge Refinement**: Implementing LoRA-based local adaptation for specific
   user-camera characteristics.
 

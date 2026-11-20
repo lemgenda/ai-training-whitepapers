@@ -52,7 +52,8 @@ The suite targets five distinct optical phenomena:
   Fusion (CSFF).
 * **MIRNet v2**: Dual-residual multi-scale architecture with Selective Kernel
   Feature Fusion (SKFF).
-* **FFANet**: Feature Fusion Attention network with pixel and channel attention blocks.
+* **FFANet**: Feature Fusion Attention network with pixel and channel attention
+  blocks.
 
 ---
 

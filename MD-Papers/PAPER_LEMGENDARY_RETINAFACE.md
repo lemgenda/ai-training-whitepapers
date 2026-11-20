@@ -2,7 +2,8 @@
 
 ## Category 08 FACE | Architecture of LemGendary AI
 
-**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Target Hardware**:
+**Author**: Lem Treursic · **Version**: `v16.9.214-STABLE` · **Target
+Hardware**:
 NVIDIA GeForce GTX 1650 / Apple Silicon / T4
 
 ---
@@ -239,7 +240,8 @@ decision.
 
 ### Related Ecosystem Documentation
 
-* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedRetinaFace`)
+* [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedRetinaFace`)
 * [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 * [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training

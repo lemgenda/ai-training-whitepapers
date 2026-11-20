@@ -75,7 +75,8 @@ $$
   Architectural Backbone: EfficientNetV2-S; Input Resolution: 384x384; Target
   Performance: Accuracy &ge; 0.940
 
-For full mathematical proofs, refer to [PAPER_LEMGENDARY_NIMA.md](./PAPER_LEMGENDARY_NIMA.md).
+For full mathematical proofs, refer to
+[PAPER_LEMGENDARY_NIMA.md](./PAPER_LEMGENDARY_NIMA.md).
 
 ---
 

@@ -1450,18 +1450,21 @@ dynamics input-dependent and use hardware-aware scan algorithms.
 
 ### 6.15 Architecture selection matrix
 
-- **Tabular classification**: Strong candidates: MLP, tree models, transformer variants
+- **Tabular classification**: Strong candidates: MLP, tree models, transformer
+  variants
 - **Image classification**: Strong candidates: CNN, ConvNeXt, ViT
 - **Object detection**: Strong candidates: CNN detectors, DETR-family,
   Swin-based systems
-- **Segmentation**: Strong candidates: U-Net, U-Net variants, transformer hybrids
+- **Segmentation**: Strong candidates: U-Net, U-Net variants, transformer
+  hybrids
 - **Restoration**: Strong candidates: CNN/U-Net, NAFNet-like,
   transformer/restoration hybrids
 - **Language modeling**: Strong candidates: Transformer, MoE, SSM/hybrid
 - **Image generation**: Strong candidates: Diffusion, GAN, flow-based systems
 - **Representation learning**: Strong candidates: CNN, ViT, autoencoder,
   contrastive architectures
-- **Long sequences**: Strong candidates: Transformer variants, SSMs, hybrid models
+- **Long sequences**: Strong candidates: Transformer variants, SSMs, hybrid
+  models
 - **Multimodal**: Strong candidates: Transformer-based fusion, modality-specific
   encoders + shared heads
 
@@ -3166,7 +3169,8 @@ and tool-integration layer.
 
 Runtime telemetry and APIs provide active environment state.
 
-Together these form a reliable, context-aware AI training assistant rather than a
+Together these form a reliable, context-aware AI training assistant rather than
+a
 static chatbot.
 
 ---

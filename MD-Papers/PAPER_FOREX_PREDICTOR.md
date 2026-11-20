@@ -715,7 +715,8 @@ continuity without downsampling or fractional stride gaps. The
 passes. The model trains on 100% of historical candles in each fold's expanding
 chronological training window, advancing through the 6-Fold Walk-Forward matrix
 (Fold 1: 2019–2020 $\rightarrow$ 2021 through Fold 6: 2019–2025
-$\rightarrow$ 2026) while expanding across the Multi-Timeframe Confluence Ladder.
+$\rightarrow$ 2026) while expanding across the Multi-Timeframe Confluence
+Ladder.
 
 #### 4.8.2 MetaTrader 5 (MT5) Auto-Acquisition Bridge
 
@@ -888,7 +889,8 @@ latency is not yet measured.
 
 ### Related Ecosystem Documentation
 
-- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold: `LemGendizedForexUniverse`)
+- [Dataset Compiler Suite](./PAPER_DATASET_COMPILER.md) (Manifold:
+  `LemGendizedForexUniverse`)
 - [Training Suite Architecture](./PAPER_TRAINING_SUITE.md) (Tri-Format ONNX / PT
   Checkpoint Lifecycle)
 - [AI Studio GUI Manual](./MANUAL_AI_STUDIO_GUI.md) (Interactive Training
