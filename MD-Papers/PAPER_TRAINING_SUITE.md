@@ -384,14 +384,20 @@ integrates the model family verification engine (`training/verification/`):
 2. **Forward Determinism Contract**:
    Verifies forward invariance under fixed seeds ($S = 42$) across repeated
    evaluation passes:
-   $$\max |f(x; \theta)_{\text{trial } 1} - f(x; \theta)_{\text{trial } 2}| \le \epsilon_{\text{atol}}$$
+   $$
+   \max |f(x; \theta)_{\text{trial } 1} - f(x; \theta)_{\text{trial } 2}| \le
+   \epsilon_{\text{atol}}
+   $$
 3. **Metric Threshold Contract**:
    Validates held-out evaluation performance against target directional bounds
    from `unified_models_v2.yaml`.
 4. **Export Equivalence Contract**:
    Measures absolute numerical parity between native PyTorch forward passes and
    compiled ONNX FP32 / ONNX FP16 runtime engines on CPU:
-   $$\Delta_{\text{max}} = \max |y_{\text{pytorch}} - y_{\text{onnx}}| \le \text{tol}_{\text{family}}$$
+   $$
+   \Delta_{\text{max}} = \max |y_{\text{pytorch}} - y_{\text{onnx}}| \le
+   \text{tol}_{\text{family}}
+   $$
 5. **Schema Conformance Contract**:
    Validates header schemas, types, and sequence order for `metrics.csv` and
    `history.csv` against canonical schemas defined in
