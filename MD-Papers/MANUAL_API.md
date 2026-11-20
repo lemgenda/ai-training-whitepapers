@@ -1255,6 +1255,61 @@ Response:
 }
 ```
 
+##### `POST /api/models/{model_key}/verify`
+
+Executes the comprehensive 5-pillar verification contract (loadability, forward
+determinism, metric thresholds, export equivalence, and schema conformance)
+returning a machine-readable report:
+
+Parameters:
+
+- `checkpoint` (optional query string): Path to specific checkpoint file.
+
+Response:
+
+```json
+{
+  "model_key": "nafnet_denoising",
+  "family": "vision",
+  "overall_passed": true,
+  "checkpoint_path": "checkpoints/nafnet_denoising/best.pth",
+  "stages": {
+    "loadability": {
+      "stage": "loadability",
+      "passed": true,
+      "details": { "file_size_bytes": 1672, "model_class": "NAFNet" },
+      "error": null
+    },
+    "determinism": {
+      "stage": "determinism",
+      "passed": true,
+      "details": { "max_abs_diff": 0.0, "trials_run": 2 },
+      "error": null
+    },
+    "metric_thresholds": {
+      "stage": "metric_thresholds",
+      "passed": true,
+      "details": {},
+      "error": null
+    },
+    "export_equivalence": {
+      "stage": "export_equivalence",
+      "passed": true,
+      "details": { "fp32_onnx_diff": 1.07e-06 },
+      "error": null
+    },
+    "schema_conformance": {
+      "stage": "schema_conformance",
+      "passed": true,
+      "details": { "metrics_csv_type": "history_format" },
+      "error": null
+    }
+  },
+  "errors": [],
+  "timestamp": "2026-11-20T05:00:00Z"
+}
+```
+
 ##### `POST /api/models/{model_key}/soup`
 
 Blends specialized vault checkpoints (`vault_psnr.pth`, `vault_lpips.pth`,

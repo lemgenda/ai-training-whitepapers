@@ -404,6 +404,33 @@ epoch audit, through the keys that <code>get_state()</code> writes (<code>input_
 <code>sample_fraction</code>; shared constants in <code>training/ratchet.py</code>, v16.9.67). A
 missing key counts as 0 and can never pass. A 384px epoch that triggers a jump
 to 512px is therefore no longer reported as complete.</p>
+<h4 id="sec-232-automated-model-family-verification-contract-lemtrain-verify">2.3.2. Automated Model Family Verification Contract (<code>lemtrain verify</code>)</h4>
+<p>To provide deterministic validation, prevent regressions across model releases,
+and enforce contract conformance before cloud synchronization, <code>lemtrain</code>
+integrates the model family verification engine (<code>training/verification/</code>):</p>
+<ol>
+<li><strong>Loadability Contract</strong>:
+Validates weights loading from checkpoint artifacts (<code>.pth</code>, <code>.pt</code>), verifies
+minimum binary size thresholds ($\ge 1024\text{ bytes}$), mandatory state
+dictionary keys (<code>model_state_dict</code>), and format versions.</li>
+<li><strong>Forward Determinism Contract</strong>:
+Verifies forward invariance under fixed seeds ($S = 42$) across repeated
+evaluation passes:
+<div class="math-block">$$\max |f(x; \theta)_{\text{trial } 1} - f(x; \theta)_{\text{trial } 2}| \le \epsilon_{\text{atol}}$$</div></li>
+<li><strong>Metric Threshold Contract</strong>:
+Validates held-out evaluation performance against target directional bounds
+from <code>unified_models_v2.yaml</code>.</li>
+<li><strong>Export Equivalence Contract</strong>:
+Measures absolute numerical parity between native PyTorch forward passes and
+compiled ONNX FP32 / ONNX FP16 runtime engines on CPU:
+<div class="math-block">$$\Delta_{\text{max}} = \max |y_{\text{pytorch}} - y_{\text{onnx}}| \le \text{tol}_{\text{family}}$$</div></li>
+<li><strong>Schema Conformance Contract</strong>:
+Validates header schemas, types, and sequence order for <code>metrics.csv</code> and
+<code>history.csv</code> against canonical schemas defined in
+<code>training/telemetry/schemas.py</code>.</li>
+</ol>
+<p>The CLI command <code>python cli.py verify {model} [-c checkpoint] [-o report.json]</code>
+executes this contract and emits structured machine-readable reports.</p>
 <h3 id="sec-24-checkpoint-resumption--singularity-hardening">2.4. Checkpoint Resumption &amp; Singularity Hardening</h3>
 <ul>
 <li><strong>Recovered Governor Topology Synchronization</strong>: When restoring from a

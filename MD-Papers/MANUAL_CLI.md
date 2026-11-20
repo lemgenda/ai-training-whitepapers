@@ -1283,7 +1283,9 @@ python cli.py eval mirnet_exposure \
 
 ### 6.3.1 Model Verification Contract (`verify`)
 
-Executes the comprehensive 5-pillar verification contract (loadability, forward determinism, metric thresholds, export equivalence, and schema conformance) and outputs a machine-readable report:
+Executes the comprehensive 5-pillar verification contract (loadability,
+forward determinism, metric thresholds, export equivalence, and schema
+conformance) and outputs a machine-readable report:
 
 ```bash
 # Verify model family contract

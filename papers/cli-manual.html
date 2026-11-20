@@ -1131,6 +1131,15 @@ quality metrics:</p>
 python cli.py eval mirnet_exposure \
   --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
 </code></pre>
+<h3 id="sec-631-model-verification-contract-verify">6.3.1 Model Verification Contract (<code>verify</code>)</h3>
+<p>Executes the comprehensive 5-pillar verification contract (loadability,
+forward determinism, metric thresholds, export equivalence, and schema
+conformance) and outputs a machine-readable report:</p>
+<pre><code class="language-bash"># Verify model family contract
+python cli.py verify nafnet_denoising \
+  --checkpoint checkpoints/nafnet_denoising/best.pth \
+  --output verification_report.json
+</code></pre>
 <h3 id="sec-64-model-compilation--export-export">6.4 Model Compilation &amp; Export (<code>export</code>)</h3>
 <p>Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:</p>
 <pre><code class="language-bash"># Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
