@@ -1724,6 +1724,14 @@ training preprocessing (<code>normalization</code>, <code>pixel_scale</code>, <c
 for a classifier, <code>class_names</code> in logit order. The <code>.pt</code> metadata carries
 the preprocessing and the class names too; Forex <code>.pt</code> files carry
 <code>model_kwargs</code>, so a non-default architecture loads without the registry.</li>
+<li><strong>Export Manifest &amp; Family Numerical Parity (v16.9.239)</strong>:
+<code>build_export_manifest</code> in <code>training/export/manifest.py</code> generates an authoritative
+<code>export_manifest.json</code> alongside exported models. The manifest records model stem,
+ONNX opset (18), input/output tensor signatures, cryptographic SHA-256 digests
+and byte counts for all release binaries (<code>.pt</code>, <code>.onnx</code>, <code>.onnx.data</code>), as well
+as documented family-specific numerical parity tolerances (<code>FAMILY_PARITY_TOLERANCES</code>:
+atol $10^{-3}$, rtol $10^{-2}$ for Vision, YOLO, and LLMs;
+atol $10^{-4}$, rtol $10^{-3}$ for Forex signals).</li>
 <li><strong>MT5 Artefact, IR 9</strong>: MetaTrader 5 (build 4230 and later) bundles ONNX
 Runtime 1.17, which reads opsets up to 20 but IR versions only up to 9.
 <code>training/export/mt5_compat.py</code> rewrites the MT5 graph as one file with

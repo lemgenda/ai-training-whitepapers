@@ -62,6 +62,19 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-20 — Prompt 24 Model Export Pipelines & Verification
+
+* Updated `MD-Papers/PAPER_TRAINING_SUITE.md` and
+  `papers/training-suite-master.html` Section 2.40 to document universal
+  tri-format model export (`.pt`, FP32 `.onnx` with sidecar, FP16 `.onnx`),
+  canonical `export_manifest.json` generation with cryptographic SHA-256
+  digests and opset 18 specification, and documented family parity
+  tolerances (`FAMILY_PARITY_TOLERANCES`) across Vision, YOLO, Forex,
+  and LLM architectures.
+* Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
+  and `manifest/documents.json` with Training Suite baseline
+  `v16.9.239-STABLE`.
+
 ### 2026-11-19 — Prompt 16 LLM Pipeline Improvements & v16.9.231 Baseline Sync
 
 * Updated `MD-Papers/PAPER_LEMGENDARY_LLM.md` and `papers/foundation-llm.html`

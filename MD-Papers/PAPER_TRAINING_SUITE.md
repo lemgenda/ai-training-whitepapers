@@ -113,8 +113,10 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     Export Probe (v16.9.216 to
     v16.9.223)](#247-kaggle-run-fixes-manifold-dedupe-log-lines-decode-warnings--export-probe-v169216-to-v169223)
   - [2.48. Visual Manifold Training & WebDataset Enhancements (v16.9.232)](#248-visual-manifold-training--webdataset-enhancements-v169232)
-  - [2.49. Financial Forecasting Validation & Calibration Enhancements (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
-  - [2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
+  - [2.49. Financial Forecasting Validation & Calibration Enhancements
+    (v16.9.233)](#249-financial-forecasting-validation--calibration-enhancements-v169233)
+  - [2.50. YOLO Object Detection Training & Evaluation Enhancements
+    (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
   - [2.51. Unified Model Configuration Schema & Validator (v16.9.235)](#251-unified-model-configuration-schema--validator-v169235)
   - [2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)](#252-standardized-telemetry--history-recording-pipelines-v169236)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
@@ -429,16 +431,24 @@ to 512px is therefore no longer reported as complete.
   skip-paths are anchored directly to live governor telemetry, guaranteeing that
   cloud restarts resume precisely at the expanded manifold fraction rather than
   reverting to pre-expansion checkpoints.
-- **Universal Checkpoint Format Versioning & Bit-Reproducible Resumption (v16.9.158)**:
-  Enforces atomic writes via write-temp-and-rename (`safe_atomic_save`) with disk
+- **Universal Checkpoint Format Versioning & Bit-Reproducible Resumption
+  (v16.9.158)**:
+  Enforces atomic writes via write-temp-and-rename (`safe_atomic_save`) with
+  disk
   headroom validation and lock backoff retries. Every saved checkpoint attaches
-  `checkpoint_format_version` (Version 2). Checkpoint loading (`safe_load_checkpoint`)
-  validates format version bounds and transparently migrates legacy state dict keys
+  `checkpoint_format_version` (Version 2). Checkpoint loading
+  (`safe_load_checkpoint`)
+  validates format version bounds and transparently migrates legacy state dict
+  keys
   (`state_dict`, `model`) while raising explicit `CheckpointMigrationError` on
-  incompatible future formats. Resumption guarantees exact bit-reproducibility across
-  restarts by capturing and restoring the complete execution state: model weights,
-  optimizer state, LR scheduler state, AMP scaler state, governor state, ResumableBatchSampler
-  progress, and host/device random number generator states (`rng_state` and `rng_state_ranks`).
+  incompatible future formats. Resumption guarantees exact bit-reproducibility
+  across
+  restarts by capturing and restoring the complete execution state: model
+  weights,
+  optimizer state, LR scheduler state, AMP scaler state, governor state,
+  ResumableBatchSampler
+  progress, and host/device random number generator states (`rng_state` and
+  `rng_state_ranks`).
 - **ONNX Trace Resilience (FakeTensor Guards)**: Dynamically wraps unmapped
   `FakeTensor` memory pointer access (`data_ptr()`) during FX/ONNX graph tracing
   within the DataParallel multi-GPU engine to prevent false-positive
@@ -1234,12 +1244,17 @@ $$
   automatically, so any claim that it beats its donors must come from a measured
   evaluation.
 - **Vault Consistency Auditing & Automated Garbage Collection (v16.9.159)**:
-  `validate_vault_consistency` in `training/checkpoint/vault.py` provides preflight
-  and runtime validation of the checkpoint vault. It audits file integrity, verifies
-  that checkpoints deserialize with non-empty model weights, validates historical
-  metric milestones against `sota_targets`, and flags corrupted or truncated files.
+  `validate_vault_consistency` in `training/checkpoint/vault.py` provides
+  preflight
+  and runtime validation of the checkpoint vault. It audits file integrity,
+  verifies
+  that checkpoints deserialize with non-empty model weights, validates
+  historical
+  metric milestones against `sota_targets`, and flags corrupted or truncated
+  files.
   Complementary garbage collection (`prune_vault_checkpoints`) purges transient
-  `.tmp` save remnants and cleans obsolete intra-epoch `progress.pth` checkpoints
+  `.tmp` save remnants and cleans obsolete intra-epoch `progress.pth`
+  checkpoints
   once `latest.pth` reaches an equal or newer epoch.
 - **SWA ingredient**: since v16.9.107 a run with SWA enabled (Section 2.32)
   writes `checkpoints/vault_swa.pth`. The default glob picks it up, or name it
@@ -1732,6 +1747,15 @@ $$
   for a classifier, `class_names` in logit order. The `.pt` metadata carries
   the preprocessing and the class names too; Forex `.pt` files carry
   `model_kwargs`, so a non-default architecture loads without the registry.
+- **Export Manifest & Family Numerical Parity (v16.9.239)**:
+  `build_export_manifest` in `training/export/manifest.py` generates an
+  authoritative `export_manifest.json` alongside exported models. The
+  manifest records model stem, ONNX opset (18), input/output tensor
+  signatures, cryptographic SHA-256 digests and byte counts for all release
+  binaries (`.pt`, `.onnx`, `.onnx.data`), as well as documented family-specific
+  numerical parity tolerances (`FAMILY_PARITY_TOLERANCES`:
+  $\text{atol}=10^{-3}, \text{rtol}=10^{-2}$ for Vision, YOLO, and LLMs;
+  $\text{atol}=10^{-4}, \text{rtol}=10^{-3}$ for Forex signals).
 - **MT5 Artefact, IR 9**: MetaTrader 5 (build 4230 and later) bundles ONNX
   Runtime 1.17, which reads opsets up to 20 but IR versions only up to 9.
   `training/export/mt5_compat.py` rewrites the MT5 graph as one file with
@@ -2051,7 +2075,8 @@ parameter counts.
 
 To maximize convergence fidelity and pipeline throughput for generative vision
 and restoration architectures, release v16.9.232 introduces visual manifold
-enhancements spanning parameter smoothing, curriculum scheduling, mask weighting,
+enhancements spanning parameter smoothing, curriculum scheduling, mask
+weighting,
 distributed shard dispatching, and hardware throughput telemetry:
 
 - **Exponential Moving Average (ModelEMA)**: `training/training/ema.py`
@@ -2099,7 +2124,8 @@ modern quantitative finance literature:
 - **Expected Calibration Error (ECE) Evaluator**: `CalibrationEvaluator` in
   `training/training/forex_calibration.py` assesses probability calibration via
   binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
-  and Brier scores to guarantee that model confidence aligns with true win-rates.
+  and Brier scores to guarantee that model confidence aligns with true
+  win-rates.
 
 ### 2.50. YOLO Object Detection Training & Evaluation Enhancements (v16.9.234)
 
@@ -2107,7 +2133,8 @@ To enhance localization precision and training efficiency for object detection
 architectures within the curriculum governor, release v16.9.234 introduces
 four modernized YOLO-family training invariants:
 
-- **Adaptive Mosaic & Mixup Close-Up Schedule**: `training/governance/yolo_run.py`
+- **Adaptive Mosaic & Mixup Close-Up Schedule**:
+  `training/governance/yolo_run.py`
   implements dynamic `close_mosaic` scheduling. Severe composite augmentations
   (mosaic, mixup, and cutmix) improve generalized feature extraction early in
   training but degrade fine boundary delineation on clean images. The runner
@@ -2136,13 +2163,16 @@ across model architectures, release v16.9.235 standardizes all 23 production
 models in `unified_models_v2.yaml` under an authoritative JSON Schema:
 
 - **Canonical JSON Schema (`training/config/model_schema.json`)**: Formally
-  specifies mandatory top-level blocks and properties for every registered model,
+  specifies mandatory top-level blocks and properties for every registered
+  model,
   including `family`, `architecture`, dataset manifold references (`dataset`,
   `dataset_variant`), `optimizer`, `lr_schedule`, `batch_size`, `precision`,
   `checkpoint_policy`, `export_targets`, `validation_suite`, and `seed`.
-- **Preflight & Runtime Schema Validator (`training/config/schema_validator.py`)**:
+- **Preflight & Runtime Schema Validator
+  (`training/config/schema_validator.py`)**:
   Provides `validate_model_config` and `validate_registry_file`. These methods
-  validate memory mappings and YAML files using `jsonschema.Draft202012Validator`.
+  validate memory mappings and YAML files using
+  `jsonschema.Draft202012Validator`.
   Violations raise `ModelConfigValidationError` with detailed path reporting.
 - **Fail-Fast Model Registry Integration**: `ModelRegistryService._load()` in
   `training/registry/model_specs.py` executes schema validation during registry
@@ -2156,7 +2186,8 @@ models in `unified_models_v2.yaml` under an authoritative JSON Schema:
 
 ### 2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)
 
-To guarantee auditability, crash-resilience, and cross-family schema consistency,
+To guarantee auditability, crash-resilience, and cross-family schema
+consistency,
 release v16.9.236 modernizes the telemetry recording pipelines:
 
 - **Canonical Telemetry Schemas (`training/telemetry/schemas.py`)**: Formally
@@ -2166,7 +2197,8 @@ release v16.9.236 modernizes the telemetry recording pipelines:
   governor actions, pathology flags (`is_spike`, `is_non_finite`), and
   specialized metrics per task family (Vision, Forex, YOLO, RetinaFace, LLM).
 - **Atomic & Crash-Safe Recorders (`training/telemetry/recorder.py`)**:
-  Implements `AtomicCsvRecorder` utilizing atomic temp-file creation, synchronous
+  Implements `AtomicCsvRecorder` utilizing atomic temp-file creation,
+  synchronous
   disk flushing (`os.fsync`), and resilient replacement (`_resilient_replace`).
   Eliminates partially written or corrupted CSV logs upon power loss or sudden
   session aborts.
