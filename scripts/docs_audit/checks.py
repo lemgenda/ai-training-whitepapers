@@ -22,7 +22,7 @@ from .model import MANIFEST_PATH, AuditContext, Finding
 from .parsing import TocEntry, content_headings
 from .workspace import COMPONENT_SOURCES, ECOSYSTEM_PATH, TRAINING_SERVICE_ID, WorkspaceError
 
-SIMILARITY_THRESHOLD = 0.85
+SIMILARITY_THRESHOLD = 0.90
 TEMPLATE_ELEMENTS = (
     "!doctype",
     "html",
@@ -109,7 +109,7 @@ def _strip_v(version: str) -> str:
 
 
 def _publications(ctx: AuditContext) -> list[str]:
-    return ctx.glob("papers/*.html") + ["index.html"]
+    return [*ctx.glob("papers/*.html"), "index.html"]
 
 
 def _markdown_sources(ctx: AuditContext) -> list[str]:
@@ -347,6 +347,53 @@ def check_links(ctx: AuditContext) -> Iterator[Finding]:
                 )
 
 
+def check_line_lengths(ctx: AuditContext) -> Iterator[Finding]:
+    """Markdown lines do not exceed 80 characters (MD013).
+
+    Headings, code blocks, math fences, tables, and atomic link lines are exempt.
+    """
+    for path in _markdown_sources(ctx):
+        lines = ctx.read_text(path).splitlines()
+        in_code = False
+        in_math = False
+        for number, line in enumerate(lines, start=1):
+            stripped = line.strip()
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                in_code = not in_code
+                continue
+            if in_code:
+                continue
+            if stripped.startswith("$$"):
+                in_math = not in_math
+                if in_math and stripped.endswith("$$") and len(stripped) > 2:
+                    in_math = False
+                continue
+            if in_math:
+                continue
+
+            # Tables
+            if stripped.startswith("|") or stripped.endswith("|") or "|---" in stripped:
+                continue
+            # Headings
+            if re.match(r"^\s*#{1,6}\s+", line):
+                continue
+            # URLs or links
+            if re.match(r"^https?://\S+$", stripped) or re.match(r"^\[[^\]]+\]:\s*\S+$", stripped):
+                continue
+            link_m = re.search(r"\]\(([^\s)]+)\)", line)
+            if link_m and len(link_m.group(1)) > 30:
+                remainder = line[: link_m.start() + 2] + line[link_m.end() :]
+                if len(remainder) <= 80:
+                    continue
+
+            if len(line) > 80:
+                yield Finding(
+                    "line-lengths",
+                    path,
+                    f"line {number} length {len(line)} > 80: {line[:75]}...",
+                )
+
+
 def _text_files(ctx: AuditContext) -> Iterator[str]:
     for path in sorted(ctx.root.rglob("*")):
         relative = path.relative_to(ctx.root)
@@ -515,6 +562,11 @@ def check_service_ports(ctx: AuditContext) -> Iterator[Finding]:
 
 
 CHECKS: tuple[Check, ...] = (
+    Check(
+        "line-lengths",
+        "Markdown lines do not exceed 80 characters (MD013)",
+        check_line_lengths,
+    ),
     Check("manifest", "manifest paths exist; no unlisted publications", check_manifest),
     Check("hub-version", "README, index.html, manifest and registries agree", check_hub_version),
     Check("version-line", "MD and HTML version lines equal the manifest", check_version_lines),
