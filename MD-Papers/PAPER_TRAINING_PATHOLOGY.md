@@ -5,9 +5,9 @@
 **Parent Paper**: [LemGendary Model Training Suite: Technical
 Whitepaper](./PAPER_TRAINING_SUITE.md)
 
-**Author**: Lem Treursic · **Version**: `v16.9.230-STABLE` (LemGendary Model
-Training Suite) · **Paper Revision**: 1.13.0 - Prompt 15 Pathology Audit
-(2026-11-19) · **Last audited**: 2026-11-19
+**Author**: Lem Treursic · **Version**: `v16.9.240-STABLE` (LemGendary Model
+Training Suite) · **Paper Revision**: 1.14.0 - Intra-Epoch Scaling Audit
+(2026-11-20) · **Last audited**: 2026-11-20
 
 **Target Hardware**: NVIDIA GeForce GTX 1650 (4GB) / Apple Silicon (MPS) / Intel
 ARC (XPU) / Kaggle Tesla T4 Cloud
@@ -132,6 +132,15 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     62)](#finished-epoch-resume-loop-pathology-62)
   - [Restoration Metric Weight Imbalance (Pathology
     63)](#restoration-metric-weight-imbalance-pathology-63)
+  - [Dual-GPU PCIe Barrier Overhead & CPU Starvation on Lightweight Predictors
+    (Pathology
+    64)](#dual-gpu-pcie-barrier-overhead--cpu-starvation-on-lightweight-predictors-pathology-64)
+  - [0-Byte WebDataset Member Fallback & Shard Index Latency (Pathology
+    65)](#0-byte-webdataset-member-fallback--shard-index-latency-pathology-65)
+  - [Unlabeled Manifold Target Nullification & Telemetry Underflow (Pathology
+    66)](#unlabeled-manifold-target-nullification--telemetry-underflow-pathology-66)
+  - [Intra-Epoch Batch Clamping & Progress Desynchronization (Pathology
+    67)](#intra-epoch-batch-clamping--progress-desynchronization-pathology-67)
 - [6. Best Practices Checklist](#6-best-practices-checklist)
 - [7. Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
 - [8. Mapping Pathologies to Pipeline
@@ -1502,6 +1511,26 @@ metrics with 6-decimal floating-point precision ({v:.6f}) to distinguish
 micro-learning rates (1e-5 to 1e-6) from true zero-rate optimizer
 freeze, and emit warning diagnostics whenever _classification_loss activates
 the zeroed unlabelled batch fallback.
+
+### Intra-Epoch Batch Clamping & Progress Desynchronization (Pathology 67)
+
+**The Issue:** When training resumes from an intra-epoch `progress.pth`
+checkpoint on altered hardware or modified configuration (such as moving from
+a physical batch size of 256 down to a memory-clamped batch size of 32), the
+total number of batches per epoch expands proportionally (e.g., from 3,887 to
+31,097 batches). If the resumption coordinator restores the raw iteration
+integer directly without rescaling against the new DataLoader length (e.g.,
+restoring iteration 2,243 into a 31,097-batch loop), the effective epoch
+progress regresses from 57.7% back to 7.2%. The engine fast-forwards only the
+unscaled micro-batch count, causing 50% of the epoch data to be re-traversed.
+
+**Remedy:** **Proportional Resume Progress Scaling**. Enhance `resume_iteration`
+and `scale_resume_progress` to compare the checkpoint's recorded `total_steps`
+against the newly constructed DataLoader length. When the batch size changes,
+calculate the exact progress fraction $\rho = \frac{\text{step}}{\text{total}}$
+and scale the fast-forward skip offset to $\lfloor \rho \times N_{\text{new}}
+\rfloor$. This guarantees bit-exact progress continuity across dynamic VRAM
+clamping, multi-GPU to single-GPU switches, and resolution ladder jumps.
 
 ---
 
