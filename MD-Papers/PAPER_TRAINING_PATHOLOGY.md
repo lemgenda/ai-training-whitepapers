@@ -1460,10 +1460,11 @@ preferred_parallel: single on lightweight parameter and tabular predictors
 compute convolutional or transformer restoration backbones. Additionally,
 scale physical micro-batch size from 16–24 to 512–1024 on lightweight
 architectures with low VRAM footprint (<500 MiB), with automated governor-safe
-memory clamping. Configure model-specific loader parameters (`loader: num_workers: 4,
-persistent_workers: true, prefetch_factor: 4`) in `unified_models_v2.yaml` to dedicate
-all 4 host vCPUs to asynchronous prefetching without inter-rank synchronization stalls,
-reducing per-epoch Python collation cycles by 4-8x and maximizing CUDA core saturation.
+memory clamping. Configure model-specific loader parameters (`loader:
+num_workers: 4, persistent_workers: true, prefetch_factor: 4`) in
+`unified_models_v2.yaml` to dedicate all 4 host vCPUs to asynchronous
+prefetching without inter-rank synchronization stalls, reducing per-epoch
+Python collation cycles by 4-8x and maximizing CUDA core saturation.
 
 ### 0-Byte WebDataset Member Fallback & Shard Index Latency (Pathology 65)
 

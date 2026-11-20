@@ -179,14 +179,14 @@ runtimes with bounded memory consumption:
 * **Uniform Buffer Steering**: The conditioning vector $\mathbf{z}$ is bound
   directly to WebGPU uniform buffers, delivering 60 FPS viewport manipulation.
 * **Cloud Training & Dataset Acceleration**: Trained on a single Tesla T4 GPU
-  (`preferred_parallel: single`) with scaled micro-batch ($B = 1024$) to eliminate
-  PCIe DDP synchronization stalls on the ~11 MB MobileNetV3 backbone while maximizing
-  GPU memory saturation. The DataLoader leverages dedicated per-model topology controls
-  (`loader: num_workers: 4, persistent_workers: true, prefetch_factor: 4`) allocating all
-  4 vCPUs to async background decompression. Consumes `LemGendizedUpnV2` with 100% clean
-  WebP containers (22 corrupt/0-byte legacy members purged) and pre-baked
-  `shard_offsets.json` v2 indices for `0.0s` startup resolution (down from
-  507.9s).
+  (`preferred_parallel: single`) with scaled micro-batch ($B = 1024$) to
+  eliminate PCIe DDP synchronization stalls on the ~11 MB MobileNetV3 backbone
+  while maximizing GPU memory saturation. The DataLoader leverages dedicated
+  per-model topology controls (`loader: num_workers: 4, persistent_workers:
+  true, prefetch_factor: 4`) allocating all 4 vCPUs to async background
+  decompression. Consumes `LemGendizedUpnV2` with 100% clean WebP containers
+  (22 corrupt/0-byte legacy members purged) and pre-baked `shard_offsets.json`
+  v2 indices for `0.0s` startup resolution (down from 507.9s).
 
 ---
 

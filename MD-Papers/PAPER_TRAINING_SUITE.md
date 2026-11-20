@@ -2398,13 +2398,14 @@ PyTorch's `nn.DataParallel` API.
   to disk. This guarantees that Kaggle Multi-GPU checkpoints can be effortlessly
   downloaded and evaluated natively on standalone Windows environments or CPU
   deployments without manual layer re-mapping.
-- **Single-GPU Affinity Governance & High-Throughput Micro-Batching**: Lightweight parameter and tabular
+- **Single-GPU Affinity Governance**: Lightweight parameter and tabular
   predictors (`upn_v2`, `forex_predictor`) enforce `preferred_parallel: single`
   on a single Tesla T4, avoiding dual-GPU PCIe barrier latency that exceeds
   their ~15ms compute pass while halving Kaggle accelerator quota consumption.
-  Furthermore, `upn_v2` scales to batch size 1024 with dedicated model-level loader tuning
-  (`loader: num_workers: 4, persistent_workers: true, prefetch_factor: 4`) under
-  automated governor VRAM clamping to prevent OOM across spatial ladder elevations.
+  Furthermore, `upn_v2` scales to batch size 1024 with dedicated model-level
+  loader tuning (`loader: num_workers: 4, persistent_workers: true,
+  prefetch_factor: 4`) under automated governor VRAM clamping to prevent OOM
+  across spatial ladder elevations.
 - **SOTA Multi-Variation Auto-Sync**: Whenever an epoch achieves a new SOTA
   best checkpoint (`is_best=True`), `KaggleHubManager.sync` invokes
   `publisher.push_model(..., variation=ALL_VARIATIONS)` to export and upload all
