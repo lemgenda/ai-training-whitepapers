@@ -1068,8 +1068,10 @@ cloud synchronization, and the background sidecar daemon.</p>
 <pre><code class="language-bash"># Display global help and command groups
 python cli.py --help
 
-# Display suite version
+# Display suite version via command or standard global flags
 python cli.py version
+python cli.py --version
+python cli.py -V
 </code></pre>
 <ul>
 <li><strong><code>train</code></strong>: Description: Train a neural architecture in-process using presets
@@ -1143,10 +1145,13 @@ python cli.py verify nafnet_denoising \
 <h3 id="sec-64-model-compilation--export-export">6.4 Model Compilation &amp; Export (<code>export</code>)</h3>
 <p>Compiles trained PyTorch checkpoints into optimized runtime deployment artifacts:</p>
 <pre><code class="language-bash"># Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
-python cli.py export mirnet_exposure --format all
+python cli.py export mirnet_exposure --target onnx_fp32 --target onnx_fp16 --target torch_pt --target webgpu
 
 # Single-target export
-python cli.py export mirnet_exposure --format webgpu
+python cli.py export mirnet_exposure --target webgpu
+
+# Export to custom destination directory
+python cli.py export mirnet_exposure --target onnx_fp32 --output-dir dist/export/
 
 # Universal model export and automatic staging into canonical Kaggle variation subdirectories
 python -m training.export.universal_exporter --model yolov8n --stage-dist
@@ -1273,8 +1278,8 @@ lemtrain sync push yolov8n --force --report sync_push.json --json
 # Sync checkpoint artifacts to Google Drive
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10
 
-# Probe remote cloud storage connection
-python cli.py sync probe --target kaggle
+# Probe remote cloud storage connection across all configured providers
+python cli.py sync probe
 </code></pre>
 <h3 id="sec-610-sidecar-daemon-operations-server">6.10 Sidecar Daemon Operations (<code>server</code>)</h3>
 <p>Controls the background FastAPI sidecar service running on <code>127.0.0.1:8200</code>:</p>
