@@ -1022,15 +1022,19 @@ enforce token authentication:
   In-process checkpoint evaluation under torch.no_grad()
 - **`POST`**: Endpoint: `/api/training/export`; Auth: Required; Description:
   In-process multi-format model compilation and export
-- **`POST`**: Endpoint: `/api/training/models/{model_key}/docs/generate`; Auth:
+- **`POST`**: Endpoint: `/api/models/{model_key}/docs/generate`; Auth:
   Required; Description: Regenerate model card README and Kaggle
   model-metadata.json
-- **`POST`**: Endpoint: `/api/training/models/{model_key}/export/stage`; Auth:
+- **`POST`**: Endpoint: `/api/models/{model_key}/export/stage`; Auth:
   Required; Description: Stage exported model binaries into canonical isolated
   Kaggle variation subdirectories
-- **`GET`**: Endpoint: `/api/training/models/{model_key}/variations/validate`;
+- **`GET`**: Endpoint: `/api/models/{model_key}/variations/validate`;
   Auth: Required; Description: Validate strict binary isolation across all
   Kaggle variation directories
+- **`POST`**: Endpoint: `/api/models/{model_key}/verify`; Auth: Required;
+  Description: Execute complete multi-pillar verification contract on model
+- **`POST`**: Endpoint: `/api/models/{model_key}/soup`; Auth: Required;
+  Description: Blend specialized vault checkpoints using Pareto Model Soup
 - **`GET`**: Endpoint: `/api/training/kaggle/status`; Auth: Required;
   Description: Real authenticated Kaggle call: `authenticated`, `username`,
   `token_configured`, `auth_method`, `http_status`, `error`
@@ -1214,7 +1218,7 @@ Response:
 
 #### Kaggle Models Hub & Variation Isolation Endpoints
 
-##### `POST /api/training/models/{model_key}/docs/generate`
+##### `POST /api/models/{model_key}/docs/generate`
 
 Regenerates the model card (`README.md`) with live SOTA targets and Kaggle
 Models manifest (`model-metadata.json`) directly into
@@ -1232,7 +1236,7 @@ Response:
 }
 ```
 
-##### `POST /api/training/models/{model_key}/export/stage`
+##### `POST /api/models/{model_key}/export/stage`
 
 Stages exported model binaries into canonical isolated Kaggle variation
 subdirectories (`dist/kaggle/pytorch/`, `dist/kaggle/onnx_fp32/`,
@@ -1252,6 +1256,26 @@ Response:
   "is_valid": true,
   "errors": [],
   "message": "Staged variations for yolov8n"
+}
+```
+
+##### `GET /api/models/{model_key}/variations/validate`
+
+Validates strict binary isolation across all Kaggle variation directories for
+the specified model key, verifying zero cross-contamination.
+
+Response:
+
+```json
+{
+  "model_key": "yolov8n",
+  "is_valid": true,
+  "variations": {
+    "pytorch": { "variation": "pytorch", "is_valid": true, "errors": [] },
+    "onnx_fp32": { "variation": "onnx_fp32", "is_valid": true, "errors": [] },
+    "onnx_fp16": { "variation": "onnx_fp16", "is_valid": true, "errors": [] }
+  },
+  "summary": "Validation Report for yolov8n: 3 valid, 0 invalid"
 }
 ```
 
@@ -1328,26 +1352,6 @@ Response payload:
   "model_key": "codeformer",
   "success": true,
   "soup_checkpoint": "./LemGendaryModels\\codeformer\\checkpoints\\best_soup.pth"
-}
-```
-
-##### `GET /api/training/models/{model_key}/variations/validate`
-
-Validates strict binary isolation across all Kaggle variation directories for
-the specified model key, verifying zero cross-contamination.
-
-Response:
-
-```json
-{
-  "model_key": "yolov8n",
-  "is_valid": true,
-  "variations": {
-    "pytorch": { "variation": "pytorch", "is_valid": true, "errors": [] },
-    "onnx_fp32": { "variation": "onnx_fp32", "is_valid": true, "errors": [] },
-    "onnx_fp16": { "variation": "onnx_fp16", "is_valid": true, "errors": [] }
-  },
-  "summary": "Validation Report for yolov8n: 3 valid, 0 invalid"
 }
 ```
 
