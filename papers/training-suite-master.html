@@ -893,6 +893,19 @@ automatically invokes <code>notebook_service.generate_notebooks(model_key)</code
 local training or remote submission begins, ensuring on-disk notebooks are
 perpetually synchronized with active model configurations in
 <code>unified_models_v2.yaml</code>.</li>
+<li><strong>Universal Multi-Platform Execution Matrix (v16.9.240)</strong>: Formalizes the
+execution matrix across model families (Vision, YOLO, Forex, LLM) and runtimes
+(Local, Kaggle Cloud, Google Colab). Enforces single-GPU affinity for
+lightweight regressors (<code>upn_v2</code>) to eliminate multi-GPU barrier stalls.</li>
+<li><strong>Fail-Fast Environment Preflight (v16.9.240)</strong>: Introduces
+<code>EnvironmentPreflight</code> in <code>training/environment/preflight.py</code> verifying package
+dependencies, disk storage headroom thresholds, GPU accelerator readiness, and
+manifold existence before launching workloads.</li>
+<li><strong>Google Colab Auto-Resume &amp; Disconnect Recovery (v16.9.240)</strong>: Extends
+session deadline detection and checkpoint recovery in
+<code>training/cloud/session_deadline.py</code> and <code>training/checkpoint/recovery.py</code> to
+support Google Colab sessions, enabling atomic progress saves and background
+Google Drive synchronization prior to session termination.</li>
 <li><strong>Omni-Channel Control (CLI, API, GUI)</strong>: Exposed via Typer CLI
 (<code>lemtrain notebooks generate</code>), FastAPI REST endpoints (<code>/api/notebooks/*</code>),
 and one-click action buttons in the Desktop GUI (<code>lemgendary-ai-studio-gui</code>).</li>

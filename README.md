@@ -62,6 +62,17 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-20 — Prompt 25 Local / Kaggle / Colab Cloud Training Pipelines
+
+* Updated `MD-Papers/PAPER_TRAINING_SUITE.md` Section 2.53 and
+  `papers/training-suite-master.html` to document the unified execution
+  matrix across model families and environments, fail-fast environment
+  preflight (`EnvironmentPreflight`), and Google Colab session deadline
+  monitoring and Google Drive auto-resumption.
+* Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
+  and `manifest/documents.json` with Training Suite baseline
+  `v16.9.240-STABLE`.
+
 ### 2026-11-20 — Prompt 24 Model Export Pipelines & Verification
 
 * Updated `MD-Papers/PAPER_TRAINING_SUITE.md` and
