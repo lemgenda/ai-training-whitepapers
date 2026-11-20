@@ -1233,6 +1233,14 @@ $$
   `soup_weights` stores the weights as given. The blend is not evaluated
   automatically, so any claim that it beats its donors must come from a measured
   evaluation.
+- **Vault Consistency Auditing & Automated Garbage Collection (v16.9.159)**:
+  `validate_vault_consistency` in `training/checkpoint/vault.py` provides preflight
+  and runtime validation of the checkpoint vault. It audits file integrity, verifies
+  that checkpoints deserialize with non-empty model weights, validates historical
+  metric milestones against `sota_targets`, and flags corrupted or truncated files.
+  Complementary garbage collection (`prune_vault_checkpoints`) purges transient
+  `.tmp` save remnants and cleans obsolete intra-epoch `progress.pth` checkpoints
+  once `latest.pth` reaches an equal or newer epoch.
 - **SWA ingredient**: since v16.9.107 a run with SWA enabled (Section 2.32)
   writes `checkpoints/vault_swa.pth`. The default glob picks it up, or name it
   with `--donors psnr swa`, so SWA plus soup blending (the ROBOTS.md Pareto

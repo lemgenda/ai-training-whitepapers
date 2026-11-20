@@ -1266,6 +1266,14 @@ Metadata, including <code>governor_state</code>, is copied from the first donor,
 <code>soup_weights</code> stores the weights as given. The blend is not evaluated
 automatically, so any claim that it beats its donors must come from a measured
 evaluation.</li>
+<li><strong>Vault Consistency Auditing &amp; Automated Garbage Collection (v16.9.159)</strong>:
+<code>validate_vault_consistency</code> in <code>training/checkpoint/vault.py</code> provides preflight
+and runtime validation of the checkpoint vault. It audits file integrity, verifies
+that checkpoints deserialize with non-empty model weights, validates historical
+metric milestones against <code>sota_targets</code>, and flags corrupted or truncated files.
+Complementary garbage collection (<code>prune_vault_checkpoints</code>) purges transient
+<code>.tmp</code> save remnants and cleans obsolete intra-epoch <code>progress.pth</code> checkpoints
+once <code>latest.pth</code> reaches an equal or newer epoch.</li>
 <li><strong>SWA ingredient</strong>: since v16.9.107 a run with SWA enabled (Section 2.32)
 writes <code>checkpoints/vault_swa.pth</code>. The default glob picks it up, or name it
 with <code>--donors psnr swa</code>, so SWA plus soup blending (the ROBOTS.md Pareto
