@@ -1442,6 +1442,13 @@ lemtrain sync pull yolov8n --variation pytorch/default
 # Force re-download even if already present locally
 lemtrain sync pull yolov8n --force
 
+# Pin a specific model variation version (--version)
+lemtrain sync pull yolov8n --variation pytorch/default --version 2
+
+# Output structured sync report to file and stdout (--report, --json)
+lemtrain sync pull yolov8n --version 2 --report sync_pull.json --json
+lemtrain sync push yolov8n --force --report sync_push.json --json
+
 # Sync checkpoint artifacts to Google Drive
 python cli.py sync run mirnet_exposure --target gdrive --epoch 10
 
