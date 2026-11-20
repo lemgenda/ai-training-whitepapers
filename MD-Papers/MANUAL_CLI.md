@@ -1281,6 +1281,17 @@ python cli.py eval mirnet_exposure \
   --checkpoint checkpoints/mirnet_exposure/best.pth --batch-size 16
 ```
 
+### 6.3.1 Model Verification Contract (`verify`)
+
+Executes the comprehensive 5-pillar verification contract (loadability, forward determinism, metric thresholds, export equivalence, and schema conformance) and outputs a machine-readable report:
+
+```bash
+# Verify model family contract
+python cli.py verify nafnet_denoising \
+  --checkpoint checkpoints/nafnet_denoising/best.pth \
+  --output verification_report.json
+```
+
 ### 6.4 Model Compilation & Export (`export`)
 
 Compiles trained PyTorch checkpoints into optimized runtime deployment

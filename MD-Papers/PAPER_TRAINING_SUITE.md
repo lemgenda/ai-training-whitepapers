@@ -371,6 +371,27 @@ epoch audit, through the keys that `get_state()` writes (`input_size`,
 missing key counts as 0 and can never pass. A 384px epoch that triggers a jump
 to 512px is therefore no longer reported as complete.
 
+#### 2.3.2. Automated Model Family Verification Contract (`lemtrain verify`)
+
+To provide deterministic validation, prevent regressions across model releases, and
+enforce contract conformance before cloud synchronization, `lemtrain` integrates
+the model family verification engine (`training/verification/`):
+
+1. **Loadability Contract**:
+   Validates weights loading from checkpoint artifacts (`.pth`, `.pt`), verifies minimum binary size thresholds ($\ge 1024\text{ bytes}$), mandatory state dictionary keys (`model_state_dict`), and format versions.
+2. **Forward Determinism Contract**:
+   Verifies forward invariance under fixed seeds ($S = 42$) across repeated evaluation passes:
+   $$\max |f(x; \theta)_{\text{trial } 1} - f(x; \theta)_{\text{trial } 2}| \le \epsilon_{\text{atol}}$$
+3. **Metric Threshold Contract**:
+   Validates held-out evaluation performance against target directional bounds from `unified_models_v2.yaml`.
+4. **Export Equivalence Contract**:
+   Measures absolute numerical parity between native PyTorch forward passes and compiled ONNX FP32 / ONNX FP16 runtime engines on CPU:
+   $$\Delta_{\text{max}} = \max |y_{\text{pytorch}} - y_{\text{onnx}}| \le \text{tol}_{\text{family}}$$
+5. **Schema Conformance Contract**:
+   Validates header schemas, types, and sequence order for `metrics.csv` and `history.csv` against canonical schemas defined in `training/telemetry/schemas.py`.
+
+The CLI command `python cli.py verify {model} [-c checkpoint] [-o report.json]` executes this contract and emits structured machine-readable reports.
+
 ### 2.4. Checkpoint Resumption & Singularity Hardening
 
 - **Recovered Governor Topology Synchronization**: When restoring from a
