@@ -119,6 +119,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
     (v16.9.234)](#250-yolo-object-detection-training--evaluation-enhancements-v169234)
   - [2.51. Unified Model Configuration Schema & Validator (v16.9.235)](#251-unified-model-configuration-schema--validator-v169235)
   - [2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)](#252-standardized-telemetry--history-recording-pipelines-v169236)
+  - [2.53. Single-Repository Cloud Notebook Execution Architecture
+    (v16.9.240)](#253-single-repository-cloud-notebook-execution-architecture-v169240)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2254,6 +2256,28 @@ release v16.9.236 modernizes the telemetry recording pipelines:
   Provides `TelemetryCsvValidator` to enforce structural and numeric validity
   across all CSV telemetry files, detecting header omissions, missing mandatory
   columns, and non-numeric value corruptions.
+
+### 2.53. Single-Repository Cloud Notebook Execution Architecture (v16.9.240)
+
+To minimize remote disk usage, reduce git credential exposure, and accelerate
+initialization latency in transient cloud kernels (Kaggle GPU/TPU instances and
+Google Colab runtimes), release v16.9.240 completely eliminates auxiliary
+repository cloning:
+
+- **Single-Repo Git Synchronization**: The clone generator
+  (`training/notebooks/cells/repo.py`) exclusively clones
+  `lemgendary-training-suite` into the session-only `/kaggle/temp/` folder.
+  Auxiliary checkouts of `lemgendary-env-manager` and `LemGendaryModels` are
+  eliminated.
+- **Autonomous Ecosystem Discovery**: The suite bundles a canonical snapshot
+  of `ecosystem.json` directly within `training/ecosystem.json`.
+  `training/ecosystem.py` discovers this bundled specification first, ensuring
+  seamless lookup of Kaggle ownership, collaborators, and accelerator profiles
+  without cloning external management repositories.
+- **Direct Manifest Resolution**: The environment dependency cell
+  (`training/notebooks/cells/deps.py`) targets the suite's root
+  `requirements.txt` as its primary manifest candidate, bypassing the need for
+  external `requirements/requirements-training.txt` manifests.
 
 ---
 

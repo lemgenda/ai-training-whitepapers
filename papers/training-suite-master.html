@@ -133,6 +133,7 @@ Probing</a></li>
 <li><a href="#sec-250-yolo-object-detection-training--evaluation-enhancements-v169234">2.50. YOLO Object Detection Training &amp; Evaluation Enhancements (v16.9.234)</a></li>
 <li><a href="#sec-251-unified-model-configuration-schema--validator-v169235">2.51. Unified Model Configuration Schema &amp; Validator (v16.9.235)</a></li>
 <li><a href="#sec-252-standardized-telemetry--history-recording-pipelines-v169236">2.52. Standardized Telemetry &amp; History Recording Pipelines (v16.9.236)</a></li>
+<li><a href="#sec-253-single-repository-cloud-notebook-execution-architecture-v169240">2.53. Single-Repository Cloud Notebook Execution Architecture (v16.9.240)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -2204,6 +2205,27 @@ session aborts.</li>
 Provides <code>TelemetryCsvValidator</code> to enforce structural and numeric validity
 across all CSV telemetry files, detecting header omissions, missing mandatory
 columns, and non-numeric value corruptions.</li>
+</ul>
+<h3 id="sec-253-single-repository-cloud-notebook-execution-architecture-v169240">2.53. Single-Repository Cloud Notebook Execution Architecture (v16.9.240)</h3>
+<p>To minimize remote disk usage, reduce git credential exposure, and accelerate
+initialization latency in transient cloud kernels (Kaggle GPU/TPU instances and
+Google Colab runtimes), release v16.9.240 completely eliminates auxiliary
+repository cloning:</p>
+<ul>
+<li><strong>Single-Repo Git Synchronization</strong>: The clone generator
+(<code>training/notebooks/cells/repo.py</code>) exclusively clones
+<code>lemgendary-training-suite</code> into the session-only <code>/kaggle/temp/</code> folder.
+Auxiliary checkouts of <code>lemgendary-env-manager</code> and <code>LemGendaryModels</code> are
+eliminated.</li>
+<li><strong>Autonomous Ecosystem Discovery</strong>: The suite bundles a canonical snapshot
+of <code>ecosystem.json</code> directly within <code>training/ecosystem.json</code>.
+<code>training/ecosystem.py</code> discovers this bundled specification first, ensuring
+seamless lookup of Kaggle ownership, collaborators, and accelerator profiles
+without cloning external management repositories.</li>
+<li><strong>Direct Manifest Resolution</strong>: The environment dependency cell
+(<code>training/notebooks/cells/deps.py</code>) targets the suite's root
+<code>requirements.txt</code> as its primary manifest candidate, bypassing the need for
+external <code>requirements/requirements-training.txt</code> manifests.</li>
 </ul>
 </section>
 
