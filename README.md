@@ -140,6 +140,18 @@
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with secret management requirements.
 
+### v16.9.228 - Navigation Standardization & Masonry Refactor Sync
+
+* **GUI Control Registry & Manual Sync (`GUI_CONTROL_REGISTRY.md`,
+  `MANUAL_AI_STUDIO_GUI.md`, `papers/gui-control-registry.html`,
+  `papers/ai-studio-manual.html`)**: Updated documentation to reflect
+  relocation of `Report Issue` (`header-btn-report-issue`) back to top header
+  as an accessible icon button (`lucide:bug`) and `LemGendary AI Documentation
+  Hub` (`sidebar-btn-docs-hub`) into the left navigation menu directly between
+  the Training Suite button and Clean Install Pipeline button. Documented
+  unified card styling on the Model Training panel and responsive true masonry
+  distribution across manifold cards.
+
 ### v16.9.227 - GUI Control Registry Audit & Header Navigation Rearrangement
 
 * **GUI Control Registry & Manual Sync (`GUI_CONTROL_REGISTRY.md`,

@@ -572,9 +572,11 @@ Since the `v2.10.57` registry 53 IDs were added, one removed and two renamed
 - **Removed**: `gpu-select` (the P100 / T4 choice), replaced by
   `kaggle-accelerator-select` (`v2.10.65`); `dash-btn-refresh-audit` removed
   completely from the top header (`v2.10.71`).
-- **Added, Header and Sidebar (`v2.10.71`)**: `sidebar-btn-config` and
-  `sidebar-btn-docs-hub` added to the left sidebar menu action group along
-  with moved controls `header-btn-report-issue` and `header-btn-test-modal`.
+- **Added, Header and Sidebar (`v2.10.74`)**: `sidebar-btn-config` and
+  `header-btn-test-modal` in sidebar action group; `sidebar-btn-docs-hub`
+  in sidebar navigation menu between `tab-training` and `tab-pipeline`;
+  `header-btn-report-issue` in top header as accessible icon button
+  (`lucide:bug`).
 - **Added, Dynamic Compiler (`v2.10.71`)**: `comp-yield-mode` for LLM
   manifold yield strategy display.
 

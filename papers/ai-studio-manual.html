@@ -264,8 +264,9 @@
         <li><strong>Config &amp; Secrets Sidebar Action Button</strong> (<code>sidebar-btn-config</code>): Opens the Universal Configuration,
           Registry Editor &amp; Secrets Vault modal for editing YAML manifests and managing
           Kaggle, Google Drive, GitHub and MetaTrader 5 credentials (chapter 3).</li>
-        <li><strong>Report Issue Sidebar Action Button</strong> (<code>header-btn-report-issue</code>): Opens the Report
-          Issue form with the module set to the current tab. You describe the problem,
+        <li><strong>Report Issue Header Action Button</strong> (<code>header-btn-report-issue</code>): Opens the Report
+          Issue form with the module set to the current tab. Accessible in the top header via an icon button
+          (<code>lucide:bug</code>) with accessible label and tooltip. You describe the problem,
           attach annotated screenshots and recent telemetry, and the LemGendary
           Environment Manager saves a ZIP report and opens your mail client (chapter
           13).</li>
@@ -273,16 +274,25 @@
           Test &amp; Diagnostic Orchestrator, which runs the 1-epoch fleet smoke test or
           the in-process unit tests of the LemGendary Model Training Suite and
           LemGendary Dataset Compiler Suite (section 3.3).</li>
-        <li><strong>LemGendary AI Documentation Hub Button</strong> (<code>sidebar-btn-docs-hub</code>): Opens the local Documentation Hub
-          in your browser. The address comes from the LemGendary Environment Manager
-          (<code>GET /api/docs/status</code>), which serves the hub; the button is disabled, with
-          the reason as tooltip, while the Environment Manager is offline or has no
-          docs checkout (chapter 10).</li>
         <li><strong>Dashboard Tab</strong> (<code>tab-dashboard</code>): Shows hardware cards, sidecar service
           tiles, project health cards and the live event console.</li>
         <li><strong>LemGendary Dataset Compiler Suite Tab</strong> (<code>tab-datasets</code>): Shows the
           manifold compiler, Kaggle synchronization and the manifold catalog
           (<code>./lemgendary-datasets/</code>).</li>
+        <li><strong>LemGendary Model Training Suite Tab</strong> (<code>tab-training</code>): Shows the model
+          cards, Sawtooth Governor VRAM controls, spatial ladders and training dispatch
+          (<code>./lemgendary-training-suite/</code>).</li>
+        <li><strong>LemGendary AI Documentation Hub Button</strong> (<code>sidebar-btn-docs-hub</code>): Located in the
+          left navigation menu directly below the Model Training Suite button and above the Clean Install Pipeline
+          button. Opens the local Documentation Hub in your browser. The address comes from the LemGendary Environment
+          Manager (<code>GET /api/docs/status</code>), which serves the hub; the button is disabled, with the reason as
+          tooltip, while the Environment Manager is offline or has no docs checkout (chapter 10).</li>
+        <li><strong>Clean Install Pipeline Tab</strong> (<code>tab-pipeline</code>): Shows the 7-step
+          provisioning sequence, Run Pipeline and the Clean Install confirmation
+          (chapter 4).</li>
+        <li><strong>Health &amp; Version Drift Tab</strong> (<code>tab-health</code>): Shows host prerequisites, the
+          Python drift matrix, the GUI's npm packages and the maintenance actions
+          (chapter 8).</li>
         <li><strong>LemGendary Model Training Suite Tab</strong> (<code>tab-training</code>): Shows the model
           cards, Sawtooth Governor VRAM controls, spatial ladders and training dispatch
           (<code>./lemgendary-training-suite/</code>).</li>
