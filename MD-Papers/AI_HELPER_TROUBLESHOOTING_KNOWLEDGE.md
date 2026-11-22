@@ -82,7 +82,8 @@ from the operator:
      `torch.cuda.mem_get_info()` or GUI telemetry stream.
    * **Invocation Parameters**: Exact CLI command line arguments or active GUI
      configuration toggles.
-3. **Stage 3: Bounded Remediation**: Recommend concrete parameter, flag, or
+3. **Stage 3: Bounded Remediation**:
+4. Recommend concrete parameter, flag, or
    structural modifications only after evidence and prerequisites justify the
    change. All diagnoses must carry an epistemic tag: `[CONFIRMED]`,
    `[PROBABLE]`, or `[ILLUSTRATIVE]`.
@@ -288,7 +289,7 @@ single authoritative resolution for this state."` and prescribe running
 
 ---
 
-### Scenario 07: Power-Loss Resilience and Corrupted Checkpoint Recovery `[CONFIRMED]`
+### Scenario 07: Power-Loss Checkpoint Recovery `[CONFIRMED]`
 
 * **`symptom`**: System crashes or loses power during training; subsequent run
   crashes on launch with EOFError: Ran out of input or RuntimeError:
@@ -474,7 +475,7 @@ single authoritative resolution for this state."` and prescribe running
 
 ---
 
-### Scenario 13: OpenCV Package Collision & Health Check False Alarms `[CONFIRMED]`
+### Scenario 13: OpenCV Collision & Health False Alarms `[CONFIRMED]`
 
 * **`symptom`**: Pipeline Step 7 reports `Ecosystem healthy status: False` and
   lists `opencv-python` as a missing package for `lemgendary-datasets`, even
@@ -572,3 +573,23 @@ single authoritative resolution for this state."` and prescribe running
      decompression to slice row records into WebDataset `.data` archives.
   3. Validate output shard sample count against `index.json` before purging
      legacy `mds/` files.
+
+### Scenario 16: Docs Suite Drift & Workspace Root [CONFIRMED]
+
+* **`symptom`**: lem-env docs-audit fails with missing sibling manifests.
+* **`context`**: lemgendary-env-manager docs_audit subsystem.
+* **`remediation`**: Ensure dynamic workspace root discovery and run
+  `lem-env docs-audit --root lemgendary-docs`.
+
+### Scenario 17: Screen Capture Desktop Leakage Guard [CONFIRMED]
+
+* **`symptom`**: Full desktop or background monitors accidentally captured.
+* **`context`**: `lemgendary-env-manager` screen_capture module.
+* **`remediation`**: Enforce HWND clamping using Win32 `PrintWindow`.
+
+### Scenario 18: Multi-Metric SOTA Training Chart Scale Distortion [CONFIRMED]
+
+* **`symptom`**: Large metrics compress small metrics, or opposing polarities.
+* **`context`**: `lemgendary-env-manager` chart_builder module.
+* **`remediation`**: Split subplots by metric optimization polarity with
+  SOTA target reference lines.

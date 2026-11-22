@@ -40,11 +40,11 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [4.4 Managed Workspace Projects Health
     Cards](#44-managed-workspace-projects-health-cards)
 - [5. Dataset Compilation: Modernization, Kaggle Ingestion & Streaming
-  Manifolds](#5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds)
+Manifolds](#5-dataset-compilation-modernization-kaggle-ingestion--streaming-manifolds)
   - [5.1 Dataset Compiler & Modernization Control
     Card](#51-dataset-compiler--modernization-control-card)
   - [5.2 Production Manifolds Catalog, Upstream Lineage & One-Click Cloud
-    Sync](#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync)
+Sync](#52-production-manifolds-catalog-upstream-lineage--one-click-cloud-sync)
   - [5.3 Modernization Queue & Scale Reduction
     Workflows](#53-modernization-queue--scale-reduction-workflows)
   - [5.4 Embedded Dataset Telemetry
@@ -60,9 +60,9 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [6.2.2 Interactive SOTA Target Pinning & Metric
     Inspection](#622-interactive-sota-target-pinning--metric-inspection)
   - [6.3 Three-Tab Real-Time Telemetry Stream & Responsive
-    Cancellation](#63-three-tab-real-time-telemetry-stream--responsive-cancellation)
+Cancellation](#63-three-tab-real-time-telemetry-stream--responsive-cancellation)
   - [6.4 Revamped Training Dashboard Topology & Interactive SOTA
-    Inspection](#64-revamped-training-dashboard-topology--interactive-sota-inspection)
+Inspection](#64-revamped-training-dashboard-topology--interactive-sota-inspection)
 - [7. Evaluation, Export & Cloud Publishing to Kaggle and Google
   Drive](#7-evaluation-export--cloud-publishing-to-kaggle-and-google-drive)
   - [7.1 Real-Time Metrics & Live Loss
@@ -71,11 +71,11 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [7.3 Publishing to Kaggle Models Hub & Cloud
     Registry](#73-publishing-to-kaggle-models-hub--cloud-registry)
   - [7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to
-    v2.10.68)](#74-kaggle-launch-options-card-transfers--resume-refusal-v21058-to-v21068)
+v2.10.68)](#74-kaggle-launch-options-transfers--resume-refusal-v21058-v21068)
 - [8. Health Matrix & Cross-Project Version Drift
   Analytics](#8-health-matrix--cross-project-version-drift-analytics)
   - [8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
-    Packages](#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages)
+Packages](#81-toolchain-prerequisites-python-drift-matrix--desktop-gui-npm-packages)
   - [8.2 Ecosystem Maintenance & Governance
     Controls](#82-ecosystem-maintenance--governance-controls)
 - [9. Contextual UX Help & Interactive Hover Guidance
@@ -83,7 +83,7 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [9.1 Interactive Hover Popovers & Safety
     Diagnostics](#91-interactive-hover-popovers--safety-diagnostics)
 - [10. Permanent Offline Documentation Hub & Online
-  Synchronization](#10-permanent-offline-documentation-hub--online-synchronization)
+Synchronization](#10-permanent-offline-documentation-hub--online-synchronization)
   - [10.1 Local Static Offline Documentation
     Server](#101-local-static-offline-documentation-server)
   - [10.2 Live GitHub Pages Online
@@ -107,6 +107,35 @@ ID Registry](./GUI_CONTROL_REGISTRY.md)
   - [13.6 Screen Recording](#136-screen-recording)
 
 ---
+
+Table of Figures:
+
+Figure 1. End-to-End Production Pipeline Flowchart (Synthesis Architecture)
+Figure 2. LemGendary AI Studio GUI Global Shell (Global Workspace Shell)
+Figure 3. Ecosystem Sidecar Services Grid (Dashboard View)
+Figure 4. Universal Dynamic Config & Manifest Editor (Config & Secrets Modal)
+Figure 5. Universal Secrets & Tokens Vault Modal (Config & Secrets Modal)
+Figure 6. Smart Clean Install Pipeline Orchestrator Card (Pipeline View)
+Figure 7. Individual Pipeline Step Execution Cards Grid (Pipeline View)
+Figure 8. System & Hardware Architecture Sentinel Card (Pipeline View)
+Figure 9. Managed Workspace Projects Health Grid (Pipeline View)
+Figure 10. Dataset Compiler & Storage Modernization Card (Datasets View)
+Figure 11. Production Manifolds Catalog Grid (Datasets View)
+Figure 12. Model Training Suite & Model Orchestration Toolbar (Training View)
+Figure 13. Registered Neural Architectures Telemetry Card (Training View)
+Figure 14. Vision & Super-Resolution Model Card (Training View)
+Figure 15. Object Detection Multi-Task Model Card (Training View)
+Figure 16. Causal LLM Model Card (Training View)
+Figure 17. Interactive SOTA Target Pinning Popover (Training View)
+Figure 18. Redesigned Three-Tab Real-Time Telemetry Console (Training View)
+Figure 19. Revamped Training Dashboard Topology (Training View)
+Figure 20. Model Export & Kaggle Models Hub Registry Dispatch (Training View)
+Figure 21. Toolchain Prerequisites & Python Drift Matrix (Diagnostics View)
+Figure 22. Ecosystem Maintenance & Governance Controls (Diagnostics View)
+Figure 23. Contextual UX Help & Interactive Hover Guidance (Global Popover)
+Figure 24. Permanent Offline Documentation Hub Interface (Documentation View)
+Figure 25. Dataset Compilation Engine Card (Compilation Control Plane)
+Figure 26. Pipeline Execution Card with Live Telemetry (Execution View)
 
 ## 1. Abstract
 
@@ -150,8 +179,10 @@ The system achieves this through three foundational engineering principles:
    hover icon (`?`) delivering instant, plain-English explanations of what the
    control does, what files are affected, and what safeguards are active.
 
-![End-to-End Production Pipeline
+![Figure 1: End-to-End Production Pipeline
 Flowchart](../assets/gui_dataset_training_flow.svg)
+*Figure 1: End-to-End Production Pipeline Flowchart: Synthesis, training, and
+cloud publishing workflow across tripartite sidecars.*
 
 ---
 
@@ -161,8 +192,11 @@ The AI Studio interface is organized into persistent visual regions designed for
 ergonomic operation. Every element, card, and control in the live interface is
 indexed below with corresponding operational workflows and safety boundaries.
 
-![LemGendary AI Studio GUI Global
+![Figure 2: LemGendary AI Studio GUI Global
 Shell](../assets/gui/gui_shell_header_sidebar.png)
+*Figure 2: LemGendary AI Studio GUI Global Shell: (1) Header with status
+indicator, refresh, tests, and report issue triggers, (2) Navigation sidebar
+with 5 primary workspaces, and (3) Main operational viewport.*
 
 ### 2.1 Workspace Global Shell Elements & Numbered Navigation Guide
 
@@ -255,7 +289,11 @@ three local microservices:
 - **LemGendary Model Training Suite (`Port 8200`)**: Neural architecture
   training and evaluation engine (`./lemgendary-training-suite/`).
 
-![Ecosystem Sidecar Services Grid](../assets/gui/gui_service_tiles.png)
+![Figure 3: Ecosystem Sidecar Services
+Grid](../assets/gui/gui_service_tiles.png)
+*Figure 3: Ecosystem Sidecar Services Grid: Live monitoring and lifecycle
+controls for Environment Manager (port 8000), Dataset Compiler (port 8100), and
+Training Suite (port 8200).*
 
 Stopping a sidecar on macOS and Linux sends SIGTERM and waits up to 3 s before
 SIGKILL, so the sidecar can flush its logs; Linux falls back to `ss -tlpnH` when
@@ -354,8 +392,10 @@ Universal Configuration & Secrets Vault modal, opened with the
 
 ### 3.1 Central Manifest Registry Editor
 
-![Universal Dynamic Config & Manifest
+![Figure 4: Universal Dynamic Config & Manifest
 Editor](../assets/gui/gui_config_secrets_modal.png)
+*Figure 4: Universal Dynamic Config & Manifest Editor: Centralized manifest
+registry editor with server-side validation and syntax checking.*
 
 The Python and npm dependency manifests open the central files in
 `lemgendary-env-manager/requirements/`; saving one makes the Environment Manager
@@ -434,8 +474,10 @@ Show/Hide toggle.
   memory. Save errors show the server's message (for example a failed Kaggle
   check), and legacy credential files that were skipped or failed are listed.
 
-![Universal Secrets & Tokens Vault
+![Figure 5: Universal Secrets & Tokens Vault
 Modal](../assets/gui/gui_secrets_vault_modal.png)
+*Figure 5: Universal Secrets & Tokens Vault Modal: Write-only credential storage
+with masked token hints for Kaggle, Hugging Face, and Google Drive.*
 
 #### Secrets & Tokens Vault Numbered Reference
 
@@ -521,8 +563,10 @@ automated 7-Stage Clean Install Pipeline.
 
 ### 4.1 Pipeline Orchestrator Control Card
 
-![Smart Clean Install Pipeline Orchestrator
+![Figure 6: Smart Clean Install Pipeline Orchestrator
 Card](../assets/gui/gui_pipeline_card.png)
+*Figure 6: Smart Clean Install Pipeline Orchestrator Card: One-click 7-stage
+automated environment installation and dependency audit orchestration.*
 
 #### Clean Install Pipeline Numbered Reference
 
@@ -601,8 +645,11 @@ In addition to running the full automated sequence, operators can execute
 individual stages in isolation for granular troubleshooting, inspection, and
 rapid re-verification:
 
-![Individual Pipeline Step Execution Cards
+![Figure 7: Individual Pipeline Step Execution Cards
 Grid](../assets/gui/gui_pipeline_step_cards.png)
+*Figure 7: Individual Pipeline Step Execution Cards Grid: Modular stage triggers
+for Git hooks, toolchain audit, venv provisioning, wheel resolution, and
+verification.*
 
 Each step pill (WAIT, RUN, DONE, FAILED) follows only that step's latest
 Environment Manager event. Compiler, training and console events no longer reset
@@ -692,8 +739,10 @@ The Hardware Acceleration Sentinel Card is permanently visible on the central
 Dashboard, delivering an un-truncated live readout of physical compute
 capabilities:
 
-![System & Hardware Architecture Sentinel
+![Figure 8: System & Hardware Architecture Sentinel
 Card](../assets/gui/gui_hardware_card.png)
+*Figure 8: System & Hardware Architecture Sentinel Card: Real-time hardware
+telemetry probing CUDA, ROCm, DirectML, CPU fallbacks, and VRAM availability.*
 
 #### Hardware Architecture Card Numbered Reference
 
@@ -742,8 +791,10 @@ The Project Environments overview on the Dashboard displays dedicated cards for
 each sub-project in the ecosystem. All cards display clean relative paths
 without exposing sensitive host absolute paths:
 
-![Managed Workspace Projects Health
+![Figure 9: Managed Workspace Projects Health
 Grid](../assets/gui/gui_managed_projects.png)
+*Figure 9: Managed Workspace Projects Health Grid: Health matrix across
+lemgendary-env-manager, lemgendary-datasets, and lemgendary-training-suite.*
 
 #### Managed Projects Grid Numbered Reference
 
@@ -786,8 +837,11 @@ synthesis, direct cloud ingestion, and bidirectional Kaggle synchronization.
 The top card of the Dataset Compiler tab governs manifold synthesis and
 streaming storage conversion:
 
-![Dataset Compiler & Storage Modernization
+![Figure 10: Dataset Compiler & Storage Modernization
 Card](../assets/gui/gui_dataset_compiler.png)
+*Figure 10: Dataset Compiler & Storage Modernization Card: Manifold compilation
+control plane with preset selection, auto-scaled workers, and shard
+modernizers.*
 
 #### Dataset Compiler Control Card Numbered Reference
 
@@ -837,7 +891,11 @@ The Production Manifolds section catalogs all verified streaming datasets inside
 `./LemGendaryDatasets/`, providing instant access to upstream lineage and
 integrated card-level Kaggle synchronization:
 
-![Production Manifolds Catalog Grid](../assets/gui/gui_production_manifolds.png)
+![Figure 11: Production Manifolds Catalog
+Grid](../assets/gui/gui_production_manifolds.png)
+*Figure 11: Production Manifolds Catalog Grid: Shard inspection, total sample
+counts, disk footprints, format distributions, and one-click cloud
+synchronization.*
 
 #### Production Manifolds Catalog Numbered Reference
 
@@ -946,8 +1004,11 @@ The top toolbar of the Model Training panel provides search, domain filtering
 and batch actions across all 23 registered models. The fleet-wide 1-epoch smoke
 test moved to the Test & Diagnostic Orchestrator (section 3.3).
 
-![Model Training Suite & Model Orchestration
+![Figure 12: Model Training Suite & Model Orchestration
 Toolbar](../assets/gui/gui_training_orchestrator.png)
+*Figure 12: Model Training Suite & Model Orchestration Toolbar: Search filters,
+architecture status selectors, notebook generators, and fleet-wide cloud
+synchronization.*
 
 #### Training Orchestrator Toolbar Numbered Reference
 
@@ -1007,8 +1068,11 @@ Callout bindings (control type; endpoint or action):
 Each registered model card provides comprehensive telemetry, binary export
 readiness, and interactive SOTA target inspection:
 
-![Registered Neural Architectures Telemetry
+![Figure 13: Registered Neural Architectures Telemetry
 Card](../assets/gui/gui_architecture_telemetry.png)
+*Figure 13: Registered Neural Architectures Telemetry Card: Live training
+convergence metrics, SOTA comparison indicators, and per-format readiness
+badges.*
 
 The PyTorch, ONNX FP32 and ONNX FP16 badges follow their own readiness flags
 (`pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready`); a flag the Training
@@ -1156,9 +1220,13 @@ GUI renders domain-tailored card rows dynamically:
 - **SOTA Convergence**: Evaluates multi-objective targets including Directional
   Accuracy (%), Profit Factor, Sharpe Ratio, Sortino Ratio, and Drawdown.
 
-#### 2. Computer Vision & Super-Resolution Card (`UPN v2`, `CodeFormer`, `MIRNet`)
+#### 2. Computer Vision & Super-Resolution Card (`UPN v2`, `CodeFormer`, etc.)
 
-![Vision & Super-Resolution Model Card](../assets/gui/gui_card_vision.png)
+![Figure 14: Vision & Super-Resolution Model
+Card](../assets/gui/gui_card_vision.png)
+*Figure 14: Vision & Super-Resolution Model Card: Spatial ladder progression
+stepping, loss curves, and checkpoint telemetry for UPN v2, CodeFormer, and
+MIRNet.*
 
 - **Resolution Ladder**: Visualizes spatial rung stepping
   (`Stage 1: 256px / 512px` or `Full (512px)`).
@@ -1169,7 +1237,10 @@ GUI renders domain-tailored card rows dynamically:
 
 #### 3. Object Detection & Spatial Perception Card (`YOLOv8n Multi-Task`)
 
-![Object Detection Multi-Task Model Card](../assets/gui/gui_card_yolo.png)
+![Figure 15: Object Detection Multi-Task Model
+Card](../assets/gui/gui_card_yolo.png)
+*Figure 15: Object Detection Multi-Task Model Card: Spatial anchor grids,
+bounding box regressions, and real-time mAP metrics for YOLOv8n Multi-Task.*
 
 - **Input Resolution**: Dynamically scales spatial inputs (`640px` multi-scale
   anchor grids).
@@ -1178,7 +1249,9 @@ GUI renders domain-tailored card rows dynamically:
 
 #### 4. Large Language Model Card (`AI Studio Assistant - Causal LLM`)
 
-![Causal LLM Model Card](../assets/gui/gui_card_llm.png)
+![Figure 16: Causal LLM Model Card](../assets/gui/gui_card_llm.png)
+*Figure 16: Causal LLM Model Card: QLoRA instruction tuning matrix, context
+token window metrics, and 4-bit quantized adapter training telemetry.*
 
 - **QLoRA Instruction Tuning Matrix**: Dedicated matrix displaying context
   tokens (`2048 tokens`), adapter rank (`LoRA r=16, alpha=32`), loss function
@@ -1195,7 +1268,10 @@ GUI renders domain-tailored card rows dynamically:
 Clicking the **Target Metrics (SOTA)** header on any active card pins the metric
 inspection popover in place:
 
-![Interactive SOTA Target Pinning Popover](../assets/gui/gui_sota_popover.png)
+![Figure 17: Interactive SOTA Target Pinning
+Popover](../assets/gui/gui_sota_popover.png)
+*Figure 17: Interactive SOTA Target Pinning Popover: Pinned inspection popover
+detailing convergence parameters, target thresholds, and historical benchmarks.*
 
 The pinned popover details all convergence parameters, goal thresholds, achieved
 validation scores, and real-time pass/fail indicators.
@@ -1208,8 +1284,11 @@ The redesigned Live Telemetry Console is embedded directly on the Model Training
 panel, providing a tabbed terminal interface for complete observability across
 local training, remote cloud execution, and ecosystem mesh daemons:
 
-![Redesigned Three-Tab Real-Time Telemetry
+![Figure 18: Redesigned Three-Tab Real-Time Telemetry
 Console](../assets/gui/gui_telemetry_console.png)
+*Figure 18: Redesigned Three-Tab Real-Time Telemetry Console: High-throughput
+local process logs, remote cloud stream, and ecosystem mesh telemetry with
+in-place roll-up.*
 
 The Local Process and Remote Cloud streams follow the newest line when events
 arrive or their tab is shown (v2.10.53). Live log events and progress ticks
@@ -1267,8 +1346,10 @@ Callout bindings (control type; endpoint or action):
 
 The modern Training Panel employs a high-productivity split topology:
 
-![Revamped Training Dashboard Topology & Interactive SOTA
+![Figure 19: Revamped Training Dashboard Topology & Interactive SOTA
 Inspection](../assets/gui/gui_training_panel_overview.png)
+*Figure 19: Revamped Training Dashboard Topology: Comprehensive architecture
+telemetry grid and responsive training lifecycle controls.*
 
 #### Training Dashboard Topology Numbered Reference
 
@@ -1334,8 +1415,11 @@ Once training completes, you can export your trained model with a single click:
 Clicking `Sync Kaggle Models Hub` on any registered architecture card opens the
 isolated multi-variation publishing workflow:
 
-![Model Export, Binary Packaging & Kaggle Models Hub Registry
+![Figure 20: Model Export, Binary Packaging & Kaggle Models Hub Registry
 Dispatch](../assets/gui/gui_model_export_publish.png)
+*Figure 20: Model Export, Binary Packaging & Kaggle Models Hub Registry
+Dispatch: Multi-variation staging modal enforcing strict 4-variation directory
+isolation.*
 
 The Kaggle tab can also attach to a kernel that is already running: enter
 `owner/kernel-slug` in `kaggle-monitor-slug` and press **Attach Monitor**
@@ -1434,7 +1518,7 @@ neural models and checkpoints to Kaggle Models Hub simultaneously using the
 `Push All Models to Kaggle` button in the Training Orchestrator Toolbar (Section
 6.1) or via the Master CLI command (`lemtrain sync push --all`).
 
-### 7.4 Kaggle Launch Options, Card Transfers & Resume Refusal (v2.10.58 to v2.10.68)
+### 7.4 Kaggle Launch Options, Transfers & Resume Refusal (v2.10.58-v2.10.68)
 
 The Kaggle GPU Cloud tab of the Cloud & Registry Dispatch dialog follows the
 Training Suite Kaggle contract (`openapi.json` of Training Suite v16.9.170
@@ -1506,8 +1590,10 @@ insidious bugs. The LemGendary AI Studio GUI provides continuous real-time
 cross-project dependency audits covering Python virtual environments and
 frontend desktop GUI NPM packages.
 
-![Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
+![Figure 21: Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
 Packages](../assets/gui/gui_health_drift_matrix.png)
+*Figure 21: Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM
+Packages: Cross-project dependency audit and wheel synchronization matrix.*
 
 ### 8.1 Toolchain Prerequisites, Python Drift Matrix & Desktop GUI NPM Packages
 
@@ -1548,8 +1634,11 @@ Callout bindings (control type; endpoint or action):
 The Health and Maintenance view provides nuclear-hardened ecosystem maintenance
 controls backed by `lemgendary-env-manager` on port 8000:
 
-![Ecosystem Maintenance & Governance
+![Figure 22: Ecosystem Maintenance & Governance
 Controls](../assets/gui/gui_ecosystem_maintenance.png)
+*Figure 22: Ecosystem Maintenance & Governance Controls: Operational triggers
+for deep cache purges, git hooks installation, package upgrades, and ecosystem
+verification.*
 
 #### Ecosystem Maintenance Controls Numbered Reference
 
@@ -1592,8 +1681,11 @@ Every single visual control across the LemGendary AI Studio GUI features
 contextual interactive hover guidance engineered according to the Gardening
 Model Rule:
 
-![Contextual UX Help & Interactive Hover Guidance
+![Figure 23: Contextual UX Help & Interactive Hover Guidance
 Popover](../assets/gui/gui_contextual_help_popover.png)
+*Figure 23: Contextual UX Help & Interactive Hover Guidance Popover: Accessible
+WCAG 2.2 compliant micro-documentation popover explaining control semantics and
+CLI equivalents.*
 
 ### 9.1 Interactive Hover Popovers & Safety Diagnostics
 
@@ -1627,8 +1719,10 @@ Reliability requires that complete engineering documentation is accessible at
 all times including on isolated workstations, offline air-gapped lab servers, or
 during broadband outages.
 
-![Permanent Offline Documentation Hub
+![Figure 24: Permanent Offline Documentation Hub
 Interface](../assets/gui/gui_docs_hub_offline.png)
+*Figure 24: Permanent Offline Documentation Hub Interface: Local static
+documentation server and navigation hub for offline ecosystem operation.*
 
 ### 10.1 Local Static Offline Documentation Server
 
@@ -1942,14 +2036,15 @@ instead.
   (`comp-select-label-strategy`) for Detection, and `Shard Extension`
   (`comp-select-shard-ext`) for WebDataset manifolds.
 
-![Figure 1: Dataset Compilation Engine Card](../assets/gui/gui_dataset_compilation_engine.png)
-*Figure 1: Dataset Compilation Engine card: (1) Target Manifold selector, (2)
+![Figure 25: Dataset Compilation Engine
+Card](../assets/gui/gui_dataset_compilation_engine.png)
+*Figure 25: Dataset Compilation Engine card: (1) Target Manifold selector, (2)
 Compilation Preset (auto-selected for the chosen manifold), (3) Max Size (GB)
 override, (4) Workers (auto-scaled to 70% of CPU cores), (5) Dynamic
 task-specific control (`Yield Strategy`, `Start/End Date`, `Label Strategy`, or
 `Shard Extension`), and (6) Compile Manifold trigger.*
 
-![Figure 2: Report Issue Modal](../assets/gui/gui_report_issue_modal.png)
-*Figure 2: Report Issue modal: (1) Your email, (2) Module selector, (3) What
+![Figure 26: Report Issue Modal](../assets/gui/gui_report_issue_modal.png)
+*Figure 26: Report Issue modal: (1) Your email, (2) Module selector, (3) What
 happened? description, (4) Attach telemetry (60 recent events as CSV), (5)
 Capture screenshot (up to 5), and (6) Send report action.*

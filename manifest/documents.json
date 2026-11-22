@@ -141,8 +141,8 @@
       "category": "Category 01.1 ENV",
       "html_path": "papers/env_manager.html",
       "md_path": "MD-Papers/PAPER_ENV_MANAGER.md",
-      "baseline_version": "v16.9.86-STABLE",
-      "last_audited": "2026-11-15",
+      "baseline_version": "v16.9.87-STABLE",
+      "last_audited": "2026-11-20",
       "status": "Canonical"
     },
     {

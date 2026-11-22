@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.86-STABLE` (LemGendary Environment Manager) · **Last
+**Version**: `v16.9.87-STABLE` (LemGendary Environment Manager) · **Last
 audited**: 2026-11-15
 
 ---
@@ -45,7 +45,7 @@ audited**: 2026-11-15
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.86-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.87-STABLE`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a

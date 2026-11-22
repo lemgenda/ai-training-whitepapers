@@ -54,15 +54,18 @@
 <li><a href="#scenario-04-sentinel-and-scheduler-desynchronization-probable">Scenario 04: Sentinel and Scheduler Desynchronization <code>[PROBABLE]</code></a></li>
 <li><a href="#scenario-05-infinite-plateau-loop-in-validation-governor-probable">Scenario 05: Infinite Plateau Loop in Validation Governor <code>[PROBABLE]</code></a></li>
 <li><a href="#scenario-06-pearson--spearman-matrix-singularities-confirmed">Scenario 06: Pearson &amp; Spearman Matrix Singularities <code>[CONFIRMED]</code></a></li>
-<li><a href="#scenario-07-power-loss-resilience-and-corrupted-checkpoint-recovery-confirmed">Scenario 07: Power-Loss Resilience and Corrupted Checkpoint Recovery <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-07-power-loss-checkpoint-recovery-confirmed">Scenario 07: Power-Loss Checkpoint Recovery <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-08-runway-bloat-during-spatial-resolution-escalation-probable">Scenario 08: Runway Bloat During Spatial Resolution Escalation <code>[PROBABLE]</code></a></li>
 <li><a href="#scenario-09-hardlink-vs-perceptual-deduplication-conflicts-probable">Scenario 09: Hardlink vs. Perceptual Deduplication Conflicts <code>[PROBABLE]</code></a></li>
 <li><a href="#scenario-10-raw-dataset-vs-compiled-manifold-path-confusion-confirmed">Scenario 10: Raw Dataset vs. Compiled Manifold Path Confusion <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-11-ambiguous-loss-plateau--validation-stagnation-illustrative">Scenario 11: Ambiguous Loss Plateau &amp; Validation Stagnation <code>[ILLUSTRATIVE]</code></a></li>
 <li><a href="#scenario-12-pipeline-step-7-visual-hang-in-running-state-confirmed">Scenario 12: Pipeline Step 7 Visual Hang in <code>RUNNING</code> State <code>[CONFIRMED]</code></a></li>
-<li><a href="#scenario-13-opencv-package-collision--health-check-false-alarms-confirmed">Scenario 13: OpenCV Package Collision &amp; Health Check False Alarms <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-13-opencv-collision--health-false-alarms-confirmed">Scenario 13: OpenCV Collision &amp; Health False Alarms <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-14-mosaicml-streaming-cloud-sdk-dependency-locks-confirmed">Scenario 14: <code>mosaicml-streaming</code> Cloud SDK Dependency Locks <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-15-mds-manifold-migration--queue-source-status-confirmed">Scenario 15: MDS Manifold Migration &amp; Queue Source Status <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-16-docs-suite-drift--workspace-root-confirmed">Scenario 16: Docs Suite Drift &amp; Workspace Root <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-17-screen-capture-desktop-leakage-guard-confirmed">Scenario 17: Screen Capture Desktop Leakage Guard <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-18-multi-metric-sota-training-chart-scale-distortion-confirmed">Scenario 18: Multi-Metric SOTA Training Chart Scale Distortion <code>[CONFIRMED]</code></a></li>
 </ul>
 </li>
 </ul>
@@ -422,7 +425,7 @@ introducing rank correlation objectives.</li>
 </ol>
 </li>
 </ul>
-<h3 id="scenario-07-power-loss-resilience-and-corrupted-checkpoint-recovery-confirmed">Scenario 07: Power-Loss Resilience and Corrupted Checkpoint Recovery <code>[CONFIRMED]</code></h3>
+<h3 id="scenario-07-power-loss-checkpoint-recovery-confirmed">Scenario 07: Power-Loss Checkpoint Recovery <code>[CONFIRMED]</code></h3>
 <ul>
 <li><strong><code>symptom</code></strong>: System crashes or loses power during training; subsequent run
 crashes on launch with EOFError: Ran out of input or RuntimeError:
@@ -689,7 +692,7 @@ frames.</li>
 </ol>
 </li>
 </ul>
-<h3 id="scenario-13-opencv-package-collision--health-check-false-alarms-confirmed">Scenario 13: OpenCV Package Collision &amp; Health Check False Alarms <code>[CONFIRMED]</code></h3>
+<h3 id="scenario-13-opencv-collision--health-false-alarms-confirmed">Scenario 13: OpenCV Collision &amp; Health False Alarms <code>[CONFIRMED]</code></h3>
 <ul>
 <li><strong><code>symptom</code></strong>: Pipeline Step 7 reports <code>Ecosystem healthy status: False</code> and
 lists <code>opencv-python</code> as a missing package for <code>lemgendary-datasets</code>, even
@@ -827,6 +830,27 @@ decompression to slice row records into WebDataset <code>.data</code> archives.<
 legacy <code>mds/</code> files.</li>
 </ol>
 </li>
+</ul>
+
+<h3 id="scenario-16-docs-suite-drift--workspace-root-confirmed">Scenario 16: Docs Suite Drift &amp; Workspace Root <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: <code>lem-env docs-audit</code> fails with missing sibling manifests under the temporary or relative workspace root.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-env-manager</code> docs_audit subsystem.</li>
+<li><strong><code>remediation</code></strong>: Ensure dynamic workspace root discovery and run <code>lem-env docs-audit --root lemgendary-docs</code>.</li>
+</ul>
+
+<h3 id="scenario-17-screen-capture-desktop-leakage-guard-confirmed">Scenario 17: Screen Capture Desktop Leakage Guard <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: Full desktop or background monitors accidentally captured in bug reports or manual screenshots.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-env-manager</code> screen_capture module.</li>
+<li><strong><code>remediation</code></strong>: Enforce HWND clamping using Win32 <code>PrintWindow</code> (PW_RENDERFULLCONTENT) and window-bounded video recording.</li>
+</ul>
+
+<h3 id="scenario-18-multi-metric-sota-training-chart-scale-distortion-confirmed">Scenario 18: Multi-Metric SOTA Training Chart Scale Distortion <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: Large metrics compress small metrics, or inverted metrics obscure convergence.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-env-manager</code> chart_builder module.</li>
+<li><strong><code>remediation</code></strong>: Split subplots by metric optimization polarity with SOTA target reference lines.</li>
 </ul>
 </section>
 

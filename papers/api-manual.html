@@ -586,6 +586,67 @@ user's <code>~/.kaggle/kaggle.json</code> CLI configuration.</p>
   "reclaimed_mb": 1.2
 }
 </code></pre>
+<h4 id="post-apidocsaudit---documentation-audit-execution"><code>POST /api/docs/audit</code> - Documentation Audit Execution</h4>
+<p>Executes the documentation audit across <code>lemgendary-docs</code> verifying manifest
+pairing, line length governance, heading parity, and media links.</p>
+<p>Request body:</p>
+<pre><code class="language-json">{
+  "root": "lemgendary-docs"
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  "status": "success",
+  "passed": true,
+  "findings_count": 0,
+  "findings": []
+}
+</code></pre>
+<h4 id="post-apichartsgenerate---sota-target-chart-generation"><code>POST /api/charts/generate</code> - SOTA Target Chart Generation</h4>
+<p>Batch generates or rebuilds training curve charts with SOTA thresholds.</p>
+<p>Request body:</p>
+<pre><code class="language-json">{
+  "model": "nima_aesthetic_efficientnet",
+  "output_dir": "lemgendary-docs/assets"
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  "status": "success",
+  "generated_charts": [
+    "lemgendary-docs/assets/nima_aesthetic_efficientnet_training.png"
+  ]
+}
+</code></pre>
+<h4 id="post-apicapturescreenshot---window-screenshot-dispatch"><code>POST /api/capture/screenshot</code> - Window Screenshot Dispatch</h4>
+<p>Captures full-fidelity application screenshots using Win32 render flags.</p>
+<p>Request body:</p>
+<pre><code class="language-json">{
+  "window_title": "LemGendary AI Studio GUI",
+  "output_path": "lemgendary-docs/assets/gui/gui_shell.png"
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  "status": "success",
+  "output_path": "lemgendary-docs/assets/gui/gui_shell.png"
+}
+</code></pre>
+<h4 id="post-apicapturevideo---window-video-recording-dispatch"><code>POST /api/capture/video</code> - Window Video Recording Dispatch</h4>
+<p>Records interaction sessions for bug diagnostics.</p>
+<p>Request body:</p>
+<pre><code class="language-json">{
+  "window_title": "LemGendary AI Studio GUI",
+  "output_path": "lemgendary-docs/assets/gui/session.mp4",
+  "duration_seconds": 10
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  "status": "success",
+  "output_path": "lemgendary-docs/assets/gui/session.mp4"
+}
+</code></pre>
 <h3 id="sec-26-websocket-real-time-telemetry">2.6 WebSocket Real-Time Telemetry</h3>
 <p>Real-time logging, telemetry, and pipeline progression are streamed to connected
 clients over a persistent WebSocket connection:</p>

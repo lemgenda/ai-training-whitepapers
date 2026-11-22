@@ -1,7 +1,0 @@
----
-_registry_metadata:
-  version: 0.0.1
-alpha_model:
-  status: TRAINING
-beta_model:
-  status: PLANNED

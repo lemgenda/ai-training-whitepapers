@@ -716,6 +716,99 @@ Response:
 }
 ```
 
+#### `POST /api/docs/audit` - Documentation Audit Execution
+
+Executes the documentation audit across `lemgendary-docs` verifying manifest
+pairing, line length governance, heading parity, and media links.
+
+Request body:
+
+```json
+{
+  "root": "lemgendary-docs"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "passed": true,
+  "findings_count": 0,
+  "findings": []
+}
+```
+
+#### `POST /api/charts/generate` - SOTA Target Chart Generation
+
+Batch generates or rebuilds training curve charts with SOTA thresholds.
+
+Request body:
+
+```json
+{
+  "model": "nima_aesthetic_efficientnet",
+  "output_dir": "lemgendary-docs/assets"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "generated_charts": [
+    "lemgendary-docs/assets/nima_aesthetic_efficientnet_training.png"
+  ]
+}
+```
+
+#### `POST /api/capture/screenshot` - Window Screenshot Dispatch
+
+Captures full-fidelity application screenshots using Win32 render flags.
+
+Request body:
+
+```json
+{
+  "window_title": "LemGendary AI Studio GUI",
+  "output_path": "lemgendary-docs/assets/gui/gui_shell.png"
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "output_path": "lemgendary-docs/assets/gui/gui_shell.png"
+}
+```
+
+#### `POST /api/capture/video` - Window Video Recording Dispatch
+
+Records interaction sessions for bug diagnostics.
+
+Request body:
+
+```json
+{
+  "window_title": "LemGendary AI Studio GUI",
+  "output_path": "lemgendary-docs/assets/gui/session.mp4",
+  "duration_seconds": 10
+}
+```
+
+Response:
+
+```json
+{
+  "status": "success",
+  "output_path": "lemgendary-docs/assets/gui/session.mp4"
+}
+```
+
 ---
 
 ### 2.6 WebSocket Real-Time Telemetry

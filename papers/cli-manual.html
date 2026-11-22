@@ -43,6 +43,9 @@
 <li><a href="#sec-29-telemetry-daemon--background-server-serve">2.9 Telemetry Daemon &amp; Background Server (<code>serve</code>)</a></li>
 <li><a href="#sec-210-git-hook-installation-setup-hooks">2.10 Git Hook Installation (<code>setup-hooks</code>)</a></li>
 <li><a href="#sec-211-line-length-governance--pre-flight-hooks-check-lines-fix-lines">2.11 Line Length Governance &amp; Pre-Flight Hooks (<code>check-lines</code>, <code>fix-lines</code>)</a></li>
+<li><a href="#sec-212-documentation-audit-engine-docs-audit">2.12 Documentation Audit Engine (<code>docs-audit</code>)</a></li>
+<li><a href="#sec-213-sota-target-chart-builder-chart-build">2.13 SOTA Target Chart Builder (<code>chart-build</code>)</a></li>
+<li><a href="#sec-214-screen-capture--video-recording-capture-screenshot-capture-video">2.14 Screen Capture &amp; Video Recording (<code>capture-screenshot</code>, <code>capture-video</code>)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-interactive-powershell-host-lemgendary_env_managerps1">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a></li>
@@ -421,6 +424,65 @@ python tools/fix_line_lengths.py --staged
 <p class="admonition-title">Pre-Commit Failure Guarantee</p>
 <p>Any Git commit will immediately fail and be blocked across all ecosystem repositories if any staged file contains line length violations, or if the affected project's <code>README.md</code> changelog has not been updated with an entry documenting the changes for the version.</p>
 </div>
+<h3 id="sec-212-documentation-audit-engine-docs-audit">2.12 Documentation Audit Engine (<code>docs-audit</code>)</h3>
+<p>The <code>docs-audit</code> command executes the comprehensive multi-point documentation
+suite across all Markdown and HTML publications:</p>
+<pre><code class="language-bash"># Audit documentation hub from default path
+lem-env docs-audit
+
+# Audit specific documentation root
+lem-env docs-audit --root lemgendary-docs/
+
+# Render structured machine-readable JSON report
+lem-env docs-audit --json
+</code></pre>
+<p>Audited invariants include:</p>
+<ul>
+<li>Markdown line length enforcement (&le; 80 characters, <code>MD013</code>).</li>
+<li>Manifest registry integrity and document pairing.</li>
+<li>Heading parity, order, and level matching between Markdown and HTML.</li>
+<li>Master table and labeled list item parity.</li>
+<li>Table of contents sidebar accuracy and dead anchor resolution.</li>
+<li>Absence of raw GitHub alert markers in published HTML.</li>
+<li>Approved structural template compliance (<code>header</code>, <code>nav</code>, <code>section</code>, etc.).</li>
+<li>Broken internal links and missing media verification (<code>assets/</code>).</li>
+<li>Elimination of hardcoded absolute paths and legacy aliases.</li>
+<li>Synchronization between JSON and YAML capability registries and codebases.</li>
+</ul>
+<h3 id="sec-213-sota-target-chart-builder-chart-build">2.13 SOTA Target Chart Builder (<code>chart-build</code>)</h3>
+<p>The <code>chart-build</code> command parses <code>unified_models_v2.yaml</code> targets and
+<code>LemGendaryModels/&lt;model&gt;/metrics.csv</code> records to generate unified dark-theme
+training curves:</p>
+<pre><code class="language-bash"># Generate charts for all registered models with metric history
+lem-env chart-build
+
+# Build training curve chart for a specific model
+lem-env chart-build --model nima_aesthetic_efficientnet
+
+# Specify custom output assets directory
+lem-env chart-build --output lemgendary-docs/assets/
+</code></pre>
+<p>Key features:</p>
+<ul>
+<li>Unified axes displaying all metrics simultaneously with target reference lines.</li>
+<li>Automatic polarity separation: models with both higher-is-better and
+lower-is-better metrics are split into separate subplots to prevent vertical
+scale distortion.</li>
+</ul>
+<h3 id="sec-214-screen-capture--video-recording-capture-screenshot-capture-video">2.14 Screen Capture &amp; Video Recording (<code>capture-screenshot</code>, <code>capture-video</code>)</h3>
+<p>The <code>capture-screenshot</code> and <code>capture-video</code> commands capture application
+windows with isolation guarantees:</p>
+<pre><code class="language-bash"># Capture full application window screenshot
+lem-env capture-screenshot --window-title "LemGendary AI Studio GUI" --output gui.png
+
+# Record application interaction video (MP4)
+lem-env capture-video --window-title "LemGendary AI Studio GUI" --output session.mp4
+</code></pre>
+<p>Features:</p>
+<ul>
+<li>Windows <code>PrintWindow</code> API with <code>PW_RENDERFULLCONTENT</code> to capture client area.</li>
+<li>Desktop leakage guard: prevents capturing behind or around target windows.</li>
+</ul>
 </section>
 
 <section id="sec-3-interactive-powershell-host-lemgendary_env_managerps1">

@@ -22,6 +22,10 @@
   - [2.10 Git Hook Installation (`setup-hooks`)](#210-git-hook-installation-setup-hooks)
   - [2.11 Line Length Governance & Pre-Flight Hooks (`check-lines`,
     `fix-lines`)](#211-line-length-governance--pre-flight-hooks-check-lines-fix-lines)
+  - [2.12 Documentation Audit Engine (`docs-audit`)](#212-documentation-audit-engine-docs-audit)
+  - [2.13 SOTA Target Chart Builder (`chart-build`)](#213-sota-target-chart-builder-chart-build)
+  - [2.14 Screen Capture & Video Recording (`capture-screenshot`,
+    `capture-video`)](#214-screen-capture--video-recording-capture-screenshot-capture-video)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
 - [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
@@ -469,6 +473,84 @@ python tools/fix_line_lengths.py --staged
 > blocked across all ecosystem repositories if any staged file contains line
 > length violations, or if the affected project's `README.md` changelog has
 > not been updated with an entry documenting the changes for the version.
+
+---
+
+### 2.12 Documentation Audit Engine (`docs-audit`)
+
+The `docs-audit` command executes the comprehensive multi-point documentation
+suite across all Markdown and HTML publications:
+
+```bash
+# Audit documentation hub from default path
+lem-env docs-audit
+
+# Audit specific documentation root
+lem-env docs-audit --root lemgendary-docs/
+
+# Render structured machine-readable JSON report
+lem-env docs-audit --json
+```
+
+Audited invariants include:
+
+- Markdown line length enforcement ($\le 80$ characters, `MD013`).
+- Manifest registry integrity and document pairing.
+- Heading parity, order, and level matching between Markdown and HTML.
+- Master table and labeled list item parity.
+- Table of contents sidebar accuracy and dead anchor resolution.
+- Absence of raw GitHub alert markers in published HTML.
+- Approved structural template compliance (`header`, `nav`, `section`, etc.).
+- Broken internal links and missing media verification (`assets/`).
+- Elimination of hardcoded absolute paths and legacy aliases.
+- Synchronization between JSON and YAML capability registries and codebases.
+
+---
+
+### 2.13 SOTA Target Chart Builder (`chart-build`)
+
+The `chart-build` command parses `unified_models_v2.yaml` targets and
+`LemGendaryModels/<model>/metrics.csv` records to generate unified dark-theme
+training curves:
+
+```bash
+# Generate charts for all registered models with metric history
+lem-env chart-build
+
+# Build training curve chart for a specific model
+lem-env chart-build --model nima_aesthetic_efficientnet
+
+# Specify custom output assets directory
+lem-env chart-build --output lemgendary-docs/assets/
+```
+
+Key features:
+
+- Unified axes displaying all metrics simultaneously with target reference
+  lines.
+- Automatic polarity separation: models with both higher-is-better and
+  lower-is-better metrics are split into separate subplots to prevent vertical
+  scale distortion.
+
+---
+
+### 2.14 Screen Capture & Video Recording (`capture-screenshot`, `capture-video`)
+
+The `capture-screenshot` and `capture-video` commands capture application
+windows with isolation guarantees:
+
+```bash
+# Capture full application window screenshot
+lem-env capture-screenshot --window-title "LemGendary AI Studio GUI" --output gui.png
+
+# Record application interaction video (MP4)
+lem-env capture-video --window-title "LemGendary AI Studio GUI" --output session.mp4
+```
+
+Features:
+
+- Windows `PrintWindow` API with `PW_RENDERFULLCONTENT` to capture client area.
+- Desktop leakage guard: prevents capturing behind or around target windows.
 
 ---
 
@@ -1303,7 +1385,11 @@ artifacts:
 
 ```bash
 # Multi-target export: FP32 ONNX, FP16 ONNX, PyTorch standalone, and WebGPU
-python cli.py export mirnet_exposure --target onnx_fp32 --target onnx_fp16 --target torch_pt --target webgpu
+python cli.py export mirnet_exposure \
+  --target onnx_fp32 \
+  --target onnx_fp16 \
+  --target torch_pt \
+  --target webgpu
 
 # Single-target export
 python cli.py export mirnet_exposure --target webgpu

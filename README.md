@@ -20,7 +20,7 @@
   Client Header), Pareto Model Soup, the Ecosystem Registry, Stochastic Weight
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
-* **Current baselines** - LemGendary Environment Manager v16.9.86, LemGendary
+* **Current baselines** - LemGendary Environment Manager v16.9.87, LemGendary
   Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.231,
   LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
@@ -28,21 +28,13 @@
   the verified workspace state with the versioning matrix.
 * **Approved HTML template** - synchronized pages use `header`,
   `nav.toc-sidebar`, `section` and `footer` and pass W3C validation.
-* **Documentation audit** - `python scripts/audit_docs.py` (also the
-  pre-commit hook) checks the manifest, hub and document versions, MD/HTML
-  heading parity and text similarity, the HTML sidebar against the Markdown
-  table of contents (no duplicate entries, every section linked), raw GitHub
-  alert markers in pages, the approved template, internal links and anchors,
-  absolute paths and canonical names, and the capability registry against
-  the sibling repositories: JSON and YAML hold the same data, the model ids
-  equal the keys of the training registry (`unified_models_v2.yaml`), every
-  port equals the service port in
-  `lemgendary-env-manager/ecosystem/ecosystem.json` and every component
-  baseline equals the release version the component declares. The sibling
-  files are found next to this repository or under
-  `LEMGENDARY_WORKSPACE_ROOT`; a missing file is a finding that names the
-  path. The parity backlog (`scripts/parity_backlog.json`) is empty: every
-  finding fails the audit
+* **Documentation audit** - `lem-env docs-audit` (executed via CLI or API)
+  checks the manifest, hub and document versions, MD/HTML heading parity,
+  text similarity, labelled list items, the HTML sidebar against the Markdown
+  table of contents, raw GitHub alert markers in pages, the approved template,
+  internal links, media assets, absolute paths, canonical names, and the
+  capability registry against sibling repositories. The parity backlog
+  is clean (0 entries).
 
 ---
 
@@ -93,6 +85,24 @@
   Warmup-Stable-Decay (WSD) schedules, MFU instrumentation, and FSDP sharding.
 * Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
   and `manifest/documents.json` with Training Suite baseline `v16.9.231-STABLE`.
+
+### 2026-11-20 — Environment Manager v16.9.87 & Documentation Toolchain Migration
+
+* **Toolchain Migration**: Cleaned Python dependencies from `lemgendary-docs`
+  and relocated `docs_audit`, `screen_capture`, and testing suites to
+  `lemgendary-env-manager`.
+* **CLI & API Expansion**: Added `lem-env chart-build`, `lem-env docs-audit`,
+  `lem-env capture-screenshot`, `lem-env capture-video`, `lem-env check-lines`,
+  and `lem-env fix-lines` commands, with matching REST API endpoints.
+* **Unified SOTA Target Training Charts**: Regenerated 21 model training curves
+  with unified multi-metric axes and SOTA thresholds, splitting lower-is-better
+  and higher-is-better metrics into dedicated subplots.
+* **AI Helper Troubleshooting Knowledge Base**: Added Scenarios 16 (Docs Suite
+  Drift), 17 (Screen Capture Desktop Leakage Guard), and 18 (Multi-Metric SOTA
+  Training Chart Scale Distortion).
+* **Registry & Baseline Sync**: Synchronized Environment Manager baseline to
+  `v16.9.87-STABLE` across `canonical_capabilities.json`,
+  `canonical_capabilities.yaml`, and `manifest/documents.json`.
 
 ### 2026-11-19 — Training Pathology Audit & v16.9.230 Baseline Sync
 
