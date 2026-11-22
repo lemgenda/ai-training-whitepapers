@@ -207,43 +207,41 @@ the sticky status footer:
 1. **Brand Title & Brand Icon**: Displays LemGendary AI alongside the official
    vector icon (lemgenda-icon.svg). The title is not a link; the sidebar footer
    logo (item 12) links to the portal.
-2. **Config & Secrets Header Button**: Opens the Universal Configuration,
-   Registry Editor & Secrets Vault modal for editing YAML manifests and managing
-   Kaggle, Google Drive, GitHub and MetaTrader 5 credentials (chapter 3).
-3. **Report Issue Header Button** (`header-btn-report-issue`): Opens the Report
-   Issue form with the module set to the current tab. You describe the problem,
-   attach annotated screenshots and recent telemetry, and the LemGendary
-   Environment Manager saves a ZIP report and opens your mail client (chapter
-   13).
-4. **Tests & Diagnostics Header Button** (`header-btn-test-modal`): Opens the
-   Test & Diagnostic Orchestrator, which runs the 1-epoch fleet smoke test or
-   the in-process unit tests of the LemGendary Model Training Suite and
+2. **Config & Secrets Sidebar Action Button** (`sidebar-btn-config`): Opens
+   the Universal Configuration, Registry Editor & Secrets Vault modal for
+   editing YAML manifests and managing Kaggle, Google Drive, GitHub and
+   MetaTrader 5 credentials (chapter 3).
+3. **Report Issue Sidebar Action Button** (`header-btn-report-issue`): Opens the
+   Report Issue form with the module set to the current tab. You describe the
+   problem, attach annotated screenshots and recent telemetry, and the
+   LemGendary Environment Manager saves a ZIP report and opens your mail client
+   (chapter 13).
+4. **Tests & Diagnostics Sidebar Action Button** (`header-btn-test-modal`):
+   Opens the Test & Diagnostic Orchestrator, which runs the 1-epoch fleet smoke
+   test or the in-process unit tests of the LemGendary Model Training Suite and
    LemGendary Dataset Compiler Suite (section 3.3).
-5. **LemGendary AI Documentation Hub Button**: Opens the local Documentation Hub
-   in your browser. The address comes from the LemGendary Environment Manager
-   (`GET /api/docs/status`), which serves the hub; the button is disabled, with
-   the reason as tooltip, while the Environment Manager is offline or has no
-   docs checkout (chapter 10).
-6. **Refresh Audit Button** (`dash-btn-refresh-audit`): Reloads hardware, health
-   and pipeline state from the Environment Manager and re-probes all three
-   sidecars.
-7. **Dashboard Tab** (`tab-dashboard`): Shows hardware cards, sidecar service
+5. **LemGendary AI Documentation Hub Button** (`sidebar-btn-docs-hub`): Opens
+   the local Documentation Hub in your browser. The address comes from the
+   LemGendary Environment Manager (`GET /api/docs/status`), which serves the
+   hub; the button is disabled, with the reason as tooltip, while the
+   Environment Manager is offline or has no docs checkout (chapter 10).
+6. **Dashboard Tab** (`tab-dashboard`): Shows hardware cards, sidecar service
    tiles, project health cards and the live event console.
-8. **LemGendary Dataset Compiler Suite Tab** (`tab-datasets`): Shows the
+7. **LemGendary Dataset Compiler Suite Tab** (`tab-datasets`): Shows the
    manifold compiler, Kaggle synchronization and the manifold catalog
    (`./lemgendary-datasets/`).
-9. **LemGendary Model Training Suite Tab** (`tab-training`): Shows the model
+8. **LemGendary Model Training Suite Tab** (`tab-training`): Shows the model
    cards, Sawtooth Governor VRAM controls, spatial ladders and training dispatch
    (`./lemgendary-training-suite/`).
-10. **Clean Install Pipeline Tab** (`tab-pipeline`): Shows the 7-step
+9. **Clean Install Pipeline Tab** (`tab-pipeline`): Shows the 7-step
     provisioning sequence, Run Pipeline and the Clean Install confirmation
     (chapter 4).
-11. **Health & Version Drift Tab** (`tab-health`): Shows host prerequisites, the
+10. **Health & Version Drift Tab** (`tab-health`): Shows host prerequisites, the
     Python drift matrix, the GUI's npm packages and the maintenance actions
     (chapter 8).
-12. **Brand Signature Logo (Sidebar Footer)**: The official brand signature
+11. **Brand Signature Logo (Sidebar Footer)**: The official brand signature
     (lemgenda-logo.svg), linking to <https://www.lemgenda.hr/>.
-13. **System Status Bar**: Sticky footer reporting the connection state of each
+12. **System Status Bar**: Sticky footer reporting the connection state of each
     sidecar.
 
 Callout bindings (control type; endpoint or action):

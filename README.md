@@ -140,6 +140,18 @@
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with secret management requirements.
 
+### v16.9.227 - GUI Control Registry Audit & Header Navigation Rearrangement
+
+* **GUI Control Registry & Manual Sync (`GUI_CONTROL_REGISTRY.md`,
+  `MANUAL_AI_STUDIO_GUI.md`, `papers/gui-control-registry.html`,
+  `papers/ai-studio-manual.html`)**: Audited all interactive controls against
+  the GUI source. Documented relocation of `Config & Secrets`
+  (`sidebar-btn-config`), `Report Issue` (`header-btn-report-issue`), `Tests &
+  Diagnostics` (`header-btn-test-modal`), and `LemGendary AI Documentation Hub`
+  (`sidebar-btn-docs-hub`) into the left sidebar actions group. Removed
+  `dash-btn-refresh-audit` and documented autonomous LLM yield indicator
+  `comp-yield-mode`.
+
 ### v16.9.226 - ParseNet Missing-Mask WebDataset Resilience & Baseline Sync
 
 * **Runtime Engine Baseline**: Synchronized `canonical_capabilities.json` and

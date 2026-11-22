@@ -122,14 +122,15 @@ changes GUI state.</p>
 <p>Each entry reads: ID (element type): label. Endpoint. Behaviour.</p>
 <h3 id="sec-31-header--sidebar">3.1 Header &amp; Sidebar</h3>
 <ul>
+<li><code>sidebar-btn-config</code> (<code>button</code>): &quot;Config &amp; Secrets&quot;. None. Opens the
+Universal Configuration, Registry Editor &amp; Secrets Vault Modal (section 3.8).</li>
 <li><code>header-btn-report-issue</code> (<code>button</code>): &quot;Report Issue&quot;. None. Opens the Report
 Issue dialog (section 3.2) with the module set to the current tab.</li>
 <li><code>header-btn-test-modal</code> (<code>button</code>): &quot;Tests &amp; Diagnostics&quot;. None. Opens the
 Test &amp; Diagnostic Orchestrator (section 3.3).</li>
-<li><code>dash-btn-refresh-audit</code> (<code>button</code>): &quot;Refresh Audit&quot;. <code>GET /api/hardware</code>,
-<code>GET /api/health</code> and <code>GET /api/pipeline/status</code> (8000) plus the liveness
-probes. Reloads hardware, health and pipeline state; shows &quot;Refreshing...&quot;
-while busy.</li>
+<li><code>sidebar-btn-docs-hub</code> (<code>button</code>): &quot;LemGendary AI Documentation Hub&quot;. Native
+or external URL. Opens the local offline documentation hub served by the
+Environment Manager.</li>
 <li><code>dash-btn-refresh-projects</code> (<code>button</code>): &quot;Refresh Projects&quot;.
 <code>GET /api/projects</code> (8000). Re-reads project health and replaces only the
 project rows of the health report; disabled while the Environment Manager
@@ -526,9 +527,9 @@ with the old and new canonical JSON values) and <code>train-frozen-refusal-hint<
 <p>These controls work but have no <code>id</code> yet; tests find them by role and label. The
 list was recounted from the <code>button</code>, <code>input</code>, <code>select</code> and <code>textarea</code> elements
 without an <code>id</code> in GUI release <code>v2.10.57</code>; controls that gained an ID up to
-<code>v2.10.67</code> are removed from it:</p>
+<code>v2.10.70</code> are removed from it:</p>
 <ul>
-<li><strong>Header and shell</strong>: the "Config &amp; Secrets" and "LemGendary AI Documentation Hub" buttons, the help tooltip (<code>?</code>) buttons, the validation banner and error dismiss buttons and the hover pin popovers.</li>
+<li><strong>Header and shell</strong>: the help tooltip (<code>?</code>) buttons, the validation banner and error dismiss buttons and the hover pin popovers.</li>
 <li><strong>Dashboard</strong>: the quick action, Start Service and Stop Service buttons on the sidecar tiles, "Start All Services" in the mesh banner, "Start Environment Manager" on the hardware card and the health panel, the "Reconcile Environment" button on each project card, and the "Copy Stream" and "Clear Stream" buttons of the log panel.</li>
 <li><strong>Pipeline</strong>: the per-step run buttons of the pipeline step cards.</li>
 <li><strong>Dataset Compiler Suite</strong>: the manifold search box, its clear button, the status, format and task filters and "Reset Filters"; the custom compile button; the Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the modernization workers input, the push, force and dry-run check boxes, "Scan Queue", the run-all and per-row modernize buttons; and "Launch Scale Reduction".</li>
@@ -574,7 +575,13 @@ publish buttons of the Cloud &amp; Registry Dispatch dialog.</li>
 <li><strong>Renamed</strong>: <code>config-editor-tab-manifests</code> and <code>config-editor-tab-secrets</code> to
 <code>config-tabs-tab-manifests</code> and <code>config-tabs-tab-secrets</code> (<code>v2.10.61</code>).</li>
 <li><strong>Removed</strong>: <code>gpu-select</code> (the P100 / T4 choice), replaced by
-<code>kaggle-accelerator-select</code> (<code>v2.10.65</code>).</li>
+<code>kaggle-accelerator-select</code> (<code>v2.10.65</code>); <code>dash-btn-refresh-audit</code> removed
+completely from the top header (<code>v2.10.71</code>).</li>
+<li><strong>Added, Header and Sidebar (<code>v2.10.71</code>)</strong>: <code>sidebar-btn-config</code> and
+<code>sidebar-btn-docs-hub</code> added to the left sidebar menu action group along
+with moved controls <code>header-btn-report-issue</code> and <code>header-btn-test-modal</code>.</li>
+<li><strong>Added, Dynamic Compiler (<code>v2.10.71</code>)</strong>: <code>comp-yield-mode</code> for LLM
+manifold yield strategy display.</li>
 </ul>
 <p>Before that, since the <code>v2.10.38</code> registry three IDs were added
 (<code>train-btn-soup-{model_key}</code>, <code>kaggle-monitor-slug</code> and <code>kaggle-monitor-btn</code>,
@@ -705,6 +712,8 @@ time-series ingestion.</li>
 for instruction synthesis.</li>
 <li><strong><code>comp-select-label-strategy</code></strong> (Detection / Pose): Label strategy (<code>yolov8</code>,
 <code>coco</code>, <code>retinaface</code>).</li>
+<li><strong><code>comp-yield-mode</code></strong> (LLM / JSONL): Yield Strategy display
+("Autonomous Source Analysis").</li>
 <li><strong><code>comp-select-shard-ext</code></strong> (WebDataset only): Shard extension (<code>.data</code> or
 <code>.tar</code>), disabled for non-WebDataset manifolds.</li>
 </ul>

@@ -93,14 +93,15 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.1 Header & Sidebar
 
+- `sidebar-btn-config` (`button`): "Config & Secrets". None. Opens the
+  Universal Configuration, Registry Editor & Secrets Vault Modal (section 3.8).
 - `header-btn-report-issue` (`button`): "Report Issue". None. Opens the Report
   Issue dialog (section 3.2) with the module set to the current tab.
 - `header-btn-test-modal` (`button`): "Tests & Diagnostics". None. Opens the
   Test & Diagnostic Orchestrator (section 3.3).
-- `dash-btn-refresh-audit` (`button`): "Refresh Audit". `GET /api/hardware`,
-  `GET /api/health` and `GET /api/pipeline/status` (8000) plus the liveness
-  probes. Reloads hardware, health and pipeline state; shows "Refreshing..."
-  while busy.
+- `sidebar-btn-docs-hub` (`button`): "LemGendary AI Documentation Hub". Native
+  or external URL. Opens the local offline documentation hub served by the
+  Environment Manager.
 - `dash-btn-refresh-projects` (`button`): "Refresh Projects".
   `GET /api/projects` (8000). Re-reads project health and replaces only the
   project rows of the health report; disabled while the Environment Manager
@@ -504,11 +505,10 @@ Landmarks and headings:
 These controls work but have no `id` yet; tests find them by role and label. The
 list was recounted from the `button`, `input`, `select` and `textarea` elements
 without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
-`v2.10.67` are removed from it:
+`v2.10.70` are removed from it:
 
-- **Header and shell**: the "Config & Secrets" and "LemGendary AI Documentation
-  Hub" buttons, the help tooltip (`?`) buttons, the validation banner and error
-  dismiss buttons and the hover pin popovers.
+- **Header and shell**: the help tooltip (`?`) buttons, the validation banner
+  and error dismiss buttons and the hover pin popovers.
 - **Dashboard**: the quick action, Start Service and Stop Service buttons on the
   sidecar tiles, "Start All Services" in the mesh banner, "Start Environment
   Manager" on the hardware card and the health panel, the "Reconcile
@@ -570,7 +570,13 @@ Since the `v2.10.57` registry 53 IDs were added, one removed and two renamed
 - **Renamed**: `config-editor-tab-manifests` and `config-editor-tab-secrets` to
   `config-tabs-tab-manifests` and `config-tabs-tab-secrets` (`v2.10.61`).
 - **Removed**: `gpu-select` (the P100 / T4 choice), replaced by
-  `kaggle-accelerator-select` (`v2.10.65`).
+  `kaggle-accelerator-select` (`v2.10.65`); `dash-btn-refresh-audit` removed
+  completely from the top header (`v2.10.71`).
+- **Added, Header and Sidebar (`v2.10.71`)**: `sidebar-btn-config` and
+  `sidebar-btn-docs-hub` added to the left sidebar menu action group along
+  with moved controls `header-btn-report-issue` and `header-btn-test-modal`.
+- **Added, Dynamic Compiler (`v2.10.71`)**: `comp-yield-mode` for LLM
+  manifold yield strategy display.
 
 Before that, since the `v2.10.38` registry three IDs were added
 (`train-btn-soup-{model_key}`, `kaggle-monitor-slug` and `kaggle-monitor-btn`,
@@ -709,5 +715,7 @@ depends on the sidecars and the hardware:
   for instruction synthesis.
 - **`comp-select-label-strategy`** (Detection / Pose): Label strategy (`yolov8`,
   `coco`, `retinaface`).
+- **`comp-yield-mode`** (LLM / JSONL): Yield Strategy display
+  ("Autonomous Source Analysis").
 - **`comp-select-shard-ext`** (WebDataset only): Shard extension (`.data` or
   `.tar`), disabled for non-WebDataset manifolds.

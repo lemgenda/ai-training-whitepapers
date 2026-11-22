@@ -261,26 +261,23 @@
         <li><strong>Brand Title &amp; Brand Icon</strong>: Displays LemGendary AI alongside the official
           vector icon (lemgenda-icon.svg). The title is not a link; the sidebar footer
           logo (item 12) links to the portal.</li>
-        <li><strong>Config &amp; Secrets Header Button</strong>: Opens the Universal Configuration,
+        <li><strong>Config &amp; Secrets Sidebar Action Button</strong> (<code>sidebar-btn-config</code>): Opens the Universal Configuration,
           Registry Editor &amp; Secrets Vault modal for editing YAML manifests and managing
           Kaggle, Google Drive, GitHub and MetaTrader 5 credentials (chapter 3).</li>
-        <li><strong>Report Issue Header Button</strong> (<code>header-btn-report-issue</code>): Opens the Report
+        <li><strong>Report Issue Sidebar Action Button</strong> (<code>header-btn-report-issue</code>): Opens the Report
           Issue form with the module set to the current tab. You describe the problem,
           attach annotated screenshots and recent telemetry, and the LemGendary
           Environment Manager saves a ZIP report and opens your mail client (chapter
           13).</li>
-        <li><strong>Tests &amp; Diagnostics Header Button</strong> (<code>header-btn-test-modal</code>): Opens the
+        <li><strong>Tests &amp; Diagnostics Sidebar Action Button</strong> (<code>header-btn-test-modal</code>): Opens the
           Test &amp; Diagnostic Orchestrator, which runs the 1-epoch fleet smoke test or
           the in-process unit tests of the LemGendary Model Training Suite and
           LemGendary Dataset Compiler Suite (section 3.3).</li>
-        <li><strong>LemGendary AI Documentation Hub Button</strong>: Opens the local Documentation Hub
+        <li><strong>LemGendary AI Documentation Hub Button</strong> (<code>sidebar-btn-docs-hub</code>): Opens the local Documentation Hub
           in your browser. The address comes from the LemGendary Environment Manager
           (<code>GET /api/docs/status</code>), which serves the hub; the button is disabled, with
           the reason as tooltip, while the Environment Manager is offline or has no
           docs checkout (chapter 10).</li>
-        <li><strong>Refresh Audit Button</strong> (<code>dash-btn-refresh-audit</code>): Reloads hardware, health
-          and pipeline state from the Environment Manager and re-probes all three
-          sidecars.</li>
         <li><strong>Dashboard Tab</strong> (<code>tab-dashboard</code>): Shows hardware cards, sidecar service
           tiles, project health cards and the live event console.</li>
         <li><strong>LemGendary Dataset Compiler Suite Tab</strong> (<code>tab-datasets</code>): Shows the
