@@ -140,6 +140,12 @@
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with secret management requirements.
 
+### v16.9.226 - ParseNet Missing-Mask WebDataset Resilience & Baseline Sync
+
+* **Runtime Engine Baseline**: Synchronized `canonical_capabilities.json` and
+  `canonical_capabilities.yaml` to `v16.9.241-STABLE` following the resolution
+  of WebDataset segmentation sample recovery and zero-loss guard protection.
+
 ### v16.9.225 - Pre-Baked WebDataset Indexing & Cloud Training Pathologies
 
 * **Environment Manager CLI (`MANUAL_CLI.md`, `cli-manual.html`)**: Documented
