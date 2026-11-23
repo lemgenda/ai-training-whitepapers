@@ -21,7 +21,7 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.87, LemGendary
-  Dataset Compiler Suite v16.9.113, LemGendary Model Training Suite v16.9.231,
+  Dataset Compiler Suite v16.9.116, LemGendary Model Training Suite v16.9.231,
   LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -53,6 +53,16 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### 2026-11-23 — Exact Manifold Provenance Extraction & Synchronization
+
+* Updated `MD-Papers/MANUAL_API.md` and `MD-Papers/PAPER_DATASET_COMPILER.md`
+  Section 6.7 to document exact multi-source sample count resolution from
+  `index.json` and JSONL provenance records in
+  `GET /api/gui/datasets/with-stats` without heuristic even-split fallbacks.
+* Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
+  and `manifest/documents.json` with Dataset Compiler baseline
+  `v16.9.116-STABLE`.
 
 ### 2026-11-20 — Prompt 25 Local / Kaggle / Colab Cloud Training Pipelines
 

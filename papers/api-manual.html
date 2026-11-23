@@ -1725,7 +1725,9 @@ hydration payload.</p>
 <h4 id="get-apiguidatasetswith-stats"><code>GET /api/gui/datasets/with-stats</code></h4>
 <p>Returns comprehensive manifold storage and format statistics, including file
 distribution counts across formats (<code>webp</code>, <code>jpg</code>, <code>png</code>, <code>parquet</code>), total byte
-footprint, and physical NTFS hardlink deduplication ratios.</p>
+footprint, physical NTFS hardlink deduplication ratios, and exact per-source
+sample tallies (<code>sources[]</code>) resolved directly from <code>index.json</code> or JSONL
+provenance lineages.</p>
 <h4 id="get-apiguijobsactive"><code>GET /api/gui/jobs/active</code></h4>
 <p>Streams execution progress telemetry for currently running compilation and
 degradation tasks, including percentage complete, current sample index, elapsed

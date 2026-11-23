@@ -1648,7 +1648,12 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
 - **Aggregated Desktop GUI Endpoints (`api/routes/gui.py`)**: `/api/gui/state`,
   `/api/gui/datasets/with-stats`, `/api/gui/jobs/active`, `/api/gui/presets`,
   `/api/gui/quick-compile` and `/api/gui/custom-compile` hydrate the LemGendary
-  AI Studio GUI dashboard.
+  AI Studio GUI dashboard. In `/api/gui/datasets/with-stats` (v16.9.116),
+  upstream source sample tallies (`sources[]`) are resolved directly from
+  `index.json` or JSONL provenance lineages via
+  `extract_manifold_provenance_counts()` and fuzzy key matching, eliminating
+  heuristic even-split fallbacks and reflecting true multi-source sample
+  proportions across compiled WebDataset and Parquet containers.
 - **Regenerated OpenAPI 3.1 Contract (v16.9.27)**: `openapi.json` is written
   deterministically from the live application by `tools/export_openapi.py`
   (application key order, 2-space indent, LF, trailing newline); `--check` exits

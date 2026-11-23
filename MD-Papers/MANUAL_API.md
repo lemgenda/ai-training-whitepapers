@@ -2039,7 +2039,9 @@ hydration payload.
 
 Returns comprehensive manifold storage and format statistics, including file
 distribution counts across formats (`webp`, `jpg`, `png`, `parquet`), total byte
-footprint, and physical NTFS hardlink deduplication ratios.
+footprint, physical NTFS hardlink deduplication ratios, and exact per-source
+sample tallies (`sources[]`) resolved directly from `index.json` or JSONL
+provenance lineages.
 
 #### `GET /api/gui/jobs/active`
 
