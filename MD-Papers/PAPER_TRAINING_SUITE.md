@@ -473,8 +473,12 @@ executes this contract and emits structured machine-readable reports.
   skew when resuming intra-epoch from `progress.pth`. The engine couples
   `ResumableBatchSampler.set_start_batch(resume_step)` to slice sample indices
   in memory at $O(1)$ complexity, avoiding disk reads and image decompressions
-  for completed batches. Simultaneously, `BatchClock` anchors its active
-  timer precisely to the first un-skipped batch and applies adaptive
+  for completed batches. WebDataset readers support shard-level offset skipping
+  (`skip_shards_offset` / `set_start_shard`) to bypass whole `.tar` archives
+  instantly. Training loaders configure `persistent_workers=True` and
+  `non_blocking=True` memory transfers, preserving active worker processes and
+  pinned OS buffer caches across phases. Simultaneously, `BatchClock` anchors
+  its active timer precisely to the first un-skipped batch and applies adaptive
   Exponential Moving Average (EMA) rate smoothing, filtering out worker queue
   initialization latency and preventing distorted $s/\text{it}$ and ETA spikes.
 - **Universal Checkpoint Format Versioning & Bit-Reproducible Resumption

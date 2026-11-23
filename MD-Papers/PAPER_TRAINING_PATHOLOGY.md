@@ -1581,10 +1581,14 @@ Smoothing**.
    `set_start_batch(resume_step)` so that sample indices are sliced in memory
    at $O(1)$ complexity, completely bypassing sample loading, disk reading,
    and image decoding for all $K$ completed batches.
-2. **Worker Pool Persistence**: Configure `persistent_workers=True` on all
-   data loaders to prevent teardown and cold re-spawn of worker processes
-   across phases or epochs.
-3. **Adaptive BatchClock EMA Smoothing**: Decouple fast-forwarding from active
+2. **Shard-Level Offset Skipping**: In WebDataset readers, support shard-level
+   offset skipping (`skip_shards_offset` and `set_start_shard`) to bypass
+   completed `.tar` archives instantly without iterating member indices.
+3. **Worker Pool Persistence & Non-Blocking Transfers**: Configure
+   `persistent_workers=True` on training loaders and set `non_blocking=True`
+   on host-to-device tensor transfers, preventing worker teardown and page-cache
+   invalidation across epochs and validation phases.
+4. **Adaptive BatchClock EMA Smoothing**: Decouple fast-forwarding from active
    compute timing in `BatchClock`. Anchor `start_time` and `last_step_time`
    strictly to the moment the first un-skipped batch reaches the compute loop,
    and apply an adaptive Exponential Moving Average (EMA) to throughput rates:

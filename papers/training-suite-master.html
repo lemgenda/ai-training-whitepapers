@@ -497,7 +497,11 @@ Eliminates DataLoader fast-forward decoding bottlenecks and transient rate skew 
 resuming intra-epoch from <code>progress.pth</code>. The engine couples
 <code>ResumableBatchSampler.set_start_batch(resume_step)</code> to slice sample indices
 in memory at $O(1)$ complexity, avoiding disk reads and image decompressions for completed
-batches. Simultaneously, <code>BatchClock</code> anchors its active timer precisely to the
+batches. WebDataset readers support shard-level offset skipping
+(<code>skip_shards_offset</code> / <code>set_start_shard</code>) to bypass whole <code>.tar</code> archives
+instantly. Training loaders configure <code>persistent_workers=True</code> and
+<code>non_blocking=True</code> memory transfers, preserving active worker processes and
+pinned OS buffer caches across phases. Simultaneously, <code>BatchClock</code> anchors its active timer precisely to the
 first un-skipped batch and applies adaptive Exponential Moving Average (EMA) rate smoothing,
 filtering out worker queue initialization latency and preventing distorted $s/\text{it}$
 and ETA spikes.</li>

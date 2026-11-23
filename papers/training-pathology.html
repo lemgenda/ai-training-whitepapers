@@ -1506,11 +1506,13 @@ iteration latency ($s/\text{it}$) and erroneous ETAs on the initial active batch
 <p><strong>Remedy:</strong> <strong>Index-Slicing Resumption, Worker Persistence &amp; Adaptive Rate Smoothing</strong>.
 Deploy <code>ResumableBatchSampler.set_start_batch(resume_step)</code> to slice sample indices
 in memory at $O(1)$ complexity, completely bypassing sample loading, disk reading, and image
-decoding for completed batches. Configure <code>persistent_workers=True</code> to prevent
-worker pool teardown across loops. In <code>BatchClock</code>, anchor <code>start_time</code>
-strictly to the first active un-skipped batch and apply adaptive Exponential Moving
-Average (EMA) rate smoothing ($\alpha=0.4 \to 0.15$) to eliminate startup latency skew and
-yield reliable throughput telemetry upon resumption.</p>
+decoding for completed batches. In WebDataset readers, support shard-level offset skipping
+(<code>skip_shards_offset</code> and <code>set_start_shard</code>) to bypass completed <code>.tar</code> archives
+instantly without iterating member indices. Configure <code>persistent_workers=True</code> and
+<code>non_blocking=True</code> to prevent worker pool teardown and cold queue priming across loops.
+In <code>BatchClock</code>, anchor <code>start_time</code> strictly to the first active un-skipped batch
+and apply adaptive Exponential Moving Average (EMA) rate smoothing ($\alpha=0.4 \to 0.15$) to
+eliminate startup latency skew and yield reliable throughput telemetry upon resumption.</p>
 </section>
 
 <section id="sec-6-best-practices-checklist">
