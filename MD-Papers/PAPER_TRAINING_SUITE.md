@@ -468,6 +468,15 @@ executes this contract and emits structured machine-readable reports.
   skip-paths are anchored directly to live governor telemetry, guaranteeing that
   cloud restarts resume precisely at the expanded manifold fraction rather than
   reverting to pre-expansion checkpoints.
+- **Zero-Cost Resumption Fast-Forwarding & Metric Smoothing (v16.9.244)**:
+  Eliminates DataLoader fast-forward decoding bottlenecks and transient rate
+  skew when resuming intra-epoch from `progress.pth`. The engine couples
+  `ResumableBatchSampler.set_start_batch(resume_step)` to slice sample indices
+  in memory at $O(1)$ complexity, avoiding disk reads and image decompressions
+  for completed batches. Simultaneously, `BatchClock` anchors its active
+  timer precisely to the first un-skipped batch and applies adaptive
+  Exponential Moving Average (EMA) rate smoothing, filtering out worker queue
+  initialization latency and preventing distorted $s/\text{it}$ and ETA spikes.
 - **Universal Checkpoint Format Versioning & Bit-Reproducible Resumption
   (v16.9.158)**:
   Enforces atomic writes via write-temp-and-rename (`safe_atomic_save`) with

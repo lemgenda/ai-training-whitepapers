@@ -492,6 +492,15 @@ payload, and overwrites both <code>_latest.pth</code> and <code>_best.pth</code>
 skip-paths are anchored directly to live governor telemetry, guaranteeing that
 cloud restarts resume precisely at the expanded manifold fraction rather than
 reverting to pre-expansion checkpoints.</li>
+<li><strong>Zero-Cost Resumption Fast-Forwarding &amp; Metric Smoothing (v16.9.244)</strong>:
+Eliminates DataLoader fast-forward decoding bottlenecks and transient rate skew when
+resuming intra-epoch from <code>progress.pth</code>. The engine couples
+<code>ResumableBatchSampler.set_start_batch(resume_step)</code> to slice sample indices
+in memory at $O(1)$ complexity, avoiding disk reads and image decompressions for completed
+batches. Simultaneously, <code>BatchClock</code> anchors its active timer precisely to the
+first un-skipped batch and applies adaptive Exponential Moving Average (EMA) rate smoothing,
+filtering out worker queue initialization latency and preventing distorted $s/\text{it}$
+and ETA spikes.</li>
 <li><strong>Universal Checkpoint Format Versioning &amp; Bit-Reproducible Resumption (v16.9.158)</strong>:
 Enforces atomic writes via write-temp-and-rename (<code>safe_atomic_save</code>) with disk
 headroom validation and lock backoff retries. Every saved checkpoint attaches
