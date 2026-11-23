@@ -1108,31 +1108,46 @@ python cli.py compile --model nima_aesthetic \
 
 ### 5.16 LLM Dataset Compilation & Quality Invariant Auditing (`llm`)
 
-The LLM compiler module (`tools.llm_helper`) provides high-velocity generic
-compilation and validation for instruction tuning datasets:
+The LLM compiler module (`tools.llm_helper`) provides deterministic compilation
+and validation for state-grounded copilot instruction tuning manifolds (via
+either `python cli.py llm compile` or `python cli.py compile --model`):
 
 ```bash
 # Compile an LLM instruction manifold declared in unified_data.yaml (in-process)
-python cli.py llm compile --dataset test_llm --no-server
+python cli.py llm compile --dataset ai_helper_lemgend --no-server
 
 # Compile via local FastAPI sidecar daemon with live WebSocket log streaming
-python cli.py llm compile --dataset test_llm
+python cli.py llm compile --dataset ai_helper_lemgend
 
-# Audit any JSONL dataset file against the 4 LemGendary Quality Invariants
-python cli.py llm validate --file ../LemGendaryDatasets/LemGendizedTestLLM/data/test_llm_train.jsonl
+# Equivalent unified compiler entrypoint (skips image layout dirs for JSONL sets)
+python cli.py compile --model ai_helper_lemgend
+
+# Audit JSONL splits against sequence, copilot structure, and quality invariants
+python cli.py llm validate \
+  --file ../LemGendaryDatasets/LemGendizedAIHelperLemGend/data/ai_helper_train.jsonl
 ```
+
+Both `compile` and recompile refresh the JSONL shards (`train`, `val`, `test`)
+together with `dataset_info.yaml`, `index.json`, `build_manifest.json`,
+`quality_report.json`, `source_manifest.json`, `README.md`, and
+`dataset-metadata.json`.
 
 #### Quality Invariant Checks Enforced
 
-1. **Zero-Emoji Rule**: Verifies total absence of Unicode emojis across all
-   system, user, and assistant turns.
-2. **ChatML 3-Turn Schema**: Enforces strict `[system, user, assistant]` message
-   structure with non-empty strings.
-3. **Epistemic Certainty Tags**: Enforces presence of `[CONFIRMED]`,
-   `[PROBABLE]`, or `[ILLUSTRATIVE]` tags in diagnostic and troubleshooting
-   outputs.
-4. **Duplicate Detection**: Identifies exact and fuzzy duplicate prompt
-   collisions across the manifold.
+1. **Zero-Emoji Rule (error)**: Prohibits Unicode emojis, pictographs, and
+   dingbats across all system, user, and assistant turns.
+2. **ChatML 3-Turn Schema (error)**: Enforces unique IDs and non-empty
+   `[system, user, assistant]` turns (or 2-turn legacy fallback).
+3. **Sequence Alignment Gate (error)**: Enforces a hard `1,536` total token
+   ceiling and `420` assistant token ceiling (`tiktoken` with `len/3.5`
+   fallback) so QLoRA `max_seq_length` never truncates assistant completions.
+4. **Copilot Grounding & 3-Part Reply Structure (warning)**: Checks
+   `[GUI_STATE]` / `[RETRIEVED_DOCS]` grounding, `boundary_and_negative`
+   refusals, 3-4 bullets + `Next step:` closing within 150-350 tokens, plus
+   epistemic tags (`[CONFIRMED]`, `[PROBABLE]`, `[ILLUSTRATIVE]`) and the
+   3-stage diagnostic intake protocol on troubleshooting records.
+5. **Deduplication & Cross-Split Decontamination**: Eliminates near-duplicate
+   and leaked prompts via MinHash LSH and 5-gram cosine similarity.
 
 ### 5.17 Manifold Repair (`repair`)
 

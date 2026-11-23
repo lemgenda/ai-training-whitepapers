@@ -21,7 +21,7 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.87, LemGendary
-  Dataset Compiler Suite v16.9.117, LemGendary Model Training Suite v16.9.244,
+  Dataset Compiler Suite v16.9.118, LemGendary Model Training Suite v16.9.244,
   LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -63,7 +63,13 @@
   assistant replies, and the 1,536-token sequence alignment gate.
 * Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
   and `manifest/documents.json` with Dataset Compiler baseline
-  `v16.9.117-STABLE`.
+  `v16.9.118-STABLE`.
+* Hardened copilot prose distillation (`response_formatter.py`), unified
+  compile/recompile metadata refresh (`README.md`, `dataset-metadata.json`),
+  skipped image layout folders for LLM manifolds, aligned `ai_helper_lemgend`
+  training/export windows (`1536` local, `2048` cloud/ONNX), and updated
+  `MD-Papers/PAPER_LEMGENDARY_LLM.md`, `MD-Papers/MANUAL_API.md`,
+  `MD-Papers/MANUAL_CLI.md`, and HTML companions.
 
 ### 2026-11-23 — Resumption Fast-Forward Optimization & Pathology 69 Sync
 

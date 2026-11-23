@@ -28,7 +28,7 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.117-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Version</strong>: <code>v16.9.118-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
 <span><strong>Last audited</strong>: 2026-11-23</span>
 </div>
 </header>
@@ -1032,9 +1032,14 @@ and 1 proactive next-step closing).</li>
 42): with $n_c$ records in category $c$ and validation share $v$ (<code>val_split</code>,
 default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c &gt; 1$ and 0 otherwise.</p>
-<p><code>lem llm validate</code> and <code>POST /api/llm/validate</code> report up to 20 issues
-(severity, field, record id, issue) and exit 1 or return HTTP 400 when the
-corpus fails; unreadable or invalid JSONL is reported as such.</p>
+<p><code>lem llm validate</code> and <code>POST /api/llm/validate</code> both run <code>QualityValidator</code> with
+<code>TokenValidationConfig(enforce_copilot_structure=True)</code> and report up to 20
+issues (severity, field, record id, issue), exiting 1 or reporting <code>invalid</code>
+when errors are present. Both initial compile and recompile
+(<code>cli.py llm compile</code> and <code>cli.py compile --model</code>) skip image directory
+creation for JSONL manifolds and atomically refresh <code>README.md</code> and
+<code>dataset-metadata.json</code> alongside <code>dataset_info.yaml</code>, <code>index.json</code>,
+<code>build_manifest.json</code>, and <code>quality_report.json</code>.</p>
 <h4 id="sec-4105-sota-curation-deduplication--decontamination">4.10.5 SOTA Curation, Deduplication &amp; Decontamination</h4>
 <p>Grounded in FineWeb-Edu (Penedo et al., 2024), Dolma (Soldaini et al., 2024),
 SemDeDup (Abbas et al., 2023), DEITA (Liu et al., 2024), and LMSYS

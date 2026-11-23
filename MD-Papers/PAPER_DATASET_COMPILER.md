@@ -4,7 +4,7 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.117-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+**Version**: `v16.9.118-STABLE` (LemGendary Dataset Compiler Suite) · **Last
 audited**: 2026-11-23
 
 ---
@@ -1090,9 +1090,14 @@ After validation, records are split per category with a seeded generator (seed
 default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c > 1$ and 0 otherwise.
 
-`lem llm validate` and `POST /api/llm/validate` report up to 20 issues
-(severity, field, record id, issue) and exit 1 or return HTTP 400 when the
-corpus fails; unreadable or invalid JSONL is reported as such.
+`lem llm validate` and `POST /api/llm/validate` both run `QualityValidator` with
+`TokenValidationConfig(enforce_copilot_structure=True)` and report up to 20
+issues (severity, field, record id, issue), exiting 1 or reporting `invalid`
+when errors are present. Both initial compile and recompile
+(`cli.py llm compile` and `cli.py compile --model`) skip image directory
+creation for JSONL manifolds and atomically refresh `README.md` and
+`dataset-metadata.json` alongside `dataset_info.yaml`, `index.json`,
+`build_manifest.json`, and `quality_report.json`.
 
 #### 4.10.5 SOTA Curation, Deduplication & Decontamination
 

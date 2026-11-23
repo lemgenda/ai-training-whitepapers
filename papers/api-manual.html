@@ -1662,9 +1662,13 @@ Dispatches batch modernization and parallel WebP transcoding</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/modernize/reduce</code>; Auth: Required; Description:
 Dispatches spatial or sample scale reduction (downsample) job</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/llm/compile</code>; Auth: Required; Description: Queue
-or execute compilation of an LLM instruction manifold from unified_data.yaml</li>
+or execute compilation of an LLM instruction manifold from
+<code>unified_data.yaml</code> (refreshes JSONL shards, <code>README.md</code>, and
+<code>dataset-metadata.json</code> without creating stray image directories)</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/llm/validate</code>; Auth: None; Description: Validate
-an LLM dataset JSONL file against the 4 LemGendary Quality Invariants</li>
+an LLM dataset JSONL file or inline records with <code>QualityValidator</code> (including
+<code>enforce_copilot_structure=True</code> for 3-part replies, <code>1,536</code>/<code>420</code> token
+ceilings, epistemic tags, and zero-emoji compliance)</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/llm/test-suite</code>; Auth: None; Description: Execute
 in-process dataset compiler unit tests matching pattern</li>
 <li><strong><code>POST</code></strong>: Endpoint: <code>/api/modernize/regenerate-manifolds</code>; Auth: Required;

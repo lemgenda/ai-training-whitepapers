@@ -24,7 +24,7 @@
 <div class="meta">
 <span><strong>Author</strong>: Lem Treursic</span>
 <span><strong>Version</strong>: <code>v16.9.231-STABLE</code></span>
-<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 / Apple Silicon / T4</span>
+<span><strong>Target Hardware</strong>: NVIDIA GeForce GTX 1650 / Apple Silicon / T4 / TPU v5e-8</span>
 </div>
 </header>
 <nav class="toc-sidebar" aria-label="Table of Contents">
@@ -130,14 +130,13 @@ opt-in: <code>GenericCausalLLM</code> quantizes only when <code>load_in_4bit=Tru
 <h3>6.2 Hardware-Aware Dynamic Micro-Batch &amp; Gradient Accumulation Scaling</h3>
 <p>Memory sentinels probe free VRAM at runtime. To prevent Out-Of-Memory (OOM)
 faults while maintaining a stable target effective batch size
-($B_{\text{eff}} = 24$), physical micro-batch size ($B_{\text{phys}}$) and
+($B_{\text{eff}} = 16$), physical micro-batch size ($B_{\text{phys}}$) and
 gradient accumulation steps ($K_{\text{accum}}$) are resolved dynamically:</p>
 <div class="math-block">$$K_{\text{accum}} = \max\left(1, \operatorname{round}\left( \frac{B_{\text{eff}}}{B_{\text{phys}}} \right)\right)$$</div>
-<p>On 4GB hardware, $B_{\text{phys}} = 2$ and $K_{\text{accum}} = 12$, yielding an
-effective batch of 24 with peak activation memory constrained below 2.8 GB
-(a sizing target; <code>ai_helper_lemgend</code> pins <code>batch_size: 2</code> and
-<code>accumulation_steps: 12</code> in <code>unified_models_v2.yaml</code>, and the code does not
-measure the 2.8 GB bound).</p>
+<p>On 4 GB local GPUs (NVIDIA GeForce GTX 1650), <code>ai_helper_lemgend</code> sets
+$B_{\text{phys}} = 1$ and $K_{\text{accum}} = 16$ ($B_{\text{eff}} = 16$), while
+Cloud TPU v5e-8 (<code>cloud</code>) scales to $B_{\text{phys}} = 4$ and
+$K_{\text{accum}} = 2$.</p>
 <h3>6.3 Token Accuracy &amp; Autoregressive Validation Formulations</h3>
 <p>Validation loss ($\mathcal{L}_{\text{val}}$) is complemented by two primary
 evaluation metrics:</p>
@@ -171,8 +170,8 @@ adapter weights binary.</p>
 adhere to Three-Way Partitioning (Train / Val / Test):</p>
 <ul>
 <li><strong>Deterministic Stratification</strong>: Splits records according to declared ratios
-(<code>val_split</code> and <code>test_split</code>) across all seven corpus taxonomies, preventing
-epistemic bias and domain skew.</li>
+(<code>val_split</code> and <code>test_split</code>) across all eight corpus taxonomies (including
+<code>boundary_and_negative</code>), preventing epistemic bias and domain skew.</li>
 <li><strong>Held-Out Test Shard</strong>: Sharded into <code>ai_helper_test.jsonl</code> with zero prompt
 or ID leakage into training or validation splits.</li>
 <li><strong>Post-Training Evaluation</strong>: Evaluates the best milestone checkpoints across
@@ -199,14 +198,19 @@ Attention (<code>attn_implementation="sdpa"</code>).</li>
 <li><strong>Paged 8-bit AdamW</strong>: Leverages <code>bitsandbytes.optim.PagedAdamW8bit</code> to
 compress optimizer states to 8 bits and dynamically page optimizer states
 across CUDA unified memory when VRAM boundaries approach saturation.</li>
-<li><strong>Sequence Clamping</strong>: Constrains micro-batch to 1 and sequence length to 512
-tokens with 16 gradient accumulation steps, eliminating <em>O</em>(<em>N</em><sup>2</sup>) memory spikes
-and preserving stable throughput on edge accelerators.</li>
+<li><strong>Aligned Sequence Windowing</strong>: Uses <code>max_seq_length: 1536</code> (<code>batch_size: 1</code>,
+<code>accumulation_steps: 16</code>) on 4 GB local GPUs and <code>max_seq_length: 2048</code> on
+Cloud TPU v5e-8 (<code>cloud</code>). Combined with the upstream <code>1,536</code>-token
+compiler ceiling and <code>ChunkedCausalLMLoss</code>, zero copilot completions are
+truncated during ChatML prompt masking while eliminating <em>O</em>(<em>N</em><sup>2</sup>) activation
+spikes.</li>
 </ol>
 
-<h3>6.7 Tri-Format Export &amp; Protobuf 2.00 GB Weight Externalization</h3>
+<h3>6.7 Tri-Format Export, INT4 ONNX Copilot &amp; Protobuf 2.00 GB Rule</h3>
 <p>In accordance with the LemGendary universal multi-variation export standard,
-<code>AIHelperLemGend</code> is exported into three isolated runtime variations:</p>
+<code>AIHelperLemGend</code> exports into PyTorch and ONNX graphs supporting dynamic sequence
+windows up to <code>DEFAULT_MAX_SEQ_LENGTH = 2048</code> (<code>training/export/llm_exporter.py</code>)
+for desktop Studio <strong>INT4 ONNX</strong> copilot deployment and cloud inference:</p>
 <ul>
 <li><strong>PyTorch Standalone (<code>pytorch/AIHelperLemGend.pt</code>)</strong>: 1.57 GB merged FP16
 torchscript executable containing base model and LoRA adapter weights.</li>
@@ -246,7 +250,8 @@ rank-stabilized LoRA (<code>use_rslora = True</code>, scaling updates by
 \(\alpha / \sqrt{r}\)).</li>
 <li><strong>Local 4 GB GPU</strong>: Enforces 4-bit NormalFloat (<code>nf4</code>) double quantization
 with hardware-verified compute dtype (<code>bfloat16</code> on Ampere+, <code>float16</code> on
-Turing), <code>lora_r = 8</code>, and <code>batch_size = 1</code> with <code>accumulation_steps = 16</code>.</li>
+Turing), <code>lora_r = 16</code>, <code>lora_alpha = 32</code>, <code>max_seq_length = 1536</code>, and
+<code>batch_size = 1</code> with <code>accumulation_steps = 16</code>.</li>
 </ul>
 </li>
 <li><strong>Chunked Linear Cross-Entropy (<code>ChunkedCausalLMLoss</code>)</strong>:
@@ -270,12 +275,15 @@ enforces invariant \([B, S]\) tensor shapes so the PyTorch/XLA PJRT compiler
 compiles the HLO graph exactly once per run.</li>
 </ul>
 </li>
-<li><strong>SOTA Corpus Curation &amp; Decontamination</strong>:
+<li><strong>State-Grounded Copilot Curation &amp; Boundary Conditioning</strong>:
 <ul>
-<li>Upstream instruction manifolds are curated by <code>tools/llm_helper/curation.py</code>
-(<code>PAPER_DATASET_COMPILER.md</code> Section 4.10.5) using Shannon entropy and
-repetition filtering, MinHash + 5-gram cosine deduplication, cross-split
-decontamination, and deterministic <code>manifest_sha256</code> lineage.</li>
+<li>Upstream <code>LemGendizedAIHelperLemGend</code> manifolds are compiled by
+<code>tools/llm_helper/</code> (<code>PAPER_DATASET_COMPILER.md</code> Section 4.10) with
+<code>&gt;= 60%</code> Zustand <code>[GUI_STATE]</code> / <code>[RETRIEVED_DOCS]</code> grounding, <code>~10%</code>
+<code>boundary_and_negative</code> refusals, concise 3-part 150-350 token assistant
+replies (zero emojis, epistemic tags), <code>1,536</code>-token sequence alignment
+gates, MinHash + LSH deduplication, cross-split decontamination, and
+deterministic <code>manifest_sha256</code> lineage.</li>
 </ul>
 </li>
 </ol>

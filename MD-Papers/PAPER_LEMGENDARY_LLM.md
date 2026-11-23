@@ -113,7 +113,7 @@ opt-in: `GenericCausalLLM` quantizes only when `load_in_4bit=True` is passed
 
 Memory sentinels probe free VRAM at runtime. To prevent Out-Of-Memory (OOM)
 faults while maintaining a stable target effective batch size
-($B_{\text{eff}} = 24$), physical micro-batch size ($B_{\text{phys}}$) and
+($B_{\text{eff}} = 16$), physical micro-batch size ($B_{\text{phys}}$) and
 gradient accumulation steps ($K_{\text{accum}}$) are resolved dynamically:
 
 $$
@@ -121,11 +121,10 @@ K_{\text{accum}} = \max\left(1, \operatorname{round}\left(
 \frac{B_{\text{eff}}}{B_{\text{phys}}} \right)\right)
 $$
 
-On 4GB hardware, $B_{\text{phys}} = 2$ and $K_{\text{accum}} = 12$, yielding an
-effective batch of 24 with peak activation memory constrained below 2.8 GB
-(a sizing target; `ai_helper_lemgend` pins `batch_size: 2` and
-`accumulation_steps: 12` in `unified_models_v2.yaml`, and the code does not
-measure the 2.8 GB bound).
+On 4 GB local GPUs (NVIDIA GeForce GTX 1650), `ai_helper_lemgend` sets
+$B_{\text{phys}} = 1$ and $K_{\text{accum}} = 16$ ($B_{\text{eff}} = 16$), while
+Cloud TPU v5e-8 (`cloud`) scales to $B_{\text{phys}} = 4$ and
+$K_{\text{accum}} = 2$.
 
 ### 6.3 Token Accuracy & Autoregressive Validation Formulations
 
@@ -168,8 +167,8 @@ To guarantee generalization without data contamination, instruction manifolds
 adhere to Three-Way Partitioning (Train / Val / Test):
 
 * **Deterministic Stratification**: Splits records according to declared ratios
-  (`val_split` and `test_split`) across all seven corpus taxonomies, preventing
-  epistemic bias and domain skew.
+  (`val_split` and `test_split`) across all eight corpus taxonomies (including
+  `boundary_and_negative`), preventing epistemic bias and domain skew.
 * **Held-Out Test Shard**: Sharded into `ai_helper_test.jsonl` with zero prompt
   or ID leakage into training or validation splits.
 * **Post-Training Evaluation**: Evaluates the best milestone checkpoints across
@@ -196,14 +195,20 @@ training suite deploys a multi-tier memory containment profile:
 4. **Paged 8-bit AdamW**: Leverages `bitsandbytes.optim.PagedAdamW8bit` to
    compress optimizer states to 8 bits and dynamically page optimizer states
    across CUDA unified memory when VRAM boundaries approach saturation.
-5. **Sequence Clamping**: Constrains micro-batch to 1 and sequence length
-   to 512 tokens with 16 gradient accumulation steps, eliminating $O(N^2)$
-   memory spikes and preserving stable throughput on edge accelerators.
+5. **Aligned Sequence Windowing**: Uses `max_seq_length: 1536` (`batch_size: 1`,
+   `accumulation_steps: 16`) on 4 GB local GPUs and `max_seq_length: 2048` on
+   Cloud TPU v5e-8 (`cloud`). Combined with the upstream `1,536`-token
+   compiler ceiling and `ChunkedCausalLMLoss`, zero copilot completions are
+   truncated during ChatML prompt masking while eliminating $O(N^2)$ activation
+   spikes.
 
-### 6.7 Tri-Format Export & Protobuf 2.00 GB Weight Externalization
+### 6.7 Tri-Format Export, INT4 ONNX Copilot & Protobuf 2.00 GB Rule
 
 In accordance with the LemGendary universal multi-variation export standard,
-`AIHelperLemGend` is exported into three isolated runtime variations:
+`AIHelperLemGend` exports into PyTorch and ONNX graphs supporting dynamic
+sequence windows up to `DEFAULT_MAX_SEQ_LENGTH = 2048`
+(`training/export/llm_exporter.py`) for desktop Studio **INT4 ONNX** copilot
+deployment and cloud inference:
 
 * **PyTorch Standalone (`pytorch/AIHelperLemGend.pt`)**: 1.57 GB merged FP16
   torchscript executable containing base model and LoRA adapter weights.
@@ -242,7 +247,8 @@ without maintaining separate model codebases, `GenericCausalLLM` and
      $\alpha / \sqrt{r}$).
    * **Local 4 GB GPU**: Enforces 4-bit NormalFloat (`nf4`) double quantization
      with hardware-verified compute dtype (`bfloat16` on Ampere+, `float16` on
-     Turing), `lora_r = 8`, and `batch_size = 1` with `accumulation_steps = 16`.
+     Turing), `lora_r = 16`, `lora_alpha = 32`, `max_seq_length = 1536`, and
+     `batch_size = 1` with `accumulation_steps = 16`.
 2. **Chunked Linear Cross-Entropy (`ChunkedCausalLMLoss`)**:
    * Standard `AutoModelForCausalLM.forward(labels=...)` materializes the full
      $[B, S, V]$ logit tensor ($V = 151,936$ for Qwen2.5) and upcasts it to
@@ -258,12 +264,14 @@ without maintaining separate model codebases, `GenericCausalLLM` and
    * On TPU v5e-8, `collate_instruction_batch(..., pad_to_max_length=True)`
      enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
      compiles the HLO graph exactly once per run.
-4. **SOTA Corpus Curation & Decontamination**:
-   * Upstream instruction manifolds are curated by
-     `tools/llm_helper/curation.py` (`PAPER_DATASET_COMPILER.md` Section 4.10.5)
-     using Shannon entropy and repetition filtering, MinHash + 5-gram cosine
-     deduplication, cross-split decontamination, and deterministic
-     `manifest_sha256` lineage.
+4. **State-Grounded Copilot Curation & Boundary Conditioning**:
+   * Upstream `LemGendizedAIHelperLemGend` manifolds are compiled by
+     `tools/llm_helper/` (`PAPER_DATASET_COMPILER.md` Section 4.10) with
+     `>= 60%` Zustand `[GUI_STATE]` / `[RETRIEVED_DOCS]` grounding, `~10%`
+     `boundary_and_negative` refusals, concise 3-part 150-350 token assistant
+     replies (zero emojis, epistemic tags), `1,536`-token sequence alignment
+     gates, MinHash + LSH deduplication, cross-split decontamination, and
+     deterministic `manifest_sha256` lineage.
 
 ---
 

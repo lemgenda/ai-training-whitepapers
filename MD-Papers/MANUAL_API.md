@@ -1960,9 +1960,13 @@ token authentication:
 - **`POST`**: Endpoint: `/api/modernize/reduce`; Auth: Required; Description:
   Dispatches spatial or sample scale reduction (downsample) job
 - **`POST`**: Endpoint: `/api/llm/compile`; Auth: Required; Description: Queue
-  or execute compilation of an LLM instruction manifold from unified_data.yaml
+  or execute compilation of an LLM instruction manifold from
+  `unified_data.yaml` (refreshes JSONL shards, `README.md`, and
+  `dataset-metadata.json` without creating stray image directories)
 - **`POST`**: Endpoint: `/api/llm/validate`; Auth: None; Description: Validate
-  an LLM dataset JSONL file against the 4 LemGendary Quality Invariants
+  an LLM dataset JSONL file or inline records with `QualityValidator` (including
+  `enforce_copilot_structure=True` for 3-part replies, `1,536`/`420` token
+  ceilings, epistemic tags, and zero-emoji compliance)
 - **`POST`**: Endpoint: `/api/llm/test-suite`; Auth: None; Description: Execute
   in-process dataset compiler unit tests matching pattern
 - **`POST`**: Endpoint: `/api/modernize/regenerate-manifolds`; Auth: Required;
