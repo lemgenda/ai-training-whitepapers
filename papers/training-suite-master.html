@@ -1757,8 +1757,11 @@ FP32; <code>&lt;Stem&gt;_FP32.onnx</code> with its weights always in
 <code>&lt;Stem&gt;_FP32.onnx.data</code>; <code>&lt;Stem&gt;.onnx</code> FP16 with embedded weights, or a
 <code>.onnx.data</code> sidecar above the 2 GB protobuf limit. FP16 graphs are captured
 from a half-precision copy; FP16-unsafe layers (Swin V2 window attention)
-stay FP32 inside the graph. The file suffixes come from
-<code>training/cloud/variations.py</code>.</li>
+stay FP32 inside the graph. In v16.9.243, <code>verify_canary()</code> was hardened to
+execute an active NaN/Inf canary probe during export and raise
+<code>ExportError(&quot;ONNX_CANARY_FAILED&quot;)</code> upon discovering non-finite tensors,
+strictly preventing corrupted half-precision weights from publishing.
+The file suffixes come from <code>training/cloud/variations.py</code>.</li>
 <li><strong>ONNX <code>metadata_props</code></strong> (<code>training/export/onnx_metadata.py</code>): both ONNX
 variants carry <code>model_key</code>, <code>task</code>, <code>input_size</code> (<code>[C, H, W]</code>, JSON), the
 training preprocessing (<code>normalization</code>, <code>pixel_scale</code>, <code>mean</code>, <code>std</code>) and,
