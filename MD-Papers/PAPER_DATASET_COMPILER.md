@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.113-STABLE` (LemGendary Dataset Compiler Suite) · **Last
-audited**: 2026-11-15
+**Version**: `v16.9.117-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+audited**: 2026-11-23
 
 ---
 
@@ -1076,6 +1076,14 @@ reported:
 4. **Epistemic Certainty Tagging (warning)**: The same troubleshooting answers
    must carry an epistemic qualifier (`[CONFIRMED]`, `[PROBABLE]`,
    `[ILLUSTRATIVE]`) to separate verified facts from illustrative examples.
+5. **Sequence Alignment & Copilot Grounding (error / warning)**:
+   `token_budget.py` enforces a hard ceiling of 1,536 combined tokens across
+   `system`, `user`, and `assistant` turns and 420 tokens on the assistant
+   reply (errors) so QLoRA `max_seq_length: 2048` never truncates assistant
+   completions during prompt masking. Grounded copilot records (`[GUI_STATE]`
+   / `[RETRIEVED_DOCS]` and `boundary_and_negative`) target 150-350 assistant
+   tokens in a 3-part format (1-sentence direct opening, 3-4 grounded bullets,
+   and 1 proactive next-step closing).
 
 After validation, records are split per category with a seeded generator (seed
 42): with $n_c$ records in category $c$ and validation share $v$ (`val_split`,
@@ -1083,6 +1091,8 @@ default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c > 1$ and 0 otherwise.
 
 `lem llm validate` and `POST /api/llm/validate` report up to 20 issues
+(severity, field, record id, issue) and exit 1 or return HTTP 400 when the
+corpus fails; unreadable or invalid JSONL is reported as such.
 
 #### 4.10.5 SOTA Curation, Deduplication & Decontamination
 
@@ -1091,22 +1101,23 @@ SemDeDup (Abbas et al., 2023), DEITA (Liu et al., 2024), and LMSYS
 Decontamination (Yang et al., 2023), `tools/llm_helper/curation.py` applies
 five deterministic curation stages before shard emission:
 
-1. **Heuristic Quality Filtering & Metadata Enrichment**: Computes normalized
+1. **Sequence Token Budget Gate**: `filter_by_token_budget()` rejects records
+   exceeding 1,536 total tokens (`exceeds_max_total_tokens`) or 420 assistant
+   tokens (`exceeds_max_assistant_tokens`) before heuristic scoring.
+2. **Heuristic Quality Filtering & Metadata Enrichment**: Computes normalized
    Shannon token entropy $H_{\text{norm}}(x)$ and 3-gram repetition ratio
    $R_3(x)$, scoring each record $Q(x) \in [0, 1]$ and assigning
    `difficulty` (`basic`, `intermediate`, `advanced`), `license`, `language`,
-   and `content_sha256`.
-2. **MinHash + Semantic Deduplication**: Prunes near-duplicates via 32-perm
+   `total_tokens`, `assistant_tokens`, and `content_sha256`.
+3. **MinHash + Semantic Deduplication**: Prunes near-duplicates via 32-perm
    MinHash Jaccard similarity ($\tau_{\text{Jaccard}} \ge 0.85$) and 5-gram
    cosine similarity ($\tau_{\cos} \ge 0.92$).
-3. **Cross-Split Decontamination**: Removes `train` records with 8-gram
+4. **Cross-Split Decontamination**: Removes `train` records with 8-gram
    overlap $\ge 0.75$ against held-out `val` or `test` splits.
-4. **Rejected Record Telemetry & Merkle Lineage**: Writes all filtered/leaked
+5. **Rejected Record Telemetry & Merkle Lineage**: Writes all filtered/leaked
    records to `rejected_records.jsonl` with `rejection_reason`, and emits
    `seed`, `curation_stats`, and `manifest_sha256` into `build_manifest.json`
    and `quality_report.json`.
-(severity, field, record id, issue) and exit 1 or return HTTP 400 when the
-corpus fails; unreadable or invalid JSONL is reported as such.
 
 ### 4.11 Sample Integrity, Shard Verification & Manifold Repair
 

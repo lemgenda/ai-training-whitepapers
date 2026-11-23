@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.117`
+**Version**: `v16.9.118`
 
 ---
 
@@ -21,7 +21,7 @@
   Averaging, the FID Re-evaluation Tool, shard-window sampling, Kaggle Cloud
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.87, LemGendary
-  Dataset Compiler Suite v16.9.116, LemGendary Model Training Suite v16.9.243,
+  Dataset Compiler Suite v16.9.117, LemGendary Model Training Suite v16.9.244,
   LemGendary AI Studio GUI v2.10.70.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
@@ -53,6 +53,17 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### 2026-11-23 — State-Grounded Copilot LLM Compiler & Sequence Alignment Gate
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` Sections 4.10.4 and 4.10.5 to document
+  Zustand `[GUI_STATE]` and `[RETRIEVED_DOCS]` copilot grounding,
+  `boundary_and_negative` refusal conditioning, 3-part 150-350 token
+  assistant replies, and the 1,536-token sequence alignment gate.
+* Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
+  and `manifest/documents.json` with Dataset Compiler baseline
+  `v16.9.117-STABLE`.
 
 ### 2026-11-23 — Resumption Fast-Forward Optimization & Pathology 69 Sync
 
