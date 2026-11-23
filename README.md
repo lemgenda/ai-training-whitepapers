@@ -58,11 +58,13 @@
 
 * Updated `MD-Papers/PAPER_TRAINING_SUITE.md` Section 2.4 and
   `papers/training-suite-master.html` to document zero-cost intra-epoch
-  resumption fast-forwarding via index-slicing and `BatchClock` EMA rate
-  smoothing.
+  resumption fast-forwarding via index-slicing, WebDataset shard-level offset
+  skipping (`skip_shards_offset` / `set_start_shard`), worker persistence
+  guarantees, and `BatchClock` EMA rate smoothing.
 * Updated `MD-Papers/PAPER_TRAINING_PATHOLOGY.md` and
   `papers/training-pathology.html` to document Pathology 69 (Intra-Epoch
-  Fast-Forward Latency & Cold Worker Resumption Skew) and its mitigation.
+  Fast-Forward Latency & Cold Worker Resumption Skew), shard skipping,
+  `persistent_workers=True`, and clock rate dampening.
 * Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
   and `manifest/documents.json` with Training Suite baseline `v16.9.244-STABLE`.
 
