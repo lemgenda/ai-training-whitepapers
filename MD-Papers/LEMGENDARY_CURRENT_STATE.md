@@ -397,15 +397,23 @@ The ecosystem enforces deterministic process lifecycle management to prevent
 orphaned child processes and CPU/VRAM resource leaks:
 
 - **Recursive Process Tree Elimination**: Sidecar shutdown
-  (`service_manager.stop_service`) and job cancellation (`jobs.py`) execute
-  recursive tree termination (`taskkill /F /T /PID` on Windows, recursive
-  signal propagation on POSIX), terminating both parent orchestrators and all
-  spawned worker subprocesses. PID files (`server.pid`) are immediately
+  (`service_manager.stop_service`, `service_manager.stop_all_services`, and
+  Tauri native `stop_all_services_native`) and job cancellation (`jobs.py`)
+  execute recursive tree termination (`taskkill /F /T /PID` on Windows,
+  recursive signal propagation on POSIX), terminating both parent orchestrators
+  and all spawned worker subprocesses. PID files (`server.pid`) are immediately
   written upon detached process creation, and listening process discovery
   features full netstat multi-format parsing for wildcard listening sockets.
-- **Guaranteed Cleanup Handlers**: `atexit` child process sentinels prevent
-  detached PyTorch training loops, Uvicorn workers or compilation scripts from
-  persisting after cancellation or abnormal exit.
+- **Ghost Process Prevention & Startup Timeout Teardown**: In
+  `env_manager/service_manager.py`, pre-flight port checks terminate stale or
+  unresponsive port holders before starting new services, preventing
+  `WinError 10048` bind crashes. Spawned child processes that fail to achieve
+  healthy status within `STARTUP_TIMEOUT_S` (15s) are forcefully terminated
+  and have their PID files purged immediately, avoiding orphan accumulation.
+- **Guaranteed Cleanup Handlers**: `atexit` child process sentinels and Tauri
+  application exit listeners (`WindowEvent::Destroyed`, `RunEvent::Exit`)
+  guarantee that when the GUI closes or crashes, all child processes and sidecar
+  daemons are terminated immediately.
 - **Telemetry & Unzip Progress Synchronization**: Kaggle dataset decompression
   streaming (`kaggle_importer.py`) and multi-stream telemetry tracking
   (`TelemetryProgressTracker.tsx`) keep operator progress bars in line with

@@ -366,12 +366,18 @@ command uses <code>.venv/Scripts/pythonw.exe</code> with <code>CREATE_NO_WINDOW<
 (<code>0x08000000</code>). Standard input, output and error are discarded
 (<code>Stdio::null</code>), so sidecar output is read from the sidecars' own log files
 and WebSocket streams.</li>
-<li><strong>Service Control Routing</strong>: Start, stop and start-all go to the Environment
+<li><strong>Service Control Routing &amp; Shutdown</strong>: Start, stop and start-all go to the Environment
 Manager (<code>POST /api/services/{id}/start</code>, <code>POST /api/services/{id}/stop</code>,
-<code>POST /api/services/start-all</code>) when its <code>/api/ping</code> answers. When it is
+<code>POST /api/services/start-all</code>, <code>POST /api/services/stop-all</code>) when its <code>/api/ping</code> answers. When it is
 offline, the desktop app falls back to the native Tauri commands
-<code>spawn_service</code> and <code>spawn_all_services</code>; a plain browser session shows a
+<code>spawn_service</code>, <code>spawn_all_services</code>, <code>stop_service</code>, and <code>stop_all_services</code>; a plain browser session shows a
 clear error instead.</li>
+<li><strong>Deterministic Teardown on Window Close and App Exit</strong>: On desktop window
+close (<code>WindowEvent::Destroyed</code>) or application termination
+(<code>RunEvent::Exit</code>), Tauri runs <code>commands::stop_all_services_native()</code>. This
+guarantees that all active sidecar processes on ports 8000, 8100, and 8200 are
+forcefully terminated via process tree killing, preventing ghost daemons from
+occupying sockets after exiting.</li>
 <li><strong>Automated Mesh Bootstrapping</strong>: On launch the GUI probes the three sidecars
 and starts the offline ones in the background, then keeps polling until they
 answer.</li>

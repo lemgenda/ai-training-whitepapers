@@ -450,14 +450,19 @@ single non-blocking payload, eliminating waterfall polling.</li>
 sidecar (port 8200) one after the other in the thread pool, each with a 1.5 s
 timeout, and reports their health next to the env manager itself (port 8000)
 for the <code>lemgendary-ai-studio-gui</code> status bar.</li>
-<li><strong>Service Control (<code>/api/services/{service_id}/start</code> and <code>/stop</code>)</strong>: Starts
-and stops the sidecar daemons. In v16.9.67, process termination is hardened
-via a two-tier strategy: recording the background process PID to
-<code>server.pid</code> upon launch, and executing Windows netstat parsing that
-recognizes both explicit IP bindings (<code>127.0.0.1</code>, <code>0.0.0.0</code>, <code>[::]</code>) and
-listening wildcard tokens (<code>*:*</code>, <code>:0</code>) to terminate stubborn lingering
-processes reliably. Furthermore, test environments enforce isolation
-via <code>LEM_DISABLE_SIDECAR_AUTORUN=1</code>.</li>
+<li><strong>Service Control (<code>/api/services/{service_id}/start</code>, <code>/stop</code>, <code>/start-all</code>, <code>/stop-all</code>)</strong>:
+Starts and stops individual or mesh sidecar daemons. In v16.9.91, process
+lifecycle resilience is enhanced by two safeguards:
+(1) <em>Stale Port Holder Clearance</em>: If a service port is occupied but fails health
+checks, <code>_preflight_service</code> terminates the stale port holder process tree
+before starting the service, eliminating <code>WinError 10048</code> socket collisions.
+(2) <em>Startup Timeout Teardown</em>: In <code>_await_service_health</code>, if a newly spawned
+child process fails to answer healthy within the 15-second timeout window,
+its process tree is terminated immediately and <code>server.pid</code> is cleaned up,
+preventing unresponsive ghost background workers from accumulating.
+(3) <em>Mesh Teardown</em>: <code>POST /api/services/stop-all</code> terminates all non-self
+services (or all services when <code>include_self=true</code>).
+Furthermore, test environments enforce isolation via <code>LEM_DISABLE_SIDECAR_AUTORUN=1</code>.</li>
 <li><strong>Governance &amp; Maintenance Endpoints (<code>/api/hooks/install</code>, <code>/api/clean</code>)</strong>:
 Provides programmatic endpoints for ecosystem-wide Git hook installation and
 recursive temporary cache/staging artifact purges with space recovery

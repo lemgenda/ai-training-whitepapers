@@ -2302,6 +2302,25 @@ post-training
   `papers/dataset-compiler.html` with Section 7.3 (Canonical
   `unified_data.yaml` & JSON Schema Export).
 
+### 2026-11-24 — Sidecar Teardown On App Exit & Ghost Process Prevention
+
+* Updated `MD-Papers/MANUAL_API.md` and `papers/api-manual.html` documenting
+  `POST /api/services/stop-all` and native Tauri IPC contracts `stop_service`,
+  `stop_all_services`, `spawn_service`, and `spawn_all_services`.
+* Updated `MD-Papers/PAPER_AI_STUDIO_GUI.md` and
+  `papers/ai-studio-whitepaper.html` Section 6.5 with deterministic native
+  sidecar teardown on window destruction and app exit hooks.
+* Updated `MD-Papers/PAPER_ENV_MANAGER.md` and `papers/env_manager.html` Section
+  6.3 with automated stale port holder clearance and startup health timeout
+  teardown safeguards.
+* Updated `MD-Papers/MANUAL_AI_STUDIO_GUI.md` and
+  `papers/ai-studio-manual.html` Section 2.2 with app exit sidecar termination.
+* Updated `MD-Papers/LEMGENDARY_CURRENT_STATE.md` and
+  `papers/current-state.html` Section 10 with process tree termination and
+  ghost process prevention.
+* Updated `canonical_capabilities.json` and `canonical_capabilities.yaml`
+  operation counts reflecting `POST /api/services/stop-all`.
+
 ### 2026-11-15 — Dataset Compiler Manifold Verification & Line Length Guard
 
 * Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and

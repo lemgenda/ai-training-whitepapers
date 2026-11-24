@@ -1014,6 +1014,37 @@ Example response:
 }
 ```
 
+#### `POST /api/services/stop-all`
+
+Terminates all running sidecars across the ecosystem. By default, it targets
+all non-self services (`dataset-compiler` and `training-suite`), leaving the
+Environment Manager online to continue serving API calls; passing query
+parameter `include_self=true` terminates the entire mesh including the
+Environment Manager daemon itself.
+
+Query parameters:
+- `include_self` (boolean, optional, default: `false`): When `true`, stops the
+  Environment Manager service in addition to all other sidecars.
+
+Example response:
+
+```json
+{
+  "results": {
+    "dataset-compiler": {
+      "status": "stopped",
+      "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
+      "port": 8100
+    },
+    "training-suite": {
+      "status": "stopped",
+      "message": "LemGendary Model Training Suite on port 8200 stopped.",
+      "port": 8200
+    }
+  }
+}
+```
+
 ---
 
 ## 3. Desktop GUI Tauri IPC API Contracts
@@ -1025,6 +1056,15 @@ Rust backend via Tauri v2 IPC invocations.
   Purpose: Triggers hardware discovery from native desktop thread
 - **`get_ecosystem_status`**: Arguments: None; Return Type: `EcosystemReport`;
   Purpose: Queries active environment manager daemon for health metrics
+- **`spawn_service`**: Arguments: `service_id: String`; Return Type:
+  `ServiceOperationResult`; Purpose: Spawns a background sidecar process
+- **`spawn_all_services`**: Arguments: None; Return Type: `()`; Purpose: Spawns
+  all registered background sidecars
+- **`stop_service`**: Arguments: `service_id: String`; Return Type:
+  `ServiceOperationResult`; Purpose: Terminates a specific sidecar by port
+- **`stop_all_services`**: Arguments: None; Return Type:
+  `HashMap<String, ServiceOperationResult>`; Purpose: Terminates all listening
+  sidecar processes on ports 8000, 8100, and 8200
 - **`trigger_clean_install`**: Arguments: `project: Option<String>`; Return
   Type: `PipelineLaunchResult`; Purpose: Starts environment provisioning
   pipeline

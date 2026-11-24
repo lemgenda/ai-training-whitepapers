@@ -797,8 +797,7 @@ recorded PID file or querying the active socket connection on the assigned port.
   "results": {
     "dataset-compiler": {
       "status": "already_running",
-      "message":
-"LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
+      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
       "port": 8100
     },
     "training-suite": {
@@ -806,6 +805,33 @@ recorded PID file or querying the active socket connection on the assigned port.
       "message": "LemGendary Model Training Suite started successfully on port 8200.",
       "port": 8200,
       "pid": 18612
+    }
+  }
+}
+</code></pre>
+<h4 id="post-apiservicesstop-all"><code>POST /api/services/stop-all</code></h4>
+<p>Terminates all running sidecars across the ecosystem. By default, it targets
+all non-self services (<code>dataset-compiler</code> and <code>training-suite</code>), leaving the
+Environment Manager online to continue serving API calls; passing query parameter
+<code>include_self=true</code> terminates the entire mesh including the Environment Manager
+daemon itself.</p>
+<p>Query parameters:</p>
+<ul>
+<li><code>include_self</code> (boolean, optional, default: <code>false</code>): When <code>true</code>, stops the
+Environment Manager service in addition to all other sidecars.</li>
+</ul>
+<p>Example response:</p>
+<pre><code class="language-json">{
+  "results": {
+    "dataset-compiler": {
+      "status": "stopped",
+      "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
+      "port": 8100
+    },
+    "training-suite": {
+      "status": "stopped",
+      "message": "LemGendary Model Training Suite on port 8200 stopped.",
+      "port": 8200
     }
   }
 }
@@ -821,6 +847,15 @@ Rust backend via Tauri v2 IPC invocations.</p>
 Purpose: Triggers hardware discovery from native desktop thread</li>
 <li><strong><code>get_ecosystem_status</code></strong>: Arguments: None; Return Type: <code>EcosystemReport</code>;
 Purpose: Queries active environment manager daemon for health metrics</li>
+<li><strong><code>spawn_service</code></strong>: Arguments: <code>service_id: String</code>; Return Type:
+<code>ServiceOperationResult</code>; Purpose: Spawns a background sidecar process</li>
+<li><strong><code>spawn_all_services</code></strong>: Arguments: None; Return Type: <code>()</code>; Purpose: Spawns
+all registered background sidecars</li>
+<li><strong><code>stop_service</code></strong>: Arguments: <code>service_id: String</code>; Return Type:
+<code>ServiceOperationResult</code>; Purpose: Terminates a specific sidecar by port</li>
+<li><strong><code>stop_all_services</code></strong>: Arguments: None; Return Type:
+<code>HashMap&lt;String, ServiceOperationResult&gt;</code>; Purpose: Terminates all listening
+sidecar processes on ports 8000, 8100, and 8200</li>
 <li><strong><code>trigger_clean_install</code></strong>: Arguments: <code>project: Option&lt;String&gt;</code>; Return
 Type: <code>PipelineLaunchResult</code>; Purpose: Starts environment provisioning
 pipeline</li>

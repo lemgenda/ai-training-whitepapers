@@ -326,12 +326,19 @@ Linux and macOS:
   (`0x08000000`). Standard input, output and error are discarded
   (`Stdio::null`), so sidecar output is read from the sidecars' own log files
   and WebSocket streams.
-- **Service Control Routing**: Start, stop and start-all go to the Environment
-  Manager (`POST /api/services/{id}/start`, `POST /api/services/{id}/stop`,
-  `POST /api/services/start-all`) when its `/api/ping` answers. When it is
+- **Service Control Routing & Shutdown**: Start, stop and start-all go to the
+  Environment Manager (`POST /api/services/{id}/start`,
+  `POST /api/services/{id}/stop`, `POST /api/services/start-all`,
+  `POST /api/services/stop-all`) when its `/api/ping` answers. When it is
   offline, the desktop app falls back to the native Tauri commands
-  `spawn_service` and `spawn_all_services`; a plain browser session shows a
-  clear error instead.
+  `spawn_service`, `spawn_all_services`, `stop_service`, and
+  `stop_all_services`; a plain browser session shows a clear error instead.
+- **Deterministic Teardown on Window Close and App Exit**: On desktop window
+  close (`WindowEvent::Destroyed`) or application termination
+  (`RunEvent::Exit`), Tauri runs `commands::stop_all_services_native()`. This
+  guarantees that all active sidecar processes on ports 8000, 8100, and 8200 are
+  forcefully terminated via process tree killing, preventing ghost daemons from
+  occupying sockets after exiting.
 - **Automated Mesh Bootstrapping**: On launch the GUI probes the three sidecars
   and starts the offline ones in the background, then keeps polling until they
   answer.

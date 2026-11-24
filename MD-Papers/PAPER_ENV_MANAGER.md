@@ -460,14 +460,22 @@ Environment Manager daemon exposes high-density aggregated endpoints:
   sidecar (port 8200) one after the other in the thread pool, each with a 1.5 s
   timeout, and reports their health next to the env manager itself (port 8000)
   for the `lemgendary-ai-studio-gui` status bar.
-- **Service Control (`/api/services/{service_id}/start` and `/stop`)**: Starts
-  and stops the sidecar daemons. In v16.9.67, process termination is hardened
-  via a two-tier strategy: recording the background process PID to
-  `server.pid` upon launch, and executing Windows netstat parsing that
-  recognizes both explicit IP bindings (`127.0.0.1`, `0.0.0.0`, `[::]`) and
-  listening wildcard tokens (`*:*`, `:0`) to terminate stubborn lingering
-  processes reliably. Furthermore, test environments enforce isolation
-  via `LEM_DISABLE_SIDECAR_AUTORUN=1`.
+- **Service Control (`/api/services/{service_id}/start`, `/stop`,
+  `/start-all`, `/stop-all`)**: Starts and stops individual or mesh sidecar
+  daemons. In v16.9.91, process lifecycle resilience is enhanced by two
+  safeguards:
+  1. *Stale Port Holder Clearance*: If a service port is occupied but fails
+     health checks, `_preflight_service` terminates the stale port holder
+     process tree before starting the service, eliminating `WinError 10048`
+     socket collisions.
+  2. *Startup Timeout Teardown*: In `_await_service_health`, if a newly spawned
+     child process fails to answer healthy within the 15-second timeout window,
+     its process tree is terminated immediately and `server.pid` is cleaned up,
+     preventing unresponsive ghost background workers from accumulating.
+  3. *Mesh Teardown*: `POST /api/services/stop-all` terminates all non-self
+     services (or all services when `include_self=true`).
+  Furthermore, test environments enforce isolation via
+  `LEM_DISABLE_SIDECAR_AUTORUN=1`.
 - **Governance & Maintenance Endpoints (`/api/hooks/install`, `/api/clean`)**:
   Provides programmatic endpoints for ecosystem-wide Git hook installation and
   recursive temporary cache/staging artifact purges with space recovery

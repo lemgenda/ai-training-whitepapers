@@ -37,7 +37,7 @@ control_planes:
     openapi_specification: openapi.json
     contracts: OpenAPI 3.1.0, one openapi.json per sidecar
     operation_counts:
-      environment_manager: 33
+      environment_manager: 34
       dataset_compiler: 37
       training: 40
     training_routes:

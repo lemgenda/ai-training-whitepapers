@@ -320,9 +320,12 @@ so a build started outside the GUI folder still finds the sidecars.
 5. **Bidirectional Sidecar Controls (Start / Stop Service)**: Offline cards show
    "Start Service"; online cards show "Stop Service". Both go to the Environment
    Manager (`POST /api/services/{id}/start` or `/stop`) when it answers. If the
-   Environment Manager itself is offline, the desktop app starts sidecars
-   through its native launcher; in a plain browser session you get a clear error
-   instead.
+   Environment Manager itself is offline, the desktop app starts or stops
+   sidecars through its native launcher (`spawn_service`, `stop_service`); in a
+   plain browser session you get a clear error instead. When exiting the
+   desktop application, Tauri triggers automated native teardown of all
+   sidecars (`stop_all_services_native`), killing listeners on ports 8000, 8100,
+   and 8200.
 
 Callout bindings (control type; endpoint or action):
 
