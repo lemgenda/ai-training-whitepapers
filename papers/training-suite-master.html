@@ -443,6 +443,12 @@ match the exact recovered ladder rung and dataset fraction.</li>
 directories. All models, whether training locally or on Kaggle, directly sync
 <code>_latest</code>, <code>_best</code>, <code>_progress</code>, and <code>_vault_</code> checkpoints exclusively to
 their respective <code>LemGendaryModels/&lt;model_name&gt;/checkpoints</code> vault.</li>
+<li><strong>Distributed Rank Cadence Synchronization</strong>: Under multi-GPU DDP training,
+all ranks synchronously update their local <code>last_progress_save_time</code> inside
+<code>save_progress_now</code> before delegating physical atomic disk operations to
+Rank 0. This prevents non-zero worker ranks from retaining stale timestamps
+and forcing spurious intra-epoch checkpoint saves across rapid DDP decision
+intervals (resolving Pathology 70).</li>
 <li><strong>Safe Non-Destructive Export Instantiation</strong>: Replaced legacy <code>shutil.rmtree</code>
 overarching folder wipes with precise, non-destructive
 <code>os.makedirs(exist_ok=True)</code> logic, structurally preventing catastrophic

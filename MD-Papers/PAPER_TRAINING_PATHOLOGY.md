@@ -145,6 +145,8 @@ ARC (XPU) / Kaggle Tesla T4 Cloud
     68)](#silent-fp16-export-overflow--non-finite-canary-leakage-pathology-68)
   - [Intra-Epoch Fast-Forward Latency & Cold Worker Resumption Skew (Pathology
     69)](#intra-epoch-fast-forward-latency--cold-worker-resumption-skew-pathology-69)
+  - [Distributed Rank Asymmetry in Intra-Epoch Save Cadence (Pathology
+    70)](#distributed-rank-asymmetry-in-intra-epoch-save-cadence-pathology-70)
 - [6. Best Practices Checklist](#6-best-practices-checklist)
 - [7. Multi-Model Pipeline Strategy](#7-multi-model-pipeline-strategy)
 - [8. Mapping Pathologies to Pipeline
@@ -1598,6 +1600,29 @@ Smoothing**.
    where $\alpha = 0.4$ for the first 5 steps and $0.15$ thereafter. This
    completely eliminates transient metric distortion and provides instant,
    accurate progress telemetry upon resumption.
+
+### Distributed Rank Asymmetry in Intra-Epoch Save Cadence (Pathology 70)
+
+**The Issue:** Under Distributed Data Parallel (DDP) execution on multi-GPU
+accelerators, rank synchronization of intra-epoch checkpoint saves relies
+on an all-reduce decision gate (`any_rank(due, device)`). When an intra-epoch
+save executes, non-zero worker ranks exit early because physical disk writes
+to `progress.pth` are restricted to Rank 0 to prevent file corruption. If
+`last_progress_save_time` is updated exclusively within the Rank 0 branch,
+non-zero ranks retain their stale startup timestamps. Consequently, on every
+subsequent DDP decision step (e.g. every $N=25$ batches), non-zero ranks
+evaluate `elapsed >= min_progress_interval_sec` as true. The `any_rank`
+consensus votes true, triggering an unintended checkpoint save on Rank 0
+every 25 batches (every ~6 to 10 seconds), causing disk write thrashing,
+log flooding, and severe training slowdowns.
+
+**Remedy:** **Universal Rank Tracking Synchronization**.
+
+Update `self.tracking.last_progress_save_time = now` unconditionally across
+all ranks within `save_progress_now()` prior to evaluating the distributed
+rank gate (`dist.get_rank() != 0`). Both primary and worker ranks maintain
+identical elapsed time counters, guaranteeing that subsequent collective
+agreement checks strictly honor the 15-minute cadence without cascade loops.
 
 ---
 

@@ -419,6 +419,12 @@ executes this contract and emits structured machine-readable reports.
   directories. All models, whether training locally or on Kaggle, directly sync
   `_latest`, `_best`, `_progress`, and `_vault_` checkpoints exclusively to
   their respective `LemGendaryModels/<model_name>/checkpoints` vault.
+- **Distributed Rank Cadence Synchronization**: Under multi-GPU DDP training,
+  all ranks synchronously update their local `last_progress_save_time` inside
+  `save_progress_now` before delegating physical atomic disk operations to
+  Rank 0. This prevents non-zero worker ranks from retaining stale timestamps
+  and forcing spurious intra-epoch checkpoint saves across rapid DDP decision
+  intervals (resolving Pathology 70).
 - **Safe Non-Destructive Export Instantiation**: Replaced legacy `shutil.rmtree`
   overarching folder wipes with precise, non-destructive
   `os.makedirs(exist_ok=True)` logic, structurally preventing catastrophic

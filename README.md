@@ -205,6 +205,20 @@
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with secret management requirements.
 
+### v16.9.229 - DDP Intra-Epoch Cadence, ONNX Canary CPU & Kaggle History Sync
+
+* **Training Pathology Specification (`PAPER_TRAINING_PATHOLOGY.md`,
+  `papers/training-pathology.html`)**: Documented Pathology 70 (Distributed Rank
+  Asymmetry in Intra-Epoch Save Cadence) detailing the mechanism of stale
+  timestamp accumulation on non-zero DDP ranks and the universal rank tracking
+  synchronization remedy.
+* **Master Training Suite Whitepaper (`PAPER_TRAINING_SUITE.md`,
+  `papers/training-suite-master.html`)**: Documented multi-GPU distributed rank
+  cadence synchronization in Section 2.4 (Checkpoint Resumption & Singularity
+  Hardening), ensuring rank parity prior to atomic file delegation.
+* **Telemetry & Release Manifest Sync**: Documented inclusion of `history.csv`
+  in default Kaggle payload files next to `metrics.csv`.
+
 ### v16.9.228 - Navigation Standardization & Masonry Refactor Sync
 
 * **GUI Control Registry & Manual Sync (`GUI_CONTROL_REGISTRY.md`,
