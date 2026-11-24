@@ -311,9 +311,9 @@ and Health Matrix. The list below describes what each step does.
 2. **Toolchain Audit ($v_2$)**: Verifies the host Python runtime, Git binaries,
    Node.js / npm, PowerShell modules, and MetaTrader 5 package managers.
    Resolves local linters from `lemgendary-env-manager/node_modules/.bin`.
-   `pyproject.toml` declares `requires-python >=3.12`, the bootstrap
-   (`MIN_PYTHON`) and the launcher ask for Python 3.12+, and a test keeps the
-   values equal; the code uses Python 3.12 APIs (`Path.walk`,
+   `pyproject.toml` declares `requires-python >=3.14`, the bootstrap
+   (`MIN_PYTHON`) and the launcher ask for Python 3.14+, and a test keeps the
+   values equal; the code uses modern Python 3.14 features and libraries,
    `shutil.rmtree(onexc=...)`, `datetime.UTC`). pip counts as installed when
    `pip` or `pip3` is on PATH or `python -m pip --version` succeeds (since
    v16.9.73).
