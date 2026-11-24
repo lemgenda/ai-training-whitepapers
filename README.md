@@ -54,6 +54,19 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-24 — Step 5 Auto-Manifest Sync & Ecosystem Baseline Alignment
+
+* Synchronized Environment Manager baseline to `v16.9.90-STABLE`, Dataset
+  Compiler to `v16.9.120-STABLE`, and Training Suite to `v16.9.245-STABLE`
+  across `canonical_capabilities.json`, `canonical_capabilities.yaml`, and
+  `manifest/documents.json`.
+* Updated `MD-Papers/PAPER_ENV_MANAGER.md` and `papers/env_manager.html` to
+  document Step 5 (`dependency_upgrades`) automated central manifest
+  synchronization (`sync_manifests_from_venvs`, `sync_all_manifests`) and
+  per-project `README.md` changelog recording.
+* Synchronized `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `MD-Papers/PAPER_TRAINING_SUITE.md` with their latest stable releases.
+
 ### 2026-11-23 — State-Grounded Copilot LLM Compiler & Sequence Alignment Gate
 
 * Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and

@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.87-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-15
+**Version**: `v16.9.90-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-24
 
 ---
 
@@ -352,7 +352,9 @@ and Health Matrix. The list below describes what each step does.
    update`. Torch-family packages on CUDA hosts are resolved against the PyTorch
    CUDA index, filtered to the installed subset and vetted as one family:
    reverse dependencies outside the family, then one dry-run against the CUDA
-   index.
+   index. In v16.9.90, Step 5 automatically synchronizes upgraded versions
+   into the central manifests and target `requirements.txt`/`package.json`
+   files, and records the upgrade changelog entry into project READMEs.
 6. **Codebase Verification ($v_6$)**: Compiles every Python file in memory
    (built-in `compile`, so no `__pycache__` is written) and runs the
    registered validation gates

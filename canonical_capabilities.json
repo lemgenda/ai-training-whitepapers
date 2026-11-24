@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0.0",
-  "document_baseline": "v16.9.119-STABLE",
-  "runtime_engine_baseline": "v16.9.244-STABLE",
+  "document_baseline": "v16.9.120-STABLE",
+  "runtime_engine_baseline": "v16.9.245-STABLE",
   "desktop_client_baseline": "v2.10.70",
-  "dataset_compiler_baseline": "v16.9.119-STABLE",
-  "environment_manager_baseline": "v16.9.87-STABLE",
-  "last_audited": "2026-11-23",
+  "dataset_compiler_baseline": "v16.9.120-STABLE",
+  "environment_manager_baseline": "v16.9.90-STABLE",
+  "last_audited": "2026-11-24",
   "control_planes": {
     "gui": {
       "framework": "Tauri v2 + React 18 + Vite",
