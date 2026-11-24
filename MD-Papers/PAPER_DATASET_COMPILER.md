@@ -65,7 +65,7 @@ audited**: 2026-11-24
     Engine](#48-smart-multi-modal-generation-engine)
   - [4.9 Physical Degradation Synthesis
     Engine](#49-physical-degradation-synthesis-engine)
-  - [4.10 Generic LLM Dataset Compiler](#410-generic-llm-dataset-compiler)
+  - [4.10 Generic Universal LLM Dataset Compiler](#410-generic-universal-llm-dataset-compiler)
   - [4.11 Sample Integrity, Shard Verification & Manifold
     Repair](#411-sample-integrity-shard-verification--manifold-repair)
   - [4.12 JSON Shard Labels, Sample Policies & Source Labels (v16.9.85 to
