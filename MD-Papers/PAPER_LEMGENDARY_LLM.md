@@ -264,14 +264,22 @@ without maintaining separate model codebases, `GenericCausalLLM` and
    * On TPU v5e-8, `collate_instruction_batch(..., pad_to_max_length=True)`
      enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
      compiles the HLO graph exactly once per run.
-4. **State-Grounded Copilot Curation & Boundary Conditioning**:
+4. **State-Grounded Copilot Curation, Multi-Turn Dynamics & DPO Alignment**:
    * Upstream `LemGendizedAIHelperLemGend` manifolds are compiled by
      `tools/llm_helper/` (`PAPER_DATASET_COMPILER.md` Section 4.10) with
-     `>= 60%` Zustand `[GUI_STATE]` / `[RETRIEVED_DOCS]` grounding, `~10%`
-     `boundary_and_negative` refusals, concise 3-part 150-350 token assistant
-     replies (zero emojis, epistemic tags), `1,536`-token sequence alignment
-     gates, MinHash + LSH deduplication, cross-split decontamination, and
-     deterministic `manifest_sha256` lineage.
+     domain-decoupled `DomainProfileConfig`, `ToolCallingConfig`, and
+     `DPOConfig`.
+   * Integrates Multi-Persona Evol-Prompt synthesis across Novice, Staff
+     Architect, Adversarial Boundary, and Operational Triage personas.
+   * Synthesizes 4-to-6 turn stateful diagnostic troubleshooting sessions
+     and structured Hermes/Qwen function calling schemas.
+   * Generates paired `_dpo_train.jsonl` and `_dpo_val.jsonl` preference splits
+     targeting negative strategies (uncalibrated overconfidence, hallucinated
+     flags, protocol omission, and verbosity) for post-SFT alignment.
+   * Enforces concise 3-part 150-350 token assistant replies (zero emojis,
+     epistemic tags), `1,536`-token sequence alignment gates, MinHash + LSH
+     deduplication, cross-split decontamination, and deterministic
+     `manifest_sha256` lineage.
 
 ---
 

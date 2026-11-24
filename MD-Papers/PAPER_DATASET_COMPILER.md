@@ -953,19 +953,22 @@ clean targets:
 - **Provenance Logging**: Exact parameter values (blur kernel dimensions, angle,
   noise variance, gamma) logged per sample to `labels/<split>/<name>.json`.
 
-### 4.10 Generic LLM Dataset Compiler
+### 4.10 Generic Universal LLM Dataset Compiler
 
 The suite includes a generic, declarative Large Language Model (LLM) instruction
 manifold compiler in `tools/llm_helper/` (`BaseLLMCompiler` in
 `base_compiler.py`), exposed as CLI `llm compile` and `llm validate` and as
 `POST /api/llm/compile` and `POST /api/llm/validate`. It replaces ad-hoc
-scraping and manual JSONL formatting with an extraction, chunking and validation
-pipeline driven by declarations in `unified_data.yaml`.
+scraping and manual JSONL formatting with an extraction, chunking, curation,
+multi-persona synthesis, and preference-alignment pipeline driven by
+declarations in `unified_data.yaml`.
 
-#### 4.10.1 Declarative Configuration
+#### 4.10.1 Declarative Configuration & Domain Decoupling
 
-Every instruction manifold declares its pipeline under the registry. The
-production entry `ai_helper_lemgend` (abridged) is:
+Every instruction manifold declares its pipeline under the registry. In
+v16.9.121, domain hard-coding is decoupled via `DomainProfileConfig`,
+`ToolCallingConfig`, and `DPOConfig`. The production entry `ai_helper_lemgend`
+(abridged) is:
 
 ```yaml
 ai_helper_lemgend:
@@ -982,28 +985,36 @@ ai_helper_lemgend:
   llm_pipeline:
     schema_format: chatml_turn3
     generator_module: tools.llm_helper.knowledge_synthesizer
+    domain_profile:
+      domain_name: studio_assistant
+      authority_hierarchy:
+        - tier_1_manifest
+        - tier_2_operational_manual
+        - tier_3_whitepaper
+        - tier_4_educational
+    tool_calling:
+      enabled: true
+      format: hermes
+    dpo:
+      enabled: true
+      negative_strategies:
+        - uncalibrated_overconfidence
+        - hallucinated_flag
+        - protocol_omission
+        - verbose_padding
+    multi_turn: true
+    anchor_mix_ratio: 0.0
     knowledge_sources:
       - type: markdown_dir
         path: lemgendary-docs/MD-Papers
         glob: '*.md'
       - type: yaml_file
         path: lemgendary-training-suite/unified_models_v2.yaml
-      - type: remote_url
-        url: https://lemgenda.github.io/ai-training-whitepapers/index.html
-    chunking:
-      strategy: recursive
-      chunk_size: 1200
-      chunk_overlap: 200
-    quality_invariants:
-      zero_emojis: true
-      enforce_epistemic_tags: true
-      intake_protocol_stages: 3
 ```
 
-The compiler reads `llm_pipeline`, resolves the knowledge sources relative to
-the workspace root, and dispatches the generator module
-(`tools.llm_helper.knowledge_synthesizer`). A key without a mapped generator
-raises an error instead of producing an empty manifold.
+The compiler reads `llm_pipeline`, resolves knowledge sources relative to
+the workspace root, and dispatches the generator module. A key without a mapped
+generator raises an error instead of producing an empty manifold.
 
 #### 4.10.2 Supported Multi-Format Loaders
 
@@ -1024,7 +1035,34 @@ with a SHA-256 `content_hash`:
 - **Web URLs**: Remote documentation fetched over HTTP and cached on disk (URL
   keyed by a truncated SHA-256 digest).
 
-#### 4.10.3 Chunking, Provenance Lineage & Hash Verification
+#### 4.10.3 Multi-Persona Evol-Instruct & Multi-Turn Dialogue
+
+To guarantee operator phrasing diversity and realistic conversational
+dynamics, the pipeline integrates dedicated generators:
+
+1. **Multi-Persona Evol-Prompt (`evol_synthesizer.py`)**: Mutates base
+   prompts across 4 distinct operator archetypes:
+   - *Novice / Exploratory*: Imprecise, colloquial queries.
+   - *Staff Architect*: Demands mathematical proofs, asymptotic bounds, and
+     algorithmic failure recovery constraints.
+   - *Adversarial / Boundary*: Attempts illegal operations, parameter injection,
+     and raw socket calls.
+   - *Operations / Diagnostic*: Urgent incident triage with log inspection.
+2. **Stateful Multi-Turn Dialogue (`dialogue_synthesizer.py`)**: Synthesizes
+   4-to-6 turn troubleshooting exchanges modeling active symptom discovery:
+   Turn 1 (Symptom presentation) $\to$ Turn 2 (Stage 1 Initial Triage) $\to$
+   Turn 3 (Telemetry disclosure) $\to$ Turn 4 (Stage 2 Diagnosis & Stage 3
+   Remediation).
+3. **Structured Tool Calling (`tool_calling.py`)**: Formats OpenAPI endpoints
+   and CLI commands into `<tools>` schemas and generates `<tool_call>`
+   invocations and `<tool_response>` returns.
+4. **Preference Pair Generation (`dpo_synthesizer.py`)**: Emits paired `chosen`
+   and `rejected` records for DPO/ORPO alignment against hallucinations.
+5. **Catastrophic Forgetting Prevention (`anchor_mixer.py`)**: Blends general
+   coding and reasoning anchors into specialized domain splits via calibrated
+   mixing ratios.
+
+#### 4.10.4 Chunking, Provenance Lineage & Hash Verification
 
 To partition documentation into bounded instruction units, `RecursiveChunker`
 (`chunker.py`) splits each document:
@@ -1057,7 +1095,7 @@ To partition documentation into bounded instruction units, `RecursiveChunker`
   training lifecycle; `index.json` lists the record inventory with SHA-256
   hashes.
 
-#### 4.10.4 Quality Invariants & Validation
+#### 4.10.5 Quality Invariants & Validation
 
 Every record passes the `QualityValidator` gate (`quality_validator.py`) before
 any file is written. Each finding is a frozen `ValidationIssue` dataclass
@@ -1065,17 +1103,16 @@ any file is written. Each finding is a frozen `ValidationIssue` dataclass
 reported:
 
 1. **Schema (error)**: A record needs an `id` and a `category`; `messages` must
-   hold at least 2 turns in the order `[system, user, assistant]` or
-   `[user, assistant]`, each with non-empty string content. Record ids must be
-   unique across the corpus.
+   hold at least 2 turns in valid conversational role order (either single-turn
+   or multi-turn alternating pairs), each with non-empty string content. Record
+   ids must be unique across the corpus.
 2. **Zero-Emoji Enforcement (error)**: Unicode emoji characters (surrogate
    pairs, pictographs, symbols, dingbats) are prohibited in all turns.
-3. **3-Stage Diagnostic Intake Protocol (warning)**: In
-   `troubleshooting_diagnostics` records, the assistant turn must cover Stage 1
-   Initial Triage, Stage 2 Targeted Diagnosis and Stage 3 Bounded Remediation.
-4. **Epistemic Certainty Tagging (warning)**: The same troubleshooting answers
-   must carry an epistemic qualifier (`[CONFIRMED]`, `[PROBABLE]`,
-   `[ILLUSTRATIVE]`) to separate verified facts from illustrative examples.
+3. **Diagnostic Protocol Compliance (warning)**: Troubleshooting records must
+   cover the required triage, diagnosis, and remediation stages.
+4. **Epistemic Certainty Tagging (warning)**: Troubleshooting answers must carry
+   an epistemic qualifier (`[CONFIRMED]`, `[PROBABLE]`, `[ILLUSTRATIVE]`) to
+   separate verified facts from illustrative examples.
 5. **Sequence Alignment & Copilot Grounding (error / warning)**:
    `token_budget.py` enforces a hard ceiling of 1,536 combined tokens across
    `system`, `user`, and `assistant` turns and 420 tokens on the assistant
@@ -1090,18 +1127,9 @@ After validation, records are split per category with a seeded generator (seed
 default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c > 1$ and 0 otherwise.
 
-`lem llm validate` and `POST /api/llm/validate` both run `QualityValidator` with
-`TokenValidationConfig(enforce_copilot_structure=True)` and report up to 20
-issues (severity, field, record id, issue), exiting 1 or reporting `invalid`
-when errors are present. Both initial compile and recompile
-(`cli.py llm compile` and `cli.py compile --model`) skip image directory
-creation for JSONL manifolds and atomically refresh `README.md` and
-`dataset-metadata.json` alongside `dataset_info.yaml`, `index.json`,
-`build_manifest.json`, and `quality_report.json`.
+#### 4.10.6 SOTA Curation, Deduplication & Decontamination
 
-#### 4.10.5 SOTA Curation, Deduplication & Decontamination
-
-Grounded in FineWeb-Edu (Penedo et al., 2024), Dolma (Soldaini et al., 2024),
+Grounding in FineWeb-Edu (Penedo et al., 2024), Dolma (Soldaini et al., 2024),
 SemDeDup (Abbas et al., 2023), DEITA (Liu et al., 2024), and LMSYS
 Decontamination (Yang et al., 2023), `tools/llm_helper/curation.py` applies
 five deterministic curation stages before shard emission:
@@ -1476,7 +1504,10 @@ LemGendaryDatasets/
 └── LemGendized{Name}/
     ├── data/
     │   ├── {train_file}.jsonl
-    │   └── {val_file}.jsonl
+    │   ├── {val_file}.jsonl
+    │   ├── {test_file}.jsonl
+    │   ├── {domain}_dpo_train.jsonl
+    │   └── {domain}_dpo_val.jsonl
     ├── dataset_info.yaml
     ├── index.json
     ├── category.txt
@@ -1485,10 +1516,9 @@ LemGendaryDatasets/
     └── README.md
 ```
 
-- **`data/` Subfolder**: The train and validation JSONL splits named by
-  `train_file` and `val_file` (default `data/<key>_train.jsonl` and
-  `data/<key>_val.jsonl`), produced by the seeded stratified split of Section
-  4.10.4.
+- **`data/` Subfolder**: The train, validation, and test JSONL splits named by
+  `train_file`, `val_file`, and `test_file`, plus preference alignment splits
+  (`_dpo_train.jsonl` and `_dpo_val.jsonl`) generated when DPO is enabled.
 - **`dataset_info.yaml`, `category.txt`, `classes.txt`**: Suite metadata,
   category and task class, as for vision manifolds.
 - **`index.json`**: Record inventory with SHA-256 hashes.

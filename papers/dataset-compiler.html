@@ -913,16 +913,19 @@ archival artifacts for film restoration pairs.</li>
 <li><strong>Provenance Logging</strong>: Exact parameter values (blur kernel dimensions, angle,
 noise variance, gamma) logged per sample to <code>labels/&lt;split&gt;/&lt;name&gt;.json</code>.</li>
 </ul>
-<h3 id="sec-410-generic-llm-dataset-compiler">4.10 Generic LLM Dataset Compiler</h3>
+<h3 id="sec-410-generic-llm-dataset-compiler">4.10 Generic Universal LLM Dataset Compiler</h3>
 <p>The suite includes a generic, declarative Large Language Model (LLM) instruction
 manifold compiler in <code>tools/llm_helper/</code> (<code>BaseLLMCompiler</code> in
 <code>base_compiler.py</code>), exposed as CLI <code>llm compile</code> and <code>llm validate</code> and as
 <code>POST /api/llm/compile</code> and <code>POST /api/llm/validate</code>. It replaces ad-hoc
-scraping and manual JSONL formatting with an extraction, chunking and validation
-pipeline driven by declarations in <code>unified_data.yaml</code>.</p>
-<h4 id="sec-4101-declarative-configuration">4.10.1 Declarative Configuration</h4>
-<p>Every instruction manifold declares its pipeline under the registry. The
-production entry <code>ai_helper_lemgend</code> (abridged) is:</p>
+scraping and manual JSONL formatting with an extraction, chunking, curation,
+multi-persona synthesis, and preference-alignment pipeline driven by
+declarations in <code>unified_data.yaml</code>.</p>
+<h4 id="sec-4101-declarative-configuration">4.10.1 Declarative Configuration &amp; Domain Decoupling</h4>
+<p>Every instruction manifold declares its pipeline under the registry. In
+v16.9.121, domain hard-coding is decoupled via <code>DomainProfileConfig</code>,
+<code>ToolCallingConfig</code>, and <code>DPOConfig</code>. The production entry <code>ai_helper_lemgend</code>
+(abridged) is:</p>
 <pre><code class="language-yaml">ai_helper_lemgend:
   name: AIHelperLemGend
   dataset_type: llm
@@ -937,26 +940,34 @@ production entry <code>ai_helper_lemgend</code> (abridged) is:</p>
   llm_pipeline:
     schema_format: chatml_turn3
     generator_module: tools.llm_helper.knowledge_synthesizer
+    domain_profile:
+      domain_name: studio_assistant
+      authority_hierarchy:
+        - tier_1_manifest
+        - tier_2_operational_manual
+        - tier_3_whitepaper
+        - tier_4_educational
+    tool_calling:
+      enabled: true
+      format: hermes
+    dpo:
+      enabled: true
+      negative_strategies:
+        - uncalibrated_overconfidence
+        - hallucinated_flag
+        - protocol_omission
+        - verbose_padding
+    multi_turn: true
+    anchor_mix_ratio: 0.0
     knowledge_sources:
       - type: markdown_dir
         path: lemgendary-docs/MD-Papers
         glob: '*.md'
       - type: yaml_file
         path: lemgendary-training-suite/unified_models_v2.yaml
-      - type: remote_url
-        url: https://lemgenda.github.io/ai-training-whitepapers/index.html
-    chunking:
-      strategy: recursive
-      chunk_size: 1200
-      chunk_overlap: 200
-    quality_invariants:
-      zero_emojis: true
-      enforce_epistemic_tags: true
-      intake_protocol_stages: 3
 </code></pre>
 <p>The compiler reads <code>llm_pipeline</code>, resolves the knowledge sources relative to
-the workspace root, and dispatches the generator module
-(<code>tools.llm_helper.knowledge_synthesizer</code>). A key without a mapped generator
+the workspace root, and dispatches the generator module. A key without a mapped generator
 raises an error instead of producing an empty manifold.</p>
 <h4 id="sec-4102-supported-multi-format-loaders">4.10.2 Supported Multi-Format Loaders</h4>
 <p>The knowledge ingestor (<code>KnowledgeIngestor</code>, <code>knowledge_ingestor.py</code>) turns
@@ -976,7 +987,28 @@ readable tables.</li>
 <li><strong>Web URLs</strong>: Remote documentation fetched over HTTP and cached on disk (URL
 keyed by a truncated SHA-256 digest).</li>
 </ul>
-<h4 id="sec-4103-chunking-provenance-lineage--hash-verification">4.10.3 Chunking, Provenance Lineage &amp; Hash Verification</h4>
+<h4 id="sec-4103-multi-persona-evol-instruct--multi-turn-dialogue">4.10.3 Multi-Persona Evol-Instruct &amp; Multi-Turn Dialogue</h4>
+<p>To guarantee operator phrasing diversity and realistic conversational
+dynamics, the pipeline integrates dedicated generators:</p>
+<ol>
+<li><strong>Multi-Persona Evol-Prompt (<code>evol_synthesizer.py</code>)</strong>: Mutates base
+prompts across 4 distinct operator archetypes: Novice / Exploratory, Staff
+Architect, Adversarial Boundary, and Operations Diagnostic.</li>
+<li><strong>Stateful Multi-Turn Dialogue (<code>dialogue_synthesizer.py</code>)</strong>: Synthesizes
+4-to-6 turn troubleshooting exchanges modeling active symptom discovery:
+Turn 1 (Symptom presentation) &rarr; Turn 2 (Stage 1 Initial Triage) &rarr;
+Turn 3 (Telemetry disclosure) &rarr; Turn 4 (Stage 2 Diagnosis &amp; Stage 3
+Remediation).</li>
+<li><strong>Structured Tool Calling (<code>tool_calling.py</code>)</strong>: Formats OpenAPI endpoints
+and CLI commands into <code>&lt;tools&gt;</code> schemas and generates <code>&lt;tool_call&gt;</code>
+invocations and <code>&lt;tool_response&gt;</code> returns.</li>
+<li><strong>Preference Pair Generation (<code>dpo_synthesizer.py</code>)</strong>: Emits paired <code>chosen</code>
+and <code>rejected</code> records for DPO/ORPO alignment against hallucinations.</li>
+<li><strong>Catastrophic Forgetting Prevention (<code>anchor_mixer.py</code>)</strong>: Blends general
+coding and reasoning anchors into specialized domain splits via calibrated
+mixing ratios.</li>
+</ol>
+<h4 id="sec-4104-chunking-provenance-lineage--hash-verification">4.10.4 Chunking, Provenance Lineage &amp; Hash Verification</h4>
 <p>To partition documentation into bounded instruction units, <code>RecursiveChunker</code>
 (<code>chunker.py</code>) splits each document:</p>
 <ul>
@@ -1001,24 +1033,23 @@ SHA-256 digest (<code>sha256</code>) of its UTF-8 text:</li>
 <p>The hash supports bit-exact deduplication and tamper verification across the
 training lifecycle; <code>index.json</code> lists the record inventory with SHA-256
 hashes.</p>
-<h4 id="sec-4104-quality-invariants--validation">4.10.4 Quality Invariants &amp; Validation</h4>
+<h4 id="sec-4105-quality-invariants--validation">4.10.5 Quality Invariants &amp; Validation</h4>
 <p>Every record passes the <code>QualityValidator</code> gate (<code>quality_validator.py</code>) before
 any file is written. Each finding is a frozen <code>ValidationIssue</code> dataclass
 (record id, <code>field</code>, <code>issue</code>, severity); errors block the compile, warnings are
 reported:</p>
 <ol>
 <li><strong>Schema (error)</strong>: A record needs an <code>id</code> and a <code>category</code>; <code>messages</code> must
-hold at least 2 turns in the order <code>[system, user, assistant]</code> or
-<code>[user, assistant]</code>, each with non-empty string content. Record ids must be
-unique across the corpus.</li>
+hold at least 2 turns in valid conversational role order (either single-turn
+or multi-turn alternating pairs), each with non-empty string content. Record
+ids must be unique across the corpus.</li>
 <li><strong>Zero-Emoji Enforcement (error)</strong>: Unicode emoji characters (surrogate
 pairs, pictographs, symbols, dingbats) are prohibited in all turns.</li>
-<li><strong>3-Stage Diagnostic Intake Protocol (warning)</strong>: In
-<code>troubleshooting_diagnostics</code> records, the assistant turn must cover Stage 1
-Initial Triage, Stage 2 Targeted Diagnosis and Stage 3 Bounded Remediation.</li>
-<li><strong>Epistemic Certainty Tagging (warning)</strong>: The same troubleshooting answers
-must carry an epistemic qualifier (<code>[CONFIRMED]</code>, <code>[PROBABLE]</code>,
-<code>[ILLUSTRATIVE]</code>) to separate verified facts from illustrative examples.</li>
+<li><strong>Diagnostic Protocol Compliance (warning)</strong>: Troubleshooting records must
+cover the required triage, diagnosis, and remediation stages.</li>
+<li><strong>Epistemic Certainty Tagging (warning)</strong>: Troubleshooting answers must carry
+an epistemic qualifier (<code>[CONFIRMED]</code>, <code>[PROBABLE]</code>, <code>[ILLUSTRATIVE]</code>) to
+separate verified facts from illustrative examples.</li>
 <li><strong>Sequence Alignment &amp; Copilot Grounding (error / warning)</strong>:
 <code>token_budget.py</code> enforces a hard ceiling of 1,536 combined tokens across
 <code>system</code>, <code>user</code>, and <code>assistant</code> turns and 420 tokens on the assistant
@@ -1028,6 +1059,11 @@ completions during prompt masking. Grounded copilot records (<code>[GUI_STATE]</
 tokens in a 3-part format (1-sentence direct opening, 3-4 grounded bullets,
 and 1 proactive next-step closing).</li>
 </ol>
+<p>After validation, records are split per category with a seeded generator (seed
+42): with $n_c$ records in category $c$ and validation share $v$ (<code>val_split</code>,
+default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
+for $n_c &gt; 1$ and 0 otherwise.</p>
+<h4 id="sec-4106-sota-curation-deduplication--decontamination">4.10.6 SOTA Curation, Deduplication &amp; Decontamination</h4>
 <p>After validation, records are split per category with a seeded generator (seed
 42): with $n_c$ records in category $c$ and validation share $v$ (<code>val_split</code>,
 default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
@@ -1374,7 +1410,10 @@ packed container was written in the same run (Section 3.5).</p>
 └── LemGendized{Name}/
     ├── data/
     │   ├── {train_file}.jsonl
-    │   └── {val_file}.jsonl
+    │   ├── {val_file}.jsonl
+    │   ├── {test_file}.jsonl
+    │   ├── {domain}_dpo_train.jsonl
+    │   └── {domain}_dpo_val.jsonl
     ├── dataset_info.yaml
     ├── index.json
     ├── category.txt
@@ -1383,10 +1422,9 @@ packed container was written in the same run (Section 3.5).</p>
     └── README.md
 </code></pre>
 <ul>
-<li><strong><code>data/</code> Subfolder</strong>: The train and validation JSONL splits named by
-<code>train_file</code> and <code>val_file</code> (default <code>data/&lt;key&gt;_train.jsonl</code> and
-<code>data/&lt;key&gt;_val.jsonl</code>), produced by the seeded stratified split of Section
-4.10.4.</li>
+<li><strong><code>data/</code> Subfolder</strong>: The train, validation, and test JSONL splits named by
+<code>train_file</code>, <code>val_file</code>, and <code>test_file</code>, plus preference alignment splits
+(<code>_dpo_train.jsonl</code> and <code>_dpo_val.jsonl</code>) generated when DPO is enabled.</li>
 <li><strong><code>dataset_info.yaml</code>, <code>category.txt</code>, <code>classes.txt</code></strong>: Suite metadata,
 category and task class, as for vision manifolds.</li>
 <li><strong><code>index.json</code></strong>: Record inventory with SHA-256 hashes.</li>
