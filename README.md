@@ -904,7 +904,7 @@ latency.
   now pins `pylint`, which the validator runs in this venv.
 * All 49 pages pass pa11y (WCAG2AA) with no findings.
 
-### v16.9.88 - Dynamic Worker Topology & Boundary Tooltip Positioning
+### v16.9.89 - Dynamic Worker Topology & Boundary Tooltip Positioning
 
 * `manifest/documents.json`, `canonical_capabilities.json`,
   `canonical_capabilities.yaml`:
