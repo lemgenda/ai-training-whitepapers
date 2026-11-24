@@ -2302,6 +2302,19 @@ post-training
   `papers/dataset-compiler.html` with Section 7.3 (Canonical
   `unified_data.yaml` & JSON Schema Export).
 
+### 2026-11-24 — Universal LLM Dataset Compiler & Preference Synthesis
+
+* Updated `MD-Papers/PAPER_DATASET_COMPILER.md` and
+  `papers/dataset-compiler.html` Section 4.10 with domain decoupling,
+  `DomainProfileConfig`, `ToolCallingConfig`, `DPOConfig`, multi-persona
+  Evol-Instruct, stateful multi-turn troubleshooting, Hermes tool calling,
+  DPO preference pair synthesis, and anchor mixing.
+* Updated Section 6.3 with the expanded filesystem topology including
+  `_dpo_train.jsonl` and `_dpo_val.jsonl`.
+* Updated `MD-Papers/PAPER_LEMGENDARY_LLM.md` and `papers/foundation-llm.html`
+  Section 7.4 with multi-persona Evol-Prompt synthesis, multi-turn stateful
+  dialogue flows, Hermes function calling, and DPO alignment splits.
+
 ### 2026-11-24 — Sidecar Teardown On App Exit & Ghost Process Prevention
 
 * Updated `MD-Papers/MANUAL_API.md` and `papers/api-manual.html` documenting
