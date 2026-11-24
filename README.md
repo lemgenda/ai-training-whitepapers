@@ -63,7 +63,7 @@
   assistant replies, and the 1,536-token sequence alignment gate.
 * Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
   and `manifest/documents.json` with Dataset Compiler baseline
-  `v16.9.118-STABLE`.
+  `v16.9.119-STABLE`.
 * Hardened copilot prose distillation (`response_formatter.py`), unified
   compile/recompile metadata refresh (`README.md`, `dataset-metadata.json`),
   skipped image layout folders for LLM manifolds, aligned `ai_helper_lemgend`
