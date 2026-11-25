@@ -319,42 +319,50 @@ and Health Matrix. The list below describes what each step does.
    v16.9.73).
 3. **Virtual Environments Provisioning ($v_3$)**: Identifies missing or invalid
    virtual environments across Python projects and creates isolated `.venv`
-   trees. A default run keeps valid venvs and `node_modules` and stops no
-   processes. Only a clean run (`lem-env install --clean` or `"clean": true` on
-   `POST /api/pipeline/run`) deletes every `.venv` and `node_modules`, stops
-   processes running from those venvs and reinstalls; the environment executing
-   the pipeline is preserved. A failed `node_modules` purge is reported as a
-   step error. The running environment is recognized from `sys.prefix` (since
-   v16.9.69), which also holds on Linux and macOS, where the venv interpreter is
-   a symlink to the base Python.
+   trees via native `uv venv` or standard venv creation. Execution natively
+   supports unseeded slim virtual environments (zero `pip-tools` and zero
+   `ensurepip`/`--seed` dependency) by invoking `uv pip` directly
+   (`uv pip --python <exe>`). A default run keeps valid venvs and `node_modules`
+   and stops no processes. Only a clean run (`lem-env install --clean` or
+   `"clean": true` on `POST /api/pipeline/run`) deletes every `.venv` and
+   `node_modules`, stops processes running from those venvs and reinstalls; the
+   environment executing the pipeline is preserved. A failed `node_modules`
+   purge is reported as a step error. The running environment is recognized from
+   `sys.prefix` (since v16.9.69), which also holds on Linux and macOS, where the
+   venv interpreter is a symlink to the base Python.
 4. **Requirements Synchronization & Installation ($v_4$)**: Writes the central
    manifests to the siblings under the downgrade guard (Section 4) and installs
-   wheel distributions under PEP 508 filters. Runs `npm install` for
-   `lemgendary-ai-studio-gui` and `lemgendary-env-manager`. Applies OpenCV
-   variant normalization after install to guarantee a single `cv2` provider per
-   project. A project with `pyproject.toml` or `setup.py` is then installed in
-   editable mode (`pip install --no-deps --no-build-isolation -e`), so console
-   scripts such as `lem-env` exist in the venv. Since v16.9.82 a failed
-   editable install is a structured warning, not an install failure (the
-   project's dependencies are already installed): step 4 reports `warning`
-   with `data.install_warning`, step 7 summarises the install warnings, and a
-   full run ends with `last_status: warning`.
+   wheel distributions under PEP 508 filters via deterministic, hash-verified
+   lockfile sync (`uv pip compile --generate-hashes` and `uv pip sync`). Runs
+   `npm install` for `lemgendary-ai-studio-gui` and `lemgendary-env-manager`.
+   Applies OpenCV variant normalization after install to guarantee a single
+   `cv2` provider per project. A project with `pyproject.toml` or `setup.py`
+   is then installed in editable mode (`pip install --no-deps
+   --no-build-isolation -e`), so console scripts such as `lem-env` exist in
+   the venv. Since v16.9.82 a failed editable install is a structured
+   warning, not an install failure (the project's dependencies are already
+   installed): step 4 reports `warning` with `data.install_warning`, step 7
+   summarises the install warnings, and a full run ends with
+   `last_status: warning`.
 5. **Dependency Audit & Safe Upgrades ($v_5$)**: Routes by discovery metadata:
    every Python project gets the pip path and every project with a
-   `package.json` (`has_npm_manifest`) gets the npm path (`npm outdated`), so a
-   dual-stack project gets both. Every pip candidate is classified as safe or
-   blocked by a reverse-dependency check (via `pip inspect --local`) followed by
-   a constraint-preserving pip dry-run. Only safe candidates are upgraded;
-   blocked candidates carry a reason describing the violated requirement.
-   The apply phase installs exactly the vetted versions (`name==version`), and
-   a failed install restores the `pip freeze` snapshot taken before it.
-   Since v16.9.72 step 5 uses the same planning and apply engine as `lem-env
-   update`. Torch-family packages on CUDA hosts are resolved against the PyTorch
-   CUDA index, filtered to the installed subset and vetted as one family:
-   reverse dependencies outside the family, then one dry-run against the CUDA
-   index. In v16.9.90, Step 5 automatically synchronizes upgraded versions
-   into the central manifests and target `requirements.txt`/`package.json`
-   files, and records the upgrade changelog entry into project READMEs.
+   `package.json` (`has_npm_manifest`) gets the npm path (`npm outdated`), so
+   a dual-stack project gets both. Every pip candidate is classified as safe
+   or blocked by a reverse-dependency check (via `pip inspect --local`)
+   followed by a constraint-preserving pip dry-run. Upstream upper-bound
+   constraints (such as `sympy` requiring `mpmath<1.4,>=1.1.0`) are recognized
+   as satisfied constraints rather than unresolvable blockers. Only safe
+   candidates are upgraded; blocked candidates carry a reason describing the
+   violated requirement. The apply phase installs exactly the vetted versions
+   (`name==version`), and a failed install restores the `pip freeze` snapshot
+   taken before it. Since v16.9.72 step 5 uses the same planning and apply
+   engine as `lem-env update`. Torch-family packages on CUDA hosts are resolved
+   against the PyTorch CUDA index, filtered to the installed subset and vetted
+   as one family: reverse dependencies outside the family, then one dry-run
+   against the CUDA index. In v16.9.90, Step 5 automatically synchronizes
+   upgraded versions into the central manifests and target
+   `requirements.txt`/`package.json` files, and records the upgrade changelog
+   entry into project READMEs.
 6. **Codebase Verification ($v_6$)**: Compiles every Python file in memory
    (built-in `compile`, so no `__pycache__` is written) and runs the
    registered validation gates

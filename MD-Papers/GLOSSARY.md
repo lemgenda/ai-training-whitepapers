@@ -398,3 +398,40 @@ its step name.
 - **Ratchet Violation vs. Epoch Budget stop**: A Ratchet Violation rejects a
   backward curriculum step and is a guard error; an Epoch Budget stop is a
   normal end of training with a recorded reason.
+
+---
+
+## 9. Modernized Toolchain & Concurrency Primitives
+
+### 9.1 Forkserver Multiprocessing Context
+
+The POSIX multiprocessing start method where child worker processes are
+forked from a clean, pre-initialized server process rather than the main
+interpreter thread, preventing cross-context `SemLock` pickling leaks and
+deadlocks in Python 3.14 `DataLoader` worker pipelines.
+
+### 9.2 py3-none ABI-Independent Wheels
+
+Pure Python packages distributed without C-extension ABI compilation tags,
+guaranteeing seamless interoperability and zero compilation overhead across
+Python 3.12, 3.14, and future minor interpreter revisions.
+
+### 9.3 uv Slim Virtual Environments
+
+Virtual environments provisioned via `uv venv` that omit pre-installed
+`pip`, `setuptools`, and `wheel` to minimize disk footprint and boost launch
+speed, managed natively using `uv pip` commands against the interpreter binary.
+
+### 9.4 SSOT Dependency Manifests
+
+Centralized requirements declarations located under
+`lemgendary-env-manager/requirements/requirements-*.txt` that act as the
+authoritative single source of truth for versions, propagating downstream into
+project manifests under downgrade protection.
+
+### 9.5 Permissive vs. Copyleft (AGPL-3.0) Augmentation Stacks
+
+Permissive augmentation libraries (Apache-2.0 `kornia` and BSD-3-Clause
+`torchvision.transforms.v2`) provide commercial-grade GPU-accelerated image
+transforms without the viral reciprocal open-source licensing liabilities
+mandated by copyleft AGPL-3.0 stacks.

@@ -852,6 +852,41 @@ legacy <code>mds/</code> files.</li>
 <li><strong><code>context</code></strong>: <code>lemgendary-env-manager</code> chart_builder module.</li>
 <li><strong><code>remediation</code></strong>: Split subplots by metric optimization polarity with SOTA target reference lines.</li>
 </ul>
+
+<h3 id="scenario-19-slim-virtual-environments-lacking-pip-confirmed">Scenario 19: Slim Virtual Environments Lacking Pip <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: <code>python -m pip</code> fails or raises <code>No module named pip</code> in slim virtual environments created via <code>uv venv</code>.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-env-manager</code> environment management pipeline.</li>
+<li><strong><code>remediation</code></strong>: Execute package operations via native <code>uv pip</code> directly (<code>uv pip &lt;args&gt; --python &lt;path_to_interpreter&gt;</code>), removing any hard requirement for <code>pip</code> or <code>ensurepip</code> inside target virtual environments.</li>
+</ul>
+
+<h3 id="scenario-20-litdata-s3-unpinned-boto3-dependency-deadlock-confirmed">Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: Package resolution backtracks to 2014 <code>boto3==0.0.3</code> and <code>botocore==0.76.0</code>, locking ancient <code>six==1.7.3</code> and <code>bcdoc==0.12.2</code>.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-datasets</code> and <code>lemgendary-training-suite</code> manifests.</li>
+<li><strong><code>remediation</code></strong>: Explicitly pin modern AWS SDK dependencies (<code>boto3==1.44.11</code>, <code>botocore==1.44.11</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code>) in all requirements manifests and uninstall legacy <code>bcdoc</code>.</li>
+</ul>
+
+<h3 id="scenario-21-ultralytics-metadata-check-failure-with-contrib-opencv-confirmed">Scenario 21: Ultralytics Metadata Check Failure with Contrib OpenCV <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: <code>pip check</code> fails with <code>ultralytics requires opencv-python, which is not installed</code> when only <code>opencv-contrib-python</code> is present.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-datasets</code> package installation and verification.</li>
+<li><strong><code>remediation</code></strong>: Install <code>opencv-python==5.1.0.95</code> alongside <code>opencv-contrib-python==5.1.0.95</code> so that both <code>ultralytics</code> metadata checks pass and MediaPipe contrib modules remain available.</li>
+</ul>
+
+<h3 id="scenario-22-mediapipe-non-contiguous-numpy-2x-memory-slice-corruption-confirmed">Scenario 22: MediaPipe Non-Contiguous NumPy 2.x Memory Slice Corruption <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: MediaPipe facial landmark or face detection produces random ctypes memory corruption or segmentation faults under NumPy 2.x.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-datasets/models/detection.py</code> image loading.</li>
+<li><strong><code>remediation</code></strong>: Wrap loaded image arrays in <code>np.ascontiguousarray(...)</code> before passing tensor buffers to MediaPipe ctypes bindings.</li>
+</ul>
+
+<h3 id="scenario-23-python-314-forkserver-multiprocessing-signal-deadlocks-confirmed">Scenario 23: Python 3.14 forkserver Multiprocessing Signal Deadlocks <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: DataLoader worker processes hang indefinitely or deadlock on <code>SemLock</code> cross-context pickling upon training interruption.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-training-suite</code> <code>training/data/workers.py</code>.</li>
+<li><strong><code>remediation</code></strong>: Configure deterministic <code>forkserver</code> on POSIX and <code>spawn</code> on Windows, setting <code>signal.SIG_IGN</code> on <code>SIGINT</code> (leaving teardown to the parent loop) and <code>signal.SIG_DFL</code> on <code>SIGTERM</code>.</li>
+</ul>
 </section>
 
 <footer>

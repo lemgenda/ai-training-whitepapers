@@ -136,6 +136,17 @@ The `v16.9.75` to `v16.9.84` releases reject incomplete or corrupt samples,
 verify every written shard, keep every metadata column in transcodes and add a
 manifold repair command (Section 4.11).
 
+In `v16.9.120` to `v16.9.123`, the runtime modernizes to **CPython 3.14.10**,
+`torch==2.15.0`, `torchvision==0.29.2`, and `numpy==2.5.5`. `mediapipe==1.2.3`
+enforces `np.ascontiguousarray(...)` C-stride memory safety in
+`models/detection.py` to prevent ctypes non-contiguous slice corruption. S3
+streaming via `litdata==0.2.76` explicitly pins `boto3==1.44.11`,
+`botocore==1.44.11`, `jmespath==1.1.0`, and `six==1.17.0`, eliminating
+backtracking to ancient 2014 `boto3==0.0.3` / `bcdoc`. Dual OpenCV provider
+alignment (`opencv-contrib-python==5.1.0.95` and `opencv-python==5.1.0.95`)
+ensures `ultralytics==8.4.218`'s `Requires-Dist: opencv-python` metadata checks
+pass cleanly without rolling back safe upgrades.
+
 - **Project Repository**:
   [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
 

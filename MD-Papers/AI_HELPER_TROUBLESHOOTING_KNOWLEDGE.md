@@ -593,3 +593,48 @@ single authoritative resolution for this state."` and prescribe running
 * **`context`**: `lemgendary-env-manager` chart_builder module.
 * **`remediation`**: Split subplots by metric optimization polarity with
   SOTA target reference lines.
+
+### Scenario 19: Slim Virtual Environments Lacking Pip [CONFIRMED]
+
+* **`symptom`**: `python -m pip` fails or raises `No module named pip` in slim
+  virtual environments created via `uv venv`.
+* **`context`**: `lemgendary-env-manager` environment management pipeline.
+* **`remediation`**: Execute package operations via native `uv pip` directly
+  (`uv pip <args> --python <path_to_interpreter>`), removing any hard
+  requirement for `pip` or `ensurepip` inside target virtual environments.
+
+### Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock [CONFIRMED]
+
+* **`symptom`**: Package resolution backtracks to 2014 `boto3==0.0.3` and
+  `botocore==0.76.0`, locking ancient `six==1.7.3` and `bcdoc==0.12.2`.
+* **`context`**: `lemgendary-datasets` and `lemgendary-training-suite`
+  manifests.
+* **`remediation`**: Explicitly pin modern AWS SDK dependencies
+  (`boto3==1.44.11`, `botocore==1.44.11`, `jmespath==1.1.0`, and
+  `six==1.17.0`) in all requirements manifests and uninstall legacy `bcdoc`.
+
+### Scenario 21: Ultralytics Metadata Check Failure with Contrib OpenCV [CONFIRMED]
+
+* **`symptom`**: `pip check` fails with `ultralytics requires opencv-python,
+  which is not installed` when only `opencv-contrib-python` is present.
+* **`context`**: `lemgendary-datasets` package installation and verification.
+* **`remediation`**: Install `opencv-python==5.1.0.95` alongside
+  `opencv-contrib-python==5.1.0.95` so that both `ultralytics` metadata checks
+  pass and MediaPipe contrib modules remain available.
+
+### Scenario 22: MediaPipe Non-Contiguous NumPy 2.x Memory Slice Corruption [CONFIRMED]
+
+* **`symptom`**: MediaPipe facial landmark or face detection produces random
+  ctypes memory corruption or segmentation faults under NumPy 2.x.
+* **`context`**: `lemgendary-datasets/models/detection.py` image loading.
+* **`remediation`**: Wrap loaded image arrays in `np.ascontiguousarray(...)`
+  before passing tensor buffers to MediaPipe ctypes bindings.
+
+### Scenario 23: Python 3.14 forkserver Multiprocessing Signal Deadlocks [CONFIRMED]
+
+* **`symptom`**: DataLoader worker processes hang indefinitely or deadlock on
+  `SemLock` cross-context pickling upon training interruption.
+* **`context`**: `lemgendary-training-suite` `training/data/workers.py`.
+* **`remediation`**: Configure deterministic `forkserver` on POSIX and `spawn`
+  on Windows, setting `signal.SIG_IGN` on `SIGINT` (leaving teardown to the
+  parent loop) and `signal.SIG_DFL` on `SIGTERM`.

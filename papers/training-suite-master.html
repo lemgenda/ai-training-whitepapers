@@ -2249,6 +2249,15 @@ without cloning external management repositories.</li>
 <code>requirements.txt</code> as its primary manifest candidate, bypassing the need for
 external <code>requirements/requirements-training.txt</code> manifests.</li>
 </ul>
+<h3 id="sec-254-permissive-license-modernization--cpython-31410-multiprocessing-v169247-to-v169251">2.54. Permissive License Modernization &amp; CPython 3.14.10 Multiprocessing (v16.9.247 to v16.9.251)</h3>
+<p>Releases v16.9.247 through v16.9.251 modernize the suite to <strong>CPython 3.14.10</strong>, guarantee zero AGPL copyleft exposure, and harden distributed training:</p>
+<ul>
+<li><strong>Permissive License Augmentation Stack</strong>: Replaced copyleft/AGPL-3.0 <code>albumentations</code> / <code>albumentationsx</code> with permissive <strong>Apache-2.0 <code>kornia==0.8.2</code></strong> (and <code>0.9.2</code>) and <strong>BSD-3-Clause <code>torchvision.transforms.v2</code></strong>, verified by automated regression test suites.</li>
+<li><strong>Multiprocessing Signal Hardening</strong>: Hardened <code>DataLoader</code> worker process lifecycle in <code>training/data/loaders.py</code> and <code>training/data/workers.py</code>: deterministic <code>forkserver</code> context on POSIX and <code>spawn</code> on Windows, setting <code>SIG_IGN</code> on <code>SIGINT</code> (so the orchestrator handles teardown) and <code>SIG_DFL</code> on <code>SIGTERM</code> to avoid SemLock cross-context pickling deadlocks.</li>
+<li><strong>Modernized Ecosystem Stack</strong>: Pinned <code>diffusers==0.43.0</code>, <code>transformers==5.24.0</code>, <code>huggingface-hub==2.4.0</code>, <code>onnxruntime-gpu==1.32.0</code>, and <code>onnxruntime-directml==1.24.4</code>.</li>
+<li><strong>Declarative DDP Reduction</strong>: Configured per-model <code>find_unused_parameters</code> in <code>unified_models_v2.yaml</code> (enabled for multi-head detection and multi-task models, disabled for CNN restorers and classifiers) to eliminate NCCL timeouts and suppress autograd graph traversal warnings.</li>
+<li><strong>AWS SDK Deadlock Prevention</strong>: Pinned modern <code>boto3==1.44.11</code>, <code>botocore==1.44.11</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code> for S3 streaming in <code>litdata==0.2.76</code>.</li>
+</ul>
 </section>
 
 <section id="sec-3-judicial-audit-engine">

@@ -256,8 +256,11 @@ contracts; no business logic in the frontend. Every sidecar request goes
 through <code>sidecarFetch</code>, which adds the client header. WebSocket lifecycle
 recovery guarantees no step card remains in <code>RUNNING</code> after pipeline
 completion (<code>success</code>, <code>warning</code>, or <code>error</code>).</li>
-<li><strong>Toolchain &amp; Env</strong>: <code>pyproject.toml</code> declares Python <code>&gt;=3.12</code>, matching
-the Python 3.12 APIs the code uses and the bootstrap check. Enforces the
+<li><strong>Toolchain &amp; Env</strong>: Standardized on <strong>CPython 3.14.10</strong> runtime baseline
+(LTS through October 2030, generational GC stability, and PEP 649 deferred
+annotations). <code>pyproject.toml</code> declares Python <code>&gt;=3.14</code>, matching the
+CPython 3.14.10 environment and the bootstrap check. Enforces cross-repo
+SSOT manifest synchronization, zero-AGPL permissive licensing policy, and
 zero-emoji and zero-suppression rules. Linting via Ruff (<code>&gt;=0.9.0</code>) and the
 Pylint gate with each project's <code>.pylintrc</code>. OpenCV variant equivalence in the health
 auditor. Driver-aware CUDA index selection (<code>select_cuda_torch_index()</code>). The

@@ -373,6 +373,20 @@ normal end of training with a recorded reason.</li>
 </ul>
 </section>
 
+<section id="sec-9-modernized-toolchain--concurrency-primitives">
+<h2>9. Modernized Toolchain &amp; Concurrency Primitives</h2>
+<h3 id="sec-91-forkserver-multiprocessing-context">9.1 Forkserver Multiprocessing Context</h3>
+<p>The POSIX multiprocessing start method where child worker processes are forked from a clean, pre-initialized server process rather than the main interpreter thread, preventing cross-context <code>SemLock</code> pickling leaks and deadlocks in Python 3.14 <code>DataLoader</code> worker pipelines.</p>
+<h3 id="sec-92-py3-none-abi-independent-wheels">9.2 py3-none ABI-Independent Wheels</h3>
+<p>Pure Python packages distributed without C-extension ABI compilation tags, guaranteeing seamless interoperability and zero compilation overhead across Python 3.12, 3.14, and future minor interpreter revisions.</p>
+<h3 id="sec-93-uv-slim-virtual-environments">9.3 uv Slim Virtual Environments</h3>
+<p>Virtual environments provisioned via <code>uv venv</code> that omit pre-installed <code>pip</code>, <code>setuptools</code>, and <code>wheel</code> to minimize disk footprint and boost launch speed, managed natively using <code>uv pip</code> commands against the interpreter binary.</p>
+<h3 id="sec-94-ssot-dependency-manifests">9.4 SSOT Dependency Manifests</h3>
+<p>Centralized requirements declarations located under <code>lemgendary-env-manager/requirements/requirements-*.txt</code> that act as the authoritative single source of truth for versions, propagating downstream into project manifests under downgrade protection.</p>
+<h3 id="sec-95-permissive-vs-copyleft-agpl-30-augmentation-stacks">9.5 Permissive vs. Copyleft (AGPL-3.0) Augmentation Stacks</h3>
+<p>Permissive augmentation libraries (Apache-2.0 <code>kornia</code> and BSD-3-Clause <code>torchvision.transforms.v2</code>) provide commercial-grade GPU-accelerated image transforms without the viral reciprocal open-source licensing liabilities mandated by copyleft AGPL-3.0 stacks.</p>
+</section>
+
 <footer>
 <p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/GLOSSARY.md</code>.</p>
 </footer>

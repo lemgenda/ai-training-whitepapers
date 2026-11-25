@@ -121,6 +121,9 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)](#252-standardized-telemetry--history-recording-pipelines-v169236)
   - [2.53. Single-Repository Cloud Notebook Execution Architecture
     (v16.9.240)](#253-single-repository-cloud-notebook-execution-architecture-v169240)
+  - [2.54. Permissive License Modernization & CPython 3.14.10 Multiprocessing
+    (v16.9.247 to
+    v16.9.251)](#254-permissive-license-modernization--cpython-31410-multiprocessing-v169247-to-v169251)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2300,6 +2303,31 @@ repository cloning:
   (`training/notebooks/cells/deps.py`) targets the suite's root
   `requirements.txt` as its primary manifest candidate, bypassing the need for
   external `requirements/requirements-training.txt` manifests.
+
+### 2.54. Permissive License Modernization & CPython 3.14.10 Multiprocessing (v16.9.247 to v16.9.251)
+
+Releases v16.9.247 through v16.9.251 modernize the suite to **CPython 3.14.10**,
+guarantee zero AGPL copyleft exposure, and harden distributed training:
+
+- **Permissive License Augmentation Stack**: Replaced copyleft/AGPL-3.0
+  `albumentations` / `albumentationsx` with permissive **Apache-2.0
+  `kornia==0.8.2`** (and `0.9.2`) and **BSD-3-Clause
+  `torchvision.transforms.v2`**, verified by automated regression test suites.
+- **Multiprocessing Signal Hardening**: Hardened `DataLoader` worker process
+  lifecycle in `training/data/loaders.py` and `training/data/workers.py`:
+  deterministic `forkserver` context on POSIX and `spawn` on Windows, setting
+  `SIG_IGN` on `SIGINT` (so the orchestrator handles teardown) and `SIG_DFL` on
+  `SIGTERM` to avoid SemLock cross-context pickling deadlocks.
+- **Modernized Ecosystem Stack**: Pinned `diffusers==0.43.0`,
+  `transformers==5.24.0`, `huggingface-hub==2.4.0`, `onnxruntime-gpu==1.32.0`,
+  and `onnxruntime-directml==1.24.4`.
+- **Declarative DDP Reduction**: Configured per-model `find_unused_parameters`
+  in `unified_models_v2.yaml` (enabled for multi-head detection and multi-task
+  models, disabled for CNN restorers and classifiers) to eliminate NCCL timeouts
+  and suppress autograd graph traversal warnings.
+- **AWS SDK Deadlock Prevention**: Pinned modern `boto3==1.44.11`,
+  `botocore==1.44.11`, `jmespath==1.1.0`, and `six==1.17.0` for S3 streaming in
+  `litdata==0.2.76`.
 
 ---
 

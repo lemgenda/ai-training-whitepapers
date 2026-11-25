@@ -116,26 +116,28 @@ Current capabilities:
 Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.
 
-- **LemGendary Model Training Suite** (`v16.9.223-STABLE`): PyTorch training
+- **LemGendary Model Training Suite** (`v16.9.251-STABLE`): PyTorch training
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
-  optional SWA, FID re-evaluation tool.
+  optional SWA, FID re-evaluation tool, CPython 3.14.10, permissive Apache-2.0
+  Kornia / BSD-3-Clause torchvision.transforms.v2.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.109-STABLE`): shard synthesis,
-  WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
+- **LemGendary Dataset Compiler Suite** (`v16.9.123-STABLE`): shard synthesis,
+  WebP transcoding, Kaggle and HF ingestion, 22 manifolds, task taxonomy,
+  CPython 3.14.10, MediaPipe contiguous memory safety, modern S3 boto3 pins.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
-- **LemGendary Environment Manager** (`v16.9.85-STABLE`): hardware probe,
+- **LemGendary Environment Manager** (`v16.9.94-STABLE`): hardware probe,
   virtual environments, compliance audits, bug report endpoint, ecosystem
-  registry (`ecosystem.json`). Entrypoints: `lem-env` and
-  `lemgendary_env_manager.ps1`.
-- **LemGendary AI Studio GUI** (`v2.10.68`): Tauri v2 desktop application and
+  registry (`ecosystem.json`), uv 0.13.10 native engine, slim venv support.
+  Entrypoints: `lem-env` and `lemgendary_env_manager.ps1`.
+- **LemGendary AI Studio GUI** (`v2.10.70`): Tauri v2 desktop application and
   operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.116-STABLE`): whitepapers,
+- **LemGendary AI Documentation Hub** (`v16.9.121-STABLE`): whitepapers,
   manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
-- **Training Pathology Guide** (`1.12.0`, baseline `v16.9.157-STABLE`):
-  `PAPER_TRAINING_PATHOLOGY.md`, 58 distinct pathologies, 63 stable numbers.
+- **Training Pathology Guide** (`1.13.0`, baseline `v16.9.250-STABLE`):
+  `PAPER_TRAINING_PATHOLOGY.md`, 70 distinct pathologies.
 - **Forex Predictor Specification** (`v2.7.1`): `PAPER_FOREX_PREDICTOR.md`.
 
 The package metadata matches the README releases: the LemGendary Model

@@ -334,21 +334,25 @@ reporting even when winget has no record of the installation.</li>
 <li><strong>Toolchain Audit ($v_2$)</strong>: Verifies the host Python runtime, Git binaries,
 Node.js / npm, PowerShell modules, and MetaTrader 5 package managers.
 Resolves local linters from <code>lemgendary-env-manager/node_modules/.bin</code>.
-<code>pyproject.toml</code> declares <code>requires-python &gt;=3.12</code>, the bootstrap
-(<code>MIN_PYTHON</code>) and the launcher ask for Python 3.12+, and a test keeps the
-values equal; the code uses Python 3.12 APIs (<code>Path.walk</code>,
-<code>shutil.rmtree(onexc=...)</code>, <code>datetime.UTC</code>). pip counts as installed when <code>pip</code> or <code>pip3</code> is on PATH or <code>python -m pip --version</code> succeeds (since v16.9.73).</li>
+<code>pyproject.toml</code> declares <code>requires-python &gt;=3.14</code>, the bootstrap
+(<code>MIN_PYTHON</code>) and the launcher ask for Python 3.14+, and a test keeps the
+values equal; the code uses modern Python 3.14 features and libraries,
+<code>shutil.rmtree(onexc=...)</code>, <code>datetime.UTC</code>. pip counts as installed when <code>pip</code> or <code>pip3</code> is on PATH or <code>python -m pip --version</code> succeeds (since v16.9.73).</li>
 <li><strong>Virtual Environments Provisioning ($v_3$)</strong>: Identifies missing or invalid
 virtual environments across Python projects and creates isolated <code>.venv</code>
-trees. A default run keeps valid venvs and <code>node_modules</code> and stops no
-processes. Only a clean run (<code>lem-env install --clean</code> or <code>&quot;clean&quot;: true</code> on
+trees via native <code>uv venv</code> or standard venv creation. Execution natively
+supports unseeded slim virtual environments (zero <code>pip-tools</code> and zero
+<code>ensurepip</code>/<code>--seed</code> dependency) by invoking <code>uv pip</code> directly
+(<code>uv pip --python &lt;exe&gt;</code>). A default run keeps valid venvs and <code>node_modules</code>
+and stops no processes. Only a clean run (<code>lem-env install --clean</code> or <code>&quot;clean&quot;: true</code> on
 <code>POST /api/pipeline/run</code>) deletes every <code>.venv</code> and <code>node_modules</code>, stops
 processes running from those venvs and reinstalls; the environment executing
 the pipeline is preserved. A failed <code>node_modules</code> purge is reported as a
 step error. The running environment is recognized from <code>sys.prefix</code> (since v16.9.69), which also holds on Linux and macOS, where the venv interpreter is a symlink to the base Python.</li>
 <li><strong>Requirements Synchronization &amp; Installation ($v_4$)</strong>: Writes the central
 manifests to the siblings under the downgrade guard (Section 4) and installs
-wheel distributions under PEP 508 filters. Runs <code>npm install</code> for
+wheel distributions under PEP 508 filters via deterministic, hash-verified
+lockfile sync (<code>uv pip compile --generate-hashes</code> and <code>uv pip sync</code>). Runs <code>npm install</code> for
 <code>lemgendary-ai-studio-gui</code> and <code>lemgendary-env-manager</code>. Applies OpenCV
 variant normalization after install to guarantee a single <code>cv2</code> provider per
 project. A project with <code>pyproject.toml</code> or <code>setup.py</code> is then installed in editable mode (<code>pip install --no-deps --no-build-isolation -e</code>), so console scripts such as <code>lem-env</code> exist in the venv. Since v16.9.82 a failed
@@ -358,6 +362,15 @@ with <code>data.install_warning</code>, step 7 summarises the install warnings, 
 full run ends with <code>last_status: warning</code>.</li>
 <li><strong>Dependency Audit &amp; Safe Upgrades ($v_5$)</strong>: Routes by discovery metadata:
 every Python project gets the pip path and every project with a
+<code>package.json</code> (<code>has_npm_manifest</code>) gets the npm path (<code>npm outdated</code>), so a
+dual-stack project gets both. Every pip candidate is classified as safe or
+blocked by a reverse-dependency check (via <code>pip inspect --local</code>) followed by
+a constraint-preserving pip dry-run. Upstream upper-bound constraints (such as
+<code>sympy</code> requiring <code>mpmath&lt;1.4,&gt;=1.1.0</code>) are recognized as satisfied
+constraints rather than unresolvable blockers. Only safe candidates are upgraded;
+blocked candidates carry a reason describing the violated requirement.
+The apply phase installs exactly the vetted versions (<code>name==version</code>), and
+a failed install restores the <code>pip freeze</code> snapshot taken before it.</li>
 <code>package.json</code> (<code>has_npm_manifest</code>) gets the npm path (<code>npm outdated</code>), so a
 dual-stack project gets both. Every pip candidate is classified as safe or
 blocked by a reverse-dependency check (via <code>pip inspect --local</code>) followed by

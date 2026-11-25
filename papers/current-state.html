@@ -135,26 +135,28 @@ transcoded to WebDataset <code>.data</code> archives: <code>LemGendizedClassific
 <p>Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.</p>
 <ul>
-<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.223-STABLE</code>): PyTorch training
+<li><strong>LemGendary Model Training Suite</strong> (<code>v16.9.251-STABLE</code>): PyTorch training
 loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
-optional SWA, FID re-evaluation tool.
+optional SWA, FID re-evaluation tool, CPython 3.14.10, permissive Apache-2.0
+Kornia / BSD-3-Clause torchvision.transforms.v2.
 Entrypoint: <code>lemtrain</code> (for example <code>lemtrain train MODEL_KEY</code>).</li>
-<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.109-STABLE</code>): shard synthesis,
-WebP transcoding, Kaggle and HF ingestion, 21 manifolds, task taxonomy.
+<li><strong>LemGendary Dataset Compiler Suite</strong> (<code>v16.9.123-STABLE</code>): shard synthesis,
+WebP transcoding, Kaggle and HF ingestion, 22 manifolds, task taxonomy,
+CPython 3.14.10, MediaPipe contiguous memory safety, modern S3 boto3 pins.
 Entrypoints:
 <code>python cli.py</code> and <code>lemgendary_datasets_hub.ps1</code>.</li>
-<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.85-STABLE</code>): hardware probe,
+<li><strong>LemGendary Environment Manager</strong> (<code>v16.9.94-STABLE</code>): hardware probe,
 virtual environments, compliance audits, bug report endpoint, ecosystem
-registry (<code>ecosystem.json</code>). Entrypoints: <code>lem-env</code> and
-<code>lemgendary_env_manager.ps1</code>.</li>
-<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.68</code>): Tauri v2 desktop application and
+registry (<code>ecosystem.json</code>), uv 0.13.10 native engine, slim venv support.
+Entrypoints: <code>lem-env</code> and <code>lemgendary_env_manager.ps1</code>.</li>
+<li><strong>LemGendary AI Studio GUI</strong> (<code>v2.10.70</code>): Tauri v2 desktop application and
 operator cockpit. Entrypoint: the <code>lemgendary-ai-studio-gui</code> executable.</li>
-<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.116-STABLE</code>): whitepapers,
+<li><strong>LemGendary AI Documentation Hub</strong> (<code>v16.9.121-STABLE</code>): whitepapers,
 manuals and HTML papers. Entrypoint: <code>lemgendary-docs/index.html</code>.</li>
 <li><strong>LemGendary Trained Models Repo</strong> (<code>v16.9.16-STABLE</code>): model weights, ONNX
 exports and metrics in <code>LemGendaryModels/&lt;model_key&gt;/</code>.</li>
-<li><strong>Training Pathology Guide</strong> (<code>1.12.0</code>, baseline <code>v16.9.157-STABLE</code>):
-<code>PAPER_TRAINING_PATHOLOGY.md</code>, 58 distinct pathologies, 63 stable numbers.</li>
+<li><strong>Training Pathology Guide</strong> (<code>1.13.0</code>, baseline <code>v16.9.250-STABLE</code>):
+<code>PAPER_TRAINING_PATHOLOGY.md</code>, 70 distinct pathologies.</li>
 <li><strong>Forex Predictor Specification</strong> (<code>v2.7.1</code>): <code>PAPER_FOREX_PREDICTOR.md</code>.</li>
 </ul>
 <p>The package metadata matches the README releases: the LemGendary Model

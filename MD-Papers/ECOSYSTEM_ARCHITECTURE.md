@@ -183,8 +183,11 @@ value is written anywhere else.
    through `sidecarFetch`, which adds the client header. WebSocket lifecycle
    recovery guarantees no step card remains in `RUNNING` after pipeline
    completion (`success`, `warning`, or `error`).
-2. **Toolchain & Env**: `pyproject.toml` declares Python `>=3.14`, matching
-   the Python 3.14 environment and the bootstrap check. Enforces the
+2. **Toolchain & Env**: Standardized on **CPython 3.14.10** runtime baseline
+   (LTS through October 2030, generational GC stability, and PEP 649 deferred
+   annotations). `pyproject.toml` declares Python `>=3.14`, matching the
+   CPython 3.14.10 environment and the bootstrap check. Enforces cross-repo
+   SSOT manifest synchronization, zero-AGPL permissive licensing policy, and
    zero-emoji and zero-suppression rules. Linting via Ruff (`>=0.9.0`) and the
    Pylint gate with each project's `.pylintrc`. OpenCV variant equivalence in
    the health auditor. Driver-aware CUDA index selection
