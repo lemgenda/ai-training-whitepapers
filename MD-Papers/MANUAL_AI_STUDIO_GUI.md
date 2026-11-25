@@ -892,14 +892,16 @@ Callout bindings (control type; endpoint or action):
 ### 5.2 Production Manifolds Catalog, Upstream Lineage & One-Click Cloud Sync
 
 The Production Manifolds section catalogs all verified streaming datasets inside
-`./LemGendaryDatasets/`, providing instant access to upstream lineage and
-integrated card-level Kaggle synchronization:
+`./LemGendaryDatasets/`, providing instant access to upstream lineage,
+integrated card-level Kaggle synchronization, and dynamic shortest-column
+bin-packing reflow layout:
 
 ![Figure 11: Production Manifolds Catalog
 Grid](../assets/gui/gui_production_manifolds.png)
 *Figure 11: Production Manifolds Catalog Grid: Shard inspection, total sample
-counts, disk footprints, format distributions, and one-click cloud
-synchronization.*
+counts, disk footprints, format distributions, one-click cloud
+synchronization, and shortest-column Masonry bin-packing with GPU-accelerated
+FLIP animations.*
 
 #### Production Manifolds Catalog Numbered Reference
 
@@ -921,13 +923,17 @@ synchronization.*
    name search paired with `Status` (All, Compiled, Uncompiled), `Format` (All,
    WebDataset, Parquet, MDS), and `Task` (All, Restoration, Detection,
    Classification, Segmentation, Forex) dropdowns.
-5. **Verified Manifold Card Identity & Status Badge**: Displays canonical
+5. **Shortest-Column Masonry Reflow Grid (`MasonryFlipGrid`)**: High-performance
+   bin-packing grid that dynamically measures card heights via `ResizeObserver`
+   and routes cards to the shortest column, reflowing positions with smooth
+   GPU-accelerated FLIP transitions (`280ms cubic-bezier(0.22, 1, 0.36, 1)`).
+6. **Verified Manifold Card Identity & Status Badge**: Displays canonical
    dataset display name, green `COMPILED` status pill, storage format, sample
    count, and disk footprint.
-6. **Upstream Sources & Lineage Popover Button**: Interactive popover trigger
+7. **Upstream Sources & Lineage Popover Button**: Interactive popover trigger
    revealing raw source dataset provenance, sample contributions, licensing, and
    raw data lineage.
-7. **Manifold Card Action Buttons Group**:
+8. **Manifold Card Action Buttons Group**:
    - `Update Metadata` (Button): Dispatches `POST /api/kaggle/update-metadata`
      for the single selected manifold.
    - `Audit Notebooks` (Link): Direct external link opening Kaggle Registry
@@ -1070,13 +1076,14 @@ Callout bindings (control type; endpoint or action):
 ### 6.2 Registered Architectures & Checkpoint Telemetry Grid
 
 Each registered model card provides comprehensive telemetry, binary export
-readiness, and interactive SOTA target inspection:
+readiness, interactive SOTA target inspection, and dynamic shortest-column
+Masonry packing with GPU-accelerated FLIP animations:
 
 ![Figure 13: Registered Neural Architectures Telemetry
 Card](../assets/gui/gui_architecture_telemetry.png)
 *Figure 13: Registered Neural Architectures Telemetry Card: Live training
-convergence metrics, SOTA comparison indicators, and per-format readiness
-badges.*
+convergence metrics, SOTA comparison indicators, per-format readiness badges,
+and shortest-column Masonry bin-packing with GPU-accelerated FLIP reflow.*
 
 The PyTorch, ONNX FP32 and ONNX FP16 badges follow their own readiness flags
 (`pytorch_ready`, `onnx_fp32_ready`, `onnx_fp16_ready`); a flag the Training
@@ -1085,7 +1092,10 @@ Suite does not send shows the badge as not ready with a "not reported" tooltip
 except Stop Training is disabled (v2.10.52). **Blend Soup**
 (`train-btn-soup-{model_key}`, `POST /api/models/{model_key}/soup`) blends the
 checkpoints in the model's vault into one Model Soup checkpoint with uniform
-weights (v2.10.55).
+weights (v2.10.55). The grid uses `<MasonryFlipGrid />` with `useMasonryFlip` to
+dynamically balance cumulative column heights across 1, 2, or 3 columns based on
+viewport width and seamlessly animate position shifts during filtering or card
+expansion.
 
 #### Architecture Telemetry Card Numbered Reference
 

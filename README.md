@@ -151,7 +151,7 @@
 * Synchronized `canonical_capabilities.json`, `canonical_capabilities.yaml`,
   and `manifest/documents.json` with Training Suite baseline `v16.9.231-STABLE`.
 
-### 2026-11-20 — Environment Manager v16.9.87 & Documentation Toolchain Migration
+### 2026-11-20 — Environment Manager v16.9.87 & Toolchain Migration
 
 * **Toolchain Migration**: Cleaned Python dependencies from `lemgendary-docs`
   and relocated `docs_audit`, `screen_capture`, and testing suites to
@@ -194,7 +194,7 @@
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with Dataset Compiler baseline `v16.9.114-STABLE`.
 
-### 2026-11-16 — Secret Management Standardization (SUITE_PAT) & Notebook/Doc Audit
+### 2026-11-16 — Secret Management Standardization & Doc Audit
 
 * Updated `MD-Papers/MANUAL_CLI.md` and `papers/cli-manual.html` to standardize
   on `SUITE_PAT` resolved via `github-primary` in `.secrets.yaml` and mark
@@ -204,6 +204,20 @@
   authentication using `SUITE_PAT`.
 * Synchronized `canonical_capabilities.json` and `canonical_capabilities.yaml`
   with secret management requirements.
+
+## Changelog
+
+### v16.9.230 - Shortest-Column Masonry Layout with GPU-Accelerated FLIP Reflow
+
+* **GUI Manual & Whitepaper Sync (`MANUAL_AI_STUDIO_GUI.md`,
+  `PAPER_AI_STUDIO_GUI.md`)**:
+  Documented the shortest-column bin-packing Masonry layout primitive
+  (`<MasonryFlipGrid />` and `useMasonryFlip`) across the Manifold Hub
+  (Compiler panel) and Model Hub (Training panel). Documented dynamic
+  measurement via `ResizeObserver`, real-time column height balancing, and
+  the First-Last-Invert-Play (FLIP) GPU animation pipeline with 280ms cubic
+  bezier transitions, scroll-parent relative coordinate tracking, rapid click
+  interruption safety, and `prefers-reduced-motion` accessibility support.
 
 ### v16.9.229 - DDP Intra-Epoch Cadence, ONNX Canary CPU & Kaggle History Sync
 
@@ -685,7 +699,7 @@ latency.
 * **Version** - hub version v16.9.98 in `README.md`, `index.html`, manifest,
   both registries and the Current State and Versioning Policy documents.
 
-### v16.9.97 - Training Pathology Page Parity, Labelled List Item Check and Master API Python Examples
+### v16.9.97 - Pathology Page Parity & Master API Python Examples
 
 * `papers/training-pathology.html`: the Section 2 master table lacked the
   Pathology 36 row (Static OS Worker Throttling & WebDataset Tar
@@ -722,7 +736,7 @@ latency.
   `VERSIONING_POLICY.md` Section 8 wraps its 90-column line at 80 columns
   (markdownlint MD013).
 
-### v16.9.96 - LemGendary Model Training Suite v16.9.157 and Environment Manager v16.9.80 Sync (Audit Phase 5b)
+### v16.9.96 - Training Suite v16.9.157 & Environment Manager v16.9.80 Sync
 
 * `canonical_capabilities.json`, `canonical_capabilities.yaml`:
   `runtime_engine_baseline` and every model `runtime_baseline` set to
@@ -793,7 +807,7 @@ latency.
 * `manifest/documents.json`: `current-state` and `versioning-policy`
   audited 2026-11-12.
 
-### v16.9.94 - LemGendary AI Studio GUI v2.10.57 Control Registry, Manual and Whitepaper (Audit DOCS-3)
+### v16.9.94 - AI Studio GUI v2.10.57 Control Registry, Manual & Whitepaper
 
 * `GUI_CONTROL_REGISTRY.md` and its page: recounted against the
   `lemgendary-ai-studio-gui` source of v2.10.57: 150 distinct IDs (91
@@ -839,7 +853,7 @@ latency.
   and logged instead of swallowed errors.
 * `manifest/documents.json`: `dataset-compiler` baseline v16.9.84-STABLE.
 
-### v16.9.92 - LemGendary Environment Manager v16.9.79 and PyTorch Index Claims (Audit DOCS-2)
+### v16.9.92 - Environment Manager v16.9.79 & PyTorch Index Claims
 
 * `PAPER_ENV_MANAGER.md` and `papers/env_manager.html`: baseline
   v16.9.79-STABLE (the page abstract still said v16.9.60). Documents the
@@ -865,7 +879,7 @@ latency.
 * `manifest/documents.json`: `env_manager` baseline v16.9.79-STABLE; audit
   dates of the edited documents.
 
-### v16.9.91 - Audit Checks for Sidebars, Alert Markers and Component Versions (Audit DOCS-4)
+### v16.9.91 - Audit Checks for Sidebars, Alert Markers & Component Versions
 
 * `scripts/docs_audit/`: three new checks.
   * `toc-sidebar`: the `nav.toc-sidebar` links of a page list the same
@@ -953,7 +967,7 @@ latency.
   multitask loss normalization ($int64$ tensor resolution across DataLoader
   collation string tuples).
 
-### v16.9.86 - PyTorch 2.15.0+cu134 Toolchain Upgrade & Component Baseline Refresh
+### v16.9.86 - PyTorch 2.15.0+cu134 Toolchain Upgrade & Baseline Refresh
 
 * Updated ecosystem baselines to LemGendary Environment Manager v16.9.63,
   LemGendary Dataset Compiler Suite v16.9.72, LemGendary Model Training Suite

@@ -42,6 +42,8 @@ Contract](#610-multi-variation-kaggle-model-hub-staging--strict-isolation-contra
 Cancellation](#611-three-tab-real-time-telemetry-stream--responsive-cancellation)
   - [6.12 Security Model](#612-security-model)
   - [6.13 Bug Reporting Subsystem](#613-bug-reporting-subsystem)
+  - [6.14 Shortest-Column Masonry Layout with GPU-Accelerated FLIP
+    Reflow](#614-shortest-column-masonry-layout-with-gpu-accelerated-flip-reflow)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 
@@ -620,6 +622,41 @@ machine except through the operator's own mail client.
   `RecordingController` polls the native status every 250 ms and stops at the
   limit or on a capture failure. The clip is sent as `recording.mp4` (the
   Environment Manager accepts `video/mp4` up to 50 MB).
+
+### 6.14 Shortest-Column Masonry Layout with GPU-Accelerated FLIP Reflow
+
+Both the Dataset Compiler (Manifold Hub) and Model Training (Model Hub) panels
+utilize an industrial, shortest-column bin-packing layout primitive
+(`<MasonryFlipGrid />` and `useMasonryFlip.ts`). Rather than using static CSS
+multi-column modulo distributions, the masonry engine dynamically measures
+real-time card heights via `ResizeObserver` and places each incoming item into
+whichever column currently has the lowest cumulative vertical height:
+
+$$
+c^* = \arg\min_{c \in \{1, \dots, C\}} H_c
+$$
+
+where $C$ is the responsive column count ($C \in \{1, 2, 3\}$ determined by
+container width thresholds $\le 680\text{px}$, $\le 1100\text{px}$, and
+$> 1100\text{px}$) and $H_c$ is the cumulative vertical height of column $c$
+including inter-card gaps.
+
+When cards expand, collapse, or filter dynamically, the grid applies a
+First-Last-Invert-Play (FLIP) animation pipeline inside `useLayoutEffect`:
+
+1. **Snapshot (First)**: Records pre-layout bounding rectangles relative to the
+   internal scroll container.
+2. **Measure & Invert (Last & Invert)**: Computes position offsets ($\Delta x,
+   \Delta y$) and applies an instantaneous translation `translate3d(Δx, Δy, 0)`
+   with `transition: none`.
+3. **Play**: On the next `requestAnimationFrame`, transitions back to
+   `translate3d(0, 0, 0)` using a cubic bezier timing function (`280ms
+   cubic-bezier(0.22, 1, 0.36, 1)`), elevating `z-index` on moving cards and
+   clearing `will-change: transform` upon `transitionend` to eliminate subpixel
+   blurring on WebKit/WebView2 runtimes.
+4. **Edge-Case Resilience**: Cancels stale animation frames on rapid click
+   interruptions, respects `prefers-reduced-motion`, and handles multi-monitor
+   DPI scaling transitions gracefully.
 
 ## 7. Unified Models Registry
 
