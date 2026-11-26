@@ -2,8 +2,8 @@
 
 ## Category 03 | LemGendary AI Documentation Hub | Master Operations Manual
 
-**Version**: `v2.10.70` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-13 · **Sidecars**: LemGendary Environment Manager (port 8000),
+**Version**: `v2.10.82` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-26 · **Sidecars**: LemGendary Environment Manager (port 8000),
 LemGendary Dataset Compiler Suite (port 8100), LemGendary Model Training Suite
 (port 8200); each keeps its own `v16.x` release line · **Parent Authority**:
 [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md) · [Document
@@ -135,7 +135,8 @@ Figure 22. Ecosystem Maintenance & Governance Controls (Diagnostics View)
 Figure 23. Contextual UX Help & Interactive Hover Guidance (Global Popover)
 Figure 24. Permanent Offline Documentation Hub Interface (Documentation View)
 Figure 25. Dataset Compilation Engine Card (Compilation Control Plane)
-Figure 26. Pipeline Execution Card with Live Telemetry (Execution View)
+Figure 26. Report Issue Modal (Diagnostic Telemetry Dispatch)
+Figure 27. Pipeline Execution Card with Live Telemetry (Execution View)
 
 ## 1. Abstract
 
@@ -2062,3 +2063,6 @@ task-specific control (`Yield Strategy`, `Start/End Date`, `Label Strategy`, or
 *Figure 26: Report Issue modal: (1) Your email, (2) Module selector, (3) What
 happened? description, (4) Attach telemetry (60 recent events as CSV), (5)
 Capture screenshot (up to 5), and (6) Send report action.*
+
+![Figure 27: Pipeline Execution Card with Live Telemetry](../assets/gui/gui_pipeline_card.png)
+*Figure 27: Pipeline Execution card with live status indicators, step metrics, and real-time execution controls.*

@@ -22,7 +22,7 @@
   Training and Frozen Run Settings.
 * **Current baselines** - LemGendary Environment Manager v16.9.87, LemGendary
   Dataset Compiler Suite v16.9.118, LemGendary Model Training Suite v16.9.244,
-  LemGendary AI Studio GUI v2.10.70.
+  LemGendary AI Studio GUI v2.10.82.
 * **Glossary and current state** - canonical terms (including Bug Report
   Archive, Telemetry CSV, Origin Guard, Ratchet Violation and Epoch Budget) and
   the verified workspace state with the versioning matrix.
@@ -53,6 +53,15 @@
 * **`scripts/`** — Documentation audit (`audit_docs.py`, `docs_audit/`) and the
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
+
+### 2026-11-26 — AI Studio GUI Operator Manual & UI/UX Audit Alignment
+
+* Synchronized `MD-Papers/MANUAL_AI_STUDIO_GUI.md` and
+  `papers/ai-studio-manual.html` to `v2.10.82` baseline following full UI/UX
+  audit, competition analysis, and WCAG AA accessibility improvements.
+* Updated Table of Figures, adding Figure 27 (`Pipeline Execution Card with
+  Live Telemetry`) and aligning Figure 26 (`Report Issue Modal`).
+* Updated `manifest/documents.json` baseline version to `v2.10.82`.
 
 ### 2026-11-24 — Step 5 Auto-Manifest Sync & Ecosystem Baseline Alignment
 
