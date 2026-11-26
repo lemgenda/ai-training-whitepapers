@@ -341,9 +341,22 @@ Validation gates enforced (in run order, from
   `allow` attributes); Projects: All projects
 - **Absolute paths**: Tool: in-process scan for hardcoded absolute paths;
   Projects: All projects
-- **Domain Verifications**: Tool: domain gates (README changelog, docs sync,
-  docs manifests, docs suite, dataset manifests, training suite, models hub,
-  git hooks); Projects: the matching repositories
+- **Domain Verifications**: Tool: domain gates
+  (`env_manager/validation/domain/`):
+  - `readme-changelog`: Verifies mandatory changelog update under release
+    heading in `README.md` for any touched project.
+  - `docs-sync`: Enforces 100% word-for-word parity, H1–H4 Table of Contents
+    coverage and resolving anchors in both Markdown and HTML, LaTeX syntax and
+    brace balance, zero HTML entity approximations for equations, MathJax
+    configuration, semantic `<main>` and `<nav>` landmarks, keyboard skip links,
+    valid `<html lang>`, unique `<title>`, canonical `<link rel="canonical">`,
+    meta descriptions, Open Graph cards, and image path and `alt` integrity.
+  - `docs-manifests`: Verifies bijective parity across `documents.json`,
+    `canonical_capabilities.json`, and `canonical_capabilities.yaml`.
+  - `docs-suite`: Subprocess execution of the documentation unit test suite.
+  - `dataset-manifests`, `training-suite`, `models-hub`: Validates format
+    manifests, model architectures, and training hyperparameters.
+  - `git-hooks`: Verifies installed `.githooks` integrity.
 - **Ecosystem SSOT**: Tool: `ecosystem_ssot` (error severity): literal ports,
   Kaggle owner, docs URL or project lists that do not come from
   `lemgendary-env-manager/ecosystem/ecosystem.json`; Projects: All projects
@@ -438,8 +451,8 @@ same validation pipeline regardless of local toolchain state.
 ### 2.11 Line Length Governance & Pre-Flight Hooks (`check-lines`, `fix-lines`)
 
 The `check-lines` and `fix-lines` commands enforce and automatically reflow
-line length compliance across Markdown ($\le 80$ characters, `MD013`) and
-Python ($\le 100$ characters, `C0301`) without mangling code blocks, tables,
+line length compliance across Markdown (&le; 80 characters, `MD013`) and
+Python (&le; 100 characters, `C0301`) without mangling code blocks, tables,
 atomic links, or math equations.
 
 ```bash
@@ -494,7 +507,7 @@ lem-env docs-audit --json
 
 Audited invariants include:
 
-- Markdown line length enforcement ($\le 80$ characters, `MD013`).
+- Markdown line length enforcement (&le; 80 characters, `MD013`).
 - Manifest registry integrity and document pairing.
 - Heading parity, order, and level matching between Markdown and HTML.
 - Master table and labeled list item parity.
@@ -1275,11 +1288,11 @@ python cli.py verify --all --json > manifold_verification_report.json
 Contracts enforced:
 
 - **Vision (WebDataset)**: Eliminates blank frames (`ERR_BLANK_FRAME`),
-  low-variance images ($\max(\sigma) < 1.0$, `ERR_LOW_VARIANCE`), corrupt
+  low-variance images (max(&sigma;) &lt; 1.0, `ERR_LOW_VARIANCE`), corrupt
   images, and non-uniform JSON labels. Verifies `<shard>.data.index.json` byte
   offset sidecars.
-- **Forex (Parquet)**: Enforces strictly positive prices, $H \ge \max(O,C)$,
-  $L \le \min(O,C)$, monotonic timestamp sequencing, and absence of NaNs or
+- **Forex (Parquet)**: Enforces strictly positive prices, $HH &ge; max(O,C),
+  $LL &le; min(O,C), monotonic timestamp sequencing, and absence of NaNs or
   Infs.
 - **LLM (JSONL)**: Verifies valid JSON syntax per line, non-empty prompt and
   response pairs, token boundary safety, and split disjointness.

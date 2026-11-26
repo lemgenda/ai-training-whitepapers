@@ -3,11 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Master CLI Operations Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
+<link rel="canonical" href="https://docs.lemgenda.hr/papers/cli-manual.html">
+<meta property="og:title" content="Master CLI Operations Manual">
+<meta property="og:description" content="Master CLI Operations Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
+<meta property="og:url" content="https://docs.lemgenda.hr/papers/cli-manual.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Master CLI Operations Manual">
+<meta name="twitter:description" content="Master CLI Operations Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
 <title>LemGendary Ecosystem: Master CLI Operations Manual</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
+<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <div class="container">
 <div class="tabs-nav">
 <a href="../index.html" class="tab-link">Hub Index</a>
@@ -23,6 +36,8 @@
 <span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
 </div>
 </header>
+<main id="main-content">
+
 <nav class="toc-sidebar" aria-label="Table of Contents">
 <a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
 <h4>Table of Contents</h4>
@@ -323,9 +338,16 @@ config; Projects: Python projects</li>
 <code>allow</code> attributes); Projects: All projects</li>
 <li><strong>Absolute paths</strong>: Tool: in-process scan for hardcoded absolute paths;
 Projects: All projects</li>
-<li><strong>Domain Verifications</strong>: Tool: domain gates (README changelog, docs sync,
-docs manifests, docs suite, dataset manifests, training suite, models hub,
-git hooks); Projects: the matching repositories</li>
+<li><strong>Domain Verifications</strong>: Tool: domain gates (<code>env_manager/validation/domain/</code>):
+<ul>
+<li><code>readme-changelog</code>: Verifies mandatory changelog update under release heading in <code>README.md</code> for any touched project.</li>
+<li><code>docs-sync</code>: Enforces 100% word-for-word parity, H1–H4 Table of Contents coverage and resolving anchors in both Markdown and HTML, LaTeX syntax and brace balance, zero HTML entity approximations for equations, MathJax configuration, semantic <code>&lt;main&gt;</code> and <code>&lt;nav&gt;</code> landmarks, keyboard skip links, valid <code>&lt;html lang&gt;</code>, unique <code>&lt;title&gt;</code>, canonical <code>&lt;link rel="canonical"&gt;</code>, meta descriptions, Open Graph cards, and image path and <code>alt</code> integrity.</li>
+<li><code>docs-manifests</code>: Verifies bijective parity across <code>documents.json</code>, <code>canonical_capabilities.json</code>, and <code>canonical_capabilities.yaml</code>.</li>
+<li><code>docs-suite</code>: Subprocess execution of the documentation unit test suite.</li>
+<li><code>dataset-manifests</code>, <code>training-suite</code>, <code>models-hub</code>: Validates format manifests, model architectures, and training hyperparameters.</li>
+<li><code>git-hooks</code>: Verifies installed <code>.githooks</code> integrity.</li>
+</ul>
+</li>
 <li><strong>Ecosystem SSOT</strong>: Tool: <code>ecosystem_ssot</code> (error severity): literal ports,
 Kaggle owner, docs URL or project lists that do not come from
 <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>; Projects: All projects</li>
@@ -1632,6 +1654,8 @@ lem-env validate || exit 2
 </ul>
 </section>
 
+
+</main>
 <footer>
 <p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/MANUAL_CLI.md</code>.</p>
 </footer>

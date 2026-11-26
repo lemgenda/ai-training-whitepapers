@@ -1456,3 +1456,40 @@ body.toc-fixed-layout .toc-fixed-content {
     border: 1px solid rgba(52, 199, 89, 0.3);
 }
 
+/* ============================================================
+   WCAG 2.2 AA / AAA ACCESSIBILITY ENHANCEMENTS
+   ============================================================ */
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -9999px;
+    left: 20px;
+    background: var(--accent-fill);
+    color: #ffffff;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+    top: 20px;
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* WCAG AAA Enhanced Focus Indicators (2.4.13) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--accent-secondary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+

@@ -2065,4 +2065,5 @@ happened? description, (4) Attach telemetry (60 recent events as CSV), (5)
 Capture screenshot (up to 5), and (6) Send report action.*
 
 ![Figure 27: Pipeline Execution Card with Live Telemetry](../assets/gui/gui_pipeline_card.png)
-*Figure 27: Pipeline Execution card with live status indicators, step metrics, and real-time execution controls.*
+*Figure 27: Pipeline Execution card with live status indicators, step
+metrics, and real-time execution controls.*

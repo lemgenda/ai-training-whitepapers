@@ -399,6 +399,33 @@ Event status values:
 Executes the multi-gate validation suite across all projects or a single
 project.
 
+The validation pipeline encompasses all quality gates from
+`env_manager/validation/registry.py`:
+
+- **Syntax & Compilation**: Python bytecode (`py_compile`), TypeScript types
+  (`tsc --noEmit`), JSON RFC 8259 validation, and YAML schema checking
+  (`yamllint`).
+- **Code & Content Hygiene**: Zero-emoji enforcement across all text files and
+  markup, forbidden suppression scanning (`@ts-*`, `eslint-disable`,
+  `warnings.filterwarnings`, empty exceptions), absolute path elimination, and
+  ecosystem SSOT verification.
+- **Linters**: ESLint, Pylint, and `markdownlint` ($\le 80$ characters).
+- **Web & Documentation Hub Compliance (`lemgendary-docs`)**:
+  - `html-validate` & W3C HTML5 zero-error conformance.
+  - WCAG 2.2 Level AA & AAA compliance via `pa11y` and AST validation: valid
+    `<html lang>`, descriptive unique `<title>`, keyboard skip links, semantic
+    `<main>` and `<nav>` landmarks, and enhanced focus appearance.
+  - SEO metadata: `<meta name="description">`, `<link rel="canonical">`,
+    and Open Graph properties on all publications.
+  - LaTeX mathematical integrity: syntax validation, bracket balance, MathJax v3
+    configuration, and zero plain HTML entity substitutions.
+  - Table of Contents integrity: complete H1–H4 coverage and fully resolving
+    anchor links between `.md` and `.html` companions.
+  - Asset integrity: zero broken local paths across all 141 diagram and
+    image assets.
+  - Manifest synchronization: bijective agreement across `documents.json`,
+    `canonical_capabilities.json`, and `canonical_capabilities.yaml`.
+
 > [!IMPORTANT]
 > **Pre-Commit & Validation Failure Guarantee**: Any validation execution and
 > subsequent Git commit will fail and be rejected if any affected project
@@ -1023,6 +1050,7 @@ parameter `include_self=true` terminates the entire mesh including the
 Environment Manager daemon itself.
 
 Query parameters:
+
 - `include_self` (boolean, optional, default: `false`): When `true`, stops the
   Environment Manager service in addition to all other sidecars.
 

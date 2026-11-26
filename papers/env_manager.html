@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LemGendary Environment Manager: Technical Whitepaper - Category 01.1 ENV | LemGendary AI Documentation Hub">
+<link rel="canonical" href="https://docs.lemgenda.hr/papers/env_manager.html">
+<meta property="og:title" content="LemGendary Environment Manager: Technical Whitepaper">
+<meta property="og:description" content="LemGendary Environment Manager: Technical Whitepaper - Category 01.1 ENV | LemGendary AI Documentation Hub">
+<meta property="og:url" content="https://docs.lemgenda.hr/papers/env_manager.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LemGendary Environment Manager: Technical Whitepaper">
+<meta name="twitter:description" content="LemGendary Environment Manager: Technical Whitepaper - Category 01.1 ENV | LemGendary AI Documentation Hub">
 <title>LemGendary Environment Manager: Technical Whitepaper</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
@@ -10,6 +19,8 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <div class="container">
 <div class="tabs-nav">
 <a href="../index.html" class="tab-link">Hub Index</a>
@@ -32,6 +43,8 @@
 <span><strong>Last audited</strong>: 2026-11-13</span>
 </div>
 </header>
+<main id="main-content">
+
 <nav class="toc-sidebar" aria-label="Table of Contents">
 <a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
 <h4>Table of Contents</h4>
@@ -370,13 +383,6 @@ a constraint-preserving pip dry-run. Upstream upper-bound constraints (such as
 constraints rather than unresolvable blockers. Only safe candidates are upgraded;
 blocked candidates carry a reason describing the violated requirement.
 The apply phase installs exactly the vetted versions (<code>name==version</code>), and
-a failed install restores the <code>pip freeze</code> snapshot taken before it.</li>
-<code>package.json</code> (<code>has_npm_manifest</code>) gets the npm path (<code>npm outdated</code>), so a
-dual-stack project gets both. Every pip candidate is classified as safe or
-blocked by a reverse-dependency check (via <code>pip inspect --local</code>) followed by
-a constraint-preserving pip dry-run. Only safe candidates are upgraded;
-blocked candidates carry a reason describing the violated requirement.
-The apply phase installs exactly the vetted versions (<code>name==version</code>), and
 a failed install restores the <code>pip freeze</code> snapshot taken before it.
 Since v16.9.72 step 5 uses the same planning and apply engine as <code>lem-env update</code>. Torch-family packages on CUDA hosts are resolved against the PyTorch CUDA index, filtered to the installed subset and vetted as one family: reverse dependencies outside the family, then one dry-run against the CUDA index.</li>
 <li><strong>Codebase Verification ($v_6$)</strong>: Compiles every Python file in memory
@@ -688,6 +694,8 @@ whitepaper focused on architectural design and comparative analysis:</p>
 </ul>
 </section>
 
+
+</main>
 <footer>
 <p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/PAPER_ENV_MANAGER.md</code>.</p>
 </footer>

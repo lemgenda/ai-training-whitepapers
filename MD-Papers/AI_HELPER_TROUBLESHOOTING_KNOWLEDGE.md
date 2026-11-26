@@ -10,24 +10,59 @@
 
 ---
 
+## Table of Contents
+
+- [1. Diagnostic Schema & Epistemic Standards](#1-diagnostic-schema--epistemic-standards)
+- [2. AI-Helper Knowledge Contract & Conflict Resolution Protocol](#2-ai-helper-knowledge-contract--conflict-resolution-protocol)
+  - [2.1 Authority Hierarchy & Resolution Protocol](#21-authority-hierarchy--resolution-protocol)
+  - [2.2 Mandatory Citation Policy](#22-mandatory-citation-policy)
+  - [2.3 3-Stage Diagnostic Intake Protocol](#23-3-stage-diagnostic-intake-protocol)
+  - [2.4 Explicit Admission Bound](#24-explicit-admission-bound)
+- [3. Core Diagnostic Scenarios](#3-core-diagnostic-scenarios)
+  - [Scenario 01: Low GPU Utilization and Dataloader Starvation `[PROBABLE]`](#scenario-01-low-gpu-utilization-and-dataloader-starvation-probable)
+  - [Scenario 02: NaN Instability in Mixed Precision (AMP FP16) `[CONFIRMED]`](#scenario-02-nan-instability-in-mixed-precision-amp-fp16-confirmed)
+  - [Scenario 03: Scheduler Double-Stepping & Premature LR Decay `[PROBABLE]`](#scenario-03-scheduler-double-stepping--premature-lr-decay-probable)
+  - [Scenario 04: Sentinel and Scheduler Desynchronization `[PROBABLE]`](#scenario-04-sentinel-and-scheduler-desynchronization-probable)
+  - [Scenario 05: Infinite Plateau Loop in Validation Governor `[PROBABLE]`](#scenario-05-infinite-plateau-loop-in-validation-governor-probable)
+  - [Scenario 06: Pearson & Spearman Matrix Singularities `[CONFIRMED]`](#scenario-06-pearson--spearman-matrix-singularities-confirmed)
+  - [Scenario 07: Power-Loss Checkpoint Recovery `[CONFIRMED]`](#scenario-07-power-loss-checkpoint-recovery-confirmed)
+  - [Scenario 08: Runway Bloat in Escalation `[PROBABLE]`](#scenario-08-runway-bloat-during-spatial-resolution-escalation-probable)
+  - [Scenario 09: Hardlink vs. Perceptual Deduplication Conflicts `[PROBABLE]`](#scenario-09-hardlink-vs-perceptual-deduplication-conflicts-probable)
+  - [Scenario 10: Raw vs Compiled Path Confusion `[CONFIRMED]`](#scenario-10-raw-dataset-vs-compiled-manifold-path-confusion-confirmed)
+  - [Scenario 11: Loss Plateau Stagnation `[ILLUSTRATIVE]`](#scenario-11-ambiguous-loss-plateau--validation-stagnation-illustrative)
+  - [Scenario 12: Pipeline Step 7 Visual Hang in `RUNNING` State `[CONFIRMED]`](#scenario-12-pipeline-step-7-visual-hang-in-running-state-confirmed)
+  - [Scenario 13: OpenCV Collision & Health False Alarms `[CONFIRMED]`](#scenario-13-opencv-collision--health-false-alarms-confirmed)
+  - [Scenario 14: `streaming` Cloud SDK Locks `[CONFIRMED]`](#scenario-14-mosaicml-streaming-cloud-sdk-dependency-locks-confirmed)
+  - [Scenario 15: MDS Manifold Migration & Queue Source Status `[CONFIRMED]`](#scenario-15-mds-manifold-migration--queue-source-status-confirmed)
+  - [Scenario 16: Docs Suite Drift & Workspace Root [CONFIRMED]](#scenario-16-docs-suite-drift--workspace-root-confirmed)
+  - [Scenario 17: Screen Capture Desktop Leakage Guard [CONFIRMED]](#scenario-17-screen-capture-desktop-leakage-guard-confirmed)
+  - [Scenario 18: SOTA Chart Scale Distortion [CONFIRMED]](#scenario-18-multi-metric-sota-training-chart-scale-distortion-confirmed)
+  - [Scenario 19: Slim Virtual Environments Lacking Pip [CONFIRMED]](#scenario-19-slim-virtual-environments-lacking-pip-confirmed)
+  - [Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock [CONFIRMED]](#scenario-20-litdata-s3-unpinned-boto3-dependency-deadlock-confirmed)
+  - [Scenario 21: Ultralytics Contrib OpenCV Failure [CONFIRMED]](#scenario-21-ultralytics-metadata-check-failure-with-contrib-opencv-confirmed)
+  - [Scenario 22: MediaPipe NumPy 2.x Corruption [CONFIRMED]](#scenario-22-mediapipe-non-contiguous-numpy-2x-memory-slice-corruption-confirmed)
+  - [Scenario 23: Python 3.14 forkserver Deadlocks [CONFIRMED]](#scenario-23-python-314-forkserver-multiprocessing-signal-deadlocks-confirmed)
+
+---
+
 ## 1. Diagnostic Schema & Epistemic Standards
 
 Every troubleshooting scenario in this knowledge base conforms strictly to the
 canonical 3-stage diagnostic structure and 6-attribute diagnostic schema:
 
-* **`symptom`**: The observable failure state, error message, or telemetry
+- **`symptom`**: The observable failure state, error message, or telemetry
   anomaly.
-* **`context`**: Operational environment, active model architecture, dataset
+- **`context`**: Operational environment, active model architecture, dataset
   container, hardware footprint, and active resolution rung.
-* **`Stage 1: Initial Triage (Safe Checks)`**: Safe, non-destructive checks
+- **`Stage 1: Initial Triage (Safe Checks)`**: Safe, non-destructive checks
   based strictly on observable symptoms without modifying runtime configuration.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**: Mechanistic
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**: Mechanistic
   hypotheses ranked by likelihood, accompanied by explicit requests for the
   missing telemetry needed to discriminate between candidate root causes.
-* **`Stage 3: Bounded Remediation (Prerequisite-Checked Fixes)`**: Concrete,
+- **`Stage 3: Bounded Remediation (Prerequisite-Checked Fixes)`**: Concrete,
   deterministic mitigations recommended only when telemetry evidence and
   prerequisite validation checks confirm the root cause.
-* **`epistemic_status`**: Standardized certainty qualification: `[CONFIRMED]`
+- **`epistemic_status`**: Standardized certainty qualification: `[CONFIRMED]`
   (deterministic proof), `[PROBABLE]` (strongly supported by telemetry), or
   `[ILLUSTRATIVE]` (hypothesis requiring further empirical evidence).
 
@@ -74,13 +109,13 @@ from the operator:
    without modifying training configurations.
 2. **Stage 2: Targeted Diagnosis**: Verify or request the missing telemetry
    points necessary to discriminate between candidate root causes:
-   * **Model & Pipeline Context**: Active model key, spatial ladder stage, and
+   - **Model & Pipeline Context**: Active model key, spatial ladder stage, and
      dataset container format.
-   * **Telemetry Logs**: Traces from `metrics.csv` or `telemetry.csv` (loss
+   - **Telemetry Logs**: Traces from `metrics.csv` or `telemetry.csv` (loss
      curves, gradient norms, dataloader wait times).
-   * **VRAM Allocation**: Physical VRAM allocation metrics from
+   - **VRAM Allocation**: Physical VRAM allocation metrics from
      `torch.cuda.mem_get_info()` or GUI telemetry stream.
-   * **Invocation Parameters**: Exact CLI command line arguments or active GUI
+   - **Invocation Parameters**: Exact CLI command line arguments or active GUI
      configuration toggles.
 3. **Stage 3: Bounded Remediation**:
 4. Recommend concrete parameter, flag, or
@@ -102,29 +137,29 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 01: Low GPU Utilization and Dataloader Starvation `[PROBABLE]`
 
-* **`symptom`**: GPU compute utilization fluctuates wildly between 10% and 35%
+- **`symptom`**: GPU compute utilization fluctuates wildly between 10% and 35%
   with periodic zero-utilization troughs during restoration training.
-* **`context`**:
-  * Model: NAFNet Deblurring / MPRNet Restoration
-  * Dataset: Sharded WebDataset (.tar archives containing WebP tiles)
-  * Hardware: NVIDIA GeForce GTX 1650 (4GB VRAM), SATA SSD / HDD storage
-  * Active Resolution: 384px or 512px
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: NAFNet Deblurring / MPRNet Restoration
+  - Dataset: Sharded WebDataset (.tar archives containing WebP tiles)
+  - Hardware: NVIDIA GeForce GTX 1650 (4GB VRAM), SATA SSD / HDD storage
+  - Active Resolution: 384px or 512px
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Verify GPU temperature and clock throttling via nvidia-smi (confirm GPU is
      not thermal throttling below 55°C).
   2. Check whether the training process is currently active or stalled on
      background file operations.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Check metrics.csv dataloader wait column and Host
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Check metrics.csv dataloader wait column and Host
     Task Manager Disk Queue depth.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Compressed WebP image decoding overhead in Python PIL workers (dataloader
        wait time > 250ms).
     2. Insufficient worker count (num_workers: 0 on disk-backed datasets).
     3. Disk I/O latency bottleneck caused by reading archives from rotational
        media.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Dataloader wait time confirmed > 200ms per iteration in
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Dataloader wait time confirmed > 200ms per iteration in
     metrics.csv.
   1. Set num_workers: 4 and enable pin_memory: true in dataloader configuration.
   2. Increase prefetch buffer factor to prefetch_factor: 2 in PyTorch
@@ -136,27 +171,27 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 02: NaN Instability in Mixed Precision (AMP FP16) `[CONFIRMED]`
 
-* **`symptom`**: Training loss suddenly spikes to NaN or Inf within the first 50
+- **`symptom`**: Training loss suddenly spikes to NaN or Inf within the first 50
   iterations; GradScaler scale collapses to zero.
-* **`context`**:
-  * Model: NIMA Mobile (Aesthetic) / NIMA Technical
-  * Loss Function: Earth Mover's Distance (EMD) Loss with CDF integration
-  * Hardware: NVIDIA Turing Architecture (GTX 1650)
-  * Precision: Automatic Mixed Precision (AMP) enabled (amp=True)
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: NIMA Mobile (Aesthetic) / NIMA Technical
+  - Loss Function: Earth Mover's Distance (EMD) Loss with CDF integration
+  - Hardware: NVIDIA Turing Architecture (GTX 1650)
+  - Precision: Automatic Mixed Precision (AMP) enabled (amp=True)
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Inspect last 5 lines of metrics.csv to confirm exact step where loss
      transitioned to NaN.
   2. Confirm whether weights in the last saved checkpoint remain valid or have
      been overwritten with NaNs.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Check GradScaler scale factor history and confirm
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Check GradScaler scale factor history and confirm
     accelerator architecture (GTX 1650 TU117 lacks Tensor Cores).
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Turing GTX 1650 FP16 half-precision underflows during Earth Mover's
        Distance cumulative distribution function (CDF) sums, causing square root
        of zero gradients to yield NaN.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: GTX 1650 hardware confirmed with EMD loss active.
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: GTX 1650 hardware confirmed with EMD loss active.
   1. Set amp: false (force FP32 mode) for all Turing GTX 1650 configurations in
      unified_models_v2.yaml.
   2. Apply logit numerical clamping: torch.clamp(logits, min=-15.0, max=15.0)
@@ -168,26 +203,26 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 03: Scheduler Double-Stepping & Premature LR Decay `[PROBABLE]`
 
-* **`symptom`**: Learning rate drops to minimum floor (eta_min) within 5 epochs
+- **`symptom`**: Learning rate drops to minimum floor (eta_min) within 5 epochs
   despite a 100-epoch schedule.
-* **`context`**:
-  * Model: UltraZoom Super-Resolution / Hybrid UPN v2
-  * Training Suite: Multi-stage curriculum with intra-fraction progression
-  * Scheduler: CosineAnnealingLR combined with custom SawtoothGovernor
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: UltraZoom Super-Resolution / Hybrid UPN v2
+  - Training Suite: Multi-stage curriculum with intra-fraction progression
+  - Scheduler: CosineAnnealingLR combined with custom SawtoothGovernor
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Plot learning rate column in metrics.csv against epoch index.
   2. Inspect trainer logs to identify if scheduler.step() logs appear per batch
      or per epoch.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Codebase inspection of trainer.py for invocation
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Codebase inspection of trainer.py for invocation
     frequency of scheduler.step().
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. scheduler.step() called inside the inner batch loop instead of the outer
        epoch boundary.
     2. SawtoothGovernor advancing scheduler epoch counter prematurely during
        intra-fraction adjustments.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Confirm whether scheduler is epoch-based (CosineAnnealingLR)
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Confirm whether scheduler is epoch-based (CosineAnnealingLR)
     or step-based (OneCycleLR).
   1. Restrict scheduler.step() invocation strictly to epoch boundary for
      CosineAnnealingLR.
@@ -198,24 +233,24 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 04: Sentinel and Scheduler Desynchronization `[PROBABLE]`
 
-* **`symptom`**: The Sawtooth Memory Sentinel reduces batch size during an OOM
+- **`symptom`**: The Sawtooth Memory Sentinel reduces batch size during an OOM
   warning, but the learning rate remains scaled for the higher batch size,
   destabilizing gradients.
-* **`context`**:
-  * Model: YOLOv8n Object Detection / Forex Predictor
-  * Feature: Dynamic Sawtooth Governor VRAM auto-scaling
-  * Hardware: GTX 1650 (4GB VRAM) approaching 95% memory allocation
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: YOLOv8n Object Detection / Forex Predictor
+  - Feature: Dynamic Sawtooth Governor VRAM auto-scaling
+  - Hardware: GTX 1650 (4GB VRAM) approaching 95% memory allocation
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Check telemetry.csv for sudden batch size cut events (e.g. 16 -> 8).
   2. Verify gradient norm behavior immediately following the batch size change.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Inspect telemetry.csv for effective_batch_size vs
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Inspect telemetry.csv for effective_batch_size vs
     learning_rate ratio and gradient accumulation steps.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Absence of linear learning rate scaling rule or failure to double
        gradient accumulation steps when physical batch size is halved.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Dynamic batch reduction event observed in telemetry.
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Dynamic batch reduction event observed in telemetry.
   1. Implement automatic gradient accumulation doubling: when batch size is cut
      in half (16 -> 8), double gradient accumulation steps (1 -> 2).
   2. Maintain constant effective batch size: B_effective = B_physical * S_accum
@@ -227,28 +262,28 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 05: Infinite Plateau Loop in Validation Governor `[PROBABLE]`
 
-* **`symptom`**: Training enters an infinite loop where the learning rate decays
+- **`symptom`**: Training enters an infinite loop where the learning rate decays
   to zero, early stopping triggers, but the governor endlessly restarts the
   epoch without checkpoint saving.
-* **`context`**:
-  * Model: NIMA Aesthetic Scorer (Mobile / EfficientNet)
-  * Metric: Spearman Rank Correlation Coefficient (SRCC)
-  * Feature: SOTA Adaptation Governor with Plateau Patience
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: NIMA Aesthetic Scorer (Mobile / EfficientNet)
+  - Metric: Spearman Rank Correlation Coefficient (SRCC)
+  - Feature: SOTA Adaptation Governor with Plateau Patience
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Check metrics.csv to verify if validation SRCC metric stagnates while
      epochs continue cycling.
   2. Confirm whether training is deadlocked or endlessly triggering jolt
      multipliers.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Check optimization.plateau_patience and
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Check optimization.plateau_patience and
     optimization.absolute_patience in unified_models_v2.yaml.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Lack of an absolute patience breaker (`absolute_patience`) or plateau
        patience configured without a hard epoch termination bound.
     2. Metric delta threshold (`min_delta: 0.001`) too small relative to
        statistical metric noise on small validation sets.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Verify `plateau_patience` is configured without an active
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Verify `plateau_patience` is configured without an active
     `absolute_patience` guard in `unified_models_v2.yaml`.
   1. Enforce hard dead-man switch `absolute_patience: 15` in
      `unified_models_v2.yaml`. The Training Governor automatically halts
@@ -264,22 +299,22 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 06: Pearson & Spearman Matrix Singularities `[CONFIRMED]`
 
-* **`symptom`**: Correlation metric returns NaN during validation or loss
+- **`symptom`**: Correlation metric returns NaN during validation or loss
   backpropagation, halting the training process.
-* **`context`**:
-  * Model: NIMA Quality Assessment Suite
-  * Loss / Metric: Differentiable Soft Spearman Rank or Pearson Linear
+- **`context`**:
+  - Model: NIMA Quality Assessment Suite
+  - Loss / Metric: Differentiable Soft Spearman Rank or Pearson Linear
     Correlation (PLCC)
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Calculate standard deviation of model output batch: torch.std(predictions).
   2. Check if predictions collapsed to a uniform constant across the batch.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Inspect prediction variance across samples in batch.
-  * **Ranked Candidate Causes**:
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Inspect prediction variance across samples in batch.
+  - **Ranked Candidate Causes**:
     1. Mode collapse during early training iterations causing standard deviation
        sigma(y) = 0 and Pearson denominator sigma(y_pred) * sigma(y_true) = 0.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Output batch variance confirmed near zero.
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Output batch variance confirmed near zero.
   1. Add numerical safety epsilon to standard deviation: sigma_safe =
      sqrt(Var(x) + 1e-8).
   2. In Soft Spearman loss, add tie-breaking noise during rank matrix inversion:
@@ -291,25 +326,25 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 07: Power-Loss Checkpoint Recovery `[CONFIRMED]`
 
-* **`symptom`**: System crashes or loses power during training; subsequent run
+- **`symptom`**: System crashes or loses power during training; subsequent run
   crashes on launch with EOFError: Ran out of input or RuntimeError:
   PytorchStreamReader failed reading zip archive.
-* **`context`**:
-  * Model: Any of the 22 LemGendary architectures
-  * File: best.pth or latest.pth
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: Any of the 22 LemGendary architectures
+  - File: best.pth or latest.pth
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Inspect file sizes of progress.pth, latest.pth, and best.pth in
      checkpoints/.
   2. Test checkpoint load in an isolated python shell: torch.load(path,
      map_location='cpu').
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify file integrity of primary and fallback
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Verify file integrity of primary and fallback
     checkpoints.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Non-atomic file write interrupted by power disruption, leaving a 0 KB or
        incomplete archive.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: latest.pth confirmed corrupted while progress.pth or
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: latest.pth confirmed corrupted while progress.pth or
     best.pth is intact.
   1. Restore training from uncorrupted progress.pth (intra-epoch rolling
      checkpoint) or immutable best.pth.
@@ -322,23 +357,23 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 08: Runway Bloat During Spatial Resolution Escalation `[PROBABLE]`
 
-* **`symptom`**: GPU runs out of memory (CUDA OOM) immediately when escalating
+- **`symptom`**: GPU runs out of memory (CUDA OOM) immediately when escalating
   from 320px to 480px or 640px along the resolution ladder.
-* **`context`**:
-  * Model: YOLOv8n / NAFNet / UltraZoom
-  * Feature: Autonomous Spatial Resolution Ladder progression
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: YOLOv8n / NAFNet / UltraZoom
+  - Feature: Autonomous Spatial Resolution Ladder progression
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Confirm the exact rung boundary where OOM occurred (e.g. 320px -> 640px).
   2. Check torch.cuda.max_memory_allocated() before and after the ladder jump.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Measure peak activation memory vs available VRAM at
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Measure peak activation memory vs available VRAM at
     the new resolution.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. PyTorch CUDA caching allocator fragmentation retaining unreleased
        activation buffers from the lower resolution rung, coupled with unscaled
        batch size.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Transition to higher spatial ladder rung confirmed.
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Transition to higher spatial ladder rung confirmed.
   1. Explicitly downscale batch size according to first principles: B_r =
      floor(B_0 * (R_0 / R)^2).
   2. Execute explicit garbage collection and cache emptying at the rung
@@ -350,26 +385,26 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 09: Hardlink vs. Perceptual Deduplication Conflicts `[PROBABLE]`
 
-* **`symptom`**: Dataset compilation claims 0 duplicate images removed, but
+- **`symptom`**: Dataset compilation claims 0 duplicate images removed, but
   visual inspection shows hundreds of duplicate photos with minor JPEG
   re-compression.
-* **`context`**:
-  * Tool: LemGendary Dataset Compiler Suite
-  * Module: Deduplication Engine
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Tool: LemGendary Dataset Compiler Suite
+  - Module: Deduplication Engine
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Review Dataset Compiler execution command flags used during compilation in
      compiler.log.
   2. Inspect raw source images to check if metadata or byte headers differ
      across visually identical images.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify if --no-hash flag was passed or if hardlink
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Verify if --no-hash flag was passed or if hardlink
     deduplication was selected instead of perceptual hashing.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Hardlink deduplication checks byte-for-byte SHA-256 hashes on the same
        volume; re-compressed images possess different quantization tables and
        fail byte-level deduplication.
-* **`Stage 3: Bounded Remediation [PROBABLE]`**:
-  * *Prerequisite*: Dataset sourced from web crawl or multiple compressed
+- **`Stage 3: Bounded Remediation [PROBABLE]`**:
+  - *Prerequisite*: Dataset sourced from web crawl or multiple compressed
     archives.
   1. Re-compile manifold with default perceptual deduplication enabled (do NOT
      pass --no-hash).
@@ -381,25 +416,25 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 10: Raw Dataset vs. Compiled Manifold Path Confusion `[CONFIRMED]`
 
-* **`symptom`**: Training script aborts with FileNotFoundError: Manifest
+- **`symptom`**: Training script aborts with FileNotFoundError: Manifest
   'manifest.json' not found in path.
-* **`context`**:
-  * Tool: Training Suite CLI / GUI
-  * Input: User specified raw download directory (e.g. raw_images/) as
+- **`context`**:
+  - Tool: Training Suite CLI / GUI
+  - Input: User specified raw download directory (e.g. raw_images/) as
     --dataset-path.
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Run ls or dir on the path provided to --dataset-path.
   2. Confirm whether manifest.json, shards/, or splits.json exist in that
      directory.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify directory layout against LemGendary Manifold
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Verify directory layout against LemGendary Manifold
     Specification.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. User provided an uncompiled raw image directory directly to the training
        suite. The training suite strictly requires a compiled manifold
        containing manifest.json and pre-split shards.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Directory lacks manifest.json.
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Directory lacks manifest.json.
   1. Execute Dataset Compiler first: python cli.py compile --model <model_key>
      --preset webdataset in lemgendary-datasets.
   2. Pass the compiled manifold directory path containing manifest.json to the
@@ -409,25 +444,25 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 11: Ambiguous Loss Plateau & Validation Stagnation `[ILLUSTRATIVE]`
 
-* **`symptom`**: Validation loss plateaus for 8 consecutive epochs without
+- **`symptom`**: Validation loss plateaus for 8 consecutive epochs without
   triggering early stopping or achieving target SOTA threshold.
-* **`context`**:
-  * Model: Hybrid MultiTask Restoration / NIMA Aesthetic
-  * Epoch: Epoch 42 of 100
-  * Observed Metric: Loss fluctuates within +/- 0.002 range
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Model: Hybrid MultiTask Restoration / NIMA Aesthetic
+  - Epoch: Epoch 42 of 100
+  - Observed Metric: Loss fluctuates within +/- 0.002 range
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Review metrics.csv without modifying parameters or stopping the run.
   2. Confirm whether training loss is also plateauing or continuing to decrease
      (check for overfitting divergence).
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Do NOT prematurely alter learning rate or change
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Do NOT prematurely alter learning rate or change
     optimizer settings. Request gradient L2 norms from the last 50 iterations,
     current spatial ladder rung, and validation sample size.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Evidence gathering is mandatory before selecting a remediation path:
        vanishing gradients vs overfitting vs validation subset noise.
-* **`Stage 3: Bounded Remediation [ILLUSTRATIVE]`**:
-  * *Prerequisite*: Action is conditioned on telemetry gathered in Stage 2.
+- **`Stage 3: Bounded Remediation [ILLUSTRATIVE]`**:
+  - *Prerequisite*: Action is conditioned on telemetry gathered in Stage 2.
   1. If gradient norm < 1e-4: Gradient vanishing diagnosed; adjust residual
      scaling or learning rate multiplier.
   2. If training loss is dropping while validation loss creeps up: Overfitting
@@ -440,30 +475,30 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 12: Pipeline Step 7 Visual Hang in `RUNNING` State `[CONFIRMED]`
 
-* **`symptom`**: Step 7 ("Health Matrix") card in desktop GUI displays `RUNNING`
+- **`symptom`**: Step 7 ("Health Matrix") card in desktop GUI displays `RUNNING`
   badge indefinitely with active telemetry progress bar, even after sidecar logs
   indicate pipeline completion.
-* **`context`**:
-  * Tool: LemGendary AI Studio GUI (`lemgendary-ai-studio-gui`)
-  * Component: Pipeline Execution View (`App.tsx`, `PipelineStepCards.tsx`)
-  * Precondition: Pipeline completes with warnings (`status="warning"`) or
+- **`context`**:
+  - Tool: LemGendary AI Studio GUI (`lemgendary-ai-studio-gui`)
+  - Component: Pipeline Execution View (`App.tsx`, `PipelineStepCards.tsx`)
+  - Precondition: Pipeline completes with warnings (`status="warning"`) or
     errors (`status="error"`).
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Inspect terminal and sidecar logs at
      `http://127.0.0.1:8000/api/pipeline/status` to confirm backend execution
      has halted.
   2. Check browser developer console for unhandled WebSocket event exceptions.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Query `GET /api/pipeline/status` to confirm
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Query `GET /api/pipeline/status` to confirm
     `is_running: false` and verify whether the last WebSocket event payload had
     `status="warning"` or `status="error"`.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Frontend WebSocket handler only triggered pipeline cleanup (`loadData()`,
        `setIsRunningPipeline(false)`) when `status === "success"`. When health
        checks emitted a warning or error, cleanup never executed and
        `isRunningPipeline` remained `true`.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Backend reports `is_running: false` while GUI card displays
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Backend reports `is_running: false` while GUI card displays
     `RUNNING`.
   1. Intercept all terminal statuses (`"success"`, `"warning"`, `"error"`) in
      `src/App.tsx` WebSocket listener.
@@ -477,29 +512,29 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 13: OpenCV Collision & Health False Alarms `[CONFIRMED]`
 
-* **`symptom`**: Pipeline Step 7 reports `Ecosystem healthy status: False` and
+- **`symptom`**: Pipeline Step 7 reports `Ecosystem healthy status: False` and
   lists `opencv-python` as a missing package for `lemgendary-datasets`, even
   though `opencv-contrib-python` is installed.
-* **`context`**:
-  * Tool: LemGendary Environment Manager (`lemgendary-env-manager`)
-  * Subsystem: Health Checker (`env_manager/health_checker.py`)
-  * Trigger: Step 4 package normalization uninstalls redundant OpenCV variants.
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Tool: LemGendary Environment Manager (`lemgendary-env-manager`)
+  - Subsystem: Health Checker (`env_manager/health_checker.py`)
+  - Trigger: Step 4 package normalization uninstalls redundant OpenCV variants.
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Run `python -m pip list` in the affected virtual environment
      (`lemgendary-datasets/.venv`).
   2. Check if `opencv-contrib-python` or `opencv-python` is present in the
      installed package list.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Inspect `requirements-datasets.txt` and
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Inspect `requirements-datasets.txt` and
     `health_checker.py` audit output.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. Dual declaration: `requirements-datasets.txt` declared both
        `opencv-contrib-python` and `opencv-python`. Normalization removed
        `opencv-python` to prevent `cv2` binary collision, causing
        `health_checker.py` exact-match comparison to report
        `missing_packages: ['opencv-python']`.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Virtual environment has `opencv-contrib-python` installed.
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Virtual environment has `opencv-contrib-python` installed.
   1. Remove redundant `opencv-python` declaration from all `requirements*.txt`
      files, retaining `opencv-contrib-python` as the single canonical OpenCV
      distribution.
@@ -511,26 +546,26 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 14: `mosaicml-streaming` Cloud SDK Dependency Locks `[CONFIRMED]`
 
-* **`symptom`**: Pip audit reports 7+ blocked package updates in
+- **`symptom`**: Pip audit reports 7+ blocked package updates in
   `lemgendary-datasets`, locking `numpy<2.2.0`, `transformers<5.0.0`,
   `google-cloud-storage<3.3.0`, `paramiko<4`, and `xxhash<4`.
-* **`context`**:
-  * Tool: LemGendary Environment Manager & Dataset Compiler
-  * Component: Dependency Resolver (`env_manager/dependency_resolver.py`)
-  * Root Package: `mosaicml-streaming` v0.13.0
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+- **`context`**:
+  - Tool: LemGendary Environment Manager & Dataset Compiler
+  - Component: Dependency Resolver (`env_manager/dependency_resolver.py`)
+  - Root Package: `mosaicml-streaming` v0.13.0
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Run `pip show streaming` to inspect metadata constraints.
   2. Review `install_requires` in `streaming` wheel for hardcoded upper bounds.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify whether active manifolds strictly require MDS
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Verify whether active manifolds strictly require MDS
     format or can read native WebDataset / LitData containers.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. `mosaicml-streaming` bundles legacy cloud SDKs (`oci`,
        `azure-storage-blob`, `google-cloud-storage`) into its mandatory
        dependencies, imposing ecosystem-wide version locks on NumPy and
        Transformers.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Datasets can be served via WebDataset or LitData streaming
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Datasets can be served via WebDataset or LitData streaming
     engines.
   1. Uninstall `mosaicml-streaming` and remove it from all `requirements*.txt`
      manifests.
@@ -543,30 +578,30 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 15: MDS Manifold Migration & Queue Source Status `[CONFIRMED]`
 
-* **`symptom`**: `python tools/modernization_queue.py --list` reports
+- **`symptom`**: `python tools/modernization_queue.py --list` reports
   `MISSING SOURCE` for manifolds whose source data exists exclusively in legacy
   `.mds.zstd` shards (`mds/train/`, `mds/val/`).
-* **`context`**:
-  * Tool: LemGendary Dataset Compiler Suite Modernization Queue
+- **`context`**:
+  - Tool: LemGendary Dataset Compiler Suite Modernization Queue
     (`tools/modernization_queue.py`)
-  * Target Manifolds: `LemGendizedClassificationMaster`,
+  - Target Manifolds: `LemGendizedClassificationMaster`,
     `LemGendizedMultitaskRestorationPro`
-  * Format Transition: MDS (`.mds.zstd`) to WebDataset (`.data`)
-* **`Stage 1: Initial Triage (Safe Checks)`**:
+  - Format Transition: MDS (`.mds.zstd`) to WebDataset (`.data`)
+- **`Stage 1: Initial Triage (Safe Checks)`**:
   1. Check disk contents of target manifold folder with `dir /s /b mds` or
      `ls -l mds/`.
   2. Confirm presence of `index.json` and `shard.*.mds.zstd` files in split
      directories.
-* **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
-  * **Required Telemetry**: Verify whether `shards/` or raw image folders exist
+- **`Stage 2: Targeted Diagnosis (Telemetry Verification)`**:
+  - **Required Telemetry**: Verify whether `shards/` or raw image folders exist
     alongside `mds/`.
-  * **Ranked Candidate Causes**:
+  - **Ranked Candidate Causes**:
     1. `modernization_queue.py` only inspected raw directories (`images/`) and
        zip archives (`*.zip`) when evaluating source availability. Manifolds
        containing only `mds/` were flagged as `MISSING SOURCE` despite
        containing valid shard assets.
-* **`Stage 3: Bounded Remediation [CONFIRMED]`**:
-  * *Prerequisite*: Manifold directory contains `mds/` with valid `index.json`.
+- **`Stage 3: Bounded Remediation [CONFIRMED]`**:
+  - *Prerequisite*: Manifold directory contains `mds/` with valid `index.json`.
   1. Extend `load_queue_manifest()` in `modernization_queue.py` to identify
      `has_mds_flag` and designate status as `MDS MIGRATION READY`.
   2. Implement `transcode_mds_to_webdataset()` using streaming `zstandard`
@@ -576,65 +611,65 @@ single authoritative resolution for this state."` and prescribe running
 
 ### Scenario 16: Docs Suite Drift & Workspace Root [CONFIRMED]
 
-* **`symptom`**: lem-env docs-audit fails with missing sibling manifests.
-* **`context`**: lemgendary-env-manager docs_audit subsystem.
-* **`remediation`**: Ensure dynamic workspace root discovery and run
+- **`symptom`**: lem-env docs-audit fails with missing sibling manifests.
+- **`context`**: lemgendary-env-manager docs_audit subsystem.
+- **`remediation`**: Ensure dynamic workspace root discovery and run
   `lem-env docs-audit --root lemgendary-docs`.
 
 ### Scenario 17: Screen Capture Desktop Leakage Guard [CONFIRMED]
 
-* **`symptom`**: Full desktop or background monitors accidentally captured.
-* **`context`**: `lemgendary-env-manager` screen_capture module.
-* **`remediation`**: Enforce HWND clamping using Win32 `PrintWindow`.
+- **`symptom`**: Full desktop or background monitors accidentally captured.
+- **`context`**: `lemgendary-env-manager` screen_capture module.
+- **`remediation`**: Enforce HWND clamping using Win32 `PrintWindow`.
 
 ### Scenario 18: Multi-Metric SOTA Training Chart Scale Distortion [CONFIRMED]
 
-* **`symptom`**: Large metrics compress small metrics, or opposing polarities.
-* **`context`**: `lemgendary-env-manager` chart_builder module.
-* **`remediation`**: Split subplots by metric optimization polarity with
+- **`symptom`**: Large metrics compress small metrics, or opposing polarities.
+- **`context`**: `lemgendary-env-manager` chart_builder module.
+- **`remediation`**: Split subplots by metric optimization polarity with
   SOTA target reference lines.
 
 ### Scenario 19: Slim Virtual Environments Lacking Pip [CONFIRMED]
 
-* **`symptom`**: `python -m pip` fails or raises `No module named pip` in slim
+- **`symptom`**: `python -m pip` fails or raises `No module named pip` in slim
   virtual environments created via `uv venv`.
-* **`context`**: `lemgendary-env-manager` environment management pipeline.
-* **`remediation`**: Execute package operations via native `uv pip` directly
+- **`context`**: `lemgendary-env-manager` environment management pipeline.
+- **`remediation`**: Execute package operations via native `uv pip` directly
   (`uv pip <args> --python <path_to_interpreter>`), removing any hard
   requirement for `pip` or `ensurepip` inside target virtual environments.
 
 ### Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock [CONFIRMED]
 
-* **`symptom`**: Package resolution backtracks to 2014 `boto3==0.0.3` and
+- **`symptom`**: Package resolution backtracks to 2014 `boto3==0.0.3` and
   `botocore==0.76.0`, locking ancient `six==1.7.3` and `bcdoc==0.12.2`.
-* **`context`**: `lemgendary-datasets` and `lemgendary-training-suite`
+- **`context`**: `lemgendary-datasets` and `lemgendary-training-suite`
   manifests.
-* **`remediation`**: Explicitly pin modern AWS SDK dependencies
+- **`remediation`**: Explicitly pin modern AWS SDK dependencies
   (`boto3==1.44.11`, `botocore==1.44.11`, `jmespath==1.1.0`, and
   `six==1.17.0`) in all requirements manifests and uninstall legacy `bcdoc`.
 
 ### Scenario 21: Ultralytics Metadata Check Failure with Contrib OpenCV [CONFIRMED]
 
-* **`symptom`**: `pip check` fails with `ultralytics requires opencv-python,
+- **`symptom`**: `pip check` fails with `ultralytics requires opencv-python,
   which is not installed` when only `opencv-contrib-python` is present.
-* **`context`**: `lemgendary-datasets` package installation and verification.
-* **`remediation`**: Install `opencv-python==5.1.0.95` alongside
+- **`context`**: `lemgendary-datasets` package installation and verification.
+- **`remediation`**: Install `opencv-python==5.1.0.95` alongside
   `opencv-contrib-python==5.1.0.95` so that both `ultralytics` metadata checks
   pass and MediaPipe contrib modules remain available.
 
 ### Scenario 22: MediaPipe Non-Contiguous NumPy 2.x Memory Slice Corruption [CONFIRMED]
 
-* **`symptom`**: MediaPipe facial landmark or face detection produces random
+- **`symptom`**: MediaPipe facial landmark or face detection produces random
   ctypes memory corruption or segmentation faults under NumPy 2.x.
-* **`context`**: `lemgendary-datasets/models/detection.py` image loading.
-* **`remediation`**: Wrap loaded image arrays in `np.ascontiguousarray(...)`
+- **`context`**: `lemgendary-datasets/models/detection.py` image loading.
+- **`remediation`**: Wrap loaded image arrays in `np.ascontiguousarray(...)`
   before passing tensor buffers to MediaPipe ctypes bindings.
 
 ### Scenario 23: Python 3.14 forkserver Multiprocessing Signal Deadlocks [CONFIRMED]
 
-* **`symptom`**: DataLoader worker processes hang indefinitely or deadlock on
+- **`symptom`**: DataLoader worker processes hang indefinitely or deadlock on
   `SemLock` cross-context pickling upon training interruption.
-* **`context`**: `lemgendary-training-suite` `training/data/workers.py`.
-* **`remediation`**: Configure deterministic `forkserver` on POSIX and `spawn`
+- **`context`**: `lemgendary-training-suite` `training/data/workers.py`.
+- **`remediation`**: Configure deterministic `forkserver` on POSIX and `spawn`
   on Windows, setting `signal.SIG_IGN` on `SIGINT` (leaving teardown to the
   parent loop) and `signal.SIG_DFL` on `SIGTERM`.

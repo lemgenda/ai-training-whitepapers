@@ -54,6 +54,30 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
+### 2026-11-26 — Ecosystem Whitepapers Audit, W3C Validation, MathJax & SEO/WCAG Compliance
+
+* Completed audit across all 48 technical whitepapers and manuals
+  (`MD-Papers/` and `papers/`) covering Prompts 35 through 40.
+* **Prompt 35 (Ecosystem Audit & Manifest Verification)**: Reconciled base
+  versions, canonical capabilities, and document pairings across
+  `manifest/documents.json`.
+* **Prompt 36 (MD <-> HTML Parity)**: Restored 100% heading and section parity,
+  repaired missing sections, and eliminated unrendered HTML entities in
+  formulas.
+* **Prompt 37 (TOC & Navigation)**: Synchronized complete H1-H4 Tables of
+  Contents with resolving GitHub anchor slugs in Markdown and accessible
+  `<nav>` elements in HTML.
+* **Prompt 38 (Formula Verification & Markdown Linting)**: Verified 1,255
+  formulas against peer-reviewed literature; passed markdownlint clean.
+* **Prompt 39 (W3C HTML5, MathJax, Asset Integrity)**: Repaired unclosed tags,
+  injected MathJax v3 configuration across all 48 HTML publications, verified
+  all 141 local images and SVGs (zero broken paths, 100% alt text).
+* **Prompt 40 (Frontend Standards, SEO, WCAG 2.2 AA / AAA)**: Injected canonical
+  links, meta descriptions, Open Graph / Twitter cards, keyboard skip links,
+  `<main>` landmarks, and WCAG AAA `:focus-visible` styling in `style.css`.
+* Updated `MANUAL_CLI.md`, `MANUAL_API.md`, and HTML counterparts to document
+  all audit verification gates and API endpoints.
+
 ### 2026-11-26 — AI Studio GUI Operator Manual & UI/UX Audit Alignment
 
 * Synchronized `MD-Papers/MANUAL_AI_STUDIO_GUI.md` and

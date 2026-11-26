@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Master API Reference Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
+<link rel="canonical" href="https://docs.lemgenda.hr/papers/api-manual.html">
+<meta property="og:title" content="Master API Reference Manual">
+<meta property="og:description" content="Master API Reference Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
+<meta property="og:url" content="https://docs.lemgenda.hr/papers/api-manual.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Master API Reference Manual">
+<meta name="twitter:description" content="Master API Reference Manual - Category 03 MANUALS | LemGendary AI Documentation Hub">
 <title>LemGendary Ecosystem: Master API Reference Manual</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Outfit:wght@500;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
@@ -10,6 +19,8 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
 <div class="container">
 <div class="tabs-nav">
 <a href="../index.html" class="tab-link">Hub Index</a>
@@ -25,6 +36,8 @@
 <span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
 </div>
 </header>
+<main id="main-content">
+
 <nav class="toc-sidebar" aria-label="Table of Contents">
 <a href="../index.html" class="toc-brand"><img src="../assets/lemgenda-icon.svg" alt="LemGendary AI Documentation Hub"></a>
 <h4>Table of Contents</h4>
@@ -353,6 +366,23 @@ stream across WebSocket connections.</p>
 </ul>
 <h4 id="post-apivalidate"><code>POST /api/validate</code></h4>
 <p>Executes the multi-gate validation suite across all projects or a single project.</p>
+<p>The validation pipeline encompasses all quality gates from <code>env_manager/validation/registry.py</code>:</p>
+<ul>
+<li><strong>Syntax &amp; Compilation</strong>: Python bytecode (<code>py_compile</code>), TypeScript types (<code>tsc --noEmit</code>), JSON RFC 8259 validation, and YAML schema checking (<code>yamllint</code>).</li>
+<li><strong>Code &amp; Content Hygiene</strong>: Zero-emoji enforcement across all text files and markup, forbidden suppression scanning (<code>@ts-*</code>, <code>eslint-disable</code>, <code>warnings.filterwarnings</code>, empty exceptions), absolute path elimination, and ecosystem SSOT verification.</li>
+<li><strong>Linters</strong>: ESLint, Pylint, and <code>markdownlint</code> (&le; 80 characters).</li>
+<li><strong>Web &amp; Documentation Hub Compliance (<code>lemgendary-docs</code>)</strong>:
+<ul>
+<li><code>html-validate</code> &amp; W3C HTML5 zero-error conformance.</li>
+<li>WCAG 2.2 Level AA &amp; AAA compliance via <code>pa11y</code> and AST validation: valid <code>&lt;html lang&gt;</code>, descriptive unique <code>&lt;title&gt;</code>, keyboard skip links, semantic <code>&lt;main&gt;</code> and <code>&lt;nav&gt;</code> landmarks, and enhanced focus appearance.</li>
+<li>SEO metadata: <code>&lt;meta name="description"&gt;</code>, <code>&lt;link rel="canonical"&gt;</code>, and Open Graph properties on all publications.</li>
+<li>LaTeX mathematical integrity: syntax validation, bracket balance, MathJax v3 configuration, and zero plain HTML entity substitutions.</li>
+<li>Table of Contents integrity: complete H1–H4 coverage and fully resolving anchor links between <code>.md</code> and <code>.html</code> companions.</li>
+<li>Asset integrity: zero broken local paths across all 141 diagram and image assets.</li>
+<li>Manifest synchronization: bijective agreement across <code>documents.json</code>, <code>canonical_capabilities.json</code>, and <code>canonical_capabilities.yaml</code>.</li>
+</ul>
+</li>
+</ul>
 <div class="callout callout-important"><div class="callout-title">Pre-Commit &amp; Validation Failure Guarantee</div><p>Any validation execution and subsequent Git commit will fail and be rejected if any affected project does not have its changelog updated under a release section in <code>README.md</code>, or if any staged line exceeds the length limit (maximum 80 characters for Markdown, 100 characters for Python).</p></div>
 <p>Request body:</p>
 <pre><code class="language-json">{
@@ -2025,6 +2055,8 @@ the FastAPI lifespan handler on server shutdown, so no
 </ul>
 </section>
 
+
+</main>
 <footer>
 <p>LemGendary AI Documentation Hub. Source: <code>MD-Papers/MANUAL_API.md</code>.</p>
 </footer>
