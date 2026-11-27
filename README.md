@@ -56,6 +56,9 @@
 
 ### v16.9.231 - Live GUI v2.10.82 Audit & Ecosystem Docs Alignment
 
+- **Pre-Commit Hook Sync (`.githooks/pre-commit`)**: Updated line-length guard
+  hook path to `lemgendary-env-manager/tools/check_line_lengths.py`.
+
 * Reconciled `MANUAL_AI_STUDIO_GUI.md` and `papers/ai-studio-manual.html` across
   Figures 1–34 (added separate Expanded Production Manifold Card figure and
   recaptured live 21-manifold Dataset Compiler screenshots).
