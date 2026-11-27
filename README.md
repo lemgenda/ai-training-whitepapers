@@ -56,7 +56,7 @@
 
 ### v16.9.231 - Live GUI v2.10.82 Audit & Ecosystem Docs Alignment
 
-- **Pre-Commit Hook Sync (`.githooks/pre-commit`)**: Updated line-length guard
+* **Pre-Commit Hook Sync (`.githooks/pre-commit`)**: Updated line-length guard
   hook path to `lemgendary-env-manager/tools/check_line_lengths.py`.
 
 * Reconciled `MANUAL_AI_STUDIO_GUI.md` and `papers/ai-studio-manual.html` across
