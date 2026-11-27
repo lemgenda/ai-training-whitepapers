@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.68-STABLE` (LemGendary AI Documentation Hub) · **Last
-audited**: 2026-11-12
+**Version**: `v16.9.231-STABLE` (LemGendary AI Documentation Hub) · **Last
+audited**: 2026-11-26
 
 ---
 
@@ -34,6 +34,16 @@ audited**: 2026-11-12
   - [7.4 Telemetry CSV](#74-telemetry-csv)
 - [8. Authoritative "Do Not Confuse With"
   Matrix](#8-authoritative-do-not-confuse-with-matrix)
+- [9. Modernized Toolchain & Concurrency
+  Primitives](#9-modernized-toolchain--concurrency-primitives)
+- [10. AI Studio GUI & Automation
+  Primitives](#10-ai-studio-gui--automation-primitives)
+  - [10.1 Custom Pipeline Step Selection](#101-custom-pipeline-step-selection)
+  - [10.2 Shortest-Column Masonry FLIP Reflow](#102-shortest-column-masonry-flip-reflow)
+  - [10.3 Embedded Offline Documentation Hub (`tab-docs`)](#103-embedded-offline-documentation-hub-tab-docs)
+  - [10.4 Automated GUI Documentation Sync](#104-automated-gui-documentation-sync)
+  - [10.5 Frozen Run Settings Guard (`FrozenSettingsChanged`)](#105-frozen-run-settings-guard-frozensettingschanged)
+  - [10.6 Autonomous Yield Strategy](#106-autonomous-yield-strategy)
 
 ---
 
@@ -298,7 +308,7 @@ Pylint and astroid toolchain.
 ### 6.2 Sidecar REST Daemon
 
 An asynchronous FastAPI service on a dedicated local port (`8000` for the
-LemGendary Environment Manager, `8100` for the LemGendary Dataset Compiler
+LemGendary Environment Manager, `8150` for the LemGendary Dataset Compiler
 Suite and `8200` for the LemGendary Model Training Suite). Each sidecar binds
 to `127.0.0.1` and provides headless API access, hardware health telemetry and
 WebSocket log broadcasting.
@@ -435,3 +445,52 @@ Permissive augmentation libraries (Apache-2.0 `kornia` and BSD-3-Clause
 `torchvision.transforms.v2`) provide commercial-grade GPU-accelerated image
 transforms without the viral reciprocal open-source licensing liabilities
 mandated by copyleft AGPL-3.0 stacks.
+
+---
+
+## 10. AI Studio GUI & Automation Primitives
+
+### 10.1 Custom Pipeline Step Selection
+
+The selective clean-install workflow in AI Studio GUI (`tab-dashboard`)
+triggered by `pipeline-btn-run-custom`, allowing operators to run a chosen
+subset of the 7-step environment pipeline instead of the full sequence
+(`pipeline-btn-run-all`).
+
+### 10.2 Shortest-Column Masonry FLIP Reflow
+
+The dynamic card-packing layout (`MasonryFlipGrid` with `useMasonryFlip`) used
+in the Dataset Compiler queue and gallery views. It places cards into the
+shortest column and animates position changes using GPU-accelerated FLIP
+(`280ms cubic-bezier(0.22, 1, 0.36, 1)`) transitions.
+
+### 10.3 Embedded Offline Documentation Hub (`tab-docs`)
+
+The 6th primary workspace tab in AI Studio GUI (`tab-docs`) that embeds the
+LemGendary AI Documentation Hub directly inside the desktop app. It queries
+`GET /api/docs/status` for `local_url` (or `online_url` fallback) so operators
+can browse canonical manuals and whitepapers offline.
+
+### 10.4 Automated GUI Documentation Sync
+
+The `lem-env` toolchain (`gui-screenshots`, `sync-gui-registry`, and
+`sync-gui-manual`) that captures numbered callout screenshots from the live
+AI Studio GUI (`http://localhost:1420`) and synchronizes
+`GUI_CONTROL_REGISTRY.md`, `MANUAL_AI_STUDIO_GUI.md`, their HTML counterparts,
+and `manifest/documents.json`.
+
+### 10.5 Frozen Run Settings Guard (`FrozenSettingsChanged`)
+
+A training-resume integrity guard in `lemgendary-training-suite` that compares
+resumed run parameters against the checkpoint's frozen settings. When drift is
+detected, training refuses with `FrozenSettingsChanged` and AI Studio GUI
+renders `train-frozen-refusal` (showing old vs. new canonical JSON values)
+unless the operator enables `train-input-override-frozen-{model_key}` (local)
+or `kaggle-override-frozen-checkbox` (Kaggle).
+
+### 10.6 Autonomous Yield Strategy
+
+The LLM dataset compilation mode (`comp-yield-mode`: `Autonomous Source
+Analysis`) in AI Studio GUI (`tab-compiler`) that inspects raw text sources
+automatically to determine chunking, token-packing, and shard-yield parameters
+without manual schema overrides.

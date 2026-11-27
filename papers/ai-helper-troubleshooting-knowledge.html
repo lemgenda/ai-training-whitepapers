@@ -35,9 +35,9 @@
 <h1>LemGendary AI Studio GUI: AI Helper Troubleshooting Knowledge Base</h1>
 <p class="subtitle">Category 02 GUIDE | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v16.9.27-STABLE</code></span>
-<span><strong>Runtime Baseline</strong>: <code>v16.9.16-STABLE</code></span>
-<span><strong>Last Reviewed / Verified</strong>: 2026-10-18</span>
+<span><strong>Version</strong>: <code>v16.9.231-STABLE</code></span>
+<span><strong>Runtime Baseline</strong>: <code>v16.9.254-STABLE</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-26</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
 <blockquote class="blockquote-styled">
@@ -81,6 +81,12 @@
 <li><a href="#scenario-16-docs-suite-drift--workspace-root-confirmed">Scenario 16: Docs Suite Drift &amp; Workspace Root <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-17-screen-capture-desktop-leakage-guard-confirmed">Scenario 17: Screen Capture Desktop Leakage Guard <code>[CONFIRMED]</code></a></li>
 <li><a href="#scenario-18-multi-metric-sota-training-chart-scale-distortion-confirmed">Scenario 18: Multi-Metric SOTA Training Chart Scale Distortion <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-19-slim-virtual-environments-lacking-pip-confirmed">Scenario 19: Slim Virtual Environments Lacking Pip <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-20-litdata-s3-unpinned-boto3-dependency-deadlock-confirmed">Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-21-ultralytics-metadata-check-failure-with-contrib-opencv-confirmed">Scenario 21: Ultralytics Metadata Check Failure with Contrib OpenCV <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-22-mediapipe-non-contiguous-numpy-2x-memory-slice-corruption-confirmed">Scenario 22: MediaPipe Non-Contiguous NumPy 2.x Memory Slice Corruption <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-23-python-314-forkserver-multiprocessing-signal-deadlocks-confirmed">Scenario 23: Python 3.14 forkserver Multiprocessing Signal Deadlocks <code>[CONFIRMED]</code></a></li>
+<li><a href="#scenario-24-frozensettingschanged--port-8150-drift-confirmed">Scenario 24: <code>FrozenSettingsChanged</code> &amp; Port 8150 Drift <code>[CONFIRMED]</code></a></li>
 </ul>
 </li>
 </ul>
@@ -120,7 +126,7 @@ sources strictly in descending order of precedence:</p>
 <li><strong>Tier 1 (Supreme Ground Truth)</strong>: Active in-process code manifests
 (<code>unified_models_v2.yaml</code>, <code>unified_data.yaml</code>) and sidecar OpenAPI
 specifications (<code>http://127.0.0.1:8000/openapi.json</code>,
-<code>http://127.0.0.1:8100/openapi.json</code>, <code>http://127.0.0.1:8200/openapi.json</code>).</li>
+<code>http://127.0.0.1:8150/openapi.json</code>, <code>http://127.0.0.1:8200/openapi.json</code>).</li>
 <li><strong>Tier 2 (Operational Manuals)</strong>: Master API Reference
 (<a href="api-manual.html"><code>MANUAL_API.md</code></a>), Master CLI Manual
 (<a href="cli-manual.html"><code>MANUAL_CLI.md</code></a>), Desktop GUI Operator Manual
@@ -901,6 +907,18 @@ legacy <code>mds/</code> files.</li>
 <li><strong><code>symptom</code></strong>: DataLoader worker processes hang indefinitely or deadlock on <code>SemLock</code> cross-context pickling upon training interruption.</li>
 <li><strong><code>context</code></strong>: <code>lemgendary-training-suite</code> <code>training/data/workers.py</code>.</li>
 <li><strong><code>remediation</code></strong>: Configure deterministic <code>forkserver</code> on POSIX and <code>spawn</code> on Windows, setting <code>signal.SIG_IGN</code> on <code>SIGINT</code> (leaving teardown to the parent loop) and <code>signal.SIG_DFL</code> on <code>SIGTERM</code>.</li>
+</ul>
+
+<h3 id="scenario-24-frozensettingschanged--port-8150-drift-confirmed">Scenario 24: <code>FrozenSettingsChanged</code> &amp; Port 8150 Drift <code>[CONFIRMED]</code></h3>
+<ul>
+<li><strong><code>symptom</code></strong>: Resuming a local or Kaggle training run fails immediately with <code>FrozenSettingsChanged</code>, displaying the <code>train-frozen-refusal</code> panel in AI Studio GUI (<code>v2.10.82</code>), or Dataset Compiler health probes fail against a stale port <code>8100</code> instead of <code>8150</code>.</li>
+<li><strong><code>context</code></strong>: <code>lemgendary-training-suite</code> frozen run-settings guard, <code>lemgendary-ai-studio-gui</code> (<code>tab-training</code>, <code>tab-cloud</code>), and <code>lemgendary-env-manager/ecosystem/ecosystem.json</code> port SSOT (<code>8000</code> Environment Manager, <code>8150</code> Dataset Compiler Suite, <code>8200</code> Model Training Suite).</li>
+<li><strong><code>remediation</code></strong>:
+<ol>
+<li>For <code>FrozenSettingsChanged</code>: Inspect <code>train-frozen-refusal-changes</code> to compare old vs. new canonical JSON values. Either revert the modified training setting or explicitly enable <code>train-input-override-frozen-{model_key}</code> (local) / <code>kaggle-override-frozen-checkbox</code> (Kaggle) before relaunching, then dismiss via <code>train-btn-frozen-refusal-dismiss</code>.</li>
+<li>For port <code>8150</code> drift: Run <code>lem-env probe</code> and <code>lem-env validate</code> to verify the Dataset Compiler sidecar is bound to <code>127.0.0.1:8150</code>, and update any stale client or script references from <code>8100</code> to <code>8150</code>.</li>
+</ol>
+</li>
 </ul>
 </section>
 

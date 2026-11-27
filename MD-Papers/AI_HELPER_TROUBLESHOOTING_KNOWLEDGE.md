@@ -5,8 +5,8 @@
 > Structured diagnostics, historical failure modes, root-cause analyses, and
 > mitigation playbooks for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.27-STABLE` · **Runtime Baseline**: `v16.9.16-STABLE` ·
-**Last Reviewed / Verified**: 2026-10-18 · **Status**: Canonical
+**Version**: `v16.9.231-STABLE` · **Runtime Baseline**: `v16.9.254-STABLE` ·
+**Last Reviewed / Verified**: 2026-11-26 · **Status**: Canonical
 
 ---
 
@@ -41,7 +41,9 @@
   - [Scenario 20: LitData S3 Unpinned boto3 Dependency Deadlock [CONFIRMED]](#scenario-20-litdata-s3-unpinned-boto3-dependency-deadlock-confirmed)
   - [Scenario 21: Ultralytics Contrib OpenCV Failure [CONFIRMED]](#scenario-21-ultralytics-metadata-check-failure-with-contrib-opencv-confirmed)
   - [Scenario 22: MediaPipe NumPy 2.x Corruption [CONFIRMED]](#scenario-22-mediapipe-non-contiguous-numpy-2x-memory-slice-corruption-confirmed)
-  - [Scenario 23: Python 3.14 forkserver Deadlocks [CONFIRMED]](#scenario-23-python-314-forkserver-multiprocessing-signal-deadlocks-confirmed)
+  - [Scenario 23: Python 3.14 forkserver Deadlocks `[CONFIRMED]`](#scenario-23-python-314-forkserver-multiprocessing-signal-deadlocks-confirmed)
+  - [Scenario 24: `FrozenSettingsChanged` & Port 8150 Drift
+    `[CONFIRMED]`](#scenario-24-frozensettingschanged--port-8150-drift-confirmed)
 
 ---
 
@@ -82,7 +84,7 @@ sources strictly in descending order of precedence:
 1. **Tier 1 (Supreme Ground Truth)**: Active in-process code manifests
    (`unified_models_v2.yaml`, `unified_data.yaml`) and sidecar OpenAPI
    specifications (`http://127.0.0.1:8000/openapi.json`,
-   `http://127.0.0.1:8100/openapi.json`, `http://127.0.0.1:8200/openapi.json`).
+   `http://127.0.0.1:8150/openapi.json`, `http://127.0.0.1:8200/openapi.json`).
 2. **Tier 2 (Operational Manuals)**: Master API Reference
    ([`MANUAL_API.md`](./MANUAL_API.md)), Master CLI Manual
    ([`MANUAL_CLI.md`](./MANUAL_CLI.md)), Desktop GUI Operator Manual
@@ -117,8 +119,7 @@ from the operator:
      `torch.cuda.mem_get_info()` or GUI telemetry stream.
    - **Invocation Parameters**: Exact CLI command line arguments or active GUI
      configuration toggles.
-3. **Stage 3: Bounded Remediation**:
-4. Recommend concrete parameter, flag, or
+3. **Stage 3: Bounded Remediation**: Recommend concrete parameter, flag, or
    structural modifications only after evidence and prerequisites justify the
    change. All diagnoses must carry an epistemic tag: `[CONFIRMED]`,
    `[PROBABLE]`, or `[ILLUSTRATIVE]`.
@@ -673,3 +674,25 @@ single authoritative resolution for this state."` and prescribe running
 - **`remediation`**: Configure deterministic `forkserver` on POSIX and `spawn`
   on Windows, setting `signal.SIG_IGN` on `SIGINT` (leaving teardown to the
   parent loop) and `signal.SIG_DFL` on `SIGTERM`.
+
+### Scenario 24: `FrozenSettingsChanged` & Port 8150 Drift [CONFIRMED]
+
+- **`symptom`**: Resuming a local or Kaggle training run fails immediately with
+  `FrozenSettingsChanged`, displaying the `train-frozen-refusal` panel in AI
+  Studio GUI (`v2.10.82`), or Dataset Compiler health probes fail against a
+  stale port `8100` instead of `8150`.
+- **`context`**: `lemgendary-training-suite` frozen run-settings guard,
+  `lemgendary-ai-studio-gui` (`tab-training`, `tab-cloud`), and
+  `lemgendary-env-manager/ecosystem/ecosystem.json` port SSOT (`8000`
+  Environment Manager, `8150` Dataset Compiler Suite, `8200` Model Training
+  Suite).
+- **`remediation`**:
+  1. For `FrozenSettingsChanged`: Inspect `train-frozen-refusal-changes` to
+     compare old vs. new canonical JSON values. Either revert the modified
+     training setting or explicitly enable
+     `train-input-override-frozen-{model_key}`
+     (local) / `kaggle-override-frozen-checkbox` (Kaggle) before relaunching,
+     then dismiss via `train-btn-frozen-refusal-dismiss`.
+  2. For port `8150` drift: Run `lem-env probe` and `lem-env validate` to verify
+     the Dataset Compiler sidecar is bound to `127.0.0.1:8150`, and update any
+     stale client or script references from `8100` to `8150`.

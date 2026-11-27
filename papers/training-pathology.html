@@ -1094,8 +1094,8 @@ training v16.9.148).</li>
 <h3 id="protobuf-200-gb-serialization-limit-on-fp16-llms-pathology-39">Protobuf 2.00 GB Serialization Limit on FP16 LLMs (Pathology 39)</h3>
 <ul>
 <li><strong>The Issue</strong>: Google Protocol Buffers strictly enforces a 2,147,483,648 byte (2.00 GB) limit on single serialized protobuf messages. When exporting large models (such as 1.5B+ parameter LLMs like <code>AIHelperLemGend</code> whose FP16 weights total 2.88 GB) without external data separation, the export fails with: <code>google.protobuf.message.EncodeError: Failed to serialize proto</code>.</li>
-<li><strong>Identification</strong>: Single-file ONNX export fails on models with parameters \(\ge 1.0\text{B}\) in FP16.</li>
-<li><strong>Remedy</strong>: <strong>Deterministic Weight Externalization</strong>. Configure ONNX export with <code>save_as_external_data=True</code> for models whose tensor byte footprint exceeds 2.00 GB, producing a lightweight <code>.onnx</code> graph paired with a <code>.onnx.data</code> external binary sidecar. Models with total footprint \(&lt; 2.00\text{ GB}\) (such as vision models like <code>ProfessionalMultiRestorer</code> at 1.62 MB) must embed weights directly within the <code>.onnx</code> container.</li>
+<li><strong>Identification</strong>: Single-file ONNX export fails on models with parameters $\ge 1.0\text{B}$ in FP16.</li>
+<li><strong>Remedy</strong>: <strong>Deterministic Weight Externalization</strong>. Configure ONNX export with <code>save_as_external_data=True</code> for models whose tensor byte footprint exceeds 2.00 GB, producing a lightweight <code>.onnx</code> graph paired with a <code>.onnx.data</code> external binary sidecar. Models with total footprint $&lt; 2.00\text{ GB}$ (such as vision models like <code>ProfessionalMultiRestorer</code> at 1.62 MB) must embed weights directly within the <code>.onnx</code> container.</li>
 </ul>
 </section>
 
@@ -1470,7 +1470,7 @@ Enforce compiler-level dataset manifold validation preventing task target
 collision between restoration pipelines and multi-class classification
 shards. In server telemetry and job orchestrators, format all learning rate
 metrics with 6-decimal floating-point precision (<code>{v:.6f}</code>) to distinguish
-micro-learning rates ($10^{-5}$ to $10^{-6}$) from true zero-rate optimizer
+micro-learning rates (1e-5 to 1e-6) from true zero-rate optimizer
 freeze, and emit warning diagnostics whenever <code>_classification_loss</code> activates
 the zeroed unlabelled batch fallback.</p>
 <h3 id="intra-epoch-batch-clamping-and-progress-desynchronization-pathology-67">Intra-Epoch Batch Clamping &amp; Progress Desynchronization (Pathology 67)</h3>
@@ -1524,13 +1524,14 @@ iteration latency ($s/\text{it}$) and erroneous ETAs on the initial active batch
 <p><strong>Remedy:</strong> <strong>Index-Slicing Resumption, Worker Persistence &amp; Adaptive Rate Smoothing</strong>.
 Deploy <code>ResumableBatchSampler.set_start_batch(resume_step)</code> to slice sample indices
 in memory at $O(1)$ complexity, completely bypassing sample loading, disk reading, and image
-decoding for completed batches. In WebDataset readers, support shard-level offset skipping
+decoding for all $K$ completed batches. In WebDataset readers, support shard-level offset skipping
 (<code>skip_shards_offset</code> and <code>set_start_shard</code>) to bypass completed <code>.tar</code> archives
 instantly without iterating member indices. Configure <code>persistent_workers=True</code> and
 <code>non_blocking=True</code> to prevent worker pool teardown and cold queue priming across loops.
 In <code>BatchClock</code>, anchor <code>start_time</code> strictly to the first active un-skipped batch
-and apply adaptive Exponential Moving Average (EMA) rate smoothing ($\alpha=0.4 \to 0.15$) to
+and apply adaptive Exponential Moving Average (EMA) rate smoothing ($\alpha = 0.4$ to $0.15$) to
 eliminate startup latency skew and yield reliable throughput telemetry upon resumption.</p>
+<div class="math-block">$$R_{\text{smooth}} = (1 - \alpha) R_{\text{prev}} + \alpha R_{\text{inst}}$$</div>
 
 <h3 id="distributed-rank-asymmetry-in-intra-epoch-save-cadence-pathology-70">Distributed Rank Asymmetry in Intra-Epoch Save Cadence (Pathology 70)</h3>
 <p><strong>The Issue:</strong> Under Distributed Data Parallel (DDP) execution on multi-GPU
@@ -1538,7 +1539,7 @@ accelerators, rank synchronization of intra-epoch checkpoint saves relies on an 
 decision gate (<code>any_rank(due, device)</code>). When an intra-epoch save executes, non-zero
 worker ranks exit early because physical disk writes to <code>progress.pth</code> are restricted to
 Rank 0. If <code>last_progress_save_time</code> is updated exclusively within the Rank 0 branch,
-non-zero ranks retain their stale startup timestamps. On every subsequent DDP decision step,
+non-zero ranks retain their stale startup timestamps. On every subsequent DDP decision step (e.g. every $N=25$ batches),
 non-zero ranks evaluate elapsed duration as exceeding the threshold, causing <code>any_rank</code>
 to evaluate true and triggering spurious checkpoint saves on Rank 0 every ~6 to 10 seconds.</p>
 <p><strong>Remedy:</strong> <strong>Universal Rank Tracking Synchronization</strong>.
@@ -1917,7 +1918,7 @@ and force-expands dataset fraction (+20%) on overfitting trends.</li>
 <h3>12.1 XLA JIT Recompilation Thrashing (TPU v5e-8)</h3>
 <ul>
 <li><strong>Symptom</strong>: Training on Kaggle TPU v5e-8 stalls for 15–90 seconds on nearly
-every batch, causing epoch times to balloon by \(10\times\text{–}30\times\).</li>
+every batch, causing epoch times to balloon by $10\times\text{–}30\times$.</li>
 <li><strong>Root Cause</strong>: Dynamic batch padding (<code>max_len = max(seq_len in batch)</code>)
 generates hundreds of distinct <code>[B, max_len]</code> input shapes, forcing
 PyTorch/XLA PJRT to recompile a new HLO graph for every unique length.</li>
@@ -1928,14 +1929,14 @@ PyTorch/XLA PJRT to recompile a new HLO graph for every unique length.</li>
 <h3>12.2 Large-Vocabulary Logit Materialization OOM (4 GB VRAM GPUs)</h3>
 <ul>
 <li><strong>Symptom</strong>: Causal LLMs with large vocabularies (e.g., Qwen2.5,
-\(V = 151,936\)) trigger <code>CUDA OutOfMemoryError</code> during <code>forward()</code> or
+$V = 151,936$) trigger <code>CUDA OutOfMemoryError</code> during <code>forward()</code> or
 <code>eval_step()</code> even at <code>batch_size = 1, max_seq_length = 512</code>.</li>
 <li><strong>Root Cause</strong>: Computing full <code>[B, S, V]</code> logits and upcasting to FP32 for
-cross-entropy allocates \(\sim 778\text{ MB}\) at \(S=512\) (and \(&gt;3\text{ GB}\) at
-\(S=1024, B=2\)), while <code>eval_step()</code> retains the full <code>[B, S, V]</code> tensor.</li>
+cross-entropy allocates $\sim 778\text{ MB}$ at $S=512$ (and $&gt;3\text{ GB}$ at
+$S=1024, B=2$), while <code>eval_step()</code> retains the full <code>[B, S, V]</code> tensor.</li>
 <li><strong>Autonomous Remediation</strong>: <code>ChunkedCausalLMLoss</code> (<code>models/llm_chunked_loss.py</code>)
 computes exact cross-entropy over active (<code>!= -100</code>) tokens in chunks of
-\(C = 256\) (reducing peak logit VRAM by \(&gt;94\%\)), and <code>chunked_eval_loss_and_preds</code>
+$C = 256$ (reducing peak logit VRAM by $&gt;94\%$), and <code>chunked_eval_loss_and_preds</code>
 returns compact 2D <code>pred_ids</code> (<code>[B, S]</code>) consumed directly by
 <code>update_llm_tokens()</code> in <code>training/training/val_metrics.py</code>.</li>
 </ul>

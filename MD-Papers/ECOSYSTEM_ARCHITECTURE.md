@@ -9,10 +9,10 @@ Suite](./PAPER_TRAINING_SUITE.md) · [LemGendary AI Studio GUI
 Architecture](./PAPER_AI_STUDIO_GUI.md) · [Unified Versioning
 Policy](./VERSIONING_POLICY.md)
 
-**Version**: `v16.9.65-STABLE` · **Component Versions**: Environment
-Manager `v16.9.85`, Dataset Compiler Suite `v16.9.109`, Model Training Suite
-`v16.9.223`, AI Studio GUI `v2.10.68` · **Last Reviewed / Verified**: 2026-11-13
-· **Status**: Canonical
+**Version**: `v16.9.231-STABLE` · **Component Versions**: Environment
+Manager `v16.9.91`, Dataset Compiler Suite `v16.9.125`, Model Training Suite
+`v16.9.254`, AI Studio GUI `v2.10.82`, Documentation Hub `v16.9.231` · **Last
+Reviewed / Verified**: 2026-11-26 · **Status**: Canonical
 
 ---
 
@@ -24,7 +24,7 @@ Manager `v16.9.85`, Dataset Compiler Suite `v16.9.109`, Model Training Suite
   - [2.1 Environment Manager Sidecar
     (`127.0.0.1:8000`)](#21-environment-manager-sidecar-1270018000)
   - [2.2 Dataset Compiler Sidecar
-    (`127.0.0.1:8100`)](#22-dataset-compiler-sidecar-1270018100)
+    (`127.0.0.1:8150`)](#22-dataset-compiler-sidecar-1270018150)
   - [2.3 Master Training Suite Sidecar
     (`127.0.0.1:8200`)](#23-master-training-suite-sidecar-1270018200)
 - [3. Repository Boundaries & Subsystem
@@ -45,7 +45,7 @@ The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning
 platform.
 A desktop operator cockpit (LemGendary AI Studio GUI) and command line tools
 drive three local sidecar services, the LemGendary Environment Manager (port
-8000), the LemGendary Dataset Compiler Suite (port 8100) and the LemGendary
+8000), the LemGendary Dataset Compiler Suite (port 8150) and the LemGendary
 Model Training Suite (port 8200), which in turn run the environment, data
 synthesis and training engines on shared storage. The sidecars bind to the
 loopback interface and share one security contract: an origin allow-list, a
@@ -64,7 +64,7 @@ graph TD
 
     subgraph Sidecars ["Asynchronous Sidecar Tier"]
         ENV_API["Environment Manager Sidecar<br/>(FastAPI / Uvicorn :8000)"]
-        COMP_API["Dataset Compiler Sidecar<br/>(FastAPI / Uvicorn :8100)"]
+        COMP_API["Dataset Compiler Sidecar<br/>(FastAPI / Uvicorn :8150)"]
         TRAIN_API["Training Suite Sidecar<br/>(FastAPI / Uvicorn :8200)"]
     end
 
@@ -107,7 +107,7 @@ graph TD
 To allow desktop applications, external CLI scripts, and cloud orchestrators to
 control the ecosystem without blocking execution or encountering Python GIL
 contentions, the ecosystem deploys three specialized asynchronous sidecar
-daemons across standardized local ports (`8000`, `8100`, and `8200`).
+daemons across standardized local ports (`8000`, `8150`, and `8200`).
 
 The ports, the project list, the pipeline step names and the Kaggle owner
 are defined once, in `lemgendary-env-manager/ecosystem/ecosystem.json`
@@ -138,7 +138,7 @@ value is written anywhere else.
   - Ecosystem-wide pre-commit compliance validation gating.
   - Live log broadcasting over WebSocket: `ws://127.0.0.1:8000/ws/log`.
 
-### 2.2 Dataset Compiler Sidecar (`127.0.0.1:8100`)
+### 2.2 Dataset Compiler Sidecar (`127.0.0.1:8150`)
 
 - **Framework**: FastAPI + Uvicorn backed by SQLite job state tracking
   (`.lgd_server/jobs.db`).
@@ -148,7 +148,8 @@ value is written anywhere else.
   - Dynamic job lifecycle management (queued, active, completed, failed,
     interrupted).
   - Real-time byte-metered transfer telemetry and WebP transcoding velocity
-    streaming (`ws://127.0.0.1:8100/api/ws/jobs/{id}/logs`).
+    streaming via `ws://127.0.0.1:8150/api/ws/events` and
+    `ws://127.0.0.1:8150/api/ws/jobs/{id}/logs`.
 
 ### 2.3 Master Training Suite Sidecar (`127.0.0.1:8200`)
 
@@ -205,9 +206,9 @@ value is written anywhere else.
    fraction only rises within one resolution step and may reset when resolution
    steps up), bounded epoch budget, nuclear-hardened checkpoints.
    `torch==2.15.0` from the PyTorch wheel index the hardware probe picks,
-   `transformers==5.22.1`.
-5. **Documentation**: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
-   generated on the approved template, Markdown and HTML kept in sync.
+   `transformers==5.24.1`.
+5. **Documentation**: WCAG 2.2 AA / AAA accessible, responsive dual-viewport
+   HTML5 generated on the approved template, Markdown and HTML kept in sync.
 
 ---
 
@@ -264,9 +265,9 @@ single module (`env_manager/security.py`, `api/security.py`,
   scripts, tests) are not affected.
 - **Content Security Policy**: the Tauri configuration sets `default-src
   'self'`, `script-src 'self'`, `object-src 'none'` and `frame-src 'none'`, and
-  limits `connect-src` to Tauri IPC, the three sidecar ports on `127.0.0.1` and
-  `localhost`, and `https://fonts.gstatic.com`. A separate `devCsp` adds what
-  the Vite dev server needs.
+  limits `connect-src` to Tauri IPC, the three sidecar ports (`8000`, `8150`,
+  `8200`) on `127.0.0.1` and `localhost`, and `https://fonts.gstatic.com`. A
+  separate `devCsp` adds what the Vite dev server needs.
 - **Secrets**: the Environment Manager returns secrets masked (`has_value`,
   `value_hint`) and accepts them write-only; secret files are ignored by git in
   every repository.

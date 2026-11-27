@@ -2,7 +2,7 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
-**Version**: `v16.9.214-STABLE`
+**Version**: `v16.9.231-STABLE` · **Last audited**: 2026-11-26
 
 ---
 
@@ -26,6 +26,7 @@
   - [2.13 SOTA Target Chart Builder (`chart-build`)](#213-sota-target-chart-builder-chart-build)
   - [2.14 Screen Capture & Video Recording (`capture-screenshot`,
     `capture-video`)](#214-screen-capture--video-recording-capture-screenshot-capture-video)
+  - [2.15 GUI Documentation Sync & Screenshot Tools](#215-gui-documentation-sync--screenshot-tools)
 - [3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)](#3-interactive-powershell-host-lemgendary_env_managerps1)
 - [4. LemGendary AI Studio GUI CLI & Toolchain](#4-lemgendary-ai-studio-gui-cli--toolchain)
 - [5. Datasets Compilation Suite CLI](#5-datasets-compilation-suite-cli)
@@ -376,7 +377,7 @@ eliminating global toolchain pollution.
 > `<div id="root">`. WCAG accessibility validation of the fully rendered UI
 > requires a running dev server. The `validate` command runs ESLint and
 > TypeScript checks for the GUI instead; WCAG should be run manually via
-> `npx pa11y http://localhost:5173` against a live dev server.
+> `npx pa11y http://localhost:1420` against a live dev server.
 
 ---
 
@@ -567,6 +568,36 @@ Features:
 
 ---
 
+### 2.15 GUI Documentation Sync & Screenshot Tools
+
+These commands automate visual capture and documentation synchronization for
+the LemGendary AI Studio GUI:
+
+```bash
+# Capture numbered callout screenshots from the live GUI dev server
+lem-env gui-screenshots --url http://localhost:1420 --out-dir lemgendary-docs/assets/gui
+
+# Optionally export live DOM audit JSON and keep test_*.png files
+lem-env gui-screenshots --audit-out live_gui_audit.json --no-prune
+
+# Synchronize GUI_CONTROL_REGISTRY.md, HTML, and documents.json
+lem-env sync-gui-registry --audit-json live_gui_audit.json
+
+# Synchronize MANUAL_AI_STUDIO_GUI.md, HTML, and documents.json
+lem-env sync-gui-manual --root .
+```
+
+Options from `env_manager/cli.py`:
+
+- **`gui-screenshots`**: `--url` (default `http://localhost:1420`), `--out-dir`
+  (output directory for captured PNGs), `--audit-out` (optional live DOM audit
+  JSON path), `--no-prune` (keep obsolete `test_*.png` files).
+- **`sync-gui-registry`**: `--root` (workspace root override), `--audit-json`
+  (optional `live_gui_audit.json` path).
+- **`sync-gui-manual`**: `--root` (workspace root override).
+
+---
+
 ## 3. Interactive PowerShell Host (`lemgendary_env_manager.ps1`)
 
 For Windows terminal operators, `lemgendary_env_manager.ps1` provides an
@@ -634,7 +665,7 @@ cargo tauri build
 The `lemgendary-datasets` repository provides the unified `lemgendary` CLI
 (`cli.py`), exposing a full suite of compiler, synthesis, audit, transcoding,
 and server operations. All commands feature transparent hybrid routing: when the
-sidecar API daemon is active on `127.0.0.1:8100`, commands submit tasks to the
+sidecar API daemon is active on `127.0.0.1:8150`, commands submit tasks to the
 API and render live WebSocket logs to Rich Console; when stopped or when
 `--no-server` is passed, commands fall back cleanly to direct in-process
 execution.
@@ -850,7 +881,7 @@ python cli.py modernize --datasets nima_aesthetic --image-format webp \
 
 ### 5.8 Sidecar API Server (`server`)
 
-Controls the local FastAPI and WebSocket daemon on `127.0.0.1:8100`:
+Controls the local FastAPI and WebSocket daemon on `127.0.0.1:8150`:
 
 ```bash
 # Launch background server daemon
@@ -1291,9 +1322,9 @@ Contracts enforced:
   low-variance images (max(&sigma;) &lt; 1.0, `ERR_LOW_VARIANCE`), corrupt
   images, and non-uniform JSON labels. Verifies `<shard>.data.index.json` byte
   offset sidecars.
-- **Forex (Parquet)**: Enforces strictly positive prices, $HH &ge; max(O,C),
-  $LL &le; min(O,C), monotonic timestamp sequencing, and absence of NaNs or
-  Infs.
+- **Forex (Parquet)**: Enforces strictly positive prices, High &ge; max(Open,
+  Close), Low &le; min(Open, Close), monotonic timestamp sequencing, and
+  absence of NaNs or Infs.
 - **LLM (JSONL)**: Verifies valid JSON syntax per line, non-empty prompt and
   response pairs, token boundary safety, and split disjointness.
 - **Merkle Determinism**: Calculates deterministic SHA-256 manifests across

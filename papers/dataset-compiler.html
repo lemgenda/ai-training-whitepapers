@@ -39,8 +39,8 @@
 <p class="subtitle">Category 01.2 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.120-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-23</span>
+<span><strong>Version</strong>: <code>v16.9.125-STABLE</code> (LemGendary Dataset Compiler Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 </div>
 </header>
 <main id="main-content">
@@ -151,7 +151,7 @@ Presets</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.84-STABLE</code>) is the data
+<p>The LemGendary Dataset Compiler Suite (release <code>v16.9.125-STABLE</code>) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -159,10 +159,10 @@ Market and LLM instruction datasets with zero-intermediate WebP transcoding,
 pluggable container formats (WebDataset, LitData, Parquet; MosaicML MDS is
 legacy and transcoded to WebDataset), deterministic degradation kernels,
 bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a
-FastAPI/WebSocket REST sidecar daemon (<code>api/</code>, port 8100) and a hybrid Typer
+FastAPI/WebSocket REST sidecar daemon (<code>api/</code>, port 8150) and a hybrid Typer
 CLI. The single source of truth registry <code>unified_data.yaml</code> declares 21
-manifolds: 19 vision manifolds, the <code>LemGendizedForexUniverse</code> financial
-manifold and the <code>LemGendizedAIHelperLemGend</code> instruction manifold.</p>
+core manifold entries (22 production manifolds across vision, financial, and
+instruction pipelines).</p>
 <p>The <code>v16.9.23</code> to <code>v16.9.27</code> releases harden the operating contract. Browser
 access is limited to the AI Studio GUI by an origin guard and a closed CORS
 allow-list. Custom compilation resolves its preset from <code>presets.yaml</code>
@@ -181,7 +181,7 @@ The port, bind host, Kaggle owner and sibling folders come from
 <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>, and task ids come from
 <code>task_taxonomy.json</code> (Section 3.7).</p>
 <p>The <code>v16.9.66</code> to <code>v16.9.74</code> releases move the toolchain to <code>torch==2.15.0</code> (the wheel index comes from the LemGendary Environment Manager hardware probe), make <code>.secrets.yaml</code> the authoritative credential source over stale environment tokens, and register the Kaggle reference of the AIHelper instruction manifold. The <code>v16.9.75</code> to <code>v16.9.84</code> releases reject incomplete or corrupt samples, verify every written shard, keep every metadata column in transcodes and add a manifold repair command (Section 4.11).</p>
-<p>In <code>v16.9.120</code> to <code>v16.9.123</code>, the runtime modernizes to <strong>CPython 3.14.10</strong>, <code>torch==2.15.0</code>, <code>torchvision==0.29.2</code>, and <code>numpy==2.5.5</code>. <code>mediapipe==1.2.3</code> enforces <code>np.ascontiguousarray(...)</code> C-stride memory safety in <code>models/detection.py</code> to prevent ctypes non-contiguous slice corruption. S3 streaming via <code>litdata==0.2.76</code> explicitly pins <code>boto3==1.44.11</code>, <code>botocore==1.44.11</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code>, eliminating backtracking to ancient 2014 <code>boto3==0.0.3</code> / <code>bcdoc</code>. Dual OpenCV provider alignment (<code>opencv-contrib-python==5.1.0.95</code> and <code>opencv-python==5.1.0.95</code>) ensures <code>ultralytics==8.4.218</code>'s <code>Requires-Dist: opencv-python</code> metadata checks pass cleanly without rolling back safe upgrades.</p>
+<p>In <code>v16.9.120</code> to <code>v16.9.125</code>, the runtime modernizes to <strong>CPython 3.14.10</strong>, <code>torch==2.15.0</code>, <code>torchvision==0.29.2</code>, and <code>numpy==2.5.5</code>. <code>mediapipe==1.2.3</code> enforces <code>np.ascontiguousarray(...)</code> C-stride memory safety in <code>models/detection.py</code> to prevent ctypes non-contiguous slice corruption. S3 streaming via <code>litdata==0.2.76</code> explicitly pins <code>boto3==1.44.12</code>, <code>botocore==1.44.12</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code>, eliminating backtracking to ancient 2014 <code>boto3==0.0.3</code> / <code>bcdoc</code>. Dual OpenCV provider alignment (<code>opencv-contrib-python==5.1.0.95</code> and <code>opencv-python==5.1.0.95</code>) ensures <code>ultralytics==8.4.219</code>'s <code>Requires-Dist: opencv-python</code> metadata checks pass cleanly without rolling back safe upgrades. Release <code>v16.9.122</code> adds non-blocking async catalog stats and provenance caching for <code>/api/gui/datasets/with-stats</code>, while <code>v16.9.115</code> / <code>v16.9.121</code> formalize the Autonomous Yield Strategy for LLM JSONL compilation.</p>
 <ul>
 <li><strong>Project Repository</strong>:
 <a href="https://github.com/lemgenda/lemgendary-datasets">lemgendary-datasets</a></li>
@@ -1010,8 +1010,8 @@ prompts across 4 distinct operator archetypes: Novice / Exploratory, Staff
 Architect, Adversarial Boundary, and Operations Diagnostic.</li>
 <li><strong>Stateful Multi-Turn Dialogue (<code>dialogue_synthesizer.py</code>)</strong>: Synthesizes
 4-to-6 turn troubleshooting exchanges modeling active symptom discovery:
-Turn 1 (Symptom presentation) &rarr; Turn 2 (Stage 1 Initial Triage) &rarr;
-Turn 3 (Telemetry disclosure) &rarr; Turn 4 (Stage 2 Diagnosis &amp; Stage 3
+Turn 1 (Symptom presentation) $\to$ Turn 2 (Stage 1 Initial Triage) $\to$
+Turn 3 (Telemetry disclosure) $\to$ Turn 4 (Stage 2 Diagnosis &amp; Stage 3
 Remediation).</li>
 <li><strong>Structured Tool Calling (<code>tool_calling.py</code>)</strong>: Formats OpenAPI endpoints
 and CLI commands into <code>&lt;tools&gt;</code> schemas and generates <code>&lt;tool_call&gt;</code>
@@ -1078,10 +1078,6 @@ and 1 proactive next-step closing).</li>
 default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
 for $n_c &gt; 1$ and 0 otherwise.</p>
 <h4 id="sec-4106-sota-curation-deduplication--decontamination">4.10.6 SOTA Curation, Deduplication &amp; Decontamination</h4>
-<p>After validation, records are split per category with a seeded generator (seed
-42): with $n_c$ records in category $c$ and validation share $v$ (<code>val_split</code>,
-default 0.20), the validation count is $\max(1, \lfloor v \cdot n_c \rfloor)$
-for $n_c &gt; 1$ and 0 otherwise.</p>
 <p><code>lem llm validate</code> and <code>POST /api/llm/validate</code> both run <code>QualityValidator</code> with
 <code>TokenValidationConfig(enforce_copilot_structure=True)</code> and report up to 20
 issues (severity, field, record id, issue), exiting 1 or reporting <code>invalid</code>
@@ -1100,15 +1096,15 @@ five deterministic curation stages before shard emission:</p>
 exceeding 1,536 total tokens (<code>exceeds_max_total_tokens</code>) or 420 assistant
 tokens (<code>exceeds_max_assistant_tokens</code>) before heuristic scoring.</li>
 <li><strong>Heuristic Quality Filtering &amp; Metadata Enrichment</strong>: Computes normalized
-Shannon token entropy \(H_{\text{norm}}(x)\) and 3-gram repetition ratio
-\(R_3(x)\), scoring each record \(Q(x) \in [0, 1]\) and assigning
+Shannon token entropy $H_{\text{norm}}(x)$ and 3-gram repetition ratio
+$R_3(x)$, scoring each record $Q(x) \in [0, 1]$ and assigning
 <code>difficulty</code> (<code>basic</code>, <code>intermediate</code>, <code>advanced</code>), <code>license</code>, <code>language</code>,
 <code>total_tokens</code>, <code>assistant_tokens</code>, and <code>content_sha256</code>.</li>
 <li><strong>MinHash + Semantic Deduplication</strong>: Prunes near-duplicates via 32-perm
-MinHash Jaccard similarity (\(\tau_{\text{Jaccard}} \ge 0.85\)) and 5-gram
-cosine similarity (\(\tau_{\cos} \ge 0.92\)).</li>
+MinHash Jaccard similarity ($\tau_{\text{Jaccard}} \ge 0.85$) and 5-gram
+cosine similarity ($\tau_{\cos} \ge 0.92$).</li>
 <li><strong>Cross-Split Decontamination</strong>: Removes <code>train</code> records with 8-gram
-overlap \(\ge 0.75\) against held-out <code>val</code> or <code>test</code> splits.</li>
+overlap $\ge 0.75$ against held-out <code>val</code> or <code>test</code> splits.</li>
 <li><strong>Rejected Record Telemetry &amp; Merkle Lineage</strong>: Writes all filtered/leaked
 records to <code>rejected_records.jsonl</code> with <code>rejection_reason</code>, and emits
 <code>seed</code>, <code>curation_stats</code>, and <code>manifest_sha256</code> into <code>build_manifest.json</code>
@@ -1573,7 +1569,7 @@ v16.9.54).</li>
 </ul>
 <h3 id="sec-66-asynchronous-sidecar-api--hybrid-cli">6.6 Asynchronous Sidecar API &amp; Hybrid CLI</h3>
 <ul>
-<li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8100</code> with route
+<li><strong>FastAPI / Uvicorn Daemon (<code>api/</code>)</strong>: Runs on <code>127.0.0.1:8150</code> with route
 groups for health (<code>/api/health</code>, <code>/api/health/full</code>), GUI aggregation
 (<code>/api/gui/*</code>), datasets, sources, gates, Kaggle, modernize, LLM,
 configuration, jobs and environment. <code>openapi.json</code> lists all 37 operations
@@ -1587,8 +1583,8 @@ endpoint (<code>POST /api/jobs/generic</code>) was removed in v16.9.58; every jo
 <code>ServiceInvocation</code>. A job moves <code>pending</code> to <code>running</code> to <code>completed</code>, <code>failed</code> (with the
 exit code), <code>cancelled</code> or <code>interrupted</code>.</li>
 <li><strong>WebSocket Streaming</strong>: Live logs stream per job via
-<code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>, and dashboard events via
-<code>ws://127.0.0.1:8100/api/ws/events</code>.</li>
+<code>ws://127.0.0.1:8150/api/ws/jobs/{id}/logs</code>, and dashboard events via
+<code>ws://127.0.0.1:8150/api/ws/events</code>.</li>
 <li><strong>Asynchronous LLM Compile (v16.9.25)</strong>: <code>POST /api/llm/compile</code> is an <code>async</code>
 route, so <code>async_mode: true</code> hands the running event loop to the job runner
 and the <code>llm</code> job actually starts (the former synchronous route left it
@@ -1917,17 +1913,19 @@ precision.</li>
 <h3>7.1 WebDataset Manifold Curation, QA, and Throughput-Tuned Packing</h3>
 <p>To guarantee high-fidelity visual manifolds at scale, the WebDataset compiler enforces pre-shard curation (<code>core/visual_qa.py</code>), deterministic degradation synthesis (<code>degrade/schedule.py</code>), and dual-bound shard packing (<code>formats/webdataset.py</code>):</p>
 <ol>
-  <li><strong>Image &amp; Mask Integrity (<code>core/visual_qa.py</code>)</strong>: Every image is decoded and checked for non-zero dimensions, solid-color blankness (<code>min == max</code> across all channels), and low-variance degeneration (<code>max(stddev) &lt; 1.0</code>). Segmentation masks are verified for exact <code>(W, H)</code> spatial alignment, valid class IDs, non-empty foreground, and bounded interior hole ratio.</li>
-  <li><strong>Class-Imbalance Weighting</strong>: Normalized class weights are computed via inverse square-root weighting or effective-number weighting.</li>
-  <li><strong>Deterministic Degradation Schedule (<code>degrade/schedule.py</code>)</strong>: Each sample's RNG seed is derived deterministically from <code>SHA-256(global_seed:sample_key)</code>, supporting <code>uniform</code>, <code>linear</code>, and <code>cosine</code> schedules and recording <code>seed</code>, <code>schedule_mode</code>, <code>severity</code>, and <code>ops</code> in the sample's <code>.json</code> sidecar.</li>
-  <li><strong>Throughput-Tuned Shard Packing (<code>formats/webdataset.py</code>)</strong>: <code>WebDatasetWriter</code> bounds each <code>.data</code> tar shard by both byte size (<code>wds_shard_size_bytes = 1_000_000_000</code>, 1 GB) and sample count (<code>wds_max_count = 10_000</code>).</li>
+  <li><strong>Image &amp; Mask Integrity (<code>core/visual_qa.py</code>)</strong>: Every image is decoded and checked for non-zero dimensions, solid-color blankness (<code>min == max</code> across all channels), and low-variance degeneration (<code>max(stddev) &lt; 1.0</code>). Segmentation masks are verified for exact <code>(W, H)</code> spatial alignment with their paired image, valid class IDs, non-empty foreground, and bounded interior hole ratio ($\rho_{\text{hole}} \le 0.25$).</li>
+  <li><strong>Class-Imbalance Weighting</strong>: Normalized class weights are computed via inverse square-root weighting ($w_c \propto n_c^{-1/2}$) or effective-number weighting:
+  <div class="math-block">$$w_c = \frac{1 - \beta}{1 - \beta^{n_c}}, \quad \beta \in [0.99, 0.9999]$$</div>
+  normalized such that $\frac{1}{|C|} \sum_{c \in C} w_c = 1$.</li>
+  <li><strong>Deterministic Degradation Schedule (<code>degrade/schedule.py</code>)</strong>: Each sample's RNG seed is derived deterministically from $\text{SHA-256}(\text{global\_seed} : \text{sample\_key})$, ensuring identical degradation across worker counts and shard orderings. Severity $s \in [s_{\min}, s_{\max}]$ supports <code>uniform</code>, <code>linear</code>, and <code>cosine</code> schedules, recording <code>seed</code>, <code>schedule_mode</code>, <code>severity</code>, and <code>ops</code> in the sample's <code>.json</code> sidecar.</li>
+  <li><strong>Throughput-Tuned Shard Packing (<code>formats/webdataset.py</code>)</strong>: <code>WebDatasetWriter</code> bounds each <code>.data</code> tar shard by both byte size (<code>wds_shard_size_bytes = 1_000_000_000</code>, 1 GB) and sample count (<code>wds_max_count = 10_000</code>), preventing metadata overhead from tiny shards and shuffle-buffer starvation from monolithic shards.</li>
 </ol>
 <h3>7.2 Forex Time-Series Curation, Purged Splits, and Leakage Audit</h3>
 <p>To eliminate look-ahead bias and label-overlap leakage in financial time-series manifolds, <code>forex/qa.py</code> enforces:</p>
 <ol>
-  <li><strong>Deterministic UTC Resampling (<code>resample_ohlcv_utc</code>)</strong>: Normalizes all timestamps to UTC, deduplicates, sorts, and resamples with <code>label="left", closed="left"</code>.</li>
-  <li><strong>Anomalous Bar Flagging (<code>flag_anomalous_bars</code>)</strong>: Flags non-positive prices, OHLC invariant violations, and extreme log-return MAD spikes.</li>
-  <li><strong>Causal Volatility Regime Labeling (<code>classify_volatility_regime</code>)</strong>: Labels each bar as <code>low_vol</code>, <code>normal_vol</code>, or <code>high_vol</code> using expanding causal quantiles.</li>
+  <li><strong>Deterministic UTC Resampling (<code>resample_ohlcv_utc</code>)</strong>: Normalizes all timestamps to UTC, deduplicates, sorts, and resamples with <code>label=&quot;left&quot;, closed=&quot;left&quot;</code>.</li>
+  <li><strong>Anomalous Bar Flagging (<code>flag_anomalous_bars</code>)</strong>: Flags non-positive prices, OHLC invariant violations ($H &lt; \max(O, C)$ or $L &gt; \min(O, C)$), and extreme log-return spikes ($|r_t - \text{median}| / (1.4826 \cdot \text{MAD}) &gt; z_{\text{thresh}}$).</li>
+  <li><strong>Causal Volatility Regime Labeling (<code>classify_volatility_regime</code>)</strong>: Labels each bar as <code>low_vol</code>, <code>normal_vol</code>, or <code>high_vol</code> using expanding causal quantiles of rolling realized volatility.</li>
   <li><strong>Purged, Embargoed Walk-Forward Splits (<code>purged_walk_forward_splits</code>)</strong>: Removes training samples whose <code>[pred_time, eval_time]</code> interval overlaps with the test block, plus a post-test embargo buffer, verified by <code>audit_horizon_leakage</code>.</li>
 </ol>
 <h3>7.3 Canonical <code>unified_data.yaml</code> &amp; JSON Schema Export</h3>
@@ -1936,13 +1934,23 @@ precision.</li>
 <p>To prevent silent downstream training failures, corrupted gradient updates, and dataset distribution drift, the compiler ecosystem introduces a unified manifold verification engine (<code>core/manifold_verification.py</code>, invoked via <code>python cli.py verify</code>). The verification pipeline evaluates output manifolds against formal mathematical and structural contracts across vision, financial time-series, and instruction datasets.</p>
 <h4>7.4.1 Formal Verification Contracts by Modality</h4>
 <ol>
-  <li><strong>Vision / WebDataset Manifolds (<code>WebDatasetManifoldValidator</code>)</strong>: Every sample within <code>.tar</code> or <code>.tar.zst</code> shards must contain an unbroken contiguous sequence of expected member extensions without orphan keys. Labels are strictly validated against modality schemas (YOLO bounding boxes in <span class="math inline">\([0, 1]^4\)</span>, binary segmentation masks, or class indices). Sample keys <span class="math inline">\(K\)</span> across partition splits must satisfy strict set disjointness: <span class="math inline">\(K_{\text{train}} \cap K_{\text{val}} = \emptyset\)</span>, <span class="math inline">\(K_{\text{train}} \cap K_{\text{test}} = \emptyset\)</span>, <span class="math inline">\(K_{\text{val}} \cap K_{\text{test}} = \emptyset\)</span>. Every decoded raster is audited against solid-color blanks, decompression artifacts, and degenerate low-variance regions (<span class="math inline">\(\max_{c \in \{R, G, B\}} \sigma_c &lt; 1.0 \implies \text{REJECT}\)</span>). Validates the structural presence and byte alignment of <code>shard_offsets.json</code> alongside per-shard <code>&lt;shard&gt;.data.index.json</code> manifests, and formally asserts equivalence between shard sample sums <span class="math inline">\(N_{\text{shards}}\)</span> and metadata claims (<span class="math inline">\(N_{\text{shards}} = N_{\text{info}} = \sum_{s \in \text{splits}} N_{\text{index}}(s)\)</span>).</li>
-  <li><strong>Forex Financial Time-Series Manifolds (<code>ForexManifoldValidator</code>)</strong>: For every OHLCV bar or windowed tensor, prices must strictly satisfy positivity and physical arbitrage bounds (<span class="math inline">\(P &gt; 0 \quad \forall P \in \{O, H, L, C\}\)</span>, <span class="math inline">\(H \ge \max(O, C)\)</span>, <span class="math inline">\(L \le \min(O, C)\)</span>). Timestamps <span class="math inline">\(t_i\)</span> must be strictly monotonically increasing with zero backward-looking steps (<span class="math inline">\(t_{i+1} &gt; t_i\)</span>). Split boundaries must obey embargo and purge gaps <span class="math inline">\(G_{\text{purge}} \ge L_{\text{lookback}}\)</span> to eliminate cross-split information leakage.</li>
-  <li><strong>LLM Instruction and Chat Manifolds (<code>LLMManifoldValidator</code>)</strong>: Validates clean UTF-8 encoding across all <code>.jsonl</code> files, rejecting Unicode replacement characters (<span class="math inline">\(\text{\ufffd}\)</span>) or malformed byte sequences. Asserts JSON structural conformance requiring valid conversational message lists (<code>role</code> and <code>content</code>) or explicit instruction-response tuples. Enforces cryptographic SHA-256 row-hash disjointness across train, validation, and test splits.</li>
+  <li><strong>Vision / WebDataset Manifolds (<code>WebDatasetManifoldValidator</code>)</strong>: Every sample within <code>.tar</code> or <code>.tar.zst</code> shards must contain an unbroken contiguous sequence of expected member extensions without orphan keys. Labels are strictly validated against modality schemas (YOLO bounding boxes in $[0, 1]^4$, binary segmentation masks, or class indices). Sample keys $K$ across partition splits must satisfy strict set disjointness:
+  <div class="math-block">$$K_{\text{train}} \cap K_{\text{val}} = \emptyset, \quad K_{\text{train}} \cap K_{\text{test}} = \emptyset, \quad K_{\text{val}} \cap K_{\text{test}} = \emptyset$$</div>
+  Every decoded raster is audited against solid-color blanks, decompression artifacts, and degenerate low-variance regions:
+  <div class="math-block">$$\max_{c \in \{R, G, B\}} \sigma_c &lt; 1.0 \implies \text{REJECT}$$</div>
+  where $\sigma_c$ denotes channel standard deviation. Validates the structural presence and byte alignment of <code>shard_offsets.json</code> alongside per-shard <code>&lt;shard&gt;.data.index.json</code> manifests, and formally asserts equivalence between shard sample sums $N_{\text{shards}}$ and metadata claims:
+  <div class="math-block">$$N_{\text{shards}} = N_{\text{info}} = \sum_{s \in \text{splits}} N_{\text{index}}(s)$$</div>
+  </li>
+  <li><strong>Forex Financial Time-Series Manifolds (<code>ForexManifoldValidator</code>)</strong>: For every OHLCV bar or windowed tensor, prices must strictly satisfy positivity and physical arbitrage bounds:
+  <div class="math-block">$$P &gt; 0 \quad \forall P \in \{O, H, L, C\}, \qquad H \ge \max(O, C), \qquad L \le \min(O, C)$$</div>
+  Timestamps $t_i$ must be strictly monotonically increasing with zero backward-looking steps:
+  <div class="math-block">$$t_{i+1} &gt; t_i \quad \forall i \in [0, N-1]$$</div>
+  Split boundaries must obey embargo and purge gaps $G_{\text{purge}} \ge L_{\text{lookback}}$ to eliminate cross-split information leakage.</li>
+  <li><strong>LLM Instruction and Chat Manifolds (<code>LLMManifoldValidator</code>)</strong>: Validates clean UTF-8 encoding across all <code>.jsonl</code> files, rejecting Unicode replacement characters (<code>\ufffd</code>) or malformed byte sequences. Asserts JSON structural conformance requiring valid conversational message lists (<code>role</code> and <code>content</code>) or explicit instruction-response tuples. Enforces cryptographic SHA-256 row-hash disjointness across train, validation, and test splits.</li>
 </ol>
 <h4>7.4.2 Deterministic Merkle Manifest Hashing</h4>
-<p>To verify bitwise reproducibility across independent compilation passes, the verification engine computes a deterministic Merkle-style root manifest hash <span class="math inline">\(\mathcal{H}_{\text{manifold}}\)</span>:</p>
-<p><span class="math display">\[\mathcal{H}_{\text{manifold}} = \text{SHA-256}\left(\bigoplus_{s \in \text{splits}} \text{SHA-256}\left(k_{s, 1} \,\|\, k_{s, 2} \,\|\, \dots \,\|\, k_{s, |K_s|}\right)\right)\]</span></p>
+<p>To verify bitwise reproducibility across independent compilation passes, the verification engine computes a deterministic Merkle-style root manifest hash $\mathcal{H}_{\text{manifold}}$:</p>
+<div class="math-block">$$\mathcal{H}_{\text{manifold}} = \text{SHA-256}\left(\bigoplus_{s \in \text{splits}} \text{SHA-256}\left(k_{s, 1} \,\|\, k_{s, 2} \,\|\, \dots \,\|\, k_{s, |K_s|}\right)\right)$$</div>
 <p>where keys are sorted lexicographically before hashing. Identical input configurations produce identical manifest hashes, guaranteeing compilation determinism.</p>
 <h4>7.4.3 Unified Verification CLI and Machine-Readable Telemetry</h4>
 <p>The verification engine provides a unified entry point:</p>

@@ -39,8 +39,8 @@
 <p class="subtitle">Category 01.3 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.245-STABLE</code> (LemGendary Model Training Suite)</span>
-<span><strong>Last audited</strong>: 2026-11-19</span>
+<span><strong>Version</strong>: <code>v16.9.254-STABLE</code> (LemGendary Model Training Suite)</span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 <span><strong>Companion Paper</strong>: <a href="training-pathology.html">Nuclear Stability: AI Training Pathology Master Guide</a></span>
 </div>
 </header>
@@ -147,6 +147,7 @@ Probing</a></li>
 <li><a href="#sec-251-unified-model-configuration-schema--validator-v169235">2.51. Unified Model Configuration Schema &amp; Validator (v16.9.235)</a></li>
 <li><a href="#sec-252-standardized-telemetry--history-recording-pipelines-v169236">2.52. Standardized Telemetry &amp; History Recording Pipelines (v16.9.236)</a></li>
 <li><a href="#sec-253-single-repository-cloud-notebook-execution-architecture-v169240">2.53. Single-Repository Cloud Notebook Execution Architecture (v16.9.240)</a></li>
+<li><a href="#sec-254-cpython-31410-onnx-export--cloudddp-hardening-v169247-254">2.54. CPython 3.14.10, ONNX Export &amp; Cloud/DDP Hardening (v16.9.247-254)</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-judicial-audit-engine">3. Judicial Audit Engine</a>
@@ -1806,8 +1807,8 @@ the preprocessing and the class names too; Forex <code>.pt</code> files carry
 ONNX opset (18), input/output tensor signatures, cryptographic SHA-256 digests
 and byte counts for all release binaries (<code>.pt</code>, <code>.onnx</code>, <code>.onnx.data</code>), as well
 as documented family-specific numerical parity tolerances (<code>FAMILY_PARITY_TOLERANCES</code>:
-atol $10^{-3}$, rtol $10^{-2}$ for Vision, YOLO, and LLMs;
-atol $10^{-4}$, rtol $10^{-3}$ for Forex signals).</li>
+$\text{atol}=10^{-3}, \text{rtol}=10^{-2}$ for Vision, YOLO, and LLMs;
+$\text{atol}=10^{-4}, \text{rtol}=10^{-3}$ for Forex signals).</li>
 <li><strong>MT5 Artefact, IR 9</strong>: MetaTrader 5 (build 4230 and later) bundles ONNX
 Runtime 1.17, which reads opsets up to 20 but IR versions only up to 9.
 <code>training/export/mt5_compat.py</code> rewrites the MT5 graph as one file with
@@ -2125,8 +2126,8 @@ enhancements spanning parameter smoothing, curriculum scheduling, mask weighting
 distributed shard dispatching, and hardware throughput telemetry:</p>
 <ul>
 <li><strong>Exponential Moving Average (ModelEMA)</strong>: <code>training/training/ema.py</code> implements
-shadow parameter smoothing \(\theta_{\text{ema}} = \beta \cdot \theta_{\text{ema}} +
-(1 - \beta) \cdot \theta_t\) with dynamic step-dependent warmup ramping, buffer
+shadow parameter smoothing $\theta_{\text{ema}} = \beta \cdot \theta_{\text{ema}} +
+(1 - \beta) \cdot \theta_t$ with dynamic step-dependent warmup ramping, buffer
 tracking, temporary shadow swapping for zero-cost validation, and state-dict
 serialization.</li>
 <li><strong>Easy-to-Hard Degradation Curriculum</strong>: <code>DegradationCurriculum</code> in
@@ -2134,7 +2135,7 @@ serialization.</li>
 noise, downsampling, JPEG artifacts) monotonically across epochs and
 resolution rungs, following Real-ESRGAN second-order degradation dynamics.</li>
 <li><strong>Mask-Aware Spatial Loss Weighting</strong>: <code>_masked_spatial_l1_loss</code> in
-<code>training/losses.py</code> provides spatial error scaling \(W(M_{ij})\) for region of
+<code>training/losses.py</code> provides spatial error scaling $W(M_{ij})$ for region of
 interest masks, focusing gradient backpropagation onto damaged areas or text.</li>
 <li><strong>Deterministic Shard Sampler</strong>: <code>DeterministicShardSampler</code> in
 <code>training/data/webdataset_sampler.py</code> delivers reproducible epoch-seeded
@@ -2159,12 +2160,12 @@ window must follow test intervals to prevent serial autocorrelation leakage.</li
 <code>training/training/forex_equity.py</code> partitions validation performance across
 market volatility regimes (Bull, Bear, Volatile). Rather than reporting a
 single global Sharpe or win-rate, this breakdown isolates regime-dependent
-drawdown risks (\(MaxDD\)) and profit factors, exposing hidden vulnerabilities.</li>
+drawdown risks ($MaxDD$) and profit factors, exposing hidden vulnerabilities.</li>
 <li><strong>Asymmetric Pinball / Quantile Loss</strong>: <code>pinball_loss</code> in <code>training/losses.py</code>
 provides asymmetric quantile regression:
-\[L_\tau(y, \hat{y}) = \max(\tau(y - \hat{y}), (\tau - 1)(y - \hat{y}))\]
+<div class="math-block">$$L_\tau(y, \hat{y}) = \max(\tau(y - \hat{y}), (\tau - 1)(y - \hat{y}))$$</div>
 integrated into <code>ForexDualLoss</code> and <code>ForexLossWeights</code> for predicting
-tail-risk quantiles (\(\tau \in \{0.1, 0.5, 0.9\}\)) and Value-at-Risk (VaR).</li>
+tail-risk quantiles ($\tau \in \{0.1, 0.5, 0.9\}$) and Value-at-Risk (VaR).</li>
 <li><strong>Expected Calibration Error (ECE) Evaluator</strong>: <code>CalibrationEvaluator</code> in
 <code>training/training/forex_calibration.py</code> assesses probability calibration via
 binned reliability diagrams, computing ECE, Maximum Calibration Error (MCE),
@@ -2183,13 +2184,13 @@ disables composite augmentations during the final epochs of each stage
 (default: 10 epochs or 20% of stage budget), allowing model weights to adapt
 to the uncorrupted visual manifold before ladder advancement.</li>
 <li><strong>Multi-Scale Spatial Training &amp; Regularization</strong>: Integrates dynamic
-multi-scale batch resolution jittering (\(\pm 50\%\) around ladder rung <code>imgsz</code>)
+multi-scale batch resolution jittering ($\pm 50\%$ around ladder rung <code>imgsz</code>)
 and label smoothing cross-entropy regularisation into <code>_train_kwargs</code>. This
 prevents overconfidence on rigid grid geometries and enhances small-object
 detection across variable resolution contexts.</li>
 <li><strong>Per-Class and Aggregate mAP Telemetry</strong>: <code>_extract_per_class_ap</code> in
 <code>training/governance/yolo_callbacks.py</code> parses per-class average precision
-metrics (\(mAP50\) and \(mAP50\text{-}95\)) from validator metrics arrays,
+metrics ($mAP50$ and $mAP50\text{-}95$) from validator metrics arrays,
 recording both global aggregates and per-category performance into
 <code>telemetry_metrics</code> rows and terminal summary banners.</li>
 <li><strong>S.O.L.I.D. Separation of Detection Losses</strong>: Decoupled detection loss
@@ -2262,14 +2263,15 @@ without cloning external management repositories.</li>
 <code>requirements.txt</code> as its primary manifest candidate, bypassing the need for
 external <code>requirements/requirements-training.txt</code> manifests.</li>
 </ul>
-<h3 id="sec-254-permissive-license-modernization--cpython-31410-multiprocessing-v169247-to-v169251">2.54. Permissive License Modernization &amp; CPython 3.14.10 Multiprocessing (v16.9.247 to v16.9.251)</h3>
-<p>Releases v16.9.247 through v16.9.251 modernize the suite to <strong>CPython 3.14.10</strong>, guarantee zero AGPL copyleft exposure, and harden distributed training:</p>
+<h3 id="sec-254-cpython-31410-onnx-export--cloudddp-hardening-v169247-254">2.54. CPython 3.14.10, ONNX Export &amp; Cloud/DDP Hardening (v16.9.247-254)</h3>
+<p>Releases v16.9.247 through v16.9.254 modernize the suite to <strong>CPython 3.14.10</strong>, guarantee zero AGPL copyleft exposure, align the Dataset Compiler port to <code>8150</code>, and harden distributed training, ONNX export, and Kaggle sync across all 23 registered models in <code>unified_models_v2.yaml</code>:</p>
 <ul>
 <li><strong>Permissive License Augmentation Stack</strong>: Replaced copyleft/AGPL-3.0 <code>albumentations</code> / <code>albumentationsx</code> with permissive <strong>Apache-2.0 <code>kornia==0.8.2</code></strong> (and <code>0.9.2</code>) and <strong>BSD-3-Clause <code>torchvision.transforms.v2</code></strong>, verified by automated regression test suites.</li>
 <li><strong>Multiprocessing Signal Hardening</strong>: Hardened <code>DataLoader</code> worker process lifecycle in <code>training/data/loaders.py</code> and <code>training/data/workers.py</code>: deterministic <code>forkserver</code> context on POSIX and <code>spawn</code> on Windows, setting <code>SIG_IGN</code> on <code>SIGINT</code> (so the orchestrator handles teardown) and <code>SIG_DFL</code> on <code>SIGTERM</code> to avoid SemLock cross-context pickling deadlocks.</li>
-<li><strong>Modernized Ecosystem Stack</strong>: Pinned <code>diffusers==0.43.0</code>, <code>transformers==5.24.0</code>, <code>huggingface-hub==2.4.0</code>, <code>onnxruntime-gpu==1.32.0</code>, and <code>onnxruntime-directml==1.24.4</code>.</li>
-<li><strong>Declarative DDP Reduction</strong>: Configured per-model <code>find_unused_parameters</code> in <code>unified_models_v2.yaml</code> (enabled for multi-head detection and multi-task models, disabled for CNN restorers and classifiers) to eliminate NCCL timeouts and suppress autograd graph traversal warnings.</li>
-<li><strong>AWS SDK Deadlock Prevention</strong>: Pinned modern <code>boto3==1.44.11</code>, <code>botocore==1.44.11</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code> for S3 streaming in <code>litdata==0.2.76</code>.</li>
+<li><strong>Modernized Ecosystem Stack &amp; <code>torch.export</code> ONNX Pipeline</strong>: Pinned <code>torch==2.15.0</code>, <code>diffusers==0.43.0</code>, <code>transformers==5.24.0</code>, <code>huggingface-hub==2.4.0</code>, <code>ultralytics==8.4.219</code>, <code>onnx==1.23.2</code>, <code>onnxscript==0.7.2</code>, <code>onnxruntime-gpu==1.32.0</code>, and <code>onnxruntime-directml==1.24.4</code>, with <code>torch.export</code> multi-variant ONNX export for FP32 and FP16 edge deployment.</li>
+<li><strong>Declarative DDP Reduction (<code>v16.9.250</code>, <code>v16.9.253</code>)</strong>: Configured per-model <code>find_unused_parameters</code> across all 23 registered models in <code>unified_models_v2.yaml</code> and the canonical model schema (enabled for <code>yolov8n</code> and <code>professional_multitask_restoration</code>, and explicitly set to <code>false</code> for <code>RetinaFace</code> and CNN restorers/classifiers) to eliminate NCCL timeouts and silence autograd graph traversal warnings.</li>
+<li><strong>Dataset Compiler Port Alignment &amp; Kaggle Page Sync Resilience (<code>v16.9.252</code>, <code>v16.9.253</code>)</strong>: Aligned Dataset Compiler service port references from <code>8100</code> to <code>8150</code>, and hardened <code>training/cloud/kaggle_hub.py</code> for fault-tolerant Kaggle model page synchronization.</li>
+<li><strong>AWS S3 <code>boto3</code> Stack Pinning (<code>v16.9.251</code>, <code>v16.9.254</code>)</strong>: Pinned modern <code>boto3==1.44.12</code>, <code>botocore==1.44.12</code>, <code>jmespath==1.1.0</code>, and <code>six==1.17.0</code> for S3 streaming in <code>litdata==0.2.76</code>, preventing solver backtracking.</li>
 </ul>
 </section>
 

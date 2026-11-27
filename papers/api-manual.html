@@ -33,7 +33,8 @@
 <h1>LemGendary Ecosystem: Master API Reference Manual</h1>
 <p class="subtitle">Category 00 | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
+<span><strong>Version</strong>: <code>v16.9.231-STABLE</code></span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 </div>
 </header>
 <main id="main-content">
@@ -370,7 +371,7 @@ stream across WebSocket connections.</p>
 <ul>
 <li><strong>Syntax &amp; Compilation</strong>: Python bytecode (<code>py_compile</code>), TypeScript types (<code>tsc --noEmit</code>), JSON RFC 8259 validation, and YAML schema checking (<code>yamllint</code>).</li>
 <li><strong>Code &amp; Content Hygiene</strong>: Zero-emoji enforcement across all text files and markup, forbidden suppression scanning (<code>@ts-*</code>, <code>eslint-disable</code>, <code>warnings.filterwarnings</code>, empty exceptions), absolute path elimination, and ecosystem SSOT verification.</li>
-<li><strong>Linters</strong>: ESLint, Pylint, and <code>markdownlint</code> (&le; 80 characters).</li>
+<li><strong>Linters</strong>: ESLint, Pylint, and <code>markdownlint</code> ($\le 80$ characters).</li>
 <li><strong>Web &amp; Documentation Hub Compliance (<code>lemgendary-docs</code>)</strong>:
 <ul>
 <li><code>html-validate</code> &amp; W3C HTML5 zero-error conformance.</li>
@@ -753,7 +754,7 @@ response or from the file instead of hard-coding them.</p>
 <h4 id="get-apiguiecosystem"><code>GET /api/gui/ecosystem</code></h4>
 <p>Monitors health and connectivity across local ecosystem sidecars by actively
 probing the health path of every service in <code>ecosystem.json</code>
-(<code>http://127.0.0.1:8100/api/health</code> and
+(<code>http://127.0.0.1:8150/api/health</code> and
 <code>http://127.0.0.1:8200/api/health</code>) with a non-blocking timeout. Powers the
 desktop GUI top-bar status indicator and service mesh dashboard tiles:</p>
 <pre><code class="language-json">{
@@ -765,7 +766,7 @@ desktop GUI top-bar status indicator and service mesh dashboard tiles:</p>
   },
   "dataset_compiler": {
     "service": "lemgendary-datasets",
-    "port": 8100,
+    "port": 8150,
     "status": "online",
     "reachable": true,
     "data": {
@@ -804,8 +805,8 @@ spawning.</p>
 <p>Example response:</p>
 <pre><code class="language-json">{
   "status": "started",
-  "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",
-  "port": 8100,
+  "message": "LemGendary Dataset Compiler Suite started successfully on port 8150.",
+  "port": 8150,
   "pid": 26024
 }
 </code></pre>
@@ -815,8 +816,8 @@ recorded PID file or querying the active socket connection on the assigned port.
 <p>Example response:</p>
 <pre><code class="language-json">{
   "status": "stopped",
-  "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
-  "port": 8100
+  "message": "LemGendary Dataset Compiler Suite on port 8150 stopped.",
+  "port": 8150
 }
 </code></pre>
 <h4 id="post-apiservicesstart-all"><code>POST /api/services/start-all</code></h4>
@@ -827,8 +828,8 @@ recorded PID file or querying the active socket connection on the assigned port.
   "results": {
     "dataset-compiler": {
       "status": "already_running",
-      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
-      "port": 8100
+      "message": "LemGendary Dataset Compiler Suite is already online and healthy on port 8150.",
+      "port": 8150
     },
     "training-suite": {
       "status": "started",
@@ -855,8 +856,8 @@ Environment Manager service in addition to all other sidecars.</li>
   "results": {
     "dataset-compiler": {
       "status": "stopped",
-      "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
-      "port": 8100
+      "message": "LemGendary Dataset Compiler Suite on port 8150 stopped.",
+      "port": 8150
     },
     "training-suite": {
       "status": "stopped",
@@ -885,7 +886,7 @@ all registered background sidecars</li>
 <code>ServiceOperationResult</code>; Purpose: Terminates a specific sidecar by port</li>
 <li><strong><code>stop_all_services</code></strong>: Arguments: None; Return Type:
 <code>HashMap&lt;String, ServiceOperationResult&gt;</code>; Purpose: Terminates all listening
-sidecar processes on ports 8000, 8100, and 8200</li>
+sidecar processes on ports 8000, 8150, and 8200</li>
 <li><strong><code>trigger_clean_install</code></strong>: Arguments: <code>project: Option&lt;String&gt;</code>; Return
 Type: <code>PipelineLaunchResult</code>; Purpose: Starts environment provisioning
 pipeline</li>
@@ -1641,13 +1642,13 @@ if fmt == "matlab" and ann_path:
 <section id="sec-5-datasets-compilation--stream-pipeline-api">
 <h2>5. Datasets Compilation &amp; Stream Pipeline API</h2>
 <p>The <code>lemgendary-datasets</code> repository provides a high-throughput sidecar API
-service running on <code>127.0.0.1:8100</code> (<code>api/</code>). It provides REST endpoints for
+service running on <code>127.0.0.1:8150</code> (<code>api/</code>). It provides REST endpoints for
 hardware inspection, configuration validation, dataset and raw-source querying,
 and background execution of compilation and degradation tasks, with
 bidirectional WebSocket streaming for live logs and global telemetry.</p>
 <h3 id="sec-51-server-architecture--discovery">5.1 Server Architecture &amp; Discovery</h3>
 <pre><code class="language-bash"># Launch server daemon
-python cli.py server start --background --host 127.0.0.1 --port 8100
+python cli.py server start --background --host 127.0.0.1 --port 8150
 
 # Probe status and hardware sensors
 python cli.py server status
@@ -1657,7 +1658,7 @@ python cli.py server stop
 </code></pre>
 <ul>
 <li><strong>Bind Host</strong>: Default: <code>127.0.0.1</code>; Description: Local loopback interface</li>
-<li><strong>Bind Port</strong>: Default: <code>8100</code>; Description: Dedicated compiler service port
+<li><strong>Bind Port</strong>: Default: <code>8150</code>; Description: Dedicated compiler service port
 (distinct from <code>lem-env</code> on 8000)</li>
 <li><strong>Interactive Docs</strong>: Default: <code>/docs</code>; Description: OpenAPI Swagger UI</li>
 <li><strong>Schema Spec</strong>: Default: <code>/openapi.json</code>; Description: OpenAPI 3.1.0 JSON
@@ -1761,7 +1762,7 @@ Passthrough delegating to <code>lem-env validate --project lemgendary-datasets</
 <h3 id="sec-54-websocket-real-time-log-streaming">5.4 WebSocket Real-Time Log Streaming</h3>
 <p>Clients connect to real-time log channels to monitor long-running compiler and
 degradation tasks without polling:</p>
-<pre><code class="language-text">ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs
+<pre><code class="language-text">ws://127.0.0.1:8150/api/ws/jobs/{job_id}/logs
 </code></pre>
 <p>On connection, the server automatically replays any existing backlog text
 buffered on disk, then streams incremental stdout/stderr chunks in real time as

@@ -8,8 +8,8 @@ Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 **Versioning Policy**: [Document Authority Hierarchy & Versioning
 Policy](./VERSIONING_POLICY.md)
 
-**Version**: `v16.9.68-STABLE` · **Status**: Canonical ·
-**Last audited**: 2026-11-13
+**Version**: `v16.9.231-STABLE` · **Status**: Canonical ·
+**Last audited**: 2026-11-26
 
 ---
 
@@ -39,13 +39,13 @@ Policy](./VERSIONING_POLICY.md)
 The **LemGendary AI Ecosystem** is an end-to-end, hardware-aware deep learning
 platform for vision restoration, perceptual quality assessment, object
 detection, a causal LLM assistant and multi-timeframe quantitative finance.
-This manifest records the operational state verified on 2026-11-03 against the
+This manifest records the operational state verified on 2026-11-26 against the
 code and the README changelogs of the five project repositories.
 
 Current capabilities:
 
 - **Tripartite Services**: Three decoupled FastAPI sidecars with HTTP REST and
-  live WebSocket channels (ports 8000, 8100, 8200), each bound to `127.0.0.1`
+  live WebSocket channels (ports 8000, 8150, 8200), each bound to `127.0.0.1`
   and described by its own OpenAPI 3.1.0 `openapi.json` (33, 37 and 40
   operations).
 - **Shared Security Contract**: Every sidecar runs the same Origin Guard.
@@ -55,10 +55,11 @@ Current capabilities:
   state-changing browser requests must send the Client Header
   `X-LemGendary-Client: ai-studio-gui`. `GET /api/secrets` returns only whether
   each secret is set and its last 4 characters.
-- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.68`), a
-  cross-platform desktop cockpit built with Tauri v2, React 18 and Vite, with a
-  real Content Security Policy and one shared fetch wrapper for all sidecar
-  calls.
+- **Presentation Layer**: The LemGendary AI Studio GUI (`v2.10.82`), a
+  cross-platform desktop cockpit built with Tauri v2, React 19, Vite 8, and
+  Vitest 5, featuring 6 primary workspace tabs including the embedded offline
+  Documentation Hub (`tab-docs`), a real Content Security Policy, and one
+  shared fetch wrapper for all sidecar calls.
 - **Bug Report Tool**: The header button "Report Issue" opens a form (email,
   module, description of at least 50 characters, up to 5 annotated
   screenshots, optional Telemetry CSV). `POST /api/bug-report` on the
@@ -102,8 +103,10 @@ Current capabilities:
   `LemGendizedMultitaskRestorationPro` (42.2 GB, 54 shards; 232,464 train +
   31,742 val samples).
 - **PyTorch Stack**: the central `lemgendary-env-manager/requirements/*.txt`
-  files pin `torch==2.15.0`, `torchvision==0.29.2`, `transformers==5.22.1` and
-  `numpy==2.5.4` for `lemgendary-training-suite` and `lemgendary-datasets`, plus
+  files pin `torch==2.15.0`, `torchvision==0.29.2`, `transformers==5.24.1`,
+  `numpy==2.5.5`, `fastapi==0.165.0`, `uvicorn==0.54.0`, `pydantic==2.14.4`,
+  `typer==0.29.3`, `webdataset==1.0.2`, and `litdata==0.2.76` for
+  `lemgendary-training-suite` and `lemgendary-datasets`, plus
   `torchaudio==2.11.1` for the training suite. No wheel index is pinned:
   `select_cuda_torch_index()` in `system_probe.py` picks it from the hardware
   probe (`cu134`, `cu126`, `cu121` or `cu118` by NVIDIA driver version, ROCm,
@@ -116,24 +119,31 @@ Current capabilities:
 Each project keeps its own version line; the README changelog of each
 repository is the source of the release version.
 
-- **LemGendary Model Training Suite** (`v16.9.251-STABLE`): PyTorch training
+- **LemGendary Model Training Suite** (`v16.9.254-STABLE`): PyTorch training
   loops, Sawtooth Governor, pair-rule ratchet, epoch budget, model soup,
-  optional SWA, FID re-evaluation tool, CPython 3.14.10, permissive Apache-2.0
-  Kornia / BSD-3-Clause torchvision.transforms.v2.
+  optional SWA, FID re-evaluation tool, frozen run-settings guard
+  (`FrozenSettingsChanged`), CPython 3.14.10, permissive Apache-2.0 Kornia /
+  BSD-3-Clause torchvision.transforms.v2.
   Entrypoint: `lemtrain` (for example `lemtrain train MODEL_KEY`).
-- **LemGendary Dataset Compiler Suite** (`v16.9.123-STABLE`): shard synthesis,
+- **LemGendary Dataset Compiler Suite** (`v16.9.125-STABLE`): shard synthesis,
   WebP transcoding, Kaggle and HF ingestion, 22 manifolds, task taxonomy,
   CPython 3.14.10, MediaPipe contiguous memory safety, modern S3 boto3 pins.
   Entrypoints:
   `python cli.py` and `lemgendary_datasets_hub.ps1`.
-- **LemGendary Environment Manager** (`v16.9.94-STABLE`): hardware probe,
+- **LemGendary Environment Manager** (`v16.9.91-STABLE`): hardware probe,
   virtual environments, compliance audits, bug report endpoint, ecosystem
-  registry (`ecosystem.json`), uv 0.13.10 native engine, slim venv support.
+  registry (`ecosystem.json`, with `lemgendary-docs` restored in the validated
+  inventory), `lem-env` CLI (`gui-screenshots`, `sync-gui-registry`,
+  `sync-gui-manual`, `docs-audit`, `validate`, `check-lines`, `fix-lines`), uv
+  0.13.10 native engine, slim venv support.
   Entrypoints: `lem-env` and `lemgendary_env_manager.ps1`.
-- **LemGendary AI Studio GUI** (`v2.10.70`): Tauri v2 desktop application and
-  operator cockpit. Entrypoint: the `lemgendary-ai-studio-gui` executable.
-- **LemGendary AI Documentation Hub** (`v16.9.121-STABLE`): whitepapers,
-  manuals and HTML papers. Entrypoint: `lemgendary-docs/index.html`.
+- **LemGendary AI Studio GUI** (`v2.10.82`): Tauri v2 + React 19 + Vite 8 +
+  Vitest 5 desktop application and operator cockpit with 6 workspace tabs
+  (including the `tab-docs` embedded Documentation Hub). Entrypoint: the
+  `lemgendary-ai-studio-gui` executable.
+- **LemGendary AI Documentation Hub** (`v16.9.231-STABLE`): 48 publications
+  (whitepapers, manuals and HTML papers). Entrypoint:
+  `lemgendary-docs/index.html`.
 - **LemGendary Trained Models Repo** (`v16.9.16-STABLE`): model weights, ONNX
   exports and metrics in `LemGendaryModels/<model_key>/`.
 - **Training Pathology Guide** (`1.13.0`, baseline `v16.9.250-STABLE`):
@@ -195,13 +205,14 @@ bound to `127.0.0.1` and protected by the Origin Guard:
 - **LemGendary Environment Manager**, port `8000` (HTTP / WebSocket): hardware
   sensing, venv provisioning, package drift analytics, compliance gating,
   masked secrets and the bug report endpoint (`POST /api/bug-report`).
-- **LemGendary Dataset Compiler Suite**, port `8100` (HTTP / WebSocket):
+- **LemGendary Dataset Compiler Suite**, port `8150` (HTTP / WebSocket):
   manifold sharding, WebP conversion, Kaggle sync hub and custom compilation.
 - **LemGendary Model Training Suite**, port `8200` (HTTP / WebSocket):
   training job submission (`POST /api/training/train`), live loss streaming,
   GPU device allocation, model soup and SOTA audits.
 
-The ports, the project list, the pipeline step names and the Kaggle owner
+The ports, the project list (including `lemgendary-docs` restored in the
+validated inventory), the pipeline step names and the Kaggle owner
 are defined once, in `lemgendary-env-manager/ecosystem/ecosystem.json`
 (served by `GET /api/ecosystem`). The LemGendary Dataset Compiler Suite and
 the LemGendary Model Training Suite read it through their `ecosystem`

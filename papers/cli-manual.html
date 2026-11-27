@@ -33,7 +33,8 @@
 <h1>LemGendary Ecosystem: Master CLI Operations Manual</h1>
 <p class="subtitle">Category 00 | LemGendary AI Documentation Hub</p>
 <div class="meta">
-<span><strong>Version</strong>: <code>v16.9.214-STABLE</code></span>
+<span><strong>Version</strong>: <code>v16.9.231-STABLE</code></span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 </div>
 </header>
 <main id="main-content">
@@ -61,6 +62,7 @@
 <li><a href="#sec-212-documentation-audit-engine-docs-audit">2.12 Documentation Audit Engine (<code>docs-audit</code>)</a></li>
 <li><a href="#sec-213-sota-target-chart-builder-chart-build">2.13 SOTA Target Chart Builder (<code>chart-build</code>)</a></li>
 <li><a href="#sec-214-screen-capture--video-recording-capture-screenshot-capture-video">2.14 Screen Capture &amp; Video Recording (<code>capture-screenshot</code>, <code>capture-video</code>)</a></li>
+<li><a href="#sec-215-gui-documentation-sync--screenshot-tools">2.15 GUI Documentation Sync &amp; Screenshot Tools</a></li>
 </ul>
 </li>
 <li><a href="#sec-3-interactive-powershell-host-lemgendary_env_managerps1">3. Interactive PowerShell Host (<code>lemgendary_env_manager.ps1</code>)</a></li>
@@ -366,7 +368,7 @@ Vite/React build produces a minimal <code>index.html</code> shell with a single
 <code>&lt;div id=&quot;root&quot;&gt;</code>. WCAG accessibility validation of the fully rendered UI
 requires a running dev server. The <code>validate</code> command runs ESLint and
 TypeScript checks for the GUI instead; WCAG should be run manually via
-<code>npx pa11y http://localhost:5173</code> against a live dev server.</p>
+<code>npx pa11y http://localhost:1420</code> against a live dev server.</p>
 </blockquote>
 <h3 id="sec-28-workspace-cache--residue-purge-clean">2.8 Workspace Cache &amp; Residue Purge (<code>clean</code>)</h3>
 <p>The <code>clean</code> command removes volatile temporary files, caches, and build
@@ -505,6 +507,30 @@ lem-env capture-video --window-title "LemGendary AI Studio GUI" --output session
 <li>Windows <code>PrintWindow</code> API with <code>PW_RENDERFULLCONTENT</code> to capture client area.</li>
 <li>Desktop leakage guard: prevents capturing behind or around target windows.</li>
 </ul>
+<h3 id="sec-215-gui-documentation-sync--screenshot-tools">2.15 GUI Documentation Sync &amp; Screenshot Tools</h3>
+<p>These commands automate visual capture and documentation synchronization for
+the LemGendary AI Studio GUI:</p>
+<pre><code class="language-bash"># Capture numbered callout screenshots from the live GUI dev server
+lem-env gui-screenshots --url http://localhost:1420 --out-dir lemgendary-docs/assets/gui
+
+# Optionally export live DOM audit JSON and keep test_*.png files
+lem-env gui-screenshots --audit-out live_gui_audit.json --no-prune
+
+# Synchronize GUI_CONTROL_REGISTRY.md, HTML, and documents.json
+lem-env sync-gui-registry --audit-json live_gui_audit.json
+
+# Synchronize MANUAL_AI_STUDIO_GUI.md, HTML, and documents.json
+lem-env sync-gui-manual --root .
+</code></pre>
+<p>Options from <code>env_manager/cli.py</code>:</p>
+<ul>
+<li><strong><code>gui-screenshots</code></strong>: <code>--url</code> (default <code>http://localhost:1420</code>), <code>--out-dir</code>
+(output directory for captured PNGs), <code>--audit-out</code> (optional live DOM audit
+JSON path), <code>--no-prune</code> (keep obsolete <code>test_*.png</code> files).</li>
+<li><strong><code>sync-gui-registry</code></strong>: <code>--root</code> (workspace root override), <code>--audit-json</code>
+(optional <code>live_gui_audit.json</code> path).</li>
+<li><strong><code>sync-gui-manual</code></strong>: <code>--root</code> (workspace root override).</li>
+</ul>
 </section>
 
 <section id="sec-3-interactive-powershell-host-lemgendary_env_managerps1">
@@ -566,7 +592,7 @@ cargo tauri build
 <p>The <code>lemgendary-datasets</code> repository provides the unified <code>lemgendary</code> CLI
 (<code>cli.py</code>), exposing a full suite of compiler, synthesis, audit, transcoding,
 and server operations. All commands feature transparent hybrid routing: when the
-sidecar API daemon is active on <code>127.0.0.1:8100</code>, commands submit tasks to the
+sidecar API daemon is active on <code>127.0.0.1:8150</code>, commands submit tasks to the
 API and render live WebSocket logs to Rich Console; when stopped or when
 <code>--no-server</code> is passed, commands fall back cleanly to direct in-process
 execution.</p>
@@ -756,7 +782,7 @@ image transcoding phase</li>
 container format conversion phase</li>
 </ul>
 <h3 id="sec-58-sidecar-api-server-server">5.8 Sidecar API Server (<code>server</code>)</h3>
-<p>Controls the local FastAPI and WebSocket daemon on <code>127.0.0.1:8100</code>:</p>
+<p>Controls the local FastAPI and WebSocket daemon on <code>127.0.0.1:8150</code>:</p>
 <pre><code class="language-bash"># Launch background server daemon
 python cli.py server start --background
 

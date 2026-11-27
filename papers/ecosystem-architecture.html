@@ -46,9 +46,9 @@
 <span><a href="training-suite-master.html">Master Training Suite</a></span>
 <span><a href="ai-studio-whitepaper.html">LemGendary AI Studio GUI Architecture</a></span>
 <span><a href="versioning-policy.html">Unified Versioning Policy</a></span>
-<span><strong>Version</strong>: <code>v16.9.65-STABLE</code></span>
-<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.85</code>, Dataset Compiler Suite <code>v16.9.109</code>, Model Training Suite <code>v16.9.223</code>, AI Studio GUI <code>v2.10.68</code></span>
-<span><strong>Last Reviewed / Verified</strong>: 2026-11-13</span>
+<span><strong>Version</strong>: <code>v16.9.231-STABLE</code></span>
+<span><strong>Component Versions</strong>: Environment Manager <code>v16.9.91</code>, Dataset Compiler Suite <code>v16.9.125</code>, Model Training Suite <code>v16.9.254</code>, AI Studio GUI <code>v2.10.82</code>, Documentation Hub <code>v16.9.231</code></span>
+<span><strong>Last Reviewed / Verified</strong>: 2026-11-26</span>
 <span><strong>Status</strong>: Canonical</span>
 </div>
 </header>
@@ -69,8 +69,8 @@
 <ul class="sub-item">
 <li><a href="#sec-21-environment-manager-sidecar-1270018000">2.1 Environment Manager Sidecar
 (<code>127.0.0.1:8000</code>)</a></li>
-<li><a href="#sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar
-(<code>127.0.0.1:8100</code>)</a></li>
+<li><a href="#sec-22-dataset-compiler-sidecar-1270018150">2.2 Dataset Compiler Sidecar
+(<code>127.0.0.1:8150</code>)</a></li>
 <li><a href="#sec-23-master-training-suite-sidecar-1270018200">2.3 Master Training Suite Sidecar
 (<code>127.0.0.1:8200</code>)</a></li>
 </ul>
@@ -93,7 +93,7 @@ Contract</a></li>
 <p>The LemGendary AI Ecosystem is a decoupled, multi-tier machine learning platform.
 A desktop operator cockpit (LemGendary AI Studio GUI) and command line tools
 drive three local sidecar services, the LemGendary Environment Manager (port
-8000), the LemGendary Dataset Compiler Suite (port 8100) and the LemGendary
+8000), the LemGendary Dataset Compiler Suite (port 8150) and the LemGendary
 Model Training Suite (port 8200), which in turn run the environment, data
 synthesis and training engines on shared storage. The sidecars bind to the
 loopback interface and share one security contract: an origin allow-list, a
@@ -110,7 +110,7 @@ graph TD
 
     subgraph Sidecars [&quot;Asynchronous Sidecar Tier&quot;]
         ENV_API[&quot;Environment Manager Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8000)&quot;]
-        COMP_API[&quot;Dataset Compiler Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8100)&quot;]
+        COMP_API[&quot;Dataset Compiler Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8150)&quot;]
         TRAIN_API[&quot;Training Suite Sidecar&lt;br/&gt;(FastAPI / Uvicorn :8200)&quot;]
     end
 
@@ -152,7 +152,7 @@ graph TD
 <p>To allow desktop applications, external CLI scripts, and cloud orchestrators to
 control the ecosystem without blocking execution or encountering Python GIL
 contentions, the ecosystem deploys three specialized asynchronous sidecar
-daemons across standardized local ports (<code>8000</code>, <code>8100</code>, and <code>8200</code>).</p>
+daemons across standardized local ports (<code>8000</code>, <code>8150</code>, and <code>8200</code>).</p>
 <p>The ports, the project list, the pipeline step names and the Kaggle owner
 are defined once, in <code>lemgendary-env-manager/ecosystem/ecosystem.json</code>
 (served by <code>GET /api/ecosystem</code>). The LemGendary Dataset Compiler Suite and
@@ -183,7 +183,7 @@ audit.</li>
 </ul>
 </li>
 </ul>
-<h3 id="sec-22-dataset-compiler-sidecar-1270018100">2.2 Dataset Compiler Sidecar (<code>127.0.0.1:8100</code>)</h3>
+<h3 id="sec-22-dataset-compiler-sidecar-1270018150">2.2 Dataset Compiler Sidecar (<code>127.0.0.1:8150</code>)</h3>
 <ul>
 <li><strong>Framework</strong>: FastAPI + Uvicorn backed by SQLite job state tracking
 (<code>.lgd_server/jobs.db</code>).</li>
@@ -194,7 +194,8 @@ dispatching.</li>
 <li>Dynamic job lifecycle management (queued, active, completed, failed,
 interrupted).</li>
 <li>Real-time byte-metered transfer telemetry and WebP transcoding velocity
-streaming (<code>ws://127.0.0.1:8100/api/ws/jobs/{id}/logs</code>).</li>
+streaming via <code>ws://127.0.0.1:8150/api/ws/events</code> and
+<code>ws://127.0.0.1:8150/api/ws/jobs/{id}/logs</code>.</li>
 </ul>
 </li>
 </ul>
@@ -290,8 +291,8 @@ ladders under the pair-rule ratchet (resolution never decreases; the data
 fraction only rises within one resolution step and may reset when resolution
 steps up), bounded epoch budget, nuclear-hardened checkpoints.
 <code>torch==2.15.0</code> from the PyTorch wheel index the hardware probe picks,
-<code>transformers==5.22.1</code>.</li>
-<li><strong>Documentation</strong>: WCAG 2.1 AA accessible, responsive dual-viewport HTML5
+<code>transformers==5.24.1</code>.</li>
+<li><strong>Documentation</strong>: WCAG 2.2 AA / AAA accessible, responsive dual-viewport HTML5
 generated on the approved template, Markdown and HTML kept in sync.</li>
 </ol>
 </section>
@@ -349,7 +350,7 @@ preflight. The GUI adds it to every sidecar request in one helper
 (<code>sidecarFetch</code> in <code>src/api/http.ts</code>). Requests without an <code>Origin</code> (CLI,
 scripts, tests) are not affected.</li>
 <li><strong>Content Security Policy</strong>: the Tauri configuration sets <code>default-src 'self'</code>, <code>script-src 'self'</code>, <code>object-src 'none'</code> and <code>frame-src 'none'</code>, and
-limits <code>connect-src</code> to Tauri IPC, the three sidecar ports on <code>127.0.0.1</code> and
+limits <code>connect-src</code> to Tauri IPC, the three sidecar ports (<code>8000</code>, <code>8150</code>, <code>8200</code>) on <code>127.0.0.1</code> and
 <code>localhost</code>, and <code>https://fonts.gstatic.com</code>. A separate <code>devCsp</code> adds what
 the Vite dev server needs.</li>
 <li><strong>Secrets</strong>: the Environment Manager returns secrets masked (<code>has_value</code>,

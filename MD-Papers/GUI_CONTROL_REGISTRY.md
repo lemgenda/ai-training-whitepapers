@@ -2,8 +2,8 @@
 
 ## Category 03.4 CONTROLS | LemGendary AI Documentation Hub
 
-**Version**: `v2.10.70` (LemGendary AI Studio GUI) · **Last audited**:
-2026-11-13 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
+**Version**: `v2.10.82` (LemGendary AI Studio GUI) · **Last audited**:
+2026-11-27 · **Companion**: [Operator Manual](./MANUAL_AI_STUDIO_GUI.md) ·
 [Architectural Whitepaper](./PAPER_AI_STUDIO_GUI.md)
 
 ---
@@ -44,16 +44,16 @@
 This registry lists every element of the LemGendary AI Studio GUI
 (`lemgendary-ai-studio-gui`) that carries an `id` attribute, with its label,
 element type, the sidecar endpoint it calls and its behaviour. It is recounted
-from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.68`, including
+from the `id` attributes in `src/**/*.tsx` of GUI release `v2.10.82`, including
 the IDs that the shared `Modal`, `ConfirmDialog` and `Tabs` components build
 from their props, with a template such as `train-btn-start-{model_key}` counted
-once: 202 distinct IDs, of which 128 belong to controls (sections 3.1 to 3.8)
+once: 206 distinct IDs, of which 132 belong to controls (sections 3.1 to 3.8)
 and 74 to dialogs, status regions, landmarks and headings (section 3.9).
 Automated tests, accessibility checks and the bug report module select use these
 IDs, so an ID changes only together with this registry.
 
 The GUI talks to three local sidecars: the LemGendary Environment Manager on
-port 8000, the LemGendary Dataset Compiler Suite on port 8100 and the LemGendary
+port 8000, the LemGendary Dataset Compiler Suite on port 8150 and the LemGendary
 Model Training Suite on port 8200.
 
 ---
@@ -76,8 +76,8 @@ Older IDs keep their shipped names (`preset-select`, `custom-name-input`,
 `training-toolbar-push-all-models-btn`) because tests depend on them. Repeated
 controls are templates: `{model_key}` is a model key from
 `unified_models_v2.yaml`, `{dataset_key}` a manifold key, `{tab_id}` one of
-`dashboard`, `datasets`, `training`, `pipeline`, `health`, `{n}` a position
-starting at 1 and `{secret_id}` the id of a stored credential.
+`dashboard`, `datasets`, `training`, `docs`, `pipeline`, `health`, `{n}` a
+position starting at 1 and `{secret_id}` the id of a stored credential.
 
 Endpoint notation: `GET /api/hardware` (8000) means the Environment Manager
 route on port 8000. Every request goes through `sidecarFetch` in
@@ -99,17 +99,15 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   Issue dialog (section 3.2) with the module set to the current tab.
 - `header-btn-test-modal` (`button`): "Tests & Diagnostics". None. Opens the
   Test & Diagnostic Orchestrator (section 3.3).
-- `sidebar-btn-docs-hub` (`button`): "LemGendary AI Documentation Hub". Native
-  or external URL. Opens the local offline documentation hub served by the
-  Environment Manager.
 - `dash-btn-refresh-projects` (`button`): "Refresh Projects".
   `GET /api/projects` (8000). Re-reads project health and replaces only the
   project rows of the health report; disabled while the Environment Manager
   is offline or no report is loaded.
 - `tab-{tab_id}` (`button`): sidebar tab ("Dashboard", "LemGendary Dataset
-  Compiler Suite", "LemGendary Model Training Suite", "Clean Install Pipeline",
-  "Health & Version Drift"). None. Switches the workspace view; the dot shows
-  whether the sidecar behind the view is online.
+  Compiler Suite", "LemGendary Model Training Suite", "LemGendary AI
+  Documentation Hub", "Clean Install Pipeline", "Health & Version Drift").
+  None. Switches the workspace view; the dot shows whether the sidecar behind
+  the view is online.
 
 ### 3.2 Report Issue Dialog & Annotator
 
@@ -173,7 +171,7 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `POST /api/training/unit-test-run` (8200). Runs the Training Suite unit tests
   in-process and prints the summary.
 - `test-modal-btn-run-dataset-unit` (`button`): "Run Dataset Compiler Tests".
-  `POST /api/llm/test-suite` (8100). Runs the Dataset Compiler test suite
+  `POST /api/llm/test-suite` (8150). Runs the Dataset Compiler test suite
   in-process and prints the summary.
 
 ### 3.4 Run Pipeline & Clean Install
@@ -188,6 +186,12 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `pipeline-btn-clean-confirm` (`button`): "Delete and reinstall".
   `POST /api/pipeline/run` (8000) with `clean: true`. Deletes the virtual
   environments and `node_modules` of all projects, then reinstalls them.
+- `pipeline-btn-run-custom` (`button`): "Run Custom Pipeline". Runs the
+  selected step cards sequentially (`POST /api/pipeline/step/{step_number}`,
+  8000); disabled while offline, running, or when no steps are selected.
+- `pipeline-btn-run-entire` (`button`): "Run Entire Pipeline".
+  `POST /api/pipeline/run` (8000) with `clean: false`. Executes all 7 pipeline
+  steps sequentially; disabled while offline or running.
 
 ### 3.5 Dataset Compiler Suite
 
@@ -195,25 +199,25 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   `compiler-subtabs-tab-reduce` (`button`, `role="tab"`): the Catalog,
   Modernization Queue and Scale Reduction sub-tabs. None.
 - `compiler-btn-validate-schema` (`button`): "Validate Schema".
-  `POST /api/config/validate` (8100, no API token; admitted with the client
+  `POST /api/config/validate` (8150, no API token; admitted with the client
   header). Shows a success notice (version, dataset count, prefix, suffix,
   output folder) or an error banner; disabled while the compiler is offline.
 - `comp-mode-standard`, `comp-mode-custom` (`button`, `aria-pressed`):
   "Standard Preset" and "Custom Multi-Source" compile mode switch. None. Shows
   the standard or the custom multi-source compilation form.
 - `comp-btn-update-all-kaggle` (`button`): "Update All Kaggle Metadata".
-  `POST /api/kaggle/update-metadata` (8100) with `all_datasets: true`. Pushes
+  `POST /api/kaggle/update-metadata` (8150) with `all_datasets: true`. Pushes
   metadata for every registered Kaggle dataset.
 - `comp-btn-regen-manifolds` (`button`): "Regen Index".
-  `POST /api/modernize/regenerate-manifolds` (8100). Rebuilds `manifolds.json`
+  `POST /api/modernize/regenerate-manifolds` (8150). Rebuilds `manifolds.json`
   and the dataset metadata files.
 - `comp-btn-refresh-catalog` (`button`): "Refresh Catalog".
-  `GET /api/gui/datasets/with-stats` (8100). Reloads the manifold catalog.
+  `GET /api/gui/datasets/with-stats` (8150). Reloads the manifold catalog.
 - `comp-select-manifold` (`select`): target manifold.
-  `GET /api/gui/datasets/with-stats?include_uncompiled=true` (8100) fills it.
+  `GET /api/gui/datasets/with-stats?include_uncompiled=true` (8150) fills it.
   Chooses the manifold for a standard compile and automatically updates
   `preset-select` to the manifold's recommended preset.
-- `preset-select` (`select`): compiler preset. `GET /api/gui/presets` (8100)
+- `preset-select` (`select`): compiler preset. `GET /api/gui/presets` (8150)
   fills it. Auto-synchronized upon selecting `comp-select-manifold`.
   "Server default" omits `preset` so the sidecar applies its default;
   offline only that option is shown.
@@ -222,13 +226,23 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
   compile with a message.
 - `comp-input-workers` (`input type=number`): "Workers". None. Sent as
   `workers`; empty keeps the sidecar default.
+- `comp-input-start-date` (`input type=date`): "Start Date". None. Shown for
+  Forex/Parquet manifolds; sent as `start_date` (`YYYY-MM-DD`).
+- `comp-input-end-date` (`input type=date`): "End Date". None. Shown for
+  Forex/Parquet manifolds; sent as `end_date` (`YYYY-MM-DD`).
+- `comp-yield-mode` (`input type=text`, read-only): "Yield Strategy". None.
+  Shown for LLM/JSONL manifolds with value `"Autonomous Source Analysis"`.
+- `comp-select-label-strategy` (`select`): "Label Strategy". None. Shown for
+  Detection/Pose manifolds; options `"Manifest default"`, `"yolov8"`, `"coco"`,
+  `"retinaface"`.
 - `comp-select-shard-ext` (`select`): shard extension. None. "Compiler
   default" (sends nothing; the compiler writes `.data`), `.data` or `.tar`,
-  sent as `shard_ext`.
+  sent as `shard_ext` (disabled for non-WebDataset manifolds).
 - `comp-btn-compile` (`button`): "Compile Manifold".
-  `POST /api/gui/quick-compile` (8100) with `model`, `preset` and the optional
-  `max_gb`, `workers` and `shard_ext`. Starts a compile job; an unknown preset
-  shows the server's 422 detail.
+  `POST /api/gui/quick-compile` (8150) with `model`, `preset` and the optional
+  `max_gb`, `workers`, `shard_ext`, `start_date`, `end_date` and
+  `label_strategy`. Starts a compile job; an unknown preset shows the server's
+  422 detail.
 - `custom-name-input` (`input type=text`): custom manifold name. None. Name of
   the new manifold.
 - `custom-task-select` (`select`): domain task. None. Restoration, detection or
@@ -236,33 +250,33 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 - `custom-format-select` (`select`): container format. None. WebDataset,
   Parquet, MDS or LitData.
 - `custom-preset-select` (`select`): compiler preset for the custom compile.
-  `GET /api/gui/presets` (8100) fills it.
+  `GET /api/gui/presets` (8150) fills it.
 - `custom-shard-size` (`input type=number`): shard size. None. Samples per
   shard.
 - `custom-purge-check` (`input type=checkbox`): purge loose files. None. Removes
   loose source images after sharding.
 - `custom-sources-area` (`textarea`): source repositories and URLs. None. One
   Kaggle, Hugging Face, Google Drive or GitHub source per line; submitted with
-  `POST /api/gui/custom-compile` (8100).
+  `POST /api/gui/custom-compile` (8150).
 - `comp-input-kaggle-custom-ref` (`input type=text`): Kaggle dataset slug or
-  URL. `POST /api/kaggle/download` (8100) on "Ingest from Kaggle". Downloads a
+  URL. `POST /api/kaggle/download` (8150) on "Ingest from Kaggle". Downloads a
   public or private Kaggle dataset into `LemGendaryDatasets`.
 - `comp-select-kaggle-registry` (`select`): registry manifold with a Kaggle
-  reference. `GET /api/kaggle/registry-datasets` (8100) fills it. Fills the
+  reference. `GET /api/kaggle/registry-datasets` (8150) fills it. Fills the
   Kaggle reference and the modernized target folder.
 - `comp-btn-kaggle-registry-reload` (`button`): reload. Reloads the registry
   manifold list.
 - `comp-btn-meta-{dataset_key}` (`button`): "Update Metadata".
-  `POST /api/kaggle/update-metadata` (8100). Pushes the metadata of one manifold
+  `POST /api/kaggle/update-metadata` (8150). Pushes the metadata of one manifold
   without uploading data.
 - `comp-btn-pull-{dataset_key}` (`button`): "Download".
-  `POST /api/kaggle/download` (8100). Downloads the manifold's shards.
+  `POST /api/kaggle/download` (8150). Downloads the manifold's shards.
 - `comp-btn-push-{dataset_key}` (`button`): "Upload". `POST /api/kaggle/upload`
-  (8100). Packages and uploads the local shards.
+  (8150). Packages and uploads the local shards.
 - `reduce-manifold-select` (`select`): manifold to reduce. None. Chooses the
   source manifold for scale reduction.
 - `reduce-scale-select` (`select`): sampling scale. None. 10, 25, 50 or 75
-  percent; sent with `POST /api/modernize/reduce` (8100).
+  percent; sent with `POST /api/modernize/reduce` (8150).
 
 ### 3.6 Model Training Suite
 
@@ -391,11 +405,11 @@ Each entry reads: ID (element type): label. Endpoint. Behaviour.
 
 ### 3.7 Health & Version Drift
 
-- `health-btn-safe-upgrade` (`button`): "Safe Package Upgrade".
-  `POST /api/update` (8000). Starts a background upgrade job and returns its
-  `job_id`; 409 means an update or the pipeline is already running.
-- `health-btn-upgrade-dry-run` (`button`): "Upgrade Dry Run". `POST /api/update`
-  (8000) with `dry_run: true`. Lists planned upgrades without changing anything.
+Package upgrades are triggered inline via un-ID'd `Upgrade All` and per-row
+`Upgrade` buttons in the Cross-Project Package Version Drift Matrix and Desktop
+GUI Project Packages (NPM) tables (section 3.10), calling `POST /api/update`
+(8000).
+
 - `health-btn-deep-clean` (`button`): "Deep Cache Purge". `POST /api/clean`
   (8000). Removes `__pycache__`, build remnants and staging residues.
 - `health-btn-install-hooks` (`button`): "Install Git Hooks".
@@ -440,8 +454,8 @@ Dialogs and forms:
   active tab.
 - Confirmation dialogs (`ConfirmDialog`, focus starts on Cancel; buttons
   `{dialog_id}-cancel` and `{dialog_id}-confirm`, text `{dialog_id}-desc`):
-  `dash-dialog-stop-service` (Stop Service), `health-dialog-confirm` (Safe
-  Package Upgrade and Deep Cache Purge), `config-dialog-delete-secret` (delete a
+  `dash-dialog-stop-service` (Stop Service), `health-dialog-confirm` (Deep Cache
+  Purge), `config-dialog-delete-secret` (delete a
   credential), `config-dialog-discard-edits` (close or leave the manifest editor
   with unsaved edits) and `config-dialog-discard-manifest` (switch manifests
   with unsaved edits).
@@ -482,7 +496,7 @@ Status and error regions:
   (`role="alert"`): the validation message under the matching Advanced
   launch field (section 3.6); shown only while the value is refused.
 - `comp-badge-kaggle-auth`: Dataset Compiler Kaggle credential badge
-  (`GET /api/kaggle/status`, 8100); the tooltip names the credential sources.
+  (`GET /api/kaggle/status`, 8150); the tooltip names the credential sources.
 - `train-frozen-refusal` (region): shown instead of the generic error banner
   when a local or cloud training job fails with the Training Suite
   `FrozenSettingsChanged` message; `train-frozen-refusal-message` (the
@@ -504,8 +518,7 @@ Landmarks and headings:
 
 These controls work but have no `id` yet; tests find them by role and label. The
 list was recounted from the `button`, `input`, `select` and `textarea` elements
-without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
-`v2.10.70` are removed from it:
+without an `id` in GUI release `v2.10.82`:
 
 - **Header and shell**: the help tooltip (`?`) buttons, the validation banner
   and error dismiss buttons and the hover pin popovers.
@@ -514,14 +527,18 @@ without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
   Manager" on the hardware card and the health panel, the "Reconcile
   Environment" button on each project card, and the "Copy Stream" and "Clear
   Stream" buttons of the log panel.
-- **Pipeline**: the per-step run buttons of the pipeline step cards.
+- **Documentation Hub**: the "Open in External Browser" button.
+- **Pipeline**: the 7 selectable step cards (`role="button"`, `aria-pressed`)
+  and the per-step "Run Step N Only" buttons.
+- **Health & Version Drift**: the "Upgrade All" header buttons and per-row
+  "Upgrade" buttons in both the Cross-Project Package Version Drift Matrix and
+  Desktop GUI Project Packages (NPM) tables.
 - **Dataset Compiler Suite**: the manifold search box, its clear button, the
-  status,
-  format and task filters and "Reset Filters"; the custom compile button; the
-  Kaggle ingestion target folder, force check box and "Ingest from Kaggle"; the
-  modernization workers input, the push, force and dry-run check boxes, "Scan
-  Queue", the run-all and per-row modernize buttons; and "Launch Scale
-  Reduction".
+  status, format and task filters and "Reset Filters"; "Compile Custom Dataset";
+  the Kaggle ingestion target folder, force check box and "Ingest from Kaggle";
+  the modernization workers input, the push, force and dry-run check boxes,
+  "Scan Queue", "Batch Modernize All" and per-row modernize buttons; and "Launch
+  Scale Reduction".
 - **Model Training Suite**: the model search box, its clear button, the status,
   category and architecture filters and "Reset Filters"; "Start Training Suite",
   Retry and the clear-filters button of the training panel; the "Copy Stream",
@@ -537,8 +554,25 @@ without an `id` in GUI release `v2.10.57`; controls that gained an ID up to
 
 ### 3.11 Changes Since the Previous Registry
 
-Since the `v2.10.57` registry 53 IDs were added, one removed and two renamed
-(GUI releases `v2.10.59` to `v2.10.68`):
+Since the `v2.10.68` / `v2.10.70` registry (GUI releases `v2.10.71` to
+`v2.10.82`), 6 control IDs were added, 4 removed, and the Dataset Compiler
+sidecar port was corrected to `8150`:
+
+- **Added, Documentation Hub (`v2.10.75+`)**: `tab-docs` (in `tab-{tab_id}`)
+  embedding the Documentation Hub inside the workspace shell.
+- **Added, Dataset Compiler (`v2.10.71+`)**: `comp-input-start-date`,
+  `comp-input-end-date`, `comp-yield-mode` (read-only "Autonomous Source
+  Analysis" replacing `comp-input-target-samples`), and
+  `comp-select-label-strategy`.
+- **Added, Clean Install Pipeline (`v2.10.76+`)**: `pipeline-btn-run-custom`
+  and `pipeline-btn-run-entire` in the 8th "Pipeline Execution" card.
+- **Removed**: `dash-btn-refresh-audit` (`v2.10.71`), `sidebar-btn-docs-hub`
+  (replaced by `tab-docs`), `health-btn-safe-upgrade` and
+  `health-btn-upgrade-dry-run` (replaced by inline `Upgrade All` and per-row
+  `Upgrade` buttons in the Health tables), and `comp-input-target-samples`
+  (replaced by `comp-yield-mode`).
+- **Port Correction**: LemGendary Dataset Compiler Suite port updated from
+  `8100` to `8150` across all endpoint references.
 
 - **Added, Dashboard and Dataset Compiler**: `dash-btn-refresh-projects`,
   `comp-badge-kaggle-auth`, `comp-select-kaggle-registry`,
@@ -628,7 +662,7 @@ and `train-modal-tab-upload`.
 
 1. The operator starts the LemGendary AI Studio GUI. The sidebar dots and the
    sidecar tiles show which sidecars answer their liveness probe
-   (`GET /api/ping` on 8000, `GET /api/health` on 8100 and 8200).
+   (`GET /api/ping` on 8000, `GET /api/health` on 8150 and 8200).
 2. The operator clicks `dash-btn-run-pipeline`. The GUI sends
    `POST /api/pipeline/run` (8000) with `clean: false`.
 3. Progress arrives over the Environment Manager log socket (`WS /ws/log`,
@@ -662,9 +696,9 @@ step 4 runs.
 2. The operator picks a manifold in `comp-select-manifold` and a preset in
    `preset-select` (or keeps "Server default").
 3. The operator clicks `comp-btn-compile`. The GUI sends
-   `POST /api/gui/quick-compile` (8100) and shows the returned job `id`.
+   `POST /api/gui/quick-compile` (8150) and shows the returned job `id`.
 4. Job progress arrives over the Dataset Compiler event socket
-   (`WS /api/ws/events`, 8100) and appears in the shared log panel.
+   (`WS /api/ws/events`, 8150) and appears in the shared log panel.
 
 ### 4.3 Workflow 3: Reporting an Issue
 
@@ -713,8 +747,6 @@ depends on the sidecars and the hardware:
   MT5 time-series ingestion.
 - **`comp-input-end-date`** (Forex / Parquet): End date (`YYYY-MM-DD`) for MT5
   time-series ingestion.
-- **`comp-input-target-samples`** (LLM / JSONL): Target sample count override
-  for instruction synthesis.
 - **`comp-select-label-strategy`** (Detection / Pose): Label strategy (`yolov8`,
   `coco`, `retinaface`).
 - **`comp-yield-mode`** (LLM / JSONL): Yield Strategy display

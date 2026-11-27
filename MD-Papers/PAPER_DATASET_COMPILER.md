@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.120-STABLE` (LemGendary Dataset Compiler Suite) · **Last
-audited**: 2026-11-24
+**Version**: `v16.9.125-STABLE` (LemGendary Dataset Compiler Suite) · **Last
+audited**: 2026-11-26
 
 ---
 
@@ -96,7 +96,7 @@ audited**: 2026-11-24
 
 ## 1. Abstract
 
-The LemGendary Dataset Compiler Suite (release `v16.9.84-STABLE`) is the data
+The LemGendary Dataset Compiler Suite (release `v16.9.125-STABLE`) is the data
 layer of the LemGendary ecosystem for Generative, Vision, Language and
 Time-Series dataset synthesis. It elevates static sharding to a self-optimizing
 generative manifold, orchestrating Diffusion, Restoration, Detection, Quality,
@@ -104,10 +104,10 @@ Market and LLM instruction datasets with zero-intermediate WebP transcoding,
 pluggable container formats (WebDataset, LitData, Parquet; MosaicML MDS is
 legacy and transcoded to WebDataset), deterministic degradation kernels,
 bidirectional Kaggle Cloud Synchronization, multi-source custom compilation, a
-FastAPI/WebSocket REST sidecar daemon (`api/`, port 8100) and a hybrid Typer
+FastAPI/WebSocket REST sidecar daemon (`api/`, port 8150) and a hybrid Typer
 CLI. The single source of truth registry `unified_data.yaml` declares 21
-manifolds: 19 vision manifolds, the `LemGendizedForexUniverse` financial
-manifold and the `LemGendizedAIHelperLemGend` instruction manifold.
+core manifold entries (22 production manifolds across vision, financial, and
+instruction pipelines).
 
 The `v16.9.23` to `v16.9.27` releases harden the operating contract. Browser
 access is limited to the AI Studio GUI by an origin guard and a closed CORS
@@ -136,16 +136,19 @@ The `v16.9.75` to `v16.9.84` releases reject incomplete or corrupt samples,
 verify every written shard, keep every metadata column in transcodes and add a
 manifold repair command (Section 4.11).
 
-In `v16.9.120` to `v16.9.123`, the runtime modernizes to **CPython 3.14.10**,
+In `v16.9.120` to `v16.9.125`, the runtime modernizes to **CPython 3.14.10**,
 `torch==2.15.0`, `torchvision==0.29.2`, and `numpy==2.5.5`. `mediapipe==1.2.3`
 enforces `np.ascontiguousarray(...)` C-stride memory safety in
 `models/detection.py` to prevent ctypes non-contiguous slice corruption. S3
-streaming via `litdata==0.2.76` explicitly pins `boto3==1.44.11`,
-`botocore==1.44.11`, `jmespath==1.1.0`, and `six==1.17.0`, eliminating
+streaming via `litdata==0.2.76` explicitly pins `boto3==1.44.12`,
+`botocore==1.44.12`, `jmespath==1.1.0`, and `six==1.17.0`, eliminating
 backtracking to ancient 2014 `boto3==0.0.3` / `bcdoc`. Dual OpenCV provider
 alignment (`opencv-contrib-python==5.1.0.95` and `opencv-python==5.1.0.95`)
-ensures `ultralytics==8.4.218`'s `Requires-Dist: opencv-python` metadata checks
-pass cleanly without rolling back safe upgrades.
+ensures `ultralytics==8.4.219`'s `Requires-Dist: opencv-python` metadata checks
+pass cleanly without rolling back safe upgrades. Release `v16.9.122` adds
+non-blocking async catalog stats and provenance caching for
+`/api/gui/datasets/with-stats`, while `v16.9.115` / `v16.9.121` formalize the
+Autonomous Yield Strategy for LLM JSONL compilation.
 
 - **Project Repository**:
   [lemgendary-datasets](https://github.com/lemgenda/lemgendary-datasets)
@@ -1658,7 +1661,7 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
 
 ### 6.6 Asynchronous Sidecar API & Hybrid CLI
 
-- **FastAPI / Uvicorn Daemon (`api/`)**: Runs on `127.0.0.1:8100` with route
+- **FastAPI / Uvicorn Daemon (`api/`)**: Runs on `127.0.0.1:8150` with route
   groups for health (`/api/health`, `/api/health/full`), GUI aggregation
   (`/api/gui/*`), datasets, sources, gates, Kaggle, modernize, LLM,
   configuration, jobs and environment. `openapi.json` lists all 37 operations
@@ -1673,8 +1676,8 @@ Introduced in v16.7.0 and extended in v16.9.19 and v16.9.25:
   typed `ServiceInvocation`. A job moves `pending` to `running` to
   `completed`, `failed` (with the exit code), `cancelled` or `interrupted`.
 - **WebSocket Streaming**: Live logs stream per job via
-  `ws://127.0.0.1:8100/api/ws/jobs/{id}/logs`, and dashboard events via
-  `ws://127.0.0.1:8100/api/ws/events`.
+  `ws://127.0.0.1:8150/api/ws/jobs/{id}/logs`, and dashboard events via
+  `ws://127.0.0.1:8150/api/ws/events`.
 - **Asynchronous LLM Compile (v16.9.25)**: `POST /api/llm/compile` is an `async`
   route, so `async_mode: true` hands the running event loop to the job runner
   and the `llm` job actually starts (the former synchronous route left it

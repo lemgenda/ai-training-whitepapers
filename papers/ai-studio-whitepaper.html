@@ -39,8 +39,8 @@
 <p class="subtitle">Category 01.4 | Subpage of Master Ecosystem Architecture</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v2.10.57</code> (LemGendary AI Studio GUI)</span>
-<span><strong>Last audited</strong>: 2026-11-12</span>
+<span><strong>Version</strong>: <code>v2.10.82</code> (LemGendary AI Studio GUI)</span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 </div>
 </header>
 <main id="main-content">
@@ -84,6 +84,7 @@ Contract</a></li>
 Cancellation</a></li>
 <li><a href="#sec-612-security-model">6.12 Security Model</a></li>
 <li><a href="#sec-613-bug-reporting-subsystem">6.13 Bug Reporting Subsystem</a></li>
+<li><a href="#sec-614-shortest-column-masonry-layout-with-gpu-accelerated-flip-reflow">6.14 Shortest-Column Masonry Layout with GPU-Accelerated FLIP Reflow</a></li>
 </ul>
 </li>
 <li><a href="#sec-7-unified-models-registry">7. Unified Models Registry</a></li>
@@ -94,12 +95,13 @@ Cancellation</a></li>
 
 <section id="sec-1-abstract">
 <h2>1. Abstract</h2>
-<p>The LemGendary AI Studio GUI (client version <code>v2.10.57</code>) is a hardware-aware
+<p>The LemGendary AI Studio GUI (client version <code>v2.10.82</code>) is a hardware-aware
 desktop orchestration system that gives machine learning workflows a
 low-latency, deterministic control plane. It addresses developer friction,
 process fragmentation and the high memory footprint of traditional web wrappers
 by separating native operating system integration from presentation logic: a
-Rust host (Tauri v2), a reactive React 18 frontend and local WebSocket telemetry
+Rust host (Tauri v2), a reactive React 19 frontend (built with Vite 8 and
+tested with Vitest 5) and local WebSocket telemetry
 channels to three Python sidecars. Every sidecar request carries a client header
 that the sidecars' origin guard checks, the window runs under a strict Content
 Security Policy, and secrets are write-only from the GUI. A built-in bug
@@ -110,12 +112,12 @@ hands it to the operator's own mail client.</p>
 <p><strong>Note:</strong> <strong>Dual Versioning Architecture</strong>: The desktop application and its backends use
 separate version tracks:</p>
 <ol>
-<li><strong>LemGendary AI Studio GUI (<code>v2.10.57</code>)</strong>: Governs the Tauri v2 desktop
-application, the React 18 frontend and the Operator Manual
+<li><strong>LemGendary AI Studio GUI (<code>v2.10.82</code>)</strong>: Governs the Tauri v2 desktop
+application, the React 19 frontend (Vite 8 / Vitest 5) and the Operator Manual
 (<a href="ai-studio-manual.html"><code>MANUAL_AI_STUDIO_GUI.md</code></a>). <code>package.json</code>
 holds this version and <code>tauri.conf.json</code> reads it from there.</li>
 <li><strong>Sidecar services (<code>v16.x</code>)</strong>: The LemGendary Environment Manager (port
-8000), LemGendary Dataset Compiler Suite (port 8100) and LemGendary Model
+8000), LemGendary Dataset Compiler Suite (port 8150) and LemGendary Model
 Training Suite (port 8200) each keep their own <code>v16.x</code> release line in their
 README. Each sidecar publishes its contract as <code>openapi.json</code>, and the GUI
 tests check request field names against those files. See the <a href="versioning-policy.html">Document
@@ -244,16 +246,21 @@ Content Security Policy, the shell capability and background process launch.</li
 <li><strong>LemGendary Environment Manager (Port 8000)</strong>: Probes host hardware,
 virtual environments, pip packages and npm workspaces; runs the clean
 install pipeline; stores secrets; receives bug reports.</li>
-<li><strong>LemGendary Dataset Compiler Suite (Port 8100)</strong>: Serves the dataset
+<li><strong>LemGendary Dataset Compiler Suite (Port 8150)</strong>: Serves the dataset
 manifold catalog, format statistics, compiler presets, and compilation and
 modernization jobs.</li>
 <li><strong>LemGendary Model Training Suite (Port 8200)</strong>: Streams training runs, GPU
 utilization, loss convergence and export jobs.</li>
 </ul>
 </li>
-<li><strong>Reactive Presentation Layer (React 18 &amp; Vanilla CSS)</strong>: Subscribes to the
+<li><strong>Reactive Presentation Layer (React 19, Vite 8 &amp; Vanilla CSS)</strong>: Subscribes to the
 sidecars over WebSockets and REST, with one store for telemetry, compilation
-jobs, training cards and log streams.</li>
+jobs, training cards and log streams. A 6-tab sidebar navigation architecture
+(<code>dashboard</code>, <code>datasets</code>, <code>training</code>, <code>docs</code>, <code>pipeline</code>, <code>health</code>) embeds
+the Documentation Hub (<code>tab-docs</code> / <code>DocumentationPanel</code>) directly inside the
+workspace shell alongside relocated sidebar action buttons for <code>Config &amp; Secrets</code>
+(<code>sidebar-btn-config</code>) and <code>Tests &amp; Diagnostics</code> (<code>header-btn-test-modal</code>), plus a
+header <code>Report Issue</code> icon button (<code>header-btn-report-issue</code>).</li>
 </ol>
 <p>Since v2.10.32 the sidecar ports and the project folders come from the
 committed snapshot <code>src/generated/ecosystem.json</code>, a copy of
@@ -329,7 +336,7 @@ covering the dashboard.</li>
 </ul>
 <h3 id="sec-64-dataset-compiler--kaggle-cloud-synchronization-hub">6.4 Dataset Compiler &amp; Kaggle Cloud Synchronization Hub</h3>
 <p>The desktop interface integrates a visual control plane for the LemGendary
-Dataset Compiler Suite (<code>Port 8100</code>):</p>
+Dataset Compiler Suite (<code>Port 8150</code>):</p>
 <ul>
 <li><strong>Compilation Mode Switcher</strong>:
 <ul>
@@ -388,7 +395,7 @@ clear error instead.</li>
 <li><strong>Deterministic Teardown on Window Close and App Exit</strong>: On desktop window
 close (<code>WindowEvent::Destroyed</code>) or application termination
 (<code>RunEvent::Exit</code>), Tauri runs <code>commands::stop_all_services_native()</code>. This
-guarantees that all active sidecar processes on ports 8000, 8100, and 8200 are
+guarantees that all active sidecar processes on ports 8000, 8150, and 8200 are
 forcefully terminated via process tree killing, preventing ghost daemons from
 occupying sockets after exiting.</li>
 <li><strong>Automated Mesh Bootstrapping</strong>: On launch the GUI probes the three sidecars
@@ -399,7 +406,7 @@ repeat every 4 seconds, independent of the full dependency audit.</li>
 </ul>
 <h3 id="sec-66-test--diagnostic-orchestrator-integration">6.6 Test &amp; Diagnostic Orchestrator Integration</h3>
 <p>The Test &amp; Diagnostic Orchestrator modal (<code>src/components/TestModal.tsx</code>) opens
-from the &quot;Tests &amp; Diagnostics&quot; header button (<code>#header-btn-test-modal</code>) and
+from the relocated &quot;Tests &amp; Diagnostics&quot; sidebar button (<code>#header-btn-test-modal</code>) and
 offers:</p>
 <ol>
 <li><strong>Fleet 1-Epoch Smoke Test</strong>: Queues a 1-epoch pass across all 23 registered
@@ -414,17 +421,22 @@ in-process (<code>POST /api/llm/test-suite</code>).</li>
 contains no hard-coded ports. Missing <code>failures</code> or <code>errors</code> arrays in a
 response are normalized instead of crashing the modal, and Escape closes it.</p>
 <h3 id="sec-67-comprehensive-testing--ecosystem-verification-battery">6.7 Comprehensive Testing &amp; Ecosystem Verification Battery</h3>
-<p>The GUI codebase is verified by an automated test battery:</p>
+<p>The GUI codebase is verified by an automated test battery running on Vitest 5
+and Cargo:</p>
 <ul>
-<li><strong>Component &amp; Integration Testing</strong>: 183 Vitest tests and 21 Rust tests
-(release <code>v2.10.34</code>) cover sidecar routing, request field names against the sidecars'
+<li><strong>Component &amp; Integration Testing</strong>: Vitest 5 unit/component suites and
+Rust tests cover sidecar routing, request field names against the sidecars'
 <code>openapi.json</code> files, the compiler and training panels, the config and secrets
 editors, the clean install dialog, the Report Issue modal and annotator, and a
 scan that fails when a <code>className</code> has no CSS rule.</li>
-<li><strong>Ecosystem Compliance</strong>:
+<li><strong>Ecosystem Compliance &amp; Documentation Sync</strong>:
 <code>lem-env validate --project lemgendary-ai-studio-gui</code> checks zero-emoji
 compliance, ESLint, TypeScript typing (including <code>vite.config.ts</code>) and the
-accessibility contracts.</li>
+accessibility contracts. The automated <code>env-manager</code> documentation sync
+pipeline (<code>lem-env gui-screenshots</code>, <code>lem-env sync-gui-registry</code>, and
+<code>lem-env sync-gui-manual</code>) keeps live desktop screenshots,
+<code>GUI_CONTROL_REGISTRY.md</code>, and <code>MANUAL_AI_STUDIO_GUI.md</code> synchronized with
+the shipped React 19 UI.</li>
 </ul>
 <h3 id="sec-68-ecosystem-maintenance--governance-controls">6.8 Ecosystem Maintenance &amp; Governance Controls</h3>
 <p>The Health view embeds operational controls backed by the LemGendary Environment
@@ -438,9 +450,16 @@ and <code>lemgendary-training-suite</code>.</li>
 <code>node_modules</code> of <code>lemgendary-ai-studio-gui</code>, including <code>@tauri-apps/api</code>,
 <code>@tauri-apps/plugin-shell</code>, <code>@radix-ui/react-progress</code>, <code>modern-screenshot</code>,
 <code>react</code>, <code>react-dom</code> and <code>zustand</code>.</li>
-<li><strong>Safe Package Upgrades &amp; Dry Runs</strong>: <code>POST /api/update</code> starts a background
-job and returns its <code>job_id</code> at once; progress arrives in the logs, and <code>409</code>
-means an update or the pipeline is already running.</li>
+<li><strong>Safe Package Upgrades &amp; Inline Drift Matrix</strong>: Both the Cross-Project
+Python Drift Matrix and the Desktop GUI Project Packages (NPM) table expose
+inline <code>Upgrade All</code> header buttons and per-row <code>Upgrade</code> buttons backed by
+<code>POST /api/update</code> (returning <code>job_id</code> immediately, streaming progress over
+WebSockets, and returning <code>409</code> if an update or pipeline run is already
+active).</li>
+<li><strong>Custom Pipeline Step Selection</strong>: The Clean Install Pipeline tab pairs the
+7 selectable step cards with an 8th Pipeline Execution card providing
+<code>pipeline-btn-run-custom</code> (runs only selected steps) and
+<code>pipeline-btn-run-entire</code> (executes the full 7-stage pipeline).</li>
 <li><strong>Deep Cache Purges</strong>: Cleans <code>__pycache__</code>, build remnants and staging
 residues and reports the recovered bytes (<code>POST /api/clean</code>).</li>
 <li><strong>Standardized Git Hooks</strong>: Installs the pre-commit hooks with the zero-emoji
@@ -452,12 +471,15 @@ repositories (<code>POST /api/validate</code>).</li>
 <p>A central Zustand store (<code>src/store/useStudioStore.ts</code>) gives deterministic
 state transitions without prop drilling:</p>
 <ul>
-<li><strong>Unified Global State Store</strong>: Sidecar online status (ports 8000, 8100,
+<li><strong>Unified Global State Store</strong>: Sidecar online status (ports 8000, 8150,
 8200), hardware telemetry, local and cloud training jobs, model and dataset
 caches, the log ring buffer (200 events) and the open modal (<code>activeModal</code>:
 <code>config</code>, <code>tests</code> or <code>bug-report</code>).</li>
 <li><strong>Single Responsibility Deconstruction</strong>:
 <ul>
+<li><code>DocumentationPanel.tsx</code>: Embedded Documentation Hub view (<code>tab-docs</code>)
+providing offline-first access to whitepapers, manuals, and the Control
+ID Registry inside the workspace shell.</li>
 <li><code>TrainingPanel.tsx</code>: A coordinator for <code>ModelManifoldCard.tsx</code>,
 <code>TelemetryConsole.tsx</code> and <code>TrainingToolbar.tsx</code> (search, filters, notebook
 generation and &quot;Push All Models to Kaggle&quot;).</li>
@@ -507,9 +529,9 @@ rebuilt from the <code>id</code> attributes in the source.</li>
 <li><code>Modal.tsx</code>: Shared dialog with <code>role=&quot;dialog&quot;</code>, <code>aria-modal</code>, a labelled
 title, a Tab focus trap, Escape closing only the innermost modal and focus
 returning to the opener.</li>
-<li><code>ValidationBanner.tsx</code>: Banner with message type detection (<code>info</code>,
-<code>success</code>, <code>warning</code>, <code>error</code>), dismiss buttons and WAI-ARIA alert and
-status semantics.</li>
+<li><code>ValidationBanner.tsx</code>: Dismissible banner with message type detection (<code>info</code>,
+<code>success</code>, <code>warning</code>, <code>error</code>), per-banner dismiss buttons, and WAI-ARIA alert and
+status semantics across all panels and modals.</li>
 <li><code>HoverPinPopover.tsx</code>: CSS hover and semantic <code>&lt;button&gt;</code> pin popover that
 follows the <code>jsx-a11y</code> rules.</li>
 <li><code>src/utils/clipboard.ts</code>: Clipboard export with
@@ -557,7 +579,7 @@ and spatial ladder transitions of local jobs.</li>
 types <code>kaggle_train</code>, <code>kaggle_monitor</code> and <code>cloud_push</code>
 (<code>isRemoteTrainingEvent</code>); local events exclude them.</li>
 <li><strong>Ecosystem Mesh Stream</strong>: Health probes, audit logs and service events across
-ports 8000, 8100 and 8200.</li>
+ports 8000, 8150 and 8200.</li>
 <li><strong>Accessible Radix UI Progress Architecture</strong>: <code>@radix-ui/react-progress</code>
 shows a metrics header (operation, percentage, sizes, throughput and ETA)
 above the progress indicator.</li>
@@ -588,7 +610,7 @@ other web pages from calling the sidecars.</li>
 <code>default-src 'self'</code>, <code>script-src 'self'</code>, <code>object-src 'none'</code> and
 <code>frame-src 'none'</code>; styles and fonts only from the app and Google Fonts;
 images from the app plus <code>data:</code> and <code>blob:</code> (for screenshots); <code>connect-src</code>
-limited to Tauri IPC, the three sidecars on ports 8000, 8100 and 8200 of
+limited to Tauri IPC, the three sidecars on ports 8000, 8150 and 8200 of
 <code>127.0.0.1</code> and <code>localhost</code>, and <code>https://fonts.gstatic.com</code> for font
 embedding in screenshots. A separate <code>devCsp</code> adds what the Vite dev server
 needs.</li>
@@ -651,6 +673,35 @@ offers &quot;Start recording&quot;; while recording, the dialog hides and
 limit or on a capture failure. The clip is sent as <code>recording.mp4</code> (the
 Environment Manager accepts <code>video/mp4</code> up to 50 MB).</li>
 </ul>
+<h3 id="sec-614-shortest-column-masonry-layout-with-gpu-accelerated-flip-reflow">6.14 Shortest-Column Masonry Layout with GPU-Accelerated FLIP Reflow</h3>
+<p>Both the Dataset Compiler (Manifold Hub) and Model Training (Model Hub) panels
+utilize an industrial, shortest-column bin-packing layout primitive
+(<code>&lt;MasonryFlipGrid /&gt;</code> and <code>useMasonryFlip.ts</code>). Rather than using static CSS
+multi-column modulo distributions, the masonry engine dynamically measures
+real-time card heights via <code>ResizeObserver</code> and places each incoming item into
+whichever column currently has the lowest cumulative vertical height:</p>
+<div class="math-block">$$c^* = \arg\min_{c \in \{1, \dots, C\}} H_c$$</div>
+<p>where $C$ is the responsive column count ($C \in \{1, 2, 3\}$ determined by
+container width thresholds $\le 680\text{px}$, $\le 1100\text{px}$, and
+$&gt; 1100\text{px}$) and $H_c$ is the cumulative vertical height of column $c$
+including inter-card gaps.</p>
+<p>When cards expand, collapse, or filter dynamically, the grid applies a
+First-Last-Invert-Play (FLIP) animation pipeline inside <code>useLayoutEffect</code>:</p>
+<ol>
+<li><strong>Snapshot (First)</strong>: Records pre-layout bounding rectangles relative to the
+internal scroll container.</li>
+<li><strong>Measure &amp; Invert (Last &amp; Invert)</strong>: Computes position offsets ($\Delta x,
+\Delta y$) and applies an instantaneous translation <code>translate3d(Δx, Δy, 0)</code>
+with <code>transition: none</code>.</li>
+<li><strong>Play</strong>: On the next <code>requestAnimationFrame</code>, transitions back to
+<code>translate3d(0, 0, 0)</code> using a cubic bezier timing function (<code>280ms
+cubic-bezier(0.22, 1, 0.36, 1)</code>), elevating <code>z-index</code> on moving cards and
+clearing <code>will-change: transform</code> upon <code>transitionend</code> to eliminate subpixel
+blurring on WebKit/WebView2 runtimes.</li>
+<li><strong>Edge-Case Resilience</strong>: Cancels stale animation frames on rapid click
+interruptions, respects <code>prefers-reduced-motion</code>, and handles multi-monitor
+DPI scaling transitions gracefully.</li>
+</ol>
 </section>
 
 <section id="sec-7-unified-models-registry">
@@ -672,7 +723,8 @@ deployments or edge quantization.</p>
 <h2>8. Conclusion</h2>
 <p>The LemGendary AI Studio GUI delivers a modern, lightweight, and robust control
 center for machine learning engineering. By replacing bulky web runtimes with a
-Tauri v2 shell, a reactive React 18 interface, a tripartite sidecar mesh guarded
+Tauri v2 shell, a reactive React 19 interface (Vite 8 / Vitest 5), a
+tripartite sidecar mesh guarded
 by an origin allow-list and client header, a universal configuration editor with
 write-only secrets, a local-first bug reporter and contextual hover
 micro-documentation, the system sets a high bar for developer ergonomics,

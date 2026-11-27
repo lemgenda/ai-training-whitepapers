@@ -3,7 +3,7 @@
 > Authoritative technical whitepapers, architectural manuals, API references,
 > CLI guides, and visual demonstrations for the LemGendary AI ecosystem.
 
-**Version**: `v16.9.118`
+**Version**: `v16.9.231-STABLE`
 
 ---
 
@@ -54,7 +54,19 @@
   known parity backlog (`parity_backlog.json`).
 * **`index.html`** — Central documentation catalog and entry portal.
 
-### 2026-11-26 — Ecosystem Whitepapers Audit, W3C Validation, MathJax & SEO/WCAG Compliance
+### v16.9.231 - Live GUI v2.10.82 Audit & Ecosystem Docs Alignment
+
+* Reconciled `MANUAL_AI_STUDIO_GUI.md` and `papers/ai-studio-manual.html` across
+  Figures 1–34 (added separate Expanded Production Manifold Card figure and
+  recaptured live 21-manifold Dataset Compiler screenshots).
+* Reconciled `INVESTOR_STRATEGY_LEMGENDARY_2026.md`,
+  `canonical_capabilities.json`, `canonical_capabilities.yaml`, and
+  `manifest/documents.json` to `v16.9.231-STABLE` (`2026-11-26`) across all 48
+  publications and 23 registered neural architectures.
+* Aligned desktop client baseline (`v2.10.82`, Tauri v2 + React 19 + Vite 8),
+  Dataset Compiler sidecar port (`8150`), and Ecosystem SSOT manifests.
+
+### 2026-11-26 — Ecosystem Whitepapers Audit & W3C/WCAG Compliance
 
 * Completed audit across all 48 technical whitepapers and manuals
   (`MD-Papers/` and `papers/`) covering Prompts 35 through 40.

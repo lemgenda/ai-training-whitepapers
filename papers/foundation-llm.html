@@ -162,7 +162,7 @@ evaluation metrics:</p>
 <p><strong>Non-Masked Token Accuracy ($\text{Acc}_{\text{token}}$)</strong>: Evaluates
 next-token prediction correctness exclusively over assistant target turns,
 ignoring prompt tokens masked with $-100$:</p>
-<div class="math-block">$$\text{Acc}_{\text{token}} = \frac{\sum_{i=1}^{M} \mathbb{I}\left( \hat{y}_i = y_i \right) \cdot \mathbb{I}\left( y_i \ne -100 \right)}{\sum_{i=1}^{M} \mathbb{I}\left( y_i \ne -100 \right)} \times 100\%$$</div>
+<div class="math-block">$$\text{Acc}_{\text{token}} = \frac{\sum_{i=1}^{M} \mathbb{I}\left( \hat{y}_i = y_i \right) \cdot \mathbb{I}\left( y_i \ne -100 \right)} {\sum_{i=1}^{M} \mathbb{I}\left( y_i \ne -100 \right)} \times 100\%$$</div>
 </li>
 </ol>
 <h3>6.4 Pareto Milestone Vault Checkpointing &amp; Adapter Souping</h3>
@@ -201,9 +201,9 @@ training suite deploys a multi-tier memory containment profile:</p>
 quantization with double quantization (<code>bnb_4bit_use_double_quant=True</code>),
 compressing FP32/BF16 base foundation weights from 3.1 GB to ~900 MB while
 retaining near-lossless numerical fidelity.</li>
-<li><strong>Low-Rank Adaptation (QLoRA)</strong>: Injects rank <em>r</em>=16, &alpha;=32 adapters
-across all projection matrices (<em>q</em>, <em>k</em>, <em>v</em>, <em>o</em>, gate,
-up, down), training &lt;1% of total network weights.</li>
+<li><strong>Low-Rank Adaptation (QLoRA)</strong>: Injects rank $r=16$, $\alpha=32$ adapters
+across all projection matrices ($q$, $k$, $v$, $o$, $\text{gate}$,
+$\text{up}$, $\text{down}$), training $&lt;1\%$ of total network weights.</li>
 <li><strong>Gradient Checkpointing &amp; SDPA</strong>: Recomputes activations during backward
 passes via <code>model.gradient_checkpointing_enable(use_reentrant=False)</code> and
 substitutes manual attention matrices with PyTorch Scaled Dot-Product
@@ -215,7 +215,7 @@ across CUDA unified memory when VRAM boundaries approach saturation.</li>
 <code>accumulation_steps: 16</code>) on 4 GB local GPUs and <code>max_seq_length: 2048</code> on
 Cloud TPU v5e-8 (<code>cloud</code>). Combined with the upstream <code>1,536</code>-token
 compiler ceiling and <code>ChunkedCausalLMLoss</code>, zero copilot completions are
-truncated during ChatML prompt masking while eliminating <em>O</em>(<em>N</em><sup>2</sup>) activation
+truncated during ChatML prompt masking while eliminating $O(N^2)$ activation
 spikes.</li>
 </ol>
 
@@ -260,7 +260,7 @@ without maintaining separate model codebases, <code>GenericCausalLLM</code> and
 quantization (<code>load_in_4bit = False</code>) and loads the backbone in native
 <code>torch.bfloat16</code> with <code>lora_r = 32</code>, <code>lora_alpha = 64</code>, and
 rank-stabilized LoRA (<code>use_rslora = True</code>, scaling updates by
-\(\alpha / \sqrt{r}\)).</li>
+$\alpha / \sqrt{r}$).</li>
 <li><strong>Local 4 GB GPU</strong>: Enforces 4-bit NormalFloat (<code>nf4</code>) double quantization
 with hardware-verified compute dtype (<code>bfloat16</code> on Ampere+, <code>float16</code> on
 Turing), <code>lora_r = 16</code>, <code>lora_alpha = 32</code>, <code>max_seq_length = 1536</code>, and
@@ -270,21 +270,21 @@ Turing), <code>lora_r = 16</code>, <code>lora_alpha = 32</code>, <code>max_seq_l
 <li><strong>Chunked Linear Cross-Entropy (<code>ChunkedCausalLMLoss</code>)</strong>:
 <ul>
 <li>Standard <code>AutoModelForCausalLM.forward(labels=...)</code> materializes the full
-\([B, S, V]\) logit tensor (\(V = 151,936\) for Qwen2.5) and upcasts it to
-FP32, consuming \(\sim 778\text{ MB}\) at \(B=1, S=512\) and \(&gt;3\text{ GB}\) at
-\(B=2, S=1024\).</li>
+$[B, S, V]$ logit tensor ($V = 151,936$ for Qwen2.5) and upcasts it to
+FP32, consuming $\sim 778\text{ MB}$ at $B=1, S=512$ and $&gt;3\text{ GB}$ at
+$B=2, S=1024$.</li>
 <li><code>ChunkedCausalLMLoss</code> (<code>models/llm_chunked_loss.py</code>) filters active tokens
-(<code>labels != -100</code>) and projects <code>lm_head</code> in chunks of \(C \in \{256, 1024\}\)
+(<code>labels != -100</code>) and projects <code>lm_head</code> in chunks of $C \in \{256, 1024\}$
 with non-reentrant gradient checkpointing, reducing peak output-layer
-memory by \(&gt;94\%\).</li>
+memory by $&gt;94\%$.</li>
 <li>During validation, <code>chunked_eval_loss_and_preds()</code> returns compact 2D
-<code>pred_ids</code> (\([B, S]\)) instead of \([B, S, V]\) floating-point logits.</li>
+<code>pred_ids</code> ($[B, S]$) instead of $[B, S, V]$ floating-point logits.</li>
 </ul>
 </li>
 <li><strong>Static-Shape Collation for XLA (<code>pad_to_max_length</code>)</strong>:
 <ul>
 <li>On TPU v5e-8, <code>collate_instruction_batch(..., pad_to_max_length=True)</code>
-enforces invariant \([B, S]\) tensor shapes so the PyTorch/XLA PJRT compiler
+enforces invariant $[B, S]$ tensor shapes so the PyTorch/XLA PJRT compiler
 compiles the HLO graph exactly once per run.</li>
 </ul>
 </li>

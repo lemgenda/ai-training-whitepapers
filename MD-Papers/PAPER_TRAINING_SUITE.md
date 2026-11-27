@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.245-STABLE` (LemGendary Model Training Suite) · **Last
-audited**: 2026-11-24
+**Version**: `v16.9.254-STABLE` (LemGendary Model Training Suite) · **Last
+audited**: 2026-11-26
 
 **Companion Paper**: [Nuclear Stability: AI Training Pathology Master
 Guide](./PAPER_TRAINING_PATHOLOGY.md)
@@ -121,9 +121,8 @@ Guide](./PAPER_TRAINING_PATHOLOGY.md)
   - [2.52. Standardized Telemetry & History Recording Pipelines (v16.9.236)](#252-standardized-telemetry--history-recording-pipelines-v169236)
   - [2.53. Single-Repository Cloud Notebook Execution Architecture
     (v16.9.240)](#253-single-repository-cloud-notebook-execution-architecture-v169240)
-  - [2.54. Permissive License Modernization & CPython 3.14.10 Multiprocessing
-    (v16.9.247 to
-    v16.9.251)](#254-permissive-license-modernization--cpython-31410-multiprocessing-v169247-to-v169251)
+  - [2.54. CPython 3.14.10, ONNX Export & Cloud/DDP Hardening
+    (v16.9.247-254)](#254-cpython-31410-onnx-export--cloudddp-hardening-v169247-254)
 - [3. Judicial Audit Engine](#3-judicial-audit-engine)
   - [3.1. Framework Agnosticism & Type
     Guards](#31-framework-agnosticism--type-guards)
@@ -2304,10 +2303,12 @@ repository cloning:
   `requirements.txt` as its primary manifest candidate, bypassing the need for
   external `requirements/requirements-training.txt` manifests.
 
-### 2.54. Permissive License Modernization & CPython 3.14.10 Multiprocessing (v16.9.247 to v16.9.251)
+### 2.54. CPython 3.14.10, ONNX Export & Cloud/DDP Hardening (v16.9.247-254)
 
-Releases v16.9.247 through v16.9.251 modernize the suite to **CPython 3.14.10**,
-guarantee zero AGPL copyleft exposure, and harden distributed training:
+Releases v16.9.247 through v16.9.254 modernize the suite to **CPython 3.14.10**,
+guarantee zero AGPL copyleft exposure, align the Dataset Compiler port to
+`8150`, and harden distributed training, ONNX export, and Kaggle sync across all
+23 registered models in `unified_models_v2.yaml`:
 
 - **Permissive License Augmentation Stack**: Replaced copyleft/AGPL-3.0
   `albumentations` / `albumentationsx` with permissive **Apache-2.0
@@ -2318,16 +2319,25 @@ guarantee zero AGPL copyleft exposure, and harden distributed training:
   deterministic `forkserver` context on POSIX and `spawn` on Windows, setting
   `SIG_IGN` on `SIGINT` (so the orchestrator handles teardown) and `SIG_DFL` on
   `SIGTERM` to avoid SemLock cross-context pickling deadlocks.
-- **Modernized Ecosystem Stack**: Pinned `diffusers==0.43.0`,
-  `transformers==5.24.0`, `huggingface-hub==2.4.0`, `onnxruntime-gpu==1.32.0`,
-  and `onnxruntime-directml==1.24.4`.
-- **Declarative DDP Reduction**: Configured per-model `find_unused_parameters`
-  in `unified_models_v2.yaml` (enabled for multi-head detection and multi-task
-  models, disabled for CNN restorers and classifiers) to eliminate NCCL timeouts
-  and suppress autograd graph traversal warnings.
-- **AWS SDK Deadlock Prevention**: Pinned modern `boto3==1.44.11`,
-  `botocore==1.44.11`, `jmespath==1.1.0`, and `six==1.17.0` for S3 streaming in
-  `litdata==0.2.76`.
+- **Modernized Ecosystem Stack & `torch.export` ONNX Pipeline**: Pinned
+  `torch==2.15.0`, `diffusers==0.43.0`, `transformers==5.24.0`,
+  `huggingface-hub==2.4.0`, `ultralytics==8.4.219`, `onnx==1.23.2`,
+  `onnxscript==0.7.2`, `onnxruntime-gpu==1.32.0`, and
+  `onnxruntime-directml==1.24.4`, with `torch.export` multi-variant ONNX export
+  for FP32 and FP16 edge deployment.
+- **Declarative DDP Reduction (`v16.9.250`, `v16.9.253`)**: Configured
+  per-model `find_unused_parameters` across all 23 registered models in
+  `unified_models_v2.yaml` and the canonical model schema (enabled for
+  `yolov8n` and `professional_multitask_restoration`, and explicitly set to
+  `false` for `RetinaFace` and CNN restorers/classifiers) to eliminate NCCL
+  timeouts and silence autograd graph traversal warnings.
+- **Dataset Compiler Port Alignment & Kaggle Page Sync Resilience (`v16.9.252`,
+  `v16.9.253`)**: Aligned Dataset Compiler service port references from `8100`
+  to `8150`, and hardened `training/cloud/kaggle_hub.py` for fault-tolerant
+  Kaggle model page synchronization.
+- **AWS S3 `boto3` Stack Pinning (`v16.9.251`, `v16.9.254`)**: Pinned modern
+  `boto3==1.44.12`, `botocore==1.44.12`, `jmespath==1.1.0`, and `six==1.17.0`
+  for S3 streaming in `litdata==0.2.76`, preventing solver backtracking.
 
 ---
 

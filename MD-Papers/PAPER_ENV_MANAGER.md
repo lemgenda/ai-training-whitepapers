@@ -4,8 +4,8 @@
 
 **Parent Hub**: [Master Ecosystem Architecture](./ECOSYSTEM_ARCHITECTURE.md)
 
-**Version**: `v16.9.90-STABLE` (LemGendary Environment Manager) · **Last
-audited**: 2026-11-24
+**Version**: `v16.9.91-STABLE` (LemGendary Environment Manager) · **Last
+audited**: 2026-11-26
 
 ---
 
@@ -37,6 +37,8 @@ audited**: 2026-11-24
     v16.9.85)](#68-kaggle-credentials-changelog-scope--runtime-contract-v16981-to-v16985)
   - [6.9 Line Length Governance, Pre-Flight Guard & Changelog Gate
     (v16.9.86)](#69-line-length-governance-pre-flight-guard--changelog-gate-v16986)
+  - [6.10 Documentation Audit & Live GUI Sync Tooling
+    (v16.9.91)](#610-documentation-audit--live-gui-sync-tooling-v16991)
 - [7. Unified Models Registry](#7-unified-models-registry)
 - [8. Conclusion](#8-conclusion)
 - [Companion Documentation](#companion-documentation)
@@ -45,7 +47,8 @@ audited**: 2026-11-24
 
 ## 1. Abstract
 
-The LemGendary Environment Manager (release `v16.9.87-STABLE`) is the
+The LemGendary Environment Manager (release `v16.9.91-STABLE`, targeting
+CPython 3.14.10 and `uv>=0.13.10`) is the
 infrastructure layer of the LemGendary ecosystem: it probes hardware, provisions
 and audits virtual environments, keeps dependency manifests aligned, validates
 the workspace and serves this functionality to the LemGendary AI Studio GUI as a
@@ -464,7 +467,7 @@ Environment Manager daemon exposes high-density aggregated endpoints:
   sensors, discovered repository trees, and active pipeline statuses into a
   single non-blocking payload, eliminating waterfall polling.
 - **Ecosystem Sidecar Interoperability (`/api/gui/ecosystem`)**: Probes the
-  `lemgendary-datasets` sidecar (port 8100) and the `lemgendary-training-suite`
+  `lemgendary-datasets` sidecar (port 8150) and the `lemgendary-training-suite`
   sidecar (port 8200) one after the other in the thread pool, each with a 1.5 s
   timeout, and reports their health next to the env manager itself (port 8000)
   for the `lemgendary-ai-studio-gui` status bar.
@@ -572,7 +575,9 @@ not the code:
 - **Projects** (`projects[]`): folder, display name, kind (`python`, `node`,
   `asset`), whether the project is managed, validated or git-hooked, its
   upgrade order and manifests. Project discovery, the validation targets, the
-  upgrade order and the manifest sync targets are derived from this list.
+  upgrade order and the manifest sync targets are derived from this list. All 7
+  registered workspace projects live here, including `lemgendary-docs`
+  (`validated: true`, `managed: false`).
 - **Pipeline steps** (`pipeline_steps[]`): number, id, name and descriptions of
   the seven pipeline steps (Section 6).
 - **Identity** (`identity`): documentation URL, Kaggle owner, bind host and,
@@ -656,7 +661,7 @@ central manifest (`check_npm_manifest`, finding `ssot_npm_manifest`; the
   Python sources, it safely reflows block comments and module/class docstrings
   while leaving source statements intact.
 - **Instant Pre-Flight Pre-Commit Hook** (`env_manager/hooks.py`,
-  `.githooks/pre-commit`): Injected into Git pre-commit hooks across all six
+  `.githooks/pre-commit`): Injected into Git pre-commit hooks across all 7
   ecosystem repositories via `lem-env setup-hooks`. Executes an ultra-fast
   (< 50ms) staged line length check (`python tools/check_line_lengths.py
   --staged`) prior to launching multi-minute full ecosystem validation suites,
@@ -667,6 +672,19 @@ central manifest (`check_npm_manifest`, finding `ssot_npm_manifest`; the
   a corresponding changelog version entry in the affected project's `README.md`.
   Commits lacking an updated `README.md` changelog entry will fail and be
   blocked at the pre-commit boundary with an explicit non-zero exit code.
+
+### 6.10 Documentation Audit & Live GUI Sync Tooling (v16.9.91)
+
+- **Prompts 35-40 Documentation Audit Engine (`lem-env docs-audit`)**:
+  Modernizes cross-repository documentation verification by checking
+  whitepaper standards, MD/HTML parity, TOC integrity, asset/MathJax health,
+  and frontend compliance across `lemgendary-docs` and sibling repositories.
+- **Automated Live GUI Documentation Synchronization (`env_manager.gui_docs`)**:
+  Provides deterministic CLI tooling (`lem-env gui-screenshots`,
+  `lem-env sync-gui-registry`, `lem-env sync-gui-manual`) to capture live
+  desktop screenshots, recount DOM control IDs from `src/**/*.tsx`, and
+  synchronize `GUI_CONTROL_REGISTRY.md` and `MANUAL_AI_STUDIO_GUI.md` with
+  the shipped GUI release.
 
 ---
 

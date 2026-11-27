@@ -34,8 +34,8 @@
 <p class="subtitle">Category 12 GLOSSARY | LemGendary AI Documentation Hub</p>
 <div class="meta">
 <span><strong>Parent Hub</strong>: <a href="ecosystem-architecture.html">Master Ecosystem Architecture</a></span>
-<span><strong>Version</strong>: <code>v16.9.68-STABLE</code> (LemGendary AI Documentation Hub)</span>
-<span><strong>Last audited</strong>: 2026-11-12</span>
+<span><strong>Version</strong>: <code>v16.9.231-STABLE</code> (LemGendary AI Documentation Hub)</span>
+<span><strong>Last audited</strong>: 2026-11-26</span>
 </div>
 </header>
 <main id="main-content">
@@ -84,6 +84,17 @@ Manifold)</a></li>
 </li>
 <li><a href="#sec-8-authoritative-do-not-confuse-with-matrix">8. Authoritative &quot;Do Not Confuse With&quot;
 Matrix</a></li>
+<li><a href="#sec-9-modernized-toolchain--concurrency-primitives">9. Modernized Toolchain &amp; Concurrency Primitives</a></li>
+<li><a href="#sec-10-ai-studio-gui--automation-primitives">10. AI Studio GUI &amp; Automation Primitives</a>
+<ul class="sub-item">
+<li><a href="#sec-101-custom-pipeline-step-selection">10.1 Custom Pipeline Step Selection</a></li>
+<li><a href="#sec-102-shortest-column-masonry-flip-reflow">10.2 Shortest-Column Masonry FLIP Reflow</a></li>
+<li><a href="#sec-103-embedded-offline-documentation-hub-tab-docs">10.3 Embedded Offline Documentation Hub (<code>tab-docs</code>)</a></li>
+<li><a href="#sec-104-automated-gui-documentation-sync">10.4 Automated GUI Documentation Sync</a></li>
+<li><a href="#sec-105-frozen-run-settings-guard-frozensettingschanged">10.5 Frozen Run Settings Guard (<code>FrozenSettingsChanged</code>)</a></li>
+<li><a href="#sec-106-autonomous-yield-strategy">10.6 Autonomous Yield Strategy</a></li>
+</ul>
+</li>
 
 </ul>
 </nav>
@@ -295,7 +306,7 @@ validation runs through <strong>Ruff</strong> (<code>ruff&gt;=0.9.0</code>), whi
 Pylint and astroid toolchain.</p>
 <h3 id="sec-62-sidecar-rest-daemon">6.2 Sidecar REST Daemon</h3>
 <p>An asynchronous FastAPI service on a dedicated local port (<code>8000</code> for the
-LemGendary Environment Manager, <code>8100</code> for the LemGendary Dataset Compiler
+LemGendary Environment Manager, <code>8150</code> for the LemGendary Dataset Compiler
 Suite and <code>8200</code> for the LemGendary Model Training Suite). Each sidecar binds
 to <code>127.0.0.1</code> and provides headless API access, hardware health telemetry and
 WebSocket log broadcasting.</p>
@@ -398,6 +409,22 @@ normal end of training with a recorded reason.</li>
 <p>Centralized requirements declarations located under <code>lemgendary-env-manager/requirements/requirements-*.txt</code> that act as the authoritative single source of truth for versions, propagating downstream into project manifests under downgrade protection.</p>
 <h3 id="sec-95-permissive-vs-copyleft-agpl-30-augmentation-stacks">9.5 Permissive vs. Copyleft (AGPL-3.0) Augmentation Stacks</h3>
 <p>Permissive augmentation libraries (Apache-2.0 <code>kornia</code> and BSD-3-Clause <code>torchvision.transforms.v2</code>) provide commercial-grade GPU-accelerated image transforms without the viral reciprocal open-source licensing liabilities mandated by copyleft AGPL-3.0 stacks.</p>
+</section>
+
+<section id="sec-10-ai-studio-gui--automation-primitives">
+<h2>10. AI Studio GUI &amp; Automation Primitives</h2>
+<h3 id="sec-101-custom-pipeline-step-selection">10.1 Custom Pipeline Step Selection</h3>
+<p>The selective clean-install workflow in AI Studio GUI (<code>tab-dashboard</code>) triggered by <code>pipeline-btn-run-custom</code>, allowing operators to run a chosen subset of the 7-step environment pipeline instead of the full sequence (<code>pipeline-btn-run-all</code>).</p>
+<h3 id="sec-102-shortest-column-masonry-flip-reflow">10.2 Shortest-Column Masonry FLIP Reflow</h3>
+<p>The dynamic card-packing layout (<code>MasonryFlipGrid</code> with <code>useMasonryFlip</code>) used in the Dataset Compiler queue and gallery views. It places cards into the shortest column and animates position changes using GPU-accelerated FLIP (<code>280ms cubic-bezier(0.22, 1, 0.36, 1)</code>) transitions.</p>
+<h3 id="sec-103-embedded-offline-documentation-hub-tab-docs">10.3 Embedded Offline Documentation Hub (<code>tab-docs</code>)</h3>
+<p>The 6th primary workspace tab in AI Studio GUI (<code>tab-docs</code>) that embeds the LemGendary AI Documentation Hub directly inside the desktop app. It queries <code>GET /api/docs/status</code> for <code>local_url</code> (or <code>online_url</code> fallback) so operators can browse canonical manuals and whitepapers offline.</p>
+<h3 id="sec-104-automated-gui-documentation-sync">10.4 Automated GUI Documentation Sync</h3>
+<p>The <code>lem-env</code> toolchain (<code>gui-screenshots</code>, <code>sync-gui-registry</code>, and <code>sync-gui-manual</code>) that captures numbered callout screenshots from the live AI Studio GUI (<code>http://localhost:1420</code>) and synchronizes <code>GUI_CONTROL_REGISTRY.md</code>, <code>MANUAL_AI_STUDIO_GUI.md</code>, their HTML counterparts, and <code>manifest/documents.json</code>.</p>
+<h3 id="sec-105-frozen-run-settings-guard-frozensettingschanged">10.5 Frozen Run Settings Guard (<code>FrozenSettingsChanged</code>)</h3>
+<p>A training-resume integrity guard in <code>lemgendary-training-suite</code> that compares resumed run parameters against the checkpoint's frozen settings. When drift is detected, training refuses with <code>FrozenSettingsChanged</code> and AI Studio GUI renders <code>train-frozen-refusal</code> (showing old vs. new canonical JSON values) unless the operator enables <code>train-input-override-frozen-{model_key}</code> (local) or <code>kaggle-override-frozen-checkbox</code> (Kaggle).</p>
+<h3 id="sec-106-autonomous-yield-strategy">10.6 Autonomous Yield Strategy</h3>
+<p>The LLM dataset compilation mode (<code>comp-yield-mode</code>: <code>Autonomous Source Analysis</code>) in AI Studio GUI (<code>tab-compiler</code>) that inspects raw text sources automatically to determine chunking, token-packing, and shard-yield parameters without manual schema overrides.</p>
 </section>
 
 

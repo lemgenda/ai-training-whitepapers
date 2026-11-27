@@ -128,6 +128,21 @@ strong {
     color: #fff;
 }
 
+main a {
+    color: #58a6ff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+main a:visited {
+    color: #79c0ff;
+}
+
+main a:hover,
+main a:focus-visible {
+    color: var(--accent-secondary);
+}
+
 ul, ol {
     margin-bottom: 20px;
     padding-left: 20px;
@@ -769,6 +784,51 @@ blockquote,
 }
 
 /* Full-width responsive paper image */
+.figure-center figcaption {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: left;
+}
+
+/* Table of Figures card */
+.tof-card {
+    margin: 0 0 40px;
+}
+
+.tof-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+}
+
+.tof-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    columns: 2 320px;
+    column-gap: 24px;
+}
+
+.tof-list li {
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    break-inside: avoid;
+}
+
+.tof-list a {
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.tof-list a:hover,
+.tof-list a:focus-visible {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
 .img-paper {
     width: 100%;
     max-width: 1050px;

@@ -2,7 +2,7 @@
 
 ## Category 00 | LemGendary AI Documentation Hub
 
-**Version**: `v16.9.214-STABLE`
+**Version**: `v16.9.231-STABLE` · **Last audited**: 2026-11-26
 
 ---
 
@@ -936,7 +936,7 @@ response or from the file instead of hard-coding them.
 
 Monitors health and connectivity across local ecosystem sidecars by actively
 probing the health path of every service in `ecosystem.json`
-(`http://127.0.0.1:8100/api/health` and
+(`http://127.0.0.1:8150/api/health` and
 `http://127.0.0.1:8200/api/health`) with a non-blocking timeout. Powers the
 desktop GUI top-bar status indicator and service mesh dashboard tiles:
 
@@ -950,7 +950,7 @@ desktop GUI top-bar status indicator and service mesh dashboard tiles:
   },
   "dataset_compiler": {
     "service": "lemgendary-datasets",
-    "port": 8100,
+    "port": 8150,
     "status": "online",
     "reachable": true,
     "data": {
@@ -994,8 +994,8 @@ Example response:
 ```json
 {
   "status": "started",
-  "message": "LemGendary Dataset Compiler Suite started successfully on port 8100.",
-  "port": 8100,
+  "message": "LemGendary Dataset Compiler Suite started successfully on port 8150.",
+  "port": 8150,
   "pid": 26024
 }
 ```
@@ -1010,8 +1010,8 @@ Example response:
 ```json
 {
   "status": "stopped",
-  "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
-  "port": 8100
+  "message": "LemGendary Dataset Compiler Suite on port 8150 stopped.",
+  "port": 8150
 }
 ```
 
@@ -1028,8 +1028,8 @@ Example response:
     "dataset-compiler": {
       "status": "already_running",
       "message":
-"LemGendary Dataset Compiler Suite is already online and healthy on port 8100.",
-      "port": 8100
+"LemGendary Dataset Compiler Suite is already online and healthy on port 8150.",
+      "port": 8150
     },
     "training-suite": {
       "status": "started",
@@ -1061,8 +1061,8 @@ Example response:
   "results": {
     "dataset-compiler": {
       "status": "stopped",
-      "message": "LemGendary Dataset Compiler Suite on port 8100 stopped.",
-      "port": 8100
+      "message": "LemGendary Dataset Compiler Suite on port 8150 stopped.",
+      "port": 8150
     },
     "training-suite": {
       "status": "stopped",
@@ -1092,7 +1092,7 @@ Rust backend via Tauri v2 IPC invocations.
   `ServiceOperationResult`; Purpose: Terminates a specific sidecar by port
 - **`stop_all_services`**: Arguments: None; Return Type:
   `HashMap<String, ServiceOperationResult>`; Purpose: Terminates all listening
-  sidecar processes on ports 8000, 8100, and 8200
+  sidecar processes on ports 8000, 8150, and 8200
 - **`trigger_clean_install`**: Arguments: `project: Option<String>`; Return
   Type: `PipelineLaunchResult`; Purpose: Starts environment provisioning
   pipeline
@@ -1938,7 +1938,7 @@ if fmt == "matlab" and ann_path:
 ## 5. Datasets Compilation & Stream Pipeline API
 
 The `lemgendary-datasets` repository provides a high-throughput sidecar API
-service running on `127.0.0.1:8100` (`api/`). It provides REST endpoints for
+service running on `127.0.0.1:8150` (`api/`). It provides REST endpoints for
 hardware inspection, configuration validation, dataset and raw-source querying,
 and background execution of compilation and degradation tasks, with
 bidirectional WebSocket streaming for live logs and global telemetry.
@@ -1947,7 +1947,7 @@ bidirectional WebSocket streaming for live logs and global telemetry.
 
 ```bash
 # Launch server daemon
-python cli.py server start --background --host 127.0.0.1 --port 8100
+python cli.py server start --background --host 127.0.0.1 --port 8150
 
 # Probe status and hardware sensors
 python cli.py server status
@@ -1957,7 +1957,7 @@ python cli.py server stop
 ```
 
 - **Bind Host**: Default: `127.0.0.1`; Description: Local loopback interface
-- **Bind Port**: Default: `8100`; Description: Dedicated compiler service port
+- **Bind Port**: Default: `8150`; Description: Dedicated compiler service port
   (distinct from `lem-env` on 8000)
 - **Interactive Docs**: Default: `/docs`; Description: OpenAPI Swagger UI
 - **Schema Spec**: Default: `/openapi.json`; Description: OpenAPI 3.1.0 JSON
@@ -2065,7 +2065,7 @@ Clients connect to real-time log channels to monitor long-running compiler and
 degradation tasks without polling:
 
 ```text
-ws://127.0.0.1:8100/api/ws/jobs/{job_id}/logs
+ws://127.0.0.1:8150/api/ws/jobs/{job_id}/logs
 ```
 
 On connection, the server automatically replays any existing backlog text
